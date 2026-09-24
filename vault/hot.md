@@ -32,7 +32,7 @@ lax query zillow-com properties/locations --options '{"query":"Miami"}'  # Proxy
 ## Hot State
 
 - Local catalog cached at `data/alexandria_catalog.json`.
-- Credentials stored in canonical `empire.env` and synced to `%APPDATA%\firecrawl-cli\credentials.json`.
-- Account credits balance: 20,435 credits.
-- Master Empire shelf at `E:\empire\wiki\library\legends-firecrawl\_Index.md`.
+- Credentials live in your local environment and the Firecrawl CLI credential store; never commit them.
+- Check your current credit balance in the Firecrawl dashboard before large runs.
+- Empire shelf: file this module under your Empire vault library when you adopt it.
 
