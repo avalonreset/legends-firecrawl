@@ -1,0 +1,2086 @@
+{
+  "id": "skyscanner-net",
+  "provider": "skyscanner-net",
+  "name": "Skyscanner",
+  "description": "Skyscanner flight search and fare comparison: place autosuggest (sky place ids and entity ids), live itinerary search by origin, destination, dates, passengers and cabin with airlines, durations, stops, fare policy flags and booking-source deep links, plus cached indicative fares per day and per month. Anonymous same-origin JSON APIs on www.skyscanner.com; live quotes and cached indicative prices are labelled as such; live quotes include the site's estimate of taxes and fees.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "skyscanner-net"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "skyscanner-net/flights/monthly_prices",
+      "provider": "skyscanner-net",
+      "capability": "flights/monthly_prices",
+      "name": "Monthly prices",
+      "description": "Find the cheapest month for a route; then price_calendar for days and search_flights for a live quote.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "currency",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z]{3}$.",
+          "default": "USD"
+        },
+        {
+          "name": "destination_entity_id",
+          "type": "string",
+          "in": "body",
+          "about": "Destination entity id (London 27544008). Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        },
+        {
+          "name": "direct_only",
+          "type": "boolean",
+          "in": "body",
+          "about": "direct_only"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[a-z]{2}-[A-Z]{2}$.",
+          "default": "en-US"
+        },
+        {
+          "name": "market",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z]{2}$.",
+          "default": "US"
+        },
+        {
+          "name": "origin_entity_id",
+          "type": "string",
+          "in": "body",
+          "about": "Origin entity id from suggest_places (New York 27537542). Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        },
+        {
+          "name": "trip_type",
+          "type": "string",
+          "in": "body",
+          "about": "trip_type",
+          "default": "return",
+          "oneOf": [
+            "return",
+            "one_way"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Cached indicative cheapest fare per month for the next 12 months between two entity ids, for a return or one-way trip, optionally direct only, with the site's price category per month. Reads POST /g/search-intent/v1/pricecalendar/month, stateless. Cached indicative prices, not live quotes.",
+        "key": "months",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "amount",
+            "type": "number",
+            "about": "Indicative fare in whole currency units (the site's UNIT_WHOLE / UNIT_CENTI amounts normalised)."
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "month",
+            "type": "number"
+          },
+          {
+            "name": "price_category",
+            "type": "string",
+            "about": "Site value: PRICE_CATEGORY_LOWEST, PRICE_CATEGORY_LOW or PRICE_CATEGORY_UNSPECIFIED."
+          },
+          {
+            "name": "year",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "destination_entity_id": "27544008",
+          "origin_entity_id": "27537542"
+        },
+        "response": {
+          "cheapest": {
+            "amount": 311,
+            "currency": "USD",
+            "month": 11,
+            "price_category": "PRICE_CATEGORY_LOWEST",
+            "year": 2026
+          },
+          "count": 12,
+          "currency": "USD",
+          "destination_entity_id": "27544008",
+          "direct_only": false,
+          "locale": "en-US",
+          "market": "US",
+          "months": [
+            {
+              "amount": 551,
+              "currency": "USD",
+              "month": 9,
+              "price_category": "PRICE_CATEGORY_UNSPECIFIED",
+              "year": 2026
+            },
+            {
+              "amount": 412,
+              "currency": "USD",
+              "month": 10,
+              "price_category": "PRICE_CATEGORY_UNSPECIFIED",
+              "year": 2026
+            },
+            {
+              "amount": 311,
+              "currency": "USD",
+              "month": 11,
+              "price_category": "PRICE_CATEGORY_LOWEST",
+              "year": 2026
+            },
+            {
+              "amount": 313,
+              "currency": "USD",
+              "month": 12,
+              "price_category": "PRICE_CATEGORY_LOW",
+              "year": 2026
+            },
+            {
+              "amount": 405,
+              "currency": "USD",
+              "month": 1,
+              "price_category": "PRICE_CATEGORY_UNSPECIFIED",
+              "year": 2027
+            },
+            {
+              "amount": 312,
+              "currency": "USD",
+              "month": 2,
+              "price_category": "PRICE_CATEGORY_LOW",
+              "year": 2027
+            },
+            {
+              "amount": 378,
+              "currency": "USD",
+              "month": 3,
+              "price_category": "PRICE_CATEGORY_LOW",
+              "year": 2027
+            },
+            {
+              "amount": 489,
+              "currency": "USD",
+              "month": 4,
+              "price_category": "PRICE_CATEGORY_UNSPECIFIED",
+              "year": 2027
+            },
+            {
+              "amount": 512,
+              "currency": "USD",
+              "month": 5,
+              "price_category": "PRICE_CATEGORY_UNSPECIFIED",
+              "year": 2027
+            },
+            {
+              "amount": 763,
+              "currency": "USD",
+              "month": 6,
+              "price_category": "PRICE_CATEGORY_UNSPECIFIED",
+              "year": 2027
+            },
+            {
+              "amount": 680,
+              "currency": "USD",
+              "month": 7,
+              "price_category": "PRICE_CATEGORY_UNSPECIFIED",
+              "year": 2027
+            },
+            {
+              "amount": 591,
+              "currency": "USD",
+              "month": 8,
+              "price_category": "PRICE_CATEGORY_UNSPECIFIED",
+              "year": 2027
+            }
+          ],
+          "observed_at_ms": 1789857828753,
+          "origin_entity_id": "27537542",
+          "price_basis": "cached_indicative",
+          "source_url": "https://www.skyscanner.com/g/search-intent/v1/pricecalendar/month",
+          "taxes_and_fees": "unknown",
+          "trip_type": "return"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "skyscanner-net",
+        "capability": "flights/monthly_prices"
+      }
+    },
+    {
+      "id": "skyscanner-net/flights/price_calendar",
+      "provider": "skyscanner-net",
+      "capability": "flights/price_calendar",
+      "name": "Price calendar",
+      "description": "Find cheap dates for a route before running a live search_flights for a specific day.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "currency",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z]{3}$.",
+          "default": "USD"
+        },
+        {
+          "name": "destination",
+          "type": "string",
+          "in": "body",
+          "about": "Destination sky place id (LOND, LHR). Pattern: ^[A-Za-z]{3,8}$.",
+          "required": true
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[a-z]{2}-[A-Z]{2}$.",
+          "default": "en-US"
+        },
+        {
+          "name": "market",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z]{2}$.",
+          "default": "US"
+        },
+        {
+          "name": "max_days",
+          "type": "number",
+          "in": "body",
+          "about": "Keep only the first N days of the calendar (it starts today).",
+          "default": 366,
+          "min": 1,
+          "max": 366
+        },
+        {
+          "name": "origin",
+          "type": "string",
+          "in": "body",
+          "about": "Origin sky place id from suggest_places (NYCA, JFK). Pattern: ^[A-Za-z]{3,8}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Cached indicative cheapest fare per departure day for the next 12 months between two sky place ids (NYCA -> LOND), with the site's low/medium/high price band per day. Reads POST /g/search-intent/v1/pricecalendar, stateless. These are cached indicative prices the site computed from earlier searches, not live quotes.",
+        "key": "days",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "amount",
+            "type": "number",
+            "about": "Indicative one-adult fare in `currency`; null when the site has no price for the day."
+          },
+          {
+            "name": "date",
+            "type": "string",
+            "about": "Departure date YYYY-MM-DD."
+          },
+          {
+            "name": "group",
+            "type": "string",
+            "about": "Price band id (low, medium, high); null with no price."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "destination": "LOND",
+          "max_days": 60,
+          "origin": "NYCA"
+        },
+        "response": {
+          "cheapest": {
+            "amount": 138.09,
+            "date": "2026-10-13",
+            "group": "low"
+          },
+          "count": 60,
+          "currency": "USD",
+          "days": [
+            {
+              "amount": 293.49,
+              "date": "2026-09-19",
+              "group": "medium"
+            },
+            {
+              "amount": 226.46,
+              "date": "2026-09-20",
+              "group": "low"
+            },
+            {
+              "amount": 226.47,
+              "date": "2026-09-21",
+              "group": "low"
+            },
+            {
+              "amount": 226.47,
+              "date": "2026-09-22",
+              "group": "low"
+            },
+            {
+              "amount": 226.47,
+              "date": "2026-09-23",
+              "group": "low"
+            },
+            {
+              "amount": 226.94,
+              "date": "2026-09-24",
+              "group": "low"
+            },
+            {
+              "amount": 218.32,
+              "date": "2026-09-25",
+              "group": "low"
+            },
+            {
+              "amount": 188.85,
+              "date": "2026-09-26",
+              "group": "low"
+            },
+            {
+              "amount": 258.5,
+              "date": "2026-09-27",
+              "group": "low"
+            },
+            {
+              "amount": 262.99,
+              "date": "2026-09-28",
+              "group": "low"
+            },
+            {
+              "amount": 258.99,
+              "date": "2026-09-29",
+              "group": "low"
+            },
+            {
+              "amount": 280.95,
+              "date": "2026-09-30",
+              "group": "medium"
+            },
+            {
+              "amount": 276.81,
+              "date": "2026-10-01",
+              "group": "medium"
+            },
+            {
+              "amount": 251.28,
+              "date": "2026-10-02",
+              "group": "low"
+            },
+            {
+              "amount": 253.97,
+              "date": "2026-10-03",
+              "group": "low"
+            },
+            {
+              "amount": 217.45,
+              "date": "2026-10-04",
+              "group": "low"
+            },
+            {
+              "amount": 217.99,
+              "date": "2026-10-05",
+              "group": "low"
+            },
+            {
+              "amount": 187.45,
+              "date": "2026-10-06",
+              "group": "low"
+            },
+            {
+              "amount": 255.83,
+              "date": "2026-10-07",
+              "group": "low"
+            },
+            {
+              "amount": 294,
+              "date": "2026-10-08",
+              "group": "medium"
+            },
+            {
+              "amount": 280.58,
+              "date": "2026-10-09",
+              "group": "medium"
+            },
+            {
+              "amount": 284.99,
+              "date": "2026-10-10",
+              "group": "medium"
+            },
+            {
+              "amount": 153.39,
+              "date": "2026-10-11",
+              "group": "low"
+            },
+            {
+              "amount": 211.63,
+              "date": "2026-10-12",
+              "group": "low"
+            },
+            {
+              "amount": 138.09,
+              "date": "2026-10-13",
+              "group": "low"
+            },
+            {
+              "amount": 210.28,
+              "date": "2026-10-14",
+              "group": "low"
+            },
+            {
+              "amount": 230.99,
+              "date": "2026-10-15",
+              "group": "low"
+            },
+            {
+              "amount": 242,
+              "date": "2026-10-16",
+              "group": "low"
+            },
+            {
+              "amount": 138.09,
+              "date": "2026-10-17",
+              "group": "low"
+            },
+            {
+              "amount": 189,
+              "date": "2026-10-18",
+              "group": "low"
+            },
+            {
+              "amount": 218.23,
+              "date": "2026-10-19",
+              "group": "low"
+            },
+            {
+              "amount": 218.23,
+              "date": "2026-10-20",
+              "group": "low"
+            },
+            {
+              "amount": 258.73,
+              "date": "2026-10-21",
+              "group": "low"
+            },
+            {
+              "amount": 189.33,
+              "date": "2026-10-22",
+              "group": "low"
+            },
+            {
+              "amount": 276.81,
+              "date": "2026-10-23",
+              "group": "medium"
+            },
+            {
+              "amount": 268.55,
+              "date": "2026-10-24",
+              "group": "medium"
+            },
+            {
+              "amount": 269.56,
+              "date": "2026-10-25",
+              "group": "medium"
+            },
+            {
+              "amount": 255.83,
+              "date": "2026-10-26",
+              "group": "low"
+            },
+            {
+              "amount": 266.1,
+              "date": "2026-10-27",
+              "group": "medium"
+            },
+            {
+              "amount": 275.99,
+              "date": "2026-10-28",
+              "group": "medium"
+            },
+            {
+              "amount": 294.49,
+              "date": "2026-10-29",
+              "group": "medium"
+            },
+            {
+              "amount": 294.49,
+              "date": "2026-10-30",
+              "group": "medium"
+            },
+            {
+              "amount": 294.49,
+              "date": "2026-10-31",
+              "group": "medium"
+            },
+            {
+              "amount": 276.57,
+              "date": "2026-11-01",
+              "group": "medium"
+            },
+            {
+              "amount": 279.58,
+              "date": "2026-11-02",
+              "group": "medium"
+            },
+            {
+              "amount": 277.57,
+              "date": "2026-11-03",
+              "group": "medium"
+            },
+            {
+              "amount": 276,
+              "date": "2026-11-04",
+              "group": "medium"
+            },
+            {
+              "amount": 275.22,
+              "date": "2026-11-05",
+              "group": "medium"
+            },
+            {
+              "amount": 283.99,
+              "date": "2026-11-06",
+              "group": "medium"
+            },
+            {
+              "amount": 283.99,
+              "date": "2026-11-07",
+              "group": "medium"
+            },
+            {
+              "amount": 279.58,
+              "date": "2026-11-08",
+              "group": "medium"
+            },
+            {
+              "amount": 251.85,
+              "date": "2026-11-09",
+              "group": "low"
+            },
+            {
+              "amount": 271.56,
+              "date": "2026-11-10",
+              "group": "medium"
+            },
+            {
+              "amount": 264.99,
+              "date": "2026-11-11",
+              "group": "medium"
+            },
+            {
+              "amount": 283.99,
+              "date": "2026-11-12",
+              "group": "medium"
+            },
+            {
+              "amount": 250.02,
+              "date": "2026-11-13",
+              "group": "low"
+            },
+            {
+              "amount": 267.55,
+              "date": "2026-11-14",
+              "group": "medium"
+            },
+            {
+              "amount": 253.32,
+              "date": "2026-11-15",
+              "group": "low"
+            },
+            {
+              "amount": 266.99,
+              "date": "2026-11-16",
+              "group": "medium"
+            },
+            {
+              "amount": 254.36,
+              "date": "2026-11-17",
+              "group": "low"
+            }
+          ],
+          "destination": "LOND",
+          "groups": [
+            {
+              "id": "low",
+              "label": "$"
+            },
+            {
+              "id": "medium",
+              "label": "$$"
+            },
+            {
+              "id": "high",
+              "label": "$$$"
+            }
+          ],
+          "locale": "en-US",
+          "market": "US",
+          "observed_at_ms": 1789857817269,
+          "origin": "NYCA",
+          "price_basis": "cached_indicative",
+          "return_flight_price": null,
+          "source_url": "https://www.skyscanner.com/g/search-intent/v1/pricecalendar",
+          "taxes_and_fees": "unknown"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "skyscanner-net",
+        "capability": "flights/price_calendar"
+      }
+    },
+    {
+      "id": "skyscanner-net/flights/search_flights",
+      "provider": "skyscanner-net",
+      "capability": "flights/search_flights",
+      "name": "Search flights",
+      "description": "Compare fares and itineraries for concrete dates. Resolve places with suggest_places first; use price_calendar or monthly_prices for cheap-date discovery instead of many live searches.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "adults",
+          "type": "number",
+          "in": "body",
+          "about": "adults",
+          "default": 1,
+          "min": 1,
+          "max": 8
+        },
+        {
+          "name": "cabin_class",
+          "type": "string",
+          "in": "body",
+          "about": "cabin_class",
+          "default": "economy",
+          "oneOf": [
+            "economy",
+            "premium_economy",
+            "business",
+            "first"
+          ]
+        },
+        {
+          "name": "child_ages",
+          "type": "number[]",
+          "in": "body",
+          "about": "One age per child (0-17)."
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "in": "body",
+          "about": "ISO currency the prices are quoted in. Pattern: ^[A-Z]{3}$.",
+          "default": "USD"
+        },
+        {
+          "name": "destination_entity_id",
+          "type": "string",
+          "in": "body",
+          "about": "Destination entity id (London city 27544008, LHR 95565050). Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        },
+        {
+          "name": "inbound_date",
+          "type": "string",
+          "in": "body",
+          "about": "Return date YYYY-MM-DD for a round trip; omit for one-way. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[a-z]{2}-[A-Z]{2}$.",
+          "default": "en-US"
+        },
+        {
+          "name": "market",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z]{2}$.",
+          "default": "US"
+        },
+        {
+          "name": "max_pricing_options",
+          "type": "number",
+          "in": "body",
+          "about": "Booking options per itinerary, cheapest first (each carries a ~1 KB deep link); pricing_options_total tells how many the site has.",
+          "default": 5,
+          "min": 1,
+          "max": 30
+        },
+        {
+          "name": "max_results",
+          "type": "number",
+          "in": "body",
+          "about": "max_results",
+          "default": 10,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "max_stops",
+          "type": "number",
+          "in": "body",
+          "about": "Keep itineraries whose every leg has at most this many stops (0 = direct only). Omit for no filter.",
+          "min": 0,
+          "max": 2
+        },
+        {
+          "name": "max_wait_seconds",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum search time, including create, polling and waits. Polls every two seconds until complete, bounded also by the runner time and byte budgets. Returns partial results when a budget stops collection; an incomplete search with no itineraries returns upstream_unavailable. No automatic retries.",
+          "default": 30,
+          "min": 5,
+          "max": 60
+        },
+        {
+          "name": "origin_entity_id",
+          "type": "string",
+          "in": "body",
+          "about": "Origin city or airport entity id from suggest_places (New York city 27537542, JFK 95565058). Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        },
+        {
+          "name": "outbound_date",
+          "type": "string",
+          "in": "body",
+          "about": "Departure date YYYY-MM-DD (local date at the origin). Defaults to 30 days after the current UTC date when omitted. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "best keeps the site's ranking; cheapest orders by price; fastest by total duration.",
+          "default": "best",
+          "oneOf": [
+            "best",
+            "cheapest",
+            "fastest"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Live flight itinerary search for one-way or round trips: origin and destination entity ids, dates, adults, child ages and cabin class. Creates a radar unified-search session (POST /g/radar/api/v2/web-unified-search/), polls every two seconds until complete or its time/byte budget is reached (GET .../{sessionId}); returns itineraries with legs, segments, marketing and operating carriers, durations, stop counts, fare policy flags, the price in the requested currency and per-agent booking deep links, plus filter statistics. Sorting (best, cheapest, fastest) and the max_stops filter are applied to the whole result set client-side; the top max_results (of matching_results) are returned. Each poll delivers a full snapshot. There is no page cursor in this interface: raise max_results (up to 50) for more. A call is partial when matching_results exceeds returned or the search is still incomplete. HTTP and network failures are returned immediately without retries. Prices are live quotes from the moment of the poll and, as the site labels them, include its estimate of taxes and fees (taxes_and_fees = included_estimated). Each itinerary carries the cabin it is sold as (the requested cabin_class); the search payload states no per-segment cabin (segment_cabins = not_stated), which the site shows only in its itinerary-details surface.",
+        "key": "itineraries",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "cabin_class",
+            "type": "string",
+            "about": "Cabin the itinerary is sold as: the requested cabin_class, the only cabin the search payload states. The site's booking panel warns 'Although sold as X, this itinerary may include some flights with a different cabin class'; per-segment cabins are not available (segment_cabins)."
+          },
+          {
+            "name": "fare_policy",
+            "type": "object"
+          },
+          {
+            "name": "has_flexible_options",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Site itinerary id: leg ids joined by '|'."
+          },
+          {
+            "name": "is_mash_up",
+            "type": "boolean"
+          },
+          {
+            "name": "is_protected_self_transfer",
+            "type": "boolean"
+          },
+          {
+            "name": "is_self_transfer",
+            "type": "boolean"
+          },
+          {
+            "name": "legs",
+            "type": "object[]"
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "pricing_options",
+            "type": "object[]"
+          },
+          {
+            "name": "pricing_options_total",
+            "type": "number",
+            "about": "How many booking options the site lists for this itinerary; pricing_options holds the cheapest max_pricing_options of them."
+          },
+          {
+            "name": "score",
+            "type": "number"
+          },
+          {
+            "name": "tags",
+            "type": "string[]",
+            "about": "Site labels such as cheapest, shortest, second_cheapest."
+          },
+          {
+            "name": "total_duration_minutes",
+            "type": "number"
+          },
+          {
+            "name": "total_stops",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "destination_entity_id": "27544008",
+          "max_pricing_options": 2,
+          "max_results": 2,
+          "origin_entity_id": "27537542",
+          "sort": "cheapest"
+        },
+        "response": {
+          "agents": [
+            {
+              "feedback_count": 753,
+              "id": "ba__",
+              "is_carrier": true,
+              "name": "British Airways",
+              "rating": 4.64,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 5560,
+              "id": "bcom",
+              "is_carrier": false,
+              "name": "Booking.com ",
+              "rating": 4.91,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 2043,
+              "id": "cfus",
+              "is_carrier": false,
+              "name": "Cheap Flights Fares",
+              "rating": 4.3,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 663,
+              "id": "chpo",
+              "is_carrier": false,
+              "name": "CheapOair",
+              "rating": 3.29,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 4630,
+              "id": "cust",
+              "is_carrier": false,
+              "name": "Trip.com",
+              "rating": 4.73,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 2752,
+              "id": "edus",
+              "is_carrier": false,
+              "name": "eDreams",
+              "rating": 4.34,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 1096,
+              "id": "fara",
+              "is_carrier": false,
+              "name": "Farera",
+              "rating": 4.31,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 1399,
+              "id": "fnus",
+              "is_carrier": false,
+              "name": "Flightnetwork",
+              "rating": 4.56,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 2736,
+              "id": "gtus",
+              "is_carrier": false,
+              "name": "Gotogate",
+              "rating": 4.66,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 873,
+              "id": "hop2",
+              "is_carrier": false,
+              "name": "Hop2",
+              "rating": 4.57,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 1077,
+              "id": "jfus",
+              "is_carrier": false,
+              "name": "Justfly.com",
+              "rating": 4.81,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 711,
+              "id": "kfus",
+              "is_carrier": false,
+              "name": "Kissandfly",
+              "rating": 3.49,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 485,
+              "id": "ovgo",
+              "is_carrier": false,
+              "name": "Ovago",
+              "rating": 4.66,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 498,
+              "id": "pcln",
+              "is_carrier": false,
+              "name": "Priceline",
+              "rating": 3.2,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 6562,
+              "id": "skyp",
+              "is_carrier": false,
+              "name": "Kiwi.com",
+              "rating": 4.44,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 1781,
+              "id": "spus",
+              "is_carrier": false,
+              "name": "Super.com",
+              "rating": 4.04,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 979,
+              "id": "stbf",
+              "is_carrier": false,
+              "name": "Sky-tours",
+              "rating": 2.94,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 436,
+              "id": "ttus",
+              "is_carrier": false,
+              "name": "Thrive Travel",
+              "rating": 2.93,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 2056,
+              "id": "vaya",
+              "is_carrier": false,
+              "name": "BudgetAir",
+              "rating": 4.59,
+              "update_status": "current"
+            },
+            {
+              "feedback_count": 4047,
+              "id": "xpus",
+              "is_carrier": false,
+              "name": "Expedia",
+              "rating": 4.76,
+              "update_status": "current"
+            }
+          ],
+          "filter_stats": {
+            "airports": [
+              {
+                "airports": [
+                  {
+                    "entity_id": "95565047",
+                    "id": "LCY",
+                    "name": "London City"
+                  },
+                  {
+                    "entity_id": "95565051",
+                    "id": "LGW",
+                    "name": "London Gatwick"
+                  },
+                  {
+                    "entity_id": "95565050",
+                    "id": "LHR",
+                    "name": "London Heathrow"
+                  },
+                  {
+                    "entity_id": "95565053",
+                    "id": "LTN",
+                    "name": "London Luton"
+                  },
+                  {
+                    "entity_id": "95565052",
+                    "id": "STN",
+                    "name": "London Stansted"
+                  }
+                ],
+                "city": "London"
+              },
+              {
+                "airports": [
+                  {
+                    "entity_id": "95565058",
+                    "id": "JFK",
+                    "name": "New York John F. Kennedy"
+                  },
+                  {
+                    "entity_id": "95565057",
+                    "id": "LGA",
+                    "name": "New York LaGuardia"
+                  },
+                  {
+                    "entity_id": "95565059",
+                    "id": "EWR",
+                    "name": "New York Newark"
+                  }
+                ],
+                "city": "New York"
+              }
+            ],
+            "carriers": [
+              {
+                "code": "A3",
+                "id": -32756,
+                "min_amount": 998,
+                "min_formatted": "$998",
+                "name": "Aegean Airlines"
+              },
+              {
+                "code": "EI",
+                "id": -32753,
+                "min_amount": 290,
+                "min_formatted": "$290",
+                "name": "Aer Lingus"
+              },
+              {
+                "code": "AM",
+                "id": -32733,
+                "min_amount": 1062.17,
+                "min_formatted": "$1,063",
+                "name": "Aeromexico"
+              },
+              {
+                "code": "AC",
+                "id": -32695,
+                "min_amount": 294.5,
+                "min_formatted": "$295",
+                "name": "Air Canada"
+              },
+              {
+                "code": "UX",
+                "id": -32680,
+                "min_amount": 401.33,
+                "min_formatted": "$402",
+                "name": "Air Europa"
+              },
+              {
+                "code": "AF",
+                "id": -32677,
+                "min_amount": 294.5,
+                "min_formatted": "$295",
+                "name": "Air France"
+              },
+              {
+                "code": "JU",
+                "id": -32181,
+                "min_amount": 549.48,
+                "min_formatted": "$550",
+                "name": "Air Serbia"
+              },
+              {
+                "code": "TS",
+                "id": -32622,
+                "min_amount": 638.5,
+                "min_formatted": "$639",
+                "name": "Air Transat"
+              },
+              {
+                "code": "AS",
+                "id": -32593,
+                "min_amount": 296.37,
+                "min_formatted": "$297",
+                "name": "Alaska Airlines"
+              },
+              {
+                "code": "AA",
+                "id": -32573,
+                "min_amount": 294.5,
+                "min_formatted": "$295",
+                "name": "American Airlines"
+              },
+              {
+                "code": "OS",
+                "id": -32544,
+                "min_amount": 313.38,
+                "min_formatted": "$314",
+                "name": "Austrian Airlines"
+              },
+              {
+                "code": "AV",
+                "id": -32540,
+                "min_amount": 1550.95,
+                "min_formatted": "$1,551",
+                "name": "Avianca"
+              },
+              {
+                "code": "BA",
+                "id": -32480,
+                "min_amount": 284.02,
+                "min_formatted": "$285",
+                "name": "British Airways"
+              },
+              {
+                "code": "SN",
+                "id": -32478,
+                "min_amount": 313.38,
+                "min_formatted": "$314",
+                "name": "Brussels Airlines"
+              },
+              {
+                "code": "DE",
+                "id": -32415,
+                "min_amount": 622,
+                "min_formatted": "$622",
+                "name": "Condor"
+              },
+              {
+                "code": "DL",
+                "id": -32385,
+                "min_amount": 294.5,
+                "min_formatted": "$295",
+                "name": "Delta"
+              },
+              {
+                "code": "MS",
+                "id": -32353,
+                "min_amount": 728,
+                "min_formatted": "$728",
+                "name": "EgyptAir"
+              },
+              {
+                "code": "ET",
+                "id": -32340,
+                "min_amount": 872.22,
+                "min_formatted": "$873",
+                "name": "Ethiopian Airlines"
+              },
+              {
+                "code": "60",
+                "id": -32339,
+                "min_amount": 10020,
+                "min_formatted": "$10,020",
+                "name": "Etihad Airways"
+              },
+              {
+                "code": "AY",
+                "id": -32317,
+                "min_amount": 296.37,
+                "min_formatted": "$297",
+                "name": "Finnair"
+              },
+              {
+                "code": "IB",
+                "id": -32222,
+                "min_amount": 292,
+                "min_formatted": "$292",
+                "name": "Iberia"
+              },
+              {
+                "code": "FI",
+                "id": -32217,
+                "min_amount": 430.91,
+                "min_formatted": "$431",
+                "name": "Icelandair"
+              },
+              {
+                "code": "AZ",
+                "id": -30727,
+                "min_amount": 348.9,
+                "min_formatted": "$349",
+                "name": "ITA Airways"
+              },
+              {
+                "code": "B6",
+                "id": -32171,
+                "min_amount": 285.5,
+                "min_formatted": "$286",
+                "name": "jetBlue"
+              },
+              {
+                "code": "KQ",
+                "id": -32139,
+                "min_amount": 2822.99,
+                "min_formatted": "$2,823",
+                "name": "Kenya Airways"
+              },
+              {
+                "code": "KL",
+                "id": -32132,
+                "min_amount": 294.5,
+                "min_formatted": "$295",
+                "name": "KLM"
+              },
+              {
+                "code": "LO",
+                "id": -32093,
+                "min_amount": 721.99,
+                "min_formatted": "$722",
+                "name": "LOT"
+              },
+              {
+                "code": "LH",
+                "id": -32090,
+                "min_amount": 295.79,
+                "min_formatted": "$296",
+                "name": "Lufthansa"
+              },
+              {
+                "code": "AT",
+                "id": -31927,
+                "min_amount": 792.95,
+                "min_formatted": "$793",
+                "name": "Royal Air Maroc"
+              },
+              {
+                "code": "SV",
+                "id": -31896,
+                "min_amount": 627.88,
+                "min_formatted": "$628",
+                "name": "Saudia"
+              },
+              {
+                "code": "SK",
+                "id": -31901,
+                "min_amount": 293.5,
+                "min_formatted": "$294",
+                "name": "Scandinavian Airlines"
+              },
+              {
+                "code": "LX",
+                "id": -31799,
+                "min_amount": 302,
+                "min_formatted": "$302",
+                "name": "SWISS"
+              },
+              {
+                "code": "TP",
+                "id": -31781,
+                "min_amount": 291.8,
+                "min_formatted": "$292",
+                "name": "TAP Air Portugal"
+              },
+              {
+                "code": "TK",
+                "id": -31734,
+                "min_amount": 591.5,
+                "min_formatted": "$592",
+                "name": "Turkish Airlines"
+              },
+              {
+                "code": "UA",
+                "id": -31722,
+                "min_amount": 294.5,
+                "min_formatted": "$295",
+                "name": "United"
+              },
+              {
+                "code": "VS",
+                "id": -31697,
+                "min_amount": 294.5,
+                "min_formatted": "$295",
+                "name": "Virgin Atlantic"
+              },
+              {
+                "code": "WS",
+                "id": -31679,
+                "min_amount": 771.95,
+                "min_formatted": "$772",
+                "name": "WestJet"
+              }
+            ],
+            "duration_minutes": {
+              "max": 2766,
+              "min": 410
+            },
+            "stop_prices": {
+              "direct": {
+                "amount": 285,
+                "available": true,
+                "formatted": "$285"
+              },
+              "one_stop": {
+                "amount": 290,
+                "available": true,
+                "formatted": "$290"
+              },
+              "two_or_more": {
+                "amount": 243,
+                "available": true,
+                "formatted": "$243"
+              }
+            }
+          },
+          "itineraries": [
+            {
+              "cabin_class": "economy",
+              "fare_policy": {
+                "is_cancellation_allowed": false,
+                "is_change_allowed": false,
+                "is_partially_changeable": false,
+                "is_partially_refundable": false
+              },
+              "has_flexible_options": false,
+              "id": "12712-2610230030--30667,-31915,-32356-2-13771-2610240120",
+              "is_mash_up": false,
+              "is_protected_self_transfer": true,
+              "is_self_transfer": false,
+              "legs": [
+                {
+                  "arrival": "2026-10-24T01:20:00",
+                  "day_change": 1,
+                  "departure": "2026-10-23T00:30:00",
+                  "destination": {
+                    "city": "London",
+                    "country": "United Kingdom",
+                    "display_code": "LTN",
+                    "entity_id": "95565053",
+                    "id": "LTN",
+                    "name": "London Luton"
+                  },
+                  "duration_minutes": 1190,
+                  "id": "12712-2610230030--30667,-31915,-32356-2-13771-2610240120",
+                  "marketing_carriers": [
+                    {
+                      "code": "9~",
+                      "id": -30667,
+                      "name": "Norse Atlantic Airways"
+                    },
+                    {
+                      "code": "FR",
+                      "id": -31915,
+                      "name": "Ryanair"
+                    },
+                    {
+                      "code": "EZ",
+                      "id": -32356,
+                      "name": "easyJet"
+                    }
+                  ],
+                  "operating_carriers": [
+                    {
+                      "code": "7A",
+                      "id": -30823,
+                      "name": "Malta Air"
+                    },
+                    {
+                      "code": "EZ",
+                      "id": -32356,
+                      "name": "easyJet"
+                    }
+                  ],
+                  "operation_type": "partially_operated",
+                  "origin": {
+                    "city": "New York",
+                    "country": "United States",
+                    "display_code": "JFK",
+                    "entity_id": "95565058",
+                    "id": "JFK",
+                    "name": "New York John F. Kennedy"
+                  },
+                  "segments": [
+                    {
+                      "arrival": "2026-10-23T14:30:00",
+                      "departure": "2026-10-23T00:30:00",
+                      "destination": {
+                        "country": "Italy",
+                        "country_id": "IT",
+                        "display_code": "FCO",
+                        "entity_id": "95565065",
+                        "name": "Rome Fiumicino",
+                        "parent": {
+                          "display_code": "ROM",
+                          "entity_id": "27539793",
+                          "name": "Rome",
+                          "place_id": "ROME",
+                          "type": "City"
+                        },
+                        "place_id": "FCO",
+                        "type": "Airport"
+                      },
+                      "duration_minutes": 480,
+                      "flight_number": "402",
+                      "id": "12712-11493-2610230030-2610231430--30667",
+                      "marketing_carrier": {
+                        "alliance_id": null,
+                        "code": "9~",
+                        "display_code": "N0",
+                        "id": -30667,
+                        "name": "Norse Atlantic Airways"
+                      },
+                      "operating_carrier": {
+                        "alliance_id": null,
+                        "code": "9~",
+                        "display_code": "N0",
+                        "id": -30667,
+                        "name": "Norse Atlantic Airways"
+                      },
+                      "origin": {
+                        "country": "United States",
+                        "country_id": "US",
+                        "display_code": "JFK",
+                        "entity_id": "95565058",
+                        "name": "New York John F. Kennedy",
+                        "parent": {
+                          "display_code": "NYC",
+                          "entity_id": "27537542",
+                          "name": "New York",
+                          "place_id": "NYCA",
+                          "type": "City"
+                        },
+                        "place_id": "JFK",
+                        "type": "Airport"
+                      },
+                      "transport_mode": "TRANSPORT_MODE_FLIGHT"
+                    },
+                    {
+                      "arrival": "2026-10-23T21:40:00",
+                      "departure": "2026-10-23T19:45:00",
+                      "destination": {
+                        "country": "Spain",
+                        "country_id": "ES",
+                        "display_code": "IBZ",
+                        "entity_id": "95565093",
+                        "name": "Ibiza",
+                        "parent": {
+                          "display_code": "IBZ",
+                          "entity_id": "27542788",
+                          "name": "Ibiza",
+                          "place_id": "IBIZ",
+                          "type": "City"
+                        },
+                        "place_id": "IBZ",
+                        "type": "Airport"
+                      },
+                      "duration_minutes": 115,
+                      "flight_number": "4139",
+                      "id": "11493-12404-2610231945-2610232140--31915",
+                      "marketing_carrier": {
+                        "alliance_id": null,
+                        "code": "FR",
+                        "display_code": "FR",
+                        "id": -31915,
+                        "name": "Ryanair"
+                      },
+                      "operating_carrier": {
+                        "alliance_id": null,
+                        "code": "7A",
+                        "display_code": "MW",
+                        "id": -30823,
+                        "name": "Malta Air"
+                      },
+                      "origin": {
+                        "country": "Italy",
+                        "country_id": "IT",
+                        "display_code": "FCO",
+                        "entity_id": "95565065",
+                        "name": "Rome Fiumicino",
+                        "parent": {
+                          "display_code": "ROM",
+                          "entity_id": "27539793",
+                          "name": "Rome",
+                          "place_id": "ROME",
+                          "type": "City"
+                        },
+                        "place_id": "FCO",
+                        "type": "Airport"
+                      },
+                      "transport_mode": "TRANSPORT_MODE_FLIGHT"
+                    },
+                    {
+                      "arrival": "2026-10-24T01:20:00",
+                      "departure": "2026-10-23T23:55:00",
+                      "destination": {
+                        "country": "United Kingdom",
+                        "country_id": "UK",
+                        "display_code": "LTN",
+                        "entity_id": "95565053",
+                        "name": "London Luton",
+                        "parent": {
+                          "display_code": "LON",
+                          "entity_id": "27544008",
+                          "name": "London",
+                          "place_id": "LOND",
+                          "type": "City"
+                        },
+                        "place_id": "LTN",
+                        "type": "Airport"
+                      },
+                      "duration_minutes": 145,
+                      "flight_number": "2308",
+                      "id": "12404-13771-2610232355-2610240120--32356",
+                      "marketing_carrier": {
+                        "alliance_id": null,
+                        "code": "EZ",
+                        "display_code": "EZY",
+                        "id": -32356,
+                        "name": "easyJet"
+                      },
+                      "operating_carrier": {
+                        "alliance_id": null,
+                        "code": "EZ",
+                        "display_code": "EZY",
+                        "id": -32356,
+                        "name": "easyJet"
+                      },
+                      "origin": {
+                        "country": "Spain",
+                        "country_id": "ES",
+                        "display_code": "IBZ",
+                        "entity_id": "95565093",
+                        "name": "Ibiza",
+                        "parent": {
+                          "display_code": "IBZ",
+                          "entity_id": "27542788",
+                          "name": "Ibiza",
+                          "place_id": "IBIZ",
+                          "type": "City"
+                        },
+                        "place_id": "IBZ",
+                        "type": "Airport"
+                      },
+                      "transport_mode": "TRANSPORT_MODE_FLIGHT"
+                    }
+                  ],
+                  "stop_count": 2
+                }
+              ],
+              "price": {
+                "amount": 243,
+                "currency": "USD",
+                "formatted": "$243",
+                "pricing_option_id": "-VzDgbDaFHeA"
+              },
+              "pricing_options": [
+                {
+                  "agent_ids": [
+                    "skyp"
+                  ],
+                  "amount": 243,
+                  "id": "-VzDgbDaFHeA",
+                  "tickets": [
+                    {
+                      "agent_id": "skyp",
+                      "amount": 243,
+                      "booking_proposition": "PBOOK",
+                      "booking_url": "https://www.skyscanner.com/transport_deeplink/4.0/US/en-US/USD/skyp/1/12712.13771.2026-10-23/air/trava/flights?itinerary=flight|-30667|402|12712|2026-10-23T00:30|11493|2026-10-23T14:30|480|-|-|-;flight|-31915|4139|11493|2026-10-23T19:45|12404|2026-10-23T21:40|115|-|N|-;flight|-32356|2308|12404|2026-10-23T23:55|13771|2026-10-24T01:20|145|-|Y|-&carriers=-30667,-31915,-32356&operators=-30667;-30823;-32356&passengers=1&channel=website&cabin_class=economy&fps_session_id=399c2a38-3477-4bd9-86d8-0daf8d54c132&ticket_price=243.00&is_npt=false&is_multipart=false&client_id=skyscanner_website&request_id=89059194-38c7-4f4b-8a02-ddd097d2a2b5&q_ids=H4sIAAAAAAAA_-Oy4mIpzq4sEOLl6NFV4jAyNzU2NzUxkuLluKUC5pqYGBhYKDQcf3WNzYhJgbGINTVPNzS4ijk02AUAcNE4TDwAAAA|-2044125981136270018|2$H4sIAAAAAAAA_-Oy4mIpzq4sEOLl6NFV4jAyNzU2NzUxkuLluKUC5pqYGBhYKDQcf3WNzYhJgbGINTVPNzS4ijk02AUAcNE4TDwAAAA|AAIBAQEAAQfqChcIMjc1Mzc1NDIIMjc1NDQwMDgC|-1537516833304947040|2&q_sources=JACQUARD&commercial_filters=false&q_datetime_utc=2026-09-23T21:50:44&transfer_protection=protected&pqid=true&fare_type=base_fare",
+                      "segment_ids": [
+                        "12712-11493-2610230030-2610231430--30667",
+                        "11493-12404-2610231945-2610232140--31915",
+                        "12404-13771-2610232355-2610240120--32356"
+                      ]
+                    }
+                  ],
+                  "update_status": "current"
+                }
+              ],
+              "pricing_options_total": 1,
+              "score": 0.312716,
+              "tags": [
+                "cheapest"
+              ],
+              "total_duration_minutes": 1190,
+              "total_stops": 2
+            },
+            {
+              "cabin_class": "economy",
+              "fare_policy": {
+                "is_cancellation_allowed": false,
+                "is_change_allowed": false,
+                "is_partially_changeable": false,
+                "is_partially_refundable": false
+              },
+              "has_flexible_options": false,
+              "id": "12712-2610230750--32480-0-13554-2610231945",
+              "is_mash_up": false,
+              "is_protected_self_transfer": false,
+              "is_self_transfer": false,
+              "legs": [
+                {
+                  "arrival": "2026-10-23T19:45:00",
+                  "day_change": 0,
+                  "departure": "2026-10-23T07:50:00",
+                  "destination": {
+                    "city": "London",
+                    "country": "United Kingdom",
+                    "display_code": "LHR",
+                    "entity_id": "95565050",
+                    "id": "LHR",
+                    "name": "London Heathrow"
+                  },
+                  "duration_minutes": 415,
+                  "id": "12712-2610230750--32480-0-13554-2610231945",
+                  "marketing_carriers": [
+                    {
+                      "code": "BA",
+                      "id": -32480,
+                      "name": "British Airways"
+                    }
+                  ],
+                  "operating_carriers": [],
+                  "operation_type": "fully_operated",
+                  "origin": {
+                    "city": "New York",
+                    "country": "United States",
+                    "display_code": "JFK",
+                    "entity_id": "95565058",
+                    "id": "JFK",
+                    "name": "New York John F. Kennedy"
+                  },
+                  "segments": [
+                    {
+                      "arrival": "2026-10-23T19:45:00",
+                      "departure": "2026-10-23T07:50:00",
+                      "destination": {
+                        "country": "United Kingdom",
+                        "country_id": "UK",
+                        "display_code": "LHR",
+                        "entity_id": "95565050",
+                        "name": "London Heathrow",
+                        "parent": {
+                          "display_code": "LON",
+                          "entity_id": "27544008",
+                          "name": "London",
+                          "place_id": "LOND",
+                          "type": "City"
+                        },
+                        "place_id": "LHR",
+                        "type": "Airport"
+                      },
+                      "duration_minutes": 415,
+                      "flight_number": "178",
+                      "id": "12712-13554-2610230750-2610231945--32480",
+                      "marketing_carrier": {
+                        "alliance_id": -32000,
+                        "code": "BA",
+                        "display_code": "BA",
+                        "id": -32480,
+                        "name": "British Airways"
+                      },
+                      "operating_carrier": {
+                        "alliance_id": -32000,
+                        "code": "BA",
+                        "display_code": "BA",
+                        "id": -32480,
+                        "name": "British Airways"
+                      },
+                      "origin": {
+                        "country": "United States",
+                        "country_id": "US",
+                        "display_code": "JFK",
+                        "entity_id": "95565058",
+                        "name": "New York John F. Kennedy",
+                        "parent": {
+                          "display_code": "NYC",
+                          "entity_id": "27537542",
+                          "name": "New York",
+                          "place_id": "NYCA",
+                          "type": "City"
+                        },
+                        "place_id": "JFK",
+                        "type": "Airport"
+                      },
+                      "transport_mode": "TRANSPORT_MODE_FLIGHT"
+                    }
+                  ],
+                  "stop_count": 0
+                }
+              ],
+              "price": {
+                "amount": 284.02,
+                "currency": "USD",
+                "formatted": "$285",
+                "pricing_option_id": "7mvlrlhteS6g"
+              },
+              "pricing_options": [
+                {
+                  "agent_ids": [
+                    "cfus"
+                  ],
+                  "amount": 284.02,
+                  "id": "7mvlrlhteS6g",
+                  "tickets": [
+                    {
+                      "agent_id": "cfus",
+                      "amount": 284.02,
+                      "booking_proposition": "PBOOK",
+                      "booking_url": "https://www.skyscanner.com/transport_deeplink/4.0/US/en-US/USD/cfus/1/12712.13554.2026-10-23/air/trava/flights?itinerary=flight|-32480|178|12712|2026-10-23T07:50|13554|2026-10-23T19:45|415|OLN0D9BV%2FY|O|-&carriers=-32480&operators=-32480&passengers=1&channel=website&cabin_class=economy&fps_session_id=399c2a38-3477-4bd9-86d8-0daf8d54c132&ticket_price=284.02&is_npt=false&is_multipart=false&client_id=skyscanner_website&request_id=89059194-38c7-4f4b-8a02-ddd097d2a2b5&q_ids=H4sIAAAAAAAA_-PS42JJTistFuLl6NFV4jAyNzU2NzUxkuLluKUC5pqYGBhYKDQcf3WNzYhJgREA6hdIlTAAAAA|-8231567400933619725|2$H4sIAAAAAAAA_-PS42JJTistFuLl6NFV4jAyNzU2NzUxkuLluKUC5pqYGBhYKDQcf3WNzYhJgREA6hdIlTAAAAA|AAIBAQEAAQfqChcIMjc1Mzc1NDIIMjc1NDQwMDgC|-8378695513595139787|2&q_sources=JACQUARD&commercial_filters=false&q_datetime_utc=2026-09-23T21:46:49&pqid=true&fare_type=base_fare",
+                      "segment_ids": [
+                        "12712-13554-2610230750-2610231945--32480"
+                      ]
+                    }
+                  ],
+                  "update_status": "current"
+                },
+                {
+                  "agent_ids": [
+                    "bcom"
+                  ],
+                  "amount": 294,
+                  "id": "1Jr8rsh9HNOY",
+                  "tickets": [
+                    {
+                      "agent_id": "bcom",
+                      "amount": 294,
+                      "booking_proposition": "PBOOK",
+                      "booking_url": "https://www.skyscanner.com/transport_deeplink/4.0/US/en-US/USD/bcom/1/12712.13554.2026-10-23/air/trava/flights?itinerary=flight|-32480|178|12712|2026-10-23T07:50|13554|2026-10-23T19:45|415|-|-|-&carriers=-32480&operators=-32480&passengers=1&channel=website&cabin_class=economy&fps_session_id=399c2a38-3477-4bd9-86d8-0daf8d54c132&ticket_price=294.00&is_npt=false&is_multipart=false&client_id=skyscanner_website&request_id=89059194-38c7-4f4b-8a02-ddd097d2a2b5&q_ids=H4sIAAAAAAAA_-My5mJJSs7PFeLl6NFV4jAyNzU2NzUxkuLluKUC5pqYGBhYKDQcf3WNzYhJgbGKOTTYBQBvWyW_NQAAAA|3451096911677447169|2$H4sIAAAAAAAA_-My5mJJSs7PFeLl6NFV4jAyNzU2NzUxkuLluKUC5pqYGBhYKDQcf3WNzYhJgbGKOTTYBQBvWyW_NQAAAA|AAIBAQEAAQfqChcIMjc1Mzc1NDIIMjc1NDQwMDgC|-4673375720416703550|2&q_sources=JACQUARD&commercial_filters=false&q_datetime_utc=2026-09-23T16:42:37&pqid=true&fare_type=base_fare",
+                      "segment_ids": [
+                        "12712-13554-2610230750-2610231945--32480"
+                      ]
+                    }
+                  ],
+                  "update_status": "current"
+                }
+              ],
+              "pricing_options_total": 19,
+              "score": 0.883159,
+              "tags": [
+                "second_cheapest",
+                "third_shortest"
+              ],
+              "total_duration_minutes": 415,
+              "total_stops": 0
+            }
+          ],
+          "matching_results": 591,
+          "observed_at_ms": 1790202261577,
+          "price_basis": "live_quote",
+          "query": {
+            "adults": 1,
+            "cabin_class": "economy",
+            "child_ages": [],
+            "currency": "USD",
+            "destination_entity_id": "27544008",
+            "inbound_date": null,
+            "locale": "en-US",
+            "market": "US",
+            "max_stops": null,
+            "origin_entity_id": "27537542",
+            "outbound_date": "2026-10-23",
+            "sort": "cheapest"
+          },
+          "returned": 2,
+          "search_status": "complete",
+          "segment_cabins": "not_stated",
+          "source_url": "https://www.skyscanner.com/transport/flights/nyca/lond/261023/?adultsv2=1&cabinclass=economy&rtn=0",
+          "taxes_and_fees": "included_estimated",
+          "total_results": 591
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "skyscanner-net",
+        "capability": "flights/search_flights"
+      }
+    },
+    {
+      "id": "skyscanner-net/flights/suggest_places",
+      "provider": "skyscanner-net",
+      "capability": "flights/suggest_places",
+      "name": "Suggest places",
+      "description": "Start here to resolve a city or airport name into the identifiers the other functions take.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "is_destination",
+          "type": "boolean",
+          "in": "body",
+          "about": "Whether the place is being picked as a destination (the site ranks differently for origins)."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "in": "body",
+          "about": "Locale for place names (en-US, en-GB, ...). Pattern: ^[a-z]{2}-[A-Z]{2}$.",
+          "default": "en-US"
+        },
+        {
+          "name": "market",
+          "type": "string",
+          "in": "body",
+          "about": "Skyscanner market code (US, UK, ...). Affects ranking and place names. Pattern: ^[A-Z]{2}$.",
+          "default": "US"
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Free text: a city, airport or country name, or an IATA code.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Flight place autosuggest: cities, airports and countries matching a free-text query, with the sky place id (LOND, JFK) used by price_calendar and the numeric entity id (27544008) used by search_flights and monthly_prices. Reads /g/autosuggest-search/api/v1/search-flight/{market}/{locale}/{query}, stateless.",
+        "key": "places",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "city_id",
+            "type": "string",
+            "about": "Sky id of the containing city; null when the place is not inside a city (a country)."
+          },
+          {
+            "name": "city_name",
+            "type": "string"
+          },
+          {
+            "name": "country_id",
+            "type": "string"
+          },
+          {
+            "name": "country_name",
+            "type": "string"
+          },
+          {
+            "name": "entity_id",
+            "type": "string",
+            "about": "Numeric geo entity id: input to search_flights and monthly_prices."
+          },
+          {
+            "name": "geo_container_id",
+            "type": "string",
+            "about": "Entity id of the containing city; equals entity_id for a city."
+          },
+          {
+            "name": "iata_code",
+            "type": "string",
+            "about": "IATA metro code for cities (LON); the site leaves it empty for airports, whose code is the place_id."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "phrase",
+            "type": "string",
+            "about": "The site's display phrase, e.g. 'London Heathrow (LHR), London|England|United Kingdom'."
+          },
+          {
+            "name": "place_id",
+            "type": "string",
+            "about": "Sky place id (LOND, LHR, NYCA): input to price_calendar."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "londo"
+        },
+        "response": {
+          "count": 10,
+          "is_destination": true,
+          "locale": "en-US",
+          "market": "US",
+          "observed_at_ms": 1790080542199,
+          "places": [
+            {
+              "city_id": "LOND",
+              "city_name": "London",
+              "country_id": "UK",
+              "country_name": "United Kingdom",
+              "entity_id": "27544008",
+              "geo_container_id": "27544008",
+              "iata_code": "LON",
+              "latitude": 51.5041174139,
+              "longitude": -0.0943465343,
+              "name": "London",
+              "phrase": "London|England|United Kingdom",
+              "place_id": "LOND"
+            },
+            {
+              "city_id": "LOND",
+              "city_name": "London",
+              "country_id": "UK",
+              "country_name": "United Kingdom",
+              "entity_id": "95565050",
+              "geo_container_id": "27544008",
+              "iata_code": null,
+              "latitude": 51.471389,
+              "longitude": -0.452778,
+              "name": "London Heathrow",
+              "phrase": "London Heathrow (LHR), London|England|United Kingdom",
+              "place_id": "LHR"
+            },
+            {
+              "city_id": "LOND",
+              "city_name": "London",
+              "country_id": "UK",
+              "country_name": "United Kingdom",
+              "entity_id": "95565051",
+              "geo_container_id": "27544008",
+              "iata_code": null,
+              "latitude": 51.148056,
+              "longitude": -0.196667,
+              "name": "London Gatwick",
+              "phrase": "London Gatwick (LGW), London|England|United Kingdom",
+              "place_id": "LGW"
+            },
+            {
+              "city_id": "LOND",
+              "city_name": "London",
+              "country_id": "UK",
+              "country_name": "United Kingdom",
+              "entity_id": "95565052",
+              "geo_container_id": "27544008",
+              "iata_code": null,
+              "latitude": 51.883333,
+              "longitude": 0.233333,
+              "name": "London Stansted",
+              "phrase": "London Stansted (STN), London|England|United Kingdom",
+              "place_id": "STN"
+            },
+            {
+              "city_id": "LOND",
+              "city_name": "London",
+              "country_id": "UK",
+              "country_name": "United Kingdom",
+              "entity_id": "95565053",
+              "geo_container_id": "27544008",
+              "iata_code": null,
+              "latitude": 51.878704,
+              "longitude": -0.375705,
+              "name": "London Luton",
+              "phrase": "London Luton (LTN), London|England|United Kingdom",
+              "place_id": "LTN"
+            },
+            {
+              "city_id": "LOND",
+              "city_name": "London",
+              "country_id": "UK",
+              "country_name": "United Kingdom",
+              "entity_id": "95565054",
+              "geo_container_id": "27544008",
+              "iata_code": null,
+              "latitude": 51.5701698,
+              "longitude": 0.6922722,
+              "name": "London Southend",
+              "phrase": "London Southend (SEN), London|England|United Kingdom",
+              "place_id": "SEN"
+            },
+            {
+              "city_id": "LOND",
+              "city_name": "London",
+              "country_id": "UK",
+              "country_name": "United Kingdom",
+              "entity_id": "95565047",
+              "geo_container_id": "27544008",
+              "iata_code": null,
+              "latitude": 51.503753,
+              "longitude": 0.048512,
+              "name": "London City",
+              "phrase": "London City (LCY), London|England|United Kingdom",
+              "place_id": "LCY"
+            },
+            {
+              "city_id": "YXUS",
+              "city_name": "London",
+              "country_id": "CA",
+              "country_name": "Canada",
+              "entity_id": "95673743",
+              "geo_container_id": "27537437",
+              "iata_code": null,
+              "latitude": 43.04,
+              "longitude": -81.15,
+              "name": "London",
+              "phrase": "London (YXU), London|Ontario|Canada",
+              "place_id": "YXU"
+            },
+            {
+              "city_id": "ELSA",
+              "city_name": "East London",
+              "country_id": "ZA",
+              "country_name": "South Africa",
+              "entity_id": "128668435",
+              "geo_container_id": "27540891",
+              "iata_code": null,
+              "latitude": -33.036111,
+              "longitude": 27.823889,
+              "name": "East London",
+              "phrase": "East London (ELS), East London|Eastern Cape|South Africa",
+              "place_id": "ELS"
+            },
+            {
+              "city_id": "DERR",
+              "city_name": "Derry",
+              "country_id": "UK",
+              "country_name": "United Kingdom",
+              "entity_id": "128667235",
+              "geo_container_id": "27544018",
+              "iata_code": null,
+              "latitude": 55.043333,
+              "longitude": -7.153333,
+              "name": "Derry",
+              "phrase": "Derry (LDY), Derry|County Londonderry|Northern Ireland|United Kingdom",
+              "place_id": "LDY"
+            }
+          ],
+          "query": "londo",
+          "source_url": "https://www.skyscanner.com/g/autosuggest-search/api/v1/search-flight/US/en-US/londo?isDestination=true&enable_general_search_v2=false"
+        },
+        "recordedAt": "2026-09-22T12:35:42.199029Z"
+      },
+      "execute": {
+        "provider": "skyscanner-net",
+        "capability": "flights/suggest_places"
+      }
+    }
+  ]
+}

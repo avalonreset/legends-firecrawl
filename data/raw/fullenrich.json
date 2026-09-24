@@ -1,0 +1,1216 @@
+{
+  "id": "fullenrich",
+  "provider": "fullenrich",
+  "name": "FullEnrich",
+  "description": "People and company search, profile lookups, firmographics, and verified contact data.",
+  "toolCount": 10,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "fullenrich"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "fullenrich/companies/lookup",
+      "provider": "fullenrich",
+      "capability": "companies/lookup",
+      "name": "Company lookup",
+      "description": "Resolve one company from its domain, LinkedIn company URL, or LinkedIn company ID. Returns firmographics, technologies, social profiles, and locations.",
+      "creditsCost": 5,
+      "perRecord": true,
+      "options": [
+        {
+          "name": "domain",
+          "type": "string",
+          "in": "body",
+          "about": "Company domain, such as fullenrich.com."
+        },
+        {
+          "name": "professional_network_url",
+          "type": "string",
+          "in": "body",
+          "about": "LinkedIn company URL."
+        },
+        {
+          "name": "professional_network_id",
+          "type": "number",
+          "in": "body",
+          "min": 1,
+          "about": "LinkedIn company ID."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "domain",
+          "professional_network_url",
+          "professional_network_id"
+        ]
+      ],
+      "response": {
+        "key": "companies",
+        "paginated": true,
+        "about": "The best matching company in the companies array, or an empty array when no match is found. No-match costs no credits.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "FullEnrich company identifier."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "domain",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "year_founded",
+            "type": "number"
+          },
+          {
+            "name": "headcount",
+            "type": "number"
+          },
+          {
+            "name": "headcount_range",
+            "type": "string"
+          },
+          {
+            "name": "company_type",
+            "type": "string"
+          },
+          {
+            "name": "locations",
+            "type": "object"
+          },
+          {
+            "name": "social_profiles",
+            "type": "object"
+          },
+          {
+            "name": "specialties",
+            "type": "string[]"
+          },
+          {
+            "name": "technologies",
+            "type": "object[]"
+          },
+          {
+            "name": "industry",
+            "type": "object"
+          },
+          {
+            "name": "logo_url",
+            "type": "string"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "fullenrich",
+        "capability": "companies/lookup"
+      }
+    },
+    {
+      "id": "fullenrich/companies/match",
+      "provider": "fullenrich",
+      "capability": "companies/match",
+      "name": "Company match",
+      "description": "Match an exact LinkedIn company URL. Use companies/lookup to resolve a domain, or companies/search to build a shortlist.",
+      "creditsCost": 5,
+      "perRecord": true,
+      "options": [
+        {
+          "name": "linkedin_url",
+          "type": "string",
+          "in": "body",
+          "required": true,
+          "about": "Canonical LinkedIn company URL, such as https://www.linkedin.com/company/fullenrich. Matched exactly."
+        }
+      ],
+      "response": {
+        "key": "companies",
+        "paginated": true,
+        "about": "At most one matching company in the companies array. An empty array costs no credits.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "FullEnrich company identifier."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "domain",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "year_founded",
+            "type": "number"
+          },
+          {
+            "name": "headcount",
+            "type": "number"
+          },
+          {
+            "name": "headcount_range",
+            "type": "string"
+          },
+          {
+            "name": "company_type",
+            "type": "string"
+          },
+          {
+            "name": "locations",
+            "type": "object"
+          },
+          {
+            "name": "social_profiles",
+            "type": "object"
+          },
+          {
+            "name": "specialties",
+            "type": "string[]"
+          },
+          {
+            "name": "technologies",
+            "type": "object[]"
+          },
+          {
+            "name": "industry",
+            "type": "object"
+          },
+          {
+            "name": "logo_url",
+            "type": "string"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "fullenrich",
+        "capability": "companies/match"
+      }
+    },
+    {
+      "id": "fullenrich/companies/search",
+      "provider": "fullenrich",
+      "capability": "companies/search",
+      "name": "Company search",
+      "description": "Find companies by industry, size, location, technologies, or founding year. Combine filters and page through the results. Use companies/lookup when you already have a domain or LinkedIn identifier.",
+      "creditsCost": 5,
+      "perRecord": true,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "default": 2,
+          "min": 1,
+          "max": 6,
+          "about": "Records per page, up to 6. Each returned record costs 5 credits. Use pagination for more."
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "min": 0,
+          "max": 10000,
+          "about": "Records to skip. Use search_after beyond 10,000."
+        },
+        {
+          "name": "search_after",
+          "type": "string",
+          "in": "body",
+          "about": "Cursor from the previous response's metadata.search_after. Keep the same filters."
+        },
+        {
+          "name": "names",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Company names. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "domains",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Company domains. Exact matching recommended. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "company_ids",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "FullEnrich company IDs. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "professional_network_urls",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "LinkedIn company URLs. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "professional_network_ids",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "LinkedIn company IDs. Entries: { value: number, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "keywords",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Keywords in company descriptions. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "specialties",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Company specialties. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "technologies",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Technologies used by the company. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "industries",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Company industries. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "types",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Company types, such as Public Company or Nonprofit. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "headquarters_locations",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Headquarters cities, regions, or countries. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "founded_years",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Founding years. Entries: { min?, max?, exclude? }; at least one inclusive bound."
+        },
+        {
+          "name": "headcounts",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Employee counts. Entries: { min?, max?, exclude? }; at least one inclusive bound."
+        }
+      ],
+      "response": {
+        "key": "companies",
+        "paginated": true,
+        "about": "Company records in the companies array. Search also returns metadata.total, metadata.offset, and metadata.search_after. An empty array costs no credits.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "FullEnrich company identifier."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "domain",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "year_founded",
+            "type": "number"
+          },
+          {
+            "name": "headcount",
+            "type": "number"
+          },
+          {
+            "name": "headcount_range",
+            "type": "string"
+          },
+          {
+            "name": "company_type",
+            "type": "string"
+          },
+          {
+            "name": "locations",
+            "type": "object"
+          },
+          {
+            "name": "social_profiles",
+            "type": "object"
+          },
+          {
+            "name": "specialties",
+            "type": "string[]"
+          },
+          {
+            "name": "technologies",
+            "type": "object[]"
+          },
+          {
+            "name": "industry",
+            "type": "object"
+          },
+          {
+            "name": "logo_url",
+            "type": "string"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "fullenrich",
+        "capability": "companies/search"
+      }
+    },
+    {
+      "id": "fullenrich/contacts/mobile",
+      "provider": "fullenrich",
+      "capability": "contacts/mobile",
+      "name": "Mobile number",
+      "description": "Find a person's mobile phone number from a LinkedIn URL, or from their name and employer. The most expensive line by far: ask for it only when a phone is what the task needs. To enrich multiple contacts, send up to 10 separate calls in the Firecrawl /v2/scrape alexandria array, each with its own provider, capability and options. Each call accepts one contact, runs as a separate upstream job and is billed only for a result found. Inspect each call for errors; this is not a single bulk job. Concurrent enrichments share poll capacity and can hit rate limits; spread large batches out. Do not pass a contacts array in options.",
+      "creditsCost": 175,
+      "perRecord": true,
+      "options": [
+        {
+          "name": "first_name",
+          "type": "string",
+          "in": "body",
+          "about": "Given name. With last_name and a company, an alternative to linkedin_url."
+        },
+        {
+          "name": "last_name",
+          "type": "string",
+          "in": "body",
+          "about": "Family name."
+        },
+        {
+          "name": "domain",
+          "type": "string",
+          "in": "body",
+          "about": "Employer domain, such as fullenrich.com. Either this or company_name identifies the company."
+        },
+        {
+          "name": "company_name",
+          "type": "string",
+          "in": "body",
+          "about": "Employer name, when the domain is not known."
+        },
+        {
+          "name": "linkedin_url",
+          "type": "string",
+          "in": "body",
+          "about": "LinkedIn profile URL, standard or Sales Navigator. Enough on its own, improves match rates when added to a name, and returns the professional profile alongside the contact data."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "linkedin_url",
+          "first_name"
+        ],
+        [
+          "linkedin_url",
+          "last_name"
+        ],
+        [
+          "linkedin_url",
+          "domain",
+          "company_name"
+        ]
+      ],
+      "response": {
+        "key": "results",
+        "paginated": true,
+        "about": "One record in results when a mobile number was found, an empty array when not. An empty array costs nothing. contact_info carries most_probable_phone and the phones candidates; profile is present when linkedin_url was given.",
+        "fields": [
+          {
+            "name": "input",
+            "type": "object",
+            "about": "The identifiers the enrichment ran on, as FullEnrich echoes them."
+          },
+          {
+            "name": "contact_info",
+            "type": "object",
+            "about": "most_probable_phone and phones."
+          },
+          {
+            "name": "profile",
+            "type": "object",
+            "about": "Professional profile, when linkedin_url was given. Same shape as people/lookup records."
+          }
+        ]
+      },
+      "execute": {
+        "provider": "fullenrich",
+        "capability": "contacts/mobile"
+      }
+    },
+    {
+      "id": "fullenrich/contacts/personal-email",
+      "provider": "fullenrich",
+      "capability": "contacts/personal-email",
+      "name": "Personal email",
+      "description": "Find a person's personal email from a LinkedIn URL, or from their name and employer. Schedule A bars marketing to personal addresses; use contacts/work-email for outreach. To enrich multiple contacts, send up to 10 separate calls in the Firecrawl /v2/scrape alexandria array, each with its own provider, capability and options. Each call accepts one contact, runs as a separate upstream job and is billed only for a result found. Inspect each call for errors; this is not a single bulk job. Concurrent enrichments share poll capacity and can hit rate limits; spread large batches out. Do not pass a contacts array in options.",
+      "creditsCost": 55,
+      "perRecord": true,
+      "options": [
+        {
+          "name": "first_name",
+          "type": "string",
+          "in": "body",
+          "about": "Given name. With last_name and a company, an alternative to linkedin_url."
+        },
+        {
+          "name": "last_name",
+          "type": "string",
+          "in": "body",
+          "about": "Family name."
+        },
+        {
+          "name": "domain",
+          "type": "string",
+          "in": "body",
+          "about": "Employer domain, such as fullenrich.com. Either this or company_name identifies the company."
+        },
+        {
+          "name": "company_name",
+          "type": "string",
+          "in": "body",
+          "about": "Employer name, when the domain is not known."
+        },
+        {
+          "name": "linkedin_url",
+          "type": "string",
+          "in": "body",
+          "about": "LinkedIn profile URL, standard or Sales Navigator. Enough on its own, improves match rates when added to a name, and returns the professional profile alongside the contact data."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "linkedin_url",
+          "first_name"
+        ],
+        [
+          "linkedin_url",
+          "last_name"
+        ],
+        [
+          "linkedin_url",
+          "domain",
+          "company_name"
+        ]
+      ],
+      "response": {
+        "key": "results",
+        "paginated": true,
+        "about": "One record in results when a valid personal email was found, an empty array when not. An empty array costs nothing. contact_info carries most_probable_personal_email and the personal_emails candidates; profile is present when linkedin_url was given.",
+        "fields": [
+          {
+            "name": "input",
+            "type": "object",
+            "about": "The identifiers the enrichment ran on, as FullEnrich echoes them."
+          },
+          {
+            "name": "contact_info",
+            "type": "object",
+            "about": "most_probable_personal_email and personal_emails."
+          },
+          {
+            "name": "profile",
+            "type": "object",
+            "about": "Professional profile, when linkedin_url was given. Same shape as people/lookup records."
+          }
+        ]
+      },
+      "execute": {
+        "provider": "fullenrich",
+        "capability": "contacts/personal-email"
+      }
+    },
+    {
+      "id": "fullenrich/contacts/reverse-email",
+      "provider": "fullenrich",
+      "capability": "contacts/reverse-email",
+      "name": "Reverse email lookup",
+      "description": "Identify the person and company behind a work or personal email address. Returns a professional profile; use people/lookup when a name or LinkedIn URL is already known. To enrich multiple contacts, send up to 10 separate calls in the Firecrawl /v2/scrape alexandria array, each with its own provider, capability and options. Each call accepts one contact, runs as a separate upstream job and is billed only for a result found. Inspect each call for errors; this is not a single bulk job. Concurrent enrichments share poll capacity and can hit rate limits; spread large batches out. Do not pass a contacts array in options.",
+      "creditsCost": 20,
+      "perRecord": true,
+      "options": [
+        {
+          "name": "email",
+          "type": "string",
+          "in": "body",
+          "required": true,
+          "about": "The work or personal email address to identify."
+        }
+      ],
+      "response": {
+        "key": "results",
+        "paginated": true,
+        "about": "One record in results when the person behind the email was found, an empty array when not. An empty array costs nothing. profile carries the person and their employer.",
+        "fields": [
+          {
+            "name": "input",
+            "type": "object",
+            "about": "The email the lookup ran on, as FullEnrich echoes it."
+          },
+          {
+            "name": "profile",
+            "type": "object",
+            "about": "Professional profile with current employer. Fields: id, full_name, first_name, last_name, headline, description, location, social_profiles, employment, educations, languages, skills."
+          }
+        ]
+      },
+      "execute": {
+        "provider": "fullenrich",
+        "capability": "contacts/reverse-email"
+      }
+    },
+    {
+      "id": "fullenrich/contacts/work-email",
+      "provider": "fullenrich",
+      "capability": "contacts/work-email",
+      "name": "Work email",
+      "description": "Find a person's verified work email from a LinkedIn URL, or from their name and employer. Use contacts/mobile for a phone number and people/lookup when only the profile is needed. To enrich multiple contacts, send up to 10 separate calls in the Firecrawl /v2/scrape alexandria array, each with its own provider, capability and options. Each call accepts one contact, runs as a separate upstream job and is billed only for a result found. Inspect each call for errors; this is not a single bulk job. Concurrent enrichments share poll capacity and can hit rate limits; spread large batches out. Do not pass a contacts array in options.",
+      "creditsCost": 20,
+      "perRecord": true,
+      "options": [
+        {
+          "name": "first_name",
+          "type": "string",
+          "in": "body",
+          "about": "Given name. With last_name and a company, an alternative to linkedin_url."
+        },
+        {
+          "name": "last_name",
+          "type": "string",
+          "in": "body",
+          "about": "Family name."
+        },
+        {
+          "name": "domain",
+          "type": "string",
+          "in": "body",
+          "about": "Employer domain, such as fullenrich.com. Either this or company_name identifies the company."
+        },
+        {
+          "name": "company_name",
+          "type": "string",
+          "in": "body",
+          "about": "Employer name, when the domain is not known."
+        },
+        {
+          "name": "linkedin_url",
+          "type": "string",
+          "in": "body",
+          "about": "LinkedIn profile URL, standard or Sales Navigator. Enough on its own, improves match rates when added to a name, and returns the professional profile alongside the contact data."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "linkedin_url",
+          "first_name"
+        ],
+        [
+          "linkedin_url",
+          "last_name"
+        ],
+        [
+          "linkedin_url",
+          "domain",
+          "company_name"
+        ]
+      ],
+      "response": {
+        "key": "results",
+        "paginated": true,
+        "about": "One record in results when a deliverable, high-probability, or catch-all work email was found, an empty array when not. An empty array costs nothing. contact_info carries most_probable_work_email and the work_emails candidates; profile is present when linkedin_url was given.",
+        "fields": [
+          {
+            "name": "input",
+            "type": "object",
+            "about": "The identifiers the enrichment ran on, as FullEnrich echoes them."
+          },
+          {
+            "name": "contact_info",
+            "type": "object",
+            "about": "most_probable_work_email and work_emails."
+          },
+          {
+            "name": "profile",
+            "type": "object",
+            "about": "Professional profile, when linkedin_url was given. Same shape as people/lookup records."
+          }
+        ]
+      },
+      "execute": {
+        "provider": "fullenrich",
+        "capability": "contacts/work-email"
+      }
+    },
+    {
+      "id": "fullenrich/people/lookup",
+      "provider": "fullenrich",
+      "capability": "people/lookup",
+      "name": "Person lookup",
+      "description": "Resolve a person from a LinkedIn URL or ID, or a full name combined with a company domain, LinkedIn URL, or ID. Returns a profile, not verified email addresses or phone numbers.",
+      "creditsCost": 5,
+      "perRecord": true,
+      "options": [
+        {
+          "name": "person_name",
+          "type": "string",
+          "in": "body",
+          "about": "Full name. Combine with a company identifier."
+        },
+        {
+          "name": "person_professional_network_url",
+          "type": "string",
+          "in": "body",
+          "about": "LinkedIn profile URL."
+        },
+        {
+          "name": "person_professional_network_id",
+          "type": "number",
+          "in": "body",
+          "min": 1,
+          "about": "LinkedIn profile ID."
+        },
+        {
+          "name": "company_domain",
+          "type": "string",
+          "in": "body",
+          "about": "Employer domain, such as fullenrich.com."
+        },
+        {
+          "name": "company_professional_network_url",
+          "type": "string",
+          "in": "body",
+          "about": "Employer LinkedIn URL."
+        },
+        {
+          "name": "company_professional_network_id",
+          "type": "number",
+          "in": "body",
+          "min": 1,
+          "about": "Employer LinkedIn ID."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "person_professional_network_url",
+          "person_professional_network_id",
+          "person_name"
+        ],
+        [
+          "person_professional_network_url",
+          "person_professional_network_id",
+          "company_domain",
+          "company_professional_network_url",
+          "company_professional_network_id"
+        ]
+      ],
+      "response": {
+        "key": "people",
+        "paginated": true,
+        "about": "The best matching person in the people array, or an empty array when no match is found. No-match costs no credits.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "FullEnrich person identifier."
+          },
+          {
+            "name": "full_name",
+            "type": "string"
+          },
+          {
+            "name": "first_name",
+            "type": "string"
+          },
+          {
+            "name": "last_name",
+            "type": "string"
+          },
+          {
+            "name": "headline",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "object",
+            "about": "Location details."
+          },
+          {
+            "name": "social_profiles",
+            "type": "object",
+            "about": "Professional and other social profiles."
+          },
+          {
+            "name": "employment",
+            "type": "object",
+            "about": "Current and past employment."
+          },
+          {
+            "name": "educations",
+            "type": "object[]"
+          },
+          {
+            "name": "languages",
+            "type": "object[]"
+          },
+          {
+            "name": "skills",
+            "type": "string[]"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "fullenrich",
+        "capability": "people/lookup"
+      }
+    },
+    {
+      "id": "fullenrich/people/match",
+      "provider": "fullenrich",
+      "capability": "people/match",
+      "name": "Person match",
+      "description": "Match an exact LinkedIn profile URL. Use people/lookup for additional identifiers, or people/search to build a shortlist.",
+      "creditsCost": 5,
+      "perRecord": true,
+      "options": [
+        {
+          "name": "linkedin_url",
+          "type": "string",
+          "in": "body",
+          "required": true,
+          "about": "Canonical LinkedIn profile URL, such as https://www.linkedin.com/in/jane-doe. Matched exactly."
+        }
+      ],
+      "response": {
+        "key": "people",
+        "paginated": true,
+        "about": "At most one matching profile in the people array. An empty array costs no credits.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "FullEnrich person identifier."
+          },
+          {
+            "name": "full_name",
+            "type": "string"
+          },
+          {
+            "name": "first_name",
+            "type": "string"
+          },
+          {
+            "name": "last_name",
+            "type": "string"
+          },
+          {
+            "name": "headline",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "object",
+            "about": "Location details."
+          },
+          {
+            "name": "social_profiles",
+            "type": "object",
+            "about": "Professional and other social profiles."
+          },
+          {
+            "name": "employment",
+            "type": "object",
+            "about": "Current and past employment."
+          },
+          {
+            "name": "educations",
+            "type": "object[]"
+          },
+          {
+            "name": "languages",
+            "type": "object[]"
+          },
+          {
+            "name": "skills",
+            "type": "string[]"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "fullenrich",
+        "capability": "people/match"
+      }
+    },
+    {
+      "id": "fullenrich/people/search",
+      "provider": "fullenrich",
+      "capability": "people/search",
+      "name": "People search",
+      "description": "Find people by role, employer, location, skills, or work history. Combine filters and page through the results. Use people/lookup when you already know a person's identifiers; contact enrichment retrieves emails and phones separately.",
+      "creditsCost": 5,
+      "perRecord": true,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "default": 2,
+          "min": 1,
+          "max": 6,
+          "about": "Records per page, up to 6. Each returned record costs 5 credits. Use pagination for more."
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "min": 0,
+          "max": 10000,
+          "about": "Records to skip. Use search_after beyond 10,000."
+        },
+        {
+          "name": "search_after",
+          "type": "string",
+          "in": "body",
+          "about": "Cursor from the previous response's metadata.search_after. Keep the same filters."
+        },
+        {
+          "name": "person_names",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Person names. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "person_ids",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "FullEnrich person IDs. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "person_professional_network_urls",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "LinkedIn profile URLs. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "person_professional_network_ids",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "LinkedIn profile IDs. Entries: { value: number, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "person_locations",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Cities, regions, or countries. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "person_languages",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Languages spoken. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "person_skills",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Professional skills. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "person_universities",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Universities attended. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_position_titles",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current job titles. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "past_position_titles",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Previous job titles. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_position_seniority_level",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Seniority levels, such as Founder, VP, or Manager. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_position_job_functions",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current job functions. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_position_sub_functions",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current job subfunctions. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_position_years_in",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Years in the current position. Entries: { min?, max?, exclude? }; at least one inclusive bound."
+        },
+        {
+          "name": "current_company_names",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current employer names. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_company_domains",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current employer domains. Exact matching recommended. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_company_ids",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current employer FullEnrich IDs. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_company_professional_network_urls",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current employer LinkedIn URLs. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_company_professional_network_ids",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current employer LinkedIn IDs. Entries: { value: number, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_company_specialties",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current employer specialties. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_company_industries",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current employer industries. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_company_technologies",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Technologies used by the current employer. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_company_types",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Company types, such as Public Company or Nonprofit. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_company_headquarters",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current employer headquarters locations. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "current_company_headcounts",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current employer employee counts. Entries: { min?, max?, exclude? }; at least one inclusive bound."
+        },
+        {
+          "name": "current_company_founded_years",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Current employer founding years. Entries: { min?, max?, exclude? }; at least one inclusive bound."
+        },
+        {
+          "name": "current_company_years_at",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Years at the current employer. Entries: { min?, max?, exclude? }; at least one inclusive bound."
+        },
+        {
+          "name": "current_company_days_since_last_job_change",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Days since the last job change. Entries: { min?, max?, exclude? }; at least one inclusive bound."
+        },
+        {
+          "name": "past_company_names",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Previous employer names. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        },
+        {
+          "name": "past_company_domains",
+          "type": "object[]",
+          "in": "body",
+          "min": 1,
+          "about": "Previous employer domains. Entries: { value: string, exclude?: boolean, exact_match?: boolean }."
+        }
+      ],
+      "response": {
+        "key": "people",
+        "paginated": true,
+        "about": "People in the people array. Search also returns metadata.total, metadata.offset, and metadata.search_after. An empty array costs no credits. Email and phone enrichment is a separate operation.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "FullEnrich person identifier."
+          },
+          {
+            "name": "full_name",
+            "type": "string"
+          },
+          {
+            "name": "first_name",
+            "type": "string"
+          },
+          {
+            "name": "last_name",
+            "type": "string"
+          },
+          {
+            "name": "headline",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "object",
+            "about": "Location details."
+          },
+          {
+            "name": "social_profiles",
+            "type": "object",
+            "about": "Professional and other social profiles."
+          },
+          {
+            "name": "employment",
+            "type": "object",
+            "about": "Current and past employment."
+          },
+          {
+            "name": "educations",
+            "type": "object[]"
+          },
+          {
+            "name": "languages",
+            "type": "object[]"
+          },
+          {
+            "name": "skills",
+            "type": "string[]"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "fullenrich",
+        "capability": "people/search"
+      }
+    }
+  ]
+}

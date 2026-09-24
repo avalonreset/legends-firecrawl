@@ -1,0 +1,2496 @@
+{
+  "id": "ziprecruiter-com",
+  "provider": "ziprecruiter-com",
+  "name": "ZipRecruiter US",
+  "description": "ZipRecruiter US job marketplace: job search by title and city/state (the public /Jobs/ directory pages, 20 cards a page with pay, employment and location types, benefits and posting time), full job postings (JobPosting JSON-LD plus the page's job details), a company's open jobs near a city, salary percentiles for a title in a city, and title/location autocomplete.",
+  "toolCount": 6,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "ziprecruiter-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "ziprecruiter-com/jobs/company_jobs",
+      "provider": "ziprecruiter-com",
+      "capability": "jobs/company_jobs",
+      "name": "Company jobs",
+      "description": "After search_jobs, with the company slug from a card's company_url (e.g. YO-AI-Labs from /co/YO-AI-Labs/Jobs) and a city.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company_slug",
+          "type": "string",
+          "in": "body",
+          "about": "Company slug as it appears in /co/<slug>/Jobs, e.g. YO-AI-Labs. Pattern: ^[A-Za-z0-9][A-Za-z0-9._()'&,-]*$.",
+          "required": true
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "in": "body",
+          "about": "US city and two-letter state, \"City, ST\".",
+          "required": true
+        },
+        {
+          "name": "radius_miles",
+          "type": "number",
+          "in": "body",
+          "about": "Search radius around the city in miles (site default 25).",
+          "default": 25,
+          "min": 5,
+          "max": 100
+        }
+      ],
+      "response": {
+        "about": "Open jobs of one employer on ZipRecruiter near a US city, one page of up to 20 job cards from the public /co/<Company-Slug>/Jobs/-in-<City>,<ST> page (same card shape as search_jobs), with the site's total count for the company.",
+        "key": "jobs",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "benefits",
+            "type": "string[]",
+            "about": "e.g. medical, dental, vision, retirement, paid_time_off (BENEFIT_TYPE_NAME_* lowercased). Empty when the card lists none."
+          },
+          {
+            "name": "company",
+            "type": "object"
+          },
+          {
+            "name": "company_url",
+            "type": "string",
+            "about": "Absolute company jobs URL (/co/<slug>/Jobs)."
+          },
+          {
+            "name": "employment_types",
+            "type": "string[]",
+            "about": "e.g. full_time, part_time, contractor (EMPLOYMENT_TYPE_NAME_* lowercased)."
+          },
+          {
+            "name": "is_new",
+            "type": "boolean",
+            "about": "true when the card carries the site's NEW flag."
+          },
+          {
+            "name": "jid",
+            "type": "string",
+            "about": "Open seat id (16 hex chars); the jid= query parameter of the job detail URL. Stable across the listing's locations."
+          },
+          {
+            "name": "listing_key",
+            "type": "string",
+            "about": "ZipRecruiter listing key (22-char base64url), one per posting+location listing."
+          },
+          {
+            "name": "location",
+            "type": "object"
+          },
+          {
+            "name": "location_types",
+            "type": "string[]",
+            "about": "e.g. remote, in_person, hybrid (LOCATION_TYPE_NAME_* lowercased)."
+          },
+          {
+            "name": "pay",
+            "type": "object",
+            "about": "Pay range as ZipRecruiter states it (parsed from the posting, provided by the employer, predicted or estimated); null when the page carries no visible pay."
+          },
+          {
+            "name": "posted_at_utc",
+            "type": "string",
+            "about": "RFC 3339 posting time as stated."
+          },
+          {
+            "name": "short_description",
+            "type": "string",
+            "about": "Card snippet with the site's <b> highlights removed and HTML entities decoded."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string",
+            "about": "RFC 3339 last update time as stated."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute job detail URL (input for `job`)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_slug": "YO-AI-Labs",
+          "location": "Austin, TX"
+        },
+        "response": {
+          "company": {
+            "name": "Yo Ai Labs",
+            "slug": "YO-AI-Labs",
+            "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+          },
+          "jobs": [
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "d3beefb5d4f1b7ff",
+              "listing_key": "ZZWXaTxKvdxqXhLLWq5Wig",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 17,
+                "max_annual": 34000,
+                "min": 10,
+                "min_annual": 20000,
+                "source": "provided",
+                "text": "$10 - $17/hr"
+              },
+              "posted_at_utc": "2026-09-18T09:39:47Z",
+              "short_description": "The collected data will support AI and machine-learning projects. Key Responsibilities * Record first-person video footage of everyday activities using a smartphone. * Follow video recording ...",
+              "title": "Video Recorder - Remote",
+              "updated_at": "2026-09-19T18:31:40.803690792Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Video-Recorder-Remote/-in-Austin,TX?jid=d3beefb5d4f1b7ff"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "f466a7d6fabfb5b3",
+              "listing_key": "APmWtILLwZzNVvah57Zczw",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 17,
+                "max_annual": 34000,
+                "min": 10,
+                "min_annual": 20000,
+                "source": "provided",
+                "text": "$10 - $17/hr"
+              },
+              "posted_at_utc": "2026-09-17T08:53:45Z",
+              "short_description": "The collected data will support AI and machine-learning projects. Key Responsibilities * Record first-person video footage of everyday activities using a smartphone. * Follow video recording ...",
+              "title": "Smartphone User - Remote",
+              "updated_at": "2026-09-19T18:14:54.947743371Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Smartphone-User-Remote/-in-Austin,TX?jid=f466a7d6fabfb5b3"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "2df3d68fd55a0d4a",
+              "listing_key": "Z8LO-fYxA0caf5FujYHtqQ",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 17,
+                "max_annual": 34000,
+                "min": 10,
+                "min_annual": 20000,
+                "source": "provided",
+                "text": "$10 - $17/hr"
+              },
+              "posted_at_utc": "2026-09-17T08:53:45Z",
+              "short_description": "The collected data will support AI and machine-learning projects. Key Responsibilities * Record first-person video footage of everyday activities using a smartphone. * Follow video recording ...",
+              "title": "Video recording Expert Remote",
+              "updated_at": "2026-09-19T18:17:12.547762206Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Video-recording-Expert-Remote/-in-Austin,TX?jid=2df3d68fd55a0d4a"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "731b47df2c6b935d",
+              "listing_key": "AWqCtWGY4mIqscBsINefhg",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 17,
+                "max_annual": 34000,
+                "min": 10,
+                "min_annual": 20000,
+                "source": "provided",
+                "text": "$10 - $17/hr"
+              },
+              "posted_at_utc": "2026-09-16T12:05:24Z",
+              "short_description": "The collected data will support AI and machine-learning projects. Key Responsibilities * Record first-person video footage of everyday activities using a smartphone. * Follow video recording ...",
+              "title": "Video Data Collector (Smartphone) Remote",
+              "updated_at": "2026-09-19T18:08:43.116846700Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Video-Data-Collector-(Smartphone)-Remote/-in-Austin,TX?jid=731b47df2c6b935d"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "5e87cde4af1f385d",
+              "listing_key": "Zh7qQ8jwcfSyXQax3GUxrg",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 90,
+                "max_annual": 180000,
+                "min": 50,
+                "min_annual": 100000,
+                "source": "provided",
+                "text": "$50 - $90/hr"
+              },
+              "posted_at_utc": "2026-09-19T21:27:10Z",
+              "short_description": "Remote Role Overview We are looking for Generalists with strong analytical and critical-thinking skills to support AI and data-focused projects. The role involves reviewing, evaluating, and ...",
+              "title": "AI Data Annotator - Remote",
+              "updated_at": "2026-09-19T21:28:31.594813294Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/AI-Data-Annotator-Remote/-in-Austin,TX?jid=5e87cde4af1f385d"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "fb62ed381484b8bb",
+              "listing_key": "k4V3bYEUKQErbqPt0paVVQ",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 90,
+                "max_annual": 180000,
+                "min": 50,
+                "min_annual": 100000,
+                "source": "provided",
+                "text": "$50 - $90/hr"
+              },
+              "posted_at_utc": "2026-09-19T21:27:23Z",
+              "short_description": "Remote Role Overview We are looking for Generalists with strong analytical and critical-thinking skills to support AI and data-focused projects. The role involves reviewing, evaluating, and ...",
+              "title": "AI Data Annotation Expert - Remote",
+              "updated_at": "2026-09-19T21:29:34.565008599Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/AI-Data-Annotation-Expert-Remote/-in-Austin,TX?jid=fb62ed381484b8bb"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "part_time"
+              ],
+              "is_new": false,
+              "jid": "edcf5c603b30b67c",
+              "listing_key": "diQTAyjhjpbGOJrySbYXxg",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 200,
+                "max_annual": 400000,
+                "min": 100,
+                "min_annual": 200000,
+                "source": "provided",
+                "text": "$100 - $200/hr"
+              },
+              "posted_at_utc": "2026-09-11T18:11:15Z",
+              "short_description": "AI Data Science Domain Expert Job Type: Contractor (Part-Time) Location: Remote Job Overview We are seeking experienced AI Data Science Domain Experts to contribute their expertise to an innovative ...",
+              "title": "AI Data Scientist - Remote",
+              "updated_at": "2026-09-19T17:57:50.751468512Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/AI-Data-Scientist-Remote/-in-Austin,TX?jid=edcf5c603b30b67c"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "part_time"
+              ],
+              "is_new": false,
+              "jid": "14c7813b3515ea1c",
+              "listing_key": "_3BIkIxE_i_QtoVsHQ-pCA",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 200,
+                "max_annual": 400000,
+                "min": 100,
+                "min_annual": 200000,
+                "source": "provided",
+                "text": "$100 - $200/hr"
+              },
+              "posted_at_utc": "2026-08-11T13:40:20Z",
+              "short_description": "AI Consulting Domain Remote Job Type: Contractor (Part-Time) Location: Remote Job Overview We are seeking experienced AI Consulting Domain Experts to contribute their consulting expertise to an ...",
+              "title": "AI Consulting Expert - Remote",
+              "updated_at": "2026-09-19T16:54:05.045140389Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/AI-Consulting-Expert-Remote/-in-Austin,TX?jid=14c7813b3515ea1c"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "part_time"
+              ],
+              "is_new": false,
+              "jid": "09a2170389016276",
+              "listing_key": "4eUm--hQgXWmJNfdSNvdEg",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 200,
+                "max_annual": 400000,
+                "min": 100,
+                "min_annual": 200000,
+                "source": "provided",
+                "text": "$100 - $200/hr"
+              },
+              "posted_at_utc": "2026-08-11T17:36:57Z",
+              "short_description": "AI Data Science Domain Expert Job Type: Contractor (Part-Time) Location: Remote Job Overview We are seeking experienced AI Data Science Domain Experts to contribute their expertise to an innovative ...",
+              "title": "AI Data Science Expert - Remote",
+              "updated_at": "2026-09-19T16:54:33.099882046Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/AI-Data-Science-Expert-Remote/-in-Austin,TX?jid=09a2170389016276"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "part_time"
+              ],
+              "is_new": false,
+              "jid": "5e68102cfc2a88ef",
+              "listing_key": "IOcRtXigLXPWWXcr-J41NQ",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 200,
+                "max_annual": 400000,
+                "min": 100,
+                "min_annual": 200000,
+                "source": "provided",
+                "text": "$100 - $200/hr"
+              },
+              "posted_at_utc": "2026-08-11T17:34:50Z",
+              "short_description": "AI Finance Domain Expert Job Type: Contractor (Part-Time) Location: Remote Job Overview We are seeking experienced AI Finance Domain Experts to contribute their financial expertise to an innovative ...",
+              "title": "AI Finance Expert - Remote",
+              "updated_at": "2026-09-19T16:54:29.977873954Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/AI-Finance-Expert-Remote/-in-Austin,TX?jid=5e68102cfc2a88ef"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "part_time"
+              ],
+              "is_new": false,
+              "jid": "3bc36f814e72ebd1",
+              "listing_key": "si5TDXwGqOnJ485edMJAoQ",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 200,
+                "max_annual": 400000,
+                "min": 100,
+                "min_annual": 200000,
+                "source": "provided",
+                "text": "$100 - $200/hr"
+              },
+              "posted_at_utc": "2026-08-11T17:25:40Z",
+              "short_description": "AI Data Science Domain Expert Job Type: Contractor (Part-Time) Location: Remote Job Overview We are seeking experienced AI Data Science Domain Experts to contribute their expertise to an innovative ...",
+              "title": "AI Data Scientist Expert - Remote",
+              "updated_at": "2026-09-19T16:55:44.793534555Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/AI-Data-Scientist-Expert-Remote/-in-Austin,TX?jid=3bc36f814e72ebd1"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "part_time",
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "8f61dc1a2182b356",
+              "listing_key": "G69ajIJoKhBFcuY_IAZbTg",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 200,
+                "max_annual": 400000,
+                "min": 100,
+                "min_annual": 200000,
+                "source": "provided",
+                "text": "$100 - $200/hr"
+              },
+              "posted_at_utc": "2026-08-21T08:16:32Z",
+              "short_description": "No prior AI experience is required. Key Responsibilities * Perform contract drafting, redlining, and simulated negotiations. * Review MSAs, NDAs, DPAs, and other technology agreements. * Evaluate AI ...",
+              "title": "Corporate Counsel Expert - Remote",
+              "updated_at": "2026-09-19T17:06:07.856938815Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Corporate-Counsel-Expert-Remote/-in-Austin,TX?jid=8f61dc1a2182b356"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "b8d9d8c32df5575d",
+              "listing_key": "BemJmwZQSVBANNauyZSiig",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 90,
+                "max_annual": 180000,
+                "min": 50,
+                "min_annual": 100000,
+                "source": "provided",
+                "text": "$50 - $90/hr"
+              },
+              "posted_at_utc": "2026-09-18T13:57:40Z",
+              "short_description": "Remote Role Overview We are looking for Generalists with strong analytical and critical-thinking skills to support AI and data-focused projects. The role involves reviewing, evaluating, and ...",
+              "title": "AI Data Trainer - Remote",
+              "updated_at": "2026-09-19T18:34:41.456098654Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/AI-Data-Trainer-Remote/-in-Austin,TX?jid=b8d9d8c32df5575d"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "4c40de1fd531e31d",
+              "listing_key": "eC1gUmfSSWqfGVcMRmWaiQ",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 90,
+                "max_annual": 180000,
+                "min": 50,
+                "min_annual": 100000,
+                "source": "provided",
+                "text": "$50 - $90/hr"
+              },
+              "posted_at_utc": "2026-09-18T13:57:40Z",
+              "short_description": "Remote Role Overview We are looking for Generalists with strong analytical and critical-thinking skills to support AI and data-focused projects. The role involves reviewing, evaluating, and ...",
+              "title": "AI Model Trainer- Remote",
+              "updated_at": "2026-09-19T18:41:28.807510492Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/AI-Model-Trainer-Remote/-in-Austin,TX?jid=4c40de1fd531e31d"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "dc563afe514e277d",
+              "listing_key": "qAGgbAp6YcV6HcfZkDwLAA",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 90,
+                "max_annual": 180000,
+                "min": 50,
+                "min_annual": 100000,
+                "source": "provided",
+                "text": "$50 - $90/hr"
+              },
+              "posted_at_utc": "2026-09-18T13:57:41Z",
+              "short_description": "Remote Role Overview We are looking for Generalists with strong analytical and critical-thinking skills to support AI and data-focused projects. The role involves reviewing, evaluating, and ...",
+              "title": "AI Data Labelling Expert - Remote",
+              "updated_at": "2026-09-19T18:33:01.484371746Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/AI-Data-Labelling-Expert-Remote/-in-Austin,TX?jid=dc563afe514e277d"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "9f4987e64a39fa01",
+              "listing_key": "7AIabTJIPPmkuyZWm8CNog",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 25,
+                "max_annual": 50000,
+                "min": 20,
+                "min_annual": 40000,
+                "source": "provided",
+                "text": "$20 - $25/hr"
+              },
+              "posted_at_utc": "2026-09-16T09:59:02Z",
+              "short_description": "Exocentric Video Recorder Job Type: Contractor Location: Remote Role Overview We are looking for Exocentric Video Recorders to capture high-quality third-person video of real-world activities and ...",
+              "title": "Exocentric Video Recorder - Remote",
+              "updated_at": "2026-09-19T18:08:52.325725399Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Exocentric-Video-Recorder-Remote/-in-Austin,TX?jid=9f4987e64a39fa01"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "2e73c653ce1256b1",
+              "listing_key": "ScbZ-F0WTzmfqBvilRtzJQ",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 80,
+                "max_annual": 160000,
+                "min": 40,
+                "min_annual": 80000,
+                "source": "provided",
+                "text": "$40 - $80/hr"
+              },
+              "posted_at_utc": "2026-09-19T21:27:28Z",
+              "short_description": "Sales / Revenue / CS Operations Expert Job Type: Contractor Location: Remote Role Overview We are looking for experienced Sales, Revenue, or Customer Success Operations professionals with strong CRM ...",
+              "title": "Sales Operations Expert - Remote",
+              "updated_at": "2026-09-19T21:29:30.832491489Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Sales-Operations-Expert-Remote/-in-Austin,TX?jid=2e73c653ce1256b1"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "c5d13af637ded2c9",
+              "listing_key": "hd4gzOfxxcNHfO1C6CJdiA",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 80,
+                "max_annual": 160000,
+                "min": 40,
+                "min_annual": 80000,
+                "source": "provided",
+                "text": "$40 - $80/hr"
+              },
+              "posted_at_utc": "2026-09-19T21:26:32Z",
+              "short_description": "Sales / Revenue / CS Operations Expert Job Type: Contractor Location: Remote Role Overview We are looking for experienced Sales, Revenue, or Customer Success Operations professionals with strong CRM ...",
+              "title": "Revenue Operations Expert - Remote",
+              "updated_at": "2026-09-19T21:28:55.359228908Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Revenue-Operations-Expert-Remote/-in-Austin,TX?jid=c5d13af637ded2c9"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "38cf5f1137026eee",
+              "listing_key": "N7fBrM1U8OOy2GTbEZVBag",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 80,
+                "max_annual": 160000,
+                "min": 40,
+                "min_annual": 80000,
+                "source": "provided",
+                "text": "$40 - $80/hr"
+              },
+              "posted_at_utc": "2026-09-19T21:26:19Z",
+              "short_description": "Sales / Revenue / CS Operations Expert Job Type: Contractor Location: Remote Role Overview We are looking for experienced Sales, Revenue, or Customer Success Operations professionals with strong CRM ...",
+              "title": "Customer Success Operations - Remote",
+              "updated_at": "2026-09-19T21:28:35.725042254Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Customer-Success-Operations-Remote/-in-Austin,TX?jid=38cf5f1137026eee"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "d60555993e040ca7",
+              "listing_key": "Sk_8xu2kuvDyiHl2LTJhdQ",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 80,
+                "max_annual": 160000,
+                "min": 40,
+                "min_annual": 80000,
+                "source": "provided",
+                "text": "$40 - $80/hr"
+              },
+              "posted_at_utc": "2026-09-19T21:27:10Z",
+              "short_description": "Sales / Revenue / CS Operations Expert Job Type: Contractor Location: Remote Role Overview We are looking for experienced Sales, Revenue, or Customer Success Operations professionals with strong CRM ...",
+              "title": "Customer Success Expert - Remote",
+              "updated_at": "2026-09-19T21:28:54.580013598Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Customer-Success-Expert-Remote/-in-Austin,TX?jid=d60555993e040ca7"
+            }
+          ],
+          "location": "Austin, TX",
+          "observed_at_ms": 1789907492010,
+          "radius_miles": 25,
+          "source_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs/-in-Austin,TX?uuid=&radius=25",
+          "total_listings": 235
+        },
+        "recordedAt": "2026-09-20"
+      },
+      "execute": {
+        "provider": "ziprecruiter-com",
+        "capability": "jobs/company_jobs"
+      }
+    },
+    {
+      "id": "ziprecruiter-com/jobs/job",
+      "provider": "ziprecruiter-com",
+      "capability": "jobs/job",
+      "name": "Job",
+      "description": "After search_jobs or company_jobs, with a card's url. Any pasted ziprecruiter.com /c/.../Job/... URL with a jid works.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "ZipRecruiter job detail URL: https://www.ziprecruiter.com/c/<Company>/Job/<Title>/-in-<City>,<ST>?jid=<16 hex>.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One ZipRecruiter job posting from its detail page (/c/<Company>/Job/<Title>/-in-<City>,<ST>?jid=...): title, employer (name, ids, website, size, HQ, industries), location, pay range, employment/location types, benefits, active flag, posting and expiry dates, O*NET occupational category, full HTML description and apply routing, combining the page's JobPosting JSON-LD with its job details payload.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "apply",
+            "type": "object"
+          },
+          {
+            "name": "benefits",
+            "type": "string[]"
+          },
+          {
+            "name": "company",
+            "type": "object"
+          },
+          {
+            "name": "date_posted",
+            "type": "string",
+            "about": "JSON-LD datePosted."
+          },
+          {
+            "name": "description_html",
+            "type": "string",
+            "about": "Full job description HTML as stated in the JSON-LD."
+          },
+          {
+            "name": "employment_types",
+            "type": "string[]"
+          },
+          {
+            "name": "industry",
+            "type": "string"
+          },
+          {
+            "name": "is_active",
+            "type": "boolean"
+          },
+          {
+            "name": "jid",
+            "type": "string",
+            "about": "Open seat id from the URL (16 hex)."
+          },
+          {
+            "name": "listing_key",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "object"
+          },
+          {
+            "name": "location_type",
+            "type": "string",
+            "about": "JSON-LD jobLocationType, e.g. TELECOMMUTE; null when the posting is on-site."
+          },
+          {
+            "name": "location_types",
+            "type": "string[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "occupational_category",
+            "type": "string",
+            "about": "O*NET-SOC code and name as stated, e.g. \"15-1133.00: Software Developers, Systems Software\"."
+          },
+          {
+            "name": "pay",
+            "type": "object",
+            "about": "Pay range as ZipRecruiter states it (parsed from the posting, provided by the employer, predicted or estimated); null when the page carries no visible pay."
+          },
+          {
+            "name": "posted_at_utc",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Canonical job URL as stated in the page's JobPosting JSON-LD."
+          },
+          {
+            "name": "valid_through",
+            "type": "string",
+            "about": "JSON-LD validThrough (expiry date)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Sr.-Full-Stack-Software-Engineer-Remote/-in-Austin,TX?jid=0c13727504b8adf8"
+        },
+        "response": {
+          "apply": {
+            "destination": "INTERNAL",
+            "direct_apply": true,
+            "type": "OPEN_APPLY_FLOW"
+          },
+          "benefits": [],
+          "company": {
+            "hiring_company_id": "5d34adfe",
+            "hq_location": "Abu Dhabi, Abu Dhabi, AE",
+            "industries": [
+              "Computing Infrastructure Providers, Data Processing, Web Hosting"
+            ],
+            "logo_url": "https://www.ziprecruiter.com/svc/fotomat/public-nosensitive-ziprecruiter-logos/company/07dcdbbf.jpeg",
+            "name": "YO AI Labs",
+            "size": "201 - 500 Employees",
+            "url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+            "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o=",
+            "website": "https://yoailabs.com/"
+          },
+          "date_posted": "2026-09-19T23:48:56Z",
+          "description_html": "<div>Full-Stack Software Engineer <p><strong>Location:</strong> Global, Fully Remote<br/><strong>Job Type:</strong> Contractor | ~15 hours/week<br/><strong>Schedule:</strong> Flexible</p><p>We're looking for experienced <strong>Full-Stack Software Engineers</strong> to support an AI training project focused on software development, debugging, code evaluation, and technical problem-solving.</p>Key Responsibilities <ul><li>Develop and debug front-end and back-end applications.</li><li>Build features, APIs, services, and data models.</li><li>Understand and work across unfamiliar codebases.</li><li>Troubleshoot application, API, database, and integration issues.</li><li>Review and evaluate AI-generated code for correctness, security, performance, and maintainability.</li><li>Translate and adapt software builds between programming languages.</li></ul>Required Skills <ul><li>Python</li><li>React</li><li>JavaScript</li><li>Java</li><li>Node.js</li><li>Rust</li><li>Go</li><li>TypeScript</li><li>Strong full-stack development experience</li><li>Experience with APIs, databases, application architecture, and debugging</li></ul>Hiring Process <ol><li>Submit application and screening questions.</li><li>Complete a ~30-minute AI interview.</li><li>Complete a technical assessment, if required.</li><li>Hiring manager review.</li></ol></div>",
+          "employment_types": [
+            "full_time"
+          ],
+          "industry": "Technology",
+          "is_active": true,
+          "jid": "0c13727504b8adf8",
+          "listing_key": "lZgmvjBN7KW-mwvmz2hS3w",
+          "location": {
+            "city": "Los Angeles",
+            "country_code": "US",
+            "display_name": "Los Angeles, CA US",
+            "state_code": "CA"
+          },
+          "location_type": "TELECOMMUTE",
+          "location_types": [
+            "remote"
+          ],
+          "observed_at_ms": 1789907487573,
+          "occupational_category": "15-1133.00: Software Developers, Systems Software",
+          "pay": {
+            "currency": "USD",
+            "interval": "hour",
+            "max": 100,
+            "max_annual": 200000,
+            "min": 50,
+            "min_annual": 100000,
+            "source": "provided",
+            "text": "$50 - $100/hr"
+          },
+          "posted_at_utc": "2026-09-19T21:26:52Z",
+          "title": "Sr. Full-Stack Software Engineer - Remote",
+          "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Sr.-Full-Stack-Software-Engineer-Remote/-in-Los-Angeles,CA?jid=0c13727504b8adf8",
+          "valid_through": "2026-10-20"
+        },
+        "recordedAt": "2026-09-20"
+      },
+      "execute": {
+        "provider": "ziprecruiter-com",
+        "capability": "jobs/job"
+      }
+    },
+    {
+      "id": "ziprecruiter-com/jobs/salary",
+      "provider": "ziprecruiter-com",
+      "capability": "jobs/salary",
+      "name": "Salary",
+      "description": "Pay benchmark for a title and city; not a posting's pay (that is on the job card).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "location",
+          "type": "string",
+          "in": "body",
+          "about": "US city and two-letter state, \"City, ST\". Omit for the national estimate."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "in": "body",
+          "about": "Job title words, e.g. \"software engineer\".",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "ZipRecruiter's annual base salary estimate for a job title in a US city (or nationally): 10th/25th/median/75th/90th percentiles in USD per year, from the Occupation JSON-LD of the public /Salaries/<Title>-Salary-in-<City>,<ST> page.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "about": "Occupation location as stated, e.g. \"Austin, TX, US\"; null for the national page."
+          },
+          {
+            "name": "median",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "percentile_10",
+            "type": "number"
+          },
+          {
+            "name": "percentile_25",
+            "type": "number"
+          },
+          {
+            "name": "percentile_75",
+            "type": "number"
+          },
+          {
+            "name": "percentile_90",
+            "type": "number"
+          },
+          {
+            "name": "period",
+            "type": "string",
+            "about": "ISO 8601 duration of the amounts, P1Y for annual."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "about": "Occupation name as the page states it."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "location": "Austin, TX",
+          "title": "software engineer"
+        },
+        "response": {
+          "currency": "USD",
+          "location": "Austin, TX, US",
+          "median": 146227,
+          "observed_at_ms": 1789907496443,
+          "percentile_10": 94660,
+          "percentile_25": 118900,
+          "percentile_75": 171500,
+          "percentile_90": 203197,
+          "period": "P1Y",
+          "source_url": "https://www.ziprecruiter.com/Salaries/Software-Engineer-Salary-in-Austin,TX",
+          "title": "Software Engineer"
+        },
+        "recordedAt": "2026-09-20"
+      },
+      "execute": {
+        "provider": "ziprecruiter-com",
+        "capability": "jobs/salary"
+      }
+    },
+    {
+      "id": "ziprecruiter-com/jobs/search_jobs",
+      "provider": "ziprecruiter-com",
+      "capability": "jobs/search_jobs",
+      "name": "Search jobs",
+      "description": "Start here to find job detail URLs and company slugs; pass page=next_page to continue. Only title and city/state are filterable: pay, distance and date filters live behind ZipRecruiter's challenged interactive search and are not exposed.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "location",
+          "type": "string",
+          "in": "body",
+          "about": "US city and two-letter state, \"City, ST\" (e.g. \"Austin, TX\", \"Los Angeles, CA\"). Omit for the national title page."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number; 20 cards per page. Use next_page from the previous call.",
+          "default": 1,
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "in": "body",
+          "about": "Job title words, e.g. \"software engineer\" or \"Registered Nurse\". Slugified to ZipRecruiter's Title-Case-Hyphenated directory form.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Search ZipRecruiter US jobs by title, optionally in a city (\"Austin, TX\"), one page of 20 job cards from the public /Jobs/<Title>/-in-<City>,<ST>[/<page>] directory page: listing key, jid, title, company, location, pay range (min/max, interval, annualized), employment and location types, benefits, posting/update times, snippet and the job detail URL. Sponsored placements are mixed in and page composition can vary between fetches.",
+        "key": "jobs",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "benefits",
+            "type": "string[]",
+            "about": "e.g. medical, dental, vision, retirement, paid_time_off (BENEFIT_TYPE_NAME_* lowercased). Empty when the card lists none."
+          },
+          {
+            "name": "company",
+            "type": "object"
+          },
+          {
+            "name": "company_url",
+            "type": "string",
+            "about": "Absolute company jobs URL (/co/<slug>/Jobs)."
+          },
+          {
+            "name": "employment_types",
+            "type": "string[]",
+            "about": "e.g. full_time, part_time, contractor (EMPLOYMENT_TYPE_NAME_* lowercased)."
+          },
+          {
+            "name": "is_new",
+            "type": "boolean",
+            "about": "true when the card carries the site's NEW flag."
+          },
+          {
+            "name": "jid",
+            "type": "string",
+            "about": "Open seat id (16 hex chars); the jid= query parameter of the job detail URL. Stable across the listing's locations."
+          },
+          {
+            "name": "listing_key",
+            "type": "string",
+            "about": "ZipRecruiter listing key (22-char base64url), one per posting+location listing."
+          },
+          {
+            "name": "location",
+            "type": "object"
+          },
+          {
+            "name": "location_types",
+            "type": "string[]",
+            "about": "e.g. remote, in_person, hybrid (LOCATION_TYPE_NAME_* lowercased)."
+          },
+          {
+            "name": "pay",
+            "type": "object",
+            "about": "Pay range as ZipRecruiter states it (parsed from the posting, provided by the employer, predicted or estimated); null when the page carries no visible pay."
+          },
+          {
+            "name": "posted_at_utc",
+            "type": "string",
+            "about": "RFC 3339 posting time as stated."
+          },
+          {
+            "name": "short_description",
+            "type": "string",
+            "about": "Card snippet with the site's <b> highlights removed and HTML entities decoded."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string",
+            "about": "RFC 3339 last update time as stated."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute job detail URL (input for `job`)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "location": "Austin, TX",
+          "title": "software engineer"
+        },
+        "response": {
+          "jobs": [
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "5d34adfe",
+                "name": "YO AI Labs",
+                "uuid": "uYYdRDSTxdPeVltN904h8nYLw/o="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/YO-AI-Labs/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "0c13727504b8adf8",
+              "listing_key": "OuyXsZPwT-kwogSAbq7rVA",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 100,
+                "max_annual": 200000,
+                "min": 50,
+                "min_annual": 100000,
+                "source": "provided",
+                "text": "$50 - $100/hr"
+              },
+              "posted_at_utc": "2026-09-19T21:27:19Z",
+              "short_description": "Full-Stack Software Engineer Location: Global, Fully Remote Job Type: Contractor | ~15 hours/week Schedule: Flexible We're looking for experienced Full-Stack Software Engineers to support an AI ...",
+              "title": "Sr. Full-Stack Software Engineer - Remote",
+              "updated_at": "2026-09-19T21:29:34.105947855Z",
+              "url": "https://www.ziprecruiter.com/c/YO-AI-Labs/Job/Sr.-Full-Stack-Software-Engineer-Remote/-in-Austin,TX?jid=0c13727504b8adf8"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "8c933fb5",
+                "name": "Simplex",
+                "uuid": "IPfls442y3N3T6pANZjGxR74Pj4="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Simplex/Jobs",
+              "employment_types": [
+                "contractor"
+              ],
+              "is_new": false,
+              "jid": "c88baf41b82edcd7",
+              "listing_key": "DRZMR_6lURS2FcYfBWIWpQ",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "hour",
+                "max": 60,
+                "max_annual": 120000,
+                "min": 50,
+                "min_annual": 100000,
+                "source": "provided",
+                "text": "$50 - $60/hr"
+              },
+              "posted_at_utc": "2026-08-19T16:25:53Z",
+              "short_description": "NET developer to support an ongoing upgrade project. *****You must live in Austin or be easily commutable to downtown Austin to be eligible for this role***** There are a number of inter-government ...",
+              "title": ".Net Software Engineer - Contract",
+              "updated_at": "2026-09-20T00:59:41.489056352Z",
+              "url": "https://www.ziprecruiter.com/c/Simplex/Job/.Net-Software-Engineer-Contract/-in-Austin,TX?jid=c88baf41b82edcd7"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "78a7c2bc",
+                "name": "Career Opportunities",
+                "uuid": null
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Career-Opportunities/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "4889e64335cbf90d",
+              "listing_key": "FVKnx2vZtDumzHVpHnEoRg",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US 78701",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 171500,
+                "max_annual": 171500,
+                "min": 118900,
+                "min_annual": 118900,
+                "source": "missing",
+                "text": null
+              },
+              "posted_at_utc": "2026-09-12T02:26:17Z",
+              "short_description": "Collaboration - we always give benefit of doubt that each person has something to contribute Position Summary We are seeking a Software Engineer with 2 to 5 years of professional experience to join ...",
+              "title": "Software Engineer",
+              "updated_at": "2026-09-19T16:19:33.544572413Z",
+              "url": "https://www.ziprecruiter.com/c/Career-Opportunities/Job/Software-Engineer/-in-Austin,TX?jid=4889e64335cbf90d"
+            },
+            {
+              "benefits": [
+                "medical",
+                "vision",
+                "dental",
+                "paid_time_off",
+                "life_insurance",
+                "retirement"
+              ],
+              "company": {
+                "hiring_company_id": null,
+                "name": "AssetMark",
+                "uuid": "8ZZZcjqqa6+BsrV3DeYH4ylkjiI="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/AssetMark/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "17233aec2709119f",
+              "listing_key": "l5UIoTXn7G3VegwtmmhWKw",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 150000,
+                "max_annual": 150000,
+                "min": 135000,
+                "min_annual": 135000,
+                "source": "parsed",
+                "text": "$135K - $150K/yr"
+              },
+              "posted_at_utc": "2026-08-18T16:14:08Z",
+              "short_description": "Collaborate with cross-functional teams, including product managers, designers, and other engineers. * Architecture and Design - Ensure that the software architecture is scalable, maintainable, and ...",
+              "title": "Senior Software Engineer",
+              "updated_at": "2026-09-20T12:26:29.905727259Z",
+              "url": "https://www.ziprecruiter.com/c/AssetMark/Job/Senior-Software-Engineer/-in-Austin,TX?jid=17233aec2709119f"
+            },
+            {
+              "benefits": [
+                "medical",
+                "vision",
+                "dental",
+                "paid_time_off",
+                "life_insurance",
+                "retirement"
+              ],
+              "company": {
+                "hiring_company_id": null,
+                "name": "Visa",
+                "uuid": "AlBW+kBMTeu+z/hrxpeq9rFtcOs="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Visa/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "6a48708bf50e49a0",
+              "listing_key": "4IdarCj6ctPN4k2THJXVdg",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 110700,
+                "max_annual": 110700,
+                "min": 110700,
+                "min_annual": 110700,
+                "source": "parsed",
+                "text": "$110K/yr"
+              },
+              "posted_at_utc": "2026-09-17T06:16:00Z",
+              "short_description": "Masters, MBA, JD, MD) - Solid understanding of Object-Oriented design and programming concepts - Experience building REST-based web services and web applications using Java and Spring Framework ...",
+              "title": "Senior Software Engineer- PaaS Engineering",
+              "updated_at": "2026-09-20T01:48:08.840729062Z",
+              "url": "https://www.ziprecruiter.com/c/Visa/Job/Senior-Software-Engineer-PaaS-Engineering/-in-Austin,TX?jid=6a48708bf50e49a0"
+            },
+            {
+              "benefits": [
+                "medical",
+                "vision",
+                "dental",
+                "paid_time_off",
+                "life_insurance",
+                "retirement"
+              ],
+              "company": {
+                "hiring_company_id": null,
+                "name": "LiveRamp",
+                "uuid": "YF/FvyVB+X5QoOrkMFLl3U07Ja8="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/LiveRamp/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "d9cbc5f32f93a1bf",
+              "listing_key": "-cHlv9d237h5nK0lDFMKrw",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 159000,
+                "max_annual": 159000,
+                "min": 135000,
+                "min_annual": 135000,
+                "source": "parsed",
+                "text": "$135K - $159K/yr"
+              },
+              "posted_at_utc": "2026-09-01T18:53:00Z",
+              "short_description": "Uphold high engineering standards through rigorous peer code reviews and sophisticated testing. You'll focus on high-coverage unit and integration testing to ensure our platform remains the most ...",
+              "title": "Software Engineer - Healthcare",
+              "updated_at": "2026-09-19T19:53:19.899428033Z",
+              "url": "https://www.ziprecruiter.com/c/LiveRamp/Job/Software-Engineer-Healthcare/-in-Austin,TX?jid=d9cbc5f32f93a1bf"
+            },
+            {
+              "benefits": [
+                "medical",
+                "paid_time_off",
+                "retirement"
+              ],
+              "company": {
+                "hiring_company_id": null,
+                "name": "eBay, Inc.",
+                "uuid": "iMSnSH2H9VhTDLbU6Pskhrf77rU="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/eBay,-Inc./Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "568fbbb3a1bbb7eb",
+              "listing_key": "gYK_wK1821Di3-mJhEm1aA",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US 78729",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 143600,
+                "max_annual": 143600,
+                "min": 80800,
+                "min_annual": 80800,
+                "source": "parsed",
+                "text": "$80K - $143K/yr"
+              },
+              "posted_at_utc": "2026-09-17T00:00:00Z",
+              "short_description": "As a Traffic Engineer, you will help design, build, and operate traffic management and routing systems that improve availability, latency, scalability, and network security. This role is suited for ...",
+              "title": "Software Engineer - Traffic",
+              "updated_at": "2026-09-20T09:17:29.932123155Z",
+              "url": "https://www.ziprecruiter.com/c/eBay,-Inc./Job/Software-Engineer-Traffic/-in-Austin,TX?jid=568fbbb3a1bbb7eb"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "bf2e8203",
+                "name": "Hired Recruiters",
+                "uuid": "kytRpe4B8efndbXi9s5+AolSdrg="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Hired-Recruiters/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "1121f567eea88845",
+              "listing_key": "St2RCTYwrvgKI4pWbkJRMA",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 171500,
+                "max_annual": 171500,
+                "min": 118900,
+                "min_annual": 118900,
+                "source": "missing",
+                "text": null
+              },
+              "posted_at_utc": "2026-09-02T06:35:08Z",
+              "short_description": "As a Software Engineer II on the Data Platform team, you will be responsible for solving engineering problems of the largest complexity and scale within your team. You will be expected to influence ...",
+              "title": "Software Engineer II",
+              "updated_at": "2026-09-20T03:08:28.438343449Z",
+              "url": "https://www.ziprecruiter.com/c/Hired-Recruiters/Job/Software-Engineer-II/-in-Austin,TX?jid=1121f567eea88845"
+            },
+            {
+              "benefits": [
+                "medical",
+                "life_insurance",
+                "retirement"
+              ],
+              "company": {
+                "hiring_company_id": "73df3773",
+                "name": "Vestwell",
+                "uuid": "cRKJZ9nniMXZoKLhgqGFuk6k9cY="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Vestwell/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "f4b0cb7588b161e1",
+              "listing_key": "OKETsGoJvcqpr_YYOXshvg",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 110000,
+                "max_annual": 110000,
+                "min": 95000,
+                "min_annual": 95000,
+                "source": "parsed",
+                "text": "$95K - $110K/yr"
+              },
+              "posted_at_utc": "2026-09-04T19:55:12Z",
+              "short_description": "The Engineering team is seeking a curious, growth-oriented engineer who wants to learn how production software is built on a real product team. You're a great fit if you enjoy building user-facing ...",
+              "title": "Associate, Software Engineer",
+              "updated_at": "2026-09-19T17:41:14.569717230Z",
+              "url": "https://www.ziprecruiter.com/c/Vestwell/Job/Associate,-Software-Engineer/-in-Austin,TX?jid=f4b0cb7588b161e1"
+            },
+            {
+              "benefits": [
+                "medical",
+                "vision",
+                "dental",
+                "paid_time_off",
+                "life_insurance",
+                "retirement"
+              ],
+              "company": {
+                "hiring_company_id": "fbea7fe6",
+                "name": "Loram",
+                "uuid": "pHkOuwgAsPfGk36+5/TaK9CZmGI="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Loram/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "52c73762887729f4",
+              "listing_key": "bUz3n-wum0_3s_1YwQP8jg",
+              "location": {
+                "city": "Georgetown",
+                "country_code": "US",
+                "display_name": "Georgetown, TX US 78626",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 160700,
+                "max_annual": 160700,
+                "min": 111500,
+                "min_annual": 111500,
+                "source": "missing",
+                "text": null
+              },
+              "posted_at_utc": "2026-06-26T06:02:01Z",
+              "short_description": "Engineer II, Software FLSA Status: Exempt Department: Engineering Reports to: Senior Manager, Software Engineering GENERAL DESCRIPTION / PURPOSE: The Engineer II, Software position is responsible for ...",
+              "title": "Software Engineer II - Desktop",
+              "updated_at": "2026-09-19T16:57:59.262641819Z",
+              "url": "https://www.ziprecruiter.com/c/Loram/Job/Software-Engineer-II-Desktop/-in-Georgetown,TX?jid=52c73762887729f4"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "500379a3",
+                "name": "Eden Technologies Inc",
+                "uuid": "GthBTyGihjXetwvveq1PxyDr4KM="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Eden-Technologies-Inc/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "72295d203bf506cc",
+              "listing_key": "3Z4pixCSBwjQo_JgRq589Q",
+              "location": {
+                "city": "Lockhart",
+                "country_code": "US",
+                "display_name": "Lockhart, TX US 78644",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 165000,
+                "max_annual": 165000,
+                "min": 130000,
+                "min_annual": 130000,
+                "source": "provided",
+                "text": "$130K - $165K/yr"
+              },
+              "posted_at_utc": "2026-06-26T00:25:22Z",
+              "short_description": "About the Role Eden Tech is seeking a hands-on Software Engineer to support embedded sensing, control systems, and edge AI deployment for our Reverse Osmosis Centrifuge platform. This role will work ...",
+              "title": "Software Engineer",
+              "updated_at": "2026-09-20T04:17:56.274147460Z",
+              "url": "https://www.ziprecruiter.com/c/Eden-Technologies-Inc/Job/Software-Engineer/-in-Lockhart,TX?jid=72295d203bf506cc"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "20d034de",
+                "name": "IntraEdge",
+                "uuid": "DBmzykbVEECm8aPX2UBXM3AAzpM="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/IntraEdge/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "6dc70d5cc5bf687f",
+              "listing_key": "kANS9N94UxK5RBo8pDy_PQ",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US 78701",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 171500,
+                "max_annual": 171500,
+                "min": 118900,
+                "min_annual": 118900,
+                "source": "missing",
+                "text": null
+              },
+              "posted_at_utc": "2026-04-16T13:10:31Z",
+              "short_description": "We are seeking an AI Software Engineer to help transform how software is built, tested, and delivered. This role is for a strong software engineer who can use GenAI and agentic development tools as a ...",
+              "title": "AI software Engineer",
+              "updated_at": "2026-09-20T04:01:08.498470276Z",
+              "url": "https://www.ziprecruiter.com/c/IntraEdge/Job/AI-software-Engineer/-in-Austin,TX?jid=6dc70d5cc5bf687f"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "0441007c",
+                "name": "FHR",
+                "uuid": "nFH4d7WOOeDXg/Rz8LfNsDCHASw="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/FHR/Jobs",
+              "employment_types": [
+                "other"
+              ],
+              "is_new": false,
+              "jid": "9c9e4cd9dca4c01e",
+              "listing_key": "5VqXATF7YDIRdlUm0C-CiQ",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 128900,
+                "max_annual": 128900,
+                "min": 89200,
+                "min_annual": 89200,
+                "source": "missing",
+                "text": null
+              },
+              "posted_at_utc": "2026-07-16T18:02:43Z",
+              "short_description": "Our direct client has an opening for a Adabas / Natural Software Developer Exp # 12765. This position is for 12+ months, with option of extension, and will be worked remote. All work must be ...",
+              "title": "M-7/16 - 12765 - Adabas / Natural Software Developer - Remote",
+              "updated_at": "2026-09-19T16:42:29.325561076Z",
+              "url": "https://www.ziprecruiter.com/c/FHR/Job/M-7-16-12765-Adabas-Natural-Software-Developer-Remote/-in-Austin,TX?jid=9c9e4cd9dca4c01e"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": null,
+                "name": "AutoHDR",
+                "uuid": null
+              },
+              "company_url": "https://www.ziprecruiter.com/co/AutoHDR/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "4bddfbf54d767836",
+              "listing_key": "DTl6IUjl6RQlAWh4Llt7AQ",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US 78701",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 180000,
+                "max_annual": 180000,
+                "min": 120000,
+                "min_annual": 120000,
+                "source": "parsed",
+                "text": "$120K - $180K/yr"
+              },
+              "posted_at_utc": "2026-04-02T00:00:00Z",
+              "short_description": "About the Role We are looking for unusually strong engineers who can ship broadly across the stack and also bring specialized knowledge/experience in at least one high-value area. We want builders ...",
+              "title": "Software Engineer",
+              "updated_at": "2026-09-20T03:47:47.960155240Z",
+              "url": "https://www.ziprecruiter.com/c/AutoHDR/Job/Software-Engineer/-in-Austin,TX?jid=4bddfbf54d767836"
+            },
+            {
+              "benefits": [
+                "medical",
+                "vision",
+                "dental",
+                "paid_time_off",
+                "life_insurance",
+                "retirement"
+              ],
+              "company": {
+                "hiring_company_id": "4a6059f5",
+                "name": "Meds",
+                "uuid": null
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Meds/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": true,
+              "jid": "704709dafc58d847",
+              "listing_key": "kKFeq42WRVu_DjklDYyEig",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 156600,
+                "max_annual": 156600,
+                "min": 110000,
+                "min_annual": 110000,
+                "source": "missing",
+                "text": null
+              },
+              "posted_at_utc": "2026-09-16T16:32:26Z",
+              "short_description": "Be on the cutting edge of both telemedicine and software engineering * Contribute as a core team member of the SWE team Interview Process * 15 minute HR Screening * 1 hour take home test with a ...",
+              "title": "Fullstack Software Engineer",
+              "updated_at": "2026-09-20T09:40:15.656654712Z",
+              "url": "https://www.ziprecruiter.com/c/Meds/Job/Fullstack-Software-Engineer/-in-Austin,TX?jid=704709dafc58d847"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "124e664c",
+                "name": "Techcliff Group",
+                "uuid": null
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Techcliff-Group/Jobs",
+              "employment_types": [
+                "contractor"
+              ],
+              "is_new": false,
+              "jid": "2ce25599bcd8bc80",
+              "listing_key": "Ovzu2ZsEFidaVEsmk1_BJQ",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "remote"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 133100,
+                "max_annual": 133100,
+                "min": 92100,
+                "min_annual": 92100,
+                "source": "missing",
+                "text": null
+              },
+              "posted_at_utc": "2025-04-15T17:39:35Z",
+              "short_description": "Years Skills/Experience 8 years experiences (Expert in n-tier architecture setup; Multiple web/app/file/database servers including load balancers/DMZs) 8 years experiences (In-depth experience in the ...",
+              "title": "Software Developer III (Onbase)",
+              "updated_at": "2026-09-19T15:38:44.872579608Z",
+              "url": "https://www.ziprecruiter.com/c/Techcliff-Group/Job/Software-Developer-III-(Onbase)/-in-Austin,TX?jid=2ce25599bcd8bc80"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "32afe2b8",
+                "name": "Winaxis",
+                "uuid": "hZ/8p/wjVGEW76DJ5TB3ELcRVfk="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Winaxis/Jobs",
+              "employment_types": [
+                "contractor"
+              ],
+              "is_new": false,
+              "jid": "41540f70287ebd2e",
+              "listing_key": "U5KSEkwTft0v37CEPengbA",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 128900,
+                "max_annual": 128900,
+                "min": 89200,
+                "min_annual": 89200,
+                "source": "missing",
+                "text": null
+              },
+              "posted_at_utc": "2025-05-27T17:44:45Z",
+              "short_description": "Job Title: .Net Software Developer 3 Location: 5805 N. Lamar Blvd., Austin, TX 78752/Hybrid Type: Long term contract 9+ months with extension Hybrid: Few say per week Hybrid - On Site and Telework ...",
+              "title": ".Net Software Developer 3",
+              "updated_at": "2026-09-19T15:40:23.372262631Z",
+              "url": "https://www.ziprecruiter.com/c/Winaxis/Job/.Net-Software-Developer-3/-in-Austin,TX?jid=41540f70287ebd2e"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "4e1186b2",
+                "name": "Donato Technologies, Inc",
+                "uuid": "k9oE1AwHO9apsOuPy9Fq9S+y828="
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Donato-Technologies,-Inc/Jobs",
+              "employment_types": [
+                "contractor"
+              ],
+              "is_new": false,
+              "jid": "c585e4432b20932c",
+              "listing_key": "wlgFyLjtFbywzfJZCl79nA",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 128900,
+                "max_annual": 128900,
+                "min": 89200,
+                "min_annual": 89200,
+                "source": "missing",
+                "text": null
+              },
+              "posted_at_utc": "2026-03-04T16:36:52Z",
+              "short_description": "Software Developer Austin TX-Hybrid Only locals to Austin, TX The Candidate will perform highly advanced front-end development with backend integration work as part of the Administrative Application ...",
+              "title": "Software Developer",
+              "updated_at": "2026-09-19T16:03:49.875026940Z",
+              "url": "https://www.ziprecruiter.com/c/Donato-Technologies,-Inc/Job/Software-Developer/-in-Austin,TX?jid=c585e4432b20932c"
+            },
+            {
+              "benefits": [],
+              "company": {
+                "hiring_company_id": "0770c9f1",
+                "name": "Texas Sports Academy Main",
+                "uuid": null
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Texas-Sports-Academy-Main/Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "8d708200fdc75cd7",
+              "listing_key": "31aZxtud06gpArdRGimyRg",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 94700,
+                "max_annual": 94700,
+                "min": 72400,
+                "min_annual": 72400,
+                "source": "missing",
+                "text": null
+              },
+              "posted_at_utc": "2026-08-03T14:53:34Z",
+              "short_description": "As a Junior Software Engineer with Texas Sports Academy, you'll help build the software that runs our school, student records, academic mastery tracking, training data, parent portals, admissions ...",
+              "title": "Junior AI Software Engineer (Austin, TX)",
+              "updated_at": "2026-09-19T16:48:32.046972456Z",
+              "url": "https://www.ziprecruiter.com/c/Texas-Sports-Academy-Main/Job/Junior-AI-Software-Engineer-(Austin,-TX)/-in-Austin,TX?jid=8d708200fdc75cd7"
+            },
+            {
+              "benefits": [
+                "medical",
+                "vision",
+                "dental",
+                "paid_time_off",
+                "life_insurance",
+                "retirement"
+              ],
+              "company": {
+                "hiring_company_id": null,
+                "name": "Annapurna Labs (U.S.) Inc.",
+                "uuid": null
+              },
+              "company_url": "https://www.ziprecruiter.com/co/Annapurna-Labs-(U.S.)-Inc./Jobs",
+              "employment_types": [
+                "full_time"
+              ],
+              "is_new": false,
+              "jid": "a20ddb3463a4595d",
+              "listing_key": "yrStUrmGlkK_El7osE3kJA",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "display_name": "Austin, TX US 78716",
+                "state_code": "TX"
+              },
+              "location_types": [
+                "in_person"
+              ],
+              "pay": {
+                "currency": "USD",
+                "interval": "year",
+                "max": 171400,
+                "max_annual": 171400,
+                "min": 118900,
+                "min_annual": 118900,
+                "source": "missing",
+                "text": null
+              },
+              "posted_at_utc": "2026-04-30T07:00:00Z",
+              "short_description": "We build production software to initialize and monitor the most advanced machine learning ... your engineering expertise so you feel empowered to take on more complex tasks in the future.",
+              "title": "Software Engineer II, Annapurna Labs ML Acceleration Systems Software",
+              "updated_at": "2026-09-20T11:13:27.486707850Z",
+              "url": "https://www.ziprecruiter.com/c/Annapurna-Labs-(U.S.)-Inc./Job/Software-Engineer-II,-Annapurna-Labs-ML-Acceleration-Systems-Software/-in-Austin,TX?jid=a20ddb3463a4595d"
+            }
+          ],
+          "next_page": 2,
+          "observed_at_ms": 1789907482389,
+          "page": 1,
+          "query": {
+            "country": "US",
+            "location": "Austin, TX",
+            "title": "Software Engineer"
+          },
+          "source_url": "https://www.ziprecruiter.com/Jobs/Software-Engineer/-in-Austin,TX",
+          "total_listings": 472
+        },
+        "recordedAt": "2026-09-20"
+      },
+      "execute": {
+        "provider": "ziprecruiter-com",
+        "capability": "jobs/search_jobs"
+      }
+    },
+    {
+      "id": "ziprecruiter-com/jobs/suggest_locations",
+      "provider": "ziprecruiter-com",
+      "capability": "jobs/suggest_locations",
+      "name": "Suggest locations",
+      "description": "Resolve a place name to the \"City, ST\" form that search_jobs, company_jobs and salary take. An unknown prefix returns an empty list.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "prefix",
+          "type": "string",
+          "in": "body",
+          "about": "prefix",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "ZipRecruiter US/Canada location autocomplete (svc/geoac): cities and places matching a prefix with GeoNames id, state/province code, country, coordinates and population.",
+        "key": "locations",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "admin1_code",
+            "type": "string",
+            "about": "State or province code."
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "country_code",
+            "type": "string"
+          },
+          {
+            "name": "geoname_id",
+            "type": "string"
+          },
+          {
+            "name": "lat",
+            "type": "number"
+          },
+          {
+            "name": "lng",
+            "type": "number"
+          },
+          {
+            "name": "loc_id",
+            "type": "string"
+          },
+          {
+            "name": "loc_type",
+            "type": "string",
+            "about": "city, state, postal_code, ... as the service states it."
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Display name, e.g. \"Austin, TX USA\"."
+          },
+          {
+            "name": "population",
+            "type": "number"
+          },
+          {
+            "name": "postal_code",
+            "type": "string",
+            "about": "Null when the service gives an empty string."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "prefix": "Austin, T"
+        },
+        "response": {
+          "locations": [
+            {
+              "admin1_code": "OK",
+              "city": "Austin Township",
+              "country_code": "US",
+              "geoname_id": "4529637",
+              "lat": 36.20282,
+              "lng": -99.65873,
+              "loc_id": "4529637",
+              "loc_type": "admin3",
+              "name": "Austin Township, OK USA",
+              "population": 0,
+              "postal_code": null
+            },
+            {
+              "admin1_code": "TX",
+              "city": "Austin",
+              "country_code": "US",
+              "geoname_id": "4671654",
+              "lat": 30.26715,
+              "lng": -97.74306,
+              "loc_id": "4671654",
+              "loc_type": "city",
+              "name": "Austin, TX USA",
+              "population": 931830,
+              "postal_code": null
+            },
+            {
+              "admin1_code": "TN",
+              "city": "Austin",
+              "country_code": "US",
+              "geoname_id": "4603359",
+              "lat": 35.20175,
+              "lng": -88.2392,
+              "loc_id": "4603359",
+              "loc_type": "city",
+              "name": "Austin, TN USA",
+              "population": 0,
+              "postal_code": null
+            },
+            {
+              "admin1_code": "TX",
+              "city": "Gateway, Austin",
+              "country_code": "US",
+              "geoname_id": "11789087",
+              "lat": 30.3915,
+              "lng": -97.74006,
+              "loc_id": "11789087",
+              "loc_type": "suburb",
+              "name": "Gateway, Austin, TX USA",
+              "population": 0,
+              "postal_code": null
+            },
+            {
+              "admin1_code": "TX",
+              "city": "North Burnet, Austin",
+              "country_code": "US",
+              "geoname_id": "11789090",
+              "lat": 30.39184,
+              "lng": -97.72039,
+              "loc_id": "11789090",
+              "loc_type": "suburb",
+              "name": "North Burnet, Austin, TX USA",
+              "population": 0,
+              "postal_code": null
+            },
+            {
+              "admin1_code": "TX",
+              "city": "North Austin Civic Association, Austin",
+              "country_code": "US",
+              "geoname_id": "11789110",
+              "lat": 30.37019,
+              "lng": -97.70621,
+              "loc_id": "11789110",
+              "loc_type": "suburb",
+              "name": "North Austin Civic Association, Austin, TX USA",
+              "population": 0,
+              "postal_code": null
+            },
+            {
+              "admin1_code": "TX",
+              "city": "North Lamar, Austin",
+              "country_code": "US",
+              "geoname_id": "11789097",
+              "lat": 30.3701,
+              "lng": -97.68669,
+              "loc_id": "11789097",
+              "loc_type": "suburb",
+              "name": "North Lamar, Austin, TX USA",
+              "population": 0,
+              "postal_code": null
+            },
+            {
+              "admin1_code": "TX",
+              "city": "Windsor Hills, Austin",
+              "country_code": "US",
+              "geoname_id": "11789119",
+              "lat": 30.36387,
+              "lng": -97.67636,
+              "loc_id": "11789119",
+              "loc_type": "suburb",
+              "name": "Windsor Hills, Austin, TX USA",
+              "population": 0,
+              "postal_code": null
+            },
+            {
+              "admin1_code": "TX",
+              "city": "Wooten, Austin",
+              "country_code": "US",
+              "geoname_id": "11789102",
+              "lat": 30.3602,
+              "lng": -97.72239,
+              "loc_id": "11789102",
+              "loc_type": "suburb",
+              "name": "Wooten, Austin, TX USA",
+              "population": 0,
+              "postal_code": null
+            },
+            {
+              "admin1_code": null,
+              "city": "Remote (USA)",
+              "country_code": "US",
+              "geoname_id": "us-remote",
+              "lat": 0,
+              "lng": 0,
+              "loc_id": null,
+              "loc_type": "virtual",
+              "name": "Remote (USA)",
+              "population": -1,
+              "postal_code": null
+            }
+          ],
+          "observed_at_ms": 1789907504228,
+          "prefix": "Austin, T"
+        },
+        "recordedAt": "2026-09-20"
+      },
+      "execute": {
+        "provider": "ziprecruiter-com",
+        "capability": "jobs/suggest_locations"
+      }
+    },
+    {
+      "id": "ziprecruiter-com/jobs/suggest_titles",
+      "provider": "ziprecruiter-com",
+      "capability": "jobs/suggest_titles",
+      "name": "Suggest titles",
+      "description": "Normalize free text into a title ZipRecruiter knows before search_jobs or salary. An unknown prefix returns an empty list.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "prefix",
+          "type": "string",
+          "in": "body",
+          "about": "prefix",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "ZipRecruiter job title autocomplete (suggest_queries_v2): up to 10 title suggestions for a prefix.",
+        "key": "suggestions",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "label",
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "prefix": "soft"
+        },
+        "response": {
+          "observed_at_ms": 1789907500335,
+          "prefix": "soft",
+          "suggestions": [
+            {
+              "label": "software engineer",
+              "value": "software engineer"
+            },
+            {
+              "label": "software developer",
+              "value": "software developer"
+            },
+            {
+              "label": "entry level software engineer",
+              "value": "entry level software engineer"
+            },
+            {
+              "label": "junior software engineer",
+              "value": "junior software engineer"
+            },
+            {
+              "label": "entry level software developer",
+              "value": "entry level software developer"
+            },
+            {
+              "label": "junior software developer",
+              "value": "junior software developer"
+            },
+            {
+              "label": "software sales",
+              "value": "software sales"
+            },
+            {
+              "label": "software tester",
+              "value": "software tester"
+            },
+            {
+              "label": "software quality assurance engineer",
+              "value": "software quality assurance engineer"
+            },
+            {
+              "label": "software engineer intern",
+              "value": "software engineer intern"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-20"
+      },
+      "execute": {
+        "provider": "ziprecruiter-com",
+        "capability": "jobs/suggest_titles"
+      }
+    }
+  ]
+}

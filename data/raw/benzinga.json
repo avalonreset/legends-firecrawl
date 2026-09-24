@@ -1,0 +1,1690 @@
+{
+  "id": "benzinga",
+  "attribution": "Powered by Benzinga Data",
+  "provider": "benzinga",
+  "name": "Benzinga",
+  "description": "Real-time financial newswire and analyst coverage for US-listed companies: market-moving headlines, why-is-it-moving notes, press releases, ratings changes and consensus, announced deals, and unusual options activity.",
+  "toolCount": 11,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "benzinga"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "benzinga/calendar/consensus-ratings",
+      "attribution": "Powered by Benzinga Data",
+      "provider": "benzinga",
+      "capability": "calendar/consensus-ratings",
+      "name": "Consensus ratings",
+      "description": "Use for where analysts stand in aggregate right now on one company. For the individual changes that moved the consensus, use calendar/ratings instead.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Exactly one ticker symbol to aggregate for; the endpoint takes a single ticker, not a list. Call once per company.",
+          "name": "parameters[tickers]",
+          "type": "string"
+        },
+        {
+          "about": "Earliest date, YYYY-MM-DD.",
+          "name": "parameters[date_from]",
+          "type": "string"
+        },
+        {
+          "about": "Latest date, YYYY-MM-DD.",
+          "name": "parameters[date_to]",
+          "type": "string"
+        },
+        {
+          "about": "Collapse the aggregate to BUY, HOLD and SELL rather than the five-step scale.",
+          "name": "simplify",
+          "type": "boolean"
+        },
+        {
+          "about": "Whether each rating bucket is reported as a count of analysts or as a percentage of them.",
+          "default": "number",
+          "name": "aggregate_type",
+          "oneOf": [
+            "number",
+            "percentage"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Records to return. Limit 1000.",
+          "max": 1000,
+          "name": "pagesize",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "The analyst consensus for a ticker as counts per rating bucket, plus consensus price targets. Note this endpoint sits outside the calendar family and takes no page parameter.",
+        "fields": [
+          {
+            "about": "Ticker.",
+            "name": "ticker",
+            "type": "string"
+          },
+          {
+            "about": "Analysts at strong buy.",
+            "name": "strong_buy",
+            "type": "number"
+          },
+          {
+            "about": "Analysts at buy.",
+            "name": "buy",
+            "type": "number"
+          },
+          {
+            "about": "Analysts at hold.",
+            "name": "hold",
+            "type": "number"
+          },
+          {
+            "about": "Analysts at sell.",
+            "name": "sell",
+            "type": "number"
+          },
+          {
+            "about": "Analysts at strong sell.",
+            "name": "strong-sell",
+            "type": "number"
+          }
+        ],
+        "key": "aggregate_ratings"
+      },
+      "execute": {
+        "provider": "benzinga",
+        "capability": "calendar/consensus-ratings"
+      }
+    },
+    {
+      "id": "benzinga/calendar/mergers-acquisitions",
+      "attribution": "Powered by Benzinga Data",
+      "provider": "benzinga",
+      "capability": "calendar/mergers-acquisitions",
+      "name": "Mergers and acquisitions",
+      "description": "Use for who is buying whom, at what price, and whether the deal is pending or closed. For the coverage and commentary around a deal use news/search.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Comma-separated ticker symbols, maximum 50. Set this when the caller asks whether a named company is acquiring or being acquired.",
+          "name": "parameters[tickers]",
+          "type": "string"
+        },
+        {
+          "about": "A single date, YYYY-MM-DD, as shorthand when date_from and date_to would be the same. Leave unset to get the latest deals.",
+          "name": "parameters[date]",
+          "type": "string"
+        },
+        {
+          "about": "Earliest date, YYYY-MM-DD, interpreted against date_sort.",
+          "name": "parameters[date_from]",
+          "type": "string"
+        },
+        {
+          "about": "Latest date, YYYY-MM-DD, interpreted against date_sort.",
+          "name": "parameters[date_to]",
+          "type": "string"
+        },
+        {
+          "about": "Which deal date to sort on. Use announced for a chronology of new deals, expected for pending closes, or completed for deals that have closed.",
+          "name": "parameters[date_sort]",
+          "oneOf": [
+            "expected",
+            "completed",
+            "announced"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Minimum importance level, matched as greater than or equal to the value given. Raise it when the caller only wants large or notable deals.",
+          "name": "parameters[importance]",
+          "oneOf": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "type": "number"
+        },
+        {
+          "about": "Unix timestamp in UTC; returns only records updated at or after it. Set this when polling for changes since a previous call.",
+          "name": "parameters[updated]",
+          "type": "number"
+        },
+        {
+          "about": "Zero-based page offset, capped at 100000. Prefer narrowing by date over paging deep.",
+          "default": 0,
+          "max": 100000,
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Number of records to return, limit 1000.",
+          "max": 1000,
+          "name": "pagesize",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Merger and acquisition deals with both sides of the transaction, the deal size and terms, and its announced, expected and completed dates.",
+        "fields": [
+          {
+            "about": "Benzinga identifier for the deal record.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Date the deal record applies to, YYYY-MM-DD.",
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "about": "Expected closing date for a pending deal.",
+            "name": "date_expected",
+            "type": "string"
+          },
+          {
+            "about": "Date the deal actually closed.",
+            "name": "date_completed",
+            "type": "string"
+          },
+          {
+            "about": "Where the deal stands, for example announced or completed.",
+            "name": "deal_status",
+            "type": "string"
+          },
+          {
+            "about": "Kind of transaction, for example an acquisition or a merger.",
+            "name": "deal_type",
+            "type": "string"
+          },
+          {
+            "about": "Headline value of the deal when disclosed.",
+            "name": "deal_size",
+            "type": "string"
+          },
+          {
+            "about": "How the deal is being paid for, for example cash or stock.",
+            "name": "deal_payment_type",
+            "type": "string"
+          },
+          {
+            "about": "Additional stated terms, including when terms were not disclosed.",
+            "name": "deal_terms_extra",
+            "type": "string"
+          },
+          {
+            "about": "Currency the deal size is quoted in.",
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "about": "Name of the acquiring company.",
+            "name": "acquirer_name",
+            "type": "string"
+          },
+          {
+            "about": "Ticker of the acquirer when it is listed.",
+            "name": "acquirer_ticker",
+            "type": "string"
+          },
+          {
+            "about": "Exchange the acquirer trades on.",
+            "name": "acquirer_exchange",
+            "type": "string"
+          },
+          {
+            "about": "CUSIP of the acquirer's security.",
+            "name": "acquirer_cusip",
+            "type": "string"
+          },
+          {
+            "about": "ISIN of the acquirer's security.",
+            "name": "acquirer_isin",
+            "type": "string"
+          },
+          {
+            "about": "Name of the target company.",
+            "name": "target_name",
+            "type": "string"
+          },
+          {
+            "about": "Ticker of the target when it is listed.",
+            "name": "target_ticker",
+            "type": "string"
+          },
+          {
+            "about": "Exchange the target trades on.",
+            "name": "target_exchange",
+            "type": "string"
+          },
+          {
+            "about": "Benzinga importance score for the deal.",
+            "name": "importance",
+            "type": "number"
+          },
+          {
+            "about": "Additional notes on the deal.",
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "about": "Unix timestamp of the last update to this record.",
+            "name": "updated",
+            "type": "number"
+          }
+        ],
+        "key": "ma",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "benzinga",
+        "capability": "calendar/mergers-acquisitions"
+      }
+    },
+    {
+      "id": "benzinga/calendar/ratings",
+      "attribution": "Powered by Benzinga Data",
+      "provider": "benzinga",
+      "capability": "calendar/ratings",
+      "name": "Analyst ratings",
+      "description": "Use for how analysts have moved on a stock: upgrades, downgrades, initiations and target changes. Filter by parameters[analyst_id] or parameters[firm_id] to follow one analyst or firm. It carries the ratings, not the reasoning behind them.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Comma-separated response fields to return, or * for every field including ratings_accuracy. Available: id, date, time, ticker, exchange, name, currency, action_pt, action_company, rating_current, pt_current, rating_prior, pt_prior, pt_pct_change, url, url_calendar, url_news, analyst, analyst_id, analyst_name, firm_id, ratings_accuracy, importance, notes, updated. Set it to trim the payload when you only need the rating and target.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated ticker symbols, maximum 50.",
+          "name": "parameters[tickers]",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated analyst ids. Take them from the id field of calendar/ratings-analysts, or the analyst_id on a rating, to follow one analyst's calls.",
+          "name": "parameters[analyst_id]",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated firm ids. Take them from the id field of calendar/ratings-firms, or the firm_id on a rating, to keep to one research firm's coverage.",
+          "name": "parameters[firm_id]",
+          "type": "string"
+        },
+        {
+          "about": "Ratings action to filter to, matched against action_company.",
+          "name": "parameters[action]",
+          "oneOf": [
+            "Assumes",
+            "Downgrades",
+            "Firm Dissolved",
+            "Initiates Coverage On",
+            "Maintains",
+            "Reinstates",
+            "Reiterates",
+            "Removes",
+            "Suspends",
+            "Terminates Coverage On",
+            "Upgrades"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "A single date, YYYY-MM-DD, as shorthand when date_from and date_to would be the same. Leave unset to get the latest ratings.",
+          "name": "parameters[date]",
+          "type": "string"
+        },
+        {
+          "about": "Earliest rating date, YYYY-MM-DD.",
+          "name": "parameters[date_from]",
+          "type": "string"
+        },
+        {
+          "about": "Latest rating date, YYYY-MM-DD.",
+          "name": "parameters[date_to]",
+          "type": "string"
+        },
+        {
+          "about": "Minimum importance level, matched as greater than or equal to the value given. Raise it when the caller only wants the notable calls.",
+          "name": "parameters[importance]",
+          "oneOf": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"
+          ],
+          "type": "number"
+        },
+        {
+          "about": "Collapse ratings to standardized categories.",
+          "name": "simplify",
+          "type": "boolean"
+        },
+        {
+          "about": "Unix timestamp. Returns records updated at or after it, for polling deltas.",
+          "name": "parameters[updated]",
+          "type": "number"
+        },
+        {
+          "about": "Page offset, 0 to 100000.",
+          "default": 0,
+          "max": 100000,
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Records to return. Limit 1000.",
+          "max": 1000,
+          "name": "pagesize",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Analyst upgrades, downgrades, initiations and price target changes, each carrying the analyst and firm ids that the roster capabilities resolve. Price targets arrive as strings.",
+        "fields": [
+          {
+            "about": "Benzinga id of the rating record.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Ticker.",
+            "name": "ticker",
+            "type": "string"
+          },
+          {
+            "about": "Exchange the security trades on.",
+            "name": "exchange",
+            "type": "string"
+          },
+          {
+            "about": "Company name.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "CUSIP of the security.",
+            "name": "cusip",
+            "type": "string"
+          },
+          {
+            "about": "ISIN of the security.",
+            "name": "isin",
+            "type": "string"
+          },
+          {
+            "about": "Date of the rating, YYYY-MM-DD.",
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "about": "Time of the rating announcement, Eastern.",
+            "name": "time",
+            "type": "string"
+          },
+          {
+            "about": "Firm issuing it.",
+            "name": "analyst",
+            "type": "string"
+          },
+          {
+            "about": "Id of the analyst; pass it to calendar/ratings-analysts or back to parameters[analyst_id].",
+            "name": "analyst_id",
+            "type": "string"
+          },
+          {
+            "about": "Full name of the analyst.",
+            "name": "analyst_name",
+            "type": "string"
+          },
+          {
+            "about": "Id of the firm; pass it to calendar/ratings-firms or back to parameters[firm_id].",
+            "name": "firm_id",
+            "type": "string"
+          },
+          {
+            "about": "What changed, for example Upgrades.",
+            "name": "action_company",
+            "type": "string"
+          },
+          {
+            "about": "Direction of the price target move, for example Lowers.",
+            "name": "action_pt",
+            "type": "string"
+          },
+          {
+            "about": "Rating before the change.",
+            "name": "rating_prior",
+            "type": "string"
+          },
+          {
+            "about": "Rating after it.",
+            "name": "rating_current",
+            "type": "string"
+          },
+          {
+            "about": "Price target before the change, as a string.",
+            "name": "pt_prior",
+            "type": "string"
+          },
+          {
+            "about": "Price target after the change, as a string.",
+            "name": "pt_current",
+            "type": "string"
+          },
+          {
+            "about": "Prior price target adjusted for splits.",
+            "name": "adjusted_pt_prior",
+            "type": "string"
+          },
+          {
+            "about": "Current price target adjusted for splits.",
+            "name": "adjusted_pt_current",
+            "type": "string"
+          },
+          {
+            "about": "Currency the price targets are quoted in.",
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "about": "Benzinga importance score, 0 to 5.",
+            "name": "importance",
+            "type": "number"
+          },
+          {
+            "about": "Analyst commentary on the rating, when present.",
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "about": "URL of the full rating article.",
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "about": "URL of the calendar entry.",
+            "name": "url_calendar",
+            "type": "string"
+          },
+          {
+            "about": "URL of the related news story.",
+            "name": "url_news",
+            "type": "string"
+          },
+          {
+            "about": "Unix timestamp of the last update to the record.",
+            "name": "updated",
+            "type": "number"
+          }
+        ],
+        "key": "ratings",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "benzinga",
+        "capability": "calendar/ratings"
+      }
+    },
+    {
+      "id": "benzinga/calendar/ratings-analysts",
+      "attribution": "Powered by Benzinga Data",
+      "provider": "benzinga",
+      "capability": "calendar/ratings-analysts",
+      "name": "Analyst roster",
+      "description": "Use to resolve an analyst by name, or to judge how accurate a particular analyst has been, and to get the id you then pass to calendar/ratings as parameters[analyst_id]. For the ratings themselves use calendar/ratings; for the list of firms rather than people use calendar/ratings-firms.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Page offset, limited to 0-100000. Set this only when walking past the first page of the analyst roster.",
+          "default": 0,
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Number of analysts to return, limit 1000. Raise it when you want the roster in one call rather than paging.",
+          "default": 100,
+          "max": 1000,
+          "name": "pageSize",
+          "type": "number"
+        },
+        {
+          "about": "Comma-separated list of response fields to return. Set it to trim the payload when you only need names and ids and not the ratings_accuracy block.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Analyst identifier to look up. Set this when you already have an analyst_id from a ratings record and want that analyst's profile and accuracy.",
+          "name": "analyst",
+          "type": "string"
+        },
+        {
+          "about": "Analyst name to match. Set this when the caller names a person rather than supplying an id; the reference does not say whether matching is exact, so try the full name first.",
+          "name": "analyst_name",
+          "type": "string"
+        },
+        {
+          "about": "Firm identifier to restrict to. Set this to list only the analysts working at one research firm.",
+          "name": "firm",
+          "type": "string"
+        },
+        {
+          "about": "Firm name to match. Use it when the caller names the bank, for example Morgan Stanley, instead of supplying a firm id.",
+          "name": "firm_name",
+          "type": "string"
+        },
+        {
+          "about": "Unix timestamp (UTC); only records updated at or after this are returned, and the sort order follows it. Set this to poll for roster changes since your last sync.",
+          "name": "updated",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "The roster of analysts who issue ratings, each with their firm and, when present, a rank and ratings_accuracy block of historical hit rates. The docs list the top-level fields; the rank and ratings_accuracy objects are nested and their child attributes are collapsed in the reference.",
+        "fields": [
+          {
+            "about": "Benzinga analyst id, the value to pass as parameters[analyst_id] when filtering ratings.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Analyst's full name.",
+            "name": "name_full",
+            "type": "string"
+          },
+          {
+            "about": "Analyst's first name.",
+            "name": "name_first",
+            "type": "string"
+          },
+          {
+            "about": "Analyst's last name.",
+            "name": "name_last",
+            "type": "string"
+          },
+          {
+            "about": "Id of the firm the analyst works for.",
+            "name": "firm_id",
+            "type": "string"
+          },
+          {
+            "about": "Name of the firm the analyst works for.",
+            "name": "firm_name",
+            "type": "string"
+          },
+          {
+            "about": "Ranking object for the analyst; child attributes are not enumerated in the docs.",
+            "name": "rank",
+            "type": "object"
+          },
+          {
+            "about": "Historical accuracy block with success rates, average returns, smart scores and total ratings over 1m, 3m, 9m, 1y, 2y, 3y and overall windows.",
+            "name": "ratings_accuracy",
+            "type": "object"
+          },
+          {
+            "about": "Unix timestamp of the last update to this analyst record.",
+            "name": "updated",
+            "type": "number"
+          }
+        ],
+        "key": "analyst_ratings_analyst",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "benzinga",
+        "capability": "calendar/ratings-analysts"
+      }
+    },
+    {
+      "id": "benzinga/calendar/ratings-firms",
+      "attribution": "Powered by Benzinga Data",
+      "provider": "benzinga",
+      "capability": "calendar/ratings-firms",
+      "name": "Research firms",
+      "description": "Use to enumerate the covering firms or to turn a firm name into the id that calendar/ratings filters on as parameters[firm_id]. For an individual analyst and their track record use calendar/ratings-analysts; for the ratings themselves use calendar/ratings.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Page offset, limited to 0-100000. Set this only when paging past the first block of firms.",
+          "default": 0,
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Number of firms to return, limit 1000. Raise it to pull the whole firm list in one call.",
+          "default": 100,
+          "max": 1000,
+          "name": "pageSize",
+          "type": "number"
+        },
+        {
+          "about": "Comma-separated list of response fields to return. Set it when you only need id and name.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Firm identifier to look up. Set this when you already hold a firm_id from a ratings record and want the firm's details.",
+          "name": "firm",
+          "type": "string"
+        },
+        {
+          "about": "Unix timestamp (UTC); only firms updated at or after this are returned. Set this to poll for newly added or renamed firms since your last sync.",
+          "name": "updated",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "The research firms that publish analyst ratings. The sample payload carries only id and name per firm; the reference additionally documents currency, homepage and updated.",
+        "fields": [
+          {
+            "about": "Benzinga firm id, the value to pass as parameters[firm_id] when filtering ratings.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Firm name as Benzinga records it.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Currency the firm reports price targets in.",
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "about": "Firm's website.",
+            "name": "homepage",
+            "type": "string"
+          },
+          {
+            "about": "Unix timestamp of the last update to this firm record.",
+            "name": "updated",
+            "type": "number"
+          }
+        ],
+        "key": "analyst_ratings_firm",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "benzinga",
+        "capability": "calendar/ratings-firms"
+      }
+    },
+    {
+      "id": "benzinga/calendar/removed",
+      "attribution": "Powered by Benzinga Data",
+      "provider": "benzinga",
+      "capability": "calendar/removed",
+      "name": "Removed calendar events",
+      "description": "Use when you keep a copy of the ratings or M&A calendar and need to know which previously returned events have since been withdrawn, which Schedule C.10 requires you to act on. It answers only what disappeared; for the events themselves use calendar/ratings or calendar/mergers-acquisitions.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Page offset, limited to 0-100000. Set this when walking a long backlog of removals.",
+          "default": 0,
+          "max": 100000,
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Number of removal records to return, limit 1000.",
+          "default": 100,
+          "max": 1000,
+          "name": "pageSize",
+          "type": "number"
+        },
+        {
+          "about": "Which calendar to read removals for: ratings for calendar/ratings rows, ma for calendar/mergers-acquisitions rows. Always set it: left unset the feed returns removals from every Benzinga calendar, most of them for calendars not published here (probed 2026-09-21, the unfiltered first page was dividends).",
+          "name": "type",
+          "oneOf": [
+            "ratings",
+            "ma"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Unix timestamp (UTC); only records updated at or after this are returned. Set this to the time of your last sync so you get just the newly withdrawn events.",
+          "name": "updated",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Calendar events Benzinga has removed or cancelled, identified by id and the calendar they came from, so you can delete matching rows from a copy you hold.",
+        "fields": [
+          {
+            "about": "Id of the removed event; match it against the id you stored from calendar/ratings or calendar/mergers-acquisitions.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Which calendar the removed event belonged to, ratings or ma.",
+            "name": "type",
+            "type": "string"
+          },
+          {
+            "about": "Unix timestamp of the removal record.",
+            "name": "updated",
+            "type": "number"
+          }
+        ],
+        "key": "removed",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "benzinga",
+        "capability": "calendar/removed"
+      }
+    },
+    {
+      "id": "benzinga/news/press-releases",
+      "attribution": "Powered by Benzinga Data",
+      "provider": "benzinga",
+      "capability": "news/press-releases",
+      "name": "Press releases",
+      "description": "Use this for company-issued announcements distributed over the wires, the primary-source wording behind a story. For Benzinga editorial coverage and the wider newswire use news/search, and for the one-line explanation of a price move use news/wiims.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Page offset, limited to 0-100000. Increase it to page past the first batch rather than widening the date range.",
+          "default": 0,
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Number of releases returned, maximum 100. Raise it when you want a full day of a company's releases in one call.",
+          "default": 15,
+          "max": 100,
+          "name": "pageSize",
+          "type": "number"
+        },
+        {
+          "about": "How much of each release to return: headline only, abstract (headline plus teaser) or full body text. Set full only when you need to quote the release.",
+          "default": "headline",
+          "name": "displayOutput",
+          "oneOf": [
+            "full",
+            "abstract",
+            "headline"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "A single day to query, yyyy-mm-dd. Use it instead of dateFrom and dateTo when the caller names one date.",
+          "name": "date",
+          "type": "string"
+        },
+        {
+          "about": "Earliest publication date, yyyy-mm-dd. Set it whenever the caller asks about a period rather than a single day.",
+          "name": "dateFrom",
+          "type": "string"
+        },
+        {
+          "about": "Latest publication date, yyyy-mm-dd. Pair it with dateFrom to bound a period.",
+          "name": "dateTo",
+          "type": "string"
+        },
+        {
+          "about": "Unix timestamp in UTC; set it to your last sync time to pull only releases updated since then.",
+          "name": "updatedSince",
+          "type": "number"
+        },
+        {
+          "about": "Unix timestamp in UTC; set it to pull and sort by releases published since that moment.",
+          "name": "publishedSince",
+          "type": "number"
+        },
+        {
+          "about": "Sort order as field:direction. Use created:asc to read a period forwards, or updated:desc when tracking edits.",
+          "name": "sort",
+          "oneOf": [
+            "id:asc",
+            "id:desc",
+            "created:asc",
+            "created:desc",
+            "updated:asc",
+            "updated:desc"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated ISINs, maximum 50. Use it when the caller identifies companies by ISIN rather than ticker.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated CUSIPs, maximum 50; requires a license agreement. Use only when the caller supplies CUSIPs.",
+          "name": "cusips",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated ticker symbols, maximum 50. Set this whenever the caller names a company.",
+          "name": "tickers",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated primary ticker symbols. Use it instead of tickers when you want only releases whose primary subject is that company.",
+          "name": "primaryTickers",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated words or phrases matched against title, tags and body in that order of priority. Use it when the caller asks about a subject rather than a company.",
+          "name": "topics",
+          "type": "string"
+        },
+        {
+          "about": "Logical operator for the topics query. Set and when every topic must appear, or leave as or to match any.",
+          "default": "or",
+          "name": "topic_group_by",
+          "oneOf": [
+            "and",
+            "or"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated authors, which for press releases are the distributing wires. Set it to restrict to one wire.",
+          "name": "authors",
+          "type": "string"
+        },
+        {
+          "about": "Desired response format. Set text only when you want plain text rather than the default JSON structures.",
+          "name": "format",
+          "oneOf": [
+            "text"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Importance level of the release. Set high when the caller only wants the market-moving releases.",
+          "name": "importance",
+          "oneOf": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Region filter, for example 'ca' or 'canada' for Canadian content. Set it when the caller scopes the question to a market.",
+          "name": "region",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "Press releases matching the filters, newest first, each with the wire that distributed it and the tickers it is filed against.",
+        "fields": [
+          {
+            "about": "Benzinga id for the release; use it to deduplicate against a prior sync.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "The distributing wire or desk, for example GlobeNewswire; use it to judge the source.",
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "about": "Publication timestamp, for example 'Wed, 17 May 2017 14:20:15 -0400'.",
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "about": "Last-modified timestamp; compare it with created to spot corrected releases.",
+            "name": "updated",
+            "type": "string"
+          },
+          {
+            "about": "Release headline.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Short summary, populated when displayOutput is abstract.",
+            "name": "teaser",
+            "type": "string"
+          },
+          {
+            "about": "Full release text, populated only when displayOutput is full.",
+            "name": "body",
+            "type": "string"
+          },
+          {
+            "about": "Canonical Benzinga URL for the release.",
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "about": "Image variants by size; use when rendering the release visually.",
+            "name": "image",
+            "type": "object[]"
+          },
+          {
+            "about": "Channels the release ran in, such as Press Releases.",
+            "name": "channels",
+            "type": "object[]"
+          },
+          {
+            "about": "Tickers the release is filed against, with cusip, isin and exchange.",
+            "name": "stocks",
+            "type": "object[]"
+          },
+          {
+            "about": "Benzinga tags on the release; useful for grouping related items.",
+            "name": "tags",
+            "type": "object[]"
+          },
+          {
+            "about": "Id of the original item when this record supersedes an earlier one.",
+            "name": "original_id",
+            "type": "number"
+          }
+        ],
+        "key": "",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "benzinga",
+        "capability": "news/press-releases"
+      }
+    },
+    {
+      "id": "benzinga/news/removed",
+      "attribution": "Powered by Benzinga Data",
+      "provider": "benzinga",
+      "capability": "news/removed",
+      "name": "Removed news",
+      "description": "Use this when you keep a copy of Benzinga news and need to know which stories have been withdrawn so you can delete them, which Schedule C.10 requires. It never returns story content; for the stories themselves use news/search.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Page offset. Upstream caps pageSize multiplied by page at 10000, so narrow with updatedSince rather than paging deep.",
+          "default": 0,
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Number of removal records returned, maximum 1000. Raise it when reconciling a backlog in one call.",
+          "default": 100,
+          "max": 1000,
+          "name": "pageSize",
+          "type": "number"
+        },
+        {
+          "about": "Unix timestamp in UTC; set it to the time of your last sync so you only receive removals recorded since then.",
+          "name": "updatedSince",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Stories Benzinga has withdrawn, flattened to one list from the keyed groups the endpoint answers with. Delete every id here from any copy you hold; the feed never carries the story itself.",
+        "fields": [
+          {
+            "about": "Id of the withdrawn story; match it against the id you stored from news/search, news/press-releases or news/wiims.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "When the story was withdrawn, for example 'Wed, 17 May 2017 14:20:15 -0400'.",
+            "name": "updated",
+            "type": "string"
+          }
+        ],
+        "key": "",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "benzinga",
+        "capability": "news/removed"
+      }
+    },
+    {
+      "id": "benzinga/news/search",
+      "attribution": "Powered by Benzinga Data",
+      "provider": "benzinga",
+      "capability": "news/search",
+      "name": "News search",
+      "description": "Use for what was reported about a company or subject, and when. Scope it to tickers or a date range: unscoped it returns the whole newswire. For the analyst reaction to a story use calendar/ratings.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Page offset, limited to 0-100000. Increase it to read past the first page of results rather than widening the date range.",
+          "default": 0,
+          "max": 100000,
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Stories to return, maximum 100. Raise it when you want a full day of coverage in one call.",
+          "default": 15,
+          "max": 100,
+          "name": "pageSize",
+          "type": "number"
+        },
+        {
+          "about": "How much of each story to return: headline only, abstract (headline plus teaser) or full body text. Set full only when you need to quote the story.",
+          "default": "headline",
+          "name": "displayOutput",
+          "oneOf": [
+            "full",
+            "abstract",
+            "headline"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "A single day to query, yyyy-mm-dd. Use it instead of dateFrom and dateTo when the caller names one date.",
+          "name": "date",
+          "type": "string"
+        },
+        {
+          "about": "Earliest publication date, yyyy-mm-dd. Set it whenever the caller asks about a period rather than a single day.",
+          "name": "dateFrom",
+          "type": "string"
+        },
+        {
+          "about": "Latest publication date, yyyy-mm-dd. Pair it with dateFrom to bound a period.",
+          "name": "dateTo",
+          "type": "string"
+        },
+        {
+          "about": "Unix timestamp in UTC; set it to your last sync time to pull only stories updated since then.",
+          "name": "updatedSince",
+          "type": "number"
+        },
+        {
+          "about": "Unix timestamp in UTC; set it to pull and sort by stories published since that moment.",
+          "name": "publishedSince",
+          "type": "number"
+        },
+        {
+          "about": "Sort order as field:direction. Use created:asc to read a period forwards, or updated:desc when tracking edits.",
+          "name": "sort",
+          "oneOf": [
+            "id:asc",
+            "id:desc",
+            "created:asc",
+            "created:desc",
+            "updated:asc",
+            "updated:desc"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated ISINs, maximum 50. Use it when the caller identifies companies by ISIN rather than ticker.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated CUSIPs, maximum 50; requires a license agreement. Use only when the caller supplies CUSIPs.",
+          "name": "cusips",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated ticker symbols, maximum 50. Set this whenever the caller names a company.",
+          "name": "tickers",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated primary ticker symbols. Use it instead of tickers when you want only stories whose primary subject is that company.",
+          "name": "primaryTickers",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated Benzinga channels to restrict to, for example Earnings or Analyst Ratings.",
+          "name": "channels",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated words or phrases matched against title, tags and body in that order of priority. Use it when the caller asks about a subject rather than a company.",
+          "name": "topics",
+          "type": "string"
+        },
+        {
+          "about": "Logical operator for the topics query. Set and when every topic must appear, or leave as or to match any.",
+          "default": "or",
+          "name": "topic_group_by",
+          "oneOf": [
+            "and",
+            "or"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated authors. Set it to restrict to a particular desk or writer.",
+          "name": "authors",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated content types. Set it when you need to keep the feed to a specific content type.",
+          "name": "content_types",
+          "type": "string"
+        },
+        {
+          "about": "Desired response format. Set text only when you want plain text rather than the default JSON structures.",
+          "name": "format",
+          "oneOf": [
+            "text"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Importance level filter. Set it when the caller only wants the market-moving stories.",
+          "name": "importance",
+          "type": "string"
+        },
+        {
+          "about": "Importance rank from 1 to 5. Set a low number to keep only the highest-ranked stories.",
+          "max": 5,
+          "min": 1,
+          "name": "importanceRank",
+          "type": "number"
+        },
+        {
+          "about": "Region filter, for example 'ca' or 'canada' for Canadian content. Set it when the caller scopes the question to a market.",
+          "name": "region",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "Matching stories, most recent first, with the channels and tickers each was filed under.",
+        "fields": [
+          {
+            "about": "Story id.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Headline.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Teaser, when displayOutput includes it.",
+            "name": "teaser",
+            "type": "string"
+          },
+          {
+            "about": "Publication timestamp.",
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "about": "Canonical story URL.",
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "about": "Tickers the story is filed against.",
+            "name": "stocks",
+            "type": "object[]"
+          },
+          {
+            "about": "Channels the story ran in.",
+            "name": "channels",
+            "type": "object[]"
+          }
+        ],
+        "key": "",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "benzinga",
+        "capability": "news/search"
+      }
+    },
+    {
+      "id": "benzinga/news/wiims",
+      "attribution": "Powered by Benzinga Data",
+      "provider": "benzinga",
+      "capability": "news/wiims",
+      "name": "Why Is It Moving",
+      "description": "Use this to answer why a stock moved: WIIMs are the short attributed explanations Benzinga files against a ticker's price action. For the underlying coverage use news/search, and for the company's own announcement use news/press-releases.",
+      "creditsCost": 45,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Page offset, limited to 0-100000. Increase it to page further back rather than widening the date range.",
+          "default": 0,
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Number of WIIM items returned, maximum 100. Raise it when scanning a whole session's movers.",
+          "default": 15,
+          "max": 100,
+          "name": "pageSize",
+          "type": "number"
+        },
+        {
+          "about": "How much of each item to return: headline only, abstract (headline plus teaser) or full body. WIIMs are short, so abstract is usually enough.",
+          "default": "headline",
+          "name": "displayOutput",
+          "oneOf": [
+            "full",
+            "abstract",
+            "headline"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "A single day to query, yyyy-mm-dd. Use it when the caller asks why a stock moved on a specific date.",
+          "name": "date",
+          "type": "string"
+        },
+        {
+          "about": "Earliest publication date, yyyy-mm-dd. Set it when the caller asks about a period.",
+          "name": "dateFrom",
+          "type": "string"
+        },
+        {
+          "about": "Latest publication date, yyyy-mm-dd. Pair it with dateFrom to bound a period.",
+          "name": "dateTo",
+          "type": "string"
+        },
+        {
+          "about": "Unix timestamp in UTC; set it to your last sync time to pull only items updated since then.",
+          "name": "updatedSince",
+          "type": "number"
+        },
+        {
+          "about": "Unix timestamp in UTC; set it to pull and sort by items published since that moment, which suits intraday polling.",
+          "name": "publishedSince",
+          "type": "number"
+        },
+        {
+          "about": "Sort order as field:direction. Use created:asc to read a session forwards.",
+          "name": "sort",
+          "oneOf": [
+            "id:asc",
+            "id:desc",
+            "created:asc",
+            "created:desc",
+            "updated:asc",
+            "updated:desc"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated ISINs, maximum 50. Use when the caller identifies companies by ISIN.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated CUSIPs, maximum 50; requires a license agreement.",
+          "name": "cusips",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated ticker symbols, maximum 50. Set this whenever the caller names a company.",
+          "name": "tickers",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated primary ticker symbols; use it to keep only items whose primary subject is that company.",
+          "name": "primaryTickers",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated words or phrases matched against title, tags and body in that order of priority.",
+          "name": "topics",
+          "type": "string"
+        },
+        {
+          "about": "Logical operator for the topics query. Set and when every topic must appear.",
+          "default": "or",
+          "name": "topic_group_by",
+          "oneOf": [
+            "and",
+            "or"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated authors. Set it to restrict to a particular desk.",
+          "name": "authors",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated content types. Set it when you need to keep the feed to a specific content type.",
+          "name": "content_types",
+          "type": "string"
+        },
+        {
+          "about": "Desired response format. Set text only when you want plain text rather than JSON structures.",
+          "name": "format",
+          "oneOf": [
+            "text"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Importance level filter. Set it when the caller wants only the more significant move explanations.",
+          "name": "importance",
+          "type": "string"
+        },
+        {
+          "about": "Importance rank from 1 to 5. Set a low number to keep only the highest-ranked items.",
+          "name": "importanceRank",
+          "type": "number"
+        },
+        {
+          "about": "Region filter, for example 'ca' or 'canada' for Canadian content.",
+          "name": "region",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "Why Is It Moving items, newest first, each a short explanation filed against the tickers it concerns.",
+        "fields": [
+          {
+            "about": "Benzinga id for the item; use it to deduplicate across polls.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "Desk that filed the explanation.",
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "about": "Publication timestamp; match it against the time of the price move.",
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "about": "Last-modified timestamp; a later value means the explanation was revised.",
+            "name": "updated",
+            "type": "string"
+          },
+          {
+            "about": "The one-line explanation of the move.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Short summary, populated when displayOutput is abstract.",
+            "name": "teaser",
+            "type": "string"
+          },
+          {
+            "about": "Full text, populated only when displayOutput is full.",
+            "name": "body",
+            "type": "string"
+          },
+          {
+            "about": "Canonical Benzinga URL for the item.",
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "about": "Image variants by size.",
+            "name": "image",
+            "type": "object[]"
+          },
+          {
+            "about": "Channels the item ran in, such as WIIM.",
+            "name": "channels",
+            "type": "object[]"
+          },
+          {
+            "about": "Tickers the item is filed against, with cusip, isin and exchange.",
+            "name": "stocks",
+            "type": "object[]"
+          },
+          {
+            "about": "Benzinga tags on the item.",
+            "name": "tags",
+            "type": "object[]"
+          },
+          {
+            "about": "Rank from 1 to 5; use it to surface the most significant explanations first.",
+            "name": "importance_rank",
+            "type": "number"
+          },
+          {
+            "about": "Id of the original item when this record supersedes an earlier one.",
+            "name": "original_id",
+            "type": "number"
+          }
+        ],
+        "key": "",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "benzinga",
+        "capability": "news/wiims"
+      }
+    },
+    {
+      "id": "benzinga/signals/options-activity",
+      "attribution": "Powered by Benzinga Data",
+      "provider": "benzinga",
+      "capability": "signals/options-activity",
+      "name": "Unusual options activity",
+      "description": "Use for positioning: large directional bets before a catalyst. It reports orders, not outcomes, and a sweep filled at or above the ask (execution_estimate) is a stronger signal than one at the midpoint.",
+      "creditsCost": 45,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Comma-separated ticker symbols, maximum 50.",
+          "name": "parameters[tickers]",
+          "type": "string"
+        },
+        {
+          "about": "Benzinga id of one options-activity record. Set it to fetch a single signal you already hold the id for.",
+          "name": "parameters[id]",
+          "type": "string"
+        },
+        {
+          "about": "A single date, YYYY-MM-DD.",
+          "name": "parameters[date]",
+          "type": "string"
+        },
+        {
+          "about": "Earliest date, YYYY-MM-DD.",
+          "name": "parameters[date_from]",
+          "type": "string"
+        },
+        {
+          "about": "Latest date, YYYY-MM-DD.",
+          "name": "parameters[date_to]",
+          "type": "string"
+        },
+        {
+          "about": "Date field to sort on. The only documented value is date; set it to read a period in date order.",
+          "name": "parameters[date_sort]",
+          "oneOf": [
+            "date"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Unix timestamp. Returns records updated at or after it.",
+          "name": "parameters[updated]",
+          "type": "number"
+        },
+        {
+          "about": "Page offset.",
+          "default": 0,
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Records to return, limit 1000.",
+          "max": 1000,
+          "name": "pagesize",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Unusually large or aggressive options orders, each with the contract, the size and premium, the sentiment Benzinga assigns, and where in the spread it filled. Prices and sizes arrive as strings.",
+        "fields": [
+          {
+            "about": "Benzinga id of the record; the value parameters[id] takes.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Date of the activity, YYYY-MM-DD.",
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "about": "Time of the activity, Eastern.",
+            "name": "time",
+            "type": "string"
+          },
+          {
+            "about": "Underlying ticker.",
+            "name": "ticker",
+            "type": "string"
+          },
+          {
+            "about": "Exchange the underlying trades on.",
+            "name": "exchange",
+            "type": "string"
+          },
+          {
+            "about": "ETF or STOCK.",
+            "name": "underlying_type",
+            "type": "string"
+          },
+          {
+            "about": "Price of the underlying when the order printed.",
+            "name": "underlying_price",
+            "type": "string"
+          },
+          {
+            "about": "OCC option symbol.",
+            "name": "option_symbol",
+            "type": "string"
+          },
+          {
+            "about": "Call or Put.",
+            "name": "put_call",
+            "type": "string"
+          },
+          {
+            "about": "Strike.",
+            "name": "strike_price",
+            "type": "string"
+          },
+          {
+            "about": "Expiry date.",
+            "name": "date_expiration",
+            "type": "string"
+          },
+          {
+            "about": "Kind of print: Sweep, Block, Large or Unusual.",
+            "name": "option_activity_type",
+            "type": "string"
+          },
+          {
+            "about": "Bullish, Bearish or Neutral, as Benzinga reads the order.",
+            "name": "sentiment",
+            "type": "string"
+          },
+          {
+            "about": "Aggressor indicator: 1 buyer, 2 seller.",
+            "name": "aggressor_ind",
+            "type": "string"
+          },
+          {
+            "about": "Where the order filled relative to the bid and ask, for example at the ask or above it.",
+            "name": "execution_estimate",
+            "type": "string"
+          },
+          {
+            "about": "Price per contract.",
+            "name": "price",
+            "type": "string"
+          },
+          {
+            "about": "Bid at the time of the print.",
+            "name": "bid",
+            "type": "string"
+          },
+          {
+            "about": "Ask at the time of the print.",
+            "name": "ask",
+            "type": "string"
+          },
+          {
+            "about": "Midpoint of the bid and ask, a price.",
+            "name": "midpoint",
+            "type": "string"
+          },
+          {
+            "about": "Contracts traded.",
+            "name": "size",
+            "type": "string"
+          },
+          {
+            "about": "Total premium paid.",
+            "name": "cost_basis",
+            "type": "string"
+          },
+          {
+            "about": "Number of trades making up the print.",
+            "name": "trade_count",
+            "type": "number"
+          },
+          {
+            "about": "Open interest on the contract.",
+            "name": "open_interest",
+            "type": "string"
+          },
+          {
+            "about": "Total volume on the contract.",
+            "name": "volume",
+            "type": "string"
+          },
+          {
+            "about": "Short description of the activity.",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "about": "Longer description with the trade details.",
+            "name": "description_extended",
+            "type": "string"
+          },
+          {
+            "about": "Unix timestamp of the last update to the record.",
+            "name": "updated",
+            "type": "number"
+          }
+        ],
+        "key": "option_activity",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "benzinga",
+        "capability": "signals/options-activity"
+      }
+    }
+  ]
+}

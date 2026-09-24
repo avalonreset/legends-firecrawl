@@ -1,0 +1,3422 @@
+{
+  "id": "fred",
+  "provider": "fred",
+  "name": "FRED",
+  "description": "US and international economic time series from the Federal Reserve Bank of St. Louis: rates, prices, employment, output and money, with the full revision history behind each figure.",
+  "toolCount": 31,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "fred"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "fred/categories/category",
+      "provider": "fred",
+      "capability": "categories/category",
+      "name": "Category",
+      "description": "Call to confirm what a category id is before walking down from it, or with no argument to land on the root. The only category endpoint that takes no real-time period, so what it returns is always the current name.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The category to read. 0 is the root of the tree.",
+          "default": 0,
+          "name": "category_id",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "One category, still delivered as a one-element array. The body is just `{ categories: [...] }` - no real-time echo and no paging keys, as on the other three category-returning capabilities.",
+        "fields": [
+          {
+            "about": "Category id. The root of the tree is 0.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "Category name.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Id of the parent category. The root is its own parent.",
+            "name": "parent_id",
+            "type": "number"
+          },
+          {
+            "about": "Documented as an optional attribute and absent from every published JSON example. Do not rely on it.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "categories",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "categories/category"
+      }
+    },
+    {
+      "id": "fred/categories/children",
+      "provider": "fred",
+      "capability": "categories/children",
+      "name": "Child categories",
+      "description": "The rung of the walk from the root to a series list. It descends one level per call, so getting from the root to a leaf takes several. Nothing here pages: a category with many children returns all of them.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The category to read. 0 is the root of the tree.",
+          "default": 0,
+          "name": "category_id",
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "Immediate children only, one level down. The body is `{ categories: [...] }` - it accepts a real-time period but does not echo one, and there is no limit or offset, so this is every child rather than a page of them.",
+        "fields": [
+          {
+            "about": "Category id. The root of the tree is 0.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "Category name.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Id of the parent category. The root is its own parent.",
+            "name": "parent_id",
+            "type": "number"
+          },
+          {
+            "about": "Documented as an optional attribute and absent from every published JSON example. Do not rely on it.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "categories",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "categories/children"
+      }
+    },
+    {
+      "id": "fred/categories/related",
+      "provider": "fred",
+      "capability": "categories/related",
+      "name": "Related categories",
+      "description": "Call for the cross-links the hierarchy cannot express. Most categories have none, so an empty array is the normal answer here and not a sign the call went wrong.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The category to read. Required here, though the identical-looking parameter defaults to the root on `categories/category` and `categories/children`.",
+          "name": "category_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "Categories linked to this one outside the parent/child tree - a Federal Reserve district category pointing at a state category, for instance.",
+        "fields": [
+          {
+            "about": "Category id. The root of the tree is 0.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "Category name.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Id of the parent category. The root is its own parent.",
+            "name": "parent_id",
+            "type": "number"
+          },
+          {
+            "about": "Documented as an optional attribute and absent from every published JSON example. Do not rely on it.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "categories",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "categories/related"
+      }
+    },
+    {
+      "id": "fred/categories/related-tags",
+      "provider": "fred",
+      "capability": "categories/related-tags",
+      "name": "Category related tags",
+      "description": "Call to narrow a category further once you already have one tag: it returns the tags that co-occur with `tag_names` inside this category. It narrows rather than suggesting alternatives, and unlike `categories/tags` the `tag_names` argument is mandatory.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The category to read. Required here, though the identical-looking parameter defaults to the root on `categories/category` and `categories/children`.",
+          "name": "category_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names, required here even though the same parameter is an optional filter on the sibling endpoints. It is the anchor set: the answer is the other tags carried by series that already carry all of these, so adding a name narrows rather than widens.",
+          "name": "tag_names",
+          "type": "string",
+          "required": true
+        },
+        {
+          "about": "Semicolon-delimited tag names to drop. Not independently usable: FRED requires `tag_names` to be set as well, which nothing in this contract can enforce.",
+          "name": "exclude_tag_names",
+          "type": "string"
+        },
+        {
+          "about": "Narrow to one kind of tag: freq frequency, gen general concept, geo geography, geot geography type, rls release, seas seasonal adjustment, src source.",
+          "name": "tag_group_id",
+          "oneOf": [
+            "freq",
+            "gen",
+            "geo",
+            "geot",
+            "rls",
+            "seas",
+            "src"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Free text the tag name must match.",
+          "name": "search_text",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which tag attribute to sort by.",
+          "default": "series_count",
+          "name": "order_by",
+          "oneOf": [
+            "series_count",
+            "popularity",
+            "created",
+            "name",
+            "group_id"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One tag per record. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "The tag name, which is its identity - tags have no id, and this is what `tag_names` takes.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Which group the tag belongs to: freq, gen, geo, geot, rls, seas or src.",
+            "name": "group_id",
+            "type": "string"
+          },
+          {
+            "about": "What the tag means. Frequently the empty string.",
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "about": "When the tag was created, as `2012-03-19 10:40:59-05`. Not ISO 8601.",
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "about": "How often the tag is used, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "How many series carry the tag. Scoped to whatever the endpoint was asked about, not global, wherever the request narrowed the set.",
+            "name": "series_count",
+            "type": "number"
+          }
+        ],
+        "key": "tags",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "categories/related-tags"
+      }
+    },
+    {
+      "id": "fred/categories/series",
+      "provider": "fred",
+      "capability": "categories/series",
+      "name": "Category series",
+      "description": "The bottom of the category walk: turns a category id into series ids. `limit` defaults to its maximum of 1000, so narrow with `tag_names` or `filter_variable` rather than expecting a small first page.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The category to read. Required here, though the identical-looking parameter defaults to the root on `categories/category` and `categories/children`.",
+          "name": "category_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which series attribute to sort by.",
+          "default": "series_id",
+          "name": "order_by",
+          "oneOf": [
+            "series_id",
+            "title",
+            "units",
+            "frequency",
+            "seasonal_adjustment",
+            "realtime_start",
+            "realtime_end",
+            "last_updated",
+            "observation_start",
+            "observation_end",
+            "popularity",
+            "group_popularity"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Which series attribute to filter on. Inert without `filter_value`.",
+          "name": "filter_variable",
+          "oneOf": [
+            "frequency",
+            "units",
+            "seasonal_adjustment"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "The value `filter_variable` must take. Inert on its own.",
+          "name": "filter_value",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names a series must carry all of, for example `income;bea`.",
+          "name": "tag_names",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names to drop. Not independently usable: FRED requires `tag_names` to be set as well, which nothing in this contract can enforce.",
+          "name": "exclude_tag_names",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One series per record, under the double-s key FRED uses everywhere for series. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "Series id, for example GNPCA. This is what every series capability takes.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Start of the real-time interval this record's attributes were valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Series title.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Date of the first observation, YYYY-MM-DD.",
+            "name": "observation_start",
+            "type": "string"
+          },
+          {
+            "about": "Date of the last observation.",
+            "name": "observation_end",
+            "type": "string"
+          },
+          {
+            "about": "Native frequency in words, for example Annual.",
+            "name": "frequency",
+            "type": "string"
+          },
+          {
+            "about": "Native frequency as a code, for example A. Not the same vocabulary as the `frequency` request parameter on observations.",
+            "name": "frequency_short",
+            "type": "string"
+          },
+          {
+            "about": "Unit of measure in words.",
+            "name": "units",
+            "type": "string"
+          },
+          {
+            "about": "Unit abbreviated.",
+            "name": "units_short",
+            "type": "string"
+          },
+          {
+            "about": "Seasonal adjustment in words.",
+            "name": "seasonal_adjustment",
+            "type": "string"
+          },
+          {
+            "about": "Seasonal adjustment abbreviated, for example NSA.",
+            "name": "seasonal_adjustment_short",
+            "type": "string"
+          },
+          {
+            "about": "When the series last changed, as `2017-07-06 09:34:00-05` - a space separator and a two-digit offset, not ISO 8601, so Date parsing on it is not portable.",
+            "name": "last_updated",
+            "type": "string"
+          },
+          {
+            "about": "How often this series is viewed on FRED, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "Popularity of the group the series belongs to.",
+            "name": "group_popularity",
+            "type": "number"
+          },
+          {
+            "about": "The series notes. Optional and absent on many series - and where a series is copyright-restricted, this is where it says so.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "seriess",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "categories/series"
+      }
+    },
+    {
+      "id": "fred/categories/tags",
+      "provider": "fred",
+      "capability": "categories/tags",
+      "name": "Category tags",
+      "description": "Call to see what the series in a category are labelled with before filtering them. `series_count` on each tag counts only series in this category, not every series carrying the tag.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The category to read. Required here, though the identical-looking parameter defaults to the root on `categories/category` and `categories/children`.",
+          "name": "category_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names to restrict the answer to, for example `usa;monthly`. Names are human strings and may contain spaces, so a space inside one name is URL-encoded while `;` separates names.",
+          "name": "tag_names",
+          "type": "string"
+        },
+        {
+          "about": "Narrow to one kind of tag: freq frequency, gen general concept, geo geography, geot geography type, rls release, seas seasonal adjustment, src source.",
+          "name": "tag_group_id",
+          "oneOf": [
+            "freq",
+            "gen",
+            "geo",
+            "geot",
+            "rls",
+            "seas",
+            "src"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Free text the tag name must match.",
+          "name": "search_text",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which tag attribute to sort by.",
+          "default": "series_count",
+          "name": "order_by",
+          "oneOf": [
+            "series_count",
+            "popularity",
+            "created",
+            "name",
+            "group_id"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One tag per record. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "The tag name, which is its identity - tags have no id, and this is what `tag_names` takes.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Which group the tag belongs to: freq, gen, geo, geot, rls, seas or src.",
+            "name": "group_id",
+            "type": "string"
+          },
+          {
+            "about": "What the tag means. Frequently the empty string.",
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "about": "When the tag was created, as `2012-03-19 10:40:59-05`. Not ISO 8601.",
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "about": "How often the tag is used, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "How many series carry the tag. Scoped to whatever the endpoint was asked about, not global, wherever the request narrowed the set.",
+            "name": "series_count",
+            "type": "number"
+          }
+        ],
+        "key": "tags",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "categories/tags"
+      }
+    },
+    {
+      "id": "fred/releases/dates",
+      "provider": "fred",
+      "capability": "releases/dates",
+      "name": "All release dates",
+      "description": "Call for the economic calendar across all releases at once. Not symmetric with `releases/release-dates` despite the near-identical name: this one sorts descending by default, carries `release_name`, and only reaches back to the start of the current year unless told otherwise.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Unlike everywhere else this defaults to the first day of the current year, which is not expressible as a literal here; pass one explicitly to ask about earlier years.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to the latest available vintage, not to today.",
+          "default": "9999-12-31",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which attribute to sort by.",
+          "default": "release_date",
+          "name": "order_by",
+          "oneOf": [
+            "release_date",
+            "release_id",
+            "release_name"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction. Defaults to desc here - the only endpoint in this provider that does - so the newest dates come first.",
+          "default": "desc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Include scheduled dates that have no data yet. The default of false silently drops the future, so `when is this next published` answers with the last past date unless this is true.",
+          "default": "false",
+          "name": "include_release_dates_with_no_data",
+          "oneOf": [
+            "true",
+            "false"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One release date per record, across every release. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "Which release was published.",
+            "name": "release_id",
+            "type": "number"
+          },
+          {
+            "about": "That release's name, carried here but not on the single-release `releases/release-dates`.",
+            "name": "release_name",
+            "type": "string"
+          },
+          {
+            "about": "The date the source agency published, YYYY-MM-DD. Not the date the data landed in FRED.",
+            "name": "date",
+            "type": "string"
+          }
+        ],
+        "key": "release_dates",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "releases/dates"
+      }
+    },
+    {
+      "id": "fred/releases/related-tags",
+      "provider": "fred",
+      "capability": "releases/related-tags",
+      "name": "Release related tags",
+      "description": "Call to narrow within a release once you have one tag. Two independently required arguments here, `release_id` and `tag_names`; the second reads like an optional filter and is not.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The release to read, for example 53 for Gross Domestic Product. Find one with `releases/releases`.",
+          "name": "release_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names, required here even though the same parameter is an optional filter on the sibling endpoints. It is the anchor set: the answer is the other tags carried by series that already carry all of these, so adding a name narrows rather than widens.",
+          "name": "tag_names",
+          "type": "string",
+          "required": true
+        },
+        {
+          "about": "Semicolon-delimited tag names to drop. Not independently usable: FRED requires `tag_names` to be set as well, which nothing in this contract can enforce.",
+          "name": "exclude_tag_names",
+          "type": "string"
+        },
+        {
+          "about": "Narrow to one kind of tag: freq frequency, gen general concept, geo geography, geot geography type, rls release, seas seasonal adjustment, src source.",
+          "name": "tag_group_id",
+          "oneOf": [
+            "freq",
+            "gen",
+            "geo",
+            "geot",
+            "rls",
+            "seas",
+            "src"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Free text the tag name must match.",
+          "name": "search_text",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which tag attribute to sort by.",
+          "default": "series_count",
+          "name": "order_by",
+          "oneOf": [
+            "series_count",
+            "popularity",
+            "created",
+            "name",
+            "group_id"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One tag per record. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "The tag name, which is its identity - tags have no id, and this is what `tag_names` takes.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Which group the tag belongs to: freq, gen, geo, geot, rls, seas or src.",
+            "name": "group_id",
+            "type": "string"
+          },
+          {
+            "about": "What the tag means. Frequently the empty string.",
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "about": "When the tag was created, as `2012-03-19 10:40:59-05`. Not ISO 8601.",
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "about": "How often the tag is used, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "How many series carry the tag. Scoped to whatever the endpoint was asked about, not global, wherever the request narrowed the set.",
+            "name": "series_count",
+            "type": "number"
+          }
+        ],
+        "key": "tags",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "releases/related-tags"
+      }
+    },
+    {
+      "id": "fred/releases/release",
+      "provider": "fred",
+      "capability": "releases/release",
+      "name": "Release",
+      "description": "Call to resolve a release id into a name and link. Widening the real-time period makes this single-release call return more than one record, one per interval in which the release's attributes differed.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The release to read, for example 53 for Gross Domestic Product. Find one with `releases/releases`.",
+          "name": "release_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One record, still delivered as a one-element array under a plural key. The object around it carries only the echoed realtime_start/realtime_end. A caller expecting a bare object gets an array of one.",
+        "fields": [
+          {
+            "about": "Release id, which every release capability takes.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "Start of the real-time interval this record was valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Release name, for example Gross Domestic Product.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Whether the source agency issues a press release with it.",
+            "name": "press_release",
+            "type": "boolean"
+          },
+          {
+            "about": "The release's page on the publisher's site. Optional - omitted, not null, for some releases.",
+            "name": "link",
+            "type": "string"
+          },
+          {
+            "about": "Notes about the release. Optional.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "releases",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "releases/release"
+      }
+    },
+    {
+      "id": "fred/releases/release-dates",
+      "provider": "fred",
+      "capability": "releases/release-dates",
+      "name": "Release dates",
+      "description": "Call for one release's publication history. It defaults to the whole span back to 1776-07-04 rather than the current year, has no `order_by`, and omits `release_name` - three ways it differs from `releases/dates`. Set `include_release_dates_with_no_data` to get the next scheduled date.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The release to read, for example 53 for Gross Domestic Product. Find one with `releases/releases`.",
+          "name": "release_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Unlike its siblings this defaults to the earliest available vintage, not to today, so leaving it unset returns the whole history.",
+          "default": "1776-07-04",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to the latest available vintage, not to today.",
+          "default": "9999-12-31",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Dates to return. The cap here is 10000, ten times every other endpoint in this provider.",
+          "default": 10000,
+          "max": 10000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Include scheduled dates that have no data yet. The default of false silently drops the future, so `when is this next published` answers with the last past date unless this is true.",
+          "default": "false",
+          "name": "include_release_dates_with_no_data",
+          "oneOf": [
+            "true",
+            "false"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One publication date per record. Same top-level key as `releases/dates` but a different record - there is no `release_name` here. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "The release these dates belong to. Constant across the answer.",
+            "name": "release_id",
+            "type": "number"
+          },
+          {
+            "about": "The date the source agency published, YYYY-MM-DD.",
+            "name": "date",
+            "type": "string"
+          }
+        ],
+        "key": "release_dates",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "releases/release-dates"
+      }
+    },
+    {
+      "id": "fred/releases/releases",
+      "provider": "fred",
+      "capability": "releases/releases",
+      "name": "Releases",
+      "description": "The entry point for every other release capability: it is where a release name becomes the `release_id` they take. There are only a few hundred releases and `limit` defaults to 1000, so one call is usually the whole list.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which release attribute to sort by.",
+          "default": "release_id",
+          "name": "order_by",
+          "oneOf": [
+            "release_id",
+            "name",
+            "press_release",
+            "realtime_start",
+            "realtime_end"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One release per record. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "Release id, which every release capability takes.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "Start of the real-time interval this record was valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Release name, for example Gross Domestic Product.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Whether the source agency issues a press release with it.",
+            "name": "press_release",
+            "type": "boolean"
+          },
+          {
+            "about": "The release's page on the publisher's site. Optional - omitted, not null, for some releases.",
+            "name": "link",
+            "type": "string"
+          },
+          {
+            "about": "Notes about the release. Optional.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "releases",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "releases/releases"
+      }
+    },
+    {
+      "id": "fred/releases/series",
+      "provider": "fred",
+      "capability": "releases/series",
+      "name": "Release series",
+      "description": "The bridge from a release to series ids: every series that arrives with this publication. A large release runs to thousands of series, so filter with `tag_names` or `filter_variable` rather than paging the whole thing.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The release to read, for example 53 for Gross Domestic Product. Find one with `releases/releases`.",
+          "name": "release_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which series attribute to sort by.",
+          "default": "series_id",
+          "name": "order_by",
+          "oneOf": [
+            "series_id",
+            "title",
+            "units",
+            "frequency",
+            "seasonal_adjustment",
+            "realtime_start",
+            "realtime_end",
+            "last_updated",
+            "observation_start",
+            "observation_end",
+            "popularity",
+            "group_popularity"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Which series attribute to filter on. Inert without `filter_value`.",
+          "name": "filter_variable",
+          "oneOf": [
+            "frequency",
+            "units",
+            "seasonal_adjustment"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "The value `filter_variable` must take. Inert on its own.",
+          "name": "filter_value",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names a series must carry all of, for example `japan;imports`.",
+          "name": "tag_names",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names to drop. Not independently usable: FRED requires `tag_names` to be set as well, which nothing in this contract can enforce.",
+          "name": "exclude_tag_names",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One series per record, under the double-s key. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "Series id, for example GNPCA. This is what every series capability takes.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Start of the real-time interval this record's attributes were valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Series title.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Date of the first observation, YYYY-MM-DD.",
+            "name": "observation_start",
+            "type": "string"
+          },
+          {
+            "about": "Date of the last observation.",
+            "name": "observation_end",
+            "type": "string"
+          },
+          {
+            "about": "Native frequency in words, for example Annual.",
+            "name": "frequency",
+            "type": "string"
+          },
+          {
+            "about": "Native frequency as a code, for example A. Not the same vocabulary as the `frequency` request parameter on observations.",
+            "name": "frequency_short",
+            "type": "string"
+          },
+          {
+            "about": "Unit of measure in words.",
+            "name": "units",
+            "type": "string"
+          },
+          {
+            "about": "Unit abbreviated.",
+            "name": "units_short",
+            "type": "string"
+          },
+          {
+            "about": "Seasonal adjustment in words.",
+            "name": "seasonal_adjustment",
+            "type": "string"
+          },
+          {
+            "about": "Seasonal adjustment abbreviated, for example NSA.",
+            "name": "seasonal_adjustment_short",
+            "type": "string"
+          },
+          {
+            "about": "When the series last changed, as `2017-07-06 09:34:00-05` - a space separator and a two-digit offset, not ISO 8601, so Date parsing on it is not portable.",
+            "name": "last_updated",
+            "type": "string"
+          },
+          {
+            "about": "How often this series is viewed on FRED, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "Popularity of the group the series belongs to.",
+            "name": "group_popularity",
+            "type": "number"
+          },
+          {
+            "about": "The series notes. Optional and absent on many series - and where a series is copyright-restricted, this is where it says so.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "seriess",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "releases/series"
+      }
+    },
+    {
+      "id": "fred/releases/sources",
+      "provider": "fred",
+      "capability": "releases/sources",
+      "name": "Release sources",
+      "description": "Call when the question is who publishes a release rather than what is in it. A release can have more than one source agency.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The release to read, for example 53 for Gross Domestic Product. Find one with `releases/releases`.",
+          "name": "release_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One source agency per record. No paging keys on this one - the envelope carries only the echoed real-time period.",
+        "fields": [
+          {
+            "about": "Source id, which the source capabilities take.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "Start of the real-time interval this record was valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Agency name, for example Board of Governors of the Federal Reserve System.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "The agency's site. Optional and absent for some sources.",
+            "name": "link",
+            "type": "string"
+          },
+          {
+            "about": "Notes about the source. Optional and absent on most.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "sources",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "releases/sources"
+      }
+    },
+    {
+      "id": "fred/releases/tables",
+      "provider": "fred",
+      "capability": "releases/tables",
+      "name": "Release table",
+      "description": "Call when the layout matters - which line of a published table a series sits on, and what nests under what. This is the only capability here that answers with a tree rather than a list, so a caller that walks `key` plus `paginated` has to special-case it: descend `elements`, then each element's `children`.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The release to read, for example 53 for Gross Domestic Product. Find one with `releases/releases`.",
+          "name": "release_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "The element to read. Omit for the root element of the release's table tree.",
+          "name": "element_id",
+          "type": "number"
+        },
+        {
+          "about": "Attach observation values to elements whose `type` is series. Only those elements gain them.",
+          "default": "false",
+          "name": "include_observation_values",
+          "oneOf": [
+            "true",
+            "false"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "The observation date to read values at, YYYY-MM-DD. Only meaningful with `include_observation_values`.",
+          "default": "9999-12-31",
+          "name": "observation_date",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "Structurally unlike every other capability here: not an envelope around a list. The body is the requested element itself, and its `elements` field is an object keyed by stringified element id rather than an array, with each element carrying a recursive `children`. There is no real-time period and no paging. Two things to expect: `release_id` is a string at the top level and a number inside each element, and asking for the root - no `element_id` - returns only `release_id` and `elements`, without `name` or `element_id`.",
+        "fields": [
+          {
+            "about": "Name of the requested element. Present only when `element_id` was given: asking for the root returns `release_id` and `elements` alone.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Id of the requested element. Present only when `element_id` was given, for the same reason as `name`.",
+            "name": "element_id",
+            "type": "number"
+          },
+          {
+            "about": "The release, as a string here - the nested elements carry the same value as a number.",
+            "name": "release_id",
+            "type": "string"
+          },
+          {
+            "about": "A map from stringified element id to element. Each element has element_id number, release_id number, series_id string (only on type `series`), parent_id number, line string, type string, name string, level string, and children object[] of the same shape. `line` and `level` are numeric-looking strings.",
+            "name": "elements",
+            "type": "object"
+          }
+        ],
+        "key": "",
+        "paginated": false
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "releases/tables"
+      }
+    },
+    {
+      "id": "fred/releases/tags",
+      "provider": "fred",
+      "capability": "releases/tags",
+      "name": "Release tags",
+      "description": "Call to see how a release's series are labelled before filtering `releases/series` by tag. `tag_names` is optional here and required on `releases/related-tags` - same parameter, adjacent endpoints, opposite requiredness.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The release to read, for example 53 for Gross Domestic Product. Find one with `releases/releases`.",
+          "name": "release_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names to restrict the answer to, for example `usa;monthly`. Names are human strings and may contain spaces, so a space inside one name is URL-encoded while `;` separates names.",
+          "name": "tag_names",
+          "type": "string"
+        },
+        {
+          "about": "Narrow to one kind of tag: freq frequency, gen general concept, geo geography, geot geography type, rls release, seas seasonal adjustment, src source.",
+          "name": "tag_group_id",
+          "oneOf": [
+            "freq",
+            "gen",
+            "geo",
+            "geot",
+            "rls",
+            "seas",
+            "src"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Free text the tag name must match.",
+          "name": "search_text",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which tag attribute to sort by.",
+          "default": "series_count",
+          "name": "order_by",
+          "oneOf": [
+            "series_count",
+            "popularity",
+            "created",
+            "name",
+            "group_id"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One tag per record. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "The tag name, which is its identity - tags have no id, and this is what `tag_names` takes.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Which group the tag belongs to: freq, gen, geo, geot, rls, seas or src.",
+            "name": "group_id",
+            "type": "string"
+          },
+          {
+            "about": "What the tag means. Frequently the empty string.",
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "about": "When the tag was created, as `2012-03-19 10:40:59-05`. Not ISO 8601.",
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "about": "How often the tag is used, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "How many series carry the tag. Scoped to whatever the endpoint was asked about, not global, wherever the request narrowed the set.",
+            "name": "series_count",
+            "type": "number"
+          }
+        ],
+        "key": "tags",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "releases/tags"
+      }
+    },
+    {
+      "id": "fred/series/categories",
+      "provider": "fred",
+      "capability": "series/categories",
+      "name": "Series categories",
+      "description": "Call to walk back up from a series you already have to the part of the tree it lives in, and from there to its peers. A series can sit in several categories.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The series to read, for example GNPCA or UNRATE. Find one with `series/search`.",
+          "name": "series_id",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "The categories this series is filed under. The body is `{ categories: [...] }` with no real-time echo, even though the endpoint accepts a real-time period.",
+        "fields": [
+          {
+            "about": "Category id. The root of the tree is 0.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "Category name.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Id of the parent category. The root is its own parent.",
+            "name": "parent_id",
+            "type": "number"
+          },
+          {
+            "about": "Documented as an optional attribute and absent from every published JSON example. Do not rely on it.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "categories",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "series/categories"
+      }
+    },
+    {
+      "id": "fred/series/observations",
+      "provider": "fred",
+      "capability": "series/observations",
+      "name": "Series observations",
+      "description": "The only capability in this provider that returns numbers; everything else exists to find the id it takes. Two independent time axes: `observation_start`/`observation_end` bound when the economy did the thing, `realtime_start`/`realtime_end` bound when FRED knew it. Leaving the real-time pair alone gives today's vintage only, so a question about revisions needs 1776-07-04 to 9999-12-31 or an explicit `vintage_dates`.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The series to read, for example GNPCA or UNRATE. Find one with `series/search`.",
+          "name": "series_id",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, meaning the current vintage. `vintage_dates` is an alternative to this pair, not a filter layered on top of it.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Observations to return.",
+          "default": 100000,
+          "max": 100000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Observations to skip.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Sort by observation date.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Earliest observation date to return, YYYY-MM-DD. When the economy did the thing - not to be confused with `realtime_start`, which is when FRED knew it.",
+          "default": "1776-07-04",
+          "name": "observation_start",
+          "type": "string"
+        },
+        {
+          "about": "Latest observation date to return, YYYY-MM-DD.",
+          "default": "9999-12-31",
+          "name": "observation_end",
+          "type": "string"
+        },
+        {
+          "about": "Value transformation: lin levels, chg change, ch1 change from a year ago, pch percent change, pc1 percent change from a year ago, pca compounded annual rate of change, cch continuously compounded rate of change, cca continuously compounded annual rate of change, log natural log.",
+          "default": "lin",
+          "name": "units",
+          "oneOf": [
+            "lin",
+            "chg",
+            "ch1",
+            "pch",
+            "pc1",
+            "pca",
+            "cch",
+            "cca",
+            "log"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Aggregate down to a lower frequency. Asking for a frequency higher than the series' native one is an error rather than a no-op, and asking for the native one does nothing. Omit for no aggregation.",
+          "name": "frequency",
+          "oneOf": [
+            "d",
+            "w",
+            "bw",
+            "m",
+            "q",
+            "sa",
+            "a",
+            "wef",
+            "weth",
+            "wew",
+            "wetu",
+            "wem",
+            "wesu",
+            "wesa",
+            "bwew",
+            "bwem"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "How `frequency` aggregates. No effect unless `frequency` is set.",
+          "default": "avg",
+          "name": "aggregation_method",
+          "oneOf": [
+            "avg",
+            "sum",
+            "eop"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "1 observations by real-time period, 2 all observations by vintage date, 3 new and revised observations only, 4 initial release only. The fields described below are the shape of output_type 1; 2 and 3 replace the record entirely with one column per vintage date.",
+          "default": "1",
+          "name": "output_type",
+          "oneOf": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated YYYY-MM-DD dates to read the data as it stood on, instead of a real-time period. Capped server-side by output type - roughly 2000 dates for json, far fewer for output_type 2 on a daily series.",
+          "name": "vintage_dates",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One observation per record. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end. The envelope here additionally echoes observation_start, observation_end, units, output_type and file_type. The fields below describe output_type 1.",
+        "fields": [
+          {
+            "about": "Start of the real-time interval this value was the published figure for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval. A value revised since carries an end date in the past.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "The period the figure measures, YYYY-MM-DD. For a monthly or quarterly series this is the first day of the period.",
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "about": "The figure, as a string rather than a number - FRED sends `1065.9` quoted to avoid precision loss. A missing observation is the single character `.`, not null and not zero, so anything summing or charting these has to filter first.",
+            "name": "value",
+            "type": "string"
+          }
+        ],
+        "key": "observations",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "series/observations"
+      }
+    },
+    {
+      "id": "fred/series/release",
+      "provider": "fred",
+      "capability": "series/release",
+      "name": "Series release",
+      "description": "Call to find which publication a series arrives in, then use that `release_id` for its calendar or its sibling series. Answering `when is this next updated` goes through here rather than through the series record.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The series to read, for example GNPCA or UNRATE. Find one with `series/search`.",
+          "name": "series_id",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One record, still delivered as a one-element array under a plural key. The object around it carries only the echoed realtime_start/realtime_end. A singular-sounding endpoint answering under a plural key with a one-element array.",
+        "fields": [
+          {
+            "about": "Release id, which every release capability takes.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "Start of the real-time interval this record was valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Release name, for example Gross Domestic Product.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Whether the source agency issues a press release with it.",
+            "name": "press_release",
+            "type": "boolean"
+          },
+          {
+            "about": "The release's page on the publisher's site. Optional - omitted, not null, for some releases.",
+            "name": "link",
+            "type": "string"
+          },
+          {
+            "about": "Notes about the release. Optional.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "releases",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "series/release"
+      }
+    },
+    {
+      "id": "fred/series/search",
+      "provider": "fred",
+      "capability": "series/search",
+      "name": "Series search",
+      "description": "The way in when all you have is words. Set `search_type` to series_id when the query is an id fragment rather than a description; the default full-text mode stems, so `UNRATE` under it matches on unrelated titles. Leave `order_by` and `sort_order` unset unless you mean to override the relevance ranking, because their defaults depend on each other.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The words to match against series.",
+          "name": "search_text",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "`full_text` stems the words across title, units, frequency and tags. `series_id` is a substring match on ids with `*` as a wildcard, which is what a ticker-shaped query wants - passing one under the default gets stem-matched noise instead.",
+          "default": "full_text",
+          "name": "search_type",
+          "oneOf": [
+            "full_text",
+            "series_id"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which attribute to sort by. The default is conditional and cannot be stated here: `search_rank` when `search_type` is full_text, `series_id` when it is series_id.",
+          "name": "order_by",
+          "oneOf": [
+            "search_rank",
+            "series_id",
+            "title",
+            "units",
+            "frequency",
+            "seasonal_adjustment",
+            "realtime_start",
+            "realtime_end",
+            "last_updated",
+            "observation_start",
+            "observation_end",
+            "popularity",
+            "group_popularity"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction. Also conditional: FRED defaults to desc when `order_by` is search_rank or popularity, asc otherwise.",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Which series attribute to filter on. Inert without `filter_value`.",
+          "name": "filter_variable",
+          "oneOf": [
+            "frequency",
+            "units",
+            "seasonal_adjustment"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "The value `filter_variable` must take. Inert on its own.",
+          "name": "filter_value",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names a series must carry all of, for example `usa;m2`.",
+          "name": "tag_names",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names to drop. Not independently usable: FRED requires `tag_names` to be set as well, which nothing in this contract can enforce.",
+          "name": "exclude_tag_names",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One series per record, under the double-s key. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "Series id, for example GNPCA. This is what every series capability takes.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Start of the real-time interval this record's attributes were valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Series title.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Date of the first observation, YYYY-MM-DD.",
+            "name": "observation_start",
+            "type": "string"
+          },
+          {
+            "about": "Date of the last observation.",
+            "name": "observation_end",
+            "type": "string"
+          },
+          {
+            "about": "Native frequency in words, for example Annual.",
+            "name": "frequency",
+            "type": "string"
+          },
+          {
+            "about": "Native frequency as a code, for example A. Not the same vocabulary as the `frequency` request parameter on observations.",
+            "name": "frequency_short",
+            "type": "string"
+          },
+          {
+            "about": "Unit of measure in words.",
+            "name": "units",
+            "type": "string"
+          },
+          {
+            "about": "Unit abbreviated.",
+            "name": "units_short",
+            "type": "string"
+          },
+          {
+            "about": "Seasonal adjustment in words.",
+            "name": "seasonal_adjustment",
+            "type": "string"
+          },
+          {
+            "about": "Seasonal adjustment abbreviated, for example NSA.",
+            "name": "seasonal_adjustment_short",
+            "type": "string"
+          },
+          {
+            "about": "When the series last changed, as `2017-07-06 09:34:00-05` - a space separator and a two-digit offset, not ISO 8601, so Date parsing on it is not portable.",
+            "name": "last_updated",
+            "type": "string"
+          },
+          {
+            "about": "How often this series is viewed on FRED, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "Popularity of the group the series belongs to.",
+            "name": "group_popularity",
+            "type": "number"
+          },
+          {
+            "about": "The series notes. Optional and absent on many series - and where a series is copyright-restricted, this is where it says so.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "seriess",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "series/search"
+      }
+    },
+    {
+      "id": "fred/series/search-related-tags",
+      "provider": "fred",
+      "capability": "series/search-related-tags",
+      "name": "Series search related tags",
+      "description": "The second step of narrowing a search: given words and one tag already applied, the tags that co-occur on what is left. Two required arguments, `series_search_text` and `tag_names` - the second looks like a filter and is mandatory.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The words matched against series; the tags returned are the tags of that result set. Note the name: `series_search_text` here, `search_text` on `series/search`. They are not interchangeable.",
+          "name": "series_search_text",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names, required here even though the same parameter is an optional filter on the sibling endpoints. It is the anchor set: the answer is the other tags carried by series that already carry all of these, so adding a name narrows rather than widens.",
+          "name": "tag_names",
+          "type": "string",
+          "required": true
+        },
+        {
+          "about": "Semicolon-delimited tag names to drop. Not independently usable: FRED requires `tag_names` to be set as well, which nothing in this contract can enforce.",
+          "name": "exclude_tag_names",
+          "type": "string"
+        },
+        {
+          "about": "Narrow to one kind of tag: freq frequency, gen general concept, geo geography, geot geography type, rls release, seas seasonal adjustment, src source.",
+          "name": "tag_group_id",
+          "oneOf": [
+            "freq",
+            "gen",
+            "geo",
+            "geot",
+            "rls",
+            "seas",
+            "src"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Words to match against tag names. Named `tag_search_text` here where the sibling tag endpoints call the same thing `search_text`.",
+          "name": "tag_search_text",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which tag attribute to sort by.",
+          "default": "series_count",
+          "name": "order_by",
+          "oneOf": [
+            "series_count",
+            "popularity",
+            "created",
+            "name",
+            "group_id"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One tag per record. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "The tag name, which is its identity - tags have no id, and this is what `tag_names` takes.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Which group the tag belongs to: freq, gen, geo, geot, rls, seas or src.",
+            "name": "group_id",
+            "type": "string"
+          },
+          {
+            "about": "What the tag means. Frequently the empty string.",
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "about": "When the tag was created, as `2012-03-19 10:40:59-05`. Not ISO 8601.",
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "about": "How often the tag is used, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "How many series carry the tag. Scoped to whatever the endpoint was asked about, not global, wherever the request narrowed the set.",
+            "name": "series_count",
+            "type": "number"
+          }
+        ],
+        "key": "tags",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "series/search-related-tags"
+      }
+    },
+    {
+      "id": "fred/series/search-tags",
+      "provider": "fred",
+      "capability": "series/search-tags",
+      "name": "Series search tags",
+      "description": "Call after a broad `series/search` to see what would narrow it, then feed a name back as `tag_names` there. Two search-text parameters on one endpoint: `series_search_text` picks the series, `tag_search_text` filters the tags that come back.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The words matched against series; the tags returned are the tags of that result set. Note the name: `series_search_text` here, `search_text` on `series/search`. They are not interchangeable.",
+          "name": "series_search_text",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names to restrict the answer to, for example `m1;m2`. An include-list over the tags returned, not a filter on the series - which is what the same name means on `series/search`.",
+          "name": "tag_names",
+          "type": "string"
+        },
+        {
+          "about": "Narrow to one kind of tag: freq frequency, gen general concept, geo geography, geot geography type, rls release, seas seasonal adjustment, src source.",
+          "name": "tag_group_id",
+          "oneOf": [
+            "freq",
+            "gen",
+            "geo",
+            "geot",
+            "rls",
+            "seas",
+            "src"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Words to match against tag names. Named `tag_search_text` here where the sibling tag endpoints call the same thing `search_text`.",
+          "name": "tag_search_text",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which tag attribute to sort by.",
+          "default": "series_count",
+          "name": "order_by",
+          "oneOf": [
+            "series_count",
+            "popularity",
+            "created",
+            "name",
+            "group_id"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One tag per record, drawn from the series a search matched. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "The tag name, which is its identity - tags have no id, and this is what `tag_names` takes.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Which group the tag belongs to: freq, gen, geo, geot, rls, seas or src.",
+            "name": "group_id",
+            "type": "string"
+          },
+          {
+            "about": "What the tag means. Frequently the empty string.",
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "about": "When the tag was created, as `2012-03-19 10:40:59-05`. Not ISO 8601.",
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "about": "How often the tag is used, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "How many series carry the tag. Scoped to whatever the endpoint was asked about, not global, wherever the request narrowed the set.",
+            "name": "series_count",
+            "type": "number"
+          }
+        ],
+        "key": "tags",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "series/search-tags"
+      }
+    },
+    {
+      "id": "fred/series/series",
+      "provider": "fred",
+      "capability": "series/series",
+      "name": "Series metadata",
+      "description": "Call before charting or comparing: `units`, `seasonal_adjustment` and `frequency` are what decide whether two series are comparable, and none of them are visible from the id. Widening the real-time period returns one record per interval in which the metadata differed, so a single-series call can answer with several rows.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The series to read, for example GNPCA or UNRATE. Find one with `series/search`.",
+          "name": "series_id",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One record, still delivered as a one-element array under a plural key. The object around it carries only the echoed realtime_start/realtime_end. No `group_popularity`: this endpoint does not serve it, though the four other series-returning ones do.",
+        "fields": [
+          {
+            "about": "Series id, for example GNPCA. This is what every series capability takes.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Start of the real-time interval this record's attributes were valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Series title.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Date of the first observation, YYYY-MM-DD.",
+            "name": "observation_start",
+            "type": "string"
+          },
+          {
+            "about": "Date of the last observation.",
+            "name": "observation_end",
+            "type": "string"
+          },
+          {
+            "about": "Native frequency in words, for example Annual.",
+            "name": "frequency",
+            "type": "string"
+          },
+          {
+            "about": "Native frequency as a code, for example A. Not the same vocabulary as the `frequency` request parameter on observations.",
+            "name": "frequency_short",
+            "type": "string"
+          },
+          {
+            "about": "Unit of measure in words.",
+            "name": "units",
+            "type": "string"
+          },
+          {
+            "about": "Unit abbreviated.",
+            "name": "units_short",
+            "type": "string"
+          },
+          {
+            "about": "Seasonal adjustment in words.",
+            "name": "seasonal_adjustment",
+            "type": "string"
+          },
+          {
+            "about": "Seasonal adjustment abbreviated, for example NSA.",
+            "name": "seasonal_adjustment_short",
+            "type": "string"
+          },
+          {
+            "about": "When the series last changed, as `2017-07-06 09:34:00-05` - a space separator and a two-digit offset, not ISO 8601, so Date parsing on it is not portable.",
+            "name": "last_updated",
+            "type": "string"
+          },
+          {
+            "about": "How often this series is viewed on FRED, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "The series notes. Optional and absent on many series - and where a series is copyright-restricted, this is where it says so.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "seriess",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "series/series"
+      }
+    },
+    {
+      "id": "fred/series/tags",
+      "provider": "fred",
+      "capability": "series/tags",
+      "name": "Series tags",
+      "description": "Call to read one series' labels - its geography, frequency, publisher and subject - and to get the tag names that would find its peers through `tags/series`. Unlike every other tag capability here it has no limit, offset, search_text or tag_group_id: you get all of them.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The series to read, for example GNPCA or UNRATE. Find one with `series/search`.",
+          "name": "series_id",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Which tag attribute to sort by.",
+          "default": "series_count",
+          "name": "order_by",
+          "oneOf": [
+            "series_count",
+            "popularity",
+            "created",
+            "name",
+            "group_id"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One tag per record. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end. The envelope reports limit and offset even though this endpoint takes neither.",
+        "fields": [
+          {
+            "about": "The tag name, which is its identity - tags have no id, and this is what `tag_names` takes.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Which group the tag belongs to: freq, gen, geo, geot, rls, seas or src.",
+            "name": "group_id",
+            "type": "string"
+          },
+          {
+            "about": "What the tag means. Frequently the empty string.",
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "about": "When the tag was created, as `2012-03-19 10:40:59-05`. Not ISO 8601.",
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "about": "How often the tag is used, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "How many series carry the tag. Scoped to whatever the endpoint was asked about, not global, wherever the request narrowed the set.",
+            "name": "series_count",
+            "type": "number"
+          }
+        ],
+        "key": "tags",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "series/tags"
+      }
+    },
+    {
+      "id": "fred/series/updates",
+      "provider": "fred",
+      "capability": "series/updates",
+      "name": "Series updates",
+      "description": "Call to find what has changed rather than what exists - the only capability here that takes no series id. FRED caps it at series updated in the last two weeks, so it cannot answer a question about last quarter, and the sort is fixed at last_updated descending with no way to change it.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Geographic scope: macro is country-level series, regional is US states, counties and metro areas. Note this is not the `filter_value` of the series-listing endpoints, where it means the value of `filter_variable` - same name, unrelated meaning.",
+          "default": "all",
+          "name": "filter_value",
+          "oneOf": [
+            "macro",
+            "regional",
+            "all"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Start of the update window, as YYYYMMDDHhmm with no separators - `201803021420`. All or nothing with `end_time`: FRED rejects either one on its own.",
+          "name": "start_time",
+          "type": "string"
+        },
+        {
+          "about": "End of the update window, same YYYYMMDDHhmm format. Required if `start_time` is set, and vice versa.",
+          "name": "end_time",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One series per record, most recently updated first. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end. The envelope also echoes filter_variable and filter_value. No `group_popularity`: this endpoint does not serve it, as with fred/series.",
+        "fields": [
+          {
+            "about": "Series id, for example GNPCA. This is what every series capability takes.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Start of the real-time interval this record's attributes were valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Series title.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Date of the first observation, YYYY-MM-DD.",
+            "name": "observation_start",
+            "type": "string"
+          },
+          {
+            "about": "Date of the last observation.",
+            "name": "observation_end",
+            "type": "string"
+          },
+          {
+            "about": "Native frequency in words, for example Annual.",
+            "name": "frequency",
+            "type": "string"
+          },
+          {
+            "about": "Native frequency as a code, for example A. Not the same vocabulary as the `frequency` request parameter on observations.",
+            "name": "frequency_short",
+            "type": "string"
+          },
+          {
+            "about": "Unit of measure in words.",
+            "name": "units",
+            "type": "string"
+          },
+          {
+            "about": "Unit abbreviated.",
+            "name": "units_short",
+            "type": "string"
+          },
+          {
+            "about": "Seasonal adjustment in words.",
+            "name": "seasonal_adjustment",
+            "type": "string"
+          },
+          {
+            "about": "Seasonal adjustment abbreviated, for example NSA.",
+            "name": "seasonal_adjustment_short",
+            "type": "string"
+          },
+          {
+            "about": "When the series last changed, as `2017-07-06 09:34:00-05` - a space separator and a two-digit offset, not ISO 8601, so Date parsing on it is not portable.",
+            "name": "last_updated",
+            "type": "string"
+          },
+          {
+            "about": "How often this series is viewed on FRED, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "The series notes. Optional and absent on many series - and where a series is copyright-restricted, this is where it says so.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "seriess",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "series/updates"
+      }
+    },
+    {
+      "id": "fred/series/vintage-dates",
+      "provider": "fred",
+      "capability": "series/vintage-dates",
+      "name": "Series vintage dates",
+      "description": "Call to find out when a series was actually revised, then pass one or more of these dates to `series/observations` as `vintage_dates` to see the data as it stood. The path is `vintagedates` with no underscore, and unlike its siblings the real-time period defaults to the whole span rather than to today, so a bare call returns the full revision history.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The series to read, for example GNPCA or UNRATE. Find one with `series/search`.",
+          "name": "series_id",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Unlike its siblings this defaults to the earliest available vintage, not to today, so leaving it unset returns the whole history.",
+          "default": "1776-07-04",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to the latest available vintage, not to today.",
+          "default": "9999-12-31",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Dates to return. The cap here is 10000, not the 1000 of most endpoints.",
+          "default": 10000,
+          "max": 10000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "The records are bare date strings, not objects: `[\"1958-12-21\", \"1959-02-19\", ...]`. The single field below names what each string is; there is no wrapping object to read it off. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "A date on which this series was revised or newly released, YYYY-MM-DD. The array elements are these strings themselves.",
+            "name": "vintage_date",
+            "type": "string"
+          }
+        ],
+        "key": "vintage_dates",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "series/vintage-dates"
+      }
+    },
+    {
+      "id": "fred/sources/releases",
+      "provider": "fred",
+      "capability": "sources/releases",
+      "name": "Source releases",
+      "description": "The middle rung of the provenance walk: agency to release to series. Call when the question starts from a publisher - everything the BEA puts out - rather than from a subject.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The source agency to read, for example 1 for the Board of Governors. Find one with `sources/sources`.",
+          "name": "source_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which release attribute to sort by.",
+          "default": "release_id",
+          "name": "order_by",
+          "oneOf": [
+            "release_id",
+            "name",
+            "press_release",
+            "realtime_start",
+            "realtime_end"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One release per record. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "Release id, which every release capability takes.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "Start of the real-time interval this record was valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Release name, for example Gross Domestic Product.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Whether the source agency issues a press release with it.",
+            "name": "press_release",
+            "type": "boolean"
+          },
+          {
+            "about": "The release's page on the publisher's site. Optional - omitted, not null, for some releases.",
+            "name": "link",
+            "type": "string"
+          },
+          {
+            "about": "Notes about the release. Optional.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "releases",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "sources/releases"
+      }
+    },
+    {
+      "id": "fred/sources/source",
+      "provider": "fred",
+      "capability": "sources/source",
+      "name": "Source",
+      "description": "Call to resolve a source id to an agency name and site. Widening the real-time period makes this single-source call return several records, one per interval in which the agency's name or link differed.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "The source agency to read, for example 1 for the Board of Governors. Find one with `sources/sources`.",
+          "name": "source_id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One record, still delivered as a one-element array under a plural key. The object around it carries only the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "Source id, which the source capabilities take.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "Start of the real-time interval this record was valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Agency name, for example Board of Governors of the Federal Reserve System.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "The agency's site. Optional and absent for some sources.",
+            "name": "link",
+            "type": "string"
+          },
+          {
+            "about": "Notes about the source. Optional and absent on most.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "sources",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "sources/source"
+      }
+    },
+    {
+      "id": "fred/sources/sources",
+      "provider": "fred",
+      "capability": "sources/sources",
+      "name": "Sources",
+      "description": "Where a `source_id` comes from. There are only about a hundred agencies and `limit` defaults to 1000, so one call is the whole list and paging is never needed here.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which source attribute to sort by.",
+          "default": "source_id",
+          "name": "order_by",
+          "oneOf": [
+            "source_id",
+            "name",
+            "realtime_start",
+            "realtime_end"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One agency per record. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "Source id, which the source capabilities take.",
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "about": "Start of the real-time interval this record was valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Agency name, for example Board of Governors of the Federal Reserve System.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "The agency's site. Optional and absent for some sources.",
+            "name": "link",
+            "type": "string"
+          },
+          {
+            "about": "Notes about the source. Optional and absent on most.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "sources",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "sources/sources"
+      }
+    },
+    {
+      "id": "fred/tags/related",
+      "provider": "fred",
+      "capability": "tags/related",
+      "name": "Related tags",
+      "description": "Call to narrow a tag search: given tags already chosen, the tags that co-occur with them. The one required argument is the one that is optional on `tags/tags`, and `tag_group_id` does not accept `cc` here. Tag names may contain spaces, so a value like `monetary aggregates;weekly` needs the space URL-encoded and only the `;` treated as a separator.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names, required here even though the same parameter is an optional filter on the sibling endpoints. It is the anchor set: the answer is the other tags carried by series that already carry all of these, so adding a name narrows rather than widens.",
+          "name": "tag_names",
+          "type": "string",
+          "required": true
+        },
+        {
+          "about": "Semicolon-delimited tag names to drop. Not independently usable: FRED requires `tag_names` to be set as well, which nothing in this contract can enforce.",
+          "name": "exclude_tag_names",
+          "type": "string"
+        },
+        {
+          "about": "Narrow to one kind of tag: freq frequency, gen general concept, geo geography, geot geography type, rls release, seas seasonal adjustment, src source.",
+          "name": "tag_group_id",
+          "oneOf": [
+            "freq",
+            "gen",
+            "geo",
+            "geot",
+            "rls",
+            "seas",
+            "src"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Free text the tag name must match.",
+          "name": "search_text",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which tag attribute to sort by.",
+          "default": "series_count",
+          "name": "order_by",
+          "oneOf": [
+            "series_count",
+            "popularity",
+            "created",
+            "name",
+            "group_id"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One tag per record. `series_count` here counts series carrying that tag *and* every tag in `tag_names`, not the tag's global count. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "The tag name, which is its identity - tags have no id, and this is what `tag_names` takes.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Which group the tag belongs to: freq, gen, geo, geot, rls, seas or src.",
+            "name": "group_id",
+            "type": "string"
+          },
+          {
+            "about": "What the tag means. Frequently the empty string.",
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "about": "When the tag was created, as `2012-03-19 10:40:59-05`. Not ISO 8601.",
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "about": "How often the tag is used, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "How many series carry the tag. Scoped to whatever the endpoint was asked about, not global, wherever the request narrowed the set.",
+            "name": "series_count",
+            "type": "number"
+          }
+        ],
+        "key": "tags",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "tags/related"
+      }
+    },
+    {
+      "id": "fred/tags/series",
+      "provider": "fred",
+      "capability": "tags/series",
+      "name": "Series by tag",
+      "description": "The non-hierarchical route to series ids: every series carrying all of `tag_names` at once, without walking the category tree. Tags intersect rather than union, so each name added narrows. Unlike `categories/series` there is no `filter_variable`/`filter_value` here - narrow with more tags instead.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Semicolon-delimited tag names, required. A series must carry all of them to be returned, so each name added narrows the answer. Names are human strings and may contain spaces: encode the space, and use `;` only as the separator.",
+          "name": "tag_names",
+          "type": "string",
+          "required": true
+        },
+        {
+          "about": "Semicolon-delimited tag names to drop. Not independently usable: FRED requires `tag_names` to be set as well, which nothing in this contract can enforce.",
+          "name": "exclude_tag_names",
+          "type": "string"
+        },
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which series attribute to sort by.",
+          "default": "series_id",
+          "name": "order_by",
+          "oneOf": [
+            "series_id",
+            "title",
+            "units",
+            "frequency",
+            "seasonal_adjustment",
+            "realtime_start",
+            "realtime_end",
+            "last_updated",
+            "observation_start",
+            "observation_end",
+            "popularity",
+            "group_popularity"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One series per record, under the double-s key. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "Series id, for example GNPCA. This is what every series capability takes.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Start of the real-time interval this record's attributes were valid for.",
+            "name": "realtime_start",
+            "type": "string"
+          },
+          {
+            "about": "End of that interval.",
+            "name": "realtime_end",
+            "type": "string"
+          },
+          {
+            "about": "Series title.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Date of the first observation, YYYY-MM-DD.",
+            "name": "observation_start",
+            "type": "string"
+          },
+          {
+            "about": "Date of the last observation.",
+            "name": "observation_end",
+            "type": "string"
+          },
+          {
+            "about": "Native frequency in words, for example Annual.",
+            "name": "frequency",
+            "type": "string"
+          },
+          {
+            "about": "Native frequency as a code, for example A. Not the same vocabulary as the `frequency` request parameter on observations.",
+            "name": "frequency_short",
+            "type": "string"
+          },
+          {
+            "about": "Unit of measure in words.",
+            "name": "units",
+            "type": "string"
+          },
+          {
+            "about": "Unit abbreviated.",
+            "name": "units_short",
+            "type": "string"
+          },
+          {
+            "about": "Seasonal adjustment in words.",
+            "name": "seasonal_adjustment",
+            "type": "string"
+          },
+          {
+            "about": "Seasonal adjustment abbreviated, for example NSA.",
+            "name": "seasonal_adjustment_short",
+            "type": "string"
+          },
+          {
+            "about": "When the series last changed, as `2017-07-06 09:34:00-05` - a space separator and a two-digit offset, not ISO 8601, so Date parsing on it is not portable.",
+            "name": "last_updated",
+            "type": "string"
+          },
+          {
+            "about": "How often this series is viewed on FRED, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "Popularity of the group the series belongs to.",
+            "name": "group_popularity",
+            "type": "number"
+          },
+          {
+            "about": "The series notes. Optional and absent on many series - and where a series is copyright-restricted, this is where it says so.",
+            "name": "notes",
+            "type": "string"
+          }
+        ],
+        "key": "seriess",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "tags/series"
+      }
+    },
+    {
+      "id": "fred/tags/tags",
+      "provider": "fred",
+      "capability": "tags/tags",
+      "name": "Tags",
+      "description": "The full vocabulary - roughly 4,800 tags against a `limit` cap of 1000, so this is the one tag capability that genuinely needs paging. `series_count` here is the global count, unlike the same field on the category, release and related-tag capabilities where it is scoped to what was asked about.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Start of the real-time period, YYYY-MM-DD. Defaults to today, which means the current vintage only. Set 1776-07-04 for the full revision history. Setting one bound implies the other.",
+          "name": "realtime_start",
+          "type": "string"
+        },
+        {
+          "about": "End of the real-time period, YYYY-MM-DD. Defaults to today. Set 9999-12-31 for the full revision history.",
+          "name": "realtime_end",
+          "type": "string"
+        },
+        {
+          "about": "Semicolon-delimited tag names to restrict the answer to, for example `usa;monthly`. Names are human strings and may contain spaces, so a space inside one name is URL-encoded while `;` separates names.",
+          "name": "tag_names",
+          "type": "string"
+        },
+        {
+          "about": "Narrow to one kind of tag: freq frequency, gen general concept, geo geography, geot geography type, rls release, seas seasonal adjustment, src source, cc citation and copyright. `cc` is accepted here and nowhere else, and it is how the copyright-restricted series are found at all.",
+          "name": "tag_group_id",
+          "oneOf": [
+            "freq",
+            "gen",
+            "geo",
+            "geot",
+            "rls",
+            "seas",
+            "src",
+            "cc"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Free text the tag name must match.",
+          "name": "search_text",
+          "type": "string"
+        },
+        {
+          "about": "Records to return. The default is the maximum, so a naive call is a large response rather than a page.",
+          "default": 1000,
+          "max": 1000,
+          "name": "limit",
+          "type": "number"
+        },
+        {
+          "about": "Records to skip. Page by adding `limit` to it; `count` in the envelope is the full match total.",
+          "default": 0,
+          "name": "offset",
+          "type": "number"
+        },
+        {
+          "about": "Which tag attribute to sort by.",
+          "default": "series_count",
+          "name": "order_by",
+          "oneOf": [
+            "series_count",
+            "popularity",
+            "created",
+            "name",
+            "group_id"
+          ],
+          "type": "string"
+        },
+        {
+          "about": "Sort direction.",
+          "default": "asc",
+          "name": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One tag per record, across all of FRED. The records are the array under this key; the object around it carries count (the full match count, not the page size), offset, limit, order_by, sort_order and the echoed realtime_start/realtime_end.",
+        "fields": [
+          {
+            "about": "The tag name, which is its identity - tags have no id, and this is what `tag_names` takes.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Which group the tag belongs to: freq, gen, geo, geot, rls, seas or src.",
+            "name": "group_id",
+            "type": "string"
+          },
+          {
+            "about": "What the tag means. Frequently the empty string.",
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "about": "When the tag was created, as `2012-03-19 10:40:59-05`. Not ISO 8601.",
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "about": "How often the tag is used, 0-100.",
+            "name": "popularity",
+            "type": "number"
+          },
+          {
+            "about": "How many series carry the tag. Scoped to whatever the endpoint was asked about, not global, wherever the request narrowed the set.",
+            "name": "series_count",
+            "type": "number"
+          }
+        ],
+        "key": "tags",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fred",
+        "capability": "tags/tags"
+      }
+    }
+  ]
+}

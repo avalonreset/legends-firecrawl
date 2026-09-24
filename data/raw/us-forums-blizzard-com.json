@@ -1,0 +1,2133 @@
+{
+  "id": "us-forums-blizzard-com",
+  "provider": "us-forums-blizzard-com",
+  "name": "Blizzard US Forums",
+  "description": "Blizzard Entertainment's US community forums (us.forums.blizzard.com, Discourse multisite): categories, latest/top topic listings, topics with their posts, full-text post search, single posts, public user profiles with activity, and the latest-posts feed, for every locale/site forum on the host (WoW, WoW: Forever, Diablo, Hearthstone, Overwatch, StarCraft, ...). Anonymous read-only JSON routes; nothing behind Battle.net login.",
+  "toolCount": 7,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "us-forums-blizzard-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "us-forums-blizzard-com/forum-discussions/get_post",
+      "provider": "us-forums-blizzard-com",
+      "capability": "forum-discussions/get_post",
+      "name": "Get post",
+      "description": "Fetch a single post found through search_posts, latest_posts or a user's activity.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "locale",
+          "type": "string",
+          "in": "body",
+          "about": "Locale path prefix: en, es or pt. Default `en`. Locales are separate forums, not translations.",
+          "default": "en",
+          "oneOf": [
+            "en",
+            "es",
+            "pt"
+          ]
+        },
+        {
+          "name": "post_id",
+          "type": "number",
+          "in": "body",
+          "about": "Post id, site-scoped.",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "site",
+          "type": "string",
+          "in": "body",
+          "about": "Forum site prefix on us.forums.blizzard.com. Known prefixes (robots.txt, 2026-09-22): wow, blizzard, blizzcon, d2r, d3, d4, diablo-immortal, hearthstone, heroes, overwatch, sc2, starcraft, warcraft3, warcraftrumble (en); d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (es); blizzard, d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (pt). Each locale/site pair is a separate Discourse forum with its own category, topic, post and user ids. Default `wow`. Pattern: ^[a-z0-9-]{1,32}$.",
+          "default": "wow"
+        }
+      ],
+      "response": {
+        "about": "One post by id (posts/{id}.json): rendered HTML, plain text, Markdown source, author handle and character alias, counters and the topic it belongs to.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "admin",
+            "type": "boolean"
+          },
+          {
+            "name": "category_id",
+            "type": "number"
+          },
+          {
+            "name": "character",
+            "type": "string",
+            "about": "WoW character alias `Name-realm` the post was made as; null on sites without character aliases."
+          },
+          {
+            "name": "cooked_html",
+            "type": "string",
+            "about": "The post body as the site renders it (HTML)."
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601 UTC."
+          },
+          {
+            "name": "display_name",
+            "type": "string",
+            "about": "Display name as the site shows it; null when the user has none."
+          },
+          {
+            "name": "hidden",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "Post id, site-scoped."
+          },
+          {
+            "name": "like_count",
+            "type": "number"
+          },
+          {
+            "name": "locale",
+            "type": "string"
+          },
+          {
+            "name": "moderator",
+            "type": "boolean"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when this result was produced."
+          },
+          {
+            "name": "post_number",
+            "type": "number",
+            "about": "1-based position inside the topic; what /t/{slug}/{topic_id}/{post_number} URLs use."
+          },
+          {
+            "name": "raw",
+            "type": "string",
+            "about": "The post's Markdown source when the route exposes it."
+          },
+          {
+            "name": "reads",
+            "type": "number"
+          },
+          {
+            "name": "reply_count",
+            "type": "number"
+          },
+          {
+            "name": "reply_to_post_number",
+            "type": "number",
+            "about": "The post this one replies to, when it is a direct reply."
+          },
+          {
+            "name": "score",
+            "type": "number"
+          },
+          {
+            "name": "site",
+            "type": "string"
+          },
+          {
+            "name": "staff",
+            "type": "boolean"
+          },
+          {
+            "name": "text",
+            "type": "string",
+            "about": "Plain-text rendering of cooked_html."
+          },
+          {
+            "name": "topic_id",
+            "type": "number"
+          },
+          {
+            "name": "topic_slug",
+            "type": "string"
+          },
+          {
+            "name": "topic_title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string",
+            "about": "ISO 8601 UTC of the last edit."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute source URL of the post."
+          },
+          {
+            "name": "username",
+            "type": "string",
+            "about": "Forum handle (BattleTag-style with numeric suffix, or a plain staff handle)."
+          },
+          {
+            "name": "version",
+            "type": "number",
+            "about": "Edit revision number."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "locale": "en",
+          "post_id": 30017885,
+          "site": "wow"
+        },
+        "response": {
+          "admin": true,
+          "character": null,
+          "cooked_html": "<p>Welcome to the  <strong>World of Warcraft: Forever General Discussion forum</strong>! This forum is here to provide you with a friendly environment where you can discuss World of Warcraft: Forever with other players.</p>\n<p>Community forums work best when participants treat their fellow posters with respect and courtesy, so we ask that you take the time to read through the forum  <strong>Code of Conduct</strong>  and guidelines before posting.</p>\n<p><strong>Code of Conduct:</strong> <a href=\"https://battle.net/support/article/000256989\">https://battle.net/support/article/000256989</a></p>\n<p><strong>Terms of Use:</strong> <a href=\"https://www.blizzard.com/en-us/legal/511dbf9e-2b2d-4047-8243-4c5c65e0ebf1/terms-of-use-for-blizzards-websites\">Terms of Use for Blizzard’s Websites</a></p>\n<p><big><strong>Guidelines</strong></big></p>\n<p>In addition to the forum <a href=\"https://battle.net/support/article/000256989\">Code of Conduct</a>, here are some common courtesy guidelines to follow. While these do technically fall within the bounds of the Code of Conduct, they cover more specific examples of common errors that will lead to thread deletions or posting privileges being revoked.</p>\n<p><strong>The World of Warcraft forums are for discussion of topics directly related to World of Warcraft.</strong></p>\n<p>The forums here are specifically to discuss the game and related topics. Any topics not related to World of Warcraft, Battle.net, or Blizzard Entertainment are subject to deletion.</p>\n<p><strong>Don’t post in all capital letters, use a misleading title, excessive punctuation, and/or non-standard symbols, etc.</strong></p>\n<p>While everyone wants their posts read, we ask you to refrain from using these types of tactics in order to bring more people to your thread. Let your post stand on its own merit. Threads violating this guideline are subject to deletion.</p>\n<p><strong>Using the words “Blizzard,” “Blue,” or any community team members’ names in a thread topic is frowned upon.</strong></p>\n<p>Everyone would like Blizzard to read and acknowledge his or her post, and we understand that; however, use of such words in the subject line does not help that come to pass. Please make your thread title relevant to the post subject. Threads violating this guideline are subject to deletion.</p>\n<p><strong>Posting “First” or IBTL (“in before lock”) constitutes as spamming.</strong></p>\n<p>You will be suspended if you create a post that is intended to call out that you achieved a specific reply number in a thread. This is considered spamming. Posting IBTL (“in before the lock”) is not helpful, and if you feel a thread should be moderated please use the rating button to do so.</p>\n<p><strong>Do not “bump” posts.</strong></p>\n<p>The act of posting simply to bump a thread is considered spamming. This also includes bumping very old threads for no reason (called “necro bumping” or “necroing”).</p>\n<p><strong>Petition posts are frowned upon.</strong></p>\n<p>These are discussion forums and, as such, we ask that you hold discussions. Creating a thread to ask for replies as votes is not a discussion. Threads violating this guideline are subject to deletion.</p>\n<p><strong>Do not post about locked or deleted threads.</strong></p>\n<p>Posts that are moderated have a reason behind the moderation. It’s up to you to read the forum Code of Conduct and these guidelines to determine what you did wrong, learn from your mistake, and attempt to post again without breaking any rules.</p>\n<p>There is also cool down period we institute during times of high forum traffic. If you are violating policy during one of these times due to frustration, you will be given a three-hour cool down suspension.  <strong>This does not get logged on your record</strong>  and is simply in place to keep the forums readable and civil. Serious violations will still have the appropriate action taken against them as documented in the Code of Conduct, and we do keep track of these cool down periods separately-if one is found to be repeatedly violating policy, appropriate action will be taken.</p>\n<p><strong>What if I would like to submit feedback on posts from Blizzard employees but not post on the forums as call outs are against the rules?</strong><br>\nIf you have any sort of issue or feedback about a Blizzard employee’s posts then you can submit that via email at  <strong><a href=\"mailto:wowcmfeedback@blizzard.com\">wowcmfeedback@blizzard.com</a></strong>.</p>",
+          "created_at": "2026-09-12T19:20:34.403Z",
+          "display_name": "Kaivax",
+          "hidden": false,
+          "id": 30017885,
+          "like_count": 3,
+          "locale": "en",
+          "moderator": true,
+          "observed_at_ms": 1790112650307,
+          "post_number": 1,
+          "raw": "Welcome to the  **World of Warcraft: Forever General Discussion forum**! This forum is here to provide you with a friendly environment where you can discuss World of Warcraft: Forever with other players.\n\nCommunity forums work best when participants treat their fellow posters with respect and courtesy, so we ask that you take the time to read through the forum  **Code of Conduct**  and guidelines before posting.\n\n**Code of Conduct:** https://battle.net/support/article/000256989\n\n**Terms of Use:** [Terms of Use for Blizzard's Websites](https://www.blizzard.com/en-us/legal/511dbf9e-2b2d-4047-8243-4c5c65e0ebf1/terms-of-use-for-blizzards-websites)\n\n<big>**Guidelines**</big>\n\nIn addition to the forum [Code of Conduct](https://battle.net/support/article/000256989), here are some common courtesy guidelines to follow. While these do technically fall within the bounds of the Code of Conduct, they cover more specific examples of common errors that will lead to thread deletions or posting privileges being revoked.\n\n**The World of Warcraft forums are for discussion of topics directly related to World of Warcraft.**\n\nThe forums here are specifically to discuss the game and related topics. Any topics not related to World of Warcraft, Battle.net, or Blizzard Entertainment are subject to deletion.\n\n**Don't post in all capital letters, use a misleading title, excessive punctuation, and/or non-standard symbols, etc.**\n\nWhile everyone wants their posts read, we ask you to refrain from using these types of tactics in order to bring more people to your thread. Let your post stand on its own merit. Threads violating this guideline are subject to deletion.\n\n**Using the words \"Blizzard,\" \"Blue,\" or any community team members' names in a thread topic is frowned upon.**\n\nEveryone would like Blizzard to read and acknowledge his or her post, and we understand that; however, use of such words in the subject line does not help that come to pass. Please make your thread title relevant to the post subject. Threads violating this guideline are subject to deletion.\n\n**Posting \"First\" or IBTL (\"in before lock\") constitutes as spamming.**\n\nYou will be suspended if you create a post that is intended to call out that you achieved a specific reply number in a thread. This is considered spamming. Posting IBTL (\"in before the lock\") is not helpful, and if you feel a thread should be moderated please use the rating button to do so.\n\n**Do not \"bump\" posts.**\n\nThe act of posting simply to bump a thread is considered spamming. This also includes bumping very old threads for no reason (called \"necro bumping\" or \"necroing\").\n\n**Petition posts are frowned upon.**\n\nThese are discussion forums and, as such, we ask that you hold discussions. Creating a thread to ask for replies as votes is not a discussion. Threads violating this guideline are subject to deletion.\n\n**Do not post about locked or deleted threads.**\n\nPosts that are moderated have a reason behind the moderation. It's up to you to read the forum Code of Conduct and these guidelines to determine what you did wrong, learn from your mistake, and attempt to post again without breaking any rules.\n\nThere is also cool down period we institute during times of high forum traffic. If you are violating policy during one of these times due to frustration, you will be given a three-hour cool down suspension.  **This does not get logged on your record**  and is simply in place to keep the forums readable and civil. Serious violations will still have the appropriate action taken against them as documented in the Code of Conduct, and we do keep track of these cool down periods separately-if one is found to be repeatedly violating policy, appropriate action will be taken.\n\n**What if I would like to submit feedback on posts from Blizzard employees but not post on the forums as call outs are against the rules?**\nIf you have any sort of issue or feedback about a Blizzard employee's posts then you can submit that via email at  **wowcmfeedback@blizzard.com**.",
+          "reads": 1278,
+          "reply_count": 0,
+          "reply_to_post_number": null,
+          "score": 1734.8,
+          "site": "wow",
+          "staff": true,
+          "text": "Welcome to the  World of Warcraft: Forever General Discussion forum! This forum is here to provide you with a friendly environment where you can discuss World of Warcraft: Forever with other players.\n\nCommunity forums work best when participants treat their fellow posters with respect and courtesy, so we ask that you take the time to read through the forum  Code of Conduct  and guidelines before posting.\n\nCode of Conduct: https://battle.net/support/article/000256989\n\nTerms of Use: Terms of Use for Blizzard’s Websites\n\nGuidelines\n\nIn addition to the forum Code of Conduct, here are some common courtesy guidelines to follow. While these do technically fall within the bounds of the Code of Conduct, they cover more specific examples of common errors that will lead to thread deletions or posting privileges being revoked.\n\nThe World of Warcraft forums are for discussion of topics directly related to World of Warcraft.\n\nThe forums here are specifically to discuss the game and related topics. Any topics not related to World of Warcraft, Battle.net, or Blizzard Entertainment are subject to deletion.\n\nDon’t post in all capital letters, use a misleading title, excessive punctuation, and/or non-standard symbols, etc.\n\nWhile everyone wants their posts read, we ask you to refrain from using these types of tactics in order to bring more people to your thread. Let your post stand on its own merit. Threads violating this guideline are subject to deletion.\n\nUsing the words “Blizzard,” “Blue,” or any community team members’ names in a thread topic is frowned upon.\n\nEveryone would like Blizzard to read and acknowledge his or her post, and we understand that; however, use of such words in the subject line does not help that come to pass. Please make your thread title relevant to the post subject. Threads violating this guideline are subject to deletion.\n\nPosting “First” or IBTL (“in before lock”) constitutes as spamming.\n\nYou will be suspended if you create a post that is intended to call out that you achieved a specific reply number in a thread. This is considered spamming. Posting IBTL (“in before the lock”) is not helpful, and if you feel a thread should be moderated please use the rating button to do so.\n\nDo not “bump” posts.\n\nThe act of posting simply to bump a thread is considered spamming. This also includes bumping very old threads for no reason (called “necro bumping” or “necroing”).\n\nPetition posts are frowned upon.\n\nThese are discussion forums and, as such, we ask that you hold discussions. Creating a thread to ask for replies as votes is not a discussion. Threads violating this guideline are subject to deletion.\n\nDo not post about locked or deleted threads.\n\nPosts that are moderated have a reason behind the moderation. It’s up to you to read the forum Code of Conduct and these guidelines to determine what you did wrong, learn from your mistake, and attempt to post again without breaking any rules.\n\nThere is also cool down period we institute during times of high forum traffic. If you are violating policy during one of these times due to frustration, you will be given a three-hour cool down suspension.  This does not get logged on your record  and is simply in place to keep the forums readable and civil. Serious violations will still have the appropriate action taken against them as documented in the Code of Conduct, and we do keep track of these cool down periods separately-if one is found to be repeatedly violating policy, appropriate action will be taken.\n\nWhat if I would like to submit feedback on posts from Blizzard employees but not post on the forums as call outs are against the rules?\n\nIf you have any sort of issue or feedback about a Blizzard employee’s posts then you can submit that via email at  wowcmfeedback@blizzard.com.",
+          "topic_id": 2347166,
+          "topic_slug": "welcome-to-the-wow-forever-general-discussion-forum-please-read-this",
+          "updated_at": "2026-09-12T19:20:34.403Z",
+          "url": "https://us.forums.blizzard.com/en/wow/t/welcome-to-the-wow-forever-general-discussion-forum-please-read-this/2347166/1",
+          "username": "Kaivax",
+          "version": 1
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "us-forums-blizzard-com",
+        "capability": "forum-discussions/get_post"
+      }
+    },
+    {
+      "id": "us-forums-blizzard-com/forum-discussions/get_topic",
+      "provider": "us-forums-blizzard-com",
+      "capability": "forum-discussions/get_topic",
+      "name": "Get topic",
+      "description": "Read a discussion found through list_topics or search_posts; page through long threads with `page` (and a smaller `page_size` when only the first replies matter).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "locale",
+          "type": "string",
+          "in": "body",
+          "about": "Locale path prefix: en, es or pt. Default `en`. Locales are separate forums, not translations.",
+          "default": "en",
+          "oneOf": [
+            "en",
+            "es",
+            "pt"
+          ]
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page of posts (default 1).",
+          "min": 1,
+          "max": 100000
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Posts per page, 1-20 (default 20, the site's chunk size).",
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "site",
+          "type": "string",
+          "in": "body",
+          "about": "Forum site prefix on us.forums.blizzard.com. Known prefixes (robots.txt, 2026-09-22): wow, blizzard, blizzcon, d2r, d3, d4, diablo-immortal, hearthstone, heroes, overwatch, sc2, starcraft, warcraft3, warcraftrumble (en); d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (es); blizzard, d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (pt). Each locale/site pair is a separate Discourse forum with its own category, topic, post and user ids. Default `wow`. Pattern: ^[a-z0-9-]{1,32}$.",
+          "default": "wow"
+        },
+        {
+          "name": "topic_id",
+          "type": "number",
+          "in": "body",
+          "about": "Topic id, site-scoped.",
+          "min": 1
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted https://us.forums.blizzard.com/{locale}/{site}/t/{slug}/{topic_id} URL; alternative to topic_id (and to site/locale)."
+        }
+      ],
+      "response": {
+        "about": "One topic by id or pasted URL (t/{id}.json, with t/{id}/posts.json for post windows): title, counters, timestamps, tags and one page of its posts with rendered HTML, plain text, author handle, character alias and post URLs.",
+        "key": "posts",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "admin",
+            "type": "boolean"
+          },
+          {
+            "name": "character",
+            "type": "string",
+            "about": "WoW character alias `Name-realm` the post was made as; null on sites without character aliases."
+          },
+          {
+            "name": "cooked_html",
+            "type": "string",
+            "about": "The post body as the site renders it (HTML)."
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601 UTC."
+          },
+          {
+            "name": "display_name",
+            "type": "string",
+            "about": "Display name as the site shows it; null when the user has none."
+          },
+          {
+            "name": "hidden",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "Post id, site-scoped."
+          },
+          {
+            "name": "like_count",
+            "type": "number"
+          },
+          {
+            "name": "moderator",
+            "type": "boolean"
+          },
+          {
+            "name": "post_number",
+            "type": "number",
+            "about": "1-based position inside the topic; what /t/{slug}/{topic_id}/{post_number} URLs use."
+          },
+          {
+            "name": "reads",
+            "type": "number"
+          },
+          {
+            "name": "reply_count",
+            "type": "number"
+          },
+          {
+            "name": "reply_to_post_number",
+            "type": "number",
+            "about": "The post this one replies to, when it is a direct reply."
+          },
+          {
+            "name": "score",
+            "type": "number"
+          },
+          {
+            "name": "staff",
+            "type": "boolean"
+          },
+          {
+            "name": "text",
+            "type": "string",
+            "about": "Plain-text rendering of cooked_html."
+          },
+          {
+            "name": "updated_at",
+            "type": "string",
+            "about": "ISO 8601 UTC of the last edit."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute source URL of the post."
+          },
+          {
+            "name": "username",
+            "type": "string",
+            "about": "Forum handle (BattleTag-style with numeric suffix, or a plain staff handle)."
+          },
+          {
+            "name": "version",
+            "type": "number",
+            "about": "Edit revision number."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "locale": "en",
+          "page_size": 1,
+          "site": "wow",
+          "topic_id": 2347166
+        },
+        "response": {
+          "archived": false,
+          "category_id": 347,
+          "closed": true,
+          "created_at": "2026-09-12T19:20:34.284Z",
+          "id": 2347166,
+          "last_posted_at": "2026-09-12T19:20:34.403Z",
+          "like_count": 3,
+          "locale": "en",
+          "next_page": 2,
+          "observed_at_ms": 1790112638662,
+          "page": 1,
+          "page_size": 1,
+          "participant_count": 0,
+          "pinned": true,
+          "post_count": 1,
+          "posts": [
+            {
+              "admin": true,
+              "character": null,
+              "cooked_html": "<p>Welcome to the  <strong>World of Warcraft: Forever General Discussion forum</strong>! This forum is here to provide you with a friendly environment where you can discuss World of Warcraft: Forever with other players.</p>\n<p>Community forums work best when participants treat their fellow posters with respect and courtesy, so we ask that you take the time to read through the forum  <strong>Code of Conduct</strong>  and guidelines before posting.</p>\n<p><strong>Code of Conduct:</strong> <a href=\"https://battle.net/support/article/000256989\">https://battle.net/support/article/000256989</a></p>\n<p><strong>Terms of Use:</strong> <a href=\"https://www.blizzard.com/en-us/legal/511dbf9e-2b2d-4047-8243-4c5c65e0ebf1/terms-of-use-for-blizzards-websites\">Terms of Use for Blizzard’s Websites</a></p>\n<p><big><strong>Guidelines</strong></big></p>\n<p>In addition to the forum <a href=\"https://battle.net/support/article/000256989\">Code of Conduct</a>, here are some common courtesy guidelines to follow. While these do technically fall within the bounds of the Code of Conduct, they cover more specific examples of common errors that will lead to thread deletions or posting privileges being revoked.</p>\n<p><strong>The World of Warcraft forums are for discussion of topics directly related to World of Warcraft.</strong></p>\n<p>The forums here are specifically to discuss the game and related topics. Any topics not related to World of Warcraft, Battle.net, or Blizzard Entertainment are subject to deletion.</p>\n<p><strong>Don’t post in all capital letters, use a misleading title, excessive punctuation, and/or non-standard symbols, etc.</strong></p>\n<p>While everyone wants their posts read, we ask you to refrain from using these types of tactics in order to bring more people to your thread. Let your post stand on its own merit. Threads violating this guideline are subject to deletion.</p>\n<p><strong>Using the words “Blizzard,” “Blue,” or any community team members’ names in a thread topic is frowned upon.</strong></p>\n<p>Everyone would like Blizzard to read and acknowledge his or her post, and we understand that; however, use of such words in the subject line does not help that come to pass. Please make your thread title relevant to the post subject. Threads violating this guideline are subject to deletion.</p>\n<p><strong>Posting “First” or IBTL (“in before lock”) constitutes as spamming.</strong></p>\n<p>You will be suspended if you create a post that is intended to call out that you achieved a specific reply number in a thread. This is considered spamming. Posting IBTL (“in before the lock”) is not helpful, and if you feel a thread should be moderated please use the rating button to do so.</p>\n<p><strong>Do not “bump” posts.</strong></p>\n<p>The act of posting simply to bump a thread is considered spamming. This also includes bumping very old threads for no reason (called “necro bumping” or “necroing”).</p>\n<p><strong>Petition posts are frowned upon.</strong></p>\n<p>These are discussion forums and, as such, we ask that you hold discussions. Creating a thread to ask for replies as votes is not a discussion. Threads violating this guideline are subject to deletion.</p>\n<p><strong>Do not post about locked or deleted threads.</strong></p>\n<p>Posts that are moderated have a reason behind the moderation. It’s up to you to read the forum Code of Conduct and these guidelines to determine what you did wrong, learn from your mistake, and attempt to post again without breaking any rules.</p>\n<p>There is also cool down period we institute during times of high forum traffic. If you are violating policy during one of these times due to frustration, you will be given a three-hour cool down suspension.  <strong>This does not get logged on your record</strong>  and is simply in place to keep the forums readable and civil. Serious violations will still have the appropriate action taken against them as documented in the Code of Conduct, and we do keep track of these cool down periods separately-if one is found to be repeatedly violating policy, appropriate action will be taken.</p>\n<p><strong>What if I would like to submit feedback on posts from Blizzard employees but not post on the forums as call outs are against the rules?</strong><br>\nIf you have any sort of issue or feedback about a Blizzard employee’s posts then you can submit that via email at  <strong><a href=\"mailto:wowcmfeedback@blizzard.com\">wowcmfeedback@blizzard.com</a></strong>.</p>",
+              "created_at": "2026-09-12T19:20:34.403Z",
+              "display_name": "Kaivax",
+              "hidden": false,
+              "id": 30017885,
+              "like_count": 3,
+              "moderator": true,
+              "post_number": 1,
+              "reads": 1278,
+              "reply_count": 0,
+              "reply_to_post_number": null,
+              "score": 1734.8,
+              "staff": true,
+              "text": "Welcome to the  World of Warcraft: Forever General Discussion forum! This forum is here to provide you with a friendly environment where you can discuss World of Warcraft: Forever with other players.\n\nCommunity forums work best when participants treat their fellow posters with respect and courtesy, so we ask that you take the time to read through the forum  Code of Conduct  and guidelines before posting.\n\nCode of Conduct: https://battle.net/support/article/000256989\n\nTerms of Use: Terms of Use for Blizzard’s Websites\n\nGuidelines\n\nIn addition to the forum Code of Conduct, here are some common courtesy guidelines to follow. While these do technically fall within the bounds of the Code of Conduct, they cover more specific examples of common errors that will lead to thread deletions or posting privileges being revoked.\n\nThe World of Warcraft forums are for discussion of topics directly related to World of Warcraft.\n\nThe forums here are specifically to discuss the game and related topics. Any topics not related to World of Warcraft, Battle.net, or Blizzard Entertainment are subject to deletion.\n\nDon’t post in all capital letters, use a misleading title, excessive punctuation, and/or non-standard symbols, etc.\n\nWhile everyone wants their posts read, we ask you to refrain from using these types of tactics in order to bring more people to your thread. Let your post stand on its own merit. Threads violating this guideline are subject to deletion.\n\nUsing the words “Blizzard,” “Blue,” or any community team members’ names in a thread topic is frowned upon.\n\nEveryone would like Blizzard to read and acknowledge his or her post, and we understand that; however, use of such words in the subject line does not help that come to pass. Please make your thread title relevant to the post subject. Threads violating this guideline are subject to deletion.\n\nPosting “First” or IBTL (“in before lock”) constitutes as spamming.\n\nYou will be suspended if you create a post that is intended to call out that you achieved a specific reply number in a thread. This is considered spamming. Posting IBTL (“in before the lock”) is not helpful, and if you feel a thread should be moderated please use the rating button to do so.\n\nDo not “bump” posts.\n\nThe act of posting simply to bump a thread is considered spamming. This also includes bumping very old threads for no reason (called “necro bumping” or “necroing”).\n\nPetition posts are frowned upon.\n\nThese are discussion forums and, as such, we ask that you hold discussions. Creating a thread to ask for replies as votes is not a discussion. Threads violating this guideline are subject to deletion.\n\nDo not post about locked or deleted threads.\n\nPosts that are moderated have a reason behind the moderation. It’s up to you to read the forum Code of Conduct and these guidelines to determine what you did wrong, learn from your mistake, and attempt to post again without breaking any rules.\n\nThere is also cool down period we institute during times of high forum traffic. If you are violating policy during one of these times due to frustration, you will be given a three-hour cool down suspension.  This does not get logged on your record  and is simply in place to keep the forums readable and civil. Serious violations will still have the appropriate action taken against them as documented in the Code of Conduct, and we do keep track of these cool down periods separately-if one is found to be repeatedly violating policy, appropriate action will be taken.\n\nWhat if I would like to submit feedback on posts from Blizzard employees but not post on the forums as call outs are against the rules?\n\nIf you have any sort of issue or feedback about a Blizzard employee’s posts then you can submit that via email at  wowcmfeedback@blizzard.com.",
+              "updated_at": "2026-09-12T19:20:34.403Z",
+              "url": "https://us.forums.blizzard.com/en/wow/t/welcome-to-the-wow-forever-general-discussion-forum-please-read-this/2347166/1",
+              "username": "Kaivax",
+              "version": 1
+            }
+          ],
+          "posts_count": 1,
+          "reply_count": 0,
+          "site": "wow",
+          "slug": "welcome-to-the-wow-forever-general-discussion-forum-please-read-this",
+          "tags": [],
+          "title": "Welcome to the WoW: Forever General Discussion Forum. Please read this--",
+          "total_pages": 3,
+          "url": "https://us.forums.blizzard.com/en/wow/t/welcome-to-the-wow-forever-general-discussion-forum-please-read-this/2347166",
+          "views": 4842,
+          "visible": true,
+          "word_count": 673
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "us-forums-blizzard-com",
+        "capability": "forum-discussions/get_topic"
+      }
+    },
+    {
+      "id": "us-forums-blizzard-com/forum-discussions/get_user",
+      "provider": "us-forums-blizzard-com",
+      "capability": "forum-discussions/get_user",
+      "name": "Get user",
+      "description": "Who is behind a post, and what else they wrote on this forum.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "include_activity",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also fetch the user's recent topics and replies (default true)."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "in": "body",
+          "about": "Locale path prefix: en, es or pt. Default `en`. Locales are separate forums, not translations.",
+          "default": "en",
+          "oneOf": [
+            "en",
+            "es",
+            "pt"
+          ]
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "Activity offset; pass the previous result's `next_offset`.",
+          "min": 0,
+          "max": 100000
+        },
+        {
+          "name": "site",
+          "type": "string",
+          "in": "body",
+          "about": "Forum site prefix on us.forums.blizzard.com. Known prefixes (robots.txt, 2026-09-22): wow, blizzard, blizzcon, d2r, d3, d4, diablo-immortal, hearthstone, heroes, overwatch, sc2, starcraft, warcraft3, warcraftrumble (en); d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (es); blizzard, d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (pt). Each locale/site pair is a separate Discourse forum with its own category, topic, post and user ids. Default `wow`. Pattern: ^[a-z0-9-]{1,32}$.",
+          "default": "wow"
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "in": "body",
+          "about": "Forum handle exactly as shown, e.g. `xmr-1714249`. Pattern: ^[A-Za-z0-9._-]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "A public user profile by handle (u/{username}.json): join and last-post dates, post and badge counts, staff flags, character aliases on WoW sites, and (by default) one page of the user's topics and replies (user_actions.json, 30 per page, `offset` continues).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "activity",
+            "type": "object[]",
+            "about": "Recent topics and replies, newest first; null when include_activity is false."
+          },
+          {
+            "name": "activity_offset",
+            "type": "number"
+          },
+          {
+            "name": "admin",
+            "type": "boolean"
+          },
+          {
+            "name": "badge_count",
+            "type": "number"
+          },
+          {
+            "name": "bio_excerpt",
+            "type": "string"
+          },
+          {
+            "name": "characters",
+            "type": "object[]",
+            "about": "WoW character aliases; empty on other sites."
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601 UTC; null on a hidden profile."
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "last_posted_at",
+            "type": "string"
+          },
+          {
+            "name": "last_seen_at",
+            "type": "string"
+          },
+          {
+            "name": "locale",
+            "type": "string"
+          },
+          {
+            "name": "moderator",
+            "type": "boolean"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "next_offset",
+            "type": "number",
+            "about": "Offset of the next activity page, null when exhausted or not fetched."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when this result was produced."
+          },
+          {
+            "name": "post_count",
+            "type": "number"
+          },
+          {
+            "name": "profile_hidden",
+            "type": "boolean",
+            "about": "True for a profile the user hid (Blizzard staff accounts do this): the site then answers only id, username, name, title, post_count and avatar, so dates, badges, characters and activity are null or empty."
+          },
+          {
+            "name": "profile_view_count",
+            "type": "number"
+          },
+          {
+            "name": "site",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute source URL of the profile."
+          },
+          {
+            "name": "username",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "include_activity": false,
+          "locale": "en",
+          "site": "wow",
+          "username": "xmr-1714249"
+        },
+        "response": {
+          "activity": null,
+          "activity_offset": 0,
+          "admin": false,
+          "badge_count": 0,
+          "bio_excerpt": null,
+          "characters": [
+            {
+              "class": "Paladin",
+              "guild": "pros only",
+              "level": "90",
+              "name": "Retxrd-tichondrius",
+              "race": "Human",
+              "realm": "Tichondrius",
+              "selected": true,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/retxrd/"
+            },
+            {
+              "class": "Paladin",
+              "guild": "pros only",
+              "level": "90",
+              "name": "Felonirl-tichondrius",
+              "race": "Human",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/felonirl/"
+            },
+            {
+              "class": "Hunter",
+              "guild": null,
+              "level": "80",
+              "name": "Ghilty-tichondrius",
+              "race": "Night Elf",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/ghilty/"
+            },
+            {
+              "class": "Warrior",
+              "guild": null,
+              "level": "11",
+              "name": "Cosbycondo-misha",
+              "race": "Night Elf",
+              "realm": "Misha",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/misha/cosbycondo/"
+            },
+            {
+              "class": "Paladin",
+              "guild": null,
+              "level": "80",
+              "name": "Keyslur-tichondrius",
+              "race": "Human",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/keyslur/"
+            },
+            {
+              "class": "Warrior",
+              "guild": null,
+              "level": "60",
+              "name": "Xhv-tichondrius",
+              "race": "Human",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/xhv/"
+            },
+            {
+              "class": "Death Knight",
+              "guild": null,
+              "level": "80",
+              "name": "Bombstrap-tichondrius",
+              "race": "Night Elf",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/bombstrap/"
+            },
+            {
+              "class": "Monk",
+              "guild": null,
+              "level": "80",
+              "name": "Northwoods-tichondrius",
+              "race": "Human",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/northwoods/"
+            },
+            {
+              "class": "Warrior",
+              "guild": "Rebel Nation",
+              "level": "80",
+              "name": "Fedpost-tichondrius",
+              "race": "Night Elf",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/fedpost/"
+            },
+            {
+              "class": "Shaman",
+              "guild": "Rebel Nation",
+              "level": "80",
+              "name": "Cxseyanthony-tichondrius",
+              "race": "Orc",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/cxseyanthony/"
+            },
+            {
+              "class": "Evoker",
+              "guild": "Rebel Nation",
+              "level": "80",
+              "name": "Realmrbeast-tichondrius",
+              "race": "Dracthyr",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/realmrbeast/"
+            },
+            {
+              "class": "Mage",
+              "guild": "Is cute AF",
+              "level": "40",
+              "name": "Funkdoobiest-kelthuzad",
+              "race": "Human",
+              "realm": "Kel'Thuzad",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/kelthuzad/funkdoobiest/"
+            },
+            {
+              "class": "Hunter",
+              "guild": "Ultimate Deathgun",
+              "level": "40",
+              "name": "Skookz-kelthuzad",
+              "race": "Human",
+              "realm": "Kel'Thuzad",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/kelthuzad/skookz/"
+            },
+            {
+              "class": "Warlock",
+              "guild": null,
+              "level": "50",
+              "name": "Mcveigh-stormrage",
+              "race": "Human",
+              "realm": "Stormrage",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/stormrage/mcveigh/"
+            },
+            {
+              "class": "Warrior",
+              "guild": null,
+              "level": "35",
+              "name": "Colbat-misha",
+              "race": "Human",
+              "realm": "Misha",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/misha/colbat/"
+            },
+            {
+              "class": "Warlock",
+              "guild": null,
+              "level": "50",
+              "name": "Skooks-misha",
+              "race": "Undead",
+              "realm": "Misha",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/misha/skooks/"
+            },
+            {
+              "class": "Rogue",
+              "guild": null,
+              "level": "50",
+              "name": "Bombstrap-kelthuzad",
+              "race": "Blood Elf",
+              "realm": "Kel'Thuzad",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/kelthuzad/bombstrap/"
+            },
+            {
+              "class": "Demon Hunter",
+              "guild": null,
+              "level": "60",
+              "name": "Consoleport-tichondrius",
+              "race": "Blood Elf",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/consoleport/"
+            },
+            {
+              "class": "Shaman",
+              "guild": null,
+              "level": "60",
+              "name": "Xusd-tichondrius",
+              "race": "Orc",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/xusd/"
+            },
+            {
+              "class": "Death Knight",
+              "guild": "The ßlack Lantern Inn",
+              "level": "50",
+              "name": "Gobford-tichondrius",
+              "race": "Goblin",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/gobford/"
+            },
+            {
+              "class": "Mage",
+              "guild": null,
+              "level": "50",
+              "name": "Murdercharls-tichondrius",
+              "race": "Undead",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/murdercharls/"
+            },
+            {
+              "class": "Paladin",
+              "guild": "Dont Stab Bobby Kotick",
+              "level": "60",
+              "name": "Randyweaver-tichondrius",
+              "race": "Blood Elf",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/randyweaver/"
+            },
+            {
+              "class": "Rogue",
+              "guild": null,
+              "level": "60",
+              "name": "Vickiweaver-tichondrius",
+              "race": "Human",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/vickiweaver/"
+            },
+            {
+              "class": "Death Knight",
+              "guild": null,
+              "level": "60",
+              "name": "Paulharrell-tichondrius",
+              "race": "Orc",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/paulharrell/"
+            },
+            {
+              "class": "Rogue",
+              "guild": null,
+              "level": "53",
+              "name": "Bombstrap-moon-guard",
+              "race": "Night Elf",
+              "realm": "Moon Guard",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/moon-guard/bombstrap/"
+            },
+            {
+              "class": "Warlock",
+              "guild": null,
+              "level": "67",
+              "name": "Applewhite-tichondrius",
+              "race": "Orc",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/applewhite/"
+            },
+            {
+              "class": "Priest",
+              "guild": null,
+              "level": "60",
+              "name": "Heemeyer-tichondrius",
+              "race": "Night Elf",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/heemeyer/"
+            },
+            {
+              "class": "Druid",
+              "guild": "Glizzy Gladiators",
+              "level": "80",
+              "name": "Caseyanthxny-kelthuzad",
+              "race": "Night Elf",
+              "realm": "Kel'Thuzad",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/kelthuzad/caseyanthxny/"
+            },
+            {
+              "class": "Warrior",
+              "guild": null,
+              "level": "10",
+              "name": "Xau-tichondrius",
+              "race": "Troll",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/xau/"
+            },
+            {
+              "class": "Hunter",
+              "guild": null,
+              "level": "80",
+              "name": "Thugdynasty-tichondrius",
+              "race": "Human",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/thugdynasty/"
+            },
+            {
+              "class": "Warrior",
+              "guild": null,
+              "level": "10",
+              "name": "Blackmrbeast-tichondrius",
+              "race": "Night Elf",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/blackmrbeast/"
+            },
+            {
+              "class": "Paladin",
+              "guild": null,
+              "level": "20",
+              "name": "Northwoods-misha",
+              "race": "Human",
+              "realm": "Misha",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/misha/northwoods/"
+            },
+            {
+              "class": "Hunter",
+              "guild": null,
+              "level": "10",
+              "name": "Dondelicious-tichondrius",
+              "race": "Human",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/dondelicious/"
+            },
+            {
+              "class": "Monk",
+              "guild": null,
+              "level": "16",
+              "name": "Penid-moon-guard",
+              "race": "Troll",
+              "realm": "Moon Guard",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/moon-guard/penid/"
+            },
+            {
+              "class": "Death Knight",
+              "guild": null,
+              "level": "10",
+              "name": "Xsilver-tichondrius",
+              "race": "Highmountain Tauren",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/xsilver/"
+            },
+            {
+              "class": "Monk",
+              "guild": null,
+              "level": "11",
+              "name": "Iheartradio-tichondrius",
+              "race": "Human",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/iheartradio/"
+            },
+            {
+              "class": "Mage",
+              "guild": null,
+              "level": "32",
+              "name": "Retxrded-tichondrius",
+              "race": "Human",
+              "realm": "Tichondrius",
+              "selected": false,
+              "url": "https://worldofwarcraft.com/en-us/character/us/tichondrius/retxrded/"
+            },
+            {
+              "class": "Shaman",
+              "guild": null,
+              "level": "10",
+              "name": "Retxrd-skull-rock",
+              "race": "Orc",
+              "realm": "Skull Rock",
+              "selected": false,
+              "url": null
+            },
+            {
+              "class": "Warrior",
+              "guild": "Ultra Hard",
+              "level": "15",
+              "name": "Mkultrafelon-doomhowl",
+              "race": "Night Elf",
+              "realm": "Doomhowl",
+              "selected": false,
+              "url": null
+            },
+            {
+              "class": "Hunter",
+              "guild": null,
+              "level": "22",
+              "name": "Ultrafelon-doomhowl",
+              "race": "Night Elf",
+              "realm": "Doomhowl",
+              "selected": false,
+              "url": null
+            },
+            {
+              "class": "Warrior",
+              "guild": "EGO",
+              "level": "27",
+              "name": "Felonirl-crusader-strike",
+              "race": "Troll",
+              "realm": "Crusader Strike",
+              "selected": false,
+              "url": null
+            },
+            {
+              "class": "Druid",
+              "guild": "op",
+              "level": "90",
+              "name": "Cxseyanthony-benediction",
+              "race": "Night Elf",
+              "realm": "Benediction",
+              "selected": false,
+              "url": null
+            },
+            {
+              "class": "Rogue",
+              "guild": null,
+              "level": "19",
+              "name": "Terryyeakey-faerlina",
+              "race": "Undead",
+              "realm": "Faerlina",
+              "selected": false,
+              "url": null
+            },
+            {
+              "class": "Druid",
+              "guild": null,
+              "level": "70",
+              "name": "Xhv-faerlina",
+              "race": "Tauren",
+              "realm": "Faerlina",
+              "selected": false,
+              "url": null
+            },
+            {
+              "class": "Paladin",
+              "guild": null,
+              "level": "85",
+              "name": "Caseyanthxny-benediction",
+              "race": "Human",
+              "realm": "Benediction",
+              "selected": false,
+              "url": null
+            },
+            {
+              "class": "Death Knight",
+              "guild": null,
+              "level": "67",
+              "name": "Jollywest-benediction",
+              "race": "Human",
+              "realm": "Benediction",
+              "selected": false,
+              "url": null
+            },
+            {
+              "class": "Warrior",
+              "guild": null,
+              "level": "80",
+              "name": "Northwoods-benediction",
+              "race": "Human",
+              "realm": "Benediction",
+              "selected": false,
+              "url": null
+            },
+            {
+              "class": "Paladin",
+              "guild": null,
+              "level": "18",
+              "name": "Xhv-benediction",
+              "race": "Human",
+              "realm": "Benediction",
+              "selected": false,
+              "url": null
+            }
+          ],
+          "created_at": "2021-05-20T18:58:15.646Z",
+          "id": 1714249,
+          "last_posted_at": "2026-09-22T18:13:19.093Z",
+          "last_seen_at": "2026-09-22T18:57:35.123Z",
+          "locale": "en",
+          "moderator": false,
+          "name": "xmr",
+          "next_offset": null,
+          "observed_at_ms": 1790112696415,
+          "post_count": 44,
+          "profile_hidden": false,
+          "profile_view_count": 140,
+          "site": "wow",
+          "title": null,
+          "url": "https://us.forums.blizzard.com/en/wow/u/xmr-1714249",
+          "username": "xmr-1714249"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "us-forums-blizzard-com",
+        "capability": "forum-discussions/get_user"
+      }
+    },
+    {
+      "id": "us-forums-blizzard-com/forum-discussions/latest_posts",
+      "provider": "us-forums-blizzard-com",
+      "capability": "forum-discussions/latest_posts",
+      "name": "Latest posts",
+      "description": "A firehose of what is being said right now on a forum (news-style monitoring); filter by category_id or topic on the caller's side.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "before",
+          "type": "number",
+          "in": "body",
+          "about": "Only posts with an id below this one (the previous result's `next_before`).",
+          "min": 1
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "in": "body",
+          "about": "Locale path prefix: en, es or pt. Default `en`. Locales are separate forums, not translations.",
+          "default": "en",
+          "oneOf": [
+            "en",
+            "es",
+            "pt"
+          ]
+        },
+        {
+          "name": "max_results",
+          "type": "number",
+          "in": "body",
+          "about": "Trim to at most this many posts, 1-50 (default 50).",
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "site",
+          "type": "string",
+          "in": "body",
+          "about": "Forum site prefix on us.forums.blizzard.com. Known prefixes (robots.txt, 2026-09-22): wow, blizzard, blizzcon, d2r, d3, d4, diablo-immortal, hearthstone, heroes, overwatch, sc2, starcraft, warcraft3, warcraftrumble (en); d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (es); blizzard, d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (pt). Each locale/site pair is a separate Discourse forum with its own category, topic, post and user ids. Default `wow`. Pattern: ^[a-z0-9-]{1,32}$.",
+          "default": "wow"
+        }
+      ],
+      "response": {
+        "about": "The newest posts across one forum site (posts.json), newest first, with rendered HTML, plain text, author, topic title, category and post URL; `next_before` pages further back.",
+        "key": "posts",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "admin",
+            "type": "boolean"
+          },
+          {
+            "name": "category_id",
+            "type": "number"
+          },
+          {
+            "name": "character",
+            "type": "string",
+            "about": "WoW character alias `Name-realm` the post was made as; null on sites without character aliases."
+          },
+          {
+            "name": "cooked_html",
+            "type": "string",
+            "about": "The post body as the site renders it (HTML)."
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601 UTC."
+          },
+          {
+            "name": "display_name",
+            "type": "string",
+            "about": "Display name as the site shows it; null when the user has none."
+          },
+          {
+            "name": "hidden",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "Post id, site-scoped."
+          },
+          {
+            "name": "like_count",
+            "type": "number"
+          },
+          {
+            "name": "moderator",
+            "type": "boolean"
+          },
+          {
+            "name": "post_number",
+            "type": "number",
+            "about": "1-based position inside the topic; what /t/{slug}/{topic_id}/{post_number} URLs use."
+          },
+          {
+            "name": "raw",
+            "type": "string",
+            "about": "The post's Markdown source when the route exposes it."
+          },
+          {
+            "name": "reads",
+            "type": "number"
+          },
+          {
+            "name": "reply_count",
+            "type": "number"
+          },
+          {
+            "name": "reply_to_post_number",
+            "type": "number",
+            "about": "The post this one replies to, when it is a direct reply."
+          },
+          {
+            "name": "score",
+            "type": "number"
+          },
+          {
+            "name": "staff",
+            "type": "boolean"
+          },
+          {
+            "name": "text",
+            "type": "string",
+            "about": "Plain-text rendering of cooked_html."
+          },
+          {
+            "name": "topic_id",
+            "type": "number"
+          },
+          {
+            "name": "topic_slug",
+            "type": "string"
+          },
+          {
+            "name": "topic_title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string",
+            "about": "ISO 8601 UTC of the last edit."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute source URL of the post."
+          },
+          {
+            "name": "username",
+            "type": "string",
+            "about": "Forum handle (BattleTag-style with numeric suffix, or a plain staff handle)."
+          },
+          {
+            "name": "version",
+            "type": "number",
+            "about": "Edit revision number."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "locale": "en",
+          "max_results": 3,
+          "site": "wow"
+        },
+        "response": {
+          "count": 3,
+          "locale": "en",
+          "next_before": 30157210,
+          "observed_at_ms": 1790112702661,
+          "posts": [
+            {
+              "admin": false,
+              "category_id": 347,
+              "character": "Kaisana-immerseus",
+              "cooked_html": "<p>Nope I think blizz , for once , exercising good judgement her.</p>",
+              "created_at": "2026-09-22T21:31:38.002Z",
+              "display_name": "Rhune",
+              "hidden": false,
+              "id": 30157212,
+              "like_count": 0,
+              "moderator": false,
+              "post_number": 109,
+              "raw": "Nope I think blizz , for once , exercising good judgement her.",
+              "reads": 2,
+              "reply_count": 0,
+              "reply_to_post_number": null,
+              "score": 0,
+              "staff": false,
+              "text": "Nope I think blizz , for once , exercising good judgement her.",
+              "topic_id": 2350889,
+              "topic_slug": "allow-gdkp-in-forever",
+              "topic_title": "Allow GDKP in Forever",
+              "updated_at": "2026-09-22T21:31:38.002Z",
+              "url": "https://us.forums.blizzard.com/en/wow/t/allow-gdkp-in-forever/2350889/109",
+              "username": "Rhune-2245102",
+              "version": 1
+            },
+            {
+              "admin": false,
+              "category_id": 16,
+              "character": "Truepeace-winterhoof",
+              "cooked_html": "<p>I was able to use the many fixes that essentially boiled down to refreshing the gpu, to fix the green hue that covered the world but today when I did my fixes after logging in the green started back up again.  Here is what I have done:</p>\n<p>Shadows to lowest</p>\n<p>Secondary lighting to lowest</p>\n<p>switching gpus from M4 to auto then auto to M4</p>\n<p>toggling on and off the boxes at the bottom of the graphics settings section</p>\n<p>/console volumeFog 0</p>\n<p>/console gxRestart</p>\n<p>None of these have stopped the green from returning.</p>",
+              "created_at": "2026-09-22T21:31:37.305Z",
+              "display_name": "true",
+              "hidden": false,
+              "id": 30157211,
+              "like_count": 0,
+              "moderator": false,
+              "post_number": 1,
+              "raw": "I was able to use the many fixes that essentially boiled down to refreshing the gpu, to fix the green hue that covered the world but today when I did my fixes after logging in the green started back up again.  Here is what I have done:\n\nShadows to lowest\n\nSecondary lighting to lowest\n\nswitching gpus from M4 to auto then auto to M4\n\ntoggling on and off the boxes at the bottom of the graphics settings section\n\n/console volumeFog 0\n\n/console gxRestart\n\nNone of these have stopped the green from returning.",
+              "reads": 1,
+              "reply_count": 0,
+              "reply_to_post_number": null,
+              "score": 0,
+              "staff": false,
+              "text": "I was able to use the many fixes that essentially boiled down to refreshing the gpu, to fix the green hue that covered the world but today when I did my fixes after logging in the green started back up again.  Here is what I have done:\n\nShadows to lowest\n\nSecondary lighting to lowest\n\nswitching gpus from M4 to auto then auto to M4\n\ntoggling on and off the boxes at the bottom of the graphics settings section\n\n/console volumeFog 0\n\n/console gxRestart\n\nNone of these have stopped the green from returning.",
+              "topic_id": 2358499,
+              "topic_slug": "green-world-again",
+              "topic_title": "Green World again",
+              "updated_at": "2026-09-22T21:31:37.305Z",
+              "url": "https://us.forums.blizzard.com/en/wow/t/green-world-again/2358499/1",
+              "username": "true-2526318",
+              "version": 1
+            },
+            {
+              "admin": false,
+              "category_id": 347,
+              "character": "Worstwarrior-maiev",
+              "cooked_html": "<p>i there is some benefit with higher ranks of charge, but yeah probably not worth a talent point</p>",
+              "created_at": "2026-09-22T21:31:34.237Z",
+              "display_name": "phobomancer",
+              "hidden": false,
+              "id": 30157210,
+              "like_count": 0,
+              "moderator": false,
+              "post_number": 27,
+              "raw": "i there is some benefit with higher ranks of charge, but yeah probably not worth a talent point",
+              "reads": 4,
+              "reply_count": 0,
+              "reply_to_post_number": 26,
+              "score": 0,
+              "staff": false,
+              "text": "i there is some benefit with higher ranks of charge, but yeah probably not worth a talent point",
+              "topic_id": 2358419,
+              "topic_slug": "warrior-rage-generation-is-a-massive-issue",
+              "topic_title": "Warrior rage generation is a massive issue",
+              "updated_at": "2026-09-22T21:31:34.237Z",
+              "url": "https://us.forums.blizzard.com/en/wow/t/warrior-rage-generation-is-a-massive-issue/2358419/27",
+              "username": "phobomancer-3011524",
+              "version": 1
+            }
+          ],
+          "site": "wow"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "us-forums-blizzard-com",
+        "capability": "forum-discussions/latest_posts"
+      }
+    },
+    {
+      "id": "us-forums-blizzard-com/forum-discussions/list_categories",
+      "provider": "us-forums-blizzard-com",
+      "capability": "forum-discussions/list_categories",
+      "name": "List categories",
+      "description": "Discovery: find the category ids to pass to list_topics (for example the WoW: Forever categories on en/wow) or to read a site's structure.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "locale",
+          "type": "string",
+          "in": "body",
+          "about": "Locale path prefix: en, es or pt. Default `en`. Locales are separate forums, not translations.",
+          "default": "en",
+          "oneOf": [
+            "en",
+            "es",
+            "pt"
+          ]
+        },
+        {
+          "name": "parent_id",
+          "type": "number",
+          "in": "body",
+          "about": "Keep only the direct children of this category id; not_found when the id does not exist on the site.",
+          "min": 1
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive substring of the category name."
+        },
+        {
+          "name": "site",
+          "type": "string",
+          "in": "body",
+          "about": "Forum site prefix on us.forums.blizzard.com. Known prefixes (robots.txt, 2026-09-22): wow, blizzard, blizzcon, d2r, d3, d4, diablo-immortal, hearthstone, heroes, overwatch, sc2, starcraft, warcraft3, warcraftrumble (en); d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (es); blizzard, d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (pt). Each locale/site pair is a separate Discourse forum with its own category, topic, post and user ids. Default `wow`. Pattern: ^[a-z0-9-]{1,32}$.",
+          "default": "wow"
+        }
+      ],
+      "response": {
+        "about": "Every category and subcategory of one forum site (categories.json), flattened with slug paths, counts and URLs; optionally only one parent's children or names containing a text.",
+        "key": "categories",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "Category id, site-scoped."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "parent_category_id",
+            "type": "number"
+          },
+          {
+            "name": "path",
+            "type": "string",
+            "about": "Slug path used in URLs: `{parent_slug}/{slug}` for subcategories, `{slug}` otherwise."
+          },
+          {
+            "name": "post_count",
+            "type": "number"
+          },
+          {
+            "name": "read_restricted",
+            "type": "boolean"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "subcategory_ids",
+            "type": "number[]"
+          },
+          {
+            "name": "topic_count",
+            "type": "number"
+          },
+          {
+            "name": "topics_month",
+            "type": "number"
+          },
+          {
+            "name": "topics_week",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute source URL of the category."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "locale": "en",
+          "parent_id": 346,
+          "site": "wow"
+        },
+        "response": {
+          "categories": [
+            {
+              "description": null,
+              "id": 347,
+              "name": "World of Warcraft: Forever General Discussion",
+              "parent_category_id": 346,
+              "path": "wow-forever/world-of-warcraft-forever-general-discussion",
+              "post_count": 64844,
+              "read_restricted": false,
+              "slug": "world-of-warcraft-forever-general-discussion",
+              "subcategory_ids": [],
+              "topic_count": 3975,
+              "topics_month": 3972,
+              "topics_week": 2856,
+              "url": "https://us.forums.blizzard.com/en/wow/c/wow-forever/world-of-warcraft-forever-general-discussion/347"
+            },
+            {
+              "description": null,
+              "id": 348,
+              "name": "WoW: Forever Community Connections",
+              "parent_category_id": 346,
+              "path": "wow-forever/wow-forever-community-connections",
+              "post_count": 698,
+              "read_restricted": false,
+              "slug": "wow-forever-community-connections",
+              "subcategory_ids": [],
+              "topic_count": 176,
+              "topics_month": 176,
+              "topics_week": 123,
+              "url": "https://us.forums.blizzard.com/en/wow/c/wow-forever/wow-forever-community-connections/348"
+            }
+          ],
+          "count": 2,
+          "locale": "en",
+          "observed_at_ms": 1790112627826,
+          "parent_id": 346,
+          "query": null,
+          "site": "wow"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "us-forums-blizzard-com",
+        "capability": "forum-discussions/list_categories"
+      }
+    },
+    {
+      "id": "us-forums-blizzard-com/forum-discussions/list_topics",
+      "provider": "us-forums-blizzard-com",
+      "capability": "forum-discussions/list_topics",
+      "name": "List topics",
+      "description": "Browse or monitor a forum or category, e.g. WoW: Forever discussions (en/wow category 347) newest first, or the week's top topics.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "category_id",
+          "type": "number",
+          "in": "body",
+          "about": "Category id from list_categories; omit for the whole site.",
+          "min": 1
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "in": "body",
+          "about": "Locale path prefix: en, es or pt. Default `en`. Locales are separate forums, not translations.",
+          "default": "en",
+          "oneOf": [
+            "en",
+            "es",
+            "pt"
+          ]
+        },
+        {
+          "name": "max_results",
+          "type": "number",
+          "in": "body",
+          "about": "Trim the page to at most this many topics, 1-50 (default 50: the whole site page). `next_page` still names the site's next page.",
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "order",
+          "type": "string",
+          "in": "body",
+          "about": "`latest` (default, by last activity) or `top` (by the period's score).",
+          "oneOf": [
+            "latest",
+            "top"
+          ]
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "0-based page; pass the previous result's `next_page`.",
+          "min": 0,
+          "max": 10000
+        },
+        {
+          "name": "period",
+          "type": "string",
+          "in": "body",
+          "about": "For `top`: all, yearly, quarterly, monthly, weekly (default) or daily.",
+          "oneOf": [
+            "all",
+            "yearly",
+            "quarterly",
+            "monthly",
+            "weekly",
+            "daily"
+          ]
+        },
+        {
+          "name": "site",
+          "type": "string",
+          "in": "body",
+          "about": "Forum site prefix on us.forums.blizzard.com. Known prefixes (robots.txt, 2026-09-22): wow, blizzard, blizzcon, d2r, d3, d4, diablo-immortal, hearthstone, heroes, overwatch, sc2, starcraft, warcraft3, warcraftrumble (en); d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (es); blizzard, d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (pt). Each locale/site pair is a separate Discourse forum with its own category, topic, post and user ids. Default `wow`. Pattern: ^[a-z0-9-]{1,32}$.",
+          "default": "wow"
+        }
+      ],
+      "response": {
+        "about": "One page of a topic listing: the site's latest or top topics, or those of one category (latest.json, top.json, c/{id}.json, c/{id}/l/top.json), with timestamps, counters, excerpts and source URLs. 30 topics per page (50 for top); `next_page` continues.",
+        "key": "topics",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "archived",
+            "type": "boolean"
+          },
+          {
+            "name": "author_username",
+            "type": "string",
+            "about": "Handle of the original poster, resolved from the listing's users table; null when the site does not name it."
+          },
+          {
+            "name": "bumped_at",
+            "type": "string",
+            "about": "ISO 8601 UTC."
+          },
+          {
+            "name": "category_id",
+            "type": "number"
+          },
+          {
+            "name": "closed",
+            "type": "boolean"
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601 UTC."
+          },
+          {
+            "name": "excerpt",
+            "type": "string",
+            "about": "Listing excerpt when the site includes one."
+          },
+          {
+            "name": "has_accepted_answer",
+            "type": "boolean"
+          },
+          {
+            "name": "highest_post_number",
+            "type": "number"
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "Topic id, site-scoped."
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "last_posted_at",
+            "type": "string",
+            "about": "ISO 8601 UTC."
+          },
+          {
+            "name": "last_poster_username",
+            "type": "string"
+          },
+          {
+            "name": "like_count",
+            "type": "number"
+          },
+          {
+            "name": "pinned",
+            "type": "boolean"
+          },
+          {
+            "name": "posts_count",
+            "type": "number"
+          },
+          {
+            "name": "reply_count",
+            "type": "number"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute source URL of the topic."
+          },
+          {
+            "name": "views",
+            "type": "number"
+          },
+          {
+            "name": "visible",
+            "type": "boolean"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "category_id": 347,
+          "locale": "en",
+          "max_results": 5,
+          "site": "wow"
+        },
+        "response": {
+          "category_id": 347,
+          "count": 5,
+          "listing": "latest",
+          "locale": "en",
+          "next_page": 1,
+          "observed_at_ms": 1790112633441,
+          "page": 0,
+          "per_page": 30,
+          "period": null,
+          "site": "wow",
+          "topics": [
+            {
+              "archived": false,
+              "author_username": "Kaivax",
+              "bumped_at": "2026-09-22T16:45:48.078Z",
+              "category_id": 347,
+              "closed": false,
+              "created_at": "2026-09-17T21:00:24.921Z",
+              "excerpt": "We’ve opened this new forum for WoW: Forever Beta discussions. \nSee you there!",
+              "has_accepted_answer": false,
+              "highest_post_number": 19,
+              "id": 2352595,
+              "image_url": null,
+              "last_posted_at": "2026-09-22T16:45:48.078Z",
+              "last_poster_username": "Kash-3205454",
+              "like_count": 13,
+              "pinned": true,
+              "posts_count": 17,
+              "reply_count": 4,
+              "slug": "beta-discussion-forum-right-this-way",
+              "tags": [],
+              "title": "Beta Discussion Forum Right This Way",
+              "url": "https://us.forums.blizzard.com/en/wow/t/beta-discussion-forum-right-this-way/2352595",
+              "views": 7779,
+              "visible": true
+            },
+            {
+              "archived": false,
+              "author_username": "Kaivax",
+              "bumped_at": "2026-09-21T21:19:19.221Z",
+              "category_id": 347,
+              "closed": true,
+              "created_at": "2026-09-12T19:23:30.284Z",
+              "excerpt": "In this thread, we’ll collect everything you need to know about World of Warcraft: Forever.",
+              "has_accepted_answer": false,
+              "highest_post_number": 13,
+              "id": 2347170,
+              "image_url": null,
+              "last_posted_at": "2026-09-21T21:19:19.221Z",
+              "last_poster_username": "Kaivax",
+              "like_count": 7,
+              "pinned": true,
+              "posts_count": 10,
+              "reply_count": 0,
+              "slug": "world-of-warcraft-forever-revealed-at-blizzcon-2026",
+              "tags": [],
+              "title": "World of Warcraft: Forever Revealed at BlizzCon 2026",
+              "url": "https://us.forums.blizzard.com/en/wow/t/world-of-warcraft-forever-revealed-at-blizzcon-2026/2347170",
+              "views": 6018,
+              "visible": true
+            },
+            {
+              "archived": false,
+              "author_username": "Kaivax",
+              "bumped_at": "2026-09-12T19:20:34.403Z",
+              "category_id": 347,
+              "closed": true,
+              "created_at": "2026-09-12T19:20:34.284Z",
+              "excerpt": "Welcome to the  World of Warcraft: Forever General Discussion forum! This forum is here to provide you with a friendly environment where you can discuss World of Warcraft: Forever with other players. \nCommunity forums wo&hellip;",
+              "has_accepted_answer": false,
+              "highest_post_number": 1,
+              "id": 2347166,
+              "image_url": null,
+              "last_posted_at": "2026-09-12T19:20:34.403Z",
+              "last_poster_username": "Kaivax",
+              "like_count": 3,
+              "pinned": true,
+              "posts_count": 1,
+              "reply_count": 0,
+              "slug": "welcome-to-the-wow-forever-general-discussion-forum-please-read-this",
+              "tags": [],
+              "title": "Welcome to the WoW: Forever General Discussion Forum. Please read this--",
+              "url": "https://us.forums.blizzard.com/en/wow/t/welcome-to-the-wow-forever-general-discussion-forum-please-read-this/2347166",
+              "views": 4842,
+              "visible": true
+            },
+            {
+              "archived": false,
+              "author_username": "Foul-2173253",
+              "bumped_at": "2026-09-22T21:30:29.688Z",
+              "category_id": 347,
+              "closed": false,
+              "created_at": "2026-09-22T20:00:13.241Z",
+              "excerpt": "If you wanted to nerf warriors, why not tune our numbers more? Changing rage generation the way you did has basically killed the class. I honestly thought it was a bug but it has been confirmed by zirene that it is NOT a&hellip;",
+              "has_accepted_answer": false,
+              "highest_post_number": 26,
+              "id": 2358419,
+              "image_url": null,
+              "last_posted_at": "2026-09-22T21:30:29.688Z",
+              "last_poster_username": "Eyr-2680875",
+              "like_count": 18,
+              "pinned": false,
+              "posts_count": 26,
+              "reply_count": 16,
+              "slug": "warrior-rage-generation-is-a-massive-issue",
+              "tags": [],
+              "title": "Warrior rage generation is a massive issue",
+              "url": "https://us.forums.blizzard.com/en/wow/t/warrior-rage-generation-is-a-massive-issue/2358419",
+              "views": 268,
+              "visible": true
+            },
+            {
+              "archived": false,
+              "author_username": "BlizzardEntertainment",
+              "bumped_at": "2026-09-22T21:30:22.891Z",
+              "category_id": 347,
+              "closed": false,
+              "created_at": "2026-09-22T17:00:07.384Z",
+              "excerpt": "Explore the playable races, class combinations, and updated racial traits coming in World of Warcraft: Forever, including new options for familiar favorites along with the introduction of the Skyborne.  View Full Articl&hellip;",
+              "has_accepted_answer": false,
+              "highest_post_number": 27,
+              "id": 2358033,
+              "image_url": null,
+              "last_posted_at": "2026-09-22T21:30:22.891Z",
+              "last_poster_username": "Jays-3149240",
+              "like_count": 35,
+              "pinned": false,
+              "posts_count": 27,
+              "reply_count": 7,
+              "slug": "create-the-hero-you-want-to-be-in-world-of-warcraft-forever",
+              "tags": [],
+              "title": "Create the Hero You Want to Be in World of Warcraft: Forever",
+              "url": "https://us.forums.blizzard.com/en/wow/t/create-the-hero-you-want-to-be-in-world-of-warcraft-forever/2358033",
+              "views": 1012,
+              "visible": true
+            }
+          ],
+          "truncated": true,
+          "url": "https://us.forums.blizzard.com/en/wow/c/347.json"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "us-forums-blizzard-com",
+        "capability": "forum-discussions/list_topics"
+      }
+    },
+    {
+      "id": "us-forums-blizzard-com/forum-discussions/search_posts",
+      "provider": "us-forums-blizzard-com",
+      "capability": "forum-discussions/search_posts",
+      "name": "Search posts",
+      "description": "Find discussions about a subject (e.g. `WoW Forever` newest first, or posts in #housing after a date). Pair with get_topic for the full thread.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "after",
+          "type": "string",
+          "in": "body",
+          "about": "Only posts on or after this YYYY-MM-DD date. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "before",
+          "type": "string",
+          "in": "body",
+          "about": "Only posts before this YYYY-MM-DD date. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "category",
+          "type": "string",
+          "in": "body",
+          "about": "Category slug to restrict to (`housing`, or `parent:child` for a subcategory)."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "in": "body",
+          "about": "Locale path prefix: en, es or pt. Default `en`. Locales are separate forums, not translations.",
+          "default": "en",
+          "oneOf": [
+            "en",
+            "es",
+            "pt"
+          ]
+        },
+        {
+          "name": "max_results",
+          "type": "number",
+          "in": "body",
+          "about": "Trim the page to at most this many posts, 1-50 (default 50).",
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "order",
+          "type": "string",
+          "in": "body",
+          "about": "latest (newest post first), likes, views or latest_topic; default is the site's relevance order.",
+          "oneOf": [
+            "latest",
+            "likes",
+            "views",
+            "latest_topic"
+          ]
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based results page.",
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Free text; the site's own operators (`#slug`, `@user`, `in:title`, `after:`) are also accepted verbatim.",
+          "required": true
+        },
+        {
+          "name": "site",
+          "type": "string",
+          "in": "body",
+          "about": "Forum site prefix on us.forums.blizzard.com. Known prefixes (robots.txt, 2026-09-22): wow, blizzard, blizzcon, d2r, d3, d4, diablo-immortal, hearthstone, heroes, overwatch, sc2, starcraft, warcraft3, warcraftrumble (en); d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (es); blizzard, d3, hearthstone, heroes, overwatch, sc2, warcraftrumble, wow (pt). Each locale/site pair is a separate Discourse forum with its own category, topic, post and user ids. Default `wow`. Pattern: ^[a-z0-9-]{1,32}$.",
+          "default": "wow"
+        }
+      ],
+      "response": {
+        "about": "Full-text search of one forum site (search.json): matching posts with topic title, category, author, timestamp, snippet and post URL; filters for category slug, date range and ordering compose the site's advanced-search term. 50 posts per page, `next_page` continues.",
+        "key": "posts",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "blurb",
+            "type": "string",
+            "about": "Search snippet around the match."
+          },
+          {
+            "name": "category_id",
+            "type": "number"
+          },
+          {
+            "name": "character",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601 UTC."
+          },
+          {
+            "name": "display_name",
+            "type": "string"
+          },
+          {
+            "name": "like_count",
+            "type": "number"
+          },
+          {
+            "name": "post_id",
+            "type": "number"
+          },
+          {
+            "name": "post_number",
+            "type": "number"
+          },
+          {
+            "name": "topic_id",
+            "type": "number"
+          },
+          {
+            "name": "topic_slug",
+            "type": "string"
+          },
+          {
+            "name": "topic_title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute source URL of the matching post."
+          },
+          {
+            "name": "username",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "locale": "en",
+          "max_results": 5,
+          "order": "latest",
+          "query": "WoW Forever",
+          "site": "wow"
+        },
+        "response": {
+          "count": 5,
+          "locale": "en",
+          "next_page": 2,
+          "observed_at_ms": 1790112645120,
+          "page": 1,
+          "posts": [
+            {
+              "blurb": "The fact that certain streamers have literally confirmed having direct lines to WoW Forever devs where they can \"voice concerns and make suggestions\" should be troubling. A handful of people who have their own playstyle and opinions on the g...",
+              "category_id": 347,
+              "character": "Asherys-aegwynn",
+              "created_at": "2026-09-22T21:29:12.685Z",
+              "display_name": "AsherahYs",
+              "like_count": 0,
+              "post_id": 30157189,
+              "post_number": 1,
+              "topic_id": 2358494,
+              "topic_slug": "blizzard-nobody-elected-xaryu-esfand-or-guzu-to-be-their-representatives",
+              "topic_title": "Blizzard - nobody elected Xaryu, Esfand, or Guzu to be their representatives",
+              "url": "https://us.forums.blizzard.com/en/wow/t/blizzard-nobody-elected-xaryu-esfand-or-guzu-to-be-their-representatives/2358494/1",
+              "username": "AsherahYs-3423316"
+            },
+            {
+              "blurb": "Theses threads are hysterical people so concerned with the label. Just play the game - or don't. Nothing hard here is a hobby . We aren't saving the world or anything we are talking about having fun.",
+              "category_id": 348,
+              "character": "Kaisana-immerseus",
+              "created_at": "2026-09-22T21:28:12.113Z",
+              "display_name": "Rhune",
+              "like_count": 0,
+              "post_id": 30157182,
+              "post_number": 15,
+              "topic_id": 2354489,
+              "topic_slug": "this-is-not-classic-this-is-retail-with-a-classic-flavour",
+              "topic_title": "This is not Classic +! This is Retail with a classic flavour",
+              "url": "https://us.forums.blizzard.com/en/wow/t/this-is-not-classic-this-is-retail-with-a-classic-flavour/2354489/15",
+              "username": "Rhune-2245102"
+            },
+            {
+              "blurb": "every version of wow is a massive time sink/grind. in retail it's for high level loot and titles. like ksm or aotc. in classic it's leveling. especially for the 1st 6+ months while everyone slowly makes their way to cap. this is a journey not destination game. if you want a destination not journe...",
+              "category_id": 347,
+              "character": "Dokthar-wyrmrest-accord",
+              "created_at": "2026-09-22T21:27:44.425Z",
+              "display_name": "scorched",
+              "like_count": 0,
+              "post_id": 30157177,
+              "post_number": 187,
+              "topic_id": 2356837,
+              "topic_slug": "running-everywhere",
+              "topic_title": "Running everywhere",
+              "url": "https://us.forums.blizzard.com/en/wow/t/running-everywhere/2356837/187",
+              "username": "scorched-7875"
+            },
+            {
+              "blurb": "I don't understand why the scaling is reduced when they told us that healers will do 30% more damage. Seems like it is backwards from what we were promised as healers. It's looking like casters are going to be on the low end of the totem pole for dmg. While melee is right at the top. So unbalanced.",
+              "category_id": 349,
+              "character": "Kaylere-mankrik",
+              "created_at": "2026-09-22T21:27:38.798Z",
+              "display_name": "GrayMoose",
+              "like_count": 0,
+              "post_id": 30157174,
+              "post_number": 42,
+              "topic_id": 2357910,
+              "topic_slug": "why-the-spell-scaling-is-bad",
+              "topic_title": "Why the Spell Scaling is bad",
+              "url": "https://us.forums.blizzard.com/en/wow/t/why-the-spell-scaling-is-bad/2357910/42",
+              "username": "GrayMoose-3433393"
+            },
+            {
+              "blurb": "Right now at lvl 20 im so rage starved but around this level its kinda normal but its even worse than in classic lower levels. Its terrifying that it wont get any better by 60 with gear.",
+              "category_id": 349,
+              "character": "Preff-crusader-strike",
+              "created_at": "2026-09-22T21:26:34.913Z",
+              "display_name": "gturtle7",
+              "like_count": 0,
+              "post_id": 30157157,
+              "post_number": 97,
+              "topic_id": 2353811,
+              "topic_slug": "warrior-is-in-a-really-bad-state",
+              "topic_title": "Warrior is in a really bad state",
+              "url": "https://us.forums.blizzard.com/en/wow/t/warrior-is-in-a-really-bad-state/2353811/97",
+              "username": "gturtle7-2719939"
+            }
+          ],
+          "site": "wow",
+          "term": "WoW Forever order:latest",
+          "truncated": true
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "us-forums-blizzard-com",
+        "capability": "forum-discussions/search_posts"
+      }
+    }
+  ]
+}

@@ -1,0 +1,2490 @@
+{
+  "id": "b3-com-br",
+  "provider": "b3-com-br",
+  "name": "B3 listed companies and indices",
+  "description": "B3 (Brasil, Bolsa, Balcão), the São Paulo exchange: listed-company registry search and enumeration, company detail with sector classification and financial summary, corporate actions, cash dividend history, CVM filings, index portfolios (IBOV, IBRX, SMLL, IDIV, IFIX...), stock-to-index membership, delayed quotes and the sector taxonomy. Public data, no credentials; Portuguese labels as B3 publishes them.",
+  "toolCount": 9,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "b3-com-br"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "b3-com-br/companies/cash_dividends",
+      "provider": "b3-com-br",
+      "capability": "companies/cash_dividends",
+      "name": "Cash dividends",
+      "description": "When the `trading_name` (e.g. PETROBRAS) is known from `search_companies` or `company`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number.",
+          "default": 1,
+          "min": 1
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page; B3 returns an empty page above 120.",
+          "min": 1,
+          "max": 120
+        },
+        {
+          "name": "trading_name",
+          "type": "string",
+          "in": "body",
+          "about": "B3 trading name, e.g. `PETROBRAS`; case-insensitive.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Paged history of cash distributions (dividends, interest on capital) for a company, keyed by B3 trading name, with approval and ex-dates, amount per share and the closing price before the ex-date.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "dividends",
+            "type": "object[]"
+          },
+          {
+            "name": "next_page",
+            "type": "number",
+            "about": "Page to request next; null when this is the last page."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "page_size",
+            "type": "number"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "total_pages",
+            "type": "number"
+          },
+          {
+            "name": "total_records",
+            "type": "number",
+            "about": "Total rows across pages as B3 reports it."
+          },
+          {
+            "name": "trading_name",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "page_size": 5,
+          "trading_name": "PETROBRAS"
+        },
+        "response": {
+          "country": "BR",
+          "dividends": [
+            {
+              "approval_date": "2026-08-06",
+              "closing_price_date": "2026-08-21",
+              "closing_price_prior_ex_brl": 49.34,
+              "closing_price_prior_ex_brl_text": "49,34",
+              "corporate_action": "JRS CAP PROPRIO",
+              "last_date_prior_ex": "2026-08-21",
+              "quoted_per_shares": 1,
+              "quoted_per_shares_text": "1",
+              "ratio": 1,
+              "ratio_text": "1",
+              "stock_type": "ON",
+              "value_per_share_brl": 0.67407131,
+              "value_per_share_brl_text": "0,67407131",
+              "yield_pct": 1.366176,
+              "yield_pct_text": "1,366176"
+            },
+            {
+              "approval_date": "2026-08-06",
+              "closing_price_date": "2026-08-21",
+              "closing_price_prior_ex_brl": 49.34,
+              "closing_price_prior_ex_brl_text": "49,34",
+              "corporate_action": "DIVIDENDO",
+              "last_date_prior_ex": "2026-08-21",
+              "quoted_per_shares": 1,
+              "quoted_per_shares_text": "1",
+              "ratio": 1,
+              "ratio_text": "1",
+              "stock_type": "ON",
+              "value_per_share_brl": 0.47156696,
+              "value_per_share_brl_text": "0,47156696",
+              "yield_pct": 0.95575,
+              "yield_pct_text": "0,955750"
+            },
+            {
+              "approval_date": "2026-08-06",
+              "closing_price_date": "2026-08-21",
+              "closing_price_prior_ex_brl": 49.34,
+              "closing_price_prior_ex_brl_text": "49,34",
+              "corporate_action": "JRS CAP PROPRIO",
+              "last_date_prior_ex": "2026-08-21",
+              "quoted_per_shares": 1,
+              "quoted_per_shares_text": "1",
+              "ratio": 1,
+              "ratio_text": "1",
+              "stock_type": "ON",
+              "value_per_share_brl": 0.20250435,
+              "value_per_share_brl_text": "0,20250435",
+              "yield_pct": 0.410426,
+              "yield_pct_text": "0,410426"
+            },
+            {
+              "approval_date": "2026-05-11",
+              "closing_price_date": "2026-06-01",
+              "closing_price_prior_ex_brl": 47.34,
+              "closing_price_prior_ex_brl_text": "47,34",
+              "corporate_action": "JRS CAP PROPRIO",
+              "last_date_prior_ex": "2026-06-01",
+              "quoted_per_shares": 1,
+              "quoted_per_shares_text": "1",
+              "ratio": 1,
+              "ratio_text": "1",
+              "stock_type": "ON",
+              "value_per_share_brl": 0.35048636,
+              "value_per_share_brl_text": "0,35048636",
+              "yield_pct": 0.74036,
+              "yield_pct_text": "0,740360"
+            },
+            {
+              "approval_date": "2026-05-11",
+              "closing_price_date": "2026-06-01",
+              "closing_price_prior_ex_brl": 47.34,
+              "closing_price_prior_ex_brl_text": "47,34",
+              "corporate_action": "JRS CAP PROPRIO",
+              "last_date_prior_ex": "2026-06-01",
+              "quoted_per_shares": 1,
+              "quoted_per_shares_text": "1",
+              "ratio": 1,
+              "ratio_text": "1",
+              "stock_type": "ON",
+              "value_per_share_brl": 0.35048636,
+              "value_per_share_brl_text": "0,35048636",
+              "yield_pct": 0.74036,
+              "yield_pct_text": "0,740360"
+            }
+          ],
+          "next_page": 2,
+          "observed_at_ms": 1790046967750,
+          "page": 1,
+          "page_size": 5,
+          "source": "b3.com.br",
+          "total_pages": 69,
+          "total_records": 343,
+          "trading_name": "PETROBRAS"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "b3-com-br",
+        "capability": "companies/cash_dividends"
+      }
+    },
+    {
+      "id": "b3-com-br/companies/company",
+      "provider": "b3-com-br",
+      "capability": "companies/company",
+      "name": "Company",
+      "description": "After `search_companies` returned a `code_cvm`, or when the CVM code is known.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "code_cvm",
+          "type": "string",
+          "in": "body",
+          "about": "CVM registration code, e.g. `9512` (Petrobras). Pattern: ^[0-9]+$.",
+          "required": true
+        },
+        {
+          "name": "include_financials",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also fetch the economic-financial summary (one more request)."
+        }
+      ],
+      "response": {
+        "about": "Company detail by CVM code: names, CNPJ, sector classification, activity, website, governance segment, trading codes with ISINs, bookkeepers; optionally the latest financial summary, capital composition, shareholder positions and free float.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "activity",
+            "type": "string"
+          },
+          {
+            "name": "bdr_type",
+            "type": "string"
+          },
+          {
+            "name": "bookkeeper_common",
+            "type": "string"
+          },
+          {
+            "name": "bookkeeper_preferred",
+            "type": "string"
+          },
+          {
+            "name": "cnpj",
+            "type": "string"
+          },
+          {
+            "name": "code_cvm",
+            "type": "string"
+          },
+          {
+            "name": "codes",
+            "type": "object[]"
+          },
+          {
+            "name": "company_name",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "financials",
+            "type": "object",
+            "about": "Present only when `include_financials` is true."
+          },
+          {
+            "name": "has_bdr",
+            "type": "boolean"
+          },
+          {
+            "name": "has_emissions",
+            "type": "boolean"
+          },
+          {
+            "name": "has_quotation",
+            "type": "boolean"
+          },
+          {
+            "name": "industry_classification",
+            "type": "object"
+          },
+          {
+            "name": "industry_classification_en",
+            "type": "object"
+          },
+          {
+            "name": "issuing_company",
+            "type": "string"
+          },
+          {
+            "name": "last_update",
+            "type": "string"
+          },
+          {
+            "name": "main_code",
+            "type": "string",
+            "about": "B3's primary ticker for the company."
+          },
+          {
+            "name": "market",
+            "type": "string",
+            "about": "Listing market / governance segment label, e.g. `BOVESPA NIVEL 2`."
+          },
+          {
+            "name": "market_indicator",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "quoted_since",
+            "type": "string"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "trading_name",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "code_cvm": "9512"
+        },
+        "response": {
+          "activity": "Pesquisa. lavra. refinação. processamento. comércio e transporte de petróleo. de seus derivados. de gás natural e de outros hidrocarbonetos fluidos. além das atividades vinculadas à energia.",
+          "bdr_type": null,
+          "bookkeeper_common": "BRADESCO",
+          "bookkeeper_preferred": "BRADESCO",
+          "cnpj": "33000167000101",
+          "code_cvm": "9512",
+          "codes": [
+            {
+              "code": "PETR3",
+              "isin": "BRPETRACNOR9"
+            },
+            {
+              "code": "PETR4",
+              "isin": "BRPETRACNPR6"
+            },
+            {
+              "code": "PETR-DEB62",
+              "isin": "BRPETRDBS092"
+            }
+          ],
+          "company_name": "PETROLEO BRASILEIRO S.A. PETROBRAS",
+          "country": "BR",
+          "financials": null,
+          "has_bdr": false,
+          "has_emissions": false,
+          "has_quotation": true,
+          "industry_classification": {
+            "sector": "Petróleo. Gás e Biocombustíveis",
+            "segment": "Exploração. Refino e Distribuição",
+            "subsector": "Petróleo. Gás e Biocombustíveis",
+            "text": "Petróleo. Gás e Biocombustíveis / Petróleo. Gás e Biocombustíveis / Exploração. Refino e Distribuição"
+          },
+          "industry_classification_en": null,
+          "issuing_company": "PETR",
+          "last_update": "2026-09-18T23:35:06",
+          "main_code": "PETR4",
+          "market": "BOVESPA NIVEL 2",
+          "market_indicator": "17",
+          "observed_at_ms": 1790046949592,
+          "quoted_since": "1977-07-20",
+          "source": "b3.com.br",
+          "status": "A",
+          "trading_name": "PETROBRAS",
+          "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/9512/PETR/overview?language=pt-br",
+          "website": "www.petrobras.com.br"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "b3-com-br",
+        "capability": "companies/company"
+      }
+    },
+    {
+      "id": "b3-com-br/companies/company_filings",
+      "provider": "b3-com-br",
+      "capability": "companies/company_filings",
+      "name": "Company filings",
+      "description": "For a company's regulatory disclosures; filter by `category` id (1 Assembleia, 2 Reunião da Administração, 3 Aviso aos Acionistas, 4 Fato Relevante, 6 Comunicado ao Mercado, 7 Dados Econômico-Financeiros, 8 Valores Mobiliários Negociados e Detidos, ...).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "category",
+          "type": "number",
+          "in": "body",
+          "about": "B3 filing category id; omit for all categories.",
+          "min": 1
+        },
+        {
+          "name": "code_cvm",
+          "type": "string",
+          "in": "body",
+          "about": "CVM registration code, e.g. `9512`. Pattern: ^[0-9]+$.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number.",
+          "default": 1,
+          "min": 1
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page; B3 returns an empty page above 120.",
+          "min": 1,
+          "max": 120
+        },
+        {
+          "name": "year",
+          "type": "number",
+          "in": "body",
+          "about": "Calendar year of delivery; defaults to the current year.",
+          "min": 1990,
+          "max": 2100
+        }
+      ],
+      "response": {
+        "about": "Paged CVM filings (material facts, notices to the market, minutes, related-party communications, ...) a company delivered in a year, with links to the CVM document viewer and download.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "category",
+            "type": "number"
+          },
+          {
+            "name": "code_cvm",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "filings",
+            "type": "object[]"
+          },
+          {
+            "name": "next_page",
+            "type": "number",
+            "about": "Page to request next; null when this is the last page."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "page_size",
+            "type": "number"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "total_pages",
+            "type": "number"
+          },
+          {
+            "name": "total_records",
+            "type": "number",
+            "about": "Total rows across pages as B3 reports it."
+          },
+          {
+            "name": "year",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "code_cvm": "9512",
+          "page_size": 5,
+          "year": 2026
+        },
+        "response": {
+          "category": null,
+          "code_cvm": "9512",
+          "country": "BR",
+          "filings": [
+            {
+              "cancelled_on": null,
+              "category": "Comunicação sobre Transação entre Partes Relacionadas",
+              "code_cvm": "9512",
+              "company_name": "PETROLEO BRASILEIRO S.A. PETROBRAS",
+              "delivered_at": "2026-09-21T19:35:28",
+              "delivery": "Apresentação",
+              "download_url": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&numSequencia=1094940&numVersao=1&numProtocolo=1570234&descTipo=IPE&CodigoInstituicao=1",
+              "kind": null,
+              "reference_date": "2026-09-10",
+              "status": "Ativo",
+              "subject": "Comunicação sobre Transação com Parte Relacionada: Petrobras e PPSA (10/09/2026)",
+              "trading_name": "PETROBRAS",
+              "type": null,
+              "version": "1",
+              "view_url": "https://www.rad.cvm.gov.br/ENETWEB/frmExibirArquivoIPEExterno.aspx?ID=1570234"
+            },
+            {
+              "cancelled_on": null,
+              "category": "Comunicado ao Mercado",
+              "code_cvm": "9512",
+              "company_name": "PETROLEO BRASILEIRO S.A. PETROBRAS",
+              "delivered_at": "2026-09-19T14:23:09",
+              "delivery": "Apresentação",
+              "download_url": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&numSequencia=1094452&numVersao=1&numProtocolo=1569746&descTipo=IPE&CodigoInstituicao=1",
+              "kind": null,
+              "reference_date": "2026-09-19",
+              "status": "Ativo",
+              "subject": "Petrobras recebe nova parcela de Subvenção Econômica à Gasolina",
+              "trading_name": "PETROBRAS",
+              "type": "Outros Comunicados Não Considerados Fatos Relevantes",
+              "version": "1",
+              "view_url": "https://www.rad.cvm.gov.br/ENETWEB/frmExibirArquivoIPEExterno.aspx?ID=1569746"
+            },
+            {
+              "cancelled_on": null,
+              "category": "Fato Relevante",
+              "code_cvm": "9512",
+              "company_name": "PETROLEO BRASILEIRO S.A. PETROBRAS",
+              "delivered_at": "2026-09-19T14:05:59",
+              "delivery": "Apresentação",
+              "download_url": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&numSequencia=1094451&numVersao=1&numProtocolo=1569745&descTipo=IPE&CodigoInstituicao=1",
+              "kind": null,
+              "reference_date": "2026-09-19",
+              "status": "Ativo",
+              "subject": "Petrobras informa sobre adesão à nova subvenção econômica",
+              "trading_name": "PETROBRAS",
+              "type": null,
+              "version": "1",
+              "view_url": "https://www.rad.cvm.gov.br/ENETWEB/frmExibirArquivoIPEExterno.aspx?ID=1569745"
+            },
+            {
+              "cancelled_on": null,
+              "category": "Comunicado ao Mercado",
+              "code_cvm": "9512",
+              "company_name": "PETROLEO BRASILEIRO S.A. PETROBRAS",
+              "delivered_at": "2026-09-17T08:34:47",
+              "delivery": "Apresentação",
+              "download_url": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&numSequencia=1093653&numVersao=1&numProtocolo=1568947&descTipo=IPE&CodigoInstituicao=1",
+              "kind": null,
+              "reference_date": "2026-09-17",
+              "status": "Ativo",
+              "subject": "Petrobras celebra 8 Contratos de Partilha de Produção na Costa do Marfim",
+              "trading_name": "PETROBRAS",
+              "type": "Outros Comunicados Não Considerados Fatos Relevantes",
+              "version": "1",
+              "view_url": "https://www.rad.cvm.gov.br/ENETWEB/frmExibirArquivoIPEExterno.aspx?ID=1568947"
+            },
+            {
+              "cancelled_on": null,
+              "category": "Comunicação sobre demandas societárias",
+              "code_cvm": "9512",
+              "company_name": "PETROLEO BRASILEIRO S.A. PETROBRAS",
+              "delivered_at": "2026-09-14T20:36:44",
+              "delivery": "Apresentação",
+              "download_url": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&numSequencia=1092855&numVersao=1&numProtocolo=1568149&descTipo=IPE&CodigoInstituicao=1",
+              "kind": null,
+              "reference_date": "2026-09-02",
+              "status": "Ativo",
+              "subject": "Comunicado de Demanda Societária: Leonardo de Siqueira Lima e Ricardo Ribeiro Feltrin x Petrobras e União Federal",
+              "trading_name": "PETROBRAS",
+              "type": null,
+              "version": "1",
+              "view_url": "https://www.rad.cvm.gov.br/ENETWEB/frmExibirArquivoIPEExterno.aspx?ID=1568149"
+            }
+          ],
+          "next_page": 2,
+          "observed_at_ms": 1790046972511,
+          "page": 1,
+          "page_size": 5,
+          "source": "b3.com.br",
+          "total_pages": 45,
+          "total_records": 225,
+          "year": 2026
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "b3-com-br",
+        "capability": "companies/company_filings"
+      }
+    },
+    {
+      "id": "b3-com-br/companies/corporate_actions",
+      "provider": "b3-com-br",
+      "capability": "companies/corporate_actions",
+      "name": "Corporate actions",
+      "description": "When the four-letter issuer code (`issuing_company`, e.g. PETR) is known, typically from `search_companies` or `company`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "issuing_company",
+          "type": "string",
+          "in": "body",
+          "about": "Issuer code, e.g. `PETR`.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Corporate actions supplement for an issuer: capital stock, share counts, round lot, bookkeepers, and every cash dividend, stock dividend/split and subscription B3 lists.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "bookkeeper_common",
+            "type": "string"
+          },
+          {
+            "name": "bookkeeper_preferred",
+            "type": "string"
+          },
+          {
+            "name": "cash_dividends",
+            "type": "object[]"
+          },
+          {
+            "name": "code_cvm",
+            "type": "string"
+          },
+          {
+            "name": "common_shares",
+            "type": "number",
+            "about": "Number of common shares, parsed; null when the text is not a number."
+          },
+          {
+            "name": "common_shares_form",
+            "type": "string"
+          },
+          {
+            "name": "common_shares_text",
+            "type": "string",
+            "about": "Number of common shares, verbatim as B3 formats it (Brazilian number format)."
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "issuing_company",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "preferred_shares",
+            "type": "number",
+            "about": "Number of preferred shares, parsed; null when the text is not a number."
+          },
+          {
+            "name": "preferred_shares_form",
+            "type": "string"
+          },
+          {
+            "name": "preferred_shares_text",
+            "type": "string",
+            "about": "Number of preferred shares, verbatim as B3 formats it (Brazilian number format)."
+          },
+          {
+            "name": "quoted_per_share_since",
+            "type": "string"
+          },
+          {
+            "name": "round_lot",
+            "type": "number",
+            "about": "Round lot, parsed; null when the text is not a number."
+          },
+          {
+            "name": "round_lot_text",
+            "type": "string",
+            "about": "Round lot, verbatim as B3 formats it (Brazilian number format)."
+          },
+          {
+            "name": "segment",
+            "type": "string",
+            "about": "Governance segment code (`NM`, `N2`, `N1`, `BOLSA`...)."
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "stock_capital_brl",
+            "type": "number",
+            "about": "Capital stock in BRL, parsed; null when the text is not a number."
+          },
+          {
+            "name": "stock_capital_brl_text",
+            "type": "string",
+            "about": "Capital stock in BRL, verbatim as B3 formats it (Brazilian number format)."
+          },
+          {
+            "name": "stock_dividends",
+            "type": "object[]"
+          },
+          {
+            "name": "subscriptions",
+            "type": "object[]"
+          },
+          {
+            "name": "total_shares",
+            "type": "number",
+            "about": "Total shares, parsed; null when the text is not a number."
+          },
+          {
+            "name": "total_shares_text",
+            "type": "string",
+            "about": "Total shares, verbatim as B3 formats it (Brazilian number format)."
+          },
+          {
+            "name": "trading_name",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "issuing_company": "PETR"
+        },
+        "response": {
+          "bookkeeper_common": "BRADESCO",
+          "bookkeeper_preferred": "BRADESCO",
+          "cash_dividends": [
+            {
+              "approved_on": "2026-08-06",
+              "asset_isin": "BRPETRACNOR9",
+              "label": "DIVIDENDO",
+              "last_date_prior": "2026-08-21",
+              "payment_date": "2026-12-21",
+              "rate": 0.47156696,
+              "rate_text": "0,47156696000",
+              "related_to": "Anual/2026",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-08-06",
+              "asset_isin": "BRPETRACNOR9",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2026-08-21",
+              "payment_date": "2026-11-23",
+              "rate": 0.67407131,
+              "rate_text": "0,67407131000",
+              "related_to": "Anual/2026",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-08-06",
+              "asset_isin": "BRPETRACNOR9",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2026-08-21",
+              "payment_date": "2026-12-21",
+              "rate": 0.20250435,
+              "rate_text": "0,20250435000",
+              "related_to": "Anual/2026",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-08-06",
+              "asset_isin": "BRPETRACNPR6",
+              "label": "DIVIDENDO",
+              "last_date_prior": "2026-08-21",
+              "payment_date": "2026-12-21",
+              "rate": 0.47156696,
+              "rate_text": "0,47156696000",
+              "related_to": "Anual/2026",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-08-06",
+              "asset_isin": "BRPETRACNPR6",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2026-08-21",
+              "payment_date": "2026-12-21",
+              "rate": 0.20250435,
+              "rate_text": "0,20250435000",
+              "related_to": "Anual/2026",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-08-06",
+              "asset_isin": "BRPETRACNPR6",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2026-08-21",
+              "payment_date": "2026-11-23",
+              "rate": 0.67407131,
+              "rate_text": "0,67407131000",
+              "related_to": "Anual/2026",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-05-11",
+              "asset_isin": "BRPETRACNOR9",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2026-06-01",
+              "payment_date": "2026-08-20",
+              "rate": 0.35048636,
+              "rate_text": "0,35048636000",
+              "related_to": "Anual/2026",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-05-11",
+              "asset_isin": "BRPETRACNOR9",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2026-06-01",
+              "payment_date": "2026-09-21",
+              "rate": 0.35048636,
+              "rate_text": "0,35048636000",
+              "related_to": "Anual/2026",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-05-11",
+              "asset_isin": "BRPETRACNPR6",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2026-06-01",
+              "payment_date": "2026-08-20",
+              "rate": 0.35048636,
+              "rate_text": "0,35048636000",
+              "related_to": "Anual/2026",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-05-11",
+              "asset_isin": "BRPETRACNPR6",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2026-06-01",
+              "payment_date": "2026-09-21",
+              "rate": 0.35048636,
+              "rate_text": "0,35048636000",
+              "related_to": "Anual/2026",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-04-16",
+              "asset_isin": "BRPETRACNOR9",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2026-04-22",
+              "payment_date": "2026-05-20",
+              "rate": 0.31311454,
+              "rate_text": "0,31311454000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-04-16",
+              "asset_isin": "BRPETRACNOR9",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2026-04-22",
+              "payment_date": "2026-06-22",
+              "rate": 0.31311454,
+              "rate_text": "0,31311454000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-04-16",
+              "asset_isin": "BRPETRACNOR9",
+              "label": "RENDIMENTO",
+              "last_date_prior": "2026-04-22",
+              "payment_date": "2026-05-20",
+              "rate": 0.01649003,
+              "rate_text": "0,01649003000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-04-16",
+              "asset_isin": "BRPETRACNOR9",
+              "label": "RENDIMENTO",
+              "last_date_prior": "2026-04-22",
+              "payment_date": "2026-06-22",
+              "rate": 0.02038398,
+              "rate_text": "0,02038398000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-04-16",
+              "asset_isin": "BRPETRACNPR6",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2026-04-22",
+              "payment_date": "2026-05-20",
+              "rate": 0.31311454,
+              "rate_text": "0,31311454000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-04-16",
+              "asset_isin": "BRPETRACNPR6",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2026-04-22",
+              "payment_date": "2026-06-22",
+              "rate": 0.31311454,
+              "rate_text": "0,31311454000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-04-16",
+              "asset_isin": "BRPETRACNPR6",
+              "label": "RENDIMENTO",
+              "last_date_prior": "2026-04-22",
+              "payment_date": "2026-05-20",
+              "rate": 0.01649003,
+              "rate_text": "0,01649003000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2026-04-16",
+              "asset_isin": "BRPETRACNPR6",
+              "label": "RENDIMENTO",
+              "last_date_prior": "2026-04-22",
+              "payment_date": "2026-06-22",
+              "rate": 0.02038398,
+              "rate_text": "0,02038398000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2025-12-11",
+              "asset_isin": "BRPETRACNOR9",
+              "label": "DIVIDENDO",
+              "last_date_prior": "2025-12-22",
+              "payment_date": "2026-03-20",
+              "rate": 0.29642144,
+              "rate_text": "0,29642144000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2025-12-11",
+              "asset_isin": "BRPETRACNOR9",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2025-12-22",
+              "payment_date": "2026-03-20",
+              "rate": 0.17518233,
+              "rate_text": "0,17518233000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2025-12-11",
+              "asset_isin": "BRPETRACNOR9",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2025-12-22",
+              "payment_date": "2026-02-20",
+              "rate": 0.47160378,
+              "rate_text": "0,47160378000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2025-12-11",
+              "asset_isin": "BRPETRACNPR6",
+              "label": "DIVIDENDO",
+              "last_date_prior": "2025-12-22",
+              "payment_date": "2026-03-20",
+              "rate": 0.29642144,
+              "rate_text": "0,29642144000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2025-12-11",
+              "asset_isin": "BRPETRACNPR6",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2025-12-22",
+              "payment_date": "2026-03-20",
+              "rate": 0.17518233,
+              "rate_text": "0,17518233000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            },
+            {
+              "approved_on": "2025-12-11",
+              "asset_isin": "BRPETRACNPR6",
+              "label": "JRS CAP PROPRIO",
+              "last_date_prior": "2025-12-22",
+              "payment_date": "2026-02-20",
+              "rate": 0.47160378,
+              "rate_text": "0,47160378000",
+              "related_to": "Anual/2025",
+              "remarks": null
+            }
+          ],
+          "code_cvm": "9512",
+          "common_shares": 7442231382,
+          "common_shares_form": "Escritural",
+          "common_shares_text": "7.442.231.382",
+          "country": "BR",
+          "issuing_company": "PETR",
+          "observed_at_ms": 1790046954234,
+          "preferred_shares": 5446501379,
+          "preferred_shares_form": "Escritural",
+          "preferred_shares_text": "5.446.501.379",
+          "quoted_per_share_since": "2000-06-23",
+          "round_lot": 100,
+          "round_lot_text": "100",
+          "segment": "N2",
+          "source": "b3.com.br",
+          "stock_capital_brl": 205431960490.52,
+          "stock_capital_brl_text": "205.431.960.490,52",
+          "stock_dividends": [
+            {
+              "approved_on": "2008-04-25",
+              "asset_isin": "BRPETRACNOR9",
+              "factor": 100,
+              "factor_text": "100,00000000000",
+              "label": "DESDOBRAMENTO",
+              "last_date_prior": "2008-04-25",
+              "remarks": null
+            },
+            {
+              "approved_on": "2008-04-25",
+              "asset_isin": "BRPETRACNPR6",
+              "factor": 100,
+              "factor_text": "100,00000000000",
+              "label": "DESDOBRAMENTO",
+              "last_date_prior": "2008-04-25",
+              "remarks": null
+            },
+            {
+              "approved_on": "2000-05-23",
+              "asset_isin": "BRPETRACNOR9",
+              "factor": 0.01,
+              "factor_text": "0,01000000000",
+              "label": "GRUPAMENTO",
+              "last_date_prior": "2000-06-21",
+              "remarks": null
+            },
+            {
+              "approved_on": "2000-05-23",
+              "asset_isin": "BRPETRACNPR6",
+              "factor": 0.01,
+              "factor_text": "0,01000000000",
+              "label": "GRUPAMENTO",
+              "last_date_prior": "2000-06-21",
+              "remarks": null
+            },
+            {
+              "approved_on": "1994-03-25",
+              "asset_isin": "BRPETRACNOR9",
+              "factor": 33.333333333,
+              "factor_text": "33,33333333300",
+              "label": "BONIFICACAO",
+              "last_date_prior": "1994-03-25",
+              "remarks": null
+            },
+            {
+              "approved_on": "1994-03-25",
+              "asset_isin": "BRPETRACNPR6",
+              "factor": 33.333333333,
+              "factor_text": "33,33333333300",
+              "label": "BONIFICACAO",
+              "last_date_prior": "1994-03-25",
+              "remarks": null
+            }
+          ],
+          "subscriptions": [
+            {
+              "approved_on": "1974-08-15",
+              "asset_isin": "BRPETRACPPR1",
+              "label": "SUBSCRICAO",
+              "last_date_prior": "1974-11-14",
+              "percentage": 20,
+              "percentage_text": "20,00000000000",
+              "remarks": null,
+              "subscription_date": null,
+              "trading_period": "01/01/1900 a 01/01/1900",
+              "unit_price": 1,
+              "unit_price_text": "1,00000000000"
+            }
+          ],
+          "total_shares": 12888732761,
+          "total_shares_text": "12.888.732.761",
+          "trading_name": "PETROBRAS",
+          "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/9512/PETR/corporate-actions?language=pt-br"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "b3-com-br",
+        "capability": "companies/corporate_actions"
+      }
+    },
+    {
+      "id": "b3-com-br/companies/index_portfolio",
+      "provider": "b3-com-br",
+      "capability": "companies/index_portfolio",
+      "name": "Index portfolio",
+      "description": "To get an index's composition; page through with `page` (default 120 rows covers IBOV in one call).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "index",
+          "type": "string",
+          "in": "body",
+          "about": "Index acronym, e.g. `IBOV`.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number.",
+          "default": 1,
+          "min": 1
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page; B3 returns an empty page above 120.",
+          "min": 1,
+          "max": 120
+        },
+        {
+          "name": "portfolio",
+          "type": "string",
+          "in": "body",
+          "about": "`theoretical`: current four-month portfolio; `day`: today's portfolio by sector with accumulated participation; `preview`: next rebalancing preview.",
+          "default": "theoretical",
+          "oneOf": [
+            "theoretical",
+            "day",
+            "preview"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Constituents of a B3 index (IBOV, IBRX, SMLL, IDIV, IFIX, ...) with type, theoretical quantity and participation, plus the header totals and reductor: the current theoretical portfolio, the day's portfolio grouped by sector, or the next quarterly preview.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "constituents",
+            "type": "object[]"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "index",
+            "type": "string"
+          },
+          {
+            "name": "next_page",
+            "type": "number",
+            "about": "Page to request next; null when this is the last page."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "page_size",
+            "type": "number"
+          },
+          {
+            "name": "portfolio",
+            "type": "string"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "total_pages",
+            "type": "number"
+          },
+          {
+            "name": "total_records",
+            "type": "number",
+            "about": "Total rows across pages as B3 reports it."
+          },
+          {
+            "name": "totals",
+            "type": "object"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "index": "IBOV",
+          "page_size": 10
+        },
+        "response": {
+          "constituents": [
+            {
+              "asset": "AMBEV S/A",
+              "code": "ABEV3",
+              "participation_accumulated_pct": null,
+              "participation_accumulated_pct_text": null,
+              "participation_pct": 2.45,
+              "participation_pct_text": "2,450",
+              "sector": null,
+              "theoretical_quantity": 4043349180,
+              "theoretical_quantity_text": "4.043.349.180",
+              "type": "ON"
+            },
+            {
+              "asset": "ALLOS",
+              "code": "ALOS3",
+              "participation_accumulated_pct": null,
+              "participation_accumulated_pct_text": null,
+              "participation_pct": 0.531,
+              "participation_pct_text": "0,531",
+              "sector": null,
+              "theoretical_quantity": 478975645,
+              "theoretical_quantity_text": "478.975.645",
+              "type": "ON NM"
+            },
+            {
+              "asset": "ASSAI",
+              "code": "ASAI3",
+              "participation_accumulated_pct": null,
+              "participation_accumulated_pct_text": null,
+              "participation_pct": 0.467,
+              "participation_pct_text": "0,467",
+              "sector": null,
+              "theoretical_quantity": 1335651252,
+              "theoretical_quantity_text": "1.335.651.252",
+              "type": "ON NM"
+            },
+            {
+              "asset": "AUREN",
+              "code": "AURE3",
+              "participation_accumulated_pct": null,
+              "participation_accumulated_pct_text": null,
+              "participation_pct": 0.147,
+              "participation_pct_text": "0,147",
+              "sector": null,
+              "theoretical_quantity": 317886569,
+              "theoretical_quantity_text": "317.886.569",
+              "type": "ON NM"
+            },
+            {
+              "asset": "AXIA ENERGIA",
+              "code": "AXIA3",
+              "participation_accumulated_pct": null,
+              "participation_accumulated_pct_text": null,
+              "participation_pct": 4.849,
+              "participation_pct_text": "4,849",
+              "sector": null,
+              "theoretical_quantity": 2278697967,
+              "theoretical_quantity_text": "2.278.697.967",
+              "type": "ON NM"
+            },
+            {
+              "asset": "AZZAS 2154",
+              "code": "AZZA3",
+              "participation_accumulated_pct": null,
+              "participation_accumulated_pct_text": null,
+              "participation_pct": 0.089,
+              "participation_pct_text": "0,089",
+              "sector": null,
+              "theoretical_quantity": 130746665,
+              "theoretical_quantity_text": "130.746.665",
+              "type": "ON NM"
+            },
+            {
+              "asset": "B3",
+              "code": "B3SA3",
+              "participation_accumulated_pct": null,
+              "participation_accumulated_pct_text": null,
+              "participation_pct": 3.334,
+              "participation_pct_text": "3,334",
+              "sector": null,
+              "theoretical_quantity": 4985893391,
+              "theoretical_quantity_text": "4.985.893.391",
+              "type": "ON NM"
+            },
+            {
+              "asset": "BRASIL",
+              "code": "BBAS3",
+              "participation_accumulated_pct": null,
+              "participation_accumulated_pct_text": null,
+              "participation_pct": 2.464,
+              "participation_pct_text": "2,464",
+              "sector": null,
+              "theoretical_quantity": 2842760965,
+              "theoretical_quantity_text": "2.842.760.965",
+              "type": "ON EX NM"
+            },
+            {
+              "asset": "BRADESCO",
+              "code": "BBDC3",
+              "participation_accumulated_pct": null,
+              "participation_accumulated_pct_text": null,
+              "participation_pct": 0.891,
+              "participation_pct_text": "0,891",
+              "sector": null,
+              "theoretical_quantity": 1464434502,
+              "theoretical_quantity_text": "1.464.434.502",
+              "type": "ON EJ N1"
+            },
+            {
+              "asset": "BRADESCO",
+              "code": "BBDC4",
+              "participation_accumulated_pct": null,
+              "participation_accumulated_pct_text": null,
+              "participation_pct": 3.515,
+              "participation_pct_text": "3,515",
+              "sector": null,
+              "theoretical_quantity": 5100907585,
+              "theoretical_quantity_text": "5.100.907.585",
+              "type": "PN EJ N1"
+            }
+          ],
+          "country": "BR",
+          "index": "IBOV",
+          "next_page": 2,
+          "observed_at_ms": 1790046977111,
+          "page": 1,
+          "page_size": 10,
+          "portfolio": "theoretical",
+          "source": "b3.com.br",
+          "total_pages": 8,
+          "total_records": 76,
+          "totals": {
+            "date": null,
+            "participation_pct": 100,
+            "participation_pct_text": "100,000",
+            "reductor": 14030907.03256302,
+            "reductor_text": "14.030.907,03256302",
+            "theoretical_quantity": 93803750400,
+            "theoretical_quantity_text": "93.803.750.400"
+          },
+          "url": "https://sistemaswebb3-listados.b3.com.br/indexPage/theorical/IBOV?language=pt-br"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "b3-com-br",
+        "capability": "companies/index_portfolio"
+      }
+    },
+    {
+      "id": "b3-com-br/companies/industry_classification",
+      "provider": "b3-com-br",
+      "capability": "companies/industry_classification",
+      "name": "Industry classification",
+      "description": "To interpret or filter the `segment` and classification labels returned by the company functions.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "language",
+          "type": "string",
+          "in": "body",
+          "about": "language",
+          "default": "pt-br",
+          "oneOf": [
+            "pt-br",
+            "en-us"
+          ]
+        }
+      ],
+      "response": {
+        "about": "B3's sector taxonomy: sectors, subsectors and segments used to classify listed companies.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "sectors",
+            "type": "object[]"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "country": "BR",
+          "language": "pt-br",
+          "observed_at_ms": 1790047035730,
+          "sectors": [
+            {
+              "name": "Bens Industriais",
+              "subsectors": [
+                {
+                  "name": "Comércio",
+                  "segments": [
+                    "Máquinas e Equipamentos",
+                    "Material de Transporte"
+                  ]
+                },
+                {
+                  "name": "Construção e Engenharia",
+                  "segments": [
+                    "Construção Pesada",
+                    "Engenharia Consultiva",
+                    "Produtos para Construção",
+                    "Serviços Diversos"
+                  ]
+                },
+                {
+                  "name": "Máquinas e Equipamentos",
+                  "segments": [
+                    "Armas e Munições",
+                    "Máq. e Equip. Construção e Agrícolas",
+                    "Máq. e Equip. Industriais",
+                    "Motores . Compressores e Outros"
+                  ]
+                },
+                {
+                  "name": "Material de Transporte",
+                  "segments": [
+                    "Material Aeronáutico e de Defesa",
+                    "Material Rodoviário"
+                  ]
+                },
+                {
+                  "name": "Serviços",
+                  "segments": [
+                    "Serviços Diversos"
+                  ]
+                },
+                {
+                  "name": "Transporte",
+                  "segments": [
+                    "Exploração de Rodovias",
+                    "Serviços de Apoio e Armazenagem",
+                    "Transporte Aéreo",
+                    "Transporte Ferroviário",
+                    "Transporte Hidroviário",
+                    "Transporte Metroviário",
+                    "Transporte Rodoviário"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Comunicações",
+              "subsectors": [
+                {
+                  "name": "Telecomunicações",
+                  "segments": [
+                    "Telecomunicações"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Construção e Transporte",
+              "subsectors": []
+            },
+            {
+              "name": "Consumo Cíclico",
+              "subsectors": [
+                {
+                  "name": "Automóveis e Motocicletas",
+                  "segments": [
+                    "Automóveis e Motocicletas"
+                  ]
+                },
+                {
+                  "name": "Comércio",
+                  "segments": [
+                    "Eletrodomésticos",
+                    "Produtos Diversos",
+                    "Tecidos. Vestuário e Calçados"
+                  ]
+                },
+                {
+                  "name": "Construção Civil",
+                  "segments": [
+                    "Incorporações"
+                  ]
+                },
+                {
+                  "name": "Diversos",
+                  "segments": [
+                    "Aluguel de carros",
+                    "Programas de Fidelização",
+                    "Serviços Educacionais"
+                  ]
+                },
+                {
+                  "name": "Hoteis e Restaurantes",
+                  "segments": [
+                    "Hotelaria",
+                    "Restaurante e Similares"
+                  ]
+                },
+                {
+                  "name": "Tecidos. Vestuário e Calçados",
+                  "segments": [
+                    "Acessórios",
+                    "Calçados",
+                    "Fios e Tecidos",
+                    "Vestuário"
+                  ]
+                },
+                {
+                  "name": "Utilidades Domésticas",
+                  "segments": [
+                    "Eletrodomésticos",
+                    "Móveis",
+                    "Utensílios Domésticos"
+                  ]
+                },
+                {
+                  "name": "Viagens e Lazer",
+                  "segments": [
+                    "Atividades Esportivas",
+                    "Bicicletas",
+                    "Brinquedos e Jogos",
+                    "Produção de Eventos e Shows",
+                    "Viagens e Turismo"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Consumo não Cíclico",
+              "subsectors": [
+                {
+                  "name": "Agropecuária",
+                  "segments": [
+                    "Agricultura"
+                  ]
+                },
+                {
+                  "name": "Alimentos Processados",
+                  "segments": [
+                    "Açucar e Alcool",
+                    "Alimentos Diversos",
+                    "Carnes e Derivados",
+                    "Laticínios"
+                  ]
+                },
+                {
+                  "name": "Bebidas",
+                  "segments": [
+                    "Cervejas e Refrigerantes"
+                  ]
+                },
+                {
+                  "name": "Comércio e Distribuição",
+                  "segments": [
+                    "Alimentos",
+                    "Medicamentos"
+                  ]
+                },
+                {
+                  "name": "Produtos de Uso Pessoal e de Limpeza",
+                  "segments": [
+                    "Produtos de Limpeza",
+                    "Produtos de Uso Pessoal"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Financeiro",
+              "subsectors": [
+                {
+                  "name": "Exploração de Imóveis",
+                  "segments": [
+                    "Exploração de Imóveis",
+                    "Intermediação Imobiliária"
+                  ]
+                },
+                {
+                  "name": "Holdings Diversificadas",
+                  "segments": [
+                    "Holdings Diversificadas"
+                  ]
+                },
+                {
+                  "name": "Intermediários Financeiros",
+                  "segments": [
+                    "Bancos",
+                    "Outros Intermediarios Financeiros",
+                    "Soc. Arrendamento Mercantil"
+                  ]
+                },
+                {
+                  "name": "Previdência e Seguros",
+                  "segments": [
+                    "Corretoras de Seguros e Resseguros",
+                    "Resseguradoras",
+                    "Seguradoras"
+                  ]
+                },
+                {
+                  "name": "Securitizadoras de Recebíveis",
+                  "segments": [
+                    "Securitizadoras de Recebíveis"
+                  ]
+                },
+                {
+                  "name": "Serviços Diversos",
+                  "segments": [
+                    "Serviços Diversos"
+                  ]
+                },
+                {
+                  "name": "Serviços Financeiros Diversos",
+                  "segments": [
+                    "Gestão de Recursos e Investimentos",
+                    "Serviços Financeiros Diversos"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Materiais Básicos",
+              "subsectors": [
+                {
+                  "name": "Embalagens",
+                  "segments": [
+                    "Embalagens"
+                  ]
+                },
+                {
+                  "name": "Madeira e Papel",
+                  "segments": [
+                    "Madeira",
+                    "Papel e Celulose"
+                  ]
+                },
+                {
+                  "name": "Materiais Diversos",
+                  "segments": [
+                    "Materiais Diversos"
+                  ]
+                },
+                {
+                  "name": "Mineração",
+                  "segments": [
+                    "Minerais Metálicos"
+                  ]
+                },
+                {
+                  "name": "Químicos",
+                  "segments": [
+                    "Fertilizantes e Defensivos",
+                    "Petroquímicos",
+                    "Químicos Diversos"
+                  ]
+                },
+                {
+                  "name": "Siderurgia e Metalurgia",
+                  "segments": [
+                    "Artefatos de Cobre",
+                    "Artefatos de Ferro e Aço",
+                    "Siderurgia"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Outros",
+              "subsectors": [
+                {
+                  "name": "Outros",
+                  "segments": [
+                    "Outros"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Petróleo. Gás e Biocombustíveis",
+              "subsectors": [
+                {
+                  "name": "Petróleo. Gás e Biocombustíveis",
+                  "segments": [
+                    "Distribuição de Combustíveis",
+                    "Equipamentos e Serviços",
+                    "Exploração. Refino e Distribuição"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Saúde",
+              "subsectors": [
+                {
+                  "name": "Comércio e Distribuição",
+                  "segments": [
+                    "Medicamentos e Outros Produtos"
+                  ]
+                },
+                {
+                  "name": "Equipamentos",
+                  "segments": [
+                    "Equipamentos"
+                  ]
+                },
+                {
+                  "name": "Medicamentos e Outros Produtos",
+                  "segments": [
+                    "Medicamentos e Outros Produtos"
+                  ]
+                },
+                {
+                  "name": "Serv.Méd.Hospit..Análises e Diagnósticos",
+                  "segments": [
+                    "Serv.Méd.Hospit..Análises e Diagnósticos"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Setor Inicial",
+              "subsectors": []
+            },
+            {
+              "name": "Tecnologia da Informação",
+              "subsectors": [
+                {
+                  "name": "Computadores e Equipamentos",
+                  "segments": [
+                    "Computadores e Equipamentos"
+                  ]
+                },
+                {
+                  "name": "Programas e Serviços",
+                  "segments": [
+                    "Programas e Serviços"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Utilidade Pública",
+              "subsectors": [
+                {
+                  "name": "Água e Saneamento",
+                  "segments": [
+                    "Água e Saneamento"
+                  ]
+                },
+                {
+                  "name": "Energia Elétrica",
+                  "segments": [
+                    "Energia Elétrica"
+                  ]
+                },
+                {
+                  "name": "Gás",
+                  "segments": [
+                    "Gás"
+                  ]
+                }
+              ]
+            }
+          ],
+          "source": "b3.com.br",
+          "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/classification?language=pt-br"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "b3-com-br",
+        "capability": "companies/industry_classification"
+      }
+    },
+    {
+      "id": "b3-com-br/companies/quote",
+      "provider": "b3-com-br",
+      "capability": "companies/quote",
+      "name": "Quote",
+      "description": "For a ticker such as PETR4, VALE3, BOVA11. Quotes are delayed per B3 policy.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "symbol",
+          "type": "string",
+          "in": "body",
+          "about": "Ticker, e.g. `PETR4`.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Delayed quote for one B3 instrument from cotacao.b3.com.br: open, low, high, average, last price, percent change and traded quantity, in BRL.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "average",
+            "type": "number"
+          },
+          {
+            "name": "change_pct",
+            "type": "number"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "high",
+            "type": "number"
+          },
+          {
+            "name": "in_index_composition",
+            "type": "boolean"
+          },
+          {
+            "name": "last",
+            "type": "number"
+          },
+          {
+            "name": "low",
+            "type": "number"
+          },
+          {
+            "name": "market",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "open",
+            "type": "number"
+          },
+          {
+            "name": "quoted_at",
+            "type": "string",
+            "about": "B3's message timestamp (São Paulo local time)."
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "total_quantity",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "symbol": "PETR4"
+        },
+        "response": {
+          "average": 48.111,
+          "change_pct": -1.0309278,
+          "country": "BR",
+          "currency": "BRL",
+          "description": "PETROBRAS PN N2",
+          "high": 48.4,
+          "in_index_composition": true,
+          "last": 48,
+          "low": 47.8,
+          "market": "Vista",
+          "observed_at_ms": 1790046996977,
+          "open": 48.21,
+          "quoted_at": "2026-09-22 00:16:36",
+          "source": "b3.com.br",
+          "symbol": "PETR4",
+          "total_quantity": 39169,
+          "url": "https://cotacao.b3.com.br/mds/api/v1/instrumentQuotation/PETR4"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "b3-com-br",
+        "capability": "companies/quote"
+      }
+    },
+    {
+      "id": "b3-com-br/companies/search_companies",
+      "provider": "b3-com-br",
+      "capability": "companies/search_companies",
+      "name": "Search companies",
+      "description": "First step to find a company's CVM code (`code_cvm`), issuer code and trading name for the detail functions.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "listing_year",
+          "type": "number",
+          "in": "body",
+          "about": "List companies that listed in this year instead of searching; cannot be combined with `query`.",
+          "min": 1900,
+          "max": 2100
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number.",
+          "default": 1,
+          "min": 1
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page; B3 returns an empty page above 120.",
+          "min": 1,
+          "max": 120
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Company name or ticker prefix (e.g. `petro`, `PETR`). Omit to enumerate the registry."
+        }
+      ],
+      "response": {
+        "about": "Search B3's listed-company registry by name or ticker prefix, enumerate the whole registry page by page, or list the companies that listed in a given year.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "companies",
+            "type": "object[]"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "listing_year",
+            "type": "number"
+          },
+          {
+            "name": "next_page",
+            "type": "number",
+            "about": "Page to request next; null when this is the last page."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "page_size",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "total_pages",
+            "type": "number"
+          },
+          {
+            "name": "total_records",
+            "type": "number",
+            "about": "Total rows across pages as B3 reports it."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "petro"
+        },
+        "response": {
+          "companies": [
+            {
+              "bdr_type": null,
+              "cnpj": "21778678000170",
+              "code_cvm": "916986",
+              "company_name": "AÇU PETROLEO S.A.",
+              "issuing_company": "ACPE",
+              "listing_date": null,
+              "market": null,
+              "market_indicator": "99",
+              "segment": "Não Classificados",
+              "segment_en": "Not Classified",
+              "status": "A",
+              "trading_name": "ACU PETROLEO",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/916986/ACPE/overview?language=pt-br"
+            },
+            {
+              "bdr_type": null,
+              "cnpj": "3987364000103",
+              "code_cvm": "900399",
+              "company_name": "ATEMS DISTRIBUIDORA DE PETROLEO S/A",
+              "issuing_company": "ATEM",
+              "listing_date": null,
+              "market": null,
+              "market_indicator": "1",
+              "segment": "Não Classificados",
+              "segment_en": "Not Classified",
+              "status": "A",
+              "trading_name": "ATEMS",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/900399/ATEM/overview?language=pt-br"
+            },
+            {
+              "bdr_type": null,
+              "cnpj": "8845534000120",
+              "code_cvm": "905406",
+              "company_name": "BRASOIL MANATI EXPLORACAO PETROLIFERA S.A.",
+              "issuing_company": "MNTI",
+              "listing_date": null,
+              "market": null,
+              "market_indicator": "1",
+              "segment": "Não Classificados",
+              "segment_en": "Not Classified",
+              "status": "A",
+              "trading_name": "BRASOILPETRO",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/905406/MNTI/overview?language=pt-br"
+            },
+            {
+              "bdr_type": null,
+              "cnpj": "1256137000174",
+              "code_cvm": "900110",
+              "company_name": "DISTRIBUIDORA RIO BRANCO DE PETRÓLEO LTDA",
+              "issuing_company": "RBPL",
+              "listing_date": null,
+              "market": null,
+              "market_indicator": "99",
+              "segment": "Não Classificados",
+              "segment_en": "Not Classified",
+              "status": "A",
+              "trading_name": "RB PETROLEO",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/900110/RBPL/overview?language=pt-br"
+            },
+            {
+              "bdr_type": null,
+              "cnpj": "33337122000127",
+              "code_cvm": "904417",
+              "company_name": "IPIRANGA  PRODUTOS DE PETROLEO S.A.",
+              "issuing_company": "IPIP",
+              "listing_date": null,
+              "market": null,
+              "market_indicator": "99",
+              "segment": "Não Classificados",
+              "segment_en": "Not Classified",
+              "status": "A",
+              "trading_name": "IPIRANGAPROD",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/904417/IPIP/overview?language=pt-br"
+            },
+            {
+              "bdr_type": null,
+              "cnpj": "33000167000101",
+              "code_cvm": "9512",
+              "company_name": "PETROLEO BRASILEIRO S.A. PETROBRAS",
+              "issuing_company": "PETR",
+              "listing_date": "1968-08-27",
+              "market": "N2",
+              "market_indicator": "17",
+              "segment": "Exploração. Refino e Distribuição",
+              "segment_en": "Exploration. Refining and Distribution",
+              "status": "A",
+              "trading_name": "PETROBRAS",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/9512/PETR/overview?language=pt-br"
+            },
+            {
+              "bdr_type": null,
+              "cnpj": "47983546000173",
+              "code_cvm": "900298",
+              "company_name": "PETROLINA PE 584 LOCACAO DE EQUIPAMENTOS 915 LTDA.",
+              "issuing_company": "PGER",
+              "listing_date": null,
+              "market": null,
+              "market_indicator": "99",
+              "segment": "Não Classificados",
+              "segment_en": "Not Classified",
+              "status": "A",
+              "trading_name": "PETROLINA PE",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/900298/PGER/overview?language=pt-br"
+            },
+            {
+              "bdr_type": null,
+              "cnpj": "3342704000130",
+              "code_cvm": "25780",
+              "company_name": "PETRORECÔNCAVO S.A.",
+              "issuing_company": "RECV",
+              "listing_date": "2021-05-03",
+              "market": "NM",
+              "market_indicator": "18",
+              "segment": "Exploração. Refino e Distribuição",
+              "segment_en": "Exploration. Refining and Distribution",
+              "status": "A",
+              "trading_name": "PETRORECSA",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/25780/RECV/overview?language=pt-br"
+            },
+            {
+              "bdr_type": null,
+              "cnpj": "94845674000130",
+              "code_cvm": "910018",
+              "company_name": "REFINARIA DE PETRÓLEO RIOGRANDENSE S.A.",
+              "issuing_company": "RIPI",
+              "listing_date": null,
+              "market": null,
+              "market_indicator": "1",
+              "segment": "Exploração. Refino e Distribuição",
+              "segment_en": "Exploration. Refining and Distribution",
+              "status": "A",
+              "trading_name": "RIOGRANDENSE",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/910018/RIPI/overview?language=pt-br"
+            },
+            {
+              "bdr_type": null,
+              "cnpj": "33412081000196",
+              "code_cvm": "9989",
+              "company_name": "REFINARIA DE PETROLEOS MANGUINHOS S.A.",
+              "issuing_company": "RPMG",
+              "listing_date": "1972-06-23",
+              "market": null,
+              "market_indicator": "1",
+              "segment": "Exploração. Refino e Distribuição",
+              "segment_en": "Exploration. Refining and Distribution",
+              "status": "A",
+              "trading_name": "PET MANGUINH",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/9989/RPMG/overview?language=pt-br"
+            },
+            {
+              "bdr_type": null,
+              "cnpj": "20139095000136",
+              "code_cvm": "907451",
+              "company_name": "RIO PETROLEO SPE S/A COMPANHIA SECURITIZADORA DE C",
+              "issuing_company": "RPTL",
+              "listing_date": null,
+              "market": null,
+              "market_indicator": "1",
+              "segment": "Não Classificados",
+              "segment_en": "Not Classified",
+              "status": "A",
+              "trading_name": "RIOPETROLEOS",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/907451/RPTL/overview?language=pt-br"
+            },
+            {
+              "bdr_type": null,
+              "cnpj": "33443860000159",
+              "code_cvm": "913095",
+              "company_name": "SPE 3R PETROLEUM S.A.",
+              "issuing_company": "SP3R",
+              "listing_date": null,
+              "market": null,
+              "market_indicator": "1",
+              "segment": "Não Classificados",
+              "segment_en": "Not Classified",
+              "status": "A",
+              "trading_name": "SPE 3R PETRO",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/913095/SP3R/overview?language=pt-br"
+            },
+            {
+              "bdr_type": null,
+              "cnpj": "647154000170",
+              "code_cvm": "909655",
+              "company_name": "ZEMA CIA. DE PETROLEO",
+              "issuing_company": "ZMPT",
+              "listing_date": null,
+              "market": null,
+              "market_indicator": "1",
+              "segment": "Não Classificados",
+              "segment_en": "Not Classified",
+              "status": "A",
+              "trading_name": "ZEMA",
+              "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/main/909655/ZMPT/overview?language=pt-br"
+            }
+          ],
+          "country": "BR",
+          "listing_year": null,
+          "next_page": null,
+          "observed_at_ms": 1790046944889,
+          "page": 1,
+          "page_size": 20,
+          "query": "petro",
+          "source": "b3.com.br",
+          "total_pages": 1,
+          "total_records": 13,
+          "url": "https://sistemaswebb3-listados.b3.com.br/listedCompaniesPage/?language=pt-br"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "b3-com-br",
+        "capability": "companies/search_companies"
+      }
+    },
+    {
+      "id": "b3-com-br/companies/stock_indices",
+      "provider": "b3-com-br",
+      "capability": "companies/stock_indices",
+      "name": "Stock indices",
+      "description": "To learn the indices a company (e.g. PETR) is a member of.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "keyword",
+          "type": "string",
+          "in": "body",
+          "about": "Ticker or company-name prefix, e.g. `PETR`. Omit for the full table."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number.",
+          "default": 1,
+          "min": 1
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page; B3 returns an empty page above 120.",
+          "min": 1,
+          "max": 120
+        }
+      ],
+      "response": {
+        "about": "Which B3 indices each stock belongs to in the current validity window, searchable by ticker or company prefix.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "keyword",
+            "type": "string"
+          },
+          {
+            "name": "next_page",
+            "type": "number",
+            "about": "Page to request next; null when this is the last page."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "page_size",
+            "type": "number"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "stocks",
+            "type": "object[]"
+          },
+          {
+            "name": "total_pages",
+            "type": "number"
+          },
+          {
+            "name": "total_records",
+            "type": "number",
+            "about": "Total rows across pages as B3 reports it."
+          },
+          {
+            "name": "updated_on",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "valid_from_month",
+            "type": "number"
+          },
+          {
+            "name": "valid_to_month",
+            "type": "number"
+          },
+          {
+            "name": "year",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "keyword": "PETR"
+        },
+        "response": {
+          "country": "BR",
+          "keyword": "PETR",
+          "next_page": null,
+          "observed_at_ms": 1790046992117,
+          "page": 1,
+          "page_size": 20,
+          "source": "b3.com.br",
+          "stocks": [
+            {
+              "code": "E1CO34",
+              "company": "ECOPETROL SA",
+              "indices": [
+                "BDRX"
+              ],
+              "type": "DRN"
+            },
+            {
+              "code": "PETR3",
+              "company": "PETROBRAS",
+              "indices": [
+                "IBBC",
+                "IBBE",
+                "IBBR",
+                "IBEE",
+                "IBEW",
+                "IBOV",
+                "IBRA",
+                "IBXL",
+                "IBXX",
+                "IDIV",
+                "IDVR",
+                "IGCT",
+                "IGCX",
+                "ITAG",
+                "MLCX"
+              ],
+              "type": "ON N2"
+            },
+            {
+              "code": "PETR4",
+              "company": "PETROBRAS",
+              "indices": [
+                "IBBC",
+                "IBBE",
+                "IBBR",
+                "IBEE",
+                "IBEW",
+                "IBLV",
+                "IBOV",
+                "IBRA",
+                "IBSD",
+                "IBXL",
+                "IBXX",
+                "IDIV",
+                "IDVR",
+                "IGCT",
+                "IGCX",
+                "ITAG",
+                "MLCX"
+              ],
+              "type": "PN N2"
+            },
+            {
+              "code": "RECV3",
+              "company": "PETRORECSA",
+              "indices": [
+                "GPTW",
+                "IBRA",
+                "IBXX",
+                "IDIV",
+                "IDVR",
+                "IGCT",
+                "IGCX",
+                "IGNM",
+                "ITAG",
+                "SCSR",
+                "SMLL"
+              ],
+              "type": "ON NM"
+            }
+          ],
+          "total_pages": 1,
+          "total_records": 4,
+          "updated_on": "2026-09-22",
+          "url": "https://sistemaswebb3-listados.b3.com.br/indexPage/stocks?language=pt-br",
+          "valid_from_month": 9,
+          "valid_to_month": 12,
+          "year": 2026
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "b3-com-br",
+        "capability": "companies/stock_indices"
+      }
+    }
+  ]
+}

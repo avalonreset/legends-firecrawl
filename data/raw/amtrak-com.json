@@ -1,0 +1,4330 @@
+{
+  "id": "amtrak-com",
+  "provider": "amtrak-com",
+  "name": "Amtrak",
+  "description": "Amtrak (US national passenger rail) read-only: station directory and search with addresses, hours and amenities; named routes with ordered stops and train numbers; live train positions and stop-by-stop status decrypted from the public Track Your Train feed. Public feeds of www.amtrak.com and maps.amtrak.com, no login. Fares, schedules by date and booking are not covered (the /dotcom/ APIs sit behind Akamai Bot Manager).",
+  "toolCount": 7,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "amtrak-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "amtrak-com/train-status/get_route",
+      "provider": "amtrak-com",
+      "capability": "train-status/get_route",
+      "name": "Get route",
+      "description": "Route detail after `list_routes`; the train numbers feed `train_status`, the stop codes feed `get_station`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "code",
+          "type": "string",
+          "in": "body",
+          "about": "Route code from list_routes, e.g. NERG Pattern: ^[A-Za-z0-9]{2,8}$."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact route name, e.g. 'Coast Starlight' (case-insensitive)"
+        }
+      ],
+      "response": {
+        "about": "One route by code (e.g. NERG) or exact name (e.g. Northeast Regional): cities served, ordered stops with station names, and the train numbers Amtrak maps to the route.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "cities_served",
+            "type": "string"
+          },
+          {
+            "name": "code",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "stops",
+            "type": "object[]",
+            "about": "Ordered stops from stopslist.json; empty when the site publishes no stop list for this route"
+          },
+          {
+            "name": "train_numbers",
+            "type": "string[]",
+            "about": "Train numbers mapped to this route in TrainCodesResource.xml (ROUTES_TRAIN_NAMES_MAP); empty when none"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "code": "NERG"
+        },
+        "response": {
+          "cities_served": "Boston - New Haven - New York - Philadelphia - Wilmington - Washington",
+          "code": "NERG",
+          "name": "Northeast Regional",
+          "observed_at_ms": 1790117621522,
+          "stops": [
+            {
+              "code": "NPN",
+              "name": "Newport News, VA"
+            },
+            {
+              "code": "WBG",
+              "name": "Williamsburg, VA"
+            },
+            {
+              "code": "RVM",
+              "name": "Richmond, VA"
+            },
+            {
+              "code": "NFK",
+              "name": "Norfolk, VA"
+            },
+            {
+              "code": "PTB",
+              "name": "Petersburg, VA"
+            },
+            {
+              "code": "RVR",
+              "name": "Richmond, VA"
+            },
+            {
+              "code": "ASD",
+              "name": "Ashland, VA"
+            },
+            {
+              "code": "FBG",
+              "name": "Fredericksburg, VA"
+            },
+            {
+              "code": "QAN",
+              "name": "Quantico, VA"
+            },
+            {
+              "code": "WDB",
+              "name": "Woodbridge, VA"
+            },
+            {
+              "code": "RNK",
+              "name": "Roanoke, VA"
+            },
+            {
+              "code": "LYH",
+              "name": "Lynchburg, VA"
+            },
+            {
+              "code": "CVS",
+              "name": "Charlottesville, VA"
+            },
+            {
+              "code": "CLP",
+              "name": "Culpeper, VA"
+            },
+            {
+              "code": "MSS",
+              "name": "Manassas, VA"
+            },
+            {
+              "code": "BCV",
+              "name": "Burke, VA"
+            },
+            {
+              "code": "ALX",
+              "name": "Alexandria, VA"
+            },
+            {
+              "code": "WAS",
+              "name": "Washington, DC"
+            },
+            {
+              "code": "NCR",
+              "name": "New Carrollton, MD"
+            },
+            {
+              "code": "BWI",
+              "name": "Baltimore, MD"
+            },
+            {
+              "code": "BAL",
+              "name": "Baltimore, MD"
+            },
+            {
+              "code": "ABE",
+              "name": "Aberdeen, MD"
+            },
+            {
+              "code": "NRK",
+              "name": "Newark, DE"
+            },
+            {
+              "code": "WIL",
+              "name": "Wilmington, DE"
+            },
+            {
+              "code": "PHL",
+              "name": "Philadelphia, PA"
+            },
+            {
+              "code": "PHN",
+              "name": "Philadelphia, PA"
+            },
+            {
+              "code": "TRE",
+              "name": "Trenton, NJ"
+            },
+            {
+              "code": "PJC",
+              "name": "Princeton Junction, NJ"
+            },
+            {
+              "code": "NBK",
+              "name": "New Brunswick, NJ"
+            },
+            {
+              "code": "MET",
+              "name": "Iselin, NJ"
+            },
+            {
+              "code": "EWR",
+              "name": "Newark, NJ"
+            },
+            {
+              "code": "NWK",
+              "name": "Newark, NJ"
+            },
+            {
+              "code": "NYP",
+              "name": "New York, NY"
+            },
+            {
+              "code": "NRO",
+              "name": "New Rochelle, NY"
+            },
+            {
+              "code": "STM",
+              "name": "Stamford, CT"
+            },
+            {
+              "code": "BRP",
+              "name": "Bridgeport, CT"
+            },
+            {
+              "code": "NHV",
+              "name": "New Haven, CT"
+            },
+            {
+              "code": "STS",
+              "name": "New Haven, CT"
+            },
+            {
+              "code": "WFD",
+              "name": "Wallingford, CT"
+            },
+            {
+              "code": "MDN",
+              "name": "Meriden, CT"
+            },
+            {
+              "code": "BER",
+              "name": "Berlin, CT"
+            },
+            {
+              "code": "HFD",
+              "name": "Hartford, CT"
+            },
+            {
+              "code": "WND",
+              "name": "Windsor, CT"
+            },
+            {
+              "code": "WNL",
+              "name": "Windsor Locks, CT"
+            },
+            {
+              "code": "SPG",
+              "name": "Springfield, MA"
+            },
+            {
+              "code": "OSB",
+              "name": "Old Saybrook, CT"
+            },
+            {
+              "code": "NLC",
+              "name": "New London, CT"
+            },
+            {
+              "code": "MYS",
+              "name": "Mystic, CT"
+            },
+            {
+              "code": "WLY",
+              "name": "Westerly, RI"
+            },
+            {
+              "code": "KIN",
+              "name": "West Kingston, RI"
+            },
+            {
+              "code": "PVD",
+              "name": "Providence, RI"
+            },
+            {
+              "code": "RTE",
+              "name": "Westwood, MA"
+            },
+            {
+              "code": "BBY",
+              "name": "Boston, MA"
+            },
+            {
+              "code": "BOS",
+              "name": "Boston, MA"
+            }
+          ],
+          "train_numbers": [
+            "65",
+            "66",
+            "67",
+            "82",
+            "84",
+            "85",
+            "86",
+            "87",
+            "88",
+            "93",
+            "94",
+            "95",
+            "96",
+            "99",
+            "111",
+            "120",
+            "121",
+            "122",
+            "123",
+            "124",
+            "125",
+            "126",
+            "127",
+            "129",
+            "130",
+            "131",
+            "132",
+            "133",
+            "134",
+            "135",
+            "137",
+            "138",
+            "139",
+            "149",
+            "150",
+            "151",
+            "152",
+            "153",
+            "154",
+            "155",
+            "157",
+            "158",
+            "159",
+            "160",
+            "161",
+            "162",
+            "163",
+            "164",
+            "165",
+            "166",
+            "167",
+            "168",
+            "169",
+            "170",
+            "172",
+            "173",
+            "174",
+            "175",
+            "177",
+            "178",
+            "179",
+            "180",
+            "181",
+            "182",
+            "183",
+            "184",
+            "185",
+            "186",
+            "187",
+            "189",
+            "190",
+            "192",
+            "193",
+            "194",
+            "195",
+            "196",
+            "198",
+            "1121",
+            "1135",
+            "1164",
+            "1173",
+            "1174",
+            "1175",
+            "1186",
+            "1192",
+            "1194",
+            "1195",
+            "1776"
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "amtrak-com",
+        "capability": "train-status/get_route"
+      }
+    },
+    {
+      "id": "amtrak-com/train-status/get_station",
+      "provider": "amtrak-com",
+      "capability": "train-status/get_station",
+      "name": "Get station",
+      "description": "Station detail once you have a code from `list_stations`, `search_stations`, a route's stops or a train's stops.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "code",
+          "type": "string",
+          "in": "body",
+          "about": "Amtrak 3-letter station code, e.g. NYP, WAS, CHI (case-insensitive). Pattern: ^[A-Za-z]{3}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Station page URL, e.g. https://www.amtrak.com/stations/nyp; alternative to `code`"
+        }
+      ],
+      "response": {
+        "about": "One station by 3-letter code: identity and timezone from the station reference feed, service flags, street address and coordinates from the station finder, and the station page tabs (hours by service, parking, baggage, features, accessibility).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "accessibility",
+            "type": "object[]"
+          },
+          {
+            "name": "accessible",
+            "type": "boolean",
+            "about": "stationAccessible flag; null when unknown."
+          },
+          {
+            "name": "address",
+            "type": "object",
+            "about": "Street address from the station finder; null when the finder has no record for the code."
+          },
+          {
+            "name": "aliases",
+            "type": "string[]",
+            "about": "Alternative names the site's autocomplete matches"
+          },
+          {
+            "name": "baggage",
+            "type": "object[]"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "code",
+            "type": "string",
+            "about": "3-letter station code"
+          },
+          {
+            "name": "country",
+            "type": "string",
+            "about": "Country as stated by the source (only present for some non-US stations); null otherwise."
+          },
+          {
+            "name": "daily_departures",
+            "type": "number",
+            "about": "Only published for a few major stations; null otherwise."
+          },
+          {
+            "name": "facility_name",
+            "type": "string",
+            "about": "Station facility name, e.g. 'Moynihan Train Hall at Penn Sta.'; null when the source has none."
+          },
+          {
+            "name": "features",
+            "type": "object[]"
+          },
+          {
+            "name": "geo",
+            "type": "object",
+            "about": "WGS84 coordinates from the station finder; null when unavailable."
+          },
+          {
+            "name": "hours",
+            "type": "object[]",
+            "about": "Opening hours by service, from the station tab JSON; empty when the site publishes none"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Station name as listed, e.g. 'New York, NY'"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "parking",
+            "type": "object[]"
+          },
+          {
+            "name": "quik_trak",
+            "type": "boolean",
+            "about": "Quik-Trak ticket kiosk available; null when unknown."
+          },
+          {
+            "name": "staffed",
+            "type": "boolean",
+            "about": "From contentService.stationsinfo.json; null when the station has no flags record."
+          },
+          {
+            "name": "state",
+            "type": "string",
+            "about": "US state or Canadian province code"
+          },
+          {
+            "name": "timezone",
+            "type": "string",
+            "about": "Amtrak timezone code: E, C, M, P (Eastern/Central/Mountain/Pacific); MS/PS mark zones without DST."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Station page on amtrak.com"
+          },
+          {
+            "name": "wheelchair",
+            "type": "boolean",
+            "about": "Courtesy wheelchair available; null when unknown."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "code": "NYP"
+        },
+        "response": {
+          "accessibility": [
+            {
+              "accessible": null,
+              "feature": "Payphones",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Accessible platform",
+              "note": "Accessible platform is a barrier-free path from the drop-off area outside the station to the train platform."
+            },
+            {
+              "accessible": null,
+              "feature": "Accessible restrooms",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Accessible ticket office",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Accessible waiting room",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Accessible water fountain",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Same-day, accessible parking is available for a fee",
+              "note": "Amtrak cannot guarantee that a parking space will be available at the time of your trip."
+            },
+            {
+              "accessible": null,
+              "feature": "Overnight, accessible parking is available for a fee",
+              "note": "Amtrak cannot guarantee that a parking space will be available at the time of your trip."
+            },
+            {
+              "accessible": null,
+              "feature": "High platform",
+              "note": "A high platform is a platform at the level of the vestibule of the train, with the exception of two-level Superliner trains."
+            },
+            {
+              "accessible": null,
+              "feature": "Wheelchair available",
+              "note": "For passengers who cannot walk far or at all, we offer a wheelchair to help move around within the station. At some stations this may be a battery-powered people mover."
+            },
+            {
+              "accessible": null,
+              "feature": "No wheelchair lift",
+              "note": "Wheelchair lift is a platform-mounted lift for loading passengers from low platforms onto trains that do not have onboard ramps."
+            }
+          ],
+          "accessible": true,
+          "address": {
+            "city": "New York",
+            "line1": "351 West 31st Street",
+            "line2": null,
+            "postal_code": "10001",
+            "state": "NY"
+          },
+          "aliases": [
+            "nyc",
+            "Penn Station",
+            "Moynihan Train Hall",
+            "new york city",
+            "newyork"
+          ],
+          "baggage": [
+            {
+              "accessible": null,
+              "feature": "Amtrak Express shipping not available",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Checked baggage service available",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Checked baggage storage available ()",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Bike boxes for sale",
+              "note": "The number of bike boxes available in the station is limited. For assistance, call us at 1-800-USA-RAIL."
+            },
+            {
+              "accessible": null,
+              "feature": "No baggage carts",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Ski bags not available",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Bag storage (with Fee)",
+              "note": "Baggage storage is an area where passengers may store their bags, equivalent to \"left luggage\" in Europe. A storage fee may apply."
+            },
+            {
+              "accessible": null,
+              "feature": "Shipping boxes for sale",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Baggage assistance provided by 212-630-7914/212-630-6221 (24/7 at Penn. 5a-11p at Moynihan)",
+              "note": "Free passenger assistance, including baggage-handling and courtesy wheelchairs where available, is provided by station staff."
+            }
+          ],
+          "city": "New York",
+          "code": "NYP",
+          "country": null,
+          "daily_departures": null,
+          "facility_name": "Moynihan Train Hall at Penn Station",
+          "features": [
+            {
+              "accessible": null,
+              "feature": "Staffed station",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "ATM available",
+              "note": null
+            },
+            {
+              "accessible": true,
+              "feature": "Elevator",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Metropolitan Lounge",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Payphones",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Amtrak ticketing kiosks available",
+              "note": null
+            },
+            {
+              "accessible": true,
+              "feature": "Restrooms",
+              "note": null
+            },
+            {
+              "accessible": true,
+              "feature": "Ticket sales office",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Unaccompanied child travel allowed",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Vending machines",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Amtrak WiFi available",
+              "note": null
+            },
+            {
+              "accessible": null,
+              "feature": "Arrive at least 45 minutes prior to departure if you're checking baggage or need ticketing/passenger assistance",
+              "note": "How long before departure to be at the station if you need ticketing, baggage or passenger assistance services."
+            },
+            {
+              "accessible": null,
+              "feature": "Arrive at least 30 minutes prior to departure if you're not checking baggage or don't need assistance",
+              "note": "How long before departure to be at the station if you do not need services such as ticketing, baggage or passenger assistance."
+            }
+          ],
+          "geo": {
+            "lat": 40.751046264230254,
+            "lng": -73.99632844773079
+          },
+          "hours": [
+            {
+              "days": [
+                {
+                  "day": "MONDAY",
+                  "time_slots": [
+                    "5:00 AM - 11:59 PM"
+                  ]
+                },
+                {
+                  "day": "TUESDAY",
+                  "time_slots": [
+                    "5:00 AM - 11:59 PM"
+                  ]
+                },
+                {
+                  "day": "WEDNESDAY",
+                  "time_slots": [
+                    "5:00 AM - 11:59 PM"
+                  ]
+                },
+                {
+                  "day": "THURSDAY",
+                  "time_slots": [
+                    "5:00 AM - 11:59 PM"
+                  ]
+                },
+                {
+                  "day": "FRIDAY",
+                  "time_slots": [
+                    "5:00 AM - 11:59 PM"
+                  ]
+                },
+                {
+                  "day": "SATURDAY",
+                  "time_slots": [
+                    "5:00 AM - 11:59 PM"
+                  ]
+                },
+                {
+                  "day": "SUNDAY",
+                  "time_slots": [
+                    "5:00 AM - 11:59 PM"
+                  ]
+                }
+              ],
+              "no_data_message": null,
+              "title": "Station Waiting Room Hours",
+              "type": "stationhours"
+            },
+            {
+              "days": [
+                {
+                  "day": "MONDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "TUESDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "WEDNESDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "THURSDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "FRIDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "SATURDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "SUNDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                }
+              ],
+              "no_data_message": null,
+              "title": "Ticket Office Hours",
+              "type": "tickethours"
+            },
+            {
+              "days": [
+                {
+                  "day": "MONDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                },
+                {
+                  "day": "TUESDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                },
+                {
+                  "day": "WEDNESDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                },
+                {
+                  "day": "THURSDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                },
+                {
+                  "day": "FRIDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                },
+                {
+                  "day": "SATURDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                },
+                {
+                  "day": "SUNDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                }
+              ],
+              "no_data_message": null,
+              "title": "Passenger Assistance",
+              "type": "meetandassisthours"
+            },
+            {
+              "days": [
+                {
+                  "day": "MONDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "TUESDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "WEDNESDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "THURSDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "FRIDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "SATURDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "SUNDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                }
+              ],
+              "no_data_message": null,
+              "title": "Checked Baggage Service",
+              "type": "baggagehours"
+            },
+            {
+              "days": [],
+              "no_data_message": "No parking at this location.",
+              "title": "Parking Hours",
+              "type": "parkinghours"
+            },
+            {
+              "days": [
+                {
+                  "day": "MONDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                },
+                {
+                  "day": "TUESDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                },
+                {
+                  "day": "WEDNESDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                },
+                {
+                  "day": "THURSDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                },
+                {
+                  "day": "FRIDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                },
+                {
+                  "day": "SATURDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                },
+                {
+                  "day": "SUNDAY",
+                  "time_slots": [
+                    "24 HOURS"
+                  ]
+                }
+              ],
+              "no_data_message": null,
+              "title": "Quik-Trak Kiosk Hours",
+              "type": "quiktrakhours"
+            },
+            {
+              "days": [
+                {
+                  "day": "MONDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "TUESDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "WEDNESDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "THURSDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "FRIDAY",
+                  "time_slots": [
+                    "5:00 AM - 10:00 PM"
+                  ]
+                },
+                {
+                  "day": "SATURDAY",
+                  "time_slots": [
+                    "7:00 AM - 9:00 PM"
+                  ]
+                },
+                {
+                  "day": "SUNDAY",
+                  "time_slots": [
+                    "7:00 AM - 9:00 PM"
+                  ]
+                }
+              ],
+              "no_data_message": null,
+              "title": "Lounge Hours",
+              "type": "loungehours"
+            },
+            {
+              "days": [
+                {
+                  "day": "MONDAY",
+                  "time_slots": [
+                    "12:00 AM - 12:00 AM"
+                  ]
+                },
+                {
+                  "day": "TUESDAY",
+                  "time_slots": [
+                    "12:00 AM - 12:00 AM"
+                  ]
+                },
+                {
+                  "day": "WEDNESDAY",
+                  "time_slots": [
+                    "12:00 AM - 12:00 AM"
+                  ]
+                },
+                {
+                  "day": "THURSDAY",
+                  "time_slots": [
+                    "12:00 AM - 12:00 AM"
+                  ]
+                },
+                {
+                  "day": "FRIDAY",
+                  "time_slots": [
+                    "12:00 AM - 12:00 AM"
+                  ]
+                },
+                {
+                  "day": "SATURDAY",
+                  "time_slots": [
+                    "12:00 AM - 12:00 AM"
+                  ]
+                },
+                {
+                  "day": "SUNDAY",
+                  "time_slots": [
+                    "12:00 AM - 12:00 AM"
+                  ]
+                }
+              ],
+              "no_data_message": null,
+              "title": "Amtrak Express Service",
+              "type": "expresshours"
+            }
+          ],
+          "name": "New York, NY",
+          "observed_at_ms": 1790117604574,
+          "parking": [
+            {
+              "accessible": true,
+              "feature": "Same-day parking is available for a fee",
+              "note": "Amtrak cannot guarantee that a parking space will be available at the time of your trip."
+            },
+            {
+              "accessible": true,
+              "feature": "Overnight parking is available for a fee",
+              "note": "Amtrak cannot guarantee that a parking space will be available at the time of your trip."
+            }
+          ],
+          "quik_trak": true,
+          "staffed": true,
+          "state": "NY",
+          "timezone": "E",
+          "url": "https://www.amtrak.com/stations/nyp",
+          "wheelchair": true
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "amtrak-com",
+        "capability": "train-status/get_station"
+      }
+    },
+    {
+      "id": "amtrak-com/train-status/list_routes",
+      "provider": "amtrak-com",
+      "capability": "train-status/list_routes",
+      "name": "List routes",
+      "description": "Find a route code or name for `get_route`, or filter `live_trains` by `route_name`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [],
+      "response": {
+        "about": "All Amtrak named routes from the public route list (code, name, cities served) joined with the ordered station-code stop list the site publishes for the routes that have one.",
+        "key": "routes",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "cities_served",
+            "type": "string",
+            "about": "Cities served, as the source lists them, ' - ' separated"
+          },
+          {
+            "name": "code",
+            "type": "string",
+            "about": "Amtrak route code, e.g. NERG, ACNG, COAS"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Route name, e.g. Northeast Regional"
+          },
+          {
+            "name": "stops",
+            "type": "string[]",
+            "about": "Ordered station codes from stopslist.json; null when the site publishes no stop list for this route"
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "count": 53,
+          "observed_at_ms": 1790117608998,
+          "routes": [
+            {
+              "cities_served": "Seattle - Tacoma - Portland - Sacramento - San Francisco area - Los Angeles",
+              "code": "COAS",
+              "name": "Coast Starlight",
+              "stops": [
+                "LAX",
+                "BUR",
+                "VNC",
+                "SIM",
+                "OXN",
+                "SBA",
+                "SLO",
+                "PRB",
+                "SNS",
+                "SJC",
+                "OKJ",
+                "EMY",
+                "MTZ",
+                "DAV",
+                "SAC",
+                "CIC",
+                "RDD",
+                "DUN",
+                "KFS",
+                "CMO",
+                "EUG",
+                "ALY",
+                "SLM",
+                "PDX",
+                "VAN",
+                "KEL",
+                "CTL",
+                "OLW",
+                "TAC",
+                "SEA"
+              ]
+            },
+            {
+              "cities_served": "Montreal - Westport - Saratoga Springs - Albany - New York",
+              "code": "ADRK",
+              "name": "Adirondack",
+              "stops": null
+            },
+            {
+              "cities_served": "Chicago - Champaign/Urbana - Carbondale",
+              "code": "ILLI",
+              "name": "Illini",
+              "stops": [
+                "CDL",
+                "DQN",
+                "CEN",
+                "EFG",
+                "MAT",
+                "CHM",
+                "RTL",
+                "GLM",
+                "KKI",
+                "HMW",
+                "CHI"
+              ]
+            },
+            {
+              "cities_served": "Vancouver, BC - Seattle - Tacoma - Portland - Salem - Eugene",
+              "code": "AMCS",
+              "name": "Amtrak Cascades",
+              "stops": [
+                "EUG",
+                "ALY",
+                "SLM",
+                "ORC",
+                "PDX",
+                "VAN",
+                "KEL",
+                "CTL",
+                "OLW",
+                "TAC",
+                "TUK",
+                "SEA",
+                "EDM",
+                "EVR",
+                "STW",
+                "MVW",
+                "BEL",
+                "VAC"
+              ]
+            },
+            {
+              "cities_served": "New York - Philadelphia - Washington - Richmond - Raleigh - Greensboro - Charlotte",
+              "code": "CARO",
+              "name": "Carolinian",
+              "stops": null
+            },
+            {
+              "cities_served": "Washington - Pittsburgh - Cleveland - Toledo - South Bend - Chicago",
+              "code": "CAPL",
+              "name": "Capitol Limited",
+              "stops": [
+                "CHI",
+                "SOB",
+                "EKH",
+                "WTI",
+                "TOL",
+                "SKY",
+                "ELY",
+                "CLE",
+                "ALC",
+                "PGH",
+                "COV",
+                "CUM",
+                "MRB",
+                "HFY",
+                "RKV",
+                "WAS"
+              ]
+            },
+            {
+              "cities_served": "St. Louis - Washington - Sedalia - Independence - Kansas City, MO",
+              "code": "MRRN",
+              "name": "Missouri River Runner",
+              "stops": [
+                "KCY",
+                "IDP",
+                "LEE",
+                "WAR",
+                "SED",
+                "JEF",
+                "HEM",
+                "WAH",
+                "KWD",
+                "STL"
+              ]
+            },
+            {
+              "cities_served": "Boston - New Haven - New York - Philadelphia - Wilmington - Washington",
+              "code": "NERG",
+              "name": "Northeast Regional",
+              "stops": [
+                "NPN",
+                "WBG",
+                "RVM",
+                "NFK",
+                "PTB",
+                "RVR",
+                "ASD",
+                "FBG",
+                "QAN",
+                "WDB",
+                "RNK",
+                "LYH",
+                "CVS",
+                "CLP",
+                "MSS",
+                "BCV",
+                "ALX",
+                "WAS",
+                "NCR",
+                "BWI",
+                "BAL",
+                "ABE",
+                "NRK",
+                "WIL",
+                "PHL",
+                "PHN",
+                "TRE",
+                "PJC",
+                "NBK",
+                "MET",
+                "EWR",
+                "NWK",
+                "NYP",
+                "NRO",
+                "STM",
+                "BRP",
+                "NHV",
+                "STS",
+                "WFD",
+                "MDN",
+                "BER",
+                "HFD",
+                "WND",
+                "WNL",
+                "SPG",
+                "OSB",
+                "NLC",
+                "MYS",
+                "WLY",
+                "KIN",
+                "PVD",
+                "RTE",
+                "BBY",
+                "BOS"
+              ]
+            },
+            {
+              "cities_served": "Rutland - Saratoga Springs - Albany - New York",
+              "code": "ETHA",
+              "name": "Ethan Allen Express",
+              "stops": [
+                "NYP",
+                "YNY",
+                "CRT",
+                "POU",
+                "RHI",
+                "HUD",
+                "ALB",
+                "SDY",
+                "SAR",
+                "FED",
+                "CNV",
+                "RUD",
+                "MBY",
+                "VRN",
+                "BTN"
+              ]
+            },
+            {
+              "cities_served": "Niagara Falls - Buffalo - Rochester - Syracuse - Albany - New York",
+              "code": "EMPS",
+              "name": "Empire Service",
+              "stops": [
+                "NYP",
+                "YNY",
+                "CRT",
+                "POU",
+                "RHI",
+                "HUD",
+                "ALB",
+                "SDY",
+                "AMS",
+                "UCA",
+                "ROM",
+                "SYR",
+                "ROC",
+                "BUF",
+                "BFX",
+                "NFL"
+              ]
+            },
+            {
+              "cities_served": "Boston - New Haven - New York - Philadelphia - Wilmington - Washington",
+              "code": "ACEX",
+              "name": "Acela",
+              "stops": [
+                "WAS",
+                "BWI",
+                "BAL",
+                "WIL",
+                "PHL",
+                "TRE",
+                "MET",
+                "NWK",
+                "NYP",
+                "STM",
+                "NHV",
+                "PVD",
+                "RTE",
+                "BBY",
+                "BOS"
+              ]
+            },
+            {
+              "cities_served": "New Haven - Springfield - Northampton - Greenfield",
+              "code": "VALF",
+              "name": "Valley Flyer",
+              "stops": [
+                "NHV",
+                "STS",
+                "WFD",
+                "MDN",
+                "BER",
+                "HFD",
+                "WND",
+                "WNL",
+                "SPG",
+                "HLK",
+                "NHT",
+                "GFD"
+              ]
+            },
+            {
+              "cities_served": "Auburn - Sacramento - Emeryville (San Francisco) - Oakland - San Jose",
+              "code": "CAPC",
+              "name": "Capitol Corridor",
+              "stops": [
+                "SJC",
+                "SCC",
+                "GAC",
+                "FMT",
+                "HAY",
+                "OAC",
+                "OKJ",
+                "EMY",
+                "BKY",
+                "RIC",
+                "MTZ",
+                "SUI",
+                "FFV",
+                "DAV",
+                "SAC",
+                "RSV",
+                "RLN",
+                "ARN"
+              ]
+            },
+            {
+              "cities_served": "New York - Washington - Charlottesville - Cincinnati - Indianapolis - Chicago",
+              "code": "CARD",
+              "name": "Cardinal",
+              "stops": [
+                "CHI",
+                "DYE",
+                "REN",
+                "LAF",
+                "CRF",
+                "IND",
+                "COI",
+                "CIN",
+                "MAY",
+                "SPM",
+                "AKY",
+                "HUN",
+                "CHW",
+                "MNG",
+                "THN",
+                "PRC",
+                "HIN",
+                "ALD",
+                "WSS",
+                "CLF",
+                "STA",
+                "CVS",
+                "CLP",
+                "MSS",
+                "ALX",
+                "WAS",
+                "BAL",
+                "WIL",
+                "PHL",
+                "TRE",
+                "NWK",
+                "NYP"
+              ]
+            },
+            {
+              "cities_served": "New York - Philadelphia - Lancaster - Harrisburg - Altoona - Pittsburgh",
+              "code": "PENN",
+              "name": "Pennsylvanian",
+              "stops": [
+                "PGH",
+                "GNB",
+                "LAB",
+                "JST",
+                "ALT",
+                "TYR",
+                "HGD",
+                "LEW",
+                "HAR",
+                "ELT",
+                "LNC",
+                "EXT",
+                "PAO",
+                "ARD",
+                "PHL",
+                "TRE",
+                "NWK",
+                "NYP"
+              ]
+            },
+            {
+              "cities_served": "Chicago - Springfield - St. Louis, MO",
+              "code": "LINC",
+              "name": "Lincoln Service",
+              "stops": [
+                "STL",
+                "ALN",
+                "CRV",
+                "SPI",
+                "LCN",
+                "BNL",
+                "PON",
+                "DWT",
+                "JOL",
+                "SMT",
+                "CHI"
+              ]
+            },
+            {
+              "cities_served": "Chicago - Champaign/Urbana - Carbondale",
+              "code": "SLKI",
+              "name": "Saluki",
+              "stops": null
+            },
+            {
+              "cities_served": "New York - Washington - Charlottesville - Charlotte - Atlanta - Birmingham - New Orleans",
+              "code": "CRSN",
+              "name": "Crescent",
+              "stops": null
+            },
+            {
+              "cities_served": "Milwaukee - Glenview - Chicago",
+              "code": "HIAW",
+              "name": "Hiawatha Service",
+              "stops": null
+            },
+            {
+              "cities_served": "New York - Washington - Charleston - Savannah - Jacksonville - Orlando - Tampa/Miami",
+              "code": "PALM",
+              "name": "Palmetto",
+              "stops": [
+                "SAV",
+                "YEM",
+                "CHS",
+                "KTR",
+                "FLO",
+                "DIL",
+                "FAY",
+                "SSM",
+                "WLN",
+                "RMT",
+                "PTB",
+                "RVR",
+                "ALX",
+                "WAS",
+                "NCR",
+                "BWI",
+                "BAL",
+                "WIL",
+                "PHL",
+                "TRE",
+                "PJC",
+                "NBK",
+                "MET",
+                "NWK",
+                "NYP"
+              ]
+            },
+            {
+              "cities_served": "New Orleans - Houston - San Antonio - El Paso - Tucson - Palm Springs -  Los Angeles",
+              "code": "SNST",
+              "name": "Sunset Limited",
+              "stops": [
+                "LAX",
+                "POS",
+                "ONA",
+                "PSN",
+                "YUM",
+                "MRC",
+                "TUS",
+                "BEN",
+                "LDB",
+                "DEM",
+                "ELP",
+                "ALP",
+                "SND",
+                "DRT",
+                "SAS",
+                "HOS",
+                "BMT",
+                "LCH",
+                "LFT",
+                "NIB",
+                "SCH",
+                "NOL"
+              ]
+            },
+            {
+              "cities_served": "St. Albans - Essex Jct. (Burlington) - Springfield - New York - Washington",
+              "code": "VMTR",
+              "name": "Vermonter",
+              "stops": null
+            },
+            {
+              "cities_served": "San Luis Obispo - Santa Barbara - Los Angeles - Anaheim - San Diego",
+              "code": "PCFS",
+              "name": "Pacific Surfliner",
+              "stops": [
+                "SAN",
+                "OLT",
+                "SOL",
+                "OSD",
+                "SNP",
+                "SNC",
+                "IRV",
+                "SNA",
+                "ANA",
+                "FUL",
+                "LAX",
+                "GDL",
+                "BBK",
+                "BUR",
+                "VNC",
+                "NRG",
+                "CWT",
+                "SIM",
+                "MPK",
+                "CML",
+                "OXN",
+                "VEC",
+                "CPN",
+                "SBA",
+                "GTA",
+                "LPS",
+                "GUA",
+                "GVB",
+                "SLO"
+              ]
+            },
+            {
+              "cities_served": "Oklahoma City - Fort Worth",
+              "code": "HTLF",
+              "name": "Heartland Flyer",
+              "stops": [
+                "FTW",
+                "GLE",
+                "ADM",
+                "PVL",
+                "PUR",
+                "NOR",
+                "OKC"
+              ]
+            },
+            {
+              "cities_served": "Chicago - Galesburg - Quincy",
+              "code": "CRLS",
+              "name": "Carl Sandburg",
+              "stops": [
+                "QCY",
+                "MAC",
+                "GBB",
+                "KEE",
+                "PCT",
+                "MDT",
+                "PLO",
+                "NPV",
+                "LAG",
+                "CHI"
+              ]
+            },
+            {
+              "cities_served": "Brunswick - Freeport - Portland - Saco - Exeter - Boston",
+              "code": "DWNE",
+              "name": "Downeaster",
+              "stops": [
+                "BON",
+                "WOB",
+                "HHL",
+                "EXR",
+                "DHM",
+                "DOV",
+                "WEM",
+                "SAO",
+                "ORB",
+                "POR",
+                "FRE",
+                "BRK"
+              ]
+            },
+            {
+              "cities_served": "New York/Boston - Albany - Buffalo - Cleveland - Toledo - Chicago",
+              "code": "LSLM",
+              "name": "Lake Shore Limited",
+              "stops": [
+                "CHI",
+                "SOB",
+                "EKH",
+                "WTI",
+                "BYN",
+                "TOL",
+                "SKY",
+                "ELY",
+                "CLE",
+                "ERI",
+                "BUF",
+                "ROC",
+                "SYR",
+                "UCA",
+                "SDY",
+                "ALB",
+                "PIT",
+                "SPG",
+                "WOR",
+                "FRA",
+                "BBY",
+                "BOS",
+                "RHI",
+                "POU",
+                "CRT",
+                "NYP"
+              ]
+            },
+            {
+              "cities_served": "New York - Philadelphia - Paoli - Downingtown - Lancaster - Harrisburg",
+              "code": "KYST",
+              "name": "Keystone Service",
+              "stops": [
+                "HAR",
+                "MID",
+                "ELT",
+                "MJY",
+                "LNC",
+                "PAR",
+                "COT",
+                "DOW",
+                "EXT",
+                "PAO",
+                "ARD",
+                "PHL",
+                "PHN",
+                "CWH",
+                "TRE",
+                "PJC",
+                "NBK",
+                "MET",
+                "EWR",
+                "NWK",
+                "NYP"
+              ]
+            },
+            {
+              "cities_served": "",
+              "code": "SANJ",
+              "name": "San Joaquins",
+              "stops": null
+            },
+            {
+              "cities_served": "Chicago - Kansas City, MO - La Junta - Albuquerque - Flagstaff - Los Angeles",
+              "code": "SWCH",
+              "name": "Southwest Chief",
+              "stops": [
+                "LAX",
+                "FUL",
+                "RIV",
+                "SNB",
+                "VRV",
+                "BAR",
+                "NDL",
+                "KNG",
+                "WMJ",
+                "FLG",
+                "WLO",
+                "GLP",
+                "ABQ",
+                "LMY",
+                "LSV",
+                "RAT",
+                "TRI",
+                "LAJ",
+                "LMR",
+                "GCK",
+                "DDG",
+                "HUT",
+                "NEW",
+                "TOP",
+                "LRC",
+                "KCY",
+                "LAP",
+                "FMD",
+                "GBB",
+                "PCT",
+                "MDT",
+                "NPV",
+                "CHI"
+              ]
+            },
+            {
+              "cities_served": "New York - Washington - Charleston - Savannah - Jacksonville - Orlando - Tampa/Miami",
+              "code": "SLVS",
+              "name": "",
+              "stops": null
+            },
+            {
+              "cities_served": "Chicago - St. Louis - Little Rock - Dallas - San Antonio - Tucson - Los Angeles",
+              "code": "TXSE",
+              "name": "Texas Eagle",
+              "stops": [
+                "LAX",
+                "POS",
+                "ONA",
+                "PSN",
+                "YUM",
+                "MRC",
+                "TUS",
+                "BEN",
+                "LDB",
+                "DEM",
+                "ELP",
+                "ALP",
+                "SND",
+                "DRT",
+                "SAS",
+                "SMC",
+                "AUS",
+                "TAY",
+                "TPL",
+                "MCG",
+                "CBR",
+                "FTW",
+                "DAL",
+                "MIN",
+                "LVW",
+                "MHL",
+                "TXA",
+                "HOP",
+                "ARK",
+                "MVN",
+                "LRK",
+                "WNR",
+                "PBF",
+                "ACD",
+                "STL",
+                "ALN",
+                "CRV",
+                "SPI",
+                "LCN",
+                "BNL",
+                "PON",
+                "JOL",
+                "CHI"
+              ]
+            },
+            {
+              "cities_served": "Lorton, VA (Washington, DC) - Sanford, FL (Orlando)",
+              "code": "AUTO",
+              "name": "Auto Train",
+              "stops": null
+            },
+            {
+              "cities_served": "Chicago - Champaign-Urbana - Carbondale - Memphis - Jackson - New Orleans",
+              "code": "CONO",
+              "name": "City of New Orleans",
+              "stops": null
+            },
+            {
+              "cities_served": "Chicago - Omaha - Denver - Salt Lake City - Emeryville (San Francisco)",
+              "code": "CALZ",
+              "name": "California Zephyr",
+              "stops": null
+            },
+            {
+              "cities_served": "New Haven - Hartford - Windsor Locks - Springfield",
+              "code": "AHFL",
+              "name": "Amtrak Hartford Line",
+              "stops": [
+                "NHV",
+                "STS",
+                "WFD",
+                "MDN",
+                "BER",
+                "HFD",
+                "WND",
+                "WNL",
+                "SPG"
+              ]
+            },
+            {
+              "cities_served": "New York - Washington - Charleston - Savannah - Jacksonville - Orlando - Tampa/Miami",
+              "code": "SLVM",
+              "name": "Silver Meteor",
+              "stops": null
+            },
+            {
+              "cities_served": "Denver - Winter Park",
+              "code": "WPRX",
+              "name": "",
+              "stops": null
+            },
+            {
+              "cities_served": "Chicago - Kalamazoo - East Lansing - Port Huron",
+              "code": "BLWT",
+              "name": "Blue Water",
+              "stops": [
+                "CHI",
+                "NBU",
+                "NLS",
+                "DOA",
+                "KAL",
+                "BTL",
+                "LNS",
+                "DRD",
+                "FLN",
+                "LPE",
+                "PTH"
+              ]
+            },
+            {
+              "cities_served": "Toronto - Niagara Falls - Buffalo - Rochester - Syracuse - Albany - New York",
+              "code": "MPLF",
+              "name": "Maple Leaf",
+              "stops": [
+                "TWO",
+                "OKL",
+                "AST",
+                "GMS",
+                "SCA",
+                "NFS",
+                "NFL",
+                "BFX",
+                "BUF",
+                "ROC",
+                "SYR",
+                "ROM",
+                "UCA",
+                "AMS",
+                "SDY",
+                "ALB",
+                "HUD",
+                "RHI",
+                "POU",
+                "CRT",
+                "YNY",
+                "NYP"
+              ]
+            },
+            {
+              "cities_served": "Chicago - Battle Creek - Ann Arbor - Detroit - Pontiac",
+              "code": "WLVR",
+              "name": "Wolverine",
+              "stops": [
+                "CHI",
+                "HMI",
+                "NBU",
+                "NLS",
+                "DOA",
+                "KAL",
+                "BTL",
+                "ALI",
+                "JXN",
+                "ARB",
+                "DER",
+                "DET",
+                "ROY",
+                "TRM",
+                "PNT"
+              ]
+            },
+            {
+              "cities_served": "Chicago - Milwaukee - St. Paul/Minneapolis - Minot - Spokane - Portland/Seattle",
+              "code": "EMPB",
+              "name": "Empire Builder",
+              "stops": [
+                "SEA",
+                "EDM",
+                "EVR",
+                "LWA",
+                "WEN",
+                "EPH",
+                "PDX",
+                "VAN",
+                "BNG",
+                "WIH",
+                "PSC",
+                "SPK",
+                "SPT",
+                "LIB",
+                "WFH",
+                "WGL",
+                "ESM",
+                "GPK",
+                "BRO",
+                "CUT",
+                "SBY",
+                "HAV",
+                "MAL",
+                "GGW",
+                "WPT",
+                "WTN",
+                "STN",
+                "MOT",
+                "RUG",
+                "DVL",
+                "GFK",
+                "FAR",
+                "DLK",
+                "SPL",
+                "SCD",
+                "MSP",
+                "RDW",
+                "WIN",
+                "LSE",
+                "TOH",
+                "WDL",
+                "POG",
+                "CBS",
+                "MKE",
+                "GLN",
+                "CHI"
+              ]
+            },
+            {
+              "cities_served": "Chicago - Galesburg - Quincy",
+              "code": "ILZP",
+              "name": "Illinois Zephyr",
+              "stops": null
+            },
+            {
+              "cities_served": "Chicago - Benton Harbor - Grand Rapids",
+              "code": "PEMQ",
+              "name": "Pere Marquette",
+              "stops": [
+                "CHI",
+                "SJM",
+                "BAM",
+                "HOM",
+                "GRR"
+              ]
+            },
+            {
+              "cities_served": "Raleigh - Greensboro - Charlotte",
+              "code": "PDMT",
+              "name": "Piedmont",
+              "stops": [
+                "CLT",
+                "KAN",
+                "SAL",
+                "HPT",
+                "GRO",
+                "BNC",
+                "DNC",
+                "CYN",
+                "RGH"
+              ]
+            },
+            {
+              "cities_served": "New York - Poughkeepsie - Albany - Pittsfield",
+              "code": "BRKF",
+              "name": "Berkshire Flyer",
+              "stops": null
+            },
+            {
+              "cities_served": "Chicago - St. Louis, MO - Kansas City",
+              "code": "LMRR",
+              "name": "Lincoln Service Missouri River Runner",
+              "stops": null
+            },
+            {
+              "cities_served": "Chicago - Milwaukee - St. Paul/Minneapolis",
+              "code": "BRLS",
+              "name": "Borealis",
+              "stops": null
+            },
+            {
+              "cities_served": "Raleigh - Pinehurst",
+              "code": "GOLF",
+              "name": "",
+              "stops": null
+            },
+            {
+              "cities_served": "Chicago - Pittsburgh - Washington, DC - Savannah - Tampa/Miami",
+              "code": "FLDN",
+              "name": "Floridian",
+              "stops": null
+            },
+            {
+              "cities_served": "New Orleans - Biloxi - Mobile",
+              "code": "AMGS",
+              "name": "Amtrak Mardi Gras Service",
+              "stops": null
+            },
+            {
+              "cities_served": "",
+              "code": "ACNG",
+              "name": "Acela",
+              "stops": [
+                "WAS",
+                "BWI",
+                "BAL",
+                "WIL",
+                "PHL",
+                "TRE",
+                "MET",
+                "NWK",
+                "NYP",
+                "STM",
+                "NHV",
+                "PVD",
+                "RTE",
+                "BBY",
+                "BOS"
+              ]
+            },
+            {
+              "cities_served": "San Francisco Bay Area/Sacramento - Bakersfield/Southern California",
+              "code": "GOLD",
+              "name": "Gold Runner",
+              "stops": [
+                "BFD",
+                "WAC",
+                "COC",
+                "HNF",
+                "FNO",
+                "MDR",
+                "MCD",
+                "TRK",
+                "MOD",
+                "SKN",
+                "ACA",
+                "MTZ",
+                "RIC",
+                "EMY",
+                "OKJ",
+                "SKT",
+                "LOD",
+                "SAC"
+              ]
+            }
+          ],
+          "source_url": "https://www.amtrak.com/services/routes-list.json"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "amtrak-com",
+        "capability": "train-status/list_routes"
+      }
+    },
+    {
+      "id": "amtrak-com/train-status/list_stations",
+      "provider": "amtrak-com",
+      "capability": "train-status/list_stations",
+      "name": "List stations",
+      "description": "Start here to find station codes for `get_station`, `search_stations` inputs or route stops; filter by `state` to keep the result small.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "state",
+          "type": "string",
+          "in": "body",
+          "about": "Two-letter US state or Canadian province code, e.g. NY, CA, BC. Case-insensitive. Pattern: ^[A-Za-z]{2}$."
+        }
+      ],
+      "response": {
+        "about": "All Amtrak stations (rail and connecting bus stops, US and Canada) from the public station reference feed, joined with the per-station service flags (staffed, accessible, Quik-Trak, wheelchair). Optional filter by state/province code.",
+        "key": "stations",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "accessible",
+            "type": "boolean",
+            "about": "stationAccessible flag; null when unknown."
+          },
+          {
+            "name": "aliases",
+            "type": "string[]",
+            "about": "Alternative names the site's autocomplete matches"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "code",
+            "type": "string",
+            "about": "3-letter station code"
+          },
+          {
+            "name": "country",
+            "type": "string",
+            "about": "Country as stated by the source (only present for some non-US stations); null otherwise."
+          },
+          {
+            "name": "daily_departures",
+            "type": "number",
+            "about": "Only published for a few major stations; null otherwise."
+          },
+          {
+            "name": "facility_name",
+            "type": "string",
+            "about": "Station facility name, e.g. 'Moynihan Train Hall at Penn Sta.'; null when the source has none."
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Station name as listed, e.g. 'New York, NY'"
+          },
+          {
+            "name": "quik_trak",
+            "type": "boolean",
+            "about": "Quik-Trak ticket kiosk available; null when unknown."
+          },
+          {
+            "name": "staffed",
+            "type": "boolean",
+            "about": "From contentService.stationsinfo.json; null when the station has no flags record."
+          },
+          {
+            "name": "state",
+            "type": "string",
+            "about": "US state or Canadian province code"
+          },
+          {
+            "name": "timezone",
+            "type": "string",
+            "about": "Amtrak timezone code: E, C, M, P (Eastern/Central/Mountain/Pacific); MS/PS mark zones without DST."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Station page on amtrak.com"
+          },
+          {
+            "name": "wheelchair",
+            "type": "boolean",
+            "about": "Courtesy wheelchair available; null when unknown."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "state": "NY"
+        },
+        "response": {
+          "count": 43,
+          "observed_at_ms": 1790117593933,
+          "source_url": "https://www.amtrak.com/services/data.stations.json",
+          "state": "NY",
+          "stations": [
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Rensselaer",
+              "code": "ALB",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Rensselaer, NY",
+              "quik_trak": true,
+              "staffed": true,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/alb",
+              "wheelchair": true
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Amsterdam",
+              "code": "AMS",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Amsterdam, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/ams",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [
+                "Exchange"
+              ],
+              "city": "Buffalo",
+              "code": "BFX",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": "Exchange Street Station",
+              "name": "Buffalo, NY",
+              "quik_trak": false,
+              "staffed": true,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/bfx",
+              "wheelchair": true
+            },
+            {
+              "accessible": true,
+              "aliases": [
+                "Depew"
+              ],
+              "city": "Depew",
+              "code": "BUF",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": "Depew Station",
+              "name": "Depew, NY",
+              "quik_trak": true,
+              "staffed": true,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/buf",
+              "wheelchair": true
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Croton-on-Hudson",
+              "code": "CRT",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Croton-on-Hudson, NY",
+              "quik_trak": true,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/crt",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [
+                "Ft Edward",
+                "Ft. Edward",
+                "Edward",
+                "Glens Falls",
+                "Glenns Falls",
+                "Hudson Falls"
+              ],
+              "city": "Fort Edward",
+              "code": "FED",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Fort Edward, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/fed",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Ticonderoga",
+              "code": "FTC",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Ticonderoga, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/ftc",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Hudson",
+              "code": "HUD",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Hudson, NY",
+              "quik_trak": true,
+              "staffed": true,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/hud",
+              "wheelchair": true
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Niagara Falls",
+              "code": "NFL",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Niagara Falls, NY",
+              "quik_trak": false,
+              "staffed": true,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/nfl",
+              "wheelchair": true
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "New Rochelle",
+              "code": "NRO",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "New Rochelle, NY",
+              "quik_trak": true,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/nro",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Syracuse",
+              "code": "NYF",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Syracuse, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/nyf",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Plattsburgh",
+              "code": "PLB",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Plattsburgh, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/plb",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Port Henry",
+              "code": "POH",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Port Henry, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/poh",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Poughkeepsie",
+              "code": "POU",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Poughkeepsie, NY",
+              "quik_trak": true,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/pou",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Port Kent",
+              "code": "PRK",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Port Kent, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/prk",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Rhinecliff",
+              "code": "RHI",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Rhinecliff, NY",
+              "quik_trak": true,
+              "staffed": true,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/rhi",
+              "wheelchair": true
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Rochester",
+              "code": "ROC",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": "Louise M. Slaughter Station",
+              "name": "Rochester, NY",
+              "quik_trak": false,
+              "staffed": true,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/roc",
+              "wheelchair": true
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Rome",
+              "code": "ROM",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Rome, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/rom",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Rouses Point",
+              "code": "RSP",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Rouses Point, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/rsp",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Saratoga Springs",
+              "code": "SAR",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Saratoga Springs, NY",
+              "quik_trak": false,
+              "staffed": true,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/sar",
+              "wheelchair": true
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Schenectady",
+              "code": "SDY",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Schenectady, NY",
+              "quik_trak": false,
+              "staffed": true,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/sdy",
+              "wheelchair": true
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Syracuse",
+              "code": "SYR",
+              "country": null,
+              "daily_departures": 11,
+              "facility_name": "Regional Transportation Center",
+              "name": "Syracuse, NY",
+              "quik_trak": true,
+              "staffed": true,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/syr",
+              "wheelchair": true
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Utica",
+              "code": "UCA",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Utica, NY",
+              "quik_trak": true,
+              "staffed": true,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/uca",
+              "wheelchair": true
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Whitehall",
+              "code": "WHL",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Whitehall, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/whl",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Westport",
+              "code": "WSP",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Westport, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/wsp",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [],
+              "city": "Yonkers",
+              "code": "YNY",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Yonkers, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/yny",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Albany",
+              "code": "ABA",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": "Albany International Airport",
+              "name": "Albany, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/aba",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Canton",
+              "code": "CTO",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": "Downtown",
+              "name": "Canton, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/cto",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Canton",
+              "code": "CTS",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": "State University of New York",
+              "name": "Canton, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/cts",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "De Kalb Junction",
+              "code": "DKJ",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "De Kalb Junction, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/dkj",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Evans Mills",
+              "code": "EVM",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Evans Mills, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/evm",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [
+                "Glenns Falls",
+                "Hudson Falls"
+              ],
+              "city": "Glens Falls",
+              "code": "GFS",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Glens Falls, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/gfs",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Gouverneur",
+              "code": "GVR",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Gouverneur, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/gvr",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Hogansburg",
+              "code": "HGS",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Hogansburg, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/hgs",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Keene Valley",
+              "code": "KVL",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Keene Valley, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/kvl",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Massena",
+              "code": "MNY",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Massena, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/mny",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Pulaski",
+              "code": "PLK",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Pulaski, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/plk",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Potsdam",
+              "code": "PTD",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Potsdam, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/ptd",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Potsdam",
+              "code": "PTU",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": "Clarkson University",
+              "name": "Potsdam, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/ptu",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Rochester",
+              "code": "ROB",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": "Bus Terminal",
+              "name": "Rochester, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/rob",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Syracuse",
+              "code": "SYA",
+              "country": null,
+              "daily_departures": 4,
+              "facility_name": "Syracuse Hancock Airport",
+              "name": "Syracuse, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/sya",
+              "wheelchair": false
+            },
+            {
+              "accessible": false,
+              "aliases": [],
+              "city": "Watertown",
+              "code": "WRT",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": null,
+              "name": "Watertown, NY",
+              "quik_trak": false,
+              "staffed": false,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/wrt",
+              "wheelchair": false
+            },
+            {
+              "accessible": true,
+              "aliases": [
+                "nyc",
+                "Penn Station",
+                "Moynihan Train Hall",
+                "new york city",
+                "newyork"
+              ],
+              "city": "New York",
+              "code": "NYP",
+              "country": null,
+              "daily_departures": null,
+              "facility_name": "Moynihan Train Hall at Penn Station",
+              "name": "New York, NY",
+              "quik_trak": true,
+              "staffed": true,
+              "state": "NY",
+              "timezone": "E",
+              "url": "https://www.amtrak.com/stations/nyp",
+              "wheelchair": true
+            }
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "amtrak-com",
+        "capability": "train-status/list_stations"
+      }
+    },
+    {
+      "id": "amtrak-com/train-status/live_trains",
+      "provider": "amtrak-com",
+      "capability": "train-status/live_trains",
+      "name": "Live trains",
+      "description": "A snapshot of where trains are right now; use `train_status` for one train with its stop-by-stop times.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Return at most this many trains (feed order). Default: all.",
+          "min": 1,
+          "max": 500
+        },
+        {
+          "name": "route_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact route name as the feed states it, e.g. 'Northeast Regional', 'Acela' (case-insensitive)"
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "in": "body",
+          "about": "Filter by feed state",
+          "oneOf": [
+            "Active",
+            "Predeparture",
+            "Completed"
+          ]
+        },
+        {
+          "name": "train_number",
+          "type": "string",
+          "in": "body",
+          "about": "Train number, e.g. 2151 Pattern: ^[0-9A-Za-z]{1,6}$."
+        }
+      ],
+      "response": {
+        "about": "Live positions and status of every Amtrak train currently in the tracking feed (active, pre-departure and recently completed runs): coordinates, heading, speed, route, origin/destination and last event. Decrypts the public maps.amtrak.com feed the Track Your Train map uses. Optional filters by route name, train number or state; `limit` caps the list (the output then says it is partial).",
+        "key": "trains",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "aliases",
+            "type": "string[]"
+          },
+          {
+            "name": "cms_id",
+            "type": "string",
+            "about": "Route CMS id, joins RoutesList.json"
+          },
+          {
+            "name": "destination_code",
+            "type": "string"
+          },
+          {
+            "name": "heading",
+            "type": "string",
+            "about": "Compass heading, e.g. NW; null when blank"
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "Feed object id for this train run (unique per run)"
+          },
+          {
+            "name": "last_event_code",
+            "type": "string",
+            "about": "Station code of the last event; null when blank"
+          },
+          {
+            "name": "last_valid_at",
+            "type": "string",
+            "about": "Last GPS fix time as the feed states it; null when blank"
+          },
+          {
+            "name": "lat",
+            "type": "number"
+          },
+          {
+            "name": "lng",
+            "type": "number"
+          },
+          {
+            "name": "origin_code",
+            "type": "string"
+          },
+          {
+            "name": "origin_scheduled_departure",
+            "type": "string",
+            "about": "Local time at the origin, 'M/D/YYYY h:mm:ss AM/PM' as the feed states it"
+          },
+          {
+            "name": "origin_timezone",
+            "type": "string"
+          },
+          {
+            "name": "route_name",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string",
+            "about": "Active, Predeparture or Completed as stated by the feed"
+          },
+          {
+            "name": "status_message",
+            "type": "string",
+            "about": "Service message; null when blank"
+          },
+          {
+            "name": "train_number",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string",
+            "about": "Feed record update time as the feed states it"
+          },
+          {
+            "name": "velocity_mph",
+            "type": "number",
+            "about": "Speed reported by the feed (mph); null when blank"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 5
+        },
+        "response": {
+          "count": 5,
+          "feed_total": 154,
+          "observed_at_ms": 1790117626420,
+          "source_url": "https://maps.amtrak.com/services/MapDataService/trains/getTrainsData",
+          "total": 154,
+          "trains": [
+            {
+              "aliases": [],
+              "cms_id": "1241245648567",
+              "destination_code": "SEA",
+              "heading": "NW",
+              "id": 1539603,
+              "last_event_code": "VAN",
+              "last_valid_at": "9/22/2026 3:50:40 PM",
+              "lat": 45.53015683241373,
+              "lng": -122.67725294815824,
+              "origin_code": "LAX",
+              "origin_scheduled_departure": "9/21/2026 9:51:00 AM",
+              "origin_timezone": "P",
+              "route_name": "Coast Starlight",
+              "state": "Active",
+              "status_message": null,
+              "train_number": "14",
+              "updated_at": "9/22/2026 6:53:18 PM",
+              "velocity_mph": 0.236120983958244
+            },
+            {
+              "aliases": [],
+              "cms_id": "1237608339450",
+              "destination_code": "SAV",
+              "heading": "SW",
+              "id": 1539939,
+              "last_event_code": "FAY",
+              "last_valid_at": "9/22/2026 6:52:40 PM",
+              "lat": 35.532561664080816,
+              "lng": -78.27996311909733,
+              "origin_code": "NYP",
+              "origin_scheduled_departure": "9/22/2026 6:02:00 AM",
+              "origin_timezone": "E",
+              "route_name": "Silver Service / Palmetto",
+              "state": "Active",
+              "status_message": null,
+              "train_number": "89",
+              "updated_at": "9/22/2026 6:53:18 PM",
+              "velocity_mph": 0.0111846998333931
+            },
+            {
+              "aliases": [],
+              "cms_id": "1241245666862",
+              "destination_code": "TWO",
+              "heading": "W",
+              "id": 1539947,
+              "last_event_code": "TWO",
+              "last_valid_at": "9/22/2026 6:50:40 PM",
+              "lat": 43.17792597782642,
+              "lng": -79.453280953005,
+              "origin_code": "NYP",
+              "origin_scheduled_departure": "9/22/2026 7:15:00 AM",
+              "origin_timezone": "E",
+              "route_name": "Maple Leaf",
+              "state": "Active",
+              "status_message": null,
+              "train_number": "63",
+              "updated_at": "9/22/2026 6:53:18 PM",
+              "velocity_mph": 63.0940132141113
+            },
+            {
+              "aliases": [],
+              "cms_id": "1241245664867",
+              "destination_code": "WAS",
+              "heading": "SW",
+              "id": 1540160,
+              "last_event_code": "WAS",
+              "last_valid_at": "9/22/2026 6:52:41 PM",
+              "lat": 39.031250193855136,
+              "lng": -76.75434333995469,
+              "origin_code": "NYP",
+              "origin_scheduled_departure": "9/22/2026 4:13:00 PM",
+              "origin_timezone": "E",
+              "route_name": "Acela",
+              "state": "Active",
+              "status_message": null,
+              "train_number": "2123",
+              "updated_at": "9/22/2026 6:53:18 PM",
+              "velocity_mph": 118.325180053711
+            },
+            {
+              "aliases": [],
+              "cms_id": "1241245668597",
+              "destination_code": "PHL",
+              "heading": "SW",
+              "id": 1540111,
+              "last_event_code": "NLC",
+              "last_valid_at": "9/22/2026 6:52:41 PM",
+              "lat": 41.36547171402999,
+              "lng": -71.83952410334625,
+              "origin_code": "BOS",
+              "origin_scheduled_departure": "9/22/2026 5:30:00 PM",
+              "origin_timezone": "E",
+              "route_name": "Northeast Regional",
+              "state": "Active",
+              "status_message": null,
+              "train_number": "177",
+              "updated_at": "9/22/2026 6:53:18 PM",
+              "velocity_mph": 76.1454391479492
+            }
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "amtrak-com",
+        "capability": "train-status/live_trains"
+      }
+    },
+    {
+      "id": "amtrak-com/train-status/search_stations",
+      "provider": "amtrak-com",
+      "capability": "train-status/search_stations",
+      "name": "Search stations",
+      "description": "Find a station code when you know a place name or a partial name; `get_station` for full detail.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "q",
+          "type": "string",
+          "in": "body",
+          "about": "Search term: city, station name, alias or code",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Station finder autocomplete of amtrak.com: free-text search by station name, city, alias or 3-letter code. Returns matching stations with street address and coordinates. Non-station place suggestions the geocoder returns are counted, not listed.",
+        "key": "stations",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object",
+            "about": "Street address from the station finder; null when the finder has no record for the code."
+          },
+          {
+            "name": "aliases",
+            "type": "string[]"
+          },
+          {
+            "name": "code",
+            "type": "string",
+            "about": "3-letter station code"
+          },
+          {
+            "name": "display_name",
+            "type": "string",
+            "about": "Autocomplete label, e.g. 'Chicago, IL - Union Station (CHI)'"
+          },
+          {
+            "name": "facility_name",
+            "type": "string"
+          },
+          {
+            "name": "geo",
+            "type": "object",
+            "about": "WGS84 coordinates from the station finder; null when unavailable."
+          },
+          {
+            "name": "match_type",
+            "type": "string",
+            "about": "How the term matched: name, code, alias, city ... as the source states it"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Station name, e.g. 'Chicago, IL'"
+          },
+          {
+            "name": "rank",
+            "type": "number",
+            "about": "Station rank from the source; null when blank"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "q": "Chicago"
+        },
+        "response": {
+          "count": 1,
+          "location_count": 5,
+          "observed_at_ms": 1790117600078,
+          "query": "Chicago",
+          "source_url": "https://www.amtrak.com/services/maps.stationfinder.json?searchTerm=Chicago",
+          "stations": [
+            {
+              "address": {
+                "city": "Chicago",
+                "line1": "255 South Clinton Street",
+                "line2": null,
+                "postal_code": "60606",
+                "state": "IL"
+              },
+              "aliases": [
+                "Union Station"
+              ],
+              "code": "CHI",
+              "display_name": "Chicago, IL - Union Station (CHI)",
+              "facility_name": "Union Station",
+              "geo": {
+                "lat": 41.87899985314727,
+                "lng": -87.64102075320515
+              },
+              "match_type": "name",
+              "name": "Chicago, IL",
+              "rank": null,
+              "url": "https://www.amtrak.com/stations/chi"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "amtrak-com",
+        "capability": "train-status/search_stations"
+      }
+    },
+    {
+      "id": "amtrak-com/train-status/train_status",
+      "provider": "amtrak-com",
+      "capability": "train-status/train_status",
+      "name": "Train status",
+      "description": "Train status by number, the Track Your Train equivalent. Train numbers come from `get_route` or `live_trains`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "train_number",
+          "type": "string",
+          "in": "body",
+          "about": "Train number, e.g. 2151 or 14 Pattern: ^[0-9A-Za-z]{1,6}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Status of one train number from the live tracking feed: every run of that number currently tracked (a long-distance number can be tracked on two consecutive service days), each with position, state and stop-by-stop scheduled, estimated and actual times with delay comments.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "train_number",
+            "type": "string"
+          },
+          {
+            "name": "trains",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "train_number": "14"
+        },
+        "response": {
+          "count": 2,
+          "observed_at_ms": 1790117631185,
+          "source_url": "https://maps.amtrak.com/services/MapDataService/trains/getTrainsData",
+          "train_number": "14",
+          "trains": [
+            {
+              "aliases": [],
+              "cms_id": "1241245648567",
+              "destination_code": "SEA",
+              "heading": "NW",
+              "id": 1539603,
+              "last_event_code": "VAN",
+              "last_valid_at": "9/22/2026 3:50:40 PM",
+              "lat": 45.53015683241373,
+              "lng": -122.67725294815824,
+              "origin_code": "LAX",
+              "origin_scheduled_departure": "9/21/2026 9:51:00 AM",
+              "origin_timezone": "P",
+              "route_name": "Coast Starlight",
+              "state": "Active",
+              "status_message": null,
+              "stops": [
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "LAX",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": "Canceled",
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/21/2026 09:51:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": "ARRIVED",
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "VNC",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": "Canceled",
+                  "scheduled_arrival": "09/21/2026 10:14:00",
+                  "scheduled_departure": "09/21/2026 10:18:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": "ARRIVED",
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "SIM",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": "Canceled",
+                  "scheduled_arrival": "09/21/2026 10:46:00",
+                  "scheduled_departure": "09/21/2026 10:49:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": "ARRIVED",
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "OXN",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": "Canceled",
+                  "scheduled_arrival": "09/21/2026 11:18:00",
+                  "scheduled_departure": "09/21/2026 11:22:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": "ARRIVED",
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "SBA",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": "Canceled",
+                  "scheduled_arrival": "09/21/2026 12:08:00",
+                  "scheduled_departure": "09/21/2026 12:15:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": "ARRIVED",
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "SLO",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": "Canceled",
+                  "scheduled_arrival": "09/21/2026 14:52:00",
+                  "scheduled_departure": "09/21/2026 15:05:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": "ARRIVED",
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "PRB",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": "Canceled",
+                  "scheduled_arrival": "09/21/2026 16:13:00",
+                  "scheduled_departure": "09/21/2026 16:15:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": "ARRIVED",
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "SNS",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": "Canceled",
+                  "scheduled_arrival": "09/21/2026 18:10:00",
+                  "scheduled_departure": "09/21/2026 18:13:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": "ARRIVED",
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "SJC",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": "Canceled",
+                  "scheduled_arrival": "09/21/2026 19:46:00",
+                  "scheduled_departure": "09/21/2026 19:58:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": "ARRIVED",
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "OKJ",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": "Canceled",
+                  "scheduled_arrival": "09/21/2026 21:06:00",
+                  "scheduled_departure": "09/21/2026 21:21:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": "ARRIVED",
+                  "actual_departure": "09/21/2026 21:41:00",
+                  "bus": false,
+                  "code": "EMY",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/21/2026 21:31:00",
+                  "scheduled_departure": "09/21/2026 21:41:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/21/2026 22:14:00",
+                  "actual_comment": "6 MI LATE",
+                  "actual_departure": "09/21/2026 22:32:00",
+                  "bus": false,
+                  "code": "MTZ",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/21/2026 22:14:00",
+                  "scheduled_departure": "09/21/2026 22:26:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/21/2026 23:11:00",
+                  "actual_comment": "2 MI LATE",
+                  "actual_departure": "09/21/2026 23:13:00",
+                  "bus": false,
+                  "code": "DAV",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/21/2026 23:11:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/21/2026 23:28:00",
+                  "actual_comment": "6 MI LATE",
+                  "actual_departure": "09/21/2026 23:55:00",
+                  "bus": false,
+                  "code": "SAC",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/21/2026 23:49:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 01:28:00",
+                  "actual_comment": "ON TIME",
+                  "actual_departure": "09/22/2026 01:37:00",
+                  "bus": false,
+                  "code": "CIC",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/22/2026 01:37:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 03:01:00",
+                  "actual_comment": "ON TIME",
+                  "actual_departure": "09/22/2026 03:05:00",
+                  "bus": false,
+                  "code": "RDD",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/22/2026 03:05:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 04:44:00",
+                  "actual_comment": "ON TIME",
+                  "actual_departure": "09/22/2026 04:58:00",
+                  "bus": false,
+                  "code": "DUN",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/22/2026 04:58:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 07:42:00",
+                  "actual_comment": "10 MI LATE",
+                  "actual_departure": "09/22/2026 07:53:00",
+                  "bus": false,
+                  "code": "KFS",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 07:33:00",
+                  "scheduled_departure": "09/22/2026 07:43:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 09:06:00",
+                  "actual_comment": "8 MI LATE",
+                  "actual_departure": "09/22/2026 09:07:00",
+                  "bus": false,
+                  "code": "CMO",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/22/2026 08:59:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 12:35:00",
+                  "actual_comment": "6 MI LATE",
+                  "actual_departure": "09/22/2026 12:43:00",
+                  "bus": false,
+                  "code": "EUG",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 12:29:00",
+                  "scheduled_departure": "09/22/2026 12:37:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 13:38:00",
+                  "actual_comment": "19 MI LATE",
+                  "actual_departure": "09/22/2026 13:42:00",
+                  "bus": false,
+                  "code": "ALY",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 13:20:00",
+                  "scheduled_departure": "09/22/2026 13:23:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 14:11:00",
+                  "actual_comment": "11 MI LATE",
+                  "actual_departure": "09/22/2026 14:15:00",
+                  "bus": false,
+                  "code": "SLM",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 14:01:00",
+                  "scheduled_departure": "09/22/2026 14:04:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 15:22:00",
+                  "actual_comment": "18 MI EARLY",
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "PDX",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": "09/22/2026 15:56:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 15:40:00",
+                  "scheduled_departure": "09/22/2026 15:56:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "VAN",
+                  "estimated_arrival": "09/22/2026 16:13:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/22/2026 16:16:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 16:13:00",
+                  "scheduled_departure": "09/22/2026 16:16:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "KEL",
+                  "estimated_arrival": "09/22/2026 16:48:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/22/2026 16:51:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 16:48:00",
+                  "scheduled_departure": "09/22/2026 16:51:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "CTL",
+                  "estimated_arrival": "09/22/2026 17:33:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/22/2026 17:36:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 17:33:00",
+                  "scheduled_departure": "09/22/2026 17:36:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "OLW",
+                  "estimated_arrival": "09/22/2026 17:59:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/22/2026 18:01:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 17:59:00",
+                  "scheduled_departure": "09/22/2026 18:01:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "TAC",
+                  "estimated_arrival": "09/22/2026 18:38:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/22/2026 18:43:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 18:38:00",
+                  "scheduled_departure": "09/22/2026 18:43:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "SEA",
+                  "estimated_arrival": "09/22/2026 19:26:00",
+                  "estimated_arrival_comment": "25 MI EARLY",
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 19:51:00",
+                  "scheduled_departure": null,
+                  "timezone": "P"
+                }
+              ],
+              "train_number": "14",
+              "updated_at": "9/22/2026 6:53:18 PM",
+              "velocity_mph": 0.236120983958244
+            },
+            {
+              "aliases": [],
+              "cms_id": "1241245648567",
+              "destination_code": "SEA",
+              "heading": "N",
+              "id": 1539930,
+              "last_event_code": "PRB",
+              "last_valid_at": "9/22/2026 3:50:42 PM",
+              "lat": 35.40100201684625,
+              "lng": -120.60514574597508,
+              "origin_code": "LAX",
+              "origin_scheduled_departure": "9/22/2026 9:51:00 AM",
+              "origin_timezone": "P",
+              "route_name": "Coast Starlight",
+              "state": "Active",
+              "status_message": null,
+              "stops": [
+                {
+                  "actual_arrival": null,
+                  "actual_comment": "ON TIME",
+                  "actual_departure": "09/22/2026 09:51:00",
+                  "bus": false,
+                  "code": "LAX",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/22/2026 09:51:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 10:13:00",
+                  "actual_comment": "ON TIME",
+                  "actual_departure": "09/22/2026 10:18:00",
+                  "bus": false,
+                  "code": "VNC",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 10:14:00",
+                  "scheduled_departure": "09/22/2026 10:18:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 10:46:00",
+                  "actual_comment": "ON TIME",
+                  "actual_departure": "09/22/2026 10:49:00",
+                  "bus": false,
+                  "code": "SIM",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 10:46:00",
+                  "scheduled_departure": "09/22/2026 10:49:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 11:16:00",
+                  "actual_comment": "ON TIME",
+                  "actual_departure": "09/22/2026 11:22:00",
+                  "bus": false,
+                  "code": "OXN",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 11:18:00",
+                  "scheduled_departure": "09/22/2026 11:22:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 12:12:00",
+                  "actual_comment": "5 MI LATE",
+                  "actual_departure": "09/22/2026 12:20:00",
+                  "bus": false,
+                  "code": "SBA",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 12:08:00",
+                  "scheduled_departure": "09/22/2026 12:15:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": "09/22/2026 14:48:00",
+                  "actual_comment": "1 MI LATE",
+                  "actual_departure": "09/22/2026 15:06:00",
+                  "bus": false,
+                  "code": "SLO",
+                  "estimated_arrival": null,
+                  "estimated_arrival_comment": null,
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 14:52:00",
+                  "scheduled_departure": "09/22/2026 15:05:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "PRB",
+                  "estimated_arrival": "09/22/2026 16:13:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/22/2026 16:15:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 16:13:00",
+                  "scheduled_departure": "09/22/2026 16:15:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "SNS",
+                  "estimated_arrival": "09/22/2026 18:10:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/22/2026 18:13:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 18:10:00",
+                  "scheduled_departure": "09/22/2026 18:13:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "SJC",
+                  "estimated_arrival": "09/22/2026 19:46:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/22/2026 19:58:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 19:46:00",
+                  "scheduled_departure": "09/22/2026 19:58:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "OKJ",
+                  "estimated_arrival": "09/22/2026 21:06:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/22/2026 21:21:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 21:06:00",
+                  "scheduled_departure": "09/22/2026 21:21:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "EMY",
+                  "estimated_arrival": "09/22/2026 21:31:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/22/2026 21:41:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 21:31:00",
+                  "scheduled_departure": "09/22/2026 21:41:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "MTZ",
+                  "estimated_arrival": "09/22/2026 22:17:00",
+                  "estimated_arrival_comment": "03 MI LATE",
+                  "estimated_departure": "09/22/2026 22:26:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/22/2026 22:14:00",
+                  "scheduled_departure": "09/22/2026 22:26:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "DAV",
+                  "estimated_arrival": "09/22/2026 23:11:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/22/2026 23:12:00",
+                  "estimated_departure_comment": "01 MI LATE",
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/22/2026 23:11:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "SAC",
+                  "estimated_arrival": "09/22/2026 23:49:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 00:04:00",
+                  "estimated_departure_comment": "15 MI LATE",
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/22/2026 23:49:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "CIC",
+                  "estimated_arrival": "09/23/2026 01:37:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 01:39:00",
+                  "estimated_departure_comment": "02 MI LATE",
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/23/2026 01:37:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "RDD",
+                  "estimated_arrival": "09/23/2026 03:05:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 03:06:00",
+                  "estimated_departure_comment": "01 MI LATE",
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/23/2026 03:05:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "DUN",
+                  "estimated_arrival": "09/23/2026 04:58:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 05:01:00",
+                  "estimated_departure_comment": "03 MI LATE",
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/23/2026 04:58:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "KFS",
+                  "estimated_arrival": "09/23/2026 07:33:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 07:43:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/23/2026 07:33:00",
+                  "scheduled_departure": "09/23/2026 07:43:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "CMO",
+                  "estimated_arrival": "09/23/2026 08:59:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 09:01:00",
+                  "estimated_departure_comment": "02 MI LATE",
+                  "schedule_comment": null,
+                  "scheduled_arrival": null,
+                  "scheduled_departure": "09/23/2026 08:59:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "EUG",
+                  "estimated_arrival": "09/23/2026 12:29:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 12:37:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/23/2026 12:29:00",
+                  "scheduled_departure": "09/23/2026 12:37:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "ALY",
+                  "estimated_arrival": "09/23/2026 13:21:00",
+                  "estimated_arrival_comment": "01 MI LATE",
+                  "estimated_departure": "09/23/2026 13:23:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/23/2026 13:20:00",
+                  "scheduled_departure": "09/23/2026 13:23:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "SLM",
+                  "estimated_arrival": "09/23/2026 14:01:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 14:04:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/23/2026 14:01:00",
+                  "scheduled_departure": "09/23/2026 14:04:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "PDX",
+                  "estimated_arrival": "09/23/2026 15:40:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 15:56:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/23/2026 15:40:00",
+                  "scheduled_departure": "09/23/2026 15:56:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "VAN",
+                  "estimated_arrival": "09/23/2026 16:13:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 16:16:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/23/2026 16:13:00",
+                  "scheduled_departure": "09/23/2026 16:16:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "KEL",
+                  "estimated_arrival": "09/23/2026 16:48:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 16:51:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/23/2026 16:48:00",
+                  "scheduled_departure": "09/23/2026 16:51:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "CTL",
+                  "estimated_arrival": "09/23/2026 17:33:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 17:36:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/23/2026 17:33:00",
+                  "scheduled_departure": "09/23/2026 17:36:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "OLW",
+                  "estimated_arrival": "09/23/2026 17:59:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 18:01:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/23/2026 17:59:00",
+                  "scheduled_departure": "09/23/2026 18:01:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "TAC",
+                  "estimated_arrival": "09/23/2026 18:38:00",
+                  "estimated_arrival_comment": "ON TIME",
+                  "estimated_departure": "09/23/2026 18:43:00",
+                  "estimated_departure_comment": "ON TIME",
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/23/2026 18:38:00",
+                  "scheduled_departure": "09/23/2026 18:43:00",
+                  "timezone": "P"
+                },
+                {
+                  "actual_arrival": null,
+                  "actual_comment": null,
+                  "actual_departure": null,
+                  "bus": false,
+                  "code": "SEA",
+                  "estimated_arrival": "09/23/2026 19:26:00",
+                  "estimated_arrival_comment": "25 MI EARLY",
+                  "estimated_departure": null,
+                  "estimated_departure_comment": null,
+                  "schedule_comment": null,
+                  "scheduled_arrival": "09/23/2026 19:51:00",
+                  "scheduled_departure": null,
+                  "timezone": "P"
+                }
+              ],
+              "train_number": "14",
+              "updated_at": "9/22/2026 6:53:18 PM",
+              "velocity_mph": 15.117956161499
+            }
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "amtrak-com",
+        "capability": "train-status/train_status"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1389 @@
+{
+  "id": "traderjoes-com",
+  "provider": "traderjoes-com",
+  "name": "Trader Joe's",
+  "description": "Trader Joe’s public store finder, store-specific product search and product nutrition, ingredients and allergens.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "traderjoes-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "traderjoes-com/products/product",
+      "provider": "traderjoes-com",
+      "capability": "products/product",
+      "name": "Product",
+      "description": "One Trader Joe's product by SKU as published for a store: price, size, availability, description, category path, images, full nutrition facts panels (serving size, calories, per-nutrient amount and % daily value), ingredients, allergens and related products. An unknown SKU is an error.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "sku",
+          "type": "string",
+          "in": "body",
+          "about": "Trader Joe's SKU, e.g. 012491; shorter digit strings are left-padded to six digits. Pattern: ^[0-9]{1,6}$.",
+          "required": true
+        },
+        {
+          "name": "store_code",
+          "type": "string",
+          "in": "body",
+          "about": "Trader Joe's store code from stores. Pattern: ^[0-9]{1,5}$.",
+          "default": "701"
+        }
+      ],
+      "response": {
+        "about": "One Trader Joe's product by SKU as published for a store: price, size, availability, description, category path, images, full nutrition facts panels (serving size, calories, per-nutrient amount and % daily value), ingredients, allergens and related products. An unknown SKU is an error.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "allergens",
+            "type": "string[]"
+          },
+          {
+            "name": "available",
+            "type": "boolean"
+          },
+          {
+            "name": "categories",
+            "type": "object[]"
+          },
+          {
+            "name": "chain",
+            "type": "string"
+          },
+          {
+            "name": "characteristics",
+            "type": "string[]"
+          },
+          {
+            "name": "country_of_origin",
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "first_published_at",
+            "type": "string"
+          },
+          {
+            "name": "fun_tags",
+            "type": "string[]"
+          },
+          {
+            "name": "images",
+            "type": "object"
+          },
+          {
+            "name": "ingredients",
+            "type": "string[]"
+          },
+          {
+            "name": "is_new",
+            "type": "boolean"
+          },
+          {
+            "name": "label",
+            "type": "string"
+          },
+          {
+            "name": "last_published_at",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "nutrition",
+            "type": "object[]",
+            "about": "One entry per nutrition facts panel (multi-component products have several)."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "promotion",
+            "type": "string"
+          },
+          {
+            "name": "related_products",
+            "type": "object[]"
+          },
+          {
+            "name": "size",
+            "type": "number"
+          },
+          {
+            "name": "size_unit",
+            "type": "string"
+          },
+          {
+            "name": "size_unit_code",
+            "type": "string"
+          },
+          {
+            "name": "sku",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "store_code",
+            "type": "string"
+          },
+          {
+            "name": "story",
+            "type": "string"
+          },
+          {
+            "name": "story_html",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "usage",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "sku": "012491",
+          "store_code": "701"
+        },
+        "response": {
+          "allergens": [
+            "CONTAINS MILK."
+          ],
+          "available": true,
+          "categories": [
+            {
+              "id": "2",
+              "level": 1,
+              "name": "Products",
+              "url_key": "default-category"
+            },
+            {
+              "id": "8",
+              "level": 2,
+              "name": "Food",
+              "url_key": "food"
+            },
+            {
+              "id": "29",
+              "level": 3,
+              "name": "Cheese",
+              "url_key": "cheese"
+            },
+            {
+              "id": "41",
+              "level": 4,
+              "name": "Cream and Creamy Cheeses",
+              "url_key": "cream-and-creamy-cheeses"
+            }
+          ],
+          "chain": "trader-joes",
+          "characteristics": [
+            "Kosher"
+          ],
+          "country_of_origin": "Product of United States",
+          "currency": "USD",
+          "description": null,
+          "first_published_at": "2023-12-06 23:27:04",
+          "fun_tags": [
+            "Brunch All Day",
+            "Rain or Shine",
+            "Rise & Shine"
+          ],
+          "images": {
+            "context": null,
+            "others": [],
+            "primary": "https://www.traderjoes.com/content/dam/trjo/products/m20204/12491.png"
+          },
+          "ingredients": [
+            "PASTEURIZED MILK AND CREAM",
+            "CHEESE CULTURE",
+            "SALT",
+            "GUAR GUM",
+            "CAROB BEAN GUM",
+            "XANTHAN GUM"
+          ],
+          "is_new": false,
+          "label": null,
+          "last_published_at": "2023-12-06 23:27:04",
+          "name": "CREAM CHEESE BRICK",
+          "nutrition": [
+            {
+              "calories_per_serving": "90",
+              "items": [
+                {
+                  "amount": "9 g",
+                  "name": "Total Fat",
+                  "percent_dv": ".12"
+                },
+                {
+                  "amount": "6 g",
+                  "name": "Saturated Fat",
+                  "percent_dv": ".3"
+                },
+                {
+                  "amount": "0 g",
+                  "name": "Trans Fat",
+                  "percent_dv": null
+                },
+                {
+                  "amount": "30 mg",
+                  "name": "Cholesterol",
+                  "percent_dv": ".1"
+                },
+                {
+                  "amount": "95 mg",
+                  "name": "Sodium",
+                  "percent_dv": ".04"
+                },
+                {
+                  "amount": "2 g",
+                  "name": "Total Carbohydrate",
+                  "percent_dv": ".01"
+                },
+                {
+                  "amount": "0 g",
+                  "name": "Dietary Fiber",
+                  "percent_dv": "0"
+                },
+                {
+                  "amount": "1 g",
+                  "name": "Total Sugars",
+                  "percent_dv": null
+                },
+                {
+                  "amount": "0 g Added Sugars",
+                  "name": "Includes",
+                  "percent_dv": "0"
+                },
+                {
+                  "amount": "1 g",
+                  "name": "Protein",
+                  "percent_dv": null
+                },
+                {
+                  "amount": "0 mcg",
+                  "name": "Vitamin D",
+                  "percent_dv": "0"
+                },
+                {
+                  "amount": "27 mg",
+                  "name": "Calcium",
+                  "percent_dv": ".02"
+                },
+                {
+                  "amount": "0 mg",
+                  "name": "Iron",
+                  "percent_dv": "0"
+                },
+                {
+                  "amount": "0 mg",
+                  "name": "Potassium",
+                  "percent_dv": "0"
+                }
+              ],
+              "panel_id": "1",
+              "serving_size": "1 oz (28g/about 2 Tbsp)",
+              "servings_per_container": "Serves 8",
+              "title": null
+            }
+          ],
+          "observed_at_ms": 1789436080560,
+          "price": 1.99,
+          "promotion": null,
+          "related_products": [],
+          "size": 8,
+          "size_unit": "Oz",
+          "size_unit_code": "179",
+          "sku": "012491",
+          "source_url": "https://www.traderjoes.com/home/products/pdp/cream-cheese-brick-012491",
+          "store_code": "701",
+          "story": "A brick, or a block: what's the difference? It seems like a negligible distinction, but we take such distinctions \nseriously-especially when it comes to Trader Joe's Cream Cheese.\n\nWithin the cheese biz, this particular presentation of Cream Cheese is known as a \"brick.\" Brick, however, \nsounds heavy, and this creamy creation is anything but. Made for us using fresh milk and cream from cows not \ntreated with rBST, it's everything you want cream cheese to be-rich, creamy, and when softened, quite spread-\nable. So, rather than \"brick,\" we'd like to refer to our Cream Cheese as a \"block,\" as in \"building block,\" since it \ncan be a building block in so many delicious dishes.\n\nWhat's that? You want examples? Sure. A simple appetizer idea: set it on a plate, top with salsa or sweet chili \nsauce and serve with tortilla chips or crackers for a Mexican or Thai inspired dip. How's that for instant versa-\ntility? And speaking of dips, cream cheese is the star of any number of creamy dips. Don't forget bagels-but \nhow could you forget bagels? Pretzel Bagels [sku 52370], maybe? Perhaps our favorite usage for this particular \nbuilding block is cheesecake. If you're up to the challenge of making a cheesecake from scratch, you won't find \na better foundation.\n\nPerhaps the biggest WOW of all is our price of $1.69 for each eight-ounce block of certified kosher Trader Joe's \nCream Cheese. You'll find it in our cheese case, next to other cream cheeses not in \"block\" form.",
+          "story_html": "<p>A brick, or a block: what’s the difference? It seems like a negligible distinction, but we take such distinctions seriously-especially when it comes to Trader Joe’s Cream Cheese.</p>\r\n<p>Within the cheese biz, this particular presentation of Cream Cheese is known as a “brick.” Brick, however, sounds heavy, and this creamy creation is anything but. Made for us using fresh milk and cream from cows not treated with rBST, it’s everything you want cream cheese to be-rich, creamy, and when softened, quite spread- able. So, rather than “brick,” we’d like to refer to our Cream Cheese as a “block,” as in “building block,” since it can be a building block in so many delicious dishes.</p>\r\n<p>What’s that? You want examples? Sure. A simple appetizer idea: set it on a plate, top with salsa or sweet chili sauce and serve with tortilla chips or crackers for a Mexican or Thai inspired dip. How’s that for instant versa- tility? And speaking of dips, cream cheese is the star of any number of creamy dips. Don’t forget bagels-but how could you forget bagels? Perhaps our favorite usage for this particular building block is cheesecake. If you’re up to the challenge of making a cheesecake from scratch, you won’t find a better foundation.</p>",
+          "title": "Cream Cheese",
+          "updated_at": "2026-09-06 01:34:08",
+          "url": "https://www.traderjoes.com/home/products/pdp/cream-cheese-brick-012491",
+          "usage": null
+        },
+        "recordedAt": "2026-09-09"
+      },
+      "execute": {
+        "provider": "traderjoes-com",
+        "capability": "products/product"
+      }
+    },
+    {
+      "id": "traderjoes-com/products/search",
+      "provider": "traderjoes-com",
+      "capability": "products/search",
+      "name": "Search",
+      "description": "Search Trader Joe's products available at one store by keyword: SKU, title, shelf price (USD), pack size, availability flag, category path and image. Paginated; total_count and next_page are returned. store_code defaults to 701 (Los Angeles - Hyperion).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 200
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 24,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Keyword search, e.g. an item name or category word.",
+          "required": true
+        },
+        {
+          "name": "store_code",
+          "type": "string",
+          "in": "body",
+          "about": "Trader Joe's store code from stores. Pattern: ^[0-9]{1,5}$.",
+          "default": "701"
+        }
+      ],
+      "response": {
+        "about": "Search Trader Joe's products available at one store by keyword: SKU, title, shelf price (USD), pack size, availability flag, category path and image. Paginated; total_count and next_page are returned. store_code defaults to 701 (Los Angeles - Hyperion).",
+        "key": "products",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "available",
+            "type": "boolean"
+          },
+          {
+            "name": "categories",
+            "type": "string[]"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "fun_tags",
+            "type": "string[]"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "is_new",
+            "type": "boolean"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "number",
+            "about": "Shelf price in USD at this store, as published."
+          },
+          {
+            "name": "promotion",
+            "type": "string"
+          },
+          {
+            "name": "size",
+            "type": "number"
+          },
+          {
+            "name": "size_unit",
+            "type": "string"
+          },
+          {
+            "name": "sku",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "cheese",
+          "store_code": "701"
+        },
+        "response": {
+          "chain": "trader-joes",
+          "count": 24,
+          "has_next": true,
+          "next_page": 2,
+          "observed_at_ms": 1789436080559,
+          "page": 1,
+          "page_size": 24,
+          "products": [
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Brunch All Day",
+                "Rain or Shine",
+                "Rise & Shine"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/12491.png",
+              "is_new": false,
+              "name": "CREAM CHEESE BRICK",
+              "price": 1.99,
+              "promotion": null,
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "012491",
+              "title": "Cream Cheese",
+              "url": "https://www.traderjoes.com/home/products/pdp/cream-cheese-brick-012491"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Brunch All Day",
+                "Rain or Shine",
+                "Rise & Shine"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/12498.png",
+              "is_new": false,
+              "name": "WHIPPED CREAM CHEESE",
+              "price": 2.49,
+              "promotion": null,
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "012498",
+              "title": "Whipped Cream Cheese",
+              "url": "https://www.traderjoes.com/home/products/pdp/whipped-cream-cheese-012498"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Alfresco Dining",
+                "Brunch All Day",
+                "Gild The Lily",
+                "Stuff of Dreams"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/84108.png",
+              "is_new": false,
+              "name": "CREAMY DREAMY WHIPPED RICOTTA",
+              "price": 3.49,
+              "promotion": "0",
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "084108",
+              "title": "Whipped Ricotta Cheese",
+              "url": "https://www.traderjoes.com/home/products/pdp/creamy-dreamy-whipped-ricotta-084108"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Brunch All Day",
+                "Rise & Shine"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/70942.png",
+              "is_new": false,
+              "name": "VEGAN CREAM CHEESE ALTERNATIVE",
+              "price": 2.99,
+              "promotion": null,
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "070942",
+              "title": "Vegan Cream Cheese Alternative",
+              "url": "https://www.traderjoes.com/home/products/pdp/vegan-cream-cheese-alternative-070942"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Cheese Board",
+                "Crack a Beer",
+                "Game Night",
+                "Pair With Wine",
+                "Picnic"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/74802.png",
+              "is_new": false,
+              "name": "UNEXPECTED CHEDDAR SPREAD",
+              "price": 4.99,
+              "promotion": "0",
+              "size": 9,
+              "size_unit": "Oz",
+              "sku": "074802",
+              "title": "Unexpected Cheddar Cheese Spread",
+              "url": "https://www.traderjoes.com/home/products/pdp/unexpected-cheddar-cheese-spread-074802"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Alfresco Dining",
+                "Brunch All Day",
+                "Fall Faves",
+                "Rise & Shine"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/51533.png",
+              "is_new": false,
+              "name": "HOL PUMPKIN CREAM CHEESE",
+              "price": 2.79,
+              "promotion": "1",
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "051533",
+              "title": "Pumpkin Cream Cheese Spread",
+              "url": "https://www.traderjoes.com/home/products/pdp/pumpkin-cream-cheese-051533"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Alfresco Dining",
+                "Cheese Board",
+                "Effortless Entertaining",
+                "Game Night",
+                "Pair With Wine",
+                "Picnic"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/80463.png",
+              "is_new": false,
+              "name": "BRIE SPREAD",
+              "price": 3.49,
+              "promotion": "0",
+              "size": 6,
+              "size_unit": "Oz",
+              "sku": "080463",
+              "title": "Brie Cheese Flavored Spread",
+              "url": "https://www.traderjoes.com/home/products/pdp/brie-spread-080463"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Yes!"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/61467.png",
+              "is_new": false,
+              "name": "PART SKIM RICOTTA",
+              "price": 3.99,
+              "promotion": null,
+              "size": 16,
+              "size_unit": "Oz",
+              "sku": "061467",
+              "title": "Part Skim Ricotta Cheese",
+              "url": "https://www.traderjoes.com/home/products/pdp/part-skim-ricotta-061467"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Alfresco Dining",
+                "Brunch All Day",
+                "Cheese Board",
+                "Rise & Shine"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/75423.png",
+              "is_new": false,
+              "name": "ORGANIC CREAM CHEESE",
+              "price": 3.49,
+              "promotion": null,
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "075423",
+              "title": "Organic Plain Cream Cheese Spread",
+              "url": "https://www.traderjoes.com/home/products/pdp/organic-cream-cheese-075423"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Alfresco Dining",
+                "Brunch All Day",
+                "Gild The Lily",
+                "Rise & Shine"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/77835.png",
+              "is_new": false,
+              "name": "PEACHES & CREAM CHEESE",
+              "price": 2.79,
+              "promotion": "0",
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "077835",
+              "title": "Peaches + Cream Cream Cheese Spread",
+              "url": "https://www.traderjoes.com/home/products/pdp/peaches-cream-cheese-077835"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Family Style",
+                "Stuff of Dreams"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/50920.png",
+              "is_new": false,
+              "name": "WHOLE MILK RICOTTA",
+              "price": 3.99,
+              "promotion": "0",
+              "size": 16,
+              "size_unit": "Oz",
+              "sku": "050920",
+              "title": "Traditional Whole Milk Ricotta Cheese",
+              "url": "https://www.traderjoes.com/home/products/pdp/whole-milk-ricotta-050920"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Brunch All Day",
+                "Gild The Lily",
+                "Rise & Shine"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/83984.png",
+              "is_new": false,
+              "name": "WHIPPED STRAWBERRY CREAM CHEESE",
+              "price": 2.79,
+              "promotion": "0",
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "083984",
+              "title": "Whipped Strawberry Flavored Cream Cheese Spread",
+              "url": "https://www.traderjoes.com/home/products/pdp/whipped-strawberry-cream-cheese-083984"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Alfresco Dining",
+                "Cheese Board",
+                "Effortless Entertaining",
+                "Rise & Shine"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/86001.png",
+              "is_new": true,
+              "name": "AMERICAN HERITAGE CHIVE CREAM CHEESE",
+              "price": 2.79,
+              "promotion": null,
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "086001",
+              "title": "American Heritage® Cream Cheese with Chives & Onions",
+              "url": "https://www.traderjoes.com/home/products/pdp/american-heritage-chive-cream-cheese-086001"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Alfresco Dining",
+                "Cheese Board",
+                "Effortless Entertaining",
+                "Gild The Lily",
+                "Pair With Wine",
+                "Picnic"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/98671.png",
+              "is_new": false,
+              "name": "BURRATA",
+              "price": 4.99,
+              "promotion": null,
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "098671",
+              "title": "Burrata",
+              "url": "https://www.traderjoes.com/home/products/pdp/burrata-098671"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Alfresco Dining",
+                "Feeling Fancy",
+                "Stuff of Dreams"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/42747.png",
+              "is_new": false,
+              "name": "MASCARPONE",
+              "price": 3.99,
+              "promotion": null,
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "042747",
+              "title": "Mascarpone",
+              "url": "https://www.traderjoes.com/home/products/pdp/mascarpone-042747"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Cream and Creamy Cheeses"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Alfresco Dining",
+                "Effortless Entertaining",
+                "Feeling Fancy",
+                "Pair With Wine",
+                "Picnic"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20204/79181.png",
+              "is_new": false,
+              "name": "WHIPPED FETA SPREAD",
+              "price": 3.99,
+              "promotion": "0",
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "079181",
+              "title": "Whipped Feta Spread",
+              "url": "https://www.traderjoes.com/home/products/pdp/whipped-feta-spread-079181"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Slices, Shreds, Crumbles"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Family Style",
+                "Put An Egg On It",
+                "Rain or Shine",
+                "The \"X\" Factor"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20201/93847.png",
+              "is_new": false,
+              "name": "SHREDDED SWISS GRUYERE BLEND",
+              "price": 4.99,
+              "promotion": null,
+              "size": 12,
+              "size_unit": "Oz",
+              "sku": "093847",
+              "title": "Shredded Swiss Cheese & Gruyère Cheese",
+              "url": "https://www.traderjoes.com/home/products/pdp/shredded-swiss-gruyere-blend-093847"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Packaged for Snacking"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Backpack Ready",
+                "Family Style",
+                "Finger Food",
+                "Midday Snacks"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20202/30337.png",
+              "is_new": false,
+              "name": "STRING CHEESE",
+              "price": 3.99,
+              "promotion": null,
+              "size": 12,
+              "size_unit": "Oz",
+              "sku": "030337",
+              "title": "String Cheese",
+              "url": "https://www.traderjoes.com/home/products/pdp/string-cheese-030337"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Packaged for Snacking"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Effortless Entertaining",
+                "Game Night"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20202/75219.png",
+              "is_new": false,
+              "name": "CHEESE PARTY TRAY",
+              "price": 5.99,
+              "promotion": "0",
+              "size": 16,
+              "size_unit": "Oz",
+              "sku": "075219",
+              "title": "Cheese Party Tray",
+              "url": "https://www.traderjoes.com/home/products/pdp/cheese-party-tray-075219"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Slices, Shreds, Crumbles"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Alfresco Dining",
+                "Feeling Fancy",
+                "Picnic"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20201/76929.png",
+              "is_new": false,
+              "name": "CRUMBLED GOAT CHEESE",
+              "price": 2.99,
+              "promotion": null,
+              "size": 4,
+              "size_unit": "Oz",
+              "sku": "076929",
+              "title": "Crumbled Goat Cheese",
+              "url": "https://www.traderjoes.com/home/products/pdp/crumbled-goat-cheese-076929"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Slices, Shreds, Crumbles"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Pour It On",
+                "Pair With Wine"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20201/69823.png",
+              "is_new": false,
+              "name": "PARMESAN GRATED CHEESE",
+              "price": 2.99,
+              "promotion": null,
+              "size": 8,
+              "size_unit": "Oz",
+              "sku": "069823",
+              "title": "Grated Parmesan Cheese",
+              "url": "https://www.traderjoes.com/home/products/pdp/parmesan-grated-cheese-069823"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Slices, Shreds, Crumbles"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Family Style"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20201/79681.png",
+              "is_new": false,
+              "name": "SLICED PROVOLONE",
+              "price": 4.99,
+              "promotion": null,
+              "size": 12,
+              "size_unit": "Oz",
+              "sku": "079681",
+              "title": "Sliced Provolone Cheese",
+              "url": "https://www.traderjoes.com/home/products/pdp/sliced-provolone-079681"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Slices, Shreds, Crumbles"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Alfresco Dining",
+                "Family Style",
+                "Pour It On",
+                "Yes!"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20201/81085.png",
+              "is_new": false,
+              "name": "SHREDDED MOZZARELLA",
+              "price": 4.49,
+              "promotion": null,
+              "size": 16,
+              "size_unit": "Oz",
+              "sku": "081085",
+              "title": "Shredded Mozzarella Cheese",
+              "url": "https://www.traderjoes.com/home/products/pdp/shredded-mozzarella-081085"
+            },
+            {
+              "available": true,
+              "categories": [
+                "Products",
+                "Food",
+                "Cheese",
+                "Slices, Shreds, Crumbles"
+              ],
+              "currency": "USD",
+              "fun_tags": [
+                "Family Style",
+                "Picnic",
+                "Put An Egg On It",
+                "Yes!"
+              ],
+              "image_url": "https://www.traderjoes.com/content/dam/trjo/products/m20201/73329.png",
+              "is_new": false,
+              "name": "SLICED MUENSTER",
+              "price": 4.49,
+              "promotion": null,
+              "size": 12,
+              "size_unit": "Oz",
+              "sku": "073329",
+              "title": "Sliced Muenster Cheese",
+              "url": "https://www.traderjoes.com/home/products/pdp/sliced-muenster-073329"
+            }
+          ],
+          "query": "cheese",
+          "source_url": "https://www.traderjoes.com/home/search?q=cheese&section=products&global=yes",
+          "store_code": "701",
+          "total_count": 253,
+          "total_pages": 11
+        },
+        "recordedAt": "2026-09-09"
+      },
+      "execute": {
+        "provider": "traderjoes-com",
+        "capability": "products/search"
+      }
+    },
+    {
+      "id": "traderjoes-com/products/stores",
+      "provider": "traderjoes-com",
+      "capability": "products/stores",
+      "name": "Stores",
+      "description": "Trader Joe's stores near a US ZIP code: store code (used by search and product), address, coordinates, distance, phone, weekly hours and alcohol availability. Zero results for a ZIP with no store in range is a success with count 0.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum stores returned, nearest first.",
+          "default": 10,
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "postal_code",
+          "type": "string",
+          "in": "body",
+          "about": "Five-digit US ZIP code to search around. Pattern: ^[0-9]{5}$.",
+          "required": true
+        },
+        {
+          "name": "radius_miles",
+          "type": "number",
+          "in": "body",
+          "about": "Search radius in miles.",
+          "default": 50,
+          "min": 1,
+          "max": 100
+        }
+      ],
+      "response": {
+        "about": "Trader Joe's stores near a US ZIP code: store code (used by search and product), address, coordinates, distance, phone, weekly hours and alcohol availability. Zero results for a ZIP with no store in range is a success with count 0.",
+        "key": "stores",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address1",
+            "type": "string"
+          },
+          {
+            "name": "address2",
+            "type": "string"
+          },
+          {
+            "name": "alcohol",
+            "type": "object"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "coming_soon",
+            "type": "boolean"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "distance_miles",
+            "type": "number"
+          },
+          {
+            "name": "hours",
+            "type": "object"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "postal_code",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "store_code",
+            "type": "string",
+            "about": "Value to pass as store_code to search and product."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 3,
+          "postal_code": "94103"
+        },
+        "response": {
+          "chain": "trader-joes",
+          "count": 3,
+          "observed_at_ms": 1789436080560,
+          "postal_code": "94103",
+          "radius_miles": 50,
+          "resolved_location": {
+            "city": "San Francisco",
+            "latitude": 37.7726402,
+            "longitude": -122.4099154,
+            "state": "CA"
+          },
+          "source_url": "https://locations.traderjoes.com/",
+          "stores": [
+            {
+              "address1": "555 9th St",
+              "address2": null,
+              "alcohol": {
+                "beer": true,
+                "liquor": true,
+                "wine": true
+              },
+              "city": "San Francisco",
+              "coming_soon": false,
+              "country": "US",
+              "distance_miles": 0.17,
+              "hours": {
+                "friday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "monday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "saturday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "sunday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "thursday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "tuesday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "wednesday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                }
+              },
+              "latitude": 37.77111,
+              "longitude": -122.40738,
+              "name": "San Francisco - 9th St (78)",
+              "phone": "415-863-1292",
+              "postal_code": "94103",
+              "state": "CA",
+              "store_code": "78",
+              "url": "https://locations.traderjoes.com/ca/san-francisco/78/"
+            },
+            {
+              "address1": "10 4th Street",
+              "address2": null,
+              "alcohol": {
+                "beer": true,
+                "liquor": true,
+                "wine": true
+              },
+              "city": "San Francisco",
+              "coming_soon": false,
+              "country": "US",
+              "distance_miles": 0.91,
+              "hours": {
+                "friday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "monday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "saturday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "sunday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "thursday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "tuesday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "wednesday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                }
+              },
+              "latitude": 37.78533,
+              "longitude": -122.40567,
+              "name": "San Francisco - Pacific Place (225)",
+              "phone": "415-536-7801",
+              "postal_code": "94103",
+              "state": "CA",
+              "store_code": "225",
+              "url": "https://locations.traderjoes.com/ca/san-francisco/225/"
+            },
+            {
+              "address1": "788 Laguna St",
+              "address2": null,
+              "alcohol": {
+                "beer": true,
+                "liquor": true,
+                "wine": true
+              },
+              "city": "San Francisco",
+              "coming_soon": false,
+              "country": "US",
+              "distance_miles": 0.97,
+              "hours": {
+                "friday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "monday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "saturday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "sunday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "thursday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "tuesday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                },
+                "wednesday": {
+                  "close": "21:00",
+                  "open": "09:00"
+                }
+              },
+              "latitude": 37.77811,
+              "longitude": -122.42626,
+              "name": "San Francisco (Hayes Valley) (226)",
+              "phone": "415-718-0175",
+              "postal_code": "94102",
+              "state": "CA",
+              "store_code": "226",
+              "url": "https://locations.traderjoes.com/ca/san-francisco/226/"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-09"
+      },
+      "execute": {
+        "provider": "traderjoes-com",
+        "capability": "products/stores"
+      }
+    }
+  ]
+}

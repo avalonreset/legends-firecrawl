@@ -1,0 +1,1170 @@
+{
+  "id": "uspto-gov",
+  "provider": "uspto-gov",
+  "name": "USPTO patents, trademarks and assignments",
+  "description": "United States Patent and Trademark Office public records: Patent Public Search (full-text patent and pre-grant publication search and bibliographic documents), Trademark Search (word-mark search), TSDR trademark status records by serial or registration number, and Assignment Center ownership records for patents and trademarks. Anonymous, stateless JSON APIs behind the USPTO web applications; US coverage only.",
+  "toolCount": 5,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "uspto-gov"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "uspto-gov/intellectual-property/assignments",
+      "provider": "uspto-gov",
+      "capability": "intellectual-property/assignments",
+      "name": "Assignments",
+      "description": "You need who owns or has a security interest in a patent or trademark, or the reel/frame of a recorded assignment.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "kind",
+          "type": "string",
+          "in": "body",
+          "about": "kind",
+          "required": true,
+          "oneOf": [
+            "patent",
+            "trademark"
+          ]
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "property",
+          "type": "string",
+          "in": "body",
+          "about": "The identifier value, e.g. 11234567.",
+          "required": true
+        },
+        {
+          "name": "rows_per_page",
+          "type": "number",
+          "in": "body",
+          "about": "rows_per_page",
+          "default": 25,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "search_by",
+          "type": "string",
+          "in": "body",
+          "about": "Identifier type. patent: patentNumber, applicationNumber (digits, no slash), publicationNumber. trademark: serialNumber, registrationNumber.",
+          "required": true,
+          "oneOf": [
+            "patentNumber",
+            "applicationNumber",
+            "publicationNumber",
+            "serialNumber",
+            "registrationNumber"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Recorded ownership transfers from the USPTO Assignment Center for one patent property (by patent, application or publication number) or one trademark property (by serial or registration number): each recorded assignment with reel/frame, conveyance type, execution and recordation dates, assignors, assignees and correspondent, plus the property's bibliographic summary.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "assignments",
+            "type": "object[]"
+          },
+          {
+            "name": "kind",
+            "type": "string"
+          },
+          {
+            "name": "next_page",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "property",
+            "type": "string"
+          },
+          {
+            "name": "property_summary",
+            "type": "object",
+            "about": "The property block as Assignment Center returns it, camelCase keys preserved (patent: patentNumber, applicationNumber, fillingDate, issueDate, inventionTitle, inventors, publicationNumber, publicationDate; trademark: serialNumber, registrationNumber, wordMark and similar). Kept open because the two property kinds share the endpoint family but not the key set."
+          },
+          {
+            "name": "search_by",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_rows",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "kind": "patent",
+          "property": "11234567",
+          "search_by": "patentNumber"
+        },
+        "response": {
+          "assignments": [
+            {
+              "assignees": [
+                {
+                  "address_lines": [
+                    "89 A STREET",
+                    "SUITE 100"
+                  ],
+                  "city": "NEEDHAM",
+                  "country": "UNITED STATES",
+                  "name": "SHARKNINJA OPERATING LLC",
+                  "postal_code": "02494",
+                  "state": "MASSACHUSETTS"
+                }
+              ],
+              "assignors": [
+                {
+                  "execution_date": "11/26/2018",
+                  "name": "THORNE, JASON B."
+                },
+                {
+                  "execution_date": "10/05/2018",
+                  "name": "CALVINO, ALEXANDER"
+                },
+                {
+                  "execution_date": "09/28/2018",
+                  "name": "SU, MINGSHUN"
+                },
+                {
+                  "execution_date": "09/28/2018",
+                  "name": "YANG, ROBERT"
+                },
+                {
+                  "execution_date": "11/28/2018",
+                  "name": "CAI, CHARLIE"
+                },
+                {
+                  "execution_date": "10/01/2018",
+                  "name": "HOWES, GORDON"
+                },
+                {
+                  "execution_date": "11/26/2018",
+                  "name": "BOND, BRIAN M."
+                },
+                {
+                  "execution_date": "11/26/2018",
+                  "name": "CORNELIUS, LEANNA"
+                }
+              ],
+              "conveyance": "ASSIGNMENT OF ASSIGNOR'S INTEREST",
+              "conveyance_code": 23,
+              "correspondent": {
+                "address_lines": [
+                  "55 SOUTH COMMERCIAL STREET",
+                  "GROSSMAN TUCKER PERREAULT & PFLEGER",
+                  "MANCHESTER, NH 03101"
+                ],
+                "name": "KEVIN J. CARROLL"
+              },
+              "execution_date": "11/28/2018",
+              "frame_number": 718,
+              "image_url": "https://assignmentcenter.uspto.gov/ipas/search/api/v3/public/download/patent/47902/718",
+              "mail_date": "01/07/2019",
+              "page_count": 7,
+              "recordation_date": "01/04/2019",
+              "reel_frame": "47902/0718",
+              "reel_number": 47902
+            },
+            {
+              "assignees": [
+                {
+                  "address_lines": [
+                    "7105 CORPORATE DR"
+                  ],
+                  "city": "PLANO",
+                  "country": "UNITED STATES",
+                  "name": "BANK OF AMERICA, N.A., AS ADMINISTRATIVE AGENT",
+                  "postal_code": "75024",
+                  "state": "TEXAS"
+                }
+              ],
+              "assignors": [
+                {
+                  "execution_date": "07/20/2023",
+                  "name": "SHARKNINJA OPERATING LLC"
+                }
+              ],
+              "conveyance": "NOTICE OF GRANT OF SECURITY INTEREST IN PATENTS",
+              "conveyance_code": 40,
+              "correspondent": {
+                "address_lines": [
+                  "100 NORTH TRYON STREET",
+                  "SUITE 4700, ATTN: IP DEPARTMENT",
+                  "CHARLOTTE, NC 28202"
+                ],
+                "name": "MOORE & VAN ALLEN PLLC"
+              },
+              "execution_date": "07/20/2023",
+              "frame_number": 98,
+              "image_url": null,
+              "mail_date": "08/17/2023",
+              "page_count": 65,
+              "recordation_date": "07/20/2023",
+              "reel_frame": "64600/0098",
+              "reel_number": 64600
+            }
+          ],
+          "kind": "patent",
+          "next_page": null,
+          "observed_at_ms": 1789795534313,
+          "page": 1,
+          "property": "11234567",
+          "property_summary": {
+            "applicationNumber": "16117894",
+            "fillingDate": "08/30/2018",
+            "internationalPublicationDate": null,
+            "internationalRegistrationNumber": null,
+            "inventionTitle": "VACUUM CLEANER TOOL HAVING A ROTATABLE DUCT FOR MOVING BETWEEN A USE POSITION AND STORAGE POSITION ON A VACUUM CLEANER",
+            "inventors": "THORNE, Jason B.; CALVINO, Alexander; SU, Mingshun; YANG, Robert; CAI, Charlie; HOWES, Gordon; BOND, Brian M.; CORNELIUS, Leanna",
+            "issueDate": "02/01/2022",
+            "patentNumber": "11234567",
+            "pctNumber": null,
+            "pctNumber17": null,
+            "propertySequenceNumber": 0,
+            "publicIndicator": "Y",
+            "publicationDate": "03/07/2019",
+            "publicationNumber": "US20190069740A1"
+          },
+          "search_by": "patentNumber",
+          "source_url": "https://assignmentcenter.uspto.gov/search/patent",
+          "total_rows": 2
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "uspto-gov",
+        "capability": "intellectual-property/assignments"
+      }
+    },
+    {
+      "id": "uspto-gov/intellectual-property/patent_document",
+      "provider": "uspto-gov",
+      "capability": "intellectual-property/patent_document",
+      "name": "Patent document",
+      "description": "You have a patent number, publication number or ppubs guid and need the record itself.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "include_full_text",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also return `claims_html` and `description_html` (tens of kilobytes)."
+        },
+        {
+          "name": "number",
+          "type": "string",
+          "in": "body",
+          "about": "Patent number (11234567, RE48123, D912345), pre-grant publication number (20260278431 or 2026/0278431) or ppubs guid (US-11234567-B2).",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Bibliographic record and full text of one US patent or pre-grant publication from Patent Public Search: parties with locations, examiners, classifications, cited references, continuity data, abstract, and on request the claims and description HTML. Resolves a plain number with a `.pn.` search first, then fetches the document (three upstream requests per call).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "abstract_html",
+            "type": "string"
+          },
+          {
+            "name": "applicants",
+            "type": "object[]"
+          },
+          {
+            "name": "application_filing_date",
+            "type": "string"
+          },
+          {
+            "name": "application_number",
+            "type": "string"
+          },
+          {
+            "name": "art_unit",
+            "type": "string",
+            "about": "Examiner group art unit, e.g. 3723; null when ppubs has none (publications)."
+          },
+          {
+            "name": "assignees",
+            "type": "object[]"
+          },
+          {
+            "name": "assistant_examiner",
+            "type": "string"
+          },
+          {
+            "name": "attorney_names",
+            "type": "string[]"
+          },
+          {
+            "name": "claims_html",
+            "type": "string",
+            "about": "Only with include_full_text; otherwise null."
+          },
+          {
+            "name": "continuity_data",
+            "type": "string[]",
+            "about": "Related-application statements as ppubs prints them (parent/child/provisional lines)."
+          },
+          {
+            "name": "cpc_additional",
+            "type": "string[]"
+          },
+          {
+            "name": "cpc_inventive",
+            "type": "string[]"
+          },
+          {
+            "name": "database",
+            "type": "string"
+          },
+          {
+            "name": "date_published",
+            "type": "string"
+          },
+          {
+            "name": "description_html",
+            "type": "string",
+            "about": "Only with include_full_text; otherwise null."
+          },
+          {
+            "name": "document_id",
+            "type": "string"
+          },
+          {
+            "name": "family_id",
+            "type": "number"
+          },
+          {
+            "name": "foreign_references",
+            "type": "string[]"
+          },
+          {
+            "name": "guid",
+            "type": "string"
+          },
+          {
+            "name": "invention_title",
+            "type": "string"
+          },
+          {
+            "name": "inventors",
+            "type": "object[]"
+          },
+          {
+            "name": "ipc_codes",
+            "type": "string[]"
+          },
+          {
+            "name": "kind_code",
+            "type": "string"
+          },
+          {
+            "name": "number_of_claims",
+            "type": "number"
+          },
+          {
+            "name": "number_of_drawing_sheets",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "other_references",
+            "type": "string[]"
+          },
+          {
+            "name": "page_count",
+            "type": "number"
+          },
+          {
+            "name": "primary_examiner",
+            "type": "string"
+          },
+          {
+            "name": "publication_number",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "us_classification",
+            "type": "string"
+          },
+          {
+            "name": "us_references",
+            "type": "string[]",
+            "about": "Cited US documents, one line each as ppubs prints them."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "number": "11234567"
+        },
+        "response": {
+          "abstract_html": "A vacuum cleaner tool having a brush head, a rotatable duct, and a hinge. The rotatable duct is configured to receive a hose or wand and rotates about the hinge relative to the brush head, between a use position and storage position. In a storage position, the rotatable duct extends generally parallel, or in-line with the brush head and, in a use position, the rotatable duct extends generally perpendicular to the brush head. The vacuum cleaner tool may removably attach to the vacuum cleaner via a release on one end of the brush head interacting with a fixed catch on the vacuum cleaner.",
+          "applicants": [
+            {
+              "city": "Needham",
+              "country": "US",
+              "name": "SharkNinja Operating, LLC",
+              "state": "MA"
+            }
+          ],
+          "application_filing_date": "2018-08-30T00:00:00Z",
+          "application_number": "16/117894",
+          "art_unit": "3723",
+          "assignees": [
+            {
+              "city": "Needham",
+              "country": "US",
+              "name": "SharkNinja Operating LLC",
+              "state": "MA"
+            }
+          ],
+          "assistant_examiner": null,
+          "attorney_names": [
+            "Grossman Tucker Perreault & Pfleger, PLLC"
+          ],
+          "claims_html": null,
+          "continuity_data": [
+            "us-provisional-application US 62553247 20170901"
+          ],
+          "cpc_additional": [],
+          "cpc_inventive": [
+            "A47L9/0072",
+            "A47L5/30",
+            "A47L9/246",
+            "A47L9/0027",
+            "A47L9/0411",
+            "A47L9/0477"
+          ],
+          "database": "USPAT",
+          "date_published": "2022-02-01T00:00:00Z",
+          "description_html": null,
+          "document_id": "US 11234567 B2",
+          "family_id": 65514619,
+          "foreign_references": [
+            "CN 1212143 A 19990300 cited by examiner",
+            "CN 1212143 A 19990300 cited by applicant",
+            "JP S63222721 A 19880900 cited by applicant"
+          ],
+          "guid": "US-11234567-B2",
+          "invention_title": "Vacuum cleaner tool having a rotatable duct for moving between a use position and storage position on a vacuum cleaner",
+          "inventors": [
+            {
+              "city": "Dover",
+              "country": "US",
+              "name": "Thorne; Jason B.",
+              "state": "MA"
+            },
+            {
+              "city": "Cranston",
+              "country": "US",
+              "name": "Calvino; Alexander",
+              "state": "RI"
+            },
+            {
+              "city": "Suzhou",
+              "country": "CN",
+              "name": "Su; Mingshun",
+              "state": null
+            },
+            {
+              "city": "Suzhou",
+              "country": "CN",
+              "name": "Yang; Robert",
+              "state": null
+            },
+            {
+              "city": "Wuhan",
+              "country": "CN",
+              "name": "Cai; Charlie",
+              "state": null
+            },
+            {
+              "city": "Suzhou",
+              "country": "CN",
+              "name": "Howes; Gordon",
+              "state": null
+            },
+            {
+              "city": "Woburn",
+              "country": "US",
+              "name": "Bond; Brian M.",
+              "state": "MA"
+            },
+            {
+              "city": "Acton",
+              "country": "US",
+              "name": "Cornelius; Leanna",
+              "state": "MA"
+            }
+          ],
+          "ipc_codes": [
+            "A47L9/00",
+            "A47L9/24"
+          ],
+          "kind_code": "B2",
+          "number_of_claims": 19,
+          "number_of_drawing_sheets": 14,
+          "observed_at_ms": 1789795515452,
+          "other_references": [
+            "PCT Search Report and Written Opinion dated Nov. 1, 2018, received in corresponding PCT Application No. PCT/US18/48858, 11 pgs. cited by applicant",
+            "Chinese Office Action with translation dated Jul. 15, 2020, received in Chinese Patent Application No. 201811013425.0, 13 pgs. cited by applicant",
+            "Australian Examination Report dated Jan. 27, 2021, received in Australian Patent Application No. 2018326611, 4 pages. cited by applicant",
+            "Chinese Office Action with English translation dated Feb. 19, 2021, received in CN 2018-11013425.0, 6 pgs. cited by applicant",
+            "Canadian Office Action dated Apr. 12, 2021, received in Canadian Patent Application No. 3,074,500, 6 pages. cited by applicant",
+            "European Search Report dated Apr. 30, 2021, received in European Patent Application No. 18851391.5, 7 pages. cited by applicant"
+          ],
+          "page_count": 20,
+          "primary_examiner": "Carlson; Marc",
+          "publication_number": "11234567",
+          "source_url": "https://ppubs.uspto.gov/pubwebapp/external.html?q=11234567.pn.&db=USPAT",
+          "us_classification": "1/1",
+          "us_references": [
+            "US 4776059 A Worwag 19881000 cited by examiner A47L 9/02 15/331",
+            "US 5046218 A Cerri 19910900 cited by examiner A47L 9/06 15/416",
+            "US 2003/0217431 A1 Uratani 20031100 cited by examiner A47L 9/066 15/328",
+            "US 2004/0205925 A1 Shanor 20041000 cited by examiner A47L 9/0018 15/323",
+            "US 2005/0081327 A1 Lim 20050400 cited by examiner A47L 9/02 15/415.1",
+            "US 2005/0120512 A1 Choi 20050600 cited by examiner A47L 9/02 15/415.1",
+            "US 2009/0217483 A1 Lee 20090900 cited by examiner A47L 5/28 15/414",
+            "US 2010/0319158 A1 Ashbee 20101200 cited by examiner A47L 9/02 15/415.1",
+            "US 2011/0005028 A1 Lee 20110100 cited by examiner A47L 5/32 15/363",
+            "US 2012/0151713 A1 Krebs 20120600 cited by examiner A47L 9/02 15/415.1",
+            "US 2012/0216364 A1 Muhlenkamp 20120800 cited by examiner A47L 9/0054 15/327.1",
+            "US 2016/0157687 A1 Perez 20160600 cited by examiner A47L 5/28 15/331"
+          ]
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "uspto-gov",
+        "capability": "intellectual-property/patent_document"
+      }
+    },
+    {
+      "id": "uspto-gov/intellectual-property/patent_search",
+      "provider": "uspto-gov",
+      "capability": "intellectual-property/patent_search",
+      "name": "Patent search",
+      "description": "Start here to find patents or publications by title, number, assignee, inventor or classification; pass `patents[].guid` to `patent_document`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "databases",
+          "type": "string[]",
+          "in": "body",
+          "about": "Collections to search: US-PGPUB (pre-grant publications), USPAT (granted patents), USOCR (OCR of pre-1976 patents). Default: all three."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 25,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Patent Public Search BRS query, e.g. `\"quantum computing\".ti.` (title), `11234567.pn.` (document number), `(SharkNinja).as.` (assignee), `G06N10/00.cpc.`.",
+          "required": true
+        },
+        {
+          "name": "start",
+          "type": "number",
+          "in": "body",
+          "about": "Zero-based offset of the first result; pass the previous page's `next_start` to continue. ppubs caps an anonymous query at 1000 documents.",
+          "default": 0,
+          "min": 0,
+          "max": 900
+        }
+      ],
+      "response": {
+        "about": "Search US patents and pre-grant publications through Patent Public Search (ppubs.uspto.gov) with the site's BRS query syntax, e.g. `\"quantum computing\".ti.`, `11234567.pn.`, `(KBR).as.`. One page of results sorted by publication date descending, with the guid each result needs for `patent_document`. Opens an anonymous ppubs session per call (two upstream requests).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "databases",
+            "type": "string[]"
+          },
+          {
+            "name": "next_start",
+            "type": "number",
+            "about": "Offset for the next page, null when this page ends the result set or reaches the 1000-document cap."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "patents",
+            "type": "object[]"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "type": "number"
+          },
+          {
+            "name": "total_results",
+            "type": "number",
+            "about": "Pageable result rows: ppubs `numberOfFamilies`. Family filtering collapses each patent family to one row, so this is what `start` pages through."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "page_size": 5,
+          "query": "11234567.pn."
+        },
+        "response": {
+          "count": 1,
+          "databases": [
+            "US-PGPUB",
+            "USPAT",
+            "USOCR"
+          ],
+          "next_start": null,
+          "observed_at_ms": 1789795507702,
+          "patents": [
+            {
+              "applicant_names": [
+                "SharkNinja Operating, LLC"
+              ],
+              "application_filing_date": "2018-08-30T00:00:00Z",
+              "application_number": "16/117894",
+              "assignee_names": [
+                "SharkNinja Operating LLC"
+              ],
+              "cpc_inventive": [
+                "A47L9/0072",
+                "A47L5/30",
+                "A47L9/246",
+                "A47L9/0027",
+                "A47L9/0411",
+                "A47L9/0477"
+              ],
+              "database": "USPAT",
+              "date_published": "2022-02-01T00:00:00Z",
+              "document_id": "US 11234567 B2",
+              "family_id": 65514619,
+              "guid": "US-11234567-B2",
+              "invention_title": "Vacuum cleaner tool having a rotatable duct for moving between a use position and storage position on a vacuum cleaner",
+              "inventors_short": "Thorne; Jason B. et al.",
+              "ipc_codes": [
+                "A47L9/00",
+                "A47L9/24"
+              ],
+              "kind_code": "B2",
+              "page_count": 20,
+              "primary_examiner": "Carlson; Marc",
+              "publication_number": "11234567",
+              "source_url": "https://ppubs.uspto.gov/pubwebapp/external.html?q=11234567.pn.&db=USPAT"
+            }
+          ],
+          "query": "11234567.pn.",
+          "source_url": "https://ppubs.uspto.gov/pubwebapp/external.html?q=11234567.pn.&db=US-PGPUB%2CUSPAT%2CUSOCR",
+          "start": 0,
+          "total_results": 1
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "uspto-gov",
+        "capability": "intellectual-property/patent_search"
+      }
+    },
+    {
+      "id": "uspto-gov/intellectual-property/trademark_search",
+      "provider": "uspto-gov",
+      "capability": "intellectual-property/trademark_search",
+      "name": "Trademark search",
+      "description": "Find trademark serial numbers by mark text; pass `hits[].serial_number` to `trademark_status` or `assignments`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "alive",
+          "type": "boolean",
+          "in": "body",
+          "about": "true: only live marks; false: only dead marks; omitted: both."
+        },
+        {
+          "name": "from",
+          "type": "number",
+          "in": "body",
+          "about": "Zero-based offset; pass the previous page's `next_from`.",
+          "default": 0,
+          "min": 0,
+          "max": 9900
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "in": "body",
+          "about": "size",
+          "default": 25,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "in": "body",
+          "about": "Word mark text to search, e.g. `firecrawl`.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Search US trademark applications and registrations by word mark through Trademark Search (tmsearch.uspto.gov): matches the mark text and pseudo mark the way the site's basic search does, with an optional live/dead filter. One page of hits with serial number, registration number, owner, dates, classes and goods/services.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "alive_counts",
+            "type": "object",
+            "about": "Result counts by live/dead status across the whole result set (the site's `alive` aggregation)."
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "from",
+            "type": "number"
+          },
+          {
+            "name": "hits",
+            "type": "object[]"
+          },
+          {
+            "name": "next_from",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "total_relation",
+            "type": "string",
+            "about": "`eq` when `total` is exact, `gte` when it is a lower bound."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "size": 10,
+          "text": "firecrawl"
+        },
+        "response": {
+          "alive_counts": {
+            "dead": 0,
+            "live": 1
+          },
+          "count": 1,
+          "from": 0,
+          "hits": [
+            {
+              "abandon_date": null,
+              "alive": true,
+              "attorney": "Emiah Youman",
+              "cancel_date": null,
+              "current_basis": [
+                "1a"
+              ],
+              "drawing_code": "4",
+              "filed_date": "2025-08-28T00:00:00",
+              "goods_and_services": [
+                "IC 042: Application service provider featuring application programming interface (API) software; Application service provider featuring application programming interface (API) software for extracting, transforming, and structuring web data into machine-readable formats.; Application service provider featuring application programming interface (API) software for converting URLs into developer-ready structured data, including markdown, JSON, or LLM-compatible content.."
+              ],
+              "international_classes": [
+                "IC 042"
+              ],
+              "mark_image_url": "https://tmcms-docs.uspto.gov/cases/99363167/mark/large.png",
+              "mark_types": [
+                "SERVICE MARK"
+              ],
+              "owner_names": [
+                "Sideguide Technologies, Inc. (CORPORATION; Delaware, USA)"
+              ],
+              "pseudo_marks": [
+                "FIRE CRAWL"
+              ],
+              "registration_date": "2026-04-07",
+              "registration_number": "8203243",
+              "serial_number": "99363167",
+              "source_url": "https://tmsearch.uspto.gov/search/search-results/99363167",
+              "us_classes": [
+                "100 101."
+              ],
+              "wordmark": "FIRECRAWL"
+            }
+          ],
+          "next_from": null,
+          "observed_at_ms": 1789795522072,
+          "source_url": "https://tmsearch.uspto.gov/search/search-results?q=firecrawl",
+          "text": "firecrawl",
+          "total": 1,
+          "total_relation": "eq"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "uspto-gov",
+        "capability": "intellectual-property/trademark_search"
+      }
+    },
+    {
+      "id": "uspto-gov/intellectual-property/trademark_status",
+      "provider": "uspto-gov",
+      "capability": "intellectual-property/trademark_status",
+      "name": "Trademark status",
+      "description": "You have a serial or registration number and need the current status and parties of the mark.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "registration_number",
+          "type": "string",
+          "in": "body",
+          "about": "US registration number, e.g. 8203243. Pattern: ^[0-9]{6,8}$."
+        },
+        {
+          "name": "serial_number",
+          "type": "string",
+          "in": "body",
+          "about": "8-digit application serial number, e.g. 99363167. Exactly one of serial_number or registration_number. Pattern: ^[0-9]{8}$."
+        }
+      ],
+      "response": {
+        "about": "Trademark Status and Document Retrieval (tsdr.uspto.gov) record for one application serial number or registration number: mark text, status code and description, key dates, owners, goods and services by class, and prosecution history.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "abandon_date",
+            "type": "string"
+          },
+          {
+            "name": "attorney_name",
+            "type": "string"
+          },
+          {
+            "name": "cancel_date",
+            "type": "string"
+          },
+          {
+            "name": "disclaimer",
+            "type": "string"
+          },
+          {
+            "name": "filing_date",
+            "type": "string"
+          },
+          {
+            "name": "goods_and_services",
+            "type": "object[]"
+          },
+          {
+            "name": "law_office",
+            "type": "string"
+          },
+          {
+            "name": "live",
+            "type": "boolean",
+            "about": "Derived from the TM5 descriptor prefix (LIVE/DEAD); null when absent."
+          },
+          {
+            "name": "mark",
+            "type": "string",
+            "about": "Mark literal element; null for pure design marks."
+          },
+          {
+            "name": "mark_description",
+            "type": "string"
+          },
+          {
+            "name": "mark_drawing_code",
+            "type": "string"
+          },
+          {
+            "name": "mark_drawing_description",
+            "type": "string"
+          },
+          {
+            "name": "mark_image_url",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "owners",
+            "type": "object[]"
+          },
+          {
+            "name": "prosecution_history",
+            "type": "object[]",
+            "about": "Most recent entry first, as TSDR lists them."
+          },
+          {
+            "name": "pseudo_mark",
+            "type": "string"
+          },
+          {
+            "name": "publication_date",
+            "type": "string"
+          },
+          {
+            "name": "registration_date",
+            "type": "string"
+          },
+          {
+            "name": "registration_number",
+            "type": "string"
+          },
+          {
+            "name": "serial_number",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "standard_character",
+            "type": "boolean"
+          },
+          {
+            "name": "status_code",
+            "type": "number",
+            "about": "TSDR numeric status code, e.g. 700 registered, 602 abandoned."
+          },
+          {
+            "name": "status_date",
+            "type": "string"
+          },
+          {
+            "name": "status_description",
+            "type": "string"
+          },
+          {
+            "name": "supplemental_register",
+            "type": "boolean"
+          },
+          {
+            "name": "tm5_status",
+            "type": "string",
+            "about": "TM5 status descriptor, e.g. LIVE/REGISTRATION/Issued and Active."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "serial_number": "99363167"
+        },
+        "response": {
+          "abandon_date": null,
+          "attorney_name": "Emiah Youman",
+          "cancel_date": null,
+          "disclaimer": null,
+          "filing_date": "2025-08-28",
+          "goods_and_services": [
+            {
+              "description": "Application service provider featuring application programming interface (API) software; Application service provider featuring application programming interface (API) software for extracting, transforming, and structuring web data into machine-readable formats.; Application service provider featuring application programming interface (API) software for converting URLs into developer-ready structured data, including markdown, JSON, or LLM-compatible content.",
+              "first_use_date": "2024-04-01",
+              "first_use_in_commerce_date": "2024-04-01",
+              "international_classes": [
+                "042"
+              ],
+              "status": "ACTIVE",
+              "us_classes": [
+                "100",
+                "101"
+              ]
+            }
+          ],
+          "law_office": "LAW OFFICE 122",
+          "live": true,
+          "mark": "FIRECRAWL",
+          "mark_description": null,
+          "mark_drawing_code": "4",
+          "mark_drawing_description": "STANDARD CHARACTER MARK",
+          "mark_image_url": "https://tmcms-docs.uspto.gov/cases/99363167/mark/large.png",
+          "observed_at_ms": 1789795527678,
+          "owners": [
+            {
+              "citizenship": "DELAWARE",
+              "city": "San Francisco",
+              "country": "US",
+              "entity_type": "CORPORATION",
+              "name": "Sideguide Technologies, Inc.",
+              "party_type": "ORIGINAL APPLICANT",
+              "state": "CA"
+            },
+            {
+              "citizenship": "DELAWARE",
+              "city": "San Francisco",
+              "country": "US",
+              "entity_type": "CORPORATION",
+              "name": "Sideguide Technologies, Inc.",
+              "party_type": "OWNER AT PUBLICATION",
+              "state": "CA"
+            },
+            {
+              "citizenship": "DELAWARE",
+              "city": "San Francisco",
+              "country": "US",
+              "entity_type": "CORPORATION",
+              "name": "Sideguide Technologies, Inc.",
+              "party_type": "ORIGINAL REGISTRANT",
+              "state": "CA"
+            }
+          ],
+          "prosecution_history": [
+            {
+              "code": "NRCC",
+              "date": "2026-04-07",
+              "description": "NOTICE OF REGISTRATION CONFIRMATION EMAILED"
+            },
+            {
+              "code": "R.PR",
+              "date": "2026-04-07",
+              "description": "REGISTERED-PRINCIPAL REGISTER"
+            },
+            {
+              "code": "NPUB",
+              "date": "2026-02-17",
+              "description": "OFFICIAL GAZETTE PUBLICATION CONFIRMATION E-MAILED"
+            },
+            {
+              "code": "PUBO",
+              "date": "2026-02-17",
+              "description": "PUBLISHED FOR OPPOSITION"
+            },
+            {
+              "code": "NONP",
+              "date": "2026-02-11",
+              "description": "NOTIFICATION OF NOTICE OF PUBLICATION E-MAILED"
+            },
+            {
+              "code": "CNSA",
+              "date": "2026-01-27",
+              "description": "APPROVED FOR PUB - PRINCIPAL REGISTER"
+            },
+            {
+              "code": "DOCK",
+              "date": "2026-01-20",
+              "description": "ASSIGNED TO EXAMINER"
+            },
+            {
+              "code": "NWOS",
+              "date": "2026-01-18",
+              "description": "NEW APPLICATION OFFICE SUPPLIED DATA ENTERED"
+            },
+            {
+              "code": "MAFR",
+              "date": "2025-08-28",
+              "description": "APPLICATION FILING RECEIPT MAILED"
+            },
+            {
+              "code": "NWAP",
+              "date": "2025-08-28",
+              "description": "NEW APPLICATION ENTERED"
+            }
+          ],
+          "pseudo_mark": "FIRE CRAWL",
+          "publication_date": "2026-02-17",
+          "registration_date": "2026-04-07",
+          "registration_number": "8203243",
+          "serial_number": "99363167",
+          "source_url": "https://tsdr.uspto.gov/#caseNumber=99363167&caseType=SERIAL_NO&searchType=statusSearch",
+          "standard_character": true,
+          "status_code": 700,
+          "status_date": "2026-04-07",
+          "status_description": "Registered.  The registration date is used to determine when post-registration maintenance documents are due.",
+          "supplemental_register": false,
+          "tm5_status": "LIVE/REGISTRATION/Issued and Active"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "uspto-gov",
+        "capability": "intellectual-property/trademark_status"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1473 @@
+{
+  "id": "data-imf-org",
+  "provider": "data-imf-org",
+  "name": "IMF Data",
+  "description": "IMF SDMX dataflows, structures, observations and World Economic Outlook editions.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "data-imf-org"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "data-imf-org/datasets/data",
+      "provider": "data-imf-org",
+      "capability": "datasets/data",
+      "name": "Data",
+      "description": "Retrieve observations from any IMF dataflow (BOP current account, ER exchange rates, IL reserves, IMTS bilateral trade, CPI, GFS, FM, WEO) by dimension key. Codes are validated against the dataflow's availability; unknown codes fail with invalid_input listing valid ones. Observations carry source codes, unit, scale, status and dataset vintage; a valid key with no observations returns complete=true and no records.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "cursor"
+        },
+        {
+          "name": "dataflow_id",
+          "type": "string",
+          "in": "body",
+          "about": "AGENCY:ID, AGENCY:ID(VERSION) or bare id.",
+          "required": true
+        },
+        {
+          "name": "end_period",
+          "type": "string",
+          "in": "body",
+          "about": "end_period"
+        },
+        {
+          "name": "key",
+          "type": "object",
+          "in": "body",
+          "about": "Dimension -> codes. Dimension names follow the structure (COUNTRY, INDICATOR, FREQUENCY, COUNTERPART_COUNTRY, UNIT, ...); REF_AREA, FREQ and COUNTERPART_AREA are accepted aliases. Omitted dimensions are wildcards."
+        },
+        {
+          "name": "last_n_observations",
+          "type": "number",
+          "in": "body",
+          "about": "last_n_observations",
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "start_period",
+          "type": "string",
+          "in": "body",
+          "about": "SDMX period: 2020, 2024-Q1, 2025-01."
+        }
+      ],
+      "response": {
+        "about": "Retrieve observations from any IMF dataflow (BOP current account, ER exchange rates, IL reserves, IMTS bilateral trade, CPI, GFS, FM, WEO) by dimension key. Codes are validated against the dataflow's availability; unknown codes fail with invalid_input listing valid ones. Observations carry source codes, unit, scale, status and dataset vintage; a valid key with no observations returns complete=true and no records.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "dataflow_id",
+            "type": "string"
+          },
+          {
+            "name": "dataflow_ref",
+            "type": "string"
+          },
+          {
+            "name": "dimensions",
+            "type": "string[]"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "operation",
+            "type": "string"
+          },
+          {
+            "name": "publication_date",
+            "type": "string"
+          },
+          {
+            "name": "record_count",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "resolved_key",
+            "type": "object",
+            "about": "Source-defined SDMX mapping."
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "sdmx_key",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_records",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "dataflow_id": "ER",
+          "end_period": "2025-03",
+          "key": {
+            "COUNTRY": [
+              "JPN"
+            ],
+            "FREQUENCY": [
+              "M"
+            ],
+            "INDICATOR": [
+              "USD_XDC"
+            ],
+            "TYPE_OF_TRANSFORMATION": [
+              "PA_RT"
+            ]
+          },
+          "page_size": 5,
+          "start_period": "2025-01"
+        },
+        "response": {
+          "attribution": "Source: International Monetary Fund (IMF) Data, https://data.imf.org. IMF terms of use: https://www.imf.org/external/terms.htm",
+          "complete": true,
+          "dataflow_id": "IMF.STA:ER",
+          "dataflow_ref": "IMF.STA,ER",
+          "dimensions": [
+            "COUNTRY",
+            "INDICATOR",
+            "TYPE_OF_TRANSFORMATION",
+            "FREQUENCY"
+          ],
+          "next_cursor": null,
+          "observed_at_ms": 1789442682556,
+          "operation": "data",
+          "publication_date": "2026-09-14T05:26:19.611682200Z",
+          "record_count": 3,
+          "records": [
+            {
+              "attributes": {
+                "ACCESS_SHARING_LEVEL": {
+                  "code": "PUBLIC_OPEN",
+                  "name": "Public (Unrestricted)"
+                },
+                "IFS_FLAG": {
+                  "code": "true",
+                  "name": "true"
+                },
+                "OVERLAP": {
+                  "code": "OL",
+                  "name": "Overlapping Indicator"
+                },
+                "SCALE": {
+                  "code": "0",
+                  "name": "Units"
+                },
+                "SECURITY_CLASSIFICATION": {
+                  "code": "PUB",
+                  "name": "Public or Unrestricted"
+                }
+              },
+              "counterpart_area": null,
+              "dataflow_id": "IMF.STA:ER",
+              "dataflow_ref": "IMF.STA,ER",
+              "edition": null,
+              "frequency": "M",
+              "id": "IMF.STA,ER|JPN.USD_XDC.PA_RT.M|2025-M01",
+              "indicator": {
+                "code": "USD_XDC",
+                "name": "US Dollar per domestic currency"
+              },
+              "is_estimate": null,
+              "last_updated": "2026-09-14T05:26:19.657400500Z",
+              "latest_actual_period": null,
+              "license": null,
+              "obs_status": null,
+              "observation_attributes": {
+                "DERIVATION_TYPE": {
+                  "code": "R",
+                  "name": "Raw data (no derivation)"
+                }
+              },
+              "period_end": "2025-01-31T23:59:59Z",
+              "period_start": "2025-01-01T00:00:00Z",
+              "publication_date": "2026-09-14T05:26:19.611682200Z",
+              "ref_area": {
+                "code": "JPN",
+                "iso3": "JPN",
+                "name": "Japan"
+              },
+              "scale": "Units",
+              "scale_code": "0",
+              "sdmx_key": "JPN.USD_XDC.PA_RT.M",
+              "series_key": {
+                "COUNTRY": "JPN",
+                "FREQUENCY": "M",
+                "INDICATOR": "USD_XDC",
+                "TYPE_OF_TRANSFORMATION": "PA_RT"
+              },
+              "series_last_updated": null,
+              "source_url": "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,ER/JPN.USD_XDC.PA_RT.M?startPeriod=2025-01&endPeriod=2025-03",
+              "suggested_citation": null,
+              "time_period": "2025-M01",
+              "unit": null,
+              "value": "0.006393501194080369"
+            },
+            {
+              "attributes": {
+                "ACCESS_SHARING_LEVEL": {
+                  "code": "PUBLIC_OPEN",
+                  "name": "Public (Unrestricted)"
+                },
+                "IFS_FLAG": {
+                  "code": "true",
+                  "name": "true"
+                },
+                "OVERLAP": {
+                  "code": "OL",
+                  "name": "Overlapping Indicator"
+                },
+                "SCALE": {
+                  "code": "0",
+                  "name": "Units"
+                },
+                "SECURITY_CLASSIFICATION": {
+                  "code": "PUB",
+                  "name": "Public or Unrestricted"
+                }
+              },
+              "counterpart_area": null,
+              "dataflow_id": "IMF.STA:ER",
+              "dataflow_ref": "IMF.STA,ER",
+              "edition": null,
+              "frequency": "M",
+              "id": "IMF.STA,ER|JPN.USD_XDC.PA_RT.M|2025-M02",
+              "indicator": {
+                "code": "USD_XDC",
+                "name": "US Dollar per domestic currency"
+              },
+              "is_estimate": null,
+              "last_updated": "2026-09-14T05:26:19.657400500Z",
+              "latest_actual_period": null,
+              "license": null,
+              "obs_status": null,
+              "observation_attributes": {
+                "DERIVATION_TYPE": {
+                  "code": "R",
+                  "name": "Raw data (no derivation)"
+                }
+              },
+              "period_end": "2025-02-28T23:59:59Z",
+              "period_start": "2025-02-01T00:00:00Z",
+              "publication_date": "2026-09-14T05:26:19.611682200Z",
+              "ref_area": {
+                "code": "JPN",
+                "iso3": "JPN",
+                "name": "Japan"
+              },
+              "scale": "Units",
+              "scale_code": "0",
+              "sdmx_key": "JPN.USD_XDC.PA_RT.M",
+              "series_key": {
+                "COUNTRY": "JPN",
+                "FREQUENCY": "M",
+                "INDICATOR": "USD_XDC",
+                "TYPE_OF_TRANSFORMATION": "PA_RT"
+              },
+              "series_last_updated": null,
+              "source_url": "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,ER/JPN.USD_XDC.PA_RT.M?startPeriod=2025-01&endPeriod=2025-03",
+              "suggested_citation": null,
+              "time_period": "2025-M02",
+              "unit": null,
+              "value": "0.006580424398665334"
+            },
+            {
+              "attributes": {
+                "ACCESS_SHARING_LEVEL": {
+                  "code": "PUBLIC_OPEN",
+                  "name": "Public (Unrestricted)"
+                },
+                "IFS_FLAG": {
+                  "code": "true",
+                  "name": "true"
+                },
+                "OVERLAP": {
+                  "code": "OL",
+                  "name": "Overlapping Indicator"
+                },
+                "SCALE": {
+                  "code": "0",
+                  "name": "Units"
+                },
+                "SECURITY_CLASSIFICATION": {
+                  "code": "PUB",
+                  "name": "Public or Unrestricted"
+                }
+              },
+              "counterpart_area": null,
+              "dataflow_id": "IMF.STA:ER",
+              "dataflow_ref": "IMF.STA,ER",
+              "edition": null,
+              "frequency": "M",
+              "id": "IMF.STA,ER|JPN.USD_XDC.PA_RT.M|2025-M03",
+              "indicator": {
+                "code": "USD_XDC",
+                "name": "US Dollar per domestic currency"
+              },
+              "is_estimate": null,
+              "last_updated": "2026-09-14T05:26:19.657400500Z",
+              "latest_actual_period": null,
+              "license": null,
+              "obs_status": null,
+              "observation_attributes": {
+                "DERIVATION_TYPE": {
+                  "code": "R",
+                  "name": "Raw data (no derivation)"
+                }
+              },
+              "period_end": "2025-03-31T23:59:59Z",
+              "period_start": "2025-03-01T00:00:00Z",
+              "publication_date": "2026-09-14T05:26:19.611682200Z",
+              "ref_area": {
+                "code": "JPN",
+                "iso3": "JPN",
+                "name": "Japan"
+              },
+              "scale": "Units",
+              "scale_code": "0",
+              "sdmx_key": "JPN.USD_XDC.PA_RT.M",
+              "series_key": {
+                "COUNTRY": "JPN",
+                "FREQUENCY": "M",
+                "INDICATOR": "USD_XDC",
+                "TYPE_OF_TRANSFORMATION": "PA_RT"
+              },
+              "series_last_updated": null,
+              "source_url": "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,ER/JPN.USD_XDC.PA_RT.M?startPeriod=2025-01&endPeriod=2025-03",
+              "suggested_citation": null,
+              "time_period": "2025-M03",
+              "unit": null,
+              "value": "0.006703536115300821"
+            }
+          ],
+          "resolved_key": {
+            "COUNTRY": [
+              "JPN"
+            ],
+            "FREQUENCY": [
+              "M"
+            ],
+            "INDICATOR": [
+              "USD_XDC"
+            ],
+            "TYPE_OF_TRANSFORMATION": [
+              "PA_RT"
+            ]
+          },
+          "retrieved_at": "2026-09-15T03:24:42Z",
+          "schema_version": "1.0.0",
+          "sdmx_key": "JPN.USD_XDC.PA_RT.M",
+          "source_updated_at": "2026-09-14T05:26:19.657400500Z",
+          "source_url": "https://api.imf.org/external/sdmx/2.1/data/IMF.STA,ER/JPN.USD_XDC.PA_RT.M?startPeriod=2025-01&endPeriod=2025-03",
+          "total_records": 3,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:24:42.556655+00:00"
+      },
+      "execute": {
+        "provider": "data-imf-org",
+        "capability": "datasets/data"
+      }
+    },
+    {
+      "id": "data-imf-org/datasets/dataflows",
+      "provider": "data-imf-org",
+      "capability": "datasets/dataflows",
+      "name": "Dataflows",
+      "description": "List IMF Data portal dataflows (WEO, BOP, ER, IMTS, CPI, GFS_*, FM and 200+ more, including frozen vintages) filtered by a free-text query over id, agency and name. Returns dataflow records with stable AGENCY:ID identifiers for structure and data.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive words that must all appear in the dataflow id, agency, name or description. Empty lists everything."
+        }
+      ],
+      "response": {
+        "about": "List IMF Data portal dataflows (WEO, BOP, ER, IMTS, CPI, GFS_*, FM and 200+ more, including frozen vintages) filtered by a free-text query over id, agency and name. Returns dataflow records with stable AGENCY:ID identifiers for structure and data.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "operation",
+            "type": "string"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "record_count",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_records",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "page_size": 5,
+          "query": "WEO"
+        },
+        "response": {
+          "attribution": "Source: International Monetary Fund (IMF) Data, https://data.imf.org. IMF terms of use: https://www.imf.org/external/terms.htm",
+          "complete": true,
+          "next_cursor": null,
+          "observed_at_ms": 1789442681269,
+          "operation": "dataflows",
+          "query": "WEO",
+          "record_count": 2,
+          "records": [
+            {
+              "agency": "IMF.RES",
+              "dataflow_id": "IMF.RES:WEO",
+              "description": null,
+              "dimensions": null,
+              "id": "WEO",
+              "is_final": true,
+              "last_updated": null,
+              "name": "World Economic Outlook (WEO)",
+              "source_url": "https://data.imf.org/en/datasets/IMF.RES:WEO",
+              "version": "9.0.0"
+            },
+            {
+              "agency": "IMF.RES",
+              "dataflow_id": "IMF.RES:WEO_2025_OCT_VINTAGE",
+              "description": null,
+              "dimensions": null,
+              "id": "WEO_2025_OCT_VINTAGE",
+              "is_final": true,
+              "last_updated": null,
+              "name": "World Economic Outlook (WEO) 2025 October",
+              "source_url": "https://data.imf.org/en/datasets/IMF.RES:WEO_2025_OCT_VINTAGE",
+              "version": "1.0.0"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:24:41Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://api.imf.org/external/sdmx/2.1/dataflow/all/all/latest?detail=allstubs",
+          "total_records": 2,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:24:41.269702+00:00"
+      },
+      "execute": {
+        "provider": "data-imf-org",
+        "capability": "datasets/dataflows"
+      }
+    },
+    {
+      "id": "data-imf-org/datasets/structure",
+      "provider": "data-imf-org",
+      "capability": "datasets/structure",
+      "name": "Structure",
+      "description": "Describe one dataflow: its dimensions in SDMX key order, the concept/codelist each one uses, the codes that currently carry data, attribute ids, series count and time coverage. Use before data to learn valid REF_AREA/INDICATOR/FREQ codes.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "dataflow_id",
+          "type": "string",
+          "in": "body",
+          "about": "AGENCY:ID (IMF.RES:WEO), AGENCY:ID(VERSION) (IMF.RES:WEO(6.0.0)) or a bare id (BOP, ER, IMTS, CPI, GFS_SOO, FM, WEO_2025_OCT_VINTAGE).",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Describe one dataflow: its dimensions in SDMX key order, the concept/codelist each one uses, the codes that currently carry data, attribute ids, series count and time coverage. Use before data to learn valid REF_AREA/INDICATOR/FREQ codes.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "next_cursor",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "operation",
+            "type": "string"
+          },
+          {
+            "name": "record_count",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_records",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "dataflow_id": "ER"
+        },
+        "response": {
+          "attribution": "Source: International Monetary Fund (IMF) Data, https://data.imf.org. IMF terms of use: https://www.imf.org/external/terms.htm",
+          "complete": true,
+          "next_cursor": null,
+          "observed_at_ms": 1789442681488,
+          "operation": "structure",
+          "record_count": 1,
+          "records": [
+            {
+              "agency": "IMF.STA",
+              "attributes": [
+                "SCALE",
+                "PRECISION",
+                "DECIMALS_DISPLAYED",
+                "EXRATE",
+                "STATISTICAL_MEASURES",
+                "TRANSFORMATION",
+                "DERIVATION_TYPE",
+                "OVERLAP",
+                "IFS_FLAG",
+                "STATUS",
+                "DOI",
+                "FULL_DESCRIPTION",
+                "PUBLISHER",
+                "DEPARTMENT",
+                "CONTACT_POINT",
+                "TOPIC",
+                "TOPIC_DATASET",
+                "KEYWORDS",
+                "KEYWORDS_DATASET",
+                "LANGUAGE",
+                "PUBLICATION_DATE",
+                "UPDATE_DATE",
+                "METHODOLOGY",
+                "METHODOLOGY_NOTES",
+                "ACCESS_SHARING_LEVEL",
+                "ACCESS_SHARING_NOTES",
+                "SECURITY_CLASSIFICATION",
+                "SOURCE",
+                "SHORT_SOURCE_CITATION",
+                "FULL_SOURCE_CITATION",
+                "LICENSE",
+                "SUGGESTED_CITATION",
+                "KEY_INDICATOR",
+                "SERIES_NAME"
+              ],
+              "data_structure": {
+                "id": "DSD_ER_PUB",
+                "name": "Exchange Rates (ER)"
+              },
+              "dataflow_id": "IMF.STA:ER",
+              "description": "This dataset contains historical exchange rate data between the US Dollar, Special Drawing Rights (SDR), Euro, and various national currencies. It includes both period average and end-of-period exchange rates.",
+              "dimensions": [
+                {
+                  "code_count": 227,
+                  "codelist": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=IMF.STA:CS_ER_PUB(5.0.0).COUNTRY",
+                  "codes": [
+                    "ABW",
+                    "AFG",
+                    "AGO",
+                    "AIA",
+                    "ALB",
+                    "AND",
+                    "ANT",
+                    "ARE",
+                    "ARG",
+                    "ARM",
+                    "ATG",
+                    "AUS",
+                    "AUT",
+                    "AZE",
+                    "BDI",
+                    "BEL",
+                    "BEN",
+                    "BFA",
+                    "BGD",
+                    "BGR",
+                    "BHR",
+                    "BHS",
+                    "BIH",
+                    "BLR",
+                    "BLZ",
+                    "BMU",
+                    "BOL",
+                    "BRA",
+                    "BRB",
+                    "BRN",
+                    "BTN",
+                    "BWA",
+                    "CAF",
+                    "CAN",
+                    "CHE",
+                    "CHL",
+                    "CHN",
+                    "CIV",
+                    "CMR",
+                    "COD",
+                    "COG",
+                    "COL",
+                    "COM",
+                    "CPV",
+                    "CRI",
+                    "CSK",
+                    "CUB",
+                    "CUW",
+                    "CWX",
+                    "CYM",
+                    "CYP",
+                    "CZE",
+                    "DDR",
+                    "DEU",
+                    "DJI",
+                    "DMA",
+                    "DNK",
+                    "DOM",
+                    "DZA",
+                    "ECU",
+                    "EGY",
+                    "ERI",
+                    "ESP",
+                    "EST",
+                    "ETH",
+                    "FIN",
+                    "FJI",
+                    "FRA",
+                    "FRO",
+                    "FSM",
+                    "G129",
+                    "G163",
+                    "G309",
+                    "G758",
+                    "G759",
+                    "GAB",
+                    "GBR",
+                    "GEO",
+                    "GGY",
+                    "GHA",
+                    "GIB",
+                    "GIN",
+                    "GLP",
+                    "GMB",
+                    "GNB",
+                    "GNQ",
+                    "GRC",
+                    "GRD",
+                    "GRL",
+                    "GTM",
+                    "GUF",
+                    "GUY",
+                    "HKG",
+                    "HND",
+                    "HRV",
+                    "HTI",
+                    "HUN",
+                    "IDN",
+                    "IMN",
+                    "IND",
+                    "IRL",
+                    "IRN",
+                    "IRQ",
+                    "ISL",
+                    "ISR",
+                    "ITA",
+                    "JAM",
+                    "JEY",
+                    "JOR",
+                    "JPN",
+                    "KAZ",
+                    "KEN",
+                    "KGZ",
+                    "KHM",
+                    "KIR",
+                    "KNA",
+                    "KOR",
+                    "KOS",
+                    "KWT",
+                    "LAO",
+                    "LBN",
+                    "LBR",
+                    "LBY",
+                    "LCA",
+                    "LIE",
+                    "LKA",
+                    "LSO",
+                    "LTU",
+                    "LUX",
+                    "LVA",
+                    "MAC",
+                    "MAR",
+                    "MDA",
+                    "MDG",
+                    "MDV",
+                    "MEX",
+                    "MKD",
+                    "MLI",
+                    "MLT",
+                    "MMR",
+                    "MNE",
+                    "MNG",
+                    "MOZ",
+                    "MRT",
+                    "MSR",
+                    "MTQ",
+                    "MUS",
+                    "MWI",
+                    "MYS",
+                    "NAM",
+                    "NCL",
+                    "NER",
+                    "NGA",
+                    "NIC",
+                    "NLD",
+                    "NOR",
+                    "NPL",
+                    "NRU",
+                    "NZL",
+                    "OMN",
+                    "PAK",
+                    "PAN",
+                    "PER",
+                    "PHL",
+                    "PLW",
+                    "PNG",
+                    "POL",
+                    "PRT",
+                    "PRY",
+                    "PYF",
+                    "QAT",
+                    "REU",
+                    "ROU",
+                    "RUS",
+                    "RWA",
+                    "SAU",
+                    "SDN",
+                    "SEN",
+                    "SGP",
+                    "SLB",
+                    "SLE",
+                    "SLV",
+                    "SMR",
+                    "SOM",
+                    "SPM",
+                    "SRB",
+                    "SSD",
+                    "STP",
+                    "SUN",
+                    "SUR",
+                    "SVK",
+                    "SVN",
+                    "SWE",
+                    "SWZ",
+                    "SXM",
+                    "SYC",
+                    "SYR",
+                    "TCD",
+                    "TGO",
+                    "THA",
+                    "TJK",
+                    "TKM",
+                    "TLS",
+                    "TON",
+                    "TTO",
+                    "TUN",
+                    "TUR",
+                    "TUV",
+                    "TWN",
+                    "TZA",
+                    "UGA",
+                    "UKR",
+                    "URY",
+                    "USA",
+                    "UZB",
+                    "VCT",
+                    "VEN",
+                    "VNM",
+                    "VUT",
+                    "WSM",
+                    "YAR",
+                    "YEM",
+                    "YMD",
+                    "YUG",
+                    "ZAF",
+                    "ZMB",
+                    "ZWE"
+                  ],
+                  "concept": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=IMF.STA:CS_ER_PUB(5.0.0).COUNTRY",
+                  "id": "COUNTRY",
+                  "name": "COUNTRY",
+                  "position": 0
+                },
+                {
+                  "code_count": 10,
+                  "codelist": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=IMF.STA:CS_ER_PUB(5.0.0).INDICATOR",
+                  "codes": [
+                    "ECU_XDC",
+                    "EUR_XDC",
+                    "USD_XDC",
+                    "USD_XDR",
+                    "XDC_ECU",
+                    "XDC_EUR",
+                    "XDC_USD",
+                    "XDC_XDR",
+                    "XDR_USD",
+                    "XDR_XDC"
+                  ],
+                  "concept": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=IMF.STA:CS_ER_PUB(5.0.0).INDICATOR",
+                  "id": "INDICATOR",
+                  "name": "INDICATOR",
+                  "position": 1
+                },
+                {
+                  "code_count": 2,
+                  "codelist": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=IMF.STA:CS_ER_PUB(5.0.0).TYPE_OF_TRANSFORMATION",
+                  "codes": [
+                    "EOP_RT",
+                    "PA_RT"
+                  ],
+                  "concept": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=IMF.STA:CS_ER_PUB(5.0.0).TYPE_OF_TRANSFORMATION",
+                  "id": "TYPE_OF_TRANSFORMATION",
+                  "name": "TYPE_OF_TRANSFORMATION",
+                  "position": 2
+                },
+                {
+                  "code_count": 3,
+                  "codelist": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=IMF:CS_MASTER_SYSTEM(1.0.2).FREQ",
+                  "codes": [
+                    "A",
+                    "M",
+                    "Q"
+                  ],
+                  "concept": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=IMF:CS_MASTER_SYSTEM(1.0.2).FREQ",
+                  "id": "FREQUENCY",
+                  "name": "FREQUENCY",
+                  "position": 3
+                }
+              ],
+              "id": "ER",
+              "is_final": true,
+              "last_updated": null,
+              "name": "Exchange Rates (ER)",
+              "series_count": 10730,
+              "source_url": "https://data.imf.org/en/datasets/IMF.STA:ER",
+              "time_dimension": "TIME_PERIOD",
+              "time_period_end": "2027-04-01",
+              "time_period_start": "1924-01-01",
+              "version": "4.0.1"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:24:41Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://api.imf.org/external/sdmx/2.1/dataflow/IMF.STA/ER/latest?references=children&detail=full",
+          "total_records": 1,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:24:41.488758+00:00"
+      },
+      "execute": {
+        "provider": "data-imf-org",
+        "capability": "datasets/structure"
+      }
+    },
+    {
+      "id": "data-imf-org/datasets/weo",
+      "provider": "data-imf-org",
+      "capability": "datasets/weo",
+      "name": "Weo",
+      "description": "World Economic Outlook observations for one edition (2026-04 current, 2025-10, 2025-04, or `latest`), given WEO subject codes (NGDP_RPCH, PCPIPCH, LUR, GGXWDG_NGDP, BCA_NGDPD, ...) and ISO3 economy or WEO group codes. Every row carries the edition, publication date and is_estimate (year after LATEST_ACTUAL_ANNUAL_DATA), so two editions can be compared for revisions.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "country_codes",
+          "type": "string[]",
+          "in": "body",
+          "about": "ISO3 codes (USA, DEU) or WEO group codes (G001 World, G110 Advanced economies, G200 Emerging market and developing economies).",
+          "required": true
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "cursor"
+        },
+        {
+          "name": "edition",
+          "type": "string",
+          "in": "body",
+          "about": "YYYY-MM edition. Served now: 2026-04 (IMF.RES:WEO), 2025-10 (WEO_2025_OCT_VINTAGE), 2025-04 (IMF.RES:WEO 6.0.0). Other months map to WEO_YYYY_MON_VINTAGE and return not_found when the IMF has not published that vintage. Pattern: ^([0-9]{4}-(01|04|07|10)|latest|current)$.",
+          "required": true
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "subject_codes",
+          "type": "string[]",
+          "in": "body",
+          "about": "subject_codes",
+          "required": true
+        },
+        {
+          "name": "year_from",
+          "type": "number",
+          "in": "body",
+          "about": "year_from",
+          "min": 1980,
+          "max": 2100
+        },
+        {
+          "name": "year_to",
+          "type": "number",
+          "in": "body",
+          "about": "year_to",
+          "min": 1980,
+          "max": 2100
+        }
+      ],
+      "response": {
+        "about": "World Economic Outlook observations for one edition (2026-04 current, 2025-10, 2025-04, or `latest`), given WEO subject codes (NGDP_RPCH, PCPIPCH, LUR, GGXWDG_NGDP, BCA_NGDPD, ...) and ISO3 economy or WEO group codes. Every row carries the edition, publication date and is_estimate (year after LATEST_ACTUAL_ANNUAL_DATA), so two editions can be compared for revisions.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "dataflow_id",
+            "type": "string"
+          },
+          {
+            "name": "dataflow_ref",
+            "type": "string"
+          },
+          {
+            "name": "dimensions",
+            "type": "string[]"
+          },
+          {
+            "name": "edition_requested",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "operation",
+            "type": "string"
+          },
+          {
+            "name": "publication_date",
+            "type": "string"
+          },
+          {
+            "name": "record_count",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "resolved_key",
+            "type": "object",
+            "about": "Source-defined SDMX mapping."
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "sdmx_key",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_records",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "country_codes": [
+            "USA"
+          ],
+          "edition": "latest",
+          "page_size": 5,
+          "subject_codes": [
+            "NGDP_RPCH"
+          ],
+          "year_from": 2024,
+          "year_to": 2025
+        },
+        "response": {
+          "attribution": "Source: International Monetary Fund (IMF) Data, https://data.imf.org. IMF terms of use: https://www.imf.org/external/terms.htm",
+          "complete": true,
+          "dataflow_id": "IMF.RES:WEO",
+          "dataflow_ref": "IMF.RES,WEO",
+          "dimensions": [
+            "COUNTRY",
+            "INDICATOR",
+            "FREQUENCY"
+          ],
+          "edition_requested": "latest",
+          "next_cursor": null,
+          "observed_at_ms": 1789442683980,
+          "operation": "weo",
+          "publication_date": "2026-04-14T13:00:00Z",
+          "record_count": 2,
+          "records": [
+            {
+              "attributes": {
+                "BASE_YEAR": {
+                  "code": "2017",
+                  "name": "2017"
+                },
+                "CHAIN_WEIGHTED": {
+                  "code": "Yes, from 1980",
+                  "name": "Yes, from 1980"
+                },
+                "COUNTRY_UPDATE_DATE": {
+                  "code": "9/30/2025",
+                  "name": "9/30/2025"
+                },
+                "DECIMALS_DISPLAYED": {
+                  "code": "3",
+                  "name": "Three"
+                },
+                "HISTORICAL_DATA_SOURCE": {
+                  "code": "National Statistics Office",
+                  "name": "National Statistics Office"
+                },
+                "KEYWORDS": {
+                  "code": "Real GDP",
+                  "name": "Real GDP"
+                },
+                "KEY_INDICATOR": {
+                  "code": "true",
+                  "name": "true"
+                },
+                "LATEST_ACTUAL_ANNUAL_DATA": {
+                  "code": "2025",
+                  "name": "2025"
+                },
+                "METHODOLOGY": {
+                  "code": "System of National Accounts (SNA) 2008",
+                  "name": "System of National Accounts (SNA) 2008"
+                },
+                "METHODOLOGY_NOTES": {
+                  "code": "Real GDP determined by chained Fisher quantity growth rates.",
+                  "name": "Real GDP determined by chained Fisher quantity growth rates."
+                },
+                "NA_STO": {
+                  "code": "B1GQ",
+                  "name": "Gross domestic product (GDP)"
+                },
+                "OVERLAP": {
+                  "code": "OL",
+                  "name": "Overlapping Indicator"
+                },
+                "PRICES": {
+                  "code": "Q",
+                  "name": "Constant prices"
+                },
+                "PRIMARY_DOMESTIC_CURRENCY": {
+                  "code": "US dollar",
+                  "name": "US dollar"
+                },
+                "SCALE": {
+                  "code": "0",
+                  "name": "Units"
+                },
+                "SERIES_NAME": {
+                  "code": "Gross domestic product (GDP), Constant prices, Percent change",
+                  "name": "Gross domestic product (GDP), Constant prices, Percent change"
+                },
+                "START_END_MONTHS_OF_REPORTING_YEAR": {
+                  "code": "January/December",
+                  "name": "January/December"
+                },
+                "TOPIC": {
+                  "code": "E10_GDP",
+                  "name": "Gross domestic product (GDP)"
+                },
+                "UNIT": {
+                  "code": "PT",
+                  "name": "Percent"
+                }
+              },
+              "counterpart_area": null,
+              "dataflow_id": "IMF.RES:WEO",
+              "dataflow_ref": "IMF.RES,WEO",
+              "edition": "2026-04",
+              "frequency": "A",
+              "id": "IMF.RES,WEO|USA.NGDP_RPCH.A|2024",
+              "indicator": {
+                "code": "NGDP_RPCH",
+                "name": "Gross domestic product (GDP), Constant prices, Percent change"
+              },
+              "is_estimate": false,
+              "last_updated": "2026-04-15T13:00:00Z",
+              "latest_actual_period": "2025",
+              "license": "© International Monetary Fund Copyright. All Rights Reserved. https://www.imf.org/external/terms.htm",
+              "obs_status": null,
+              "observation_attributes": {},
+              "period_end": "2024-12-31T23:59:59Z",
+              "period_start": "2024-01-01T00:00:00Z",
+              "publication_date": "2026-04-14T13:00:00Z",
+              "ref_area": {
+                "code": "USA",
+                "iso3": "USA",
+                "name": "United States"
+              },
+              "scale": "Units",
+              "scale_code": "0",
+              "sdmx_key": "USA.NGDP_RPCH.A",
+              "series_key": {
+                "COUNTRY": "USA",
+                "FREQUENCY": "A",
+                "INDICATOR": "NGDP_RPCH"
+              },
+              "series_last_updated": "9/30/2025",
+              "source_url": "https://api.imf.org/external/sdmx/2.1/data/IMF.RES,WEO/USA.NGDP_RPCH.A?startPeriod=2024&endPeriod=2025",
+              "suggested_citation": "International Monetary Fund. World Economic Outlook (WEO), https://data.imf.org/en/datasets/IMF.RES:WEO. Accessed on [current date].",
+              "time_period": "2024",
+              "unit": {
+                "code": "PT",
+                "name": "Percent"
+              },
+              "value": "2.793116"
+            },
+            {
+              "attributes": {
+                "BASE_YEAR": {
+                  "code": "2017",
+                  "name": "2017"
+                },
+                "CHAIN_WEIGHTED": {
+                  "code": "Yes, from 1980",
+                  "name": "Yes, from 1980"
+                },
+                "COUNTRY_UPDATE_DATE": {
+                  "code": "9/30/2025",
+                  "name": "9/30/2025"
+                },
+                "DECIMALS_DISPLAYED": {
+                  "code": "3",
+                  "name": "Three"
+                },
+                "HISTORICAL_DATA_SOURCE": {
+                  "code": "National Statistics Office",
+                  "name": "National Statistics Office"
+                },
+                "KEYWORDS": {
+                  "code": "Real GDP",
+                  "name": "Real GDP"
+                },
+                "KEY_INDICATOR": {
+                  "code": "true",
+                  "name": "true"
+                },
+                "LATEST_ACTUAL_ANNUAL_DATA": {
+                  "code": "2025",
+                  "name": "2025"
+                },
+                "METHODOLOGY": {
+                  "code": "System of National Accounts (SNA) 2008",
+                  "name": "System of National Accounts (SNA) 2008"
+                },
+                "METHODOLOGY_NOTES": {
+                  "code": "Real GDP determined by chained Fisher quantity growth rates.",
+                  "name": "Real GDP determined by chained Fisher quantity growth rates."
+                },
+                "NA_STO": {
+                  "code": "B1GQ",
+                  "name": "Gross domestic product (GDP)"
+                },
+                "OVERLAP": {
+                  "code": "OL",
+                  "name": "Overlapping Indicator"
+                },
+                "PRICES": {
+                  "code": "Q",
+                  "name": "Constant prices"
+                },
+                "PRIMARY_DOMESTIC_CURRENCY": {
+                  "code": "US dollar",
+                  "name": "US dollar"
+                },
+                "SCALE": {
+                  "code": "0",
+                  "name": "Units"
+                },
+                "SERIES_NAME": {
+                  "code": "Gross domestic product (GDP), Constant prices, Percent change",
+                  "name": "Gross domestic product (GDP), Constant prices, Percent change"
+                },
+                "START_END_MONTHS_OF_REPORTING_YEAR": {
+                  "code": "January/December",
+                  "name": "January/December"
+                },
+                "TOPIC": {
+                  "code": "E10_GDP",
+                  "name": "Gross domestic product (GDP)"
+                },
+                "UNIT": {
+                  "code": "PT",
+                  "name": "Percent"
+                }
+              },
+              "counterpart_area": null,
+              "dataflow_id": "IMF.RES:WEO",
+              "dataflow_ref": "IMF.RES,WEO",
+              "edition": "2026-04",
+              "frequency": "A",
+              "id": "IMF.RES,WEO|USA.NGDP_RPCH.A|2025",
+              "indicator": {
+                "code": "NGDP_RPCH",
+                "name": "Gross domestic product (GDP), Constant prices, Percent change"
+              },
+              "is_estimate": false,
+              "last_updated": "2026-04-15T13:00:00Z",
+              "latest_actual_period": "2025",
+              "license": "© International Monetary Fund Copyright. All Rights Reserved. https://www.imf.org/external/terms.htm",
+              "obs_status": null,
+              "observation_attributes": {},
+              "period_end": "2025-12-31T23:59:59Z",
+              "period_start": "2025-01-01T00:00:00Z",
+              "publication_date": "2026-04-14T13:00:00Z",
+              "ref_area": {
+                "code": "USA",
+                "iso3": "USA",
+                "name": "United States"
+              },
+              "scale": "Units",
+              "scale_code": "0",
+              "sdmx_key": "USA.NGDP_RPCH.A",
+              "series_key": {
+                "COUNTRY": "USA",
+                "FREQUENCY": "A",
+                "INDICATOR": "NGDP_RPCH"
+              },
+              "series_last_updated": "9/30/2025",
+              "source_url": "https://api.imf.org/external/sdmx/2.1/data/IMF.RES,WEO/USA.NGDP_RPCH.A?startPeriod=2024&endPeriod=2025",
+              "suggested_citation": "International Monetary Fund. World Economic Outlook (WEO), https://data.imf.org/en/datasets/IMF.RES:WEO. Accessed on [current date].",
+              "time_period": "2025",
+              "unit": {
+                "code": "PT",
+                "name": "Percent"
+              },
+              "value": "2.11733"
+            }
+          ],
+          "resolved_key": {
+            "COUNTRY": [
+              "USA"
+            ],
+            "FREQUENCY": [
+              "A"
+            ],
+            "INDICATOR": [
+              "NGDP_RPCH"
+            ]
+          },
+          "retrieved_at": "2026-09-15T03:24:43Z",
+          "schema_version": "1.0.0",
+          "sdmx_key": "USA.NGDP_RPCH.A",
+          "source_updated_at": "2026-04-15T13:00:00Z",
+          "source_url": "https://api.imf.org/external/sdmx/2.1/data/IMF.RES,WEO/USA.NGDP_RPCH.A?startPeriod=2024&endPeriod=2025",
+          "total_records": 2,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:24:43.980129+00:00"
+      },
+      "execute": {
+        "provider": "data-imf-org",
+        "capability": "datasets/weo"
+      }
+    }
+  ]
+}

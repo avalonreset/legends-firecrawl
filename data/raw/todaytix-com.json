@@ -1,0 +1,1932 @@
+{
+  "id": "todaytix-com",
+  "provider": "todaytix-com",
+  "name": "TodayTix",
+  "description": "TodayTix theatre discovery and availability: the cities the site sells in, show search by city, keyword, date, price and sort, show detail with event-level low prices and publicly disclosed Rush/Lottery information, per-performance ticket snapshots with price bands and seat counts, and venue profiles. Read-only; no holds, lotteries or checkout.",
+  "toolCount": 5,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "todaytix-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "todaytix-com/events/locations",
+      "provider": "todaytix-com",
+      "capability": "events/locations",
+      "name": "Locations",
+      "description": "First hop of discovery: resolve a city name to a TodayTix location id, timezone and currency.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [],
+      "response": {
+        "about": "List the cities TodayTix sells in (content-service /api/v3/locations): id, seo name, country, currency, timezone, coordinates, whether displayed prices include fees, and the city's all-shows page. Use the id as location_id in search_shows.",
+        "key": "locations",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "abbr",
+            "type": "string"
+          },
+          {
+            "name": "all_shows_url",
+            "type": "string",
+            "about": "Public all-shows listing page for the city."
+          },
+          {
+            "name": "country_code",
+            "type": "string",
+            "about": "ISO 3166-1 alpha-2 (`regionCode`)."
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "currency_symbol",
+            "type": "string"
+          },
+          {
+            "name": "entry_id",
+            "type": "string",
+            "about": "Contentful entry id of the location record."
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "Numeric city id; `location_id` for search_shows."
+          },
+          {
+            "name": "includes_fees",
+            "type": "boolean",
+            "about": "The site's `includeFees` display setting for the city."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "locale",
+            "type": "string"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "seo_name",
+            "type": "string",
+            "about": "URL prefix, e.g. `nyc`, `london`."
+          },
+          {
+            "name": "timezone",
+            "type": "string",
+            "about": "IANA timezone the city's dates are in."
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "count": 12,
+          "locations": [
+            {
+              "abbr": "NYC",
+              "all_shows_url": "https://www.todaytix.com/nyc/category/all-shows",
+              "country_code": "US",
+              "currency": "USD",
+              "currency_symbol": "$",
+              "entry_id": "4Un73OICXQRCcKvuvZWHmB",
+              "id": 1,
+              "includes_fees": true,
+              "latitude": 40.7641667,
+              "locale": "en_US",
+              "longitude": -73.9563889,
+              "name": "New York",
+              "seo_name": "nyc",
+              "timezone": "America/New_York"
+            },
+            {
+              "abbr": "LON",
+              "all_shows_url": "https://www.todaytix.com/london/category/all-shows",
+              "country_code": "GB",
+              "currency": "GBP",
+              "currency_symbol": "£",
+              "entry_id": "6fB6lj3IJS76AAvxaysFL8",
+              "id": 2,
+              "includes_fees": true,
+              "latitude": 51.5,
+              "locale": "en_GB",
+              "longitude": -0.116667,
+              "name": "London",
+              "seo_name": "london",
+              "timezone": "Europe/London"
+            },
+            {
+              "abbr": "CHI",
+              "all_shows_url": "https://www.todaytix.com/chicago/category/all-shows",
+              "country_code": "US",
+              "currency": "USD",
+              "currency_symbol": "$",
+              "entry_id": "6UC3G3qTnc9B6HlE64aSQe",
+              "id": 3,
+              "includes_fees": true,
+              "latitude": 41.885332,
+              "locale": "en_US",
+              "longitude": -87.62975,
+              "name": "Chicago",
+              "seo_name": "chicago",
+              "timezone": "America/Chicago"
+            },
+            {
+              "abbr": "SFO",
+              "all_shows_url": "https://www.todaytix.com/sf-bay-area/category/all-shows",
+              "country_code": "US",
+              "currency": "USD",
+              "currency_symbol": "$",
+              "entry_id": "5B2ytGFtyis5hWrLarc9Rj",
+              "id": 4,
+              "includes_fees": true,
+              "latitude": 37.770006,
+              "locale": "en_US",
+              "longitude": -122.446939,
+              "name": "SF Bay Area",
+              "seo_name": "sf-bay-area",
+              "timezone": "America/Los_Angeles"
+            },
+            {
+              "abbr": "LA + OC",
+              "all_shows_url": "https://www.todaytix.com/los-angeles/category/all-shows",
+              "country_code": "US",
+              "currency": "USD",
+              "currency_symbol": "$",
+              "entry_id": "4pcGfv55akJ5xi3cRwVgNZ",
+              "id": 5,
+              "includes_fees": true,
+              "latitude": 34.096169,
+              "locale": "en_US",
+              "longitude": -118.364008,
+              "name": "Los Angeles + OC",
+              "seo_name": "los-angeles",
+              "timezone": "America/Los_Angeles"
+            },
+            {
+              "abbr": "DC",
+              "all_shows_url": "https://www.todaytix.com/washington-dc/category/all-shows",
+              "country_code": "US",
+              "currency": "USD",
+              "currency_symbol": "$",
+              "entry_id": "44Gi5IsIwmnKfhh1SCChAi",
+              "id": 6,
+              "includes_fees": true,
+              "latitude": 38.896047,
+              "locale": "en_US",
+              "longitude": -77.055615,
+              "name": "Washington DC",
+              "seo_name": "washington-dc",
+              "timezone": "America/New_York"
+            },
+            {
+              "abbr": "BOS",
+              "all_shows_url": null,
+              "country_code": "US",
+              "currency": "USD",
+              "currency_symbol": "$",
+              "entry_id": "74hVM8vxTWa5J2x1K05M2S",
+              "id": 7,
+              "includes_fees": true,
+              "latitude": 42.3061,
+              "locale": "en_US",
+              "longitude": -71.0589,
+              "name": "Boston",
+              "seo_name": "boston",
+              "timezone": "America/New_York"
+            },
+            {
+              "abbr": "SYD",
+              "all_shows_url": "https://www.todaytix.com/sydney/category/all-shows",
+              "country_code": "AU",
+              "currency": "AUD",
+              "currency_symbol": "$",
+              "entry_id": "3XR2GRSP1bl0aBVlRBlW1N",
+              "id": 17,
+              "includes_fees": true,
+              "latitude": -33.8634694,
+              "locale": "en_AU",
+              "longitude": 151.1924776,
+              "name": "Sydney",
+              "seo_name": "sydney",
+              "timezone": "Australia/Sydney"
+            },
+            {
+              "abbr": "MEL",
+              "all_shows_url": "https://www.todaytix.com/melbourne/category/all-shows",
+              "country_code": "AU",
+              "currency": "AUD",
+              "currency_symbol": "$",
+              "entry_id": "5REktZODFJbe7o80Ma5dtx",
+              "id": 18,
+              "includes_fees": true,
+              "latitude": -37.8136,
+              "locale": "en_AU",
+              "longitude": 144.9631,
+              "name": "Melbourne",
+              "seo_name": "melbourne",
+              "timezone": "Australia/Melbourne"
+            },
+            {
+              "abbr": "BNE",
+              "all_shows_url": "https://www.todaytix.com/brisbane/category/all-shows",
+              "country_code": "AU",
+              "currency": "AUD",
+              "currency_symbol": "$",
+              "entry_id": "6NBb4ygl7hkwIIY1mnfLGw",
+              "id": 19,
+              "includes_fees": true,
+              "latitude": -27.4698,
+              "locale": "en_AU",
+              "longitude": 153.0251,
+              "name": "Brisbane",
+              "seo_name": "brisbane",
+              "timezone": "Australia/Brisbane"
+            },
+            {
+              "abbr": "PER",
+              "all_shows_url": "https://www.todaytix.com/perth/category/all-shows",
+              "country_code": "AU",
+              "currency": "AUD",
+              "currency_symbol": "$",
+              "entry_id": "73Yf8EFOz4ng6c2V5dskxD",
+              "id": 93,
+              "includes_fees": true,
+              "latitude": -31.9559,
+              "locale": "en_AU",
+              "longitude": 115.8006,
+              "name": "Perth",
+              "seo_name": "perth",
+              "timezone": "Australia/Perth"
+            },
+            {
+              "abbr": "ADL",
+              "all_shows_url": "https://www.todaytix.com/adelaide/category/all-shows",
+              "country_code": "AU",
+              "currency": "AUD",
+              "currency_symbol": "$",
+              "entry_id": "1w7SjpGTcf5jjmZGMXfL0A",
+              "id": 95,
+              "includes_fees": true,
+              "latitude": -34.9287,
+              "locale": "en_AU",
+              "longitude": 138.5986,
+              "name": "Adelaide",
+              "seo_name": "adelaide",
+              "timezone": "Australia/Adelaide"
+            }
+          ],
+          "observed_at_ms": 1790019666536,
+          "source_url": "https://content-service.todaytix.com/api/v3/locations?includeAllFields=true"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "todaytix-com",
+        "capability": "events/locations"
+      }
+    },
+    {
+      "id": "todaytix-com/events/search_shows",
+      "provider": "todaytix-com",
+      "capability": "events/search_shows",
+      "name": "Search shows",
+      "description": "Find shows by city, keyword or date, then pass a show id to show or showtimes.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "date",
+          "type": "string",
+          "in": "body",
+          "about": "Only shows with a performance on this local date, YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Shows per page.",
+          "default": 20,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "location_id",
+          "type": "number",
+          "in": "body",
+          "about": "TodayTix city id from locations (1 New York, 2 London, 3 Chicago, 4 SF Bay Area, 5 Los Angeles, 6 Washington DC, 7 Boston, 17 Sydney, 18 Melbourne, 19 Brisbane, 93 Perth, 95 Adelaide).",
+          "required": true,
+          "min": 1,
+          "max": 100000
+        },
+        {
+          "name": "max_price",
+          "type": "number",
+          "in": "body",
+          "about": "Only shows whose lowest regular price is at most this amount in the city's currency.",
+          "min": 0
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "0-based offset; use next_offset from the previous page.",
+          "default": 0,
+          "min": 0,
+          "max": 100000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Keyword matched against show names (e.g. `hamilton`). Omit to browse the whole city."
+        },
+        {
+          "name": "sort_by",
+          "type": "string",
+          "in": "body",
+          "about": "`price` (lowest regular price) or `recent_views` (recently viewed); omitted, the site orders by popularity.",
+          "oneOf": [
+            "price",
+            "recent_views"
+          ]
+        },
+        {
+          "name": "sort_order",
+          "type": "string",
+          "in": "body",
+          "about": "Direction for sort_by; the site's default when omitted.",
+          "oneOf": [
+            "asc",
+            "desc"
+          ]
+        },
+        {
+          "name": "timezone",
+          "type": "string",
+          "in": "body",
+          "about": "IANA timezone the `date` is in. Defaults to the city's timezone for the known location ids; required with `date` for any other id."
+        }
+      ],
+      "response": {
+        "about": "Discover shows in a TodayTix city (api.todaytix.com /api/v2/shows, fieldset SHOW_SUMMARY): optional keyword, performance date, price cap and sort. Each card carries the stable show id, venue, run dates, event-level low prices (regular, rush, lottery; fee inclusion unknown), availability flags, promotion and review summary. Offset pagination with the site's total.",
+        "key": "shows",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "availability",
+            "type": "object"
+          },
+          {
+            "name": "avg_rating",
+            "type": "number"
+          },
+          {
+            "name": "booking_end_date",
+            "type": "string"
+          },
+          {
+            "name": "booking_start_date",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "object",
+            "about": "Primary category (8 = Musicals) or null."
+          },
+          {
+            "name": "display_name",
+            "type": "string",
+            "about": "Short display name, e.g. `& Juliet`."
+          },
+          {
+            "name": "end_date",
+            "type": "string",
+            "about": "Closing date (YYYY-MM-DD) or null when open-ended (the site sends `null` or the string \"null\")."
+          },
+          {
+            "name": "hero_image_url",
+            "type": "string"
+          },
+          {
+            "name": "hero_subtitle",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "TodayTix show id (`showId`); the stable event identifier used by show, showtimes and the page URL."
+          },
+          {
+            "name": "location_id",
+            "type": "number",
+            "about": "Numeric TodayTix city id (see locations)."
+          },
+          {
+            "name": "location_seo_name",
+            "type": "string",
+            "about": "City URL prefix, e.g. `nyc`, `london`."
+          },
+          {
+            "name": "lottery_banner_text",
+            "type": "string"
+          },
+          {
+            "name": "max_tickets",
+            "type": "number"
+          },
+          {
+            "name": "min_tickets",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Full listing name, e.g. `& Juliet on Broadway`."
+          },
+          {
+            "name": "on_sale_date",
+            "type": "string",
+            "about": "ISO timestamp the site started selling."
+          },
+          {
+            "name": "poster_image_url",
+            "type": "string"
+          },
+          {
+            "name": "prices",
+            "type": "object"
+          },
+          {
+            "name": "product_type",
+            "type": "string",
+            "about": "SHOW, or other product kinds the site lists (e.g. gift cards)."
+          },
+          {
+            "name": "promotion",
+            "type": "object",
+            "about": "Current site-wide or show promotion, or null."
+          },
+          {
+            "name": "rating_count",
+            "type": "number"
+          },
+          {
+            "name": "review_summary",
+            "type": "object",
+            "about": "Show-Score style audience summary, or null."
+          },
+          {
+            "name": "rush_banner_text",
+            "type": "string"
+          },
+          {
+            "name": "sales_message",
+            "type": "string"
+          },
+          {
+            "name": "savings_message",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string",
+            "about": "URL slug; the site omits it for some cards."
+          },
+          {
+            "name": "start_date",
+            "type": "string",
+            "about": "First performance date (YYYY-MM-DD) or null."
+          },
+          {
+            "name": "subcategories",
+            "type": "object[]"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public show page: https://www.todaytix.com/{region}/shows/{id}-{slug} (or /{id} when the site gives no slug)."
+          },
+          {
+            "name": "venue",
+            "type": "object",
+            "about": "Venue, or null when the site names none."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 5,
+          "location_id": 1,
+          "query": "hamilton"
+        },
+        "response": {
+          "currency": "USD",
+          "date": null,
+          "limit": 5,
+          "location_id": 1,
+          "max_price": null,
+          "next_offset": null,
+          "observed_at_ms": 1790019670968,
+          "offset": 0,
+          "query": "hamilton",
+          "returned": 1,
+          "shows": [
+            {
+              "availability": {
+                "lottery_active": false,
+                "lottery_tickets": false,
+                "regular_tickets": true,
+                "rush_active": false,
+                "rush_tickets": false
+              },
+              "avg_rating": 4.82325,
+              "booking_end_date": "2027-06-13",
+              "booking_start_date": "2026-09-22",
+              "category": {
+                "id": 8,
+                "name": "Musicals",
+                "slug": "musicals"
+              },
+              "display_name": "Hamilton",
+              "end_date": null,
+              "hero_image_url": "https://images.ctfassets.net/6pezt69ih962/1pYzhGpYcpbasqXvOf3YBq/5ac1b9604f509fa4acf54f3ea38e35fd/HAM_020_PA_BRAND_REFRESH_TICKETING_ASSETS_TodayTix_HeroKeyArt_1440x580_v1.jpg",
+              "hero_subtitle": "The award-winning sensation",
+              "id": 384,
+              "location_id": 1,
+              "location_seo_name": "nyc",
+              "lottery_banner_text": null,
+              "max_tickets": 8,
+              "min_tickets": 1,
+              "name": "Hamilton on Broadway",
+              "on_sale_date": "2019-11-03T23:54:10Z",
+              "poster_image_url": "https://images.ctfassets.net/6pezt69ih962/4qb7FeNVZnq8k5A0AEN1Ug/beceb06cd0bb60e7b3ad2670fe0f0fa9/HAM_020_PA_BRAND_REFRESH_TICKETING_ASSETS_TodayTix_PosterKeyArt_480x720_v1.jpg",
+              "prices": {
+                "currency": "USD",
+                "fees": "unknown",
+                "lottery_low": null,
+                "max_discount_percentage": 0,
+                "regular_low": {
+                  "currency": "USD",
+                  "display": "$112",
+                  "value": 112
+                },
+                "regular_low_face_value": {
+                  "currency": "USD",
+                  "display": "$112",
+                  "value": 112
+                },
+                "rush_low": null
+              },
+              "product_type": "SHOW",
+              "promotion": null,
+              "rating_count": 775,
+              "review_summary": {
+                "audience_acclaimed": true,
+                "description": "Must See!",
+                "five_star_score": 4.8,
+                "reviews_count": 19354,
+                "score": 95
+              },
+              "rush_banner_text": null,
+              "sales_message": "Ten years on, this iconic masterpiece still has the power to blow you away. Join the revolution.  ",
+              "savings_message": null,
+              "slug": null,
+              "start_date": "2015-07-13",
+              "subcategories": [
+                {
+                  "id": 36,
+                  "name": "History",
+                  "slug": "history"
+                },
+                {
+                  "id": 42,
+                  "name": "Must-See",
+                  "slug": "must-see"
+                },
+                {
+                  "id": 27,
+                  "name": "Broadway",
+                  "slug": "broadway"
+                },
+                {
+                  "id": 25,
+                  "name": "Award winners",
+                  "slug": "award-winners"
+                },
+                {
+                  "id": 31,
+                  "name": "Drama",
+                  "slug": "drama"
+                },
+                {
+                  "id": 33,
+                  "name": "Family / Kid-friendly",
+                  "slug": "family-kid-friendly"
+                },
+                {
+                  "id": 46,
+                  "name": "Romance",
+                  "slug": "romance"
+                }
+              ],
+              "url": "https://www.todaytix.com/nyc/shows/384",
+              "venue": {
+                "id": "714",
+                "name": "Richard Rodgers Theatre",
+                "slug": "richard-rodgers-theatre",
+                "url": "https://www.todaytix.com/nyc/venues/richard-rodgers-theatre"
+              }
+            }
+          ],
+          "sort_by": null,
+          "sort_order": null,
+          "source_url": "https://api.todaytix.com/api/v2/shows?fieldset=SHOW_SUMMARY&location=1&query=hamilton&context=TRANSACTIONAL&limit=5&offset=0&includeAggregations=false",
+          "timezone": null,
+          "total": 1
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "todaytix-com",
+        "capability": "events/search_shows"
+      }
+    },
+    {
+      "id": "todaytix-com/events/show",
+      "provider": "todaytix-com",
+      "capability": "events/show",
+      "name": "Show",
+      "description": "Detail for a show id from search_shows, or for a pasted todaytix.com show URL.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "show_id",
+          "type": "number",
+          "in": "body",
+          "about": "Numeric TodayTix show id (from search_shows or the show page URL /{region}/shows/{id}-{slug}). Exactly one of show_id or url.",
+          "min": 1,
+          "max": 999999999999
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A todaytix.com show page URL, https://www.todaytix.com/{region}/shows/{id}-{slug}, instead of show_id."
+        }
+      ],
+      "response": {
+        "about": "Read one TodayTix show by id or page URL (api.todaytix.com /api/v2/shows?id=): everything search_shows returns plus description, admission and delivery, seating chart URL, and, when the show's Rush is active, the publicly disclosed Rush settings (/api/v2/shows/{id}/rushSettings: price, opening text, fee note). Lottery and Rush data is disclosure only; nothing is entered or reserved.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "admission_type",
+            "type": "string",
+            "about": "TIMED or the site's other admission kinds."
+          },
+          {
+            "name": "availability",
+            "type": "object"
+          },
+          {
+            "name": "avg_rating",
+            "type": "number"
+          },
+          {
+            "name": "booking_end_date",
+            "type": "string"
+          },
+          {
+            "name": "booking_start_date",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "object",
+            "about": "Primary category (8 = Musicals) or null."
+          },
+          {
+            "name": "delivery_method",
+            "type": "string",
+            "about": "E-ticket, etc."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Marketing description (markdown as the site sends it)."
+          },
+          {
+            "name": "display_name",
+            "type": "string",
+            "about": "Short display name, e.g. `& Juliet`."
+          },
+          {
+            "name": "end_date",
+            "type": "string",
+            "about": "Closing date (YYYY-MM-DD) or null when open-ended (the site sends `null` or the string \"null\")."
+          },
+          {
+            "name": "hero_image_url",
+            "type": "string"
+          },
+          {
+            "name": "hero_subtitle",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "TodayTix show id (`showId`); the stable event identifier used by show, showtimes and the page URL."
+          },
+          {
+            "name": "inventory_selection_mode",
+            "type": "string",
+            "about": "CHART (pick your seats) or the site's other modes."
+          },
+          {
+            "name": "location_id",
+            "type": "number",
+            "about": "Numeric TodayTix city id (see locations)."
+          },
+          {
+            "name": "location_seo_name",
+            "type": "string",
+            "about": "City URL prefix, e.g. `nyc`, `london`."
+          },
+          {
+            "name": "lottery_banner_text",
+            "type": "string"
+          },
+          {
+            "name": "max_tickets",
+            "type": "number"
+          },
+          {
+            "name": "min_tickets",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Full listing name, e.g. `& Juliet on Broadway`."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when this program read the source (SDK observation stamp)."
+          },
+          {
+            "name": "on_sale_date",
+            "type": "string",
+            "about": "ISO timestamp the site started selling."
+          },
+          {
+            "name": "poster_image_url",
+            "type": "string"
+          },
+          {
+            "name": "prices",
+            "type": "object"
+          },
+          {
+            "name": "product_type",
+            "type": "string",
+            "about": "SHOW, or other product kinds the site lists (e.g. gift cards)."
+          },
+          {
+            "name": "promotion",
+            "type": "object",
+            "about": "Current site-wide or show promotion, or null."
+          },
+          {
+            "name": "rating_count",
+            "type": "number"
+          },
+          {
+            "name": "review_summary",
+            "type": "object",
+            "about": "Show-Score style audience summary, or null."
+          },
+          {
+            "name": "rush_banner_text",
+            "type": "string"
+          },
+          {
+            "name": "rush_settings",
+            "type": "object",
+            "about": "Publicly disclosed Rush programme settings (/api/v2/shows/{id}/rushSettings), fetched only when the show's Rush is active; null otherwise."
+          },
+          {
+            "name": "sales_message",
+            "type": "string"
+          },
+          {
+            "name": "savings_message",
+            "type": "string"
+          },
+          {
+            "name": "seating_chart_url",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string",
+            "about": "URL slug; the site omits it for some cards."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The API URL this record was read from."
+          },
+          {
+            "name": "start_date",
+            "type": "string",
+            "about": "First performance date (YYYY-MM-DD) or null."
+          },
+          {
+            "name": "subcategories",
+            "type": "object[]"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public show page: https://www.todaytix.com/{region}/shows/{id}-{slug} (or /{id} when the site gives no slug)."
+          },
+          {
+            "name": "venue",
+            "type": "object",
+            "about": "Venue, or null when the site names none."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "show_id": 25598
+        },
+        "response": {
+          "admission_type": "TIMED",
+          "availability": {
+            "lottery_active": false,
+            "lottery_tickets": false,
+            "regular_tickets": true,
+            "rush_active": true,
+            "rush_tickets": false
+          },
+          "avg_rating": 4.75636,
+          "booking_end_date": "2027-01-03",
+          "booking_start_date": "2026-09-22",
+          "category": {
+            "id": 8,
+            "name": "Musicals",
+            "slug": "musicals"
+          },
+          "delivery_method": "E-ticket",
+          "description": "What would happen after *Romeo & Juliet* if Juliet didn't die? That's the question this pop-fueled musical, from songwriting icon Max Martin and a writer on *Schitt’s Creek*, asks. Jam out to tunes made famous by Britney Spears, the Backstreet Boys, Pink, and more.",
+          "display_name": "& Juliet",
+          "end_date": null,
+          "hero_image_url": "https://images.ctfassets.net/6pezt69ih962/1pePhHDlaO3Ll7GWC0YkL1/80b1aac734fa1a7ca7c950883f84cc24/_J-Nov2025Update-TodayTix-1440x580-ALT.jpg",
+          "hero_subtitle": "Packed with your fave pop hits",
+          "id": 25598,
+          "inventory_selection_mode": "CHART",
+          "location_id": 1,
+          "location_seo_name": "nyc",
+          "lottery_banner_text": null,
+          "max_tickets": 8,
+          "min_tickets": 1,
+          "name": "& Juliet on Broadway",
+          "observed_at_ms": 1790019675073,
+          "on_sale_date": "2022-07-07T14:30:39Z",
+          "poster_image_url": "https://images.ctfassets.net/6pezt69ih962/WPJrqheYFVWFD2kA0sDuJ/be06ca6f24c542418557616196f97e49/_J-Nov2025Update-TodayTix-480x720.jpg",
+          "prices": {
+            "currency": "USD",
+            "fees": "unknown",
+            "lottery_low": null,
+            "max_discount_percentage": 35,
+            "regular_low": {
+              "currency": "USD",
+              "display": "$65",
+              "value": 65
+            },
+            "regular_low_face_value": {
+              "currency": "USD",
+              "display": "$65",
+              "value": 65
+            },
+            "rush_low": null
+          },
+          "product_type": "SHOW",
+          "promotion": {
+            "description": "Celebrate the Theatre Sale with special prices on top shows.",
+            "id": 749,
+            "label": "Theatre Sale",
+            "title": "US - Theatre Sale"
+          },
+          "rating_count": 788,
+          "review_summary": {
+            "audience_acclaimed": true,
+            "description": "Must See!",
+            "five_star_score": 4.6,
+            "reviews_count": 12830,
+            "score": 91
+          },
+          "rush_banner_text": "$49 Rush tickets",
+          "rush_settings": {
+            "card_description": "Our mobile Rush for $49 tickets opens at 9:00 AM daily. Tickets are limited, so don't miss out!",
+            "card_title": "$49 Rush tickets",
+            "fee_text_per_ticket": "incl. $8 fee",
+            "hero_badge_text_available": "$49 Rush tickets on sale now!",
+            "hero_badge_text_unavailable": "$49 Rush tickets",
+            "price": {
+              "currency": "USD",
+              "display": "$49",
+              "value": 49
+            },
+            "remaining_tickets_starting_count": 4
+          },
+          "sales_message": "Don’t miss the electrifying Broadway musical.",
+          "savings_message": "Save 35%",
+          "seating_chart_url": "https://img.ttix.io/prod/1656347538233_1652563399821_NEW_doubtfire.svg",
+          "slug": "and-juliet-on-broadway",
+          "source_url": "https://api.todaytix.com/api/v2/shows?fieldset=SHOW_SUMMARY&id=25598&context=TRANSACTIONAL&limit=1&offset=0&includeAggregations=false",
+          "start_date": "2022-10-28",
+          "subcategories": [
+            {
+              "id": 42,
+              "name": "Must-See",
+              "slug": "must-see"
+            },
+            {
+              "id": 27,
+              "name": "Broadway",
+              "slug": "broadway"
+            },
+            {
+              "id": 31,
+              "name": "Drama",
+              "slug": "drama"
+            },
+            {
+              "id": 49,
+              "name": "Stars on Stage",
+              "slug": "stars-on-stage"
+            },
+            {
+              "id": 40,
+              "name": "Jukebox",
+              "slug": "jukebox"
+            },
+            {
+              "id": 33,
+              "name": "Family / Kid-friendly",
+              "slug": "family-kid-friendly"
+            },
+            {
+              "id": 46,
+              "name": "Romance",
+              "slug": "romance"
+            }
+          ],
+          "url": "https://www.todaytix.com/nyc/shows/25598-and-juliet-on-broadway",
+          "venue": {
+            "id": "8390",
+            "name": "Stephen Sondheim Theatre",
+            "slug": "stephen-sondheim-theatre",
+            "url": "https://www.todaytix.com/nyc/venues/stephen-sondheim-theatre"
+          }
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "todaytix-com",
+        "capability": "events/show"
+      }
+    },
+    {
+      "id": "todaytix-com/events/showtimes",
+      "provider": "todaytix-com",
+      "capability": "events/showtimes",
+      "name": "Showtimes",
+      "description": "Availability and prices per performance for a show id; filter by date window to keep pages small.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "date_from",
+          "type": "string",
+          "in": "body",
+          "about": "Keep performances on or after this local date, YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "date_to",
+          "type": "string",
+          "in": "body",
+          "about": "Keep performances on or before this local date, YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "include_no_inventory",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also list performances the site reports without any tickets (default true); false asks the site for performances with inventory only."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Performances per page.",
+          "default": 50,
+          "min": 1,
+          "max": 300
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "0-based offset into the (date-filtered) list; use next_offset.",
+          "default": 0,
+          "min": 0,
+          "max": 100000
+        },
+        {
+          "name": "show_id",
+          "type": "number",
+          "in": "body",
+          "about": "Numeric TodayTix show id (from search_shows or the show page URL /{region}/shows/{id}-{slug}). Exactly one of show_id or url.",
+          "min": 1,
+          "max": 999999999999
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A todaytix.com show page URL instead of show_id."
+        }
+      ],
+      "response": {
+        "about": "Performance list for one show (api.todaytix.com /api/v2/shows/{id}/showtimes?includeNoInventory=true): every scheduled performance with local date/time and UTC offset, per-performance regular ticket snapshot (lowest price, face value, seat counts, price bands, sale cut-off), disclosed Lottery and Rush windows, and cast notices. Prices are per ticket as displayed; fee inclusion is not stated by the site. Optional date window and offset pagination over the site's full list. Seat-level sections are not available (AWS WAF bot control).",
+        "key": "showtimes",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "admission_type",
+            "type": "string"
+          },
+          {
+            "name": "datetime",
+            "type": "string",
+            "about": "Local start time with UTC offset, e.g. `2026-09-22T19:00:00.000-04:00`."
+          },
+          {
+            "name": "day_of_week",
+            "type": "string"
+          },
+          {
+            "name": "daypart",
+            "type": "string",
+            "about": "MATINEE or EVENING."
+          },
+          {
+            "name": "days_out",
+            "type": "number"
+          },
+          {
+            "name": "epoch",
+            "type": "number",
+            "about": "Start time as Unix seconds."
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "Showtime (performance) id."
+          },
+          {
+            "name": "local_date",
+            "type": "string",
+            "about": "YYYY-MM-DD in the venue's timezone."
+          },
+          {
+            "name": "local_time",
+            "type": "string",
+            "about": "HH:MM in the venue's timezone."
+          },
+          {
+            "name": "lottery_tickets",
+            "type": "object",
+            "about": "Lottery window disclosed for the performance (read-only; entering requires the app and a login), or null."
+          },
+          {
+            "name": "regular_tickets",
+            "type": "object",
+            "about": "Regular (primary) ticket inventory for the performance; null when the site reports none (`regularTickets: null`)."
+          },
+          {
+            "name": "rush_tickets",
+            "type": "object",
+            "about": "Rush inventory disclosed for the performance, or null."
+          },
+          {
+            "name": "special_performance_info",
+            "type": "object[]",
+            "about": "Cast changes and other notices for this performance."
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "`available` when any ticket type is on sale for this performance, `no_inventory` when the site lists it with no regular, rush or lottery tickets (sold out, not yet on sale or off sale; the site does not say which)."
+          },
+          {
+            "name": "ticket_protection_available",
+            "type": "boolean"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 3,
+          "show_id": 25598
+        },
+        "response": {
+          "currency": "USD",
+          "date_from": null,
+          "date_to": null,
+          "fees": "unknown",
+          "include_no_inventory": true,
+          "limit": 3,
+          "next_offset": 3,
+          "observed_at_ms": 1790019679155,
+          "offset": 0,
+          "returned": 3,
+          "show_id": 25598,
+          "showtimes": [
+            {
+              "admission_type": "TIMED",
+              "datetime": "2026-09-22T19:00:00.000-04:00",
+              "day_of_week": "TUESDAY",
+              "daypart": "EVENING",
+              "days_out": 1,
+              "epoch": 1790118000,
+              "id": 2352078,
+              "local_date": "2026-09-22",
+              "local_time": "19:00",
+              "lottery_tickets": null,
+              "regular_tickets": {
+                "availability_level": null,
+                "available_until": "2026-09-22T17:55:00.000-04:00",
+                "discount_percent": 30,
+                "fee_text": null,
+                "has_no_booking_fee": false,
+                "has_promotion": true,
+                "low_price": {
+                  "currency": "USD",
+                  "display": "$69",
+                  "value": 69
+                },
+                "low_price_face_value": {
+                  "currency": "USD",
+                  "display": "$99",
+                  "value": 99
+                },
+                "max_contiguous_seats": 21,
+                "max_tickets": 8,
+                "min_tickets": 1,
+                "price_bands": [
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$99",
+                      "value": 99
+                    },
+                    "max_contiguous_seats": 8,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$69",
+                      "value": 69
+                    },
+                    "seats_available": 37
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$129",
+                      "value": 129
+                    },
+                    "max_contiguous_seats": 21,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$99",
+                      "value": 99
+                    },
+                    "seats_available": 68
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$135",
+                      "value": 135
+                    },
+                    "max_contiguous_seats": 4,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$113",
+                      "value": 113
+                    },
+                    "seats_available": 12
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$157",
+                      "value": 157
+                    },
+                    "max_contiguous_seats": 21,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$135",
+                      "value": 135
+                    },
+                    "seats_available": 42
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$157",
+                      "value": 157
+                    },
+                    "max_contiguous_seats": 2,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$157",
+                      "value": 157
+                    },
+                    "seats_available": 8
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$180",
+                      "value": 180
+                    },
+                    "max_contiguous_seats": 19,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$180",
+                      "value": 180
+                    },
+                    "seats_available": 26
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$202",
+                      "value": 202
+                    },
+                    "max_contiguous_seats": 15,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$202",
+                      "value": 202
+                    },
+                    "seats_available": 45
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$265",
+                      "value": 265
+                    },
+                    "max_contiguous_seats": 2,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$225",
+                      "value": 225
+                    },
+                    "seats_available": 8
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$343",
+                      "value": 343
+                    },
+                    "max_contiguous_seats": 2,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$254",
+                      "value": 254
+                    },
+                    "seats_available": 6
+                  }
+                ],
+                "promotion_label": "Theatre Sale",
+                "savings_message": "Save 30%",
+                "seats_available": 609
+              },
+              "rush_tickets": null,
+              "special_performance_info": [
+                {
+                  "long_description": null,
+                  "short_description": null,
+                  "title": "The role of Lance will be played by Reese Britts."
+                }
+              ],
+              "status": "available",
+              "ticket_protection_available": false
+            },
+            {
+              "admission_type": "TIMED",
+              "datetime": "2026-09-23T14:00:00.000-04:00",
+              "day_of_week": "WEDNESDAY",
+              "daypart": "MATINEE",
+              "days_out": 2,
+              "epoch": 1790186400,
+              "id": 2352082,
+              "local_date": "2026-09-23",
+              "local_time": "14:00",
+              "lottery_tickets": null,
+              "regular_tickets": {
+                "availability_level": null,
+                "available_until": "2026-09-23T12:55:00.000-04:00",
+                "discount_percent": 35,
+                "fee_text": null,
+                "has_no_booking_fee": false,
+                "has_promotion": true,
+                "low_price": {
+                  "currency": "USD",
+                  "display": "$79",
+                  "value": 79
+                },
+                "low_price_face_value": {
+                  "currency": "USD",
+                  "display": "$79",
+                  "value": 79
+                },
+                "max_contiguous_seats": 21,
+                "max_tickets": 8,
+                "min_tickets": 1,
+                "price_bands": [
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$79",
+                      "value": 79
+                    },
+                    "max_contiguous_seats": 7,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$79",
+                      "value": 79
+                    },
+                    "seats_available": 47
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$113",
+                      "value": 113
+                    },
+                    "max_contiguous_seats": 3,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$89",
+                      "value": 89
+                    },
+                    "seats_available": 3
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$125",
+                      "value": 125
+                    },
+                    "max_contiguous_seats": 7,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$91",
+                      "value": 91
+                    },
+                    "seats_available": 50
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$99",
+                      "value": 99
+                    },
+                    "max_contiguous_seats": 5,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$99",
+                      "value": 99
+                    },
+                    "seats_available": 37
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$152",
+                      "value": 152
+                    },
+                    "max_contiguous_seats": 19,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$109",
+                      "value": 109
+                    },
+                    "seats_available": 45
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$113",
+                      "value": 113
+                    },
+                    "max_contiguous_seats": 19,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$113",
+                      "value": 113
+                    },
+                    "seats_available": 19
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$175",
+                      "value": 175
+                    },
+                    "max_contiguous_seats": 21,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$140",
+                      "value": 140
+                    },
+                    "seats_available": 36
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$202",
+                      "value": 202
+                    },
+                    "max_contiguous_seats": 17,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$202",
+                      "value": 202
+                    },
+                    "seats_available": 31
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$219",
+                      "value": 219
+                    },
+                    "max_contiguous_seats": 16,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$219",
+                      "value": 219
+                    },
+                    "seats_available": 16
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$298",
+                      "value": 298
+                    },
+                    "max_contiguous_seats": 14,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$225",
+                      "value": 225
+                    },
+                    "seats_available": 18
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$388",
+                      "value": 388
+                    },
+                    "max_contiguous_seats": 2,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$254",
+                      "value": 254
+                    },
+                    "seats_available": 6
+                  }
+                ],
+                "promotion_label": "Theatre Sale",
+                "savings_message": "Save 35%",
+                "seats_available": 645
+              },
+              "rush_tickets": null,
+              "special_performance_info": [
+                {
+                  "long_description": null,
+                  "short_description": null,
+                  "title": "The role of Lance will be played by Joey Fatone."
+                }
+              ],
+              "status": "available",
+              "ticket_protection_available": false
+            },
+            {
+              "admission_type": "TIMED",
+              "datetime": "2026-09-24T19:00:00.000-04:00",
+              "day_of_week": "THURSDAY",
+              "daypart": "EVENING",
+              "days_out": 3,
+              "epoch": 1790290800,
+              "id": 2352119,
+              "local_date": "2026-09-24",
+              "local_time": "19:00",
+              "lottery_tickets": null,
+              "regular_tickets": {
+                "availability_level": null,
+                "available_until": "2026-09-24T17:55:00.000-04:00",
+                "discount_percent": 28,
+                "fee_text": null,
+                "has_no_booking_fee": false,
+                "has_promotion": true,
+                "low_price": {
+                  "currency": "USD",
+                  "display": "$79",
+                  "value": 79
+                },
+                "low_price_face_value": {
+                  "currency": "USD",
+                  "display": "$79",
+                  "value": 79
+                },
+                "max_contiguous_seats": 21,
+                "max_tickets": 8,
+                "min_tickets": 1,
+                "price_bands": [
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$79",
+                      "value": 79
+                    },
+                    "max_contiguous_seats": 4,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$79",
+                      "value": 79
+                    },
+                    "seats_available": 19
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$113",
+                      "value": 113
+                    },
+                    "max_contiguous_seats": 17,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$89",
+                      "value": 89
+                    },
+                    "seats_available": 20
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$125",
+                      "value": 125
+                    },
+                    "max_contiguous_seats": 6,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$91",
+                      "value": 91
+                    },
+                    "seats_available": 49
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$99",
+                      "value": 99
+                    },
+                    "max_contiguous_seats": 5,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$99",
+                      "value": 99
+                    },
+                    "seats_available": 32
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$152",
+                      "value": 152
+                    },
+                    "max_contiguous_seats": 21,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$109",
+                      "value": 109
+                    },
+                    "seats_available": 42
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$113",
+                      "value": 113
+                    },
+                    "max_contiguous_seats": 2,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$113",
+                      "value": 113
+                    },
+                    "seats_available": 2
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$175",
+                      "value": 175
+                    },
+                    "max_contiguous_seats": 21,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$140",
+                      "value": 140
+                    },
+                    "seats_available": 42
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$202",
+                      "value": 202
+                    },
+                    "max_contiguous_seats": 8,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$202",
+                      "value": 202
+                    },
+                    "seats_available": 27
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$219",
+                      "value": 219
+                    },
+                    "max_contiguous_seats": 6,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$219",
+                      "value": 219
+                    },
+                    "seats_available": 6
+                  },
+                  {
+                    "face_value": {
+                      "currency": "USD",
+                      "display": "$298",
+                      "value": 298
+                    },
+                    "max_contiguous_seats": 5,
+                    "price": {
+                      "currency": "USD",
+                      "display": "$225",
+                      "value": 225
+                    },
+                    "seats_available": 24
+                  }
+                ],
+                "promotion_label": "Theatre Sale",
+                "savings_message": "Save 28%",
+                "seats_available": 499
+              },
+              "rush_tickets": null,
+              "special_performance_info": [
+                {
+                  "long_description": null,
+                  "short_description": null,
+                  "title": "The role of Lance will be played by Joey Fatone."
+                }
+              ],
+              "status": "available",
+              "ticket_protection_available": true
+            }
+          ],
+          "source_url": "https://api.todaytix.com/api/v2/shows/25598/showtimes?includeNoInventory=true",
+          "total": 120
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "todaytix-com",
+        "capability": "events/showtimes"
+      }
+    },
+    {
+      "id": "todaytix-com/events/venue",
+      "provider": "todaytix-com",
+      "capability": "events/venue",
+      "name": "Venue",
+      "description": "Where a show plays: pass venue.slug from a show card, or a todaytix.com venue URL.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "location_id",
+          "type": "number",
+          "in": "body",
+          "about": "TodayTix city id the venue is listed under (defaults to 1, New York; London venues need 2, etc.). Used for the region prefix of `url` and the site's `location` parameter.",
+          "min": 1,
+          "max": 100000
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A todaytix.com venue page URL, https://www.todaytix.com/{region}/venues/{slug}, instead of venue_slug."
+        },
+        {
+          "name": "venue_slug",
+          "type": "string",
+          "in": "body",
+          "about": "Venue slug, e.g. `stephen-sondheim-theatre` (venue.slug from search_shows/show, or the last segment of /{region}/venues/{slug}). Exactly one of venue_slug or url. Pattern: ^[a-z0-9]+(-[a-z0-9]+)*$."
+        }
+      ],
+      "response": {
+        "about": "Venue profile by slug or page URL (content-service /api/v3/venues/{slug}): name, type, area, address with country code and coordinates, capacity, accessibility, transport, images and seating chart images, and the TodayTix city it belongs to.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "accessibility",
+            "type": "string"
+          },
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "area",
+            "type": "string",
+            "about": "e.g. `Broadway`, `West End`."
+          },
+          {
+            "name": "capacity",
+            "type": "number"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "entry_id",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Venue id as the site sends it (numeric string), matches show venue.id."
+          },
+          {
+            "name": "image_urls",
+            "type": "string[]"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "location",
+            "type": "object",
+            "about": "The TodayTix city the venue belongs to, or null."
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "nearest_public_transport",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when this program read the source (SDK observation stamp)."
+          },
+          {
+            "name": "seat_plan_urls",
+            "type": "string[]",
+            "about": "Static seating chart images, when published."
+          },
+          {
+            "name": "short_description",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "transit_links",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public venue page."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "venue_slug": "stephen-sondheim-theatre"
+        },
+        "response": {
+          "accessibility": "Wheelchair and transfer seating on Orchestra and Mezzanine levels via elevator, accessible restrooms, assisted listening devices, audio described/captioned performances.",
+          "address": {
+            "city": "New York",
+            "country": "USA",
+            "country_code": "US",
+            "postal_code": "10036",
+            "state": "NY",
+            "street1": "124 West 43rd Street (between Broadway and 6th Avenue)",
+            "street2": null
+          },
+          "area": "Broadway",
+          "capacity": 1055,
+          "description": "The Stephen Sondheim Theatre is a treasured gem within the heart of New York City. Located in the bustling Times Square district, it stands proudly, retaining its historical charm midst contemporary edifices. The theatre, formerly known as Henry Miller's Theatre, is deeply rooted in theatrical history, having hosted numerous Broadway classics since its inception in 1918. It boasts art nouveau architecture bathed in gentle, welcoming lights, with intricate details that add to its grandeur. A walk inside reveals a relaxing ambiance with ornamented ceilings, beautiful chandeliers, red velvet seats, and a sizeable stage that brings performances to life. Dedicated to the legendary composer Stephen Sondheim, the theatre's rich legacy continues by staging some of the most critically acclaimed plays, musicals, and performances, all enjoyed from the comfort of its 1,055 seats. \n\n**How to Get There** \nStephen Sondheim Theatre is conveniently located at 124 West 43rd Street, accessible via various modes of transportation. Visitors can reach the theatre by subway, taking the B, D, F, or M train to 42nd Street/Bryant Park or the 1, 2, 3, 7, N, Q, R, S, or W train to Times Square/42nd Street. Buses M5, M7, M20, M42, or M104 also offer routes to Times Square. For those who prefer driving, several paid parking garages are available nearby.",
+          "entry_id": "46aG38M4JcTJTW5VNmTkew",
+          "id": "8390",
+          "image_urls": [
+            "https://images.ctfassets.net/6pezt69ih962/7KS6LAFNM66YajjCJ5bBhR/3f7987c931ae12861cd824ef0b816d02/Stephen-Sondheim-theatre.jpg"
+          ],
+          "latitude": 40.75584,
+          "location": {
+            "id": 1,
+            "name": "New York"
+          },
+          "longitude": -73.9848,
+          "name": "Stephen Sondheim Theatre",
+          "nearest_public_transport": "42nd Street - Bryant Park",
+          "observed_at_ms": 1790019683534,
+          "seat_plan_urls": [
+            "https://images.ctfassets.net/6pezt69ih962/6B85YbofGR5cZHckQNelcE/1930cc82a09e91af1ce49a3fcf9f7f50/Image_17-06-2024_at_17.32.jpeg"
+          ],
+          "short_description": "The Stephen Sondheim Theatre is a cherished historical venue in Times Square, known for its Broadway classics and art nouveau architecture.",
+          "slug": "stephen-sondheim-theatre",
+          "source_url": "https://content-service.todaytix.com/api/v3/venues/stephen-sondheim-theatre?includeAllFields=true&location=1",
+          "transit_links": "B, D, F & M trains",
+          "type": "Theatre",
+          "url": "https://www.todaytix.com/nyc/venues/stephen-sondheim-theatre"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "todaytix-com",
+        "capability": "events/venue"
+      }
+    }
+  ]
+}

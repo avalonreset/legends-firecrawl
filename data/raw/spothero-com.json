@@ -1,0 +1,2648 @@
+{
+  "id": "spothero-com",
+  "provider": "spothero-com",
+  "name": "SpotHero parking",
+  "description": "SpotHero parking discovery and pricing for the US and Canada: hourly/daily, monthly and airport parking searches with itemised quotes for a time window, single-facility quotes, customer reviews, destinations with typical price ranges, upcoming events, and the city and airport directories. Read-only: no holds, bookings or checkout.",
+  "toolCount": 10,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "spothero-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "spothero-com/parking/airports",
+      "provider": "spothero-com",
+      "capability": "parking/airports",
+      "name": "Airports",
+      "description": "Look up an airport's IATA code or destination id before search_airport_parking or destination.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query"
+        }
+      ],
+      "response": {
+        "about": "The airports SpotHero sells parking at (spothero.com/api/v1/airports/, ~110 in the US and Canada): IATA code, name, city, coordinates, time zone, destination id and the airport page URL. `query` filters by code, name or city (case-insensitive substring).",
+        "key": "airports",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "city_slug",
+            "type": "string"
+          },
+          {
+            "name": "destination_id",
+            "type": "number"
+          },
+          {
+            "name": "iata",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "time_zone",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "spothero.com airport parking page."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "ORD"
+        },
+        "response": {
+          "airport_count": 2,
+          "airports": [
+            {
+              "city": "Chicago",
+              "city_slug": "chicago",
+              "destination_id": 583,
+              "iata": "ORD",
+              "latitude": 41.97671486983269,
+              "longitude": -87.8842329447998,
+              "name": "O'Hare International Airport",
+              "time_zone": "America/Chicago",
+              "url": "https://spothero.com/airport/chicago/ord-parking"
+            },
+            {
+              "city": "Medford",
+              "city_slug": "eugene-or",
+              "destination_id": 123675,
+              "iata": "MFR",
+              "latitude": 42.374482,
+              "longitude": -122.873928,
+              "name": "Rogue Valley International Medford Airport",
+              "time_zone": "America/Los_Angeles",
+              "url": "https://spothero.com/airport/eugene-or/mfr-parking"
+            }
+          ],
+          "observed_at_ms": 1790020837687,
+          "query": "ORD",
+          "source_url": "https://spothero.com/api/v1/airports/",
+          "total_count": 109
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "spothero-com",
+        "capability": "parking/airports"
+      }
+    },
+    {
+      "id": "spothero-com/parking/cities",
+      "provider": "spothero-com",
+      "capability": "parking/cities",
+      "name": "Cities",
+      "description": "Check whether SpotHero covers a city and get a starting coordinate for search_parking or search_monthly_parking.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "latitude",
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query"
+        }
+      ],
+      "response": {
+        "about": "SpotHero's cities (spothero.com/api/v1/cities/, ~150 in the US and Canada): id, name, slug, coordinates, country code and the city parking page URL. With `latitude`/`longitude` the nearest cities are returned first (`limit`, default 5); without, the full list, optionally filtered by `query` on the name.",
+        "key": "cities",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "city_id",
+            "type": "number"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "latitude": 41.8781,
+          "limit": 3,
+          "longitude": -87.6298
+        },
+        "response": {
+          "cities": [
+            {
+              "city_id": 1,
+              "country": "US",
+              "latitude": 41.8839288418,
+              "longitude": -87.6309569143,
+              "name": "Chicago",
+              "slug": "chicago",
+              "url": "https://spothero.com/city/chicago-parking"
+            },
+            {
+              "city_id": 716,
+              "country": "US",
+              "latitude": 41.6763545,
+              "longitude": -86.2519898,
+              "name": "South Bend",
+              "slug": "south-bend",
+              "url": "https://spothero.com/city/south-bend-parking"
+            },
+            {
+              "city_id": 3,
+              "country": "US",
+              "latitude": 43.0394048606,
+              "longitude": -87.9135939471,
+              "name": "Milwaukee",
+              "slug": "milwaukee",
+              "url": "https://spothero.com/city/milwaukee-parking"
+            }
+          ],
+          "city_count": 3,
+          "near": {
+            "latitude": 41.8781,
+            "longitude": -87.6298
+          },
+          "observed_at_ms": 1790021043756,
+          "query": null,
+          "source_url": "https://spothero.com/api/v1/cities/?latitude=41.8781&longitude=-87.6298&sort=distance&order=asc&limit=3"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "spothero-com",
+        "capability": "parking/cities"
+      }
+    },
+    {
+      "id": "spothero-com/parking/destination",
+      "provider": "spothero-com",
+      "capability": "parking/destination",
+      "name": "Destination",
+      "description": "Resolve a destination id to coordinates before search_parking, or show a venue's typical price ranges.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "destination_id",
+          "type": "number",
+          "in": "body",
+          "about": "SpotHero destination id (e.g. 2 United Center, 583 O'Hare); from `destination_id` fields of events, airports or a pasted `/search?kind=destination&id=` URL.",
+          "required": true,
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "Read a SpotHero destination (venue, airport, neighbourhood) by id: title, address, coordinates, time zone, city slug and page URL (spothero.com/api/v1/destinations/{id}), plus SpotHero's average price ranges by rate category (commuter, overnight, weekend, event, monthly, airport) from api.spothero.com/v2/midfunnel-rates. Price ranges are advertised averages, not quotes for a window. An unknown id is `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "can_have_events",
+            "type": "boolean"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "city_slug",
+            "type": "string"
+          },
+          {
+            "name": "destination_id",
+            "type": "number"
+          },
+          {
+            "name": "has_upcoming_events",
+            "type": "boolean"
+          },
+          {
+            "name": "is_airport",
+            "type": "boolean"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "monthly_enabled",
+            "type": "boolean"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "postal_code",
+            "type": "string"
+          },
+          {
+            "name": "price_ranges",
+            "type": "object",
+            "about": "null when SpotHero has no average rates for this destination."
+          },
+          {
+            "name": "relative_url",
+            "type": "string"
+          },
+          {
+            "name": "search_url",
+            "type": "string",
+            "about": "spothero.com search page anchored on this destination."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "street_address",
+            "type": "string"
+          },
+          {
+            "name": "time_zone",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "spothero.com destination page when both slugs are known."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "destination_id": 2
+        },
+        "response": {
+          "can_have_events": true,
+          "city": "Chicago",
+          "city_slug": "chicago",
+          "destination_id": 2,
+          "has_upcoming_events": true,
+          "is_airport": false,
+          "latitude": 41.881027831537345,
+          "longitude": -87.67415378888552,
+          "monthly_enabled": false,
+          "observed_at_ms": 1790020980107,
+          "postal_code": "60612",
+          "price_ranges": {
+            "airport": null,
+            "commuter": {
+              "high": "12.75",
+              "low": "8.75"
+            },
+            "currency": "USD",
+            "event": {
+              "high": "40.00",
+              "low": "37.00"
+            },
+            "monthly": null,
+            "overnight": {
+              "high": "22.00",
+              "low": "15.75"
+            },
+            "weekend": {
+              "high": "38.00",
+              "low": "38.00"
+            }
+          },
+          "relative_url": "united-center-parking",
+          "search_url": "https://spothero.com/search?kind=destination&id=2",
+          "source_url": "https://spothero.com/api/v1/destinations/2/?include=can_have_events%2Chas_upcoming_events%2Cdestination%2Cairport%2Cspothero_city_slug",
+          "state": "IL",
+          "street_address": "1901 West Madison Street",
+          "time_zone": "America/Chicago",
+          "title": "United Center",
+          "url": "https://spothero.com/destination/chicago/united-center-parking"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "spothero-com",
+        "capability": "parking/destination"
+      }
+    },
+    {
+      "id": "spothero-com/parking/destination_events",
+      "provider": "spothero-com",
+      "capability": "parking/destination_events",
+      "name": "Destination events",
+      "description": "Find event dates and SpotHero's event parking windows at a venue before pricing with search_parking.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "destination_id",
+          "type": "number",
+          "in": "body",
+          "about": "SpotHero destination id (e.g. 2 United Center, 583 O'Hare); from `destination_id` fields of events, airports or a pasted `/search?kind=destination&id=` URL.",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "min": 1
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "min": 1,
+          "max": 150
+        },
+        {
+          "name": "starts",
+          "type": "string",
+          "in": "body",
+          "about": "Only events starting at or after this UTC date/time (default now). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}(T[0-9]{2}:[0-9]{2}(:[0-9]{2})?)?$."
+        }
+      ],
+      "response": {
+        "about": "List upcoming events at a destination (spothero.com/api/v1/events/?destination_id=), each with SpotHero's parking window (local time) and the event parking page URL, after resolving the destination (title, time zone). `starts` bounds the list (default: now, UTC). 25 events per page by default (`page_size` up to 150); `next_page` when SpotHero reports more. An unknown destination is `not_found`; a destination without events returns an empty list.",
+        "key": "events",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "destination_id",
+            "type": "string"
+          },
+          {
+            "name": "ends",
+            "type": "string"
+          },
+          {
+            "name": "event_id",
+            "type": "string"
+          },
+          {
+            "name": "parking_window",
+            "type": "object"
+          },
+          {
+            "name": "search_url",
+            "type": "string",
+            "about": "Absolute spothero.com URL of the event parking page when the source supplies its path."
+          },
+          {
+            "name": "seo_url",
+            "type": "string"
+          },
+          {
+            "name": "starts",
+            "type": "string",
+            "about": "Event start as returned by SpotHero (UTC `Z` timestamp on the v1 API)."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "destination_id": 2,
+          "page_size": 5
+        },
+        "response": {
+          "destination_id": 2,
+          "destination_title": "United Center",
+          "event_count": 5,
+          "events": [
+            {
+              "description": "United Center - 09-21-2026 07:00 pm - Chicago Blackhawks v Minnesota Wild - PRESEASON",
+              "destination_id": "2",
+              "ends": "2026-09-22T03:00:00Z",
+              "event_id": "1383933",
+              "parking_window": {
+                "ends": "2026-09-21T23:00:00",
+                "starts": "2026-09-21T18:00:00"
+              },
+              "search_url": "https://spothero.com/destination/chicago/united-center-parking/chicago-blackhawks-v-minnesota-wild-preseason-09-21-2026-1",
+              "seo_url": "chicago-blackhawks-v-minnesota-wild-preseason-09-21-2026-1",
+              "starts": "2026-09-22T00:00:00Z",
+              "title": "Chicago Blackhawks v Minnesota Wild - PRESEASON"
+            },
+            {
+              "description": "United Center - 09-22-2026 07:00 pm - WEEZER: The Gathering",
+              "destination_id": "2",
+              "ends": "2026-09-23T04:00:00Z",
+              "event_id": "1308754",
+              "parking_window": {
+                "ends": "2026-09-23T00:00:00",
+                "starts": "2026-09-22T18:00:00"
+              },
+              "search_url": "https://spothero.com/destination/chicago/united-center-parking/weezer-the-gathering-09-22-2026",
+              "seo_url": "weezer-the-gathering-09-22-2026",
+              "starts": "2026-09-23T00:00:00Z",
+              "title": "WEEZER: The Gathering"
+            },
+            {
+              "description": "United Center - 09-25-2026 07:00 pm - Teddy Swims: The UGLY Tour",
+              "destination_id": "2",
+              "ends": "2026-09-26T04:00:00Z",
+              "event_id": "1323887",
+              "parking_window": {
+                "ends": "2026-09-26T00:00:00",
+                "starts": "2026-09-25T18:00:00"
+              },
+              "search_url": "https://spothero.com/destination/chicago/united-center-parking/teddy-swims-the-ugly-tour-09-25-2026",
+              "seo_url": "teddy-swims-the-ugly-tour-09-25-2026",
+              "starts": "2026-09-26T00:00:00Z",
+              "title": "Teddy Swims: The UGLY Tour"
+            },
+            {
+              "description": "United Center - 09-26-2026 06:00 pm - Chicago Blackhawks v St. Louis Blues - PRESEASON",
+              "destination_id": "2",
+              "ends": "2026-09-27T02:00:00Z",
+              "event_id": "1383953",
+              "parking_window": {
+                "ends": "2026-09-26T22:00:00",
+                "starts": "2026-09-26T17:00:00"
+              },
+              "search_url": "https://spothero.com/destination/chicago/united-center-parking/chicago-blackhawks-v-st-louis-blues-preseason-09-26-2026-1",
+              "seo_url": "chicago-blackhawks-v-st-louis-blues-preseason-09-26-2026-1",
+              "starts": "2026-09-26T23:00:00Z",
+              "title": "Chicago Blackhawks v St. Louis Blues - PRESEASON"
+            },
+            {
+              "description": "United Center - 09-29-2026 08:00 pm - Johnny Blue Skies & the Dark Clouds - Mutiny for the Masses 2026 Tour",
+              "destination_id": "2",
+              "ends": "2026-09-30T05:00:00Z",
+              "event_id": "1312400",
+              "parking_window": {
+                "ends": "2026-09-30T01:00:00",
+                "starts": "2026-09-29T19:00:00"
+              },
+              "search_url": "https://spothero.com/destination/chicago/united-center-parking/johnny-blue-skies-the-dark-clouds-mutiny-for-the-masses-2026-tour-09-29-2026",
+              "seo_url": "johnny-blue-skies-the-dark-clouds-mutiny-for-the-masses-2026-tour-09-29-2026",
+              "starts": "2026-09-30T01:00:00Z",
+              "title": "Johnny Blue Skies & the Dark Clouds - Mutiny for the Masses 2026 Tour"
+            }
+          ],
+          "next_page": 2,
+          "observed_at_ms": 1790020990857,
+          "page": 1,
+          "page_size": 5,
+          "source_url": "https://spothero.com/api/v1/events/?destination_id=2&page_size=5&starts=2026-09-21T20%3A03%3A10%2B00%3A00&include=search_url",
+          "starts": "2026-09-21T20:03:10",
+          "time_zone": "America/Chicago",
+          "total_count": 120
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "spothero-com",
+        "capability": "parking/destination_events"
+      }
+    },
+    {
+      "id": "spothero-com/parking/facility_quote",
+      "provider": "spothero-com",
+      "capability": "parking/facility_quote",
+      "name": "Facility quote",
+      "description": "Re-price a facility found by a search for a different window, or read its full details.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "ends",
+          "type": "string",
+          "in": "body",
+          "about": "Local wall-clock time at the parking location, `YYYY-MM-DDTHH:mm` or `YYYY-MM-DDTHH:mm:ss`, no offset (SpotHero interprets it in the facility's time zone). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?$.",
+          "required": true
+        },
+        {
+          "name": "facility_id",
+          "type": "string",
+          "in": "body",
+          "about": "SpotHero facility id (`facility_id` from a search result). Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        },
+        {
+          "name": "starts",
+          "type": "string",
+          "in": "body",
+          "about": "Local wall-clock time at the parking location, `YYYY-MM-DDTHH:mm` or `YYYY-MM-DDTHH:mm:ss`, no offset (SpotHero interprets it in the facility's time zone). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Quote one facility for an arrival/departure window (api.spothero.com/v2/search/transient/{facility_id}, the request behind a spot's detail panel): full facility record (address, hours, restrictions, vehicle limits, requirements, cancellation policy, images) with every rate priced for the window, itemised, plus availability. An unknown facility id is `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "ends",
+            "type": "string"
+          },
+          {
+            "name": "facility",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "pricing_note",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "starts",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "ends": "2026-12-16T23:00",
+          "facility_id": "100339",
+          "starts": "2026-12-16T18:00"
+        },
+        "response": {
+          "ends": "2026-12-16T23:00:00",
+          "facility": {
+            "address": {
+              "city": "Chicago",
+              "country": "US",
+              "latitude": 41.886259,
+              "longitude": -87.673911,
+              "postal_code": "60612",
+              "state": "IL",
+              "street": "1850 West Walnut Street",
+              "time_zone": "America/Chicago"
+            },
+            "availability": {
+              "available": false,
+              "available_spaces": 28,
+              "unavailable_reasons": [
+                "Search Too Far In Future"
+              ]
+            },
+            "cancellation": {
+              "allowed_by_customer": true,
+              "minutes_before_start": 0
+            },
+            "distance": null,
+            "facility_id": "100339",
+            "facility_type": "lot",
+            "hours_of_operation": {
+              "always_open": true,
+              "text": [
+                "This facility is open 24/7."
+              ]
+            },
+            "images": [
+              "https://res.cloudinary.com/spothero/image/upload/w_2000,h_1493,q_50,x_1000,y_746,c_fill,g_xy_center,f_auto/v1782286522/eg1qznldyhdyp2gjuchx.png",
+              "https://res.cloudinary.com/spothero/image/upload/w_2000,h_1493,q_50,x_1000,y_746,c_fill,g_xy_center,f_auto/v1782286529/m4g8w0xonciodtmjuiiy.png",
+              "https://res.cloudinary.com/spothero/image/upload/w_2000,h_1493,q_50,x_1000,y_746,c_fill,g_xy_center,f_auto/v1782286536/fnzam2ikim7r9z6jfz4x.png"
+            ],
+            "operator": "SWL Marketing LLC Parking",
+            "quotes": [
+              {
+                "advertised_price": {
+                  "amount_minor": 1000,
+                  "currency": "USD"
+                },
+                "airport": null,
+                "amenities": [
+                  {
+                    "name": "Self Park",
+                    "type": "self_park"
+                  },
+                  {
+                    "name": "Lot - Uncovered",
+                    "type": "paved"
+                  },
+                  {
+                    "name": "Touchless",
+                    "type": "touchless"
+                  },
+                  {
+                    "name": "In & Out Allowed",
+                    "type": "in_out"
+                  }
+                ],
+                "ends": "2026-12-16T23:00:00-06:00",
+                "items": [
+                  {
+                    "label": "Subtotal",
+                    "price": {
+                      "amount_minor": 1000,
+                      "currency": "USD"
+                    },
+                    "type": "rental"
+                  },
+                  {
+                    "label": "Service Fee",
+                    "price": {
+                      "amount_minor": 88,
+                      "currency": "USD"
+                    },
+                    "type": "event_fee"
+                  }
+                ],
+                "monthly": null,
+                "parking_pass": {
+                  "name": "Monitored by License Plate",
+                  "type": "license_plate"
+                },
+                "quote_valid_until": "2026-12-16T23:00:00-06:00",
+                "rate_id": "event-rate",
+                "rate_kind": "transient",
+                "rate_type": null,
+                "redemption_type": "self",
+                "starts": "2026-12-16T17:00:00-06:00",
+                "title": "Event Rate",
+                "total_price": {
+                  "amount_minor": 1088,
+                  "currency": "USD"
+                }
+              }
+            ],
+            "rating": {
+              "average": 4.5,
+              "count": 636
+            },
+            "requirements": {
+              "license_plate": true,
+              "phone_number": true,
+              "printout": false
+            },
+            "restrictions": [
+              "1 reservation includes parking for only 1 vehicle and you must register the plate of this vehicle or you will be towed. You can update it in the app.",
+              "74 inches wide is the maximum vehicle size allowed. Google your vehicle. Oversized vehicles will be towed.",
+              "NO LITTERING. Keep your trash. This area is monitored by camera, and violators will be towed immediately.",
+              "SpotHero and the local parking provider are not responsible for any damage to vehicles. Please lock your car and do not leave valuables inside.",
+              "The gate remains open at all times and is not closed.",
+              "The operator of this location may reach out to you directly regarding your reservation via text, phone, or email if there is an update to this facility.",
+              "You may park in any available spot. If all spots are occupied, parking is allowed in front of the unused gate."
+            ],
+            "slug": "1850-w-walnut-st",
+            "spot_url": null,
+            "status": "on_sales_allowed",
+            "title": "1850 - 1856 W Walnut St.",
+            "vehicle_limits": null
+          },
+          "observed_at_ms": 1790020919000,
+          "pricing_note": "Prices are in the currency's minor unit (cents). total_price is what SpotHero charges for the priced window, including its service fee item; advertised_price is the rate's headline price without that fee. Taxes are not itemised by SpotHero; whether they are included is unknown. Availability and prices are a snapshot at observed_at_ms.",
+          "source_url": "https://api.spothero.com/v2/search/transient/100339?show_unavailable=true&starts=2026-12-16T18%3A00%3A00&ends=2026-12-16T23%3A00%3A00",
+          "starts": "2026-12-16T18:00:00"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "spothero-com",
+        "capability": "parking/facility_quote"
+      }
+    },
+    {
+      "id": "spothero-com/parking/facility_reviews",
+      "provider": "spothero-com",
+      "capability": "parking/facility_reviews",
+      "name": "Facility reviews",
+      "description": "Read what customers say about a facility found by a search.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "facility_id",
+          "type": "string",
+          "in": "body",
+          "about": "SpotHero facility id (`facility_id` from a search result). Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "Customer reviews of a facility, 10 per page, newest first (spothero.com/api/v1/reviews/?facility_id=): star rating, comment text, the one-tap prompts chosen (e.g. 'Great value'), review date and the rental context (type, venue, vehicle make/model as printed). No reviewer identities are exposed by the source. `next_page` while more pages exist; a page past the end is `not_found`.",
+        "key": "reviews",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "comment",
+            "type": "string",
+            "about": "null when the reviewer left no text."
+          },
+          {
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "name": "prompts",
+            "type": "string[]"
+          },
+          {
+            "name": "rental",
+            "type": "object"
+          },
+          {
+            "name": "review_id",
+            "type": "string"
+          },
+          {
+            "name": "star_rating",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "facility_id": "100339"
+        },
+        "response": {
+          "facility_id": "100339",
+          "next_page": 2,
+          "observed_at_ms": 1790021021256,
+          "page": 1,
+          "review_count": 10,
+          "reviews": [
+            {
+              "comment": null,
+              "created": "2026-09-20T12:45:17.913609-05:00",
+              "prompts": [],
+              "rental": {
+                "ends": "2026-09-11T01:00:00-05:00",
+                "rental_type": "daily",
+                "starts": "2026-09-10T18:00:00-05:00",
+                "vehicle": "Hyundai Kona",
+                "venue": "United Center"
+              },
+              "review_id": "15414305",
+              "star_rating": 5
+            },
+            {
+              "comment": null,
+              "created": "2026-09-20T11:15:25.422990-05:00",
+              "prompts": [
+                "Clear instructions",
+                "Easy enter & exit"
+              ],
+              "rental": {
+                "ends": "2026-09-20T00:30:00-05:00",
+                "rental_type": "daily",
+                "starts": "2026-09-19T17:30:00-05:00",
+                "vehicle": "Honda Odyssey",
+                "venue": "United Center"
+              },
+              "review_id": "15413627",
+              "star_rating": 5
+            },
+            {
+              "comment": null,
+              "created": "2026-09-19T10:10:49.538141-05:00",
+              "prompts": [
+                "Clear instructions",
+                "Easy enter & exit"
+              ],
+              "rental": {
+                "ends": "2026-09-19T00:30:00-05:00",
+                "rental_type": "daily",
+                "starts": "2026-09-18T17:30:00-05:00",
+                "vehicle": "Subaru Crosstrek",
+                "venue": "United Center"
+              },
+              "review_id": "15405110",
+              "star_rating": 5
+            },
+            {
+              "comment": null,
+              "created": "2026-09-18T18:00:39.356255-05:00",
+              "prompts": [],
+              "rental": {
+                "ends": "2026-09-17T21:00:00-05:00",
+                "rental_type": "daily",
+                "starts": "2026-09-17T18:00:00-05:00",
+                "vehicle": "Subaru Legacy",
+                "venue": null
+              },
+              "review_id": "15401063",
+              "star_rating": 5
+            },
+            {
+              "comment": null,
+              "created": "2026-09-17T07:01:46.811184-05:00",
+              "prompts": [],
+              "rental": {
+                "ends": "2026-09-10T14:00:00-05:00",
+                "rental_type": "daily",
+                "starts": "2026-09-10T08:00:00-05:00",
+                "vehicle": "Chevrolet Impala",
+                "venue": null
+              },
+              "review_id": "15390138",
+              "star_rating": 5
+            },
+            {
+              "comment": null,
+              "created": "2026-09-17T06:38:04.079334-05:00",
+              "prompts": [],
+              "rental": {
+                "ends": "2026-09-10T15:00:00-05:00",
+                "rental_type": "daily",
+                "starts": "2026-09-10T09:00:00-05:00",
+                "vehicle": "Hyundai Tucson Hybrid",
+                "venue": null
+              },
+              "review_id": "15389938",
+              "star_rating": 5
+            },
+            {
+              "comment": null,
+              "created": "2026-09-16T16:48:31.767339-05:00",
+              "prompts": [],
+              "rental": {
+                "ends": "2026-09-13T00:30:00-05:00",
+                "rental_type": "daily",
+                "starts": "2026-09-12T17:30:00-05:00",
+                "vehicle": "Hyundai Tucson",
+                "venue": "United Center"
+              },
+              "review_id": "15386918",
+              "star_rating": 5
+            },
+            {
+              "comment": null,
+              "created": "2026-09-15T20:06:59.406961-05:00",
+              "prompts": [],
+              "rental": {
+                "ends": "2026-09-15T17:30:00-05:00",
+                "rental_type": "daily",
+                "starts": "2026-09-15T09:00:00-05:00",
+                "vehicle": "Honda CRV",
+                "venue": null
+              },
+              "review_id": "15381179",
+              "star_rating": 5
+            },
+            {
+              "comment": null,
+              "created": "2026-09-15T15:37:19.883452-05:00",
+              "prompts": [],
+              "rental": {
+                "ends": "2026-09-12T00:30:00-05:00",
+                "rental_type": "daily",
+                "starts": "2026-09-11T17:30:00-05:00",
+                "vehicle": "Porsche Cayenne",
+                "venue": "United Center"
+              },
+              "review_id": "15379782",
+              "star_rating": 5
+            },
+            {
+              "comment": null,
+              "created": "2026-09-14T13:46:33.241875-05:00",
+              "prompts": [
+                "Clean facility",
+                "Safe & secure",
+                "Easy enter & exit"
+              ],
+              "rental": {
+                "ends": "2026-09-12T00:30:00-05:00",
+                "rental_type": "daily",
+                "starts": "2026-09-11T17:30:00-05:00",
+                "vehicle": "Mazda CX-9",
+                "venue": "United Center"
+              },
+              "review_id": "15371859",
+              "star_rating": 5
+            }
+          ],
+          "source_url": "https://spothero.com/api/v1/reviews/?facility_id=100339&page=1",
+          "total_count": 636
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "spothero-com",
+        "capability": "parking/facility_reviews"
+      }
+    },
+    {
+      "id": "spothero-com/parking/search_airport_parking",
+      "provider": "spothero-com",
+      "capability": "parking/search_airport_parking",
+      "name": "Search airport parking",
+      "description": "Compare off-airport and on-airport parking prices for a trip; airports and their codes come from `airports`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "`next_cursor` from a previous page of this function. When given, the other search inputs must be omitted."
+        },
+        {
+          "name": "ends",
+          "type": "string",
+          "in": "body",
+          "about": "Local wall-clock time at the parking location, `YYYY-MM-DDTHH:mm` or `YYYY-MM-DDTHH:mm:ss`, no offset (SpotHero interprets it in the facility's time zone). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?$."
+        },
+        {
+          "name": "iata",
+          "type": "string",
+          "in": "body",
+          "about": "Airport IATA code, e.g. ORD, LAX, YYZ. Pattern: ^[A-Za-z]{3}$."
+        },
+        {
+          "name": "oversize",
+          "type": "boolean",
+          "in": "body",
+          "about": "oversize"
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page (default 10, at most 25).",
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "starts",
+          "type": "string",
+          "in": "body",
+          "about": "Local wall-clock time at the parking location, `YYYY-MM-DDTHH:mm` or `YYYY-MM-DDTHH:mm:ss`, no offset (SpotHero interprets it in the facility's time zone). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?$."
+        }
+      ],
+      "response": {
+        "about": "Search airport parking by IATA code for a drop-off/pick-up window (api.spothero.com/v2/search/airport). Results are facilities with distance to the terminal, rating, availability and airport quotes: `total_price` for the whole stay (daily rate x days plus fees, service fee included), `advertised_price` (the daily headline), the itemised fees, shuttle/parking-pass amenities and the lowest daily rate. Pages via `cursor`/`next_cursor`. An unknown IATA code is `not_found`.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object",
+            "about": "The facility's search address (the entry SpotHero tags `search`, else the first one)."
+          },
+          {
+            "name": "availability",
+            "type": "object"
+          },
+          {
+            "name": "cancellation",
+            "type": "object"
+          },
+          {
+            "name": "distance",
+            "type": "object"
+          },
+          {
+            "name": "facility_id",
+            "type": "string",
+            "about": "SpotHero facility id; use it with facility_quote and facility_reviews."
+          },
+          {
+            "name": "facility_type",
+            "type": "string",
+            "about": "garage, lot, personal, valet, ..."
+          },
+          {
+            "name": "hours_of_operation",
+            "type": "object"
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "operator",
+            "type": "string"
+          },
+          {
+            "name": "quotes",
+            "type": "object[]"
+          },
+          {
+            "name": "rating",
+            "type": "object"
+          },
+          {
+            "name": "requirements",
+            "type": "object"
+          },
+          {
+            "name": "restrictions",
+            "type": "string[]"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "spot_url",
+            "type": "string",
+            "about": "spothero.com search page opening this spot's detail panel; null when the search has no destination or airport anchor."
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "vehicle_limits",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "ends": "2026-12-18T12:00",
+          "iata": "ORD",
+          "page_size": 3,
+          "starts": "2026-12-16T12:00"
+        },
+        "response": {
+          "airport": {
+            "code": "ORD",
+            "latitude": 41.97671486983269,
+            "longitude": -87.8842329447998,
+            "name": "O'Hare International Airport",
+            "short_name": "O'Hare"
+          },
+          "next_cursor": "https://api.spothero.com/v2/search/airport?after=14742&ends=2026-12-18T12:00:00&oversize=false&page_size=3&iata=ORD&starts=2026-12-16T12:00:00",
+          "observed_at_ms": 1790020933075,
+          "pricing_note": "Prices are in the currency's minor unit (cents). total_price is what SpotHero charges for the priced window, including its service fee item; advertised_price is the rate's headline price without that fee. Taxes are not itemised by SpotHero; whether they are included is unknown. Availability and prices are a snapshot at observed_at_ms.",
+          "result_count": 3,
+          "results": [
+            {
+              "address": {
+                "city": "Des Plaines",
+                "country": "US",
+                "latitude": 41.9739656,
+                "longitude": -87.8709264,
+                "postal_code": "60018",
+                "state": "IL",
+                "street": "5200 Pearl Street",
+                "time_zone": "America/Chicago"
+              },
+              "availability": {
+                "available": true,
+                "available_spaces": 45,
+                "unavailable_reasons": []
+              },
+              "cancellation": {
+                "allowed_by_customer": true,
+                "minutes_before_start": 0
+              },
+              "distance": {
+                "linear_meters": 1141.6895447468337,
+                "walking_meters": null,
+                "walking_seconds": null
+              },
+              "facility_id": "12897",
+              "facility_type": "lot",
+              "hours_of_operation": {
+                "always_open": true,
+                "text": [
+                  "This facility is open 24/7."
+                ]
+              },
+              "images": [
+                "https://res.cloudinary.com/spothero/image/upload/w_2034,h_1498,q_50,x_1017,y_749,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1652385081/sl19j8wqzmf8jzoxjql4.png",
+                "https://res.cloudinary.com/spothero/image/upload/w_2018,h_1502,q_50,x_1009,y_751,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1652385083/iytsgv827qksxxadpjbw.png"
+              ],
+              "operator": "Rose Hotel Parking",
+              "quotes": [
+                {
+                  "advertised_price": {
+                    "amount_minor": 1550,
+                    "currency": "USD"
+                  },
+                  "airport": {
+                    "lowest_daily_rate": {
+                      "amount_minor": 0,
+                      "currency": "USD"
+                    },
+                    "tag": null
+                  },
+                  "amenities": [
+                    {
+                      "name": "Self Park",
+                      "type": "self_park"
+                    },
+                    {
+                      "name": "Lot - Uncovered",
+                      "type": "paved"
+                    },
+                    {
+                      "name": "Touchless",
+                      "type": "touchless"
+                    },
+                    {
+                      "name": "On-Site Staff",
+                      "type": "attendant"
+                    },
+                    {
+                      "name": "Airport Shuttle",
+                      "type": "shuttle"
+                    },
+                    {
+                      "name": "Wheelchair Accessible",
+                      "type": "wheelchair_accessible"
+                    }
+                  ],
+                  "ends": "2026-12-18T12:00:00-06:00",
+                  "items": [
+                    {
+                      "label": "$15.50 x 2 days",
+                      "price": {
+                        "amount_minor": 3100,
+                        "currency": "USD"
+                      },
+                      "type": "rental"
+                    },
+                    {
+                      "label": "Additional Fees",
+                      "price": {
+                        "amount_minor": 500,
+                        "currency": "USD"
+                      },
+                      "type": "optimization_fee"
+                    },
+                    {
+                      "label": "Service Fee",
+                      "price": {
+                        "amount_minor": 400,
+                        "currency": "USD"
+                      },
+                      "type": "blanket_fee"
+                    }
+                  ],
+                  "monthly": null,
+                  "parking_pass": {
+                    "name": "Scan In/Out",
+                    "type": "scan_in_out"
+                  },
+                  "quote_valid_until": "2026-12-18T12:00:00-06:00",
+                  "rate_id": "1100166858",
+                  "rate_kind": "airport",
+                  "rate_type": null,
+                  "redemption_type": "self",
+                  "starts": "2026-12-16T12:00:00-06:00",
+                  "title": null,
+                  "total_price": {
+                    "amount_minor": 4000,
+                    "currency": "USD"
+                  }
+                }
+              ],
+              "rating": {
+                "average": 4.6,
+                "count": 597
+              },
+              "requirements": {
+                "license_plate": true,
+                "phone_number": false,
+                "printout": false
+              },
+              "restrictions": [
+                " Please note: The shuttle runs by appointment only on the top and the bottom of every hour. To make sure that you arrive at the airport on time, please arrive at the hotel no less than 2 hours before your flight. The hotel is NOT responsible if you must wait for the next shuttle. For an easier experience, please call the hotel to reserve your shuttle drop off and pick up. They can be reached at 847-260-4770.",
+                "Make sure you are parking in The Rose Hotel parking lot and NOT the areas nearby areas labeled. NO OVERNIGHT PARKING.",
+                "Please call hotel to make an appointment for drop off at O’Hare airport 847-260-4770",
+                "Please note, your QR code can only be scanned after the start time of the reservation. Please book enough time to make it to your shuttle."
+              ],
+              "slug": "5200-pearl-st",
+              "spot_url": "https://spothero.com/search?kind=airport&id=ord&airport=true&starts=2026-12-16T12:00&ends=2026-12-18T12:00&view=dl&spot-id=12897",
+              "status": "on_sales_allowed",
+              "title": "The Rose Hotel - Uncovered Self Park",
+              "vehicle_limits": null
+            },
+            {
+              "address": {
+                "city": "Chicago",
+                "country": "US",
+                "latitude": 41.97786915438057,
+                "longitude": -87.9043899541731,
+                "postal_code": "60666",
+                "state": "IL",
+                "street": null,
+                "time_zone": "America/Chicago"
+              },
+              "availability": {
+                "available": true,
+                "available_spaces": 15,
+                "unavailable_reasons": []
+              },
+              "cancellation": {
+                "allowed_by_customer": true,
+                "minutes_before_start": 0
+              },
+              "distance": {
+                "linear_meters": 1671.1856562989512,
+                "walking_meters": null,
+                "walking_seconds": null
+              },
+              "facility_id": "131203",
+              "facility_type": "valet_stand",
+              "hours_of_operation": {
+                "always_open": true,
+                "text": [
+                  "This facility is open 24/7."
+                ]
+              },
+              "images": [
+                "https://res.cloudinary.com/spothero/image/upload/w_800,h_600,q_50,x_400,y_300,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1758749600/uwwdclvjflp1zlldnymd.jpg",
+                "https://res.cloudinary.com/spothero/image/upload/w_800,h_600,q_50,x_400,y_300,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1758749601/miwr4kossemxbmxkdbxk.jpg",
+                "https://res.cloudinary.com/spothero/image/upload/w_2016,h_1512,q_50,x_1008,y_756,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1761247807/mukgul0dyrpu2whfpziq.jpg"
+              ],
+              "operator": "Hilton O'Hare Chicago Parking",
+              "quotes": [
+                {
+                  "advertised_price": {
+                    "amount_minor": 4307,
+                    "currency": "USD"
+                  },
+                  "airport": {
+                    "lowest_daily_rate": {
+                      "amount_minor": 0,
+                      "currency": "USD"
+                    },
+                    "tag": null
+                  },
+                  "amenities": [
+                    {
+                      "name": "Valet",
+                      "type": "valet"
+                    },
+                    {
+                      "name": "Lot - Uncovered",
+                      "type": "paved"
+                    },
+                    {
+                      "name": "On-Site Staff",
+                      "type": "attendant"
+                    },
+                    {
+                      "name": "Airport Shuttle",
+                      "type": "shuttle"
+                    }
+                  ],
+                  "ends": "2026-12-18T12:00:00-06:00",
+                  "items": [
+                    {
+                      "label": "$43.07 x 2 days",
+                      "price": {
+                        "amount_minor": 8614,
+                        "currency": "USD"
+                      },
+                      "type": "rental"
+                    },
+                    {
+                      "label": "Service Fee",
+                      "price": {
+                        "amount_minor": 524,
+                        "currency": "USD"
+                      },
+                      "type": "blanket_fee"
+                    },
+                    {
+                      "label": "Additional Fees",
+                      "price": {
+                        "amount_minor": 500,
+                        "currency": "USD"
+                      },
+                      "type": "optimization_fee"
+                    }
+                  ],
+                  "monthly": null,
+                  "parking_pass": {
+                    "name": "Valet",
+                    "type": "valet"
+                  },
+                  "quote_valid_until": "2026-12-18T12:00:00-06:00",
+                  "rate_id": "1100166675",
+                  "rate_kind": "airport",
+                  "rate_type": null,
+                  "redemption_type": "valet",
+                  "starts": "2026-12-16T12:00:00-06:00",
+                  "title": null,
+                  "total_price": {
+                    "amount_minor": 9638,
+                    "currency": "USD"
+                  }
+                }
+              ],
+              "rating": {
+                "average": 4.8,
+                "count": 95
+              },
+              "requirements": {
+                "license_plate": true,
+                "phone_number": true,
+                "printout": false
+              },
+              "restrictions": [
+                "In & Out Privileges are not included."
+              ],
+              "slug": "terminal-2",
+              "spot_url": "https://spothero.com/search?kind=airport&id=ord&airport=true&starts=2026-12-16T12:00&ends=2026-12-18T12:00&view=dl&spot-id=131203",
+              "status": "on_sales_allowed",
+              "title": "Hilton Chicago O'Hare Airport - Uncovered Valet",
+              "vehicle_limits": null
+            },
+            {
+              "address": {
+                "city": "Rosemont",
+                "country": "US",
+                "latitude": 41.97405549999999,
+                "longitude": -87.86372209999999,
+                "postal_code": "60018",
+                "state": "IL",
+                "street": "5300 North River Road",
+                "time_zone": "America/Chicago"
+              },
+              "availability": {
+                "available": true,
+                "available_spaces": 49,
+                "unavailable_reasons": []
+              },
+              "cancellation": {
+                "allowed_by_customer": true,
+                "minutes_before_start": 0
+              },
+              "distance": {
+                "linear_meters": 1721.1426971458477,
+                "walking_meters": null,
+                "walking_seconds": null
+              },
+              "facility_id": "14742",
+              "facility_type": "lot",
+              "hours_of_operation": {
+                "always_open": true,
+                "text": [
+                  "This facility is open 24/7."
+                ]
+              },
+              "images": [
+                "https://res.cloudinary.com/spothero/image/upload/w_1132,h_1518,q_50,x_566,y_759,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1652384636/ox3b8zscsrf2ougbzotf.png",
+                "https://res.cloudinary.com/spothero/image/upload/w_2034,h_1516,q_50,x_1017,y_758,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1652384631/icavoiagzwfsl5ittrou.png",
+                "https://res.cloudinary.com/spothero/image/upload/w_1176,h_1562,q_50,x_588,y_781,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1711385629/yvsi8w9wtsmkuthmbq08.jpg"
+              ],
+              "operator": "SP+ Parking",
+              "quotes": [
+                {
+                  "advertised_price": {
+                    "amount_minor": 2350,
+                    "currency": "USD"
+                  },
+                  "airport": {
+                    "lowest_daily_rate": {
+                      "amount_minor": 0,
+                      "currency": "USD"
+                    },
+                    "tag": null
+                  },
+                  "amenities": [
+                    {
+                      "name": "Self Park",
+                      "type": "self_park"
+                    },
+                    {
+                      "name": "Lot - Uncovered",
+                      "type": "paved"
+                    },
+                    {
+                      "name": "Wheelchair Accessible",
+                      "type": "wheelchair_accessible"
+                    },
+                    {
+                      "name": "EV Charging",
+                      "type": "ev"
+                    }
+                  ],
+                  "ends": "2026-12-18T12:00:00-06:00",
+                  "items": [
+                    {
+                      "label": "$23.50 x 2 days",
+                      "price": {
+                        "amount_minor": 4700,
+                        "currency": "USD"
+                      },
+                      "type": "rental"
+                    },
+                    {
+                      "label": "Additional Fees",
+                      "price": {
+                        "amount_minor": 500,
+                        "currency": "USD"
+                      },
+                      "type": "optimization_fee"
+                    },
+                    {
+                      "label": "Service Fee",
+                      "price": {
+                        "amount_minor": 400,
+                        "currency": "USD"
+                      },
+                      "type": "blanket_fee"
+                    }
+                  ],
+                  "monthly": null,
+                  "parking_pass": {
+                    "name": "Pull Ticket / Call Button",
+                    "type": "pull_ticket_call_button"
+                  },
+                  "quote_valid_until": "2026-12-18T12:00:00-06:00",
+                  "rate_id": "1100166902",
+                  "rate_kind": "airport",
+                  "rate_type": null,
+                  "redemption_type": "self",
+                  "starts": "2026-12-16T12:00:00-06:00",
+                  "title": null,
+                  "total_price": {
+                    "amount_minor": 5600,
+                    "currency": "USD"
+                  }
+                }
+              ],
+              "rating": {
+                "average": 4.7,
+                "count": 1370
+              },
+              "requirements": {
+                "license_plate": true,
+                "phone_number": true,
+                "printout": false
+              },
+              "restrictions": [
+                "Height Restriction: 6' 11\"",
+                "NO QR CODE, PLEASE PULL TICKET AND TAKE IT TO THE FRONT DESK FOR VALIDATION <u>AT THE END OF YOUR RESERVATION</u>",
+                "Shuttle <b>Pick up</b> is located at Terminal 2 Lower Level for Arrivals at 2C. Shuttle does not <b>pick up</b> at Terminal 5.",
+                "The airport shuttle runs 24/7 every 15 minutes between airport and hotel.",
+                "Visit the <strong><a href=\"https://trackmyshuttle.com/a/5300\" target=\"_new\">Shuttle Tracker</a></strong>"
+              ],
+              "slug": "5300-n-river-rd-2",
+              "spot_url": "https://spothero.com/search?kind=airport&id=ord&airport=true&starts=2026-12-16T12:00&ends=2026-12-18T12:00&view=dl&spot-id=14742",
+              "status": "on_sales_allowed",
+              "title": "Loews Chicago O'Hare - Covered Self Park",
+              "vehicle_limits": {
+                "clearance_inches": 83,
+                "max_height_inches": 83,
+                "max_length_inches": null,
+                "max_width_inches": null
+              }
+            }
+          ],
+          "search": {
+            "ends": "2026-12-18T12:00:00",
+            "iata": "ORD",
+            "kind": "airport",
+            "oversize": false,
+            "page_size": 3,
+            "starts": "2026-12-16T12:00:00"
+          },
+          "source_url": "https://api.spothero.com/v2/search/airport?iata=ORD&starts=2026-12-16T12%3A00%3A00&ends=2026-12-18T12%3A00%3A00&oversize=false&page_size=3"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "spothero-com",
+        "capability": "parking/search_airport_parking"
+      }
+    },
+    {
+      "id": "spothero-com/parking/search_events",
+      "provider": "spothero-com",
+      "capability": "parking/search_events",
+      "name": "Search events",
+      "description": "Turn a team, artist or venue name into destination coordinates and an event parking window for search_parking.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Default 10.",
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Text search for upcoming events SpotHero sells parking for (api.spothero.com/v2/events/search, the search box's event suggestions): event id, title, start/end (local with offset), parking window, destination id/title/coordinates/time zone. No match returns an empty list.",
+        "key": "events",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "destination_id",
+            "type": "string"
+          },
+          {
+            "name": "destination_title",
+            "type": "string"
+          },
+          {
+            "name": "ends",
+            "type": "string"
+          },
+          {
+            "name": "event_id",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "parking_window",
+            "type": "object"
+          },
+          {
+            "name": "search_url",
+            "type": "string",
+            "about": "spothero.com search page for this event's parking."
+          },
+          {
+            "name": "seo_url",
+            "type": "string"
+          },
+          {
+            "name": "starts",
+            "type": "string"
+          },
+          {
+            "name": "time_zone",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 3,
+          "query": "United Center"
+        },
+        "response": {
+          "events": [
+            {
+              "city": "Washington",
+              "destination_id": "122609",
+              "destination_title": "Washington Spirit",
+              "ends": "2026-09-22T14:00:00-04:00",
+              "event_id": "1373035",
+              "latitude": 38.868401,
+              "longitude": -77.012869,
+              "parking_window": {
+                "ends": "2026-09-22T15:00:00-04:00",
+                "starts": "2026-09-22T10:00:00-04:00"
+              },
+              "search_url": "https://spothero.com/search?kind=event&id=1373035",
+              "seo_url": "dc-power-fc-vs-fort-lauderdale-united-fc-09-22-2026",
+              "starts": "2026-09-22T11:00:00-04:00",
+              "time_zone": "America/New_York",
+              "title": "DC Power FC vs. Fort Lauderdale United FC"
+            },
+            {
+              "city": "Washington",
+              "destination_id": "72485",
+              "destination_title": "Audi Field",
+              "ends": "2026-09-22T14:00:00-04:00",
+              "event_id": "1373034",
+              "latitude": 38.86841862261251,
+              "longitude": -77.01287198511575,
+              "parking_window": {
+                "ends": "2026-09-22T15:00:00-04:00",
+                "starts": "2026-09-22T10:00:00-04:00"
+              },
+              "search_url": "https://spothero.com/search?kind=event&id=1373034",
+              "seo_url": "dc-power-fc-vs-fort-lauderdale-united-fc-09-22-2026",
+              "starts": "2026-09-22T11:00:00-04:00",
+              "time_zone": "America/New_York",
+              "title": "DC Power FC vs. Fort Lauderdale United FC"
+            },
+            {
+              "city": "Las Vegas",
+              "destination_id": "73197",
+              "destination_title": "Las Vegas Convention Center",
+              "ends": "2026-09-23T17:00:00-07:00",
+              "event_id": "1304549",
+              "latitude": 36.1311282,
+              "longitude": -115.15111919999998,
+              "parking_window": {
+                "ends": "2026-09-23T18:00:00-07:00",
+                "starts": "2026-09-23T08:00:00-07:00"
+              },
+              "search_url": "https://spothero.com/search?kind=event&id=1304549",
+              "seo_url": "printing-united-exposition-2026-day-1-09-23-2026",
+              "starts": "2026-09-23T09:00:00-07:00",
+              "time_zone": "America/Los_Angeles",
+              "title": "Printing United Exposition 2026 Day 1"
+            }
+          ],
+          "observed_at_ms": 1790021032344,
+          "query": "United Center",
+          "result_count": 3,
+          "source_url": "https://api.spothero.com/v2/events/search?search_query=United+Center&limit=3"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "spothero-com",
+        "capability": "parking/search_events"
+      }
+    },
+    {
+      "id": "spothero-com/parking/search_monthly_parking",
+      "provider": "spothero-com",
+      "capability": "parking/search_monthly_parking",
+      "name": "Search monthly parking",
+      "description": "Find commuter or resident monthly parking near an address; coordinates come from `cities`, `destination` or `airports`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "`next_cursor` from a previous page of this function. When given, the other search inputs must be omitted."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "latitude",
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "max_distance_meters",
+          "type": "number",
+          "in": "body",
+          "about": "max_distance_meters",
+          "min": 100,
+          "max": 20000
+        },
+        {
+          "name": "oversize",
+          "type": "boolean",
+          "in": "body",
+          "about": "oversize"
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page (default 10, at most 25).",
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "starts",
+          "type": "string",
+          "in": "body",
+          "about": "Desired start date `YYYY-MM-DD` (midnight local is used) or a local time. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}(T[0-9]{2}:[0-9]{2}(:[0-9]{2})?)?$."
+        }
+      ],
+      "response": {
+        "about": "Search monthly parking around a coordinate starting on a given date (api.spothero.com/v2/search/monthly). Each result carries the facility record and monthly quotes: `total_price` for the first month (service fee included), `advertised_price` (the monthly rate), contract terms, activation fee, in/out privileges, start-date choices and access hours. Pages via `cursor`/`next_cursor`.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object",
+            "about": "The facility's search address (the entry SpotHero tags `search`, else the first one)."
+          },
+          {
+            "name": "availability",
+            "type": "object"
+          },
+          {
+            "name": "cancellation",
+            "type": "object"
+          },
+          {
+            "name": "distance",
+            "type": "object"
+          },
+          {
+            "name": "facility_id",
+            "type": "string",
+            "about": "SpotHero facility id; use it with facility_quote and facility_reviews."
+          },
+          {
+            "name": "facility_type",
+            "type": "string",
+            "about": "garage, lot, personal, valet, ..."
+          },
+          {
+            "name": "hours_of_operation",
+            "type": "object"
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "operator",
+            "type": "string"
+          },
+          {
+            "name": "quotes",
+            "type": "object[]"
+          },
+          {
+            "name": "rating",
+            "type": "object"
+          },
+          {
+            "name": "requirements",
+            "type": "object"
+          },
+          {
+            "name": "restrictions",
+            "type": "string[]"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "spot_url",
+            "type": "string",
+            "about": "spothero.com search page opening this spot's detail panel; null when the search has no destination or airport anchor."
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "vehicle_limits",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "latitude": 41.881027831537345,
+          "longitude": -87.67415378888552,
+          "page_size": 3,
+          "starts": "2026-12-01"
+        },
+        "response": {
+          "next_cursor": null,
+          "observed_at_ms": 1790020968522,
+          "pricing_note": "Prices are in the currency's minor unit (cents). total_price is what SpotHero charges for the priced window, including its service fee item; advertised_price is the rate's headline price without that fee. Taxes are not itemised by SpotHero; whether they are included is unknown. Availability and prices are a snapshot at observed_at_ms.",
+          "result_count": 1,
+          "results": [
+            {
+              "address": {
+                "city": "Chicago",
+                "country": "US",
+                "latitude": 41.886259,
+                "longitude": -87.673911,
+                "postal_code": "60612",
+                "state": "IL",
+                "street": "1850 West Walnut Street",
+                "time_zone": "America/Chicago"
+              },
+              "availability": {
+                "available": true,
+                "available_spaces": 20,
+                "unavailable_reasons": []
+              },
+              "cancellation": {
+                "allowed_by_customer": true,
+                "minutes_before_start": 0
+              },
+              "distance": {
+                "linear_meters": 582.027346649244,
+                "walking_meters": 925,
+                "walking_seconds": 791
+              },
+              "facility_id": "100339",
+              "facility_type": "lot",
+              "hours_of_operation": {
+                "always_open": true,
+                "text": [
+                  "This facility is open 24/7."
+                ]
+              },
+              "images": [
+                "https://res.cloudinary.com/spothero/image/upload/w_2000,h_1493,q_50,x_1000,y_746,c_fill,g_xy_center,f_auto/v1782286522/eg1qznldyhdyp2gjuchx.png",
+                "https://res.cloudinary.com/spothero/image/upload/w_2000,h_1493,q_50,x_1000,y_746,c_fill,g_xy_center,f_auto/v1782286529/m4g8w0xonciodtmjuiiy.png",
+                "https://res.cloudinary.com/spothero/image/upload/w_2000,h_1493,q_50,x_1000,y_746,c_fill,g_xy_center,f_auto/v1782286536/fnzam2ikim7r9z6jfz4x.png"
+              ],
+              "operator": "SWL Marketing LLC Parking",
+              "quotes": [
+                {
+                  "advertised_price": {
+                    "amount_minor": 25000,
+                    "currency": "USD"
+                  },
+                  "airport": null,
+                  "amenities": [
+                    {
+                      "name": "Self Park",
+                      "type": "self_park"
+                    },
+                    {
+                      "name": "Lot - Uncovered",
+                      "type": "paved"
+                    },
+                    {
+                      "name": "Touchless",
+                      "type": "touchless"
+                    },
+                    {
+                      "name": "Immediate Parking",
+                      "type": "immediate_parking"
+                    },
+                    {
+                      "name": "Month to Month",
+                      "type": "no_contract"
+                    }
+                  ],
+                  "ends": "2026-12-31T23:59:59-06:00",
+                  "items": [
+                    {
+                      "label": "Subtotal",
+                      "price": {
+                        "amount_minor": 25000,
+                        "currency": "USD"
+                      },
+                      "type": "rental"
+                    },
+                    {
+                      "label": "One Time Service Fee",
+                      "price": {
+                        "amount_minor": 750,
+                        "currency": "USD"
+                      },
+                      "type": "monthly_fee"
+                    }
+                  ],
+                  "monthly": {
+                    "activation_fee": {
+                      "amount_minor": 0,
+                      "currency": "USD"
+                    },
+                    "contract_duration_months": 12,
+                    "contract_required": false,
+                    "in_out_allowed": true,
+                    "pricing_details": "The rate is at the garage&#39;s discretion. You will receive an email notice of upcoming rate changes, if any. Your card will be charged 5 days before the start of each month.",
+                    "start_date_choices": [
+                      "2026-12-01"
+                    ]
+                  },
+                  "parking_pass": {
+                    "name": "Monitored by License Plate",
+                    "type": "license_plate"
+                  },
+                  "quote_valid_until": null,
+                  "rate_id": "34010556",
+                  "rate_kind": "monthly",
+                  "rate_type": null,
+                  "redemption_type": "self",
+                  "starts": "2026-12-01T00:00:00-06:00",
+                  "title": "24/7 Parking",
+                  "total_price": {
+                    "amount_minor": 25750,
+                    "currency": "USD"
+                  }
+                }
+              ],
+              "rating": {
+                "average": 4.5,
+                "count": 636
+              },
+              "requirements": {
+                "license_plate": true,
+                "phone_number": true,
+                "printout": false
+              },
+              "restrictions": [
+                "1 reservation includes parking for only 1 vehicle and you must register the plate of this vehicle or you will be towed. You can update it in the app.",
+                "74 inches wide is the maximum vehicle size allowed. Google your vehicle. Oversized vehicles will be towed.",
+                "NO LITTERING. Keep your trash. This area is monitored by camera, and violators will be towed immediately.",
+                "SpotHero and the local parking provider are not responsible for any damage to vehicles. Please lock your car and do not leave valuables inside.",
+                "The gate remains open at all times and is not closed.",
+                "The operator of this location may reach out to you directly regarding your reservation via text, phone, or email if there is an update to this facility.",
+                "You may park in any available spot. If all spots are occupied, parking is allowed in front of the unused gate."
+              ],
+              "slug": "1850-w-walnut-st",
+              "spot_url": null,
+              "status": "on_sales_allowed",
+              "title": "1850 - 1856 W Walnut St.",
+              "vehicle_limits": null
+            }
+          ],
+          "search": {
+            "kind": "monthly",
+            "latitude": 41.881027831537345,
+            "longitude": -87.67415378888552,
+            "oversize": false,
+            "page_size": 3,
+            "starts": "2026-12-01T00:00:00"
+          },
+          "source_url": "https://api.spothero.com/v2/search/monthly?lat=41.881027831537345&lon=-87.67415378888552&starts=2026-12-01T00%3A00%3A00&oversize=false&sort_by=relevance&include_walking_distance=true&show_unavailable=false&page_size=3"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "spothero-com",
+        "capability": "parking/search_monthly_parking"
+      }
+    },
+    {
+      "id": "spothero-com/parking/search_parking",
+      "provider": "spothero-com",
+      "capability": "parking/search_parking",
+      "name": "Search parking",
+      "description": "Find parking near a place or venue for a specific arrival and departure time and compare quoted prices; follow `facility_id` into facility_quote or facility_reviews.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "`next_cursor` from a previous page of this function. When given, the other search inputs must be omitted."
+        },
+        {
+          "name": "destination_id",
+          "type": "number",
+          "in": "body",
+          "about": "SpotHero destination id (e.g. 2 United Center, 583 O'Hare); from `destination_id` fields of events, airports or a pasted `/search?kind=destination&id=` URL.",
+          "min": 1
+        },
+        {
+          "name": "ends",
+          "type": "string",
+          "in": "body",
+          "about": "Local wall-clock time at the parking location, `YYYY-MM-DDTHH:mm` or `YYYY-MM-DDTHH:mm:ss`, no offset (SpotHero interprets it in the facility's time zone). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?$."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "latitude",
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "max_distance_meters",
+          "type": "number",
+          "in": "body",
+          "about": "Search radius; SpotHero's default is used when omitted.",
+          "min": 100,
+          "max": 20000
+        },
+        {
+          "name": "oversize",
+          "type": "boolean",
+          "in": "body",
+          "about": "Search for an oversize vehicle (default false)."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page (default 10, at most 25).",
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "show_unavailable",
+          "type": "boolean",
+          "in": "body",
+          "about": "Include facilities that cannot be booked for the window, with their `unavailable_reasons` (default false)."
+        },
+        {
+          "name": "starts",
+          "type": "string",
+          "in": "body",
+          "about": "Local wall-clock time at the parking location, `YYYY-MM-DDTHH:mm` or `YYYY-MM-DDTHH:mm:ss`, no offset (SpotHero interprets it in the facility's time zone). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2})?$."
+        }
+      ],
+      "response": {
+        "about": "Search hourly/daily (transient) parking around a coordinate for an arrival/departure window (api.spothero.com/v2/search/transient, the request behind spothero.com/search). Each result is a facility with its address, distance from the origin, rating, live availability, access hours, restrictions, vehicle limits and one or more priced quotes for the window: `total_price` (what SpotHero charges, service fee included) and `advertised_price` (the headline rate without the fee), itemised. Event rates can widen the priced window; read each quote's `starts`/`ends`. Pass a SpotHero `destination_id` to anchor the search on a venue (its coordinates from `destination`) and to get `spot_url` links. Pages via `cursor`/`next_cursor`. Prices are USD in the US and CAD in Canada, taxes not itemised.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object",
+            "about": "The facility's search address (the entry SpotHero tags `search`, else the first one)."
+          },
+          {
+            "name": "availability",
+            "type": "object"
+          },
+          {
+            "name": "cancellation",
+            "type": "object"
+          },
+          {
+            "name": "distance",
+            "type": "object"
+          },
+          {
+            "name": "facility_id",
+            "type": "string",
+            "about": "SpotHero facility id; use it with facility_quote and facility_reviews."
+          },
+          {
+            "name": "facility_type",
+            "type": "string",
+            "about": "garage, lot, personal, valet, ..."
+          },
+          {
+            "name": "hours_of_operation",
+            "type": "object"
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "operator",
+            "type": "string"
+          },
+          {
+            "name": "quotes",
+            "type": "object[]"
+          },
+          {
+            "name": "rating",
+            "type": "object"
+          },
+          {
+            "name": "requirements",
+            "type": "object"
+          },
+          {
+            "name": "restrictions",
+            "type": "string[]"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "spot_url",
+            "type": "string",
+            "about": "spothero.com search page opening this spot's detail panel; null when the search has no destination or airport anchor."
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "vehicle_limits",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "destination_id": 2,
+          "ends": "2026-12-16T23:00",
+          "latitude": 41.881027831537345,
+          "longitude": -87.67415378888552,
+          "page_size": 3,
+          "starts": "2026-12-16T18:00"
+        },
+        "response": {
+          "next_cursor": "https://api.spothero.com/v2/search/transient?after=131200&overflow_candidates=131200,80274&starts=2026-12-16T18:00:00&lon=-87.67415378888552&page_size=3&lat=41.881027831537345&destination_id=2&ends=2026-12-16T23:00:00&oversize=false&show_unavailable=false&sort_by=relevance&include_walking_distance=true",
+          "observed_at_ms": 1790020903051,
+          "pricing_note": "Prices are in the currency's minor unit (cents). total_price is what SpotHero charges for the priced window, including its service fee item; advertised_price is the rate's headline price without that fee. Taxes are not itemised by SpotHero; whether they are included is unknown. Availability and prices are a snapshot at observed_at_ms.",
+          "result_count": 3,
+          "results": [
+            {
+              "address": {
+                "city": "Chicago",
+                "country": "US",
+                "latitude": 41.88068100000001,
+                "longitude": -87.674053,
+                "postal_code": "60612",
+                "state": "IL",
+                "street": "1901 West Madison Street",
+                "time_zone": "America/Chicago"
+              },
+              "availability": {
+                "available": true,
+                "available_spaces": 389,
+                "unavailable_reasons": []
+              },
+              "cancellation": {
+                "allowed_by_customer": true,
+                "minutes_before_start": 0
+              },
+              "distance": {
+                "linear_meters": 39.45831331456901,
+                "walking_meters": 1,
+                "walking_seconds": 1
+              },
+              "facility_id": "14021",
+              "facility_type": "lot",
+              "hours_of_operation": {
+                "always_open": true,
+                "text": [
+                  "This facility is open 24/7."
+                ]
+              },
+              "images": [
+                "https://res.cloudinary.com/spothero/image/upload/w_225,h_225,q_50,x_112,y_112,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1728273915/gyriedfzfkngywmagwum.png",
+                "https://res.cloudinary.com/spothero/image/upload/w_666,h_580,q_50,x_333,y_290,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1779456833/m7wmxybq8cqyhfm7sg6m.png",
+                "https://res.cloudinary.com/spothero/image/upload/w_1086,h_1449,q_50,x_545,y_642,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1779457471/w6qzy5ifu35vlixuzeth.png"
+              ],
+              "operator": "United Center (SP+) Parking",
+              "quotes": [
+                {
+                  "advertised_price": {
+                    "amount_minor": 3800,
+                    "currency": "USD"
+                  },
+                  "airport": null,
+                  "amenities": [
+                    {
+                      "name": "Self Park",
+                      "type": "self_park"
+                    },
+                    {
+                      "name": "Lot - Uncovered",
+                      "type": "paved"
+                    },
+                    {
+                      "name": "On-Site Staff",
+                      "type": "attendant"
+                    },
+                    {
+                      "name": "Wheelchair Accessible",
+                      "type": "wheelchair_accessible"
+                    }
+                  ],
+                  "ends": "2026-12-17T00:00:00-06:00",
+                  "items": [
+                    {
+                      "label": "Subtotal",
+                      "price": {
+                        "amount_minor": 3800,
+                        "currency": "USD"
+                      },
+                      "type": "rental"
+                    },
+                    {
+                      "label": "Service Fee",
+                      "price": {
+                        "amount_minor": 276,
+                        "currency": "USD"
+                      },
+                      "type": "event_fee"
+                    }
+                  ],
+                  "monthly": null,
+                  "parking_pass": {
+                    "name": "Operator Scan Print/Mobile",
+                    "type": "operator_scan"
+                  },
+                  "quote_valid_until": "2026-12-17T00:00:00-06:00",
+                  "rate_id": "event-rate",
+                  "rate_kind": "transient",
+                  "rate_type": null,
+                  "redemption_type": "self",
+                  "starts": "2026-12-16T14:00:00-06:00",
+                  "title": "Event Rate",
+                  "total_price": {
+                    "amount_minor": 4076,
+                    "currency": "USD"
+                  }
+                }
+              ],
+              "rating": {
+                "average": 4.7,
+                "count": 9961
+              },
+              "requirements": {
+                "license_plate": true,
+                "phone_number": false,
+                "printout": false
+              },
+              "restrictions": [
+                "ADA parking is available in Lot C with a valid ADA placard/plate and parking pass.",
+                "Official United Center parking opens 2 hours before the event start time.",
+                "Please park only in a lot listed on your SpotHero pass. Official SpotHero parking includes Lots M, R, T, W, B & Malcolm X College Garage.",
+                "Some lots may close 30 minutes after the event starts. If you arrive late, parking staff will direct you to an official lot that is still open.",
+                "This reservation is only valid if you are attending an event at the United Center. Access may be denied otherwise.",
+                "Use the attached map and on-site signage to find a SpotHero assigned lot. Your pass does not provide access to all United Center lots."
+              ],
+              "slug": "1901-w-madison-st",
+              "spot_url": "https://spothero.com/search?kind=destination&id=2&starts=2026-12-16T18:00&ends=2026-12-16T23:00&view=dl&spot-id=14021",
+              "status": "on_sales_allowed",
+              "title": "United Center Official Parking - Lots M, R, T, W, B & Malcolm X College Garage Only",
+              "vehicle_limits": null
+            },
+            {
+              "address": {
+                "city": "Chicago",
+                "country": "US",
+                "latitude": 41.8837789,
+                "longitude": -87.677263,
+                "postal_code": "60612",
+                "state": "IL",
+                "street": "2035 West Washington Boulevard",
+                "time_zone": "America/Chicago"
+              },
+              "availability": {
+                "available": true,
+                "available_spaces": 30,
+                "unavailable_reasons": []
+              },
+              "cancellation": {
+                "allowed_by_customer": true,
+                "minutes_before_start": 0
+              },
+              "distance": {
+                "linear_meters": 399.7915687346044,
+                "walking_meters": 517,
+                "walking_seconds": 455
+              },
+              "facility_id": "40014",
+              "facility_type": "lot",
+              "hours_of_operation": {
+                "always_open": false,
+                "text": [
+                  "08/10- 06/17 School is in session; restricted times, access only from 5pm-7am M-F 24/7 access on Saturday and Sunday. Exception for school Holidays."
+                ]
+              },
+              "images": [
+                "https://res.cloudinary.com/spothero/image/upload/w_720,h_540,q_50,x_360,y_270,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1722290340/ugbpc7zw5gemji7xypmv.jpg",
+                "https://res.cloudinary.com/spothero/image/upload/w_720,h_540,q_50,x_360,y_270,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1722290349/jgh3734peckas2ctrgzf.jpg",
+                "https://res.cloudinary.com/spothero/image/upload/w_720,h_540,q_50,x_360,y_270,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1722290349/vklgjq4gzgvxhxxxrdkc.jpg"
+              ],
+              "operator": "Chicago Parking Solutions LLC",
+              "quotes": [
+                {
+                  "advertised_price": {
+                    "amount_minor": 2500,
+                    "currency": "USD"
+                  },
+                  "airport": null,
+                  "amenities": [
+                    {
+                      "name": "Self Park",
+                      "type": "self_park"
+                    },
+                    {
+                      "name": "Lot - Uncovered",
+                      "type": "paved"
+                    },
+                    {
+                      "name": "Touchless",
+                      "type": "touchless"
+                    },
+                    {
+                      "name": "Wheelchair Accessible",
+                      "type": "wheelchair_accessible"
+                    }
+                  ],
+                  "ends": "2026-12-17T00:00:00-06:00",
+                  "items": [
+                    {
+                      "label": "Subtotal",
+                      "price": {
+                        "amount_minor": 2500,
+                        "currency": "USD"
+                      },
+                      "type": "rental"
+                    },
+                    {
+                      "label": "Service Fee",
+                      "price": {
+                        "amount_minor": 219,
+                        "currency": "USD"
+                      },
+                      "type": "event_fee"
+                    }
+                  ],
+                  "monthly": null,
+                  "parking_pass": {
+                    "name": "Monitored by License Plate",
+                    "type": "license_plate"
+                  },
+                  "quote_valid_until": "2026-12-17T00:00:00-06:00",
+                  "rate_id": "event-rate",
+                  "rate_kind": "transient",
+                  "rate_type": null,
+                  "redemption_type": "self",
+                  "starts": "2026-12-16T18:00:00-06:00",
+                  "title": "Event Rate",
+                  "total_price": {
+                    "amount_minor": 2719,
+                    "currency": "USD"
+                  }
+                }
+              ],
+              "rating": {
+                "average": 4.7,
+                "count": 395
+              },
+              "requirements": {
+                "license_plate": true,
+                "phone_number": true,
+                "printout": false
+              },
+              "restrictions": [
+                "Please call +1 (872) 339-1006 should you need help finding an open spot."
+              ],
+              "slug": "2035-w-washington-blvd",
+              "spot_url": "https://spothero.com/search?kind=destination&id=2&starts=2026-12-16T18:00&ends=2026-12-16T23:00&view=dl&spot-id=40014",
+              "status": "on_sales_allowed",
+              "title": "2035 W Washington Blvd. - Suder",
+              "vehicle_limits": null
+            },
+            {
+              "address": {
+                "city": "Chicago",
+                "country": "US",
+                "latitude": 41.884852,
+                "longitude": -87.674432,
+                "postal_code": "60612",
+                "state": "IL",
+                "street": "152 N Wolcott Avenue",
+                "time_zone": "America/Chicago"
+              },
+              "availability": {
+                "available": true,
+                "available_spaces": 23,
+                "unavailable_reasons": []
+              },
+              "cancellation": {
+                "allowed_by_customer": true,
+                "minutes_before_start": 0
+              },
+              "distance": {
+                "linear_meters": 425.85201000154905,
+                "walking_meters": 774,
+                "walking_seconds": 657
+              },
+              "facility_id": "147695",
+              "facility_type": "lot",
+              "hours_of_operation": {
+                "always_open": true,
+                "text": [
+                  "This facility is open 24/7."
+                ]
+              },
+              "images": [
+                "https://res.cloudinary.com/spothero/image/upload/w_4000,h_3000,q_50,x_2000,y_1500,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1776450037/aatwnbsghbnkdzlqysr2.jpg",
+                "https://res.cloudinary.com/spothero/image/upload/w_4000,h_3000,q_50,x_2000,y_1500,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1776450037/nzxo9fnivuqgqh2pysjn.jpg",
+                "https://res.cloudinary.com/spothero/image/upload/w_4000,h_3000,q_50,x_2000,y_1500,c_fill,g_xy_center,f_auto/c_scale,fl_relative,g_south_east,l_logos:spothero,o_27,w_0.25,x_0.05,y_0.05/v1776450048/y2htyqreaxaf0lpiohib.jpg"
+              ],
+              "operator": "1901 W. Lake Street, LLC Parking",
+              "quotes": [
+                {
+                  "advertised_price": {
+                    "amount_minor": 2400,
+                    "currency": "USD"
+                  },
+                  "airport": null,
+                  "amenities": [
+                    {
+                      "name": "Self Park",
+                      "type": "self_park"
+                    },
+                    {
+                      "name": "Lot - Uncovered",
+                      "type": "paved"
+                    },
+                    {
+                      "name": "Touchless",
+                      "type": "touchless"
+                    },
+                    {
+                      "name": "In & Out Allowed",
+                      "type": "in_out"
+                    },
+                    {
+                      "name": "Wheelchair Accessible",
+                      "type": "wheelchair_accessible"
+                    }
+                  ],
+                  "ends": "2026-12-16T23:00:00-06:00",
+                  "items": [
+                    {
+                      "label": "Subtotal",
+                      "price": {
+                        "amount_minor": 2400,
+                        "currency": "USD"
+                      },
+                      "type": "rental"
+                    },
+                    {
+                      "label": "Service Fee",
+                      "price": {
+                        "amount_minor": 210,
+                        "currency": "USD"
+                      },
+                      "type": "event_fee"
+                    }
+                  ],
+                  "monthly": null,
+                  "parking_pass": {
+                    "name": "Monitored by License Plate",
+                    "type": "license_plate"
+                  },
+                  "quote_valid_until": "2026-12-16T23:00:00-06:00",
+                  "rate_id": "event-rate",
+                  "rate_kind": "transient",
+                  "rate_type": null,
+                  "redemption_type": "self",
+                  "starts": "2026-12-16T16:00:00-06:00",
+                  "title": "Event Rate",
+                  "total_price": {
+                    "amount_minor": 2610,
+                    "currency": "USD"
+                  }
+                }
+              ],
+              "rating": {
+                "average": 4.8,
+                "count": 228
+              },
+              "requirements": {
+                "license_plate": true,
+                "phone_number": false,
+                "printout": false
+              },
+              "restrictions": [],
+              "slug": "1901-w-lake-st",
+              "spot_url": "https://spothero.com/search?kind=destination&id=2&starts=2026-12-16T18:00&ends=2026-12-16T23:00&view=dl&spot-id=147695",
+              "status": "on_sales_allowed",
+              "title": "152 N Wolcott Ave. (1901 W Lake St.) - Lot",
+              "vehicle_limits": null
+            }
+          ],
+          "search": {
+            "destination_id": 2,
+            "ends": "2026-12-16T23:00:00",
+            "kind": "transient",
+            "latitude": 41.881027831537345,
+            "longitude": -87.67415378888552,
+            "oversize": false,
+            "page_size": 3,
+            "show_unavailable": false,
+            "starts": "2026-12-16T18:00:00"
+          },
+          "source_url": "https://api.spothero.com/v2/search/transient?lat=41.881027831537345&lon=-87.67415378888552&starts=2026-12-16T18%3A00%3A00&ends=2026-12-16T23%3A00%3A00&oversize=false&sort_by=relevance&include_walking_distance=true&show_unavailable=false&page_size=3&destination_id=2"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "spothero-com",
+        "capability": "parking/search_parking"
+      }
+    }
+  ]
+}

@@ -1,0 +1,524 @@
+{
+  "id": "redfin-com",
+  "provider": "redfin-com",
+  "name": "Redfin",
+  "description": "Read publicly advertised US rental listings, floor plans, amenities and policies. Preview pending runner validation.",
+  "toolCount": 6,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "redfin-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "redfin-com/properties/amenities",
+      "provider": "redfin-com",
+      "capability": "properties/amenities",
+      "name": "Amenities",
+      "description": "Read published in-unit and community amenity names for a rental listing.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.redfin\\.com/[A-Za-z0-9/.,=_-]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read published in-unit and community amenity names for a rental listing.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.redfin.com/CA/San-Francisco/1257-Bush-St-94109/apartment/1571370"
+        },
+        "response": {
+          "complete": false,
+          "next_url": null,
+          "observed_at_ms": 1789516800000,
+          "page_text": null,
+          "records": [
+            {
+              "name": "Cable"
+            }
+          ],
+          "source_url": "https://www.redfin.com/CA/San-Francisco/1257-Bush-St-94109/apartment/1571370",
+          "warnings": [
+            "One published page only. Prices and availability are observations, not quotes or guarantees. Building and unit counts are not interchangeable. Search filters may include partially matching buildings."
+          ]
+        },
+        "recordedAt": "2026-09-15T20:00:00Z"
+      },
+      "execute": {
+        "provider": "redfin-com",
+        "capability": "properties/amenities"
+      }
+    },
+    {
+      "id": "redfin-com/properties/floor_plans",
+      "provider": "redfin-com",
+      "capability": "properties/floor_plans",
+      "name": "Floor plans",
+      "description": "Read published rental floor plans with names, rent, size/bath text and unit availability text. Unit counts are separate from building counts.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.redfin\\.com/[A-Za-z0-9/.,=_-]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read published rental floor plans with names, rent, size/bath text and unit availability text. Unit counts are separate from building counts.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "availability_text",
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "details",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "price_text",
+            "type": "string"
+          },
+          {
+            "name": "rent_period",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.redfin.com/CA/San-Francisco/1257-Bush-St-94109/apartment/1571370"
+        },
+        "response": {
+          "complete": false,
+          "next_url": null,
+          "observed_at_ms": 1789516800000,
+          "page_text": null,
+          "records": [
+            {
+              "availability_text": "1 unit available now",
+              "currency": "USD",
+              "details": "1 Bath · 400 Sqft.",
+              "name": "7C",
+              "price_text": "$2,500/mo",
+              "rent_period": "month"
+            }
+          ],
+          "source_url": "https://www.redfin.com/CA/San-Francisco/1257-Bush-St-94109/apartment/1571370",
+          "warnings": [
+            "One published page only. Prices and availability are observations, not quotes or guarantees. Building and unit counts are not interchangeable. Search filters may include partially matching buildings."
+          ]
+        },
+        "recordedAt": "2026-09-15T20:00:00Z"
+      },
+      "execute": {
+        "provider": "redfin-com",
+        "capability": "properties/floor_plans"
+      }
+    },
+    {
+      "id": "redfin-com/properties/policies",
+      "provider": "redfin-com",
+      "capability": "properties/policies",
+      "name": "Policies",
+      "description": "Read published rental policy text, including pet restrictions and any displayed fees. Does not infer missing policies.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.redfin\\.com/[A-Za-z0-9/.,=_-]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read published rental policy text, including pet restrictions and any displayed fees. Does not infer missing policies.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "text",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.redfin.com/CA/San-Francisco/1257-Bush-St-94109/apartment/1571370"
+        },
+        "response": {
+          "complete": false,
+          "next_url": null,
+          "observed_at_ms": 1789516800000,
+          "page_text": null,
+          "records": [
+            {
+              "text": "Policies Pets No pets allowed No pets allowed"
+            }
+          ],
+          "source_url": "https://www.redfin.com/CA/San-Francisco/1257-Bush-St-94109/apartment/1571370",
+          "warnings": [
+            "One published page only. Prices and availability are observations, not quotes or guarantees. Building and unit counts are not interchangeable. Search filters may include partially matching buildings."
+          ]
+        },
+        "recordedAt": "2026-09-15T20:00:00Z"
+      },
+      "execute": {
+        "provider": "redfin-com",
+        "capability": "properties/policies"
+      }
+    },
+    {
+      "id": "redfin-com/properties/related_areas",
+      "provider": "redfin-com",
+      "capability": "properties/related_areas",
+      "name": "Related areas",
+      "description": "Discover linked nearby city rental search pages from an existing city rental page. This is not free-text location geocoding.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.redfin\\.com/[A-Za-z0-9/.,=_-]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Discover linked nearby city rental search pages from an existing city rental page. This is not free-text location geocoding.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "label",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.redfin.com/city/17151/CA/San-Francisco/apartments-for-rent"
+        },
+        "response": {
+          "complete": false,
+          "next_url": null,
+          "observed_at_ms": 1789516800000,
+          "page_text": null,
+          "records": [
+            {
+              "label": "Apartments for rent in San Francisco",
+              "url": "https://www.redfin.com/city/17151/CA/San-Francisco/apartments-for-rent"
+            }
+          ],
+          "source_url": "https://www.redfin.com/city/17151/CA/San-Francisco/apartments-for-rent",
+          "warnings": [
+            "One published page only. Prices and availability are observations, not quotes or guarantees. Building and unit counts are not interchangeable. Search filters may include partially matching buildings."
+          ]
+        },
+        "recordedAt": "2026-09-15T20:00:00Z"
+      },
+      "execute": {
+        "provider": "redfin-com",
+        "capability": "properties/related_areas"
+      }
+    },
+    {
+      "id": "redfin-com/properties/rental",
+      "provider": "redfin-com",
+      "capability": "properties/rental",
+      "name": "Rental",
+      "description": "Read primary rental identity, rent, beds, baths, area, description and source attribution. Requires a current For rent listing; excludes nearby for-sale recommendations.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.redfin\\.com/[A-Za-z0-9/.,=_-]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read primary rental identity, rent, beds, baths, area, description and source attribution. Requires a current For rent listing; excludes nearby for-sale recommendations.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "area_text",
+            "type": "string"
+          },
+          {
+            "name": "availability_text",
+            "type": "string"
+          },
+          {
+            "name": "baths_text",
+            "type": "string"
+          },
+          {
+            "name": "beds_text",
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "fee_basis",
+            "type": "string"
+          },
+          {
+            "name": "listing_id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "price_text",
+            "type": "string"
+          },
+          {
+            "name": "rent_period",
+            "type": "string"
+          },
+          {
+            "name": "source_disclaimer",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.redfin.com/CA/San-Francisco/1257-Bush-St-94109/apartment/1571370"
+        },
+        "response": {
+          "complete": false,
+          "next_url": null,
+          "observed_at_ms": 1789516800000,
+          "page_text": null,
+          "records": [
+            {
+              "address": "1257 Bush St, San Francisco, CA 94109",
+              "area_text": "400 sq ft",
+              "availability_text": null,
+              "baths_text": "1 ba",
+              "beds_text": "Studio",
+              "currency": "USD",
+              "description": "Bright and spacious newly remodeled studio w/ large backyard backyard with garden views, laundry available UNIT FEATURES: *Floor to ceiling glass door opening to a large patio creating an indoor/outdoor connection providing great natural light *Newly remodeled kitchen with stainless steel appliances *New wood laminate floors *Bathroom with tiles, tub, vanity, toilet, light fixture, mirror *Ample closet space and storage in unit *Electric baseboard heater *Individual water heater in unit *Unit is newly painted in a white color palette *Modern light fixtures *BUILDING FEATURES: *On-site management for deliveries and emergencies/repairs *Updated lobby with new floors, LED lights *Modern and spacious elevator *Laundry facility with card reader *Non smoking premises *Secured apartment complex with intercom system with remote access RENTAL DETAILS: *Unit is available from November 1, 2025 *One year lease then month to month thereafter *Security deposit: 1 month *Tenant pays for utilities, cable/internet *Non smoking *No pets LOCATION: *Convenient central location in Lower Nob Hill near Union Square, Financial District, Nob Hill/Soma *Walking distance to Trader Joe's, Whole Foods, neighborhood stores, restaurants and cafes, bars *Easy access to public transportation (Muni buses, tech shuttles) *Walkscore: 99 (Walker's Paradise) *Transit Score: 100 (Rider's Paradise) *Bike Score: 74 (Very Bikeable)",
+              "fee_basis": null,
+              "listing_id": "1571370",
+              "name": "1257 Bush St, San Francisco, CA 94109",
+              "price_text": "$2,500 /mo Price",
+              "rent_period": "month",
+              "source_disclaimer": "All information is deemed reliable but not guaranteed. Redfin and its affiliates may receive compensation if you contact a rental property or sign a lease.",
+              "url": "https://www.redfin.com/CA/San-Francisco/1257-Bush-St-94109/apartment/1571370"
+            }
+          ],
+          "source_url": "https://www.redfin.com/CA/San-Francisco/1257-Bush-St-94109/apartment/1571370",
+          "warnings": [
+            "One published page only. Prices and availability are observations, not quotes or guarantees. Building and unit counts are not interchangeable. Search filters may include partially matching buildings."
+          ]
+        },
+        "recordedAt": "2026-09-15T20:00:00Z"
+      },
+      "execute": {
+        "provider": "redfin-com",
+        "capability": "properties/rental"
+      }
+    },
+    {
+      "id": "redfin-com/properties/search",
+      "provider": "redfin-com",
+      "capability": "properties/search",
+      "name": "Search",
+      "description": "Read one rental search page with published rent, bedroom/bathroom text, listing URLs and availability facts. Accept city rental URLs and observed price/bedroom filter URLs; excludes cards explicitly reporting zero matching units. Does not guarantee every unit matches.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "max_beds",
+          "type": "number",
+          "in": "body",
+          "about": "Use with a base city rentals URL without existing filters or page.",
+          "min": 0,
+          "max": 10
+        },
+        {
+          "name": "max_rent",
+          "type": "number",
+          "in": "body",
+          "about": "Use with a base city rentals URL without existing filters or page.",
+          "min": 1,
+          "max": 100000
+        },
+        {
+          "name": "min_beds",
+          "type": "number",
+          "in": "body",
+          "about": "Use with a base city rentals URL without existing filters or page.",
+          "min": 0,
+          "max": 10
+        },
+        {
+          "name": "min_rent",
+          "type": "number",
+          "in": "body",
+          "about": "Use with a base city rentals URL without existing filters or page.",
+          "min": 1,
+          "max": 100000
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "Use with a base city rentals URL without existing filters or page.",
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.redfin\\.com/[A-Za-z0-9/.,=_-]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read one rental search page with published rent, bedroom/bathroom text, listing URLs and availability facts. Accept city rental URLs and observed price/bedroom filter URLs; excludes cards explicitly reporting zero matching units. Does not guarantee every unit matches.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "area_text",
+            "type": "string"
+          },
+          {
+            "name": "baths_text",
+            "type": "string"
+          },
+          {
+            "name": "beds_text",
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "facts",
+            "type": "string[]"
+          },
+          {
+            "name": "price_text",
+            "type": "string"
+          },
+          {
+            "name": "rent_period",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.redfin.com/city/17151/CA/San-Francisco/apartments-for-rent"
+        },
+        "response": {
+          "complete": false,
+          "next_url": "https://www.redfin.com/city/17151/CA/San-Francisco/apartments-for-rent/page-2",
+          "observed_at_ms": 1789516800000,
+          "page_text": "Viewing page 1 of 11",
+          "records": [
+            {
+              "address": "952 Sutter St, San Francisco, CA 94109",
+              "area_text": "348-400 sq ft",
+              "baths_text": "1 bath",
+              "beds_text": "Studio",
+              "currency": "USD",
+              "facts": [
+                "2 units available",
+                "Pets welcome",
+                "No deposit"
+              ],
+              "price_text": "Contact for Price",
+              "rent_period": null,
+              "url": "https://www.redfin.com/CA/San-Francisco/952-Sutter-St-94109/apartment/1594243"
+            }
+          ],
+          "source_url": "https://www.redfin.com/city/17151/CA/San-Francisco/apartments-for-rent",
+          "warnings": [
+            "One published page only. Prices and availability are observations, not quotes or guarantees. Building and unit counts are not interchangeable. Search filters may include partially matching buildings."
+          ]
+        },
+        "recordedAt": "2026-09-15T20:00:00Z"
+      },
+      "execute": {
+        "provider": "redfin-com",
+        "capability": "properties/search"
+      }
+    }
+  ]
+}

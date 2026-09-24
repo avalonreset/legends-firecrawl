@@ -1,0 +1,2363 @@
+{
+  "id": "golfnow-com",
+  "provider": "golfnow-com",
+  "name": "GolfNow US",
+  "description": "GolfNow US public course discovery: location and course search, courses with tee times near a point, per-facility tee times with displayed rates, per-day availability summaries, course profiles and GolfNow reviews. Anonymous, read-only.",
+  "toolCount": 8,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "golfnow-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "golfnow-com/tee-times/course_detail",
+      "provider": "golfnow-com",
+      "capability": "tee-times/course_detail",
+      "name": "Course detail",
+      "description": "Details for one `facility_id`. Two page fetches; no availability (use `facility_tee_times`).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "facility_id",
+          "type": "number",
+          "in": "body",
+          "about": "GolfNow facility id. Give exactly one of `facility_id`, `product_review_id`, `url`.",
+          "min": 1
+        },
+        {
+          "name": "product_review_id",
+          "type": "number",
+          "in": "body",
+          "about": "The course page key (`productReviewId` / `reviewId` from `search_courses`, `courses_near`, `course_reviews`); may be negative."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A golfnow.com course URL (`/courses/{productReviewId}-{slug}-details`) or facility URL (`/tee-times/facility/{id}-{slug}/search`)."
+        }
+      ],
+      "response": {
+        "about": "Course profile from the facility and course pages: address, coordinates, contact, description, notices, par/yardage, tees, amenities, rating breakdown, AI review summary and any posted closure.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "average_rating",
+            "type": "number"
+          },
+          {
+            "name": "closure",
+            "type": "object"
+          },
+          {
+            "name": "country",
+            "type": "string",
+            "about": "Storefront market: always `US` (www.golfnow.com)."
+          },
+          {
+            "name": "course_statistics",
+            "type": "object",
+            "about": "Zero values from the site are reported as null (unknown)."
+          },
+          {
+            "name": "courses",
+            "type": "object[]",
+            "about": "Playable courses at the facility from the GolfAdvisor feed; empty when the feed has none."
+          },
+          {
+            "name": "description_html",
+            "type": "string"
+          },
+          {
+            "name": "detail_url",
+            "type": "string",
+            "about": "Canonical course detail page."
+          },
+          {
+            "name": "facility_id",
+            "type": "number"
+          },
+          {
+            "name": "has_hot_deal",
+            "type": "boolean"
+          },
+          {
+            "name": "has_member_pricing",
+            "type": "boolean"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "information",
+            "type": "string",
+            "about": "Course notices as published (plain text with line breaks)."
+          },
+          {
+            "name": "is_active",
+            "type": "boolean"
+          },
+          {
+            "name": "is_private",
+            "type": "boolean"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Observation time, milliseconds since the Unix epoch."
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "policies",
+            "type": "string"
+          },
+          {
+            "name": "product_review_id",
+            "type": "number"
+          },
+          {
+            "name": "recommended_percent",
+            "type": "number"
+          },
+          {
+            "name": "review_count",
+            "type": "number",
+            "about": "GolfPass/GolfAdvisor review count shown on the page."
+          },
+          {
+            "name": "review_stats",
+            "type": "object"
+          },
+          {
+            "name": "review_summaries",
+            "type": "object[]"
+          },
+          {
+            "name": "seo_name",
+            "type": "string"
+          },
+          {
+            "name": "source",
+            "type": "string",
+            "about": "Always `golfnow.com`."
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "timezone_offset_hours",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Canonical facility tee-time page."
+          },
+          {
+            "name": "website",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "facility_id": 877
+        },
+        "response": {
+          "address": {
+            "city": "Orlando",
+            "country_code": "US",
+            "line1": "549 West Par Street",
+            "postal_code": "32804",
+            "state": "Florida",
+            "state_code": "FL"
+          },
+          "average_rating": 4.5276,
+          "closure": {
+            "description": "Temporary update for aerification",
+            "end_date": "2026-09-27",
+            "inventory_disabled": false,
+            "start_date": "2026-09-15"
+          },
+          "country": "US",
+          "course_statistics": {
+            "holes": 18,
+            "par": 70,
+            "rating": null,
+            "slope": null,
+            "yardage": 6153
+          },
+          "courses": [
+            {
+              "amenities": {
+                "credit_cards": "VISA, MasterCard Welcomed",
+                "dress_code": "Shirts must be worn at all times.",
+                "driving_range": true,
+                "fivesomes_allowed": false,
+                "metal_spikes_allowed": false,
+                "pitching_chipping_area": true,
+                "putting_green": true,
+                "rental_carts": true,
+                "rental_clubs": true,
+                "teaching_pro": true,
+                "walking_allowed": true
+              },
+              "architects": [],
+              "fairways": "Bermuda Grass",
+              "greens": "Bermuda Grass",
+              "name": "Dubsdread Golf Course",
+              "season": "Year round",
+              "tees": [
+                {
+                  "length": "6153",
+                  "name": "Black",
+                  "par": "70",
+                  "rating": "70.0",
+                  "slope": "123",
+                  "units": "yards"
+                },
+                {
+                  "length": "6153",
+                  "name": "Black (W)",
+                  "par": "70",
+                  "rating": "76.3",
+                  "slope": "142",
+                  "units": "yards"
+                },
+                {
+                  "length": "5775",
+                  "name": "Blue",
+                  "par": "70",
+                  "rating": "68.3",
+                  "slope": "120",
+                  "units": "yards"
+                },
+                {
+                  "length": "5775",
+                  "name": "Blue (W)",
+                  "par": "70",
+                  "rating": "74.4",
+                  "slope": "138",
+                  "units": "yards"
+                },
+                {
+                  "length": "5388",
+                  "name": "Green",
+                  "par": "70",
+                  "rating": "66.7",
+                  "slope": "116",
+                  "units": "yards"
+                },
+                {
+                  "length": "5388",
+                  "name": "Green (W)",
+                  "par": "70",
+                  "rating": "72.3",
+                  "slope": "133",
+                  "units": "yards"
+                },
+                {
+                  "length": "4924",
+                  "name": "Yellow",
+                  "par": "70",
+                  "rating": "64.6",
+                  "slope": "112",
+                  "units": "yards"
+                },
+                {
+                  "length": "4924",
+                  "name": "Yellow (W)",
+                  "par": "70",
+                  "rating": "69.3",
+                  "slope": "124",
+                  "units": "yards"
+                },
+                {
+                  "length": "4094",
+                  "name": "Red",
+                  "par": "70",
+                  "rating": "61.4",
+                  "slope": "103",
+                  "units": "yards"
+                },
+                {
+                  "length": "4094",
+                  "name": "Red (W)",
+                  "par": "70",
+                  "rating": "64.4",
+                  "slope": "112",
+                  "units": "yards"
+                }
+              ],
+              "year_built": "1923"
+            }
+          ],
+          "description_html": "<p>Located just minutes from downtown Orlando, Dubsdread features the oldest public layout in the area, originally designed in 1923 and renovated in 2008.  This classic course has plenty of history attached to it as the former site of the Orlando Open, when it hosted such golf legends as Sam Snead, Ben Hogan and Claude Harmon. </p>\n<p>Today, golfers are treated to the same beautiful scenery and challenges of the original course, including narrow fairways and heavily bunkered, \"postage stamp\" style greens.  A full restaurant and banquet facility complete the ultimate golfing experience.</p>",
+          "detail_url": "https://www.golfnow.com/courses/1028365-dubsdread-golf-course-details",
+          "facility_id": 877,
+          "has_hot_deal": false,
+          "has_member_pricing": true,
+          "image_url": "https://exddilid.cdn.imgeng.in/app/ttf/image/hdm/877.jpg",
+          "information": "**ATTENTION GOLFERS**\nThe driving range is closed until further notice.\n\nGREAT SPECIAL AVAILABLE TO NON-RESIDENTS AS WELL AS RESIDENTS OF FL!\n\nTAX NOT INCLUDED.\n\nPlease bring a copy of your reservation to the golf course. We ask that our customers adhere to golf course dress code: No denim allowed, collared shirt is required, soft spikes only. Players & guests are required to follow all course policies and procedures as outlined by the staff.",
+          "is_active": true,
+          "is_private": false,
+          "latitude": 28.582455,
+          "longitude": -81.386986,
+          "name": "Dubsdread Golf Course",
+          "observed_at_ms": 1790018559788,
+          "phone": "407-246-2551",
+          "policies": null,
+          "product_review_id": 1028365,
+          "recommended_percent": 95,
+          "review_count": 1745,
+          "review_stats": {
+            "conditions": 4.4061975,
+            "difficulty": 3.4341614,
+            "facilities": 4.6106405,
+            "layout": 4.5954795,
+            "overall_rating": 4.5276046,
+            "pace": 4.2761064,
+            "ratings_count": 1745,
+            "recommended_count": 1651,
+            "recommended_percentage": 96.81794,
+            "staff": 4.7978477,
+            "value": 4.5569563
+          },
+          "review_summaries": [
+            {
+              "based_on_reviews": 50,
+              "category": "courseHighlights",
+              "generated_on": "2/27/26",
+              "summary": "Dubsdread's greens consistently rank among Orlando's best, rolling quick and true even under heavy traffic and wet conditions. Exceptionally friendly staff and fair pricing make this uniquely-laid-out course a standout value in Central Florida."
+            }
+          ],
+          "seo_name": "877-dubsdread-golf-course",
+          "source": "golfnow.com",
+          "tags": [
+            "EZL",
+            "NORAM"
+          ],
+          "timezone_offset_hours": -4,
+          "url": "https://www.golfnow.com/tee-times/facility/877-dubsdread-golf-course/search",
+          "website": "http://www.golfdubsdread.com"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "golfnow-com",
+        "capability": "tee-times/course_detail"
+      }
+    },
+    {
+      "id": "golfnow-com/tee-times/course_reviews",
+      "provider": "golfnow-com",
+      "capability": "tee-times/course_reviews",
+      "name": "Course reviews",
+      "description": "Read what golfers wrote about a course. Only reviews left on GolfNow itself; the larger GolfPass review count on course records is a different corpus.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "facility_id",
+          "type": "number",
+          "in": "body",
+          "about": "facility_id",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "0-based page (default 0).",
+          "min": 0,
+          "max": 10000
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Reviews per page, 1-50 (default 10).",
+          "min": 1,
+          "max": 50
+        }
+      ],
+      "response": {
+        "about": "GolfNow-native reviews for a facility (author handle, rating, title, text, date of play), paginated.",
+        "key": "reviews",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "author",
+            "type": "string",
+            "about": "Reviewer's public handle as displayed."
+          },
+          {
+            "name": "date_of_play",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "reviewed_at",
+            "type": "string",
+            "about": "Site-local timestamp `YYYY-MM-DDTHH:MM:SS`."
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "facility_id": 877,
+          "page_size": 3
+        },
+        "response": {
+          "average_rating": 4.3404011461318,
+          "count": 3,
+          "country": "US",
+          "facility_id": 877,
+          "next_page": 1,
+          "observed_at_ms": 1790018546665,
+          "page": 0,
+          "page_size": 3,
+          "product_review_id": 1028365,
+          "reviews": [
+            {
+              "author": "Neil8140",
+              "date_of_play": "2026-09-18",
+              "rating": 5,
+              "reviewed_at": "2026-09-18T23:45:39",
+              "text": "Course is just over 100 years old, you wouldn't think it.\r\nWonderful layout, with some very challenging holes. Loved it and will be playing again.\r\nGreens had been dressed and sanded, but did not diminish enjoyment, full 5 stars from me\r\nPlus get a warm up basket for the trackman range and GPS on the carts! What is not to like?",
+              "title": "Hidden Gem"
+            },
+            {
+              "author": "AllanDyer",
+              "date_of_play": "2026-09-17",
+              "rating": 5,
+              "reviewed_at": "2026-09-18T22:50:45",
+              "text": null,
+              "title": null
+            },
+            {
+              "author": "mfoor24",
+              "date_of_play": "2026-09-09",
+              "rating": 4,
+              "reviewed_at": "2026-09-12T16:25:23",
+              "text": null,
+              "title": null
+            }
+          ],
+          "source": "golfnow.com",
+          "total_recommended": 1651,
+          "total_reviews": 8
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "golfnow-com",
+        "capability": "tee-times/course_reviews"
+      }
+    },
+    {
+      "id": "golfnow-com/tee-times/courses_near",
+      "provider": "golfnow-com",
+      "capability": "tee-times/courses_near",
+      "name": "Courses near",
+      "description": "Discover courses near a place (coordinates from `suggest_locations`); then call `facility_tee_times` with a `facility_id`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "date",
+          "type": "string",
+          "in": "body",
+          "about": "Play date, `YYYY-MM-DD`. Defaults to tomorrow (UTC). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "holes",
+          "type": "string",
+          "in": "body",
+          "about": "`Any` (default), `9` or `18`.",
+          "oneOf": [
+            "Any",
+            "9",
+            "18"
+          ]
+        },
+        {
+          "name": "hot_deals_only",
+          "type": "boolean",
+          "in": "body",
+          "about": "Only tee times the site flags as Hot Deals (default false)."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "latitude",
+          "required": true,
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "required": true,
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "0-based page (default 0).",
+          "min": 0,
+          "max": 1000
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Courses per page, 1-50 (default 20).",
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "players",
+          "type": "number",
+          "in": "body",
+          "about": "Number of players, 0 = any (default).",
+          "min": 0,
+          "max": 4
+        },
+        {
+          "name": "radius_miles",
+          "type": "number",
+          "in": "body",
+          "about": "Search radius in miles, 1-255 (default 25).",
+          "min": 1,
+          "max": 255
+        },
+        {
+          "name": "time_max",
+          "type": "number",
+          "in": "body",
+          "about": "Latest tee time as a half-hour slot: 48 = midnight (default 48).",
+          "min": 0,
+          "max": 48
+        },
+        {
+          "name": "time_min",
+          "type": "number",
+          "in": "body",
+          "about": "Earliest tee time as a half-hour slot: 0 = midnight, 14 = 7:00 AM (default 0).",
+          "min": 0,
+          "max": 48
+        }
+      ],
+      "response": {
+        "about": "Courses with tee times around a coordinate on one date: distance, rating, tee-time count, price range and first/last tee time per course, paginated.",
+        "key": "courses",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "average_rating",
+            "type": "number"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "days_out",
+            "type": "number"
+          },
+          {
+            "name": "distance_miles",
+            "type": "number"
+          },
+          {
+            "name": "facility_id",
+            "type": "number"
+          },
+          {
+            "name": "first_tee_time",
+            "type": "string",
+            "about": "Course-local wall-clock time as `YYYY-MM-DDTHH:MM:SS` (no offset). GolfNow serialises these with a spurious `+00:00`; it is not UTC."
+          },
+          {
+            "name": "has_hot_deal",
+            "type": "boolean"
+          },
+          {
+            "name": "has_member_pricing",
+            "type": "boolean"
+          },
+          {
+            "name": "is_featured",
+            "type": "boolean"
+          },
+          {
+            "name": "is_private",
+            "type": "boolean"
+          },
+          {
+            "name": "last_tee_time",
+            "type": "string",
+            "about": "Course-local wall-clock time as `YYYY-MM-DDTHH:MM:SS` (no offset). GolfNow serialises these with a spurious `+00:00`; it is not UTC."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "max_price",
+            "type": "object"
+          },
+          {
+            "name": "min_price",
+            "type": "object"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "product_review_id",
+            "type": "number"
+          },
+          {
+            "name": "review_count",
+            "type": "number"
+          },
+          {
+            "name": "seo_name",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "tee_time_count",
+            "type": "number",
+            "about": "Tee times on the date matching the filters."
+          },
+          {
+            "name": "thumbnail_url",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "latitude": 28.5383,
+          "longitude": -81.3792,
+          "page_size": 3,
+          "radius_miles": 35
+        },
+        "response": {
+          "count": 3,
+          "country": "US",
+          "courses": [
+            {
+              "address": {
+                "city": "Orlando",
+                "country_code": "US",
+                "line1": "3201 Woodgate Blvd",
+                "postal_code": "32822",
+                "state": "Florida",
+                "state_code": "FL"
+              },
+              "average_rating": 4.0856,
+              "currency": "USD",
+              "days_out": 1,
+              "distance_miles": 5,
+              "facility_id": 1791,
+              "first_tee_time": "2026-09-22T08:10:00",
+              "has_hot_deal": true,
+              "has_member_pricing": true,
+              "is_featured": true,
+              "is_private": false,
+              "last_tee_time": "2026-09-22T17:50:00",
+              "latitude": 28.510838,
+              "longitude": -81.29938,
+              "max_price": {
+                "amount": 49.76,
+                "currency": "USD"
+              },
+              "min_price": {
+                "amount": 28.99,
+                "currency": "USD"
+              },
+              "name": "Ventura Country Club",
+              "product_review_id": 1028836,
+              "review_count": 2277,
+              "seo_name": "1791-ventura-country-club",
+              "tags": [
+                "PMP",
+                "PTP",
+                "NORAM",
+                "PMP",
+                "PMPT1",
+                "PTP"
+              ],
+              "tee_time_count": 27,
+              "thumbnail_url": "https://exddilid.cdn.imgeng.in/app/ttf/image/bh/1791.jpg",
+              "url": "https://www.golfnow.com/tee-times/facility/1791-ventura-country-club/search"
+            },
+            {
+              "address": {
+                "city": "Orlando",
+                "country_code": "US",
+                "line1": "549 West Par Street",
+                "postal_code": "32804",
+                "state": "Florida",
+                "state_code": "FL"
+              },
+              "average_rating": 4.5276,
+              "currency": "USD",
+              "days_out": 1,
+              "distance_miles": 3,
+              "facility_id": 877,
+              "first_tee_time": "2026-09-22T08:00:00",
+              "has_hot_deal": false,
+              "has_member_pricing": true,
+              "is_featured": false,
+              "is_private": false,
+              "last_tee_time": "2026-09-22T18:30:00",
+              "latitude": 28.582455,
+              "longitude": -81.386986,
+              "max_price": {
+                "amount": 52.95,
+                "currency": "USD"
+              },
+              "min_price": {
+                "amount": 20.99,
+                "currency": "USD"
+              },
+              "name": "Dubsdread Golf Course",
+              "product_review_id": 1028365,
+              "review_count": 1745,
+              "seo_name": "877-dubsdread-golf-course",
+              "tags": [
+                "EZL",
+                "NORAM"
+              ],
+              "tee_time_count": 139,
+              "thumbnail_url": "https://exddilid.cdn.imgeng.in/app/ttf/image/bh/877.jpg",
+              "url": "https://www.golfnow.com/tee-times/facility/877-dubsdread-golf-course/search"
+            },
+            {
+              "address": {
+                "city": "Winter Park",
+                "country_code": "US",
+                "line1": "761 Old England Ave",
+                "postal_code": "32789",
+                "state": "Florida",
+                "state_code": "FL"
+              },
+              "average_rating": 4.3805,
+              "currency": "USD",
+              "days_out": 1,
+              "distance_miles": 5,
+              "facility_id": 3217,
+              "first_tee_time": "2026-09-22T09:00:00",
+              "has_hot_deal": false,
+              "has_member_pricing": false,
+              "is_featured": false,
+              "is_private": false,
+              "last_tee_time": "2026-09-22T15:54:00",
+              "latitude": 28.603214,
+              "longitude": -81.35428,
+              "max_price": {
+                "amount": 28,
+                "currency": "USD"
+              },
+              "min_price": {
+                "amount": 28,
+                "currency": "USD"
+              },
+              "name": "Winter Park Golf Course (WP9)",
+              "product_review_id": 1028868,
+              "review_count": 1247,
+              "seo_name": "3217-winter-park-golf-course-wp9",
+              "tags": [
+                "G1",
+                "NORAM",
+                "SPARK"
+              ],
+              "tee_time_count": 32,
+              "thumbnail_url": "https://exddilid.cdn.imgeng.in/app/ttf/image/bh/3217.jpg",
+              "url": "https://www.golfnow.com/tee-times/facility/3217-winter-park-golf-course-wp9/search"
+            }
+          ],
+          "date": "2026-09-22",
+          "next_page": 1,
+          "no_results": null,
+          "observed_at_ms": 1790018491547,
+          "page": 0,
+          "page_size": 3,
+          "radius_miles": 35,
+          "source": "golfnow.com",
+          "start_index": 0,
+          "total": 73
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "golfnow-com",
+        "capability": "tee-times/courses_near"
+      }
+    },
+    {
+      "id": "golfnow-com/tee-times/facility_day_summaries",
+      "provider": "golfnow-com",
+      "capability": "tee-times/facility_day_summaries",
+      "name": "Facility day summaries",
+      "description": "Pick a day before calling `facility_tee_times`; up to 31 days per call.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "facility_id",
+          "type": "number",
+          "in": "body",
+          "about": "facility_id",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "from",
+          "type": "string",
+          "in": "body",
+          "about": "First day, `YYYY-MM-DD` (default today, UTC). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "in": "body",
+          "about": "Last day, `YYYY-MM-DD` (default `from` + 6 days; at most 30 days after `from`). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "Per-day availability for one facility over a date range: tee-time count, min/max price and hot-deal flag per day.",
+        "key": "days",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "has_hot_deals",
+            "type": "boolean"
+          },
+          {
+            "name": "max_price",
+            "type": "object"
+          },
+          {
+            "name": "min_price",
+            "type": "object"
+          },
+          {
+            "name": "tee_time_count",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "facility_id": 877
+        },
+        "response": {
+          "count": 7,
+          "country": "US",
+          "days": [
+            {
+              "date": "2026-09-21",
+              "has_hot_deals": false,
+              "max_price": {
+                "amount": 52.95,
+                "currency": "USD"
+              },
+              "min_price": {
+                "amount": 35,
+                "currency": "USD"
+              },
+              "tee_time_count": 2
+            },
+            {
+              "date": "2026-09-22",
+              "has_hot_deals": false,
+              "max_price": {
+                "amount": 52.95,
+                "currency": "USD"
+              },
+              "min_price": {
+                "amount": 21.99,
+                "currency": "USD"
+              },
+              "tee_time_count": 34
+            },
+            {
+              "date": "2026-09-23",
+              "has_hot_deals": false,
+              "max_price": {
+                "amount": 47.95,
+                "currency": "USD"
+              },
+              "min_price": {
+                "amount": 22.99,
+                "currency": "USD"
+              },
+              "tee_time_count": 39
+            },
+            {
+              "date": "2026-09-24",
+              "has_hot_deals": false,
+              "max_price": {
+                "amount": 35,
+                "currency": "USD"
+              },
+              "min_price": {
+                "amount": 35,
+                "currency": "USD"
+              },
+              "tee_time_count": 39
+            },
+            {
+              "date": "2026-09-25",
+              "has_hot_deals": false,
+              "max_price": {
+                "amount": 40,
+                "currency": "USD"
+              },
+              "min_price": {
+                "amount": 40,
+                "currency": "USD"
+              },
+              "tee_time_count": 29
+            },
+            {
+              "date": "2026-09-26",
+              "has_hot_deals": false,
+              "max_price": {
+                "amount": 40,
+                "currency": "USD"
+              },
+              "min_price": {
+                "amount": 40,
+                "currency": "USD"
+              },
+              "tee_time_count": 20
+            },
+            {
+              "date": "2026-09-27",
+              "has_hot_deals": false,
+              "max_price": {
+                "amount": 40,
+                "currency": "USD"
+              },
+              "min_price": {
+                "amount": 40,
+                "currency": "USD"
+              },
+              "tee_time_count": 35
+            }
+          ],
+          "facility_id": 877,
+          "from": "2026-09-21",
+          "observed_at_ms": 1790018530714,
+          "source": "golfnow.com",
+          "to": "2026-09-27"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "golfnow-com",
+        "capability": "tee-times/facility_day_summaries"
+      }
+    },
+    {
+      "id": "golfnow-com/tee-times/facility_tee_times",
+      "provider": "golfnow-com",
+      "capability": "tee-times/facility_tee_times",
+      "name": "Facility tee times",
+      "description": "Availability and displayed prices for a known `facility_id` on one day. Discovery only: nothing is held or booked.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "date",
+          "type": "string",
+          "in": "body",
+          "about": "Play date, `YYYY-MM-DD`. Defaults to tomorrow (UTC). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "facility_id",
+          "type": "number",
+          "in": "body",
+          "about": "GolfNow facility id, from `search_courses`, `courses_near` or a `/tee-times/facility/{id}-...` URL. Give this or `url`.",
+          "min": 1
+        },
+        {
+          "name": "holes",
+          "type": "string",
+          "in": "body",
+          "about": "`Any` (default), `9` or `18`.",
+          "oneOf": [
+            "Any",
+            "9",
+            "18"
+          ]
+        },
+        {
+          "name": "hot_deals_only",
+          "type": "boolean",
+          "in": "body",
+          "about": "Only tee times the site flags as Hot Deals (default false)."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Return at most this many tee times (earliest first). `total` still counts the whole day; default all.",
+          "min": 1,
+          "max": 500
+        },
+        {
+          "name": "players",
+          "type": "number",
+          "in": "body",
+          "about": "Number of players, 0 = any (default).",
+          "min": 0,
+          "max": 4
+        },
+        {
+          "name": "time_max",
+          "type": "number",
+          "in": "body",
+          "about": "Latest tee time as a half-hour slot: 48 = midnight (default 48).",
+          "min": 0,
+          "max": 48
+        },
+        {
+          "name": "time_min",
+          "type": "number",
+          "in": "body",
+          "about": "Earliest tee time as a half-hour slot: 0 = midnight, 14 = 7:00 AM (default 0).",
+          "min": 0,
+          "max": 48
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A golfnow.com facility URL (`/tee-times/facility/{id}-{slug}/search` or `/tee-times/facility/{id}/tee-time/{teeTimeId}`) instead of `facility_id`."
+        }
+      ],
+      "response": {
+        "about": "Every tee time one facility sells on a date, with the displayed rate per tee time and its per-player price breakdown; optional player, hole and time filters.",
+        "key": "tee_times",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "detail_url",
+            "type": "string"
+          },
+          {
+            "name": "display_rate",
+            "type": "object"
+          },
+          {
+            "name": "facility_id",
+            "type": "number"
+          },
+          {
+            "name": "has_more_rates",
+            "type": "boolean",
+            "about": "True when the site has further rate variants; see `tee_time_rates`."
+          },
+          {
+            "name": "hole_options",
+            "type": "string",
+            "about": "`18`, `9` or `18/9` as displayed."
+          },
+          {
+            "name": "is_reservation_restricted",
+            "type": "boolean"
+          },
+          {
+            "name": "local_time",
+            "type": "string",
+            "about": "Course-local wall-clock time as `YYYY-MM-DDTHH:MM:SS` (no offset). GolfNow serialises these with a spurious `+00:00`; it is not UTC."
+          },
+          {
+            "name": "max_rate",
+            "type": "object"
+          },
+          {
+            "name": "min_rate",
+            "type": "object"
+          },
+          {
+            "name": "player_rule",
+            "type": "string"
+          },
+          {
+            "name": "rates",
+            "type": "object[]"
+          },
+          {
+            "name": "tee_time_id",
+            "type": "number",
+            "about": "Default rate id of the slot (`defaultTeeTimeRateId`); feed to `tee_time_rates`."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "facility_id": 877,
+          "limit": 3
+        },
+        "response": {
+          "count": 3,
+          "country": "US",
+          "date": "2026-09-22",
+          "facility": {
+            "address": {
+              "city": "Orlando",
+              "country_code": "US",
+              "line1": "549 West Par Street",
+              "postal_code": "32804",
+              "state": "Florida",
+              "state_code": "FL"
+            },
+            "average_rating": 4.5276,
+            "course_statistics": null,
+            "facility_id": 877,
+            "is_active": true,
+            "is_private": false,
+            "latitude": 28.582455,
+            "longitude": -81.386986,
+            "name": "Dubsdread Golf Course",
+            "phone": "407-246-2551",
+            "product_review_id": 1028365,
+            "review_count": 1745,
+            "seo_name": "877-dubsdread-golf-course",
+            "timezone_offset_hours": -4,
+            "url": "https://www.golfnow.com/tee-times/facility/877-dubsdread-golf-course/search",
+            "website": "http://www.golfdubsdread.com"
+          },
+          "facility_id": 877,
+          "limit_reached": false,
+          "max_daily_rate": {
+            "amount": 52.95,
+            "currency": "USD"
+          },
+          "min_daily_rate": {
+            "amount": 19.73,
+            "currency": "USD"
+          },
+          "no_results": null,
+          "observed_at_ms": 1790018519743,
+          "source": "golfnow.com",
+          "tee_times": [
+            {
+              "currency": "USD",
+              "detail_url": "https://www.golfnow.com/tee-times/facility/877/tee-time/-905001773",
+              "display_rate": {
+                "amount": 35,
+                "currency": "USD"
+              },
+              "facility_id": 877,
+              "has_more_rates": true,
+              "hole_options": "18/9",
+              "is_reservation_restricted": false,
+              "local_time": "2026-09-22T08:00:00",
+              "max_rate": {
+                "amount": 52.95,
+                "currency": "USD"
+              },
+              "min_rate": {
+                "amount": 35,
+                "currency": "USD"
+              },
+              "player_rule": "OneTwo",
+              "rates": [
+                {
+                  "cart_included": true,
+                  "currency": "USD",
+                  "detail_url": "https://www.golfnow.com/tee-times/facility/877/tee-time/-905001773",
+                  "due_at_course": 0,
+                  "due_online": 0,
+                  "greens_fee": 35,
+                  "holes": 18,
+                  "is_hot_deal": false,
+                  "name": "Resident",
+                  "percent_discount": 47,
+                  "player_rule": "OneTwo",
+                  "rate_id": -905001773,
+                  "rate_set_type": "Course",
+                  "regular_price": 65.95,
+                  "sales_tax": 0,
+                  "tags": [
+                    "AA"
+                  ],
+                  "taxes_and_fees": 0,
+                  "transaction_fees": 2.99,
+                  "transportation": "Cart Included"
+                }
+              ],
+              "tee_time_id": -905001773
+            },
+            {
+              "currency": "USD",
+              "detail_url": "https://www.golfnow.com/tee-times/facility/877/tee-time/-895039595",
+              "display_rate": {
+                "amount": 35,
+                "currency": "USD"
+              },
+              "facility_id": 877,
+              "has_more_rates": true,
+              "hole_options": "18/9",
+              "is_reservation_restricted": false,
+              "local_time": "2026-09-22T08:10:00",
+              "max_rate": {
+                "amount": 47.95,
+                "currency": "USD"
+              },
+              "min_rate": {
+                "amount": 35,
+                "currency": "USD"
+              },
+              "player_rule": "One",
+              "rates": [
+                {
+                  "cart_included": true,
+                  "currency": "USD",
+                  "detail_url": "https://www.golfnow.com/tee-times/facility/877/tee-time/-895039595",
+                  "due_at_course": 0,
+                  "due_online": 0,
+                  "greens_fee": 35,
+                  "holes": 18,
+                  "is_hot_deal": false,
+                  "name": "Resident",
+                  "percent_discount": 47,
+                  "player_rule": "One",
+                  "rate_id": -895039595,
+                  "rate_set_type": "Course",
+                  "regular_price": 65.95,
+                  "sales_tax": 0,
+                  "tags": [
+                    "AA"
+                  ],
+                  "taxes_and_fees": 0,
+                  "transaction_fees": 2.99,
+                  "transportation": "Cart Included"
+                }
+              ],
+              "tee_time_id": -895039595
+            },
+            {
+              "currency": "USD",
+              "detail_url": "https://www.golfnow.com/tee-times/facility/877/tee-time/-895039594",
+              "display_rate": {
+                "amount": 35,
+                "currency": "USD"
+              },
+              "facility_id": 877,
+              "has_more_rates": true,
+              "hole_options": "18/9",
+              "is_reservation_restricted": false,
+              "local_time": "2026-09-22T08:30:00",
+              "max_rate": {
+                "amount": 52.95,
+                "currency": "USD"
+              },
+              "min_rate": {
+                "amount": 35,
+                "currency": "USD"
+              },
+              "player_rule": "OneTwoThree",
+              "rates": [
+                {
+                  "cart_included": true,
+                  "currency": "USD",
+                  "detail_url": "https://www.golfnow.com/tee-times/facility/877/tee-time/-895039594",
+                  "due_at_course": 0,
+                  "due_online": 0,
+                  "greens_fee": 35,
+                  "holes": 18,
+                  "is_hot_deal": false,
+                  "name": "Resident",
+                  "percent_discount": 47,
+                  "player_rule": "OneTwoThree",
+                  "rate_id": -895039594,
+                  "rate_set_type": "Course",
+                  "regular_price": 65.95,
+                  "sales_tax": 0,
+                  "tags": [
+                    "AA"
+                  ],
+                  "taxes_and_fees": 0,
+                  "transaction_fees": 2.99,
+                  "transportation": "Cart Included"
+                }
+              ],
+              "tee_time_id": -895039594
+            }
+          ],
+          "total": 34
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "golfnow-com",
+        "capability": "tee-times/facility_tee_times"
+      }
+    },
+    {
+      "id": "golfnow-com/tee-times/search_courses",
+      "provider": "golfnow-com",
+      "capability": "tee-times/search_courses",
+      "name": "Search courses",
+      "description": "Find a `facility_id` from a course name; every id-keyed function needs one.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum courses, 1-25 (default 10).",
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Course name or part of it, 1-100 characters.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Course directory search by name: facility ids, addresses, contact details, tax percentage, tee-time policy and the rate sets a course sells.",
+        "key": "courses",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "aliases",
+            "type": "object[]"
+          },
+          {
+            "name": "company_name",
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "detail_url",
+            "type": "string",
+            "about": "Course detail page."
+          },
+          {
+            "name": "display_name",
+            "type": "string"
+          },
+          {
+            "name": "facility_id",
+            "type": "number",
+            "about": "GolfNow facility id (site `courseId`), key for tee-time functions."
+          },
+          {
+            "name": "information",
+            "type": "string",
+            "about": "Course notice text as published."
+          },
+          {
+            "name": "is_active",
+            "type": "boolean"
+          },
+          {
+            "name": "is_trade_course",
+            "type": "boolean"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "product_review_id",
+            "type": "number",
+            "about": "Key of the `/courses/{id}-...-details` page and reviews (site `reviewId`); may be negative."
+          },
+          {
+            "name": "rate_sets",
+            "type": "object[]"
+          },
+          {
+            "name": "seo_name",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "tax_percentage",
+            "type": "number",
+            "about": "Course tax rate the site lists; null when not published."
+          },
+          {
+            "name": "tee_time_policy",
+            "type": "string"
+          },
+          {
+            "name": "timezone_offset_hours",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Facility tee-time page."
+          },
+          {
+            "name": "website",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 2,
+          "query": "Dubsdread"
+        },
+        "response": {
+          "count": 1,
+          "country": "US",
+          "courses": [
+            {
+              "address": {
+                "city": "Orlando",
+                "country_code": "US",
+                "line1": "549 West Par Street",
+                "postal_code": "32804",
+                "state": null,
+                "state_code": "FL"
+              },
+              "aliases": [
+                {
+                  "id": 18736,
+                  "name": "Dubstread"
+                }
+              ],
+              "company_name": "Dubsdread Golf Course",
+              "currency": "USD",
+              "detail_url": "https://www.golfnow.com/courses/1028365-dubsdread-golf-course-details",
+              "display_name": "Dubsdread Golf Course, Orlando, FL, US",
+              "facility_id": 877,
+              "information": "**ATTENTION GOLFERS**\nThe driving range is closed until further notice.\n\nGREAT SPECIAL AVAILABLE TO NON-RESIDENTS AS WELL AS RESIDENTS OF FL!\n\nTAX NOT INCLUDED.\n\nPlease bring a copy of your reservation to the golf course. We ask that our customers adhere to golf course dress code: No denim allowed, collared shirt is required, soft spikes only. Players & guests are required to follow all course policies and procedures as outlined by the staff.",
+              "is_active": true,
+              "is_trade_course": false,
+              "name": "Dubsdread Golf Course",
+              "phone": "407-246-2551",
+              "product_review_id": 1028365,
+              "rate_sets": [
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "Dubsdread**",
+                  "rate_set_id": 1646,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "Dubsdread",
+                  "rate_set_id": 1647,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Trade"
+                },
+                {
+                  "holes": 18,
+                  "is_active": true,
+                  "is_restricted": true,
+                  "name": "Dubsdread GC Res 18H RIDE GN",
+                  "rate_set_id": 7767,
+                  "restriction_message": "This rate is restricted to resident golfers. By continuing, you acknowledge eligibility for this rate and may be required to provide proof at the course.",
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "Dubsdread*",
+                  "rate_set_id": 9878,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Trade"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "Dubsdread Fall KickOff Classic",
+                  "rate_set_id": 21879,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": true,
+                  "is_restricted": false,
+                  "name": "Dubsdread",
+                  "rate_set_id": 39821,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Trade"
+                },
+                {
+                  "holes": 18,
+                  "is_active": true,
+                  "is_restricted": false,
+                  "name": "Dubsdread GC Non Res 18H RIDE GN",
+                  "rate_set_id": 66150,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": true,
+                  "name": "Dubsdread Florida Residents",
+                  "rate_set_id": 66151,
+                  "restriction_message": "This rate is restricted to resident golfers. By continuing, you acknowledge eligibility for this rate and may be required to provide proof at the course.",
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "DubsDread - Toolkit",
+                  "rate_set_id": 92855,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Trade"
+                },
+                {
+                  "holes": 9,
+                  "is_active": true,
+                  "is_restricted": false,
+                  "name": "Dubsdread GC Non Res 9H RIDE GN",
+                  "rate_set_id": 104554,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 9,
+                  "is_active": true,
+                  "is_restricted": true,
+                  "name": "Dubsdread GC FL Res 9H RIDE GN",
+                  "rate_set_id": 104555,
+                  "restriction_message": "This rate is restricted to resident golfers. By continuing, you acknowledge eligibility for this rate and may be required to provide proof at the course.",
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": true,
+                  "is_restricted": false,
+                  "name": "Dubsdread G1",
+                  "rate_set_id": 105999,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Trade"
+                },
+                {
+                  "holes": 18,
+                  "is_active": true,
+                  "is_restricted": true,
+                  "name": "Dubsdread GC- Members 7 Day Riding",
+                  "rate_set_id": 107466,
+                  "restriction_message": "This rate is restricted to Members - 7 Day Riding. By continuing, you acknowledge eligibility for this rate and may be required to provide proof at the course.",
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": true,
+                  "is_restricted": true,
+                  "name": "Dubsdread GC- Junior Member",
+                  "rate_set_id": 107564,
+                  "restriction_message": "This rate is restricted to Junior Members. By continuing, you acknowledge eligibility for this rate and may be required to provide proof at the course.",
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": true,
+                  "is_restricted": true,
+                  "name": "Dubsdread GC- Members 5 Day Riding",
+                  "rate_set_id": 107565,
+                  "restriction_message": "This rate is restricted to Members - 5 Day Riding. By continuing, you acknowledge eligibility for this rate and may be required to provide proof at the course.",
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": true,
+                  "is_restricted": true,
+                  "name": "Dubsdread GC- Members 5 Day Walking",
+                  "rate_set_id": 107566,
+                  "restriction_message": "This rate is restricted to Members - 5 Day Walking. By continuing, you acknowledge eligibility for this rate and may be required to provide proof at the course.",
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": true,
+                  "is_restricted": true,
+                  "name": "Dubsdread GC- Members 7 Day Walking",
+                  "rate_set_id": 107567,
+                  "restriction_message": "This rate is restricted to Members - 7 Day Walking. By continuing, you acknowledge eligibility for this rate and may be required to provide proof at the course.",
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "DubsDread GC",
+                  "rate_set_id": 126610,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": true,
+                  "is_restricted": true,
+                  "name": "Dubsdread GC FL Res 18H RIDE BE",
+                  "rate_set_id": 132880,
+                  "restriction_message": "This rate is restricted to resident golfers. By continuing, you acknowledge eligibility for this rate and may be required to provide proof at the course.",
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": true,
+                  "is_restricted": false,
+                  "name": "Dubsdread GC Non Res 18H RIDE BE",
+                  "rate_set_id": 132881,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 9,
+                  "is_active": true,
+                  "is_restricted": false,
+                  "name": "Dubsdread GC-Non Res 9H RIDE BE",
+                  "rate_set_id": 132882,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 9,
+                  "is_active": true,
+                  "is_restricted": true,
+                  "name": "Dubsdread GC FL Res 9H RIDE BE",
+                  "rate_set_id": 132883,
+                  "restriction_message": "This rate is restricted to resident golfers. By continuing, you acknowledge eligibility for this rate and may be required to provide proof at the course.",
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": true,
+                  "name": "Dubsdread GC FL Res 18H RIDE APP",
+                  "rate_set_id": 138813,
+                  "restriction_message": "This rate is restricted to resident golfers. By continuing, you acknowledge eligibility for this rate and may be required to provide proof at the course.",
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 9,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "Dubsdread GC Non Res 9H RIDE APP",
+                  "rate_set_id": 138814,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 9,
+                  "is_active": false,
+                  "is_restricted": true,
+                  "name": "Dubsdread FL Res 9H RIDE APP",
+                  "rate_set_id": 138815,
+                  "restriction_message": "This rate is restricted to resident golfers. By continuing, you acknowledge eligibility for this rate and may be required to provide proof at the course.",
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "Dubsdread GC Non Res 18H RIDE APP",
+                  "rate_set_id": 138816,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": true,
+                  "is_restricted": false,
+                  "name": "Dubsdread @",
+                  "rate_set_id": 142731,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Trade"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "_ResCtr Public 18H Riding",
+                  "rate_set_id": 144547,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "_ResCtr Public 18H Walking",
+                  "rate_set_id": 144549,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 9,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "ResCtr Public 9H Walking",
+                  "rate_set_id": 144598,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 9,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "_ResCtr Public 9H Riding",
+                  "rate_set_id": 144599,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 9,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "_ResCtr FL Res 9H Walking",
+                  "rate_set_id": 145105,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "_ResCtr FL Res 18H Walking",
+                  "rate_set_id": 145106,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 9,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "_ResCtr FL Res 9H Riding",
+                  "rate_set_id": 145107,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "_ResCtr FL Res 18H Riding",
+                  "rate_set_id": 145108,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "_ResCtr Junior 18H Walking",
+                  "rate_set_id": 146290,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "_ResCtr Member 18H Riding",
+                  "rate_set_id": 146314,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "ResCtr Ladies Day June 2, 2022 18H Riding",
+                  "rate_set_id": 146973,
+                  "restriction_message": null,
+                  "tax_percentage": 0,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "Dubsdread GC Troon Access+ Advanced",
+                  "rate_set_id": 169040,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "Dubsdread GC Troon Access+",
+                  "rate_set_id": 169041,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                },
+                {
+                  "holes": 18,
+                  "is_active": false,
+                  "is_restricted": false,
+                  "name": "Dubsdread GC Troon Access",
+                  "rate_set_id": 169042,
+                  "restriction_message": null,
+                  "tax_percentage": 6.5,
+                  "type": "Course"
+                }
+              ],
+              "seo_name": "1028365-dubsdread-golf-course",
+              "tags": [],
+              "tax_percentage": null,
+              "tee_time_policy": "All golfers must sign a Hold Harmless agreement during the check-in process in order to be permitted to play.\nIf you wish to cancel your reservation, Dubsdread requires that you do so at least 24 hours before the start of your round. Reservations canceled within this window are subject to being charged the full price for all rounds booked at the discretion of the course.  If you or a member of your party becomes unable to play, you will still be charged for each round of golf you purchased. Not showing for this tee time will result in a charge to your credit card for the entire amount due at the course.",
+              "timezone_offset_hours": -4,
+              "url": "https://www.golfnow.com/tee-times/facility/877/search",
+              "website": "http://www.golfdubsdread.com"
+            }
+          ],
+          "observed_at_ms": 1790018478784,
+          "query": "Dubsdread",
+          "source": "golfnow.com"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "golfnow-com",
+        "capability": "tee-times/search_courses"
+      }
+    },
+    {
+      "id": "golfnow-com/tee-times/suggest_locations",
+      "provider": "golfnow-com",
+      "capability": "tee-times/suggest_locations",
+      "name": "Suggest locations",
+      "description": "Turn a place name into latitude/longitude for `courses_near`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum suggestions, 1-25 (default 10).",
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Place name prefix, 1-100 characters.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Location type-ahead: cities and places with coordinates from GolfNow's geolookup, worldwide.",
+        "key": "locations",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "country_code",
+            "type": "string"
+          },
+          {
+            "name": "display_name",
+            "type": "string"
+          },
+          {
+            "name": "facility_id",
+            "type": "number",
+            "about": "Set when the suggestion is a course (site `contextInformation.courseId`); null for places."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "GolfNow place id (hex string)."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "state_code",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string",
+            "about": "`city` or another site place type."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 3,
+          "query": "Orlando"
+        },
+        "response": {
+          "count": 3,
+          "country": "US",
+          "locations": [
+            {
+              "city": "Orlando",
+              "country_code": "US",
+              "display_name": "Orlando, Florida, US",
+              "facility_id": null,
+              "id": "679a5c2a3837d53e5de35abc",
+              "latitude": 28.53834,
+              "longitude": -81.37924,
+              "name": "Orlando",
+              "state": "Florida",
+              "state_code": "FL",
+              "type": "city"
+            },
+            {
+              "city": "Orlando",
+              "country_code": "US",
+              "display_name": "Orlando, Oklahoma, US",
+              "facility_id": null,
+              "id": "679a5c5c3837d53e5de931bd",
+              "latitude": 36.14893,
+              "longitude": -97.3781,
+              "name": "Orlando",
+              "state": "Oklahoma",
+              "state_code": "OK",
+              "type": "city"
+            },
+            {
+              "city": "Orlando",
+              "country_code": "US",
+              "display_name": "Orlando, Kentucky, US",
+              "facility_id": null,
+              "id": "679a5c3d3837d53e5de53f72",
+              "latitude": 37.37286,
+              "longitude": -84.26799,
+              "name": "Orlando",
+              "state": "Kentucky",
+              "state_code": "KY",
+              "type": "city"
+            }
+          ],
+          "observed_at_ms": 1790018463603,
+          "query": "Orlando",
+          "source": "golfnow.com"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "golfnow-com",
+        "capability": "tee-times/suggest_locations"
+      }
+    },
+    {
+      "id": "golfnow-com/tee-times/tee_time_rates",
+      "provider": "golfnow-com",
+      "capability": "tee-times/tee_time_rates",
+      "name": "Tee time rates",
+      "description": "Expand `has_more_rates` on a `facility_tee_times` row. Without `tee_time_id`, the first tee time of `date` for `players` is used.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "date",
+          "type": "string",
+          "in": "body",
+          "about": "Play date used when `tee_time_id` is omitted, `YYYY-MM-DD` (default tomorrow, UTC). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "facility_id",
+          "type": "number",
+          "in": "body",
+          "about": "facility_id",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "players",
+          "type": "number",
+          "in": "body",
+          "about": "Players to price for, 1-4 (default 2).",
+          "min": 1,
+          "max": 4
+        },
+        {
+          "name": "tee_time_id",
+          "type": "number",
+          "in": "body",
+          "about": "`tee_time_id` from `facility_tee_times` (may be negative). Omit to use the day's first tee time."
+        }
+      ],
+      "response": {
+        "about": "All rate variants the site offers for one tee time and player count (resident/non-resident, 9/18 holes, cart), with the per-player price breakdown. Read-only: nothing is held.",
+        "key": "rates",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "cart_included",
+            "type": "boolean"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "detail_url",
+            "type": "string"
+          },
+          {
+            "name": "due_at_course",
+            "type": "number"
+          },
+          {
+            "name": "due_online",
+            "type": "number",
+            "about": "Amount the site would collect online per player; 0 when not computed for the anonymous view."
+          },
+          {
+            "name": "greens_fee",
+            "type": "number",
+            "about": "Per-player displayed price (site `greensFees`)."
+          },
+          {
+            "name": "holes",
+            "type": "number"
+          },
+          {
+            "name": "is_hot_deal",
+            "type": "boolean"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Rate name as displayed (e.g. Resident, Non Resident, Twilight)."
+          },
+          {
+            "name": "percent_discount",
+            "type": "number",
+            "about": "Discount the site advertises against `regular_price`."
+          },
+          {
+            "name": "player_rule",
+            "type": "string",
+            "about": "Player counts the rate allows, in the site's vocabulary (`One`, `OneTwo`, `Any`, ...)."
+          },
+          {
+            "name": "rate_id",
+            "type": "number",
+            "about": "`teeTimeRateId`; the key `tee_time_rates` and the detail URL use."
+          },
+          {
+            "name": "rate_set_type",
+            "type": "string"
+          },
+          {
+            "name": "regular_price",
+            "type": "number",
+            "about": "Undiscounted per-player price the discount is computed from (site `ipo`)."
+          },
+          {
+            "name": "sales_tax",
+            "type": "number"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "taxes_and_fees",
+            "type": "number",
+            "about": "Site `taxesAndFees` per player; 0 when the site does not itemise them."
+          },
+          {
+            "name": "transaction_fees",
+            "type": "number",
+            "about": "Site `transactionFeesTotal` per player."
+          },
+          {
+            "name": "transportation",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "facility_id": 877,
+          "players": 2
+        },
+        "response": {
+          "count": 4,
+          "country": "US",
+          "facility_id": 877,
+          "facility_name": "Dubsdread Golf Course",
+          "group_size_limit": 6,
+          "holes": 0,
+          "is_pay_now": false,
+          "is_rate_restricted": false,
+          "is_reservation_restricted": false,
+          "local_time": "2026-09-22T08:00:00",
+          "observed_at_ms": 1790018452008,
+          "player_rule": "OneTwo",
+          "players": 2,
+          "rates": [
+            {
+              "cart_included": true,
+              "currency": "USD",
+              "detail_url": null,
+              "due_at_course": 0,
+              "due_online": 0,
+              "greens_fee": 35,
+              "holes": 18,
+              "is_hot_deal": false,
+              "name": "Resident",
+              "percent_discount": 47,
+              "player_rule": "OneTwo",
+              "rate_id": -905001773,
+              "rate_set_type": "Course",
+              "regular_price": 65.95,
+              "sales_tax": 0,
+              "tags": [
+                "AA"
+              ],
+              "taxes_and_fees": 0,
+              "transaction_fees": 2.99,
+              "transportation": "Cart Included"
+            },
+            {
+              "cart_included": true,
+              "currency": "USD",
+              "detail_url": null,
+              "due_at_course": 0,
+              "due_online": 0,
+              "greens_fee": 35,
+              "holes": 18,
+              "is_hot_deal": false,
+              "name": "Non Resident",
+              "percent_discount": 54,
+              "player_rule": "OneTwo",
+              "rate_id": -905001771,
+              "rate_set_type": "Course",
+              "regular_price": 75.95,
+              "sales_tax": 0,
+              "tags": [
+                "AA"
+              ],
+              "taxes_and_fees": 0,
+              "transaction_fees": 2.99,
+              "transportation": "Cart Included"
+            },
+            {
+              "cart_included": true,
+              "currency": "USD",
+              "detail_url": null,
+              "due_at_course": 0,
+              "due_online": 0,
+              "greens_fee": 40,
+              "holes": 9,
+              "is_hot_deal": false,
+              "name": "Resident",
+              "percent_discount": 17,
+              "player_rule": "OneTwo",
+              "rate_id": -905001769,
+              "rate_set_type": "Course",
+              "regular_price": 47.95,
+              "sales_tax": 0,
+              "tags": [
+                "AA"
+              ],
+              "taxes_and_fees": 0,
+              "transaction_fees": 2.99,
+              "transportation": "Cart Included"
+            },
+            {
+              "cart_included": true,
+              "currency": "USD",
+              "detail_url": null,
+              "due_at_course": 0,
+              "due_online": 0,
+              "greens_fee": 52,
+              "holes": 9,
+              "is_hot_deal": false,
+              "name": "Non Resident",
+              "percent_discount": 10,
+              "player_rule": "OneTwo",
+              "rate_id": -905001770,
+              "rate_set_type": "Course",
+              "regular_price": 57.95,
+              "sales_tax": 0,
+              "tags": [
+                "AA"
+              ],
+              "taxes_and_fees": 0,
+              "transaction_fees": 2.99,
+              "transportation": "Cart Included"
+            }
+          ],
+          "source": "golfnow.com",
+          "tee_time_id": -905001773,
+          "url": "https://www.golfnow.com/tee-times/facility/877/tee-time/-905001773"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "golfnow-com",
+        "capability": "tee-times/tee_time_rates"
+      }
+    }
+  ]
+}

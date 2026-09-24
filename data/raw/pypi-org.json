@@ -1,0 +1,3393 @@
+{
+  "id": "pypi-org",
+  "provider": "pypi-org",
+  "name": "PyPI",
+  "description": "Python Package Index: project and release metadata, dependencies and Python compatibility, distribution files with hashes, PEP 740 provenance, release feeds, the global change log, a user's projects and site statistics.",
+  "toolCount": 8,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "pypi-org"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "pypi-org/packages/changelog",
+      "provider": "pypi-org",
+      "capability": "packages/changelog",
+      "name": "Changelog",
+      "description": "Incrementally track everything that changes on PyPI: poll with the last seen serial. Upstream serves up to 50 000 events per call; `limit` windows them and `next_serial` resumes.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 500,
+          "min": 1,
+          "max": 5000
+        },
+        {
+          "name": "since_serial",
+          "type": "number",
+          "in": "body",
+          "about": "Return events with a serial greater than this (use `next_serial` or `head_serial` from a previous call).",
+          "min": 0
+        }
+      ],
+      "response": {
+        "about": "PyPI's global change log over XML-RPC (`changelog_since_serial`): every event (new release, file added, project created, yanked, removed, ...) after a serial, with project, version, timestamp, action and serial, plus the current head serial. Without `since_serial` it returns only the head so a caller can start polling.",
+        "key": "events",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "action",
+            "type": "string"
+          },
+          {
+            "name": "normalized_name",
+            "type": "string"
+          },
+          {
+            "name": "project",
+            "type": "string"
+          },
+          {
+            "name": "serial",
+            "type": "number"
+          },
+          {
+            "name": "timestamp",
+            "type": "number",
+            "about": "Unix seconds (UTC)."
+          },
+          {
+            "name": "version",
+            "type": "string",
+            "about": "Null for project-level events."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 5,
+          "since_serial": 41310000
+        },
+        "response": {
+          "count": 5,
+          "events": [
+            {
+              "action": "new release",
+              "normalized_name": "ontometer",
+              "project": "ontometer",
+              "serial": 41310001,
+              "timestamp": 1790031437,
+              "version": "0.1.1"
+            },
+            {
+              "action": "add py3 file ontometer-0.1.1-py3-none-any.whl",
+              "normalized_name": "ontometer",
+              "project": "ontometer",
+              "serial": 41310002,
+              "timestamp": 1790031437,
+              "version": "0.1.1"
+            },
+            {
+              "action": "add source file ontometer-0.1.1.tar.gz",
+              "normalized_name": "ontometer",
+              "project": "ontometer",
+              "serial": 41310003,
+              "timestamp": 1790031438,
+              "version": "0.1.1"
+            },
+            {
+              "action": "add cp311 file pilz-0.34.0-cp311-abi3-manylinux_2_28_x86_64.whl",
+              "normalized_name": "pilz",
+              "project": "pilz",
+              "serial": 41310004,
+              "timestamp": 1790031438,
+              "version": "0.34.0"
+            },
+            {
+              "action": "add source file pilz-0.34.0.tar.gz",
+              "normalized_name": "pilz",
+              "project": "pilz",
+              "serial": 41310005,
+              "timestamp": 1790031439,
+              "version": "0.34.0"
+            }
+          ],
+          "head_serial": 41310423,
+          "next_serial": 41310005,
+          "observed_at_ms": 1790032712011,
+          "since_serial": 41310000,
+          "source_url": "https://pypi.org/pypi",
+          "upstream_count": 423
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "pypi-org",
+        "capability": "packages/changelog"
+      }
+    },
+    {
+      "id": "pypi-org/packages/files",
+      "provider": "pypi-org",
+      "capability": "packages/files",
+      "name": "Files",
+      "description": "Enumerate all files across all versions of a package (for mirroring, hash pinning or compatibility scans), or get the complete version list cheaply.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "`next_cursor` from the previous page; omit for the first page."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Files per page.",
+          "default": 100,
+          "min": 1,
+          "max": 500
+        },
+        {
+          "name": "project",
+          "type": "string",
+          "in": "body",
+          "about": "Project name as on PyPI, any spelling: PEP 503 normalization (case-insensitive, `-`/`_`/`.` equivalent) is applied before the request. Pattern: ^[A-Za-z0-9]([A-Za-z0-9._-]*[A-Za-z0-9])?$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Every distribution file of a project from the Simple repository API (PEP 691 JSON, `/simple/{project}/`): filename, download URL, sha256, size, upload time, `requires_python`, yanked state and provenance URL, plus the full version list and project status. The index has no server pages; `cursor`/`limit` window the file list.",
+        "key": "files",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "filename",
+            "type": "string"
+          },
+          {
+            "name": "provenance_url",
+            "type": "string",
+            "about": "Integrity API URL when the file has attestations; null otherwise."
+          },
+          {
+            "name": "requires_python",
+            "type": "string"
+          },
+          {
+            "name": "sha256",
+            "type": "string"
+          },
+          {
+            "name": "size",
+            "type": "number"
+          },
+          {
+            "name": "upload_time",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "yanked",
+            "type": "boolean"
+          },
+          {
+            "name": "yanked_reason",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 5,
+          "project": "requests"
+        },
+        "response": {
+          "api_version": "1.4",
+          "file_count": 244,
+          "files": [
+            {
+              "filename": "requests-0.2.0.tar.gz",
+              "provenance_url": null,
+              "requires_python": null,
+              "sha256": "813202ace4d9301a3c00740c700e012fb9f3f8c73ddcfe02ab558a8df6f175fd",
+              "size": 5533,
+              "upload_time": "2011-02-14T08:49:42.641660Z",
+              "url": "https://files.pythonhosted.org/packages/ba/bb/dfa0141a32d773c47e4dede1a617c59a23b74dd302e449cf85413fc96bc4/requests-0.2.0.tar.gz",
+              "yanked": false,
+              "yanked_reason": null
+            },
+            {
+              "filename": "requests-0.2.1.tar.gz",
+              "provenance_url": null,
+              "requires_python": null,
+              "sha256": "d54eb33499f018fc6bd297613bf866f8d134629c8e02964aab6ef951f460e41e",
+              "size": 12715,
+              "upload_time": "2011-02-14T16:38:12.392550Z",
+              "url": "https://files.pythonhosted.org/packages/4b/ad/d536b2e572e843fda13e4458c67f937b05ce359722c1e4cdad35ba05b6e3/requests-0.2.1.tar.gz",
+              "yanked": false,
+              "yanked_reason": null
+            },
+            {
+              "filename": "requests-0.2.2.tar.gz",
+              "provenance_url": null,
+              "requires_python": null,
+              "sha256": "b3289694b2ddf6adb4f7e1f470b9771330c76125611222b9c702f0e2e9733cbc",
+              "size": 13049,
+              "upload_time": "2011-02-14T18:58:40.410171Z",
+              "url": "https://files.pythonhosted.org/packages/82/3c/3b5beca192da920c0c2ba67119d66ba1e4b1e766f40898e5e684d697ca1c/requests-0.2.2.tar.gz",
+              "yanked": false,
+              "yanked_reason": null
+            },
+            {
+              "filename": "requests-0.2.3.tar.gz",
+              "provenance_url": null,
+              "requires_python": null,
+              "sha256": "8e374b75aaae7f85325e9bb126e96cb77a3bfc17e81ee74a0e96916aac1cc2ba",
+              "size": 13255,
+              "upload_time": "2011-02-15T15:47:29.058010Z",
+              "url": "https://files.pythonhosted.org/packages/6f/7e/5c2d7d9102c6ab847bd1215f96255e894fbfc81c8abf2c1714ae2a504913/requests-0.2.3.tar.gz",
+              "yanked": false,
+              "yanked_reason": null
+            },
+            {
+              "filename": "requests-0.2.4.tar.gz",
+              "provenance_url": null,
+              "requires_python": null,
+              "sha256": "ef1bd1a81022e9bf574ecfe69cbd8597e79371b890d29bd3847dd946102c8eed",
+              "size": 13653,
+              "upload_time": "2011-02-19T07:03:14.518479Z",
+              "url": "https://files.pythonhosted.org/packages/dc/02/789859c27162bb91ecf6b72ed4ce1af3ed1710255265ad0901c4d4e25666/requests-0.2.4.tar.gz",
+              "yanked": false,
+              "yanked_reason": null
+            }
+          ],
+          "last_serial": 37059094,
+          "name": "requests",
+          "next_cursor": "5",
+          "normalized_name": "requests",
+          "observed_at_ms": 1790032664545,
+          "offset": 0,
+          "project_status": "active",
+          "source_url": "https://pypi.org/simple/requests/",
+          "version_count": 160,
+          "versions": [
+            "0.2.0",
+            "0.2.1",
+            "0.2.2",
+            "0.2.3",
+            "0.2.4",
+            "0.3.0",
+            "0.3.1",
+            "0.3.2",
+            "0.3.3",
+            "0.3.4",
+            "0.4.0",
+            "0.4.1",
+            "0.5.0",
+            "0.5.1",
+            "0.6.0",
+            "0.6.1",
+            "0.6.2",
+            "0.6.3",
+            "0.6.4",
+            "0.6.5",
+            "0.6.6",
+            "0.7.0",
+            "0.7.1",
+            "0.7.2",
+            "0.7.3",
+            "0.7.4",
+            "0.7.5",
+            "0.7.6",
+            "0.8.0",
+            "0.8.1",
+            "0.8.2",
+            "0.8.3",
+            "0.8.4",
+            "0.8.5",
+            "0.8.6",
+            "0.8.7",
+            "0.8.8",
+            "0.8.9",
+            "0.9.0",
+            "0.9.1",
+            "0.9.2",
+            "0.9.3",
+            "0.10.0",
+            "0.10.1",
+            "0.10.2",
+            "0.10.3",
+            "0.10.4",
+            "0.10.6",
+            "0.10.7",
+            "0.10.8",
+            "0.11.1",
+            "0.11.2",
+            "0.12.0",
+            "0.12.1",
+            "0.13.0",
+            "0.13.1",
+            "0.13.2",
+            "0.13.3",
+            "0.13.4",
+            "0.13.5",
+            "0.13.6",
+            "0.13.7",
+            "0.13.8",
+            "0.13.9",
+            "0.14.0",
+            "0.14.1",
+            "0.14.2",
+            "1.0.0",
+            "1.0.1",
+            "1.0.2",
+            "1.0.3",
+            "1.0.4",
+            "1.1.0",
+            "1.2.0",
+            "1.2.1",
+            "1.2.2",
+            "1.2.3",
+            "2.0.0",
+            "2.0.1",
+            "2.1.0",
+            "2.2.0",
+            "2.2.1",
+            "2.3.0",
+            "2.4.0",
+            "2.4.1",
+            "2.4.2",
+            "2.4.3",
+            "2.5.0",
+            "2.5.1",
+            "2.5.2",
+            "2.5.3",
+            "2.6.0",
+            "2.6.1",
+            "2.6.2",
+            "2.7.0",
+            "2.8.0",
+            "2.8.1",
+            "2.9.0",
+            "2.9.1",
+            "2.9.2",
+            "2.10.0",
+            "2.11.0",
+            "2.11.1",
+            "2.12.0",
+            "2.12.1",
+            "2.12.2",
+            "2.12.3",
+            "2.12.4",
+            "2.12.5",
+            "2.13.0",
+            "2.14.0",
+            "2.14.1",
+            "2.14.2",
+            "2.15.1",
+            "2.16.0",
+            "2.16.1",
+            "2.16.2",
+            "2.16.3",
+            "2.16.4",
+            "2.16.5",
+            "2.17.0",
+            "2.17.1",
+            "2.17.2",
+            "2.17.3",
+            "2.18.0",
+            "2.18.1",
+            "2.18.2",
+            "2.18.3",
+            "2.18.4",
+            "2.19.0",
+            "2.19.1",
+            "2.20.0",
+            "2.20.1",
+            "2.21.0",
+            "2.22.0",
+            "2.23.0",
+            "2.24.0",
+            "2.25.0",
+            "2.25.1",
+            "2.26.0",
+            "2.27.0",
+            "2.27.1",
+            "2.28.0",
+            "2.28.1",
+            "2.28.2",
+            "2.29.0",
+            "2.30.0",
+            "2.31.0",
+            "2.32.0",
+            "2.32.1",
+            "2.32.2",
+            "2.32.3",
+            "2.32.4",
+            "2.32.5",
+            "2.33.0",
+            "2.33.1",
+            "2.34.0.dev1",
+            "2.34.0",
+            "2.34.1",
+            "2.34.2"
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "pypi-org",
+        "capability": "packages/files"
+      }
+    },
+    {
+      "id": "pypi-org/packages/project",
+      "provider": "pypi-org",
+      "capability": "packages/project",
+      "name": "Project",
+      "description": "Look up a Python package by name or pasted pypi.org URL: what it is, who publishes it, which Python versions and dependencies it needs, which versions exist, and whether the current release has advisories.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "include_description",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also return the long description (README, often tens of KB)."
+        },
+        {
+          "name": "project",
+          "type": "string",
+          "in": "body",
+          "about": "Project name as on PyPI, any spelling: PEP 503 normalization (case-insensitive, `-`/`_`/`.` equivalent) is applied before the request. Pattern: ^[A-Za-z0-9]([A-Za-z0-9._-]*[A-Za-z0-9])?$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted https://pypi.org/project/{name}/ (or /pypi/{name}/json) URL; alternative to `project`."
+        }
+      ],
+      "response": {
+        "about": "One project from the JSON API (`/pypi/{project}/json`): identity, latest-release metadata (summary, license, author, `requires_python`, `requires_dist` dependencies with extras markers, classifiers, project URLs), every release version with file count, first upload time and yanked state, the latest release's files with sizes and hashes, and known vulnerabilities for the latest release.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "name": "author_email",
+            "type": "string"
+          },
+          {
+            "name": "classifiers",
+            "type": "string[]",
+            "about": "Trove classifiers."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Long description (README) only when `include_description` is true; otherwise omitted."
+          },
+          {
+            "name": "description_content_type",
+            "type": "string"
+          },
+          {
+            "name": "files",
+            "type": "object[]",
+            "about": "Files of the latest release."
+          },
+          {
+            "name": "home_page",
+            "type": "string"
+          },
+          {
+            "name": "keywords",
+            "type": "string"
+          },
+          {
+            "name": "last_serial",
+            "type": "number",
+            "about": "PyPI's global change serial at which this project last changed (also `x-pypi-last-serial`)."
+          },
+          {
+            "name": "license",
+            "type": "string",
+            "about": "Free-text `License` metadata field; null when the project uses `license_expression` or declares none."
+          },
+          {
+            "name": "license_expression",
+            "type": "string",
+            "about": "SPDX expression (`License-Expression`, PEP 639); null for older metadata."
+          },
+          {
+            "name": "license_files",
+            "type": "string[]",
+            "about": "`License-File` entries; null when not declared."
+          },
+          {
+            "name": "maintainer",
+            "type": "string"
+          },
+          {
+            "name": "maintainer_email",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Project name as PyPI stores it (canonical spelling)."
+          },
+          {
+            "name": "normalized_name",
+            "type": "string",
+            "about": "PEP 503 normalized name used in URLs."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "project_url",
+            "type": "string",
+            "about": "https://pypi.org/project/{normalized_name}/"
+          },
+          {
+            "name": "project_urls",
+            "type": "object[]",
+            "about": "`Project-URL` entries (Documentation, Source, ...); null when none are declared."
+          },
+          {
+            "name": "provides_extra",
+            "type": "string[]",
+            "about": "Optional dependency groups; null when none are declared."
+          },
+          {
+            "name": "release_url",
+            "type": "string",
+            "about": "https://pypi.org/project/{normalized_name}/{version}/"
+          },
+          {
+            "name": "requires_dist",
+            "type": "string[]",
+            "about": "Dependencies as PEP 508 requirement strings (extras carry `; extra == \"name\"` markers). Null when the metadata declares none."
+          },
+          {
+            "name": "requires_python",
+            "type": "string",
+            "about": "`Requires-Python` specifier, e.g. `>=3.8`; null when not declared."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "summary",
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "type": "string",
+            "about": "Release version this metadata describes (the latest non-yanked release for `project`)."
+          },
+          {
+            "name": "version_count",
+            "type": "number",
+            "about": "Number of release versions PyPI lists."
+          },
+          {
+            "name": "versions",
+            "type": "object[]",
+            "about": "Every release version in PyPI's listing order (string-sorted, not PEP 440-sorted)."
+          },
+          {
+            "name": "vulnerabilities",
+            "type": "object[]",
+            "about": "Advisories affecting the latest release (from OSV via PyPI)."
+          },
+          {
+            "name": "yanked",
+            "type": "boolean"
+          },
+          {
+            "name": "yanked_reason",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "project": "requests"
+        },
+        "response": {
+          "author": null,
+          "author_email": "Kenneth Reitz <me@kennethreitz.org>",
+          "classifiers": [
+            "Development Status :: 5 - Production/Stable",
+            "Environment :: Web Environment",
+            "Intended Audience :: Developers",
+            "License :: OSI Approved :: Apache Software License",
+            "Natural Language :: English",
+            "Operating System :: OS Independent",
+            "Programming Language :: Python",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3 :: Only",
+            "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
+            "Programming Language :: Python :: 3.12",
+            "Programming Language :: Python :: 3.13",
+            "Programming Language :: Python :: 3.14",
+            "Programming Language :: Python :: 3.15",
+            "Programming Language :: Python :: Free Threading :: 2 - Beta",
+            "Programming Language :: Python :: Implementation :: CPython",
+            "Programming Language :: Python :: Implementation :: PyPy",
+            "Topic :: Internet :: WWW/HTTP",
+            "Topic :: Software Development :: Libraries"
+          ],
+          "description_content_type": "text/markdown",
+          "files": [
+            {
+              "blake2b_256": "a0f4c67b0b3f1b9245e8d266f0f112c500d50e5b4e83cb6f3b71b6528104182a",
+              "filename": "requests-2.34.2-py3-none-any.whl",
+              "md5": "cc4287951c320ff794e5e183c7a91f85",
+              "packagetype": "bdist_wheel",
+              "python_version": "py3",
+              "requires_python": ">=3.10",
+              "sha256": "2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0",
+              "size": 73075,
+              "upload_time": "2026-05-14T19:25:26.443000Z",
+              "url": "https://files.pythonhosted.org/packages/a0/f4/c67b0b3f1b9245e8d266f0f112c500d50e5b4e83cb6f3b71b6528104182a/requests-2.34.2-py3-none-any.whl",
+              "yanked": false,
+              "yanked_reason": null
+            },
+            {
+              "blake2b_256": "acc3e2a2b89f2d3e2179abd6d00ebd70bff6273f37fb3e0cc209f48b39d00cbf",
+              "filename": "requests-2.34.2.tar.gz",
+              "md5": "611e438d0803e962500225f9807a475e",
+              "packagetype": "sdist",
+              "python_version": "source",
+              "requires_python": ">=3.10",
+              "sha256": "f288924cae4e29463698d6d60bc6a4da69c89185ad1e0bcc4104f584e960b9ed",
+              "size": 142856,
+              "upload_time": "2026-05-14T19:25:27.735762Z",
+              "url": "https://files.pythonhosted.org/packages/ac/c3/e2a2b89f2d3e2179abd6d00ebd70bff6273f37fb3e0cc209f48b39d00cbf/requests-2.34.2.tar.gz",
+              "yanked": false,
+              "yanked_reason": null
+            }
+          ],
+          "home_page": null,
+          "keywords": null,
+          "last_serial": 37059094,
+          "license": "Apache-2.0",
+          "license_expression": null,
+          "license_files": [
+            "LICENSE",
+            "NOTICE"
+          ],
+          "maintainer": null,
+          "maintainer_email": "Ian Stapleton Cordasco <graffatcolmingov@gmail.com>, Nate Prewitt <nate.prewitt@gmail.com>",
+          "name": "requests",
+          "normalized_name": "requests",
+          "observed_at_ms": 1790032625490,
+          "project_url": "https://pypi.org/project/requests/",
+          "project_urls": [
+            {
+              "label": "Documentation",
+              "url": "https://requests.readthedocs.io"
+            },
+            {
+              "label": "Source",
+              "url": "https://github.com/psf/requests"
+            }
+          ],
+          "provides_extra": [
+            "security",
+            "socks",
+            "use-chardet-on-py3"
+          ],
+          "release_url": "https://pypi.org/project/requests/2.34.2/",
+          "requires_dist": [
+            "charset_normalizer<4,>=2",
+            "idna<4,>=2.5",
+            "urllib3<3,>=1.26",
+            "certifi>=2023.5.7",
+            "PySocks!=1.5.7,>=1.5.6; extra == \"socks\"",
+            "chardet<8,>=3.0.2; extra == \"use-chardet-on-py3\""
+          ],
+          "requires_python": ">=3.10",
+          "source_url": "https://pypi.org/pypi/requests/json",
+          "summary": "Python HTTP for Humans.",
+          "version": "2.34.2",
+          "version_count": 163,
+          "versions": [
+            {
+              "file_count": 0,
+              "upload_time": null,
+              "version": "0.0.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-01-22T05:08:17.091441Z",
+              "version": "0.10.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-01-23T08:22:52.352375Z",
+              "version": "0.10.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-02-15T09:48:52.830436Z",
+              "version": "0.10.2",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-02-20T20:10:57.584946Z",
+              "version": "0.10.3",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-02-20T22:21:31.091713Z",
+              "version": "0.10.4",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-02-26T05:17:54.135905Z",
+              "version": "0.10.6",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-03-08T01:50:58.069132Z",
+              "version": "0.10.7",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-03-09T17:59:54.950126Z",
+              "version": "0.10.8",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-03-31T05:47:56.690051Z",
+              "version": "0.11.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-04-23T04:29:36.868120Z",
+              "version": "0.11.2",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-05-03T01:18:47.376345Z",
+              "version": "0.12.0",
+              "yanked": false
+            },
+            {
+              "file_count": 0,
+              "upload_time": null,
+              "version": "0.12.01",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-05-08T07:21:59.920122Z",
+              "version": "0.12.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-05-30T02:54:18.564587Z",
+              "version": "0.13.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-06-08T04:22:28.683979Z",
+              "version": "0.13.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-06-29T02:37:41.500479Z",
+              "version": "0.13.2",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-07-12T23:20:43.867603Z",
+              "version": "0.13.3",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-07-27T08:22:09.864284Z",
+              "version": "0.13.4",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-07-27T09:23:41.969623Z",
+              "version": "0.13.5",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-08-06T08:46:22.516645Z",
+              "version": "0.13.6",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-08-19T00:47:48.501903Z",
+              "version": "0.13.7",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-08-20T15:24:42.439401Z",
+              "version": "0.13.8",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-08-25T15:26:50.954170Z",
+              "version": "0.13.9",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-09-02T08:50:39.106639Z",
+              "version": "0.14.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-10-01T17:30:05.176526Z",
+              "version": "0.14.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-10-27T15:08:51.460827Z",
+              "version": "0.14.2",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-02-14T08:49:42.641660Z",
+              "version": "0.2.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-02-14T16:38:12.392550Z",
+              "version": "0.2.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-02-14T18:58:40.410171Z",
+              "version": "0.2.2",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-02-15T15:47:29.058010Z",
+              "version": "0.2.3",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-02-19T07:03:14.518479Z",
+              "version": "0.2.4",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-02-25T14:58:38.361577Z",
+              "version": "0.3.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-04-01T20:55:03.064666Z",
+              "version": "0.3.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-04-15T23:30:50.899634Z",
+              "version": "0.3.2",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-05-12T10:03:24.258074Z",
+              "version": "0.3.3",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-05-14T20:30:44.001002Z",
+              "version": "0.3.4",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-05-15T05:58:43.415820Z",
+              "version": "0.4.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-05-25T18:54:05.328955Z",
+              "version": "0.4.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-06-22T04:44:39.288841Z",
+              "version": "0.5.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-07-24T05:01:45.612333Z",
+              "version": "0.5.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-08-17T10:33:05.720565Z",
+              "version": "0.6.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-08-21T00:25:37.203918Z",
+              "version": "0.6.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-10-09T13:12:45.395766Z",
+              "version": "0.6.2",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-10-14T03:35:13.523706Z",
+              "version": "0.6.3",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-10-14T04:23:31.793480Z",
+              "version": "0.6.4",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-10-19T07:30:59.708543Z",
+              "version": "0.6.5",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-10-19T09:39:56.534103Z",
+              "version": "0.6.6",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-10-23T03:33:24.637553Z",
+              "version": "0.7.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-10-23T21:19:22.099184Z",
+              "version": "0.7.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-10-23T21:40:37.623156Z",
+              "version": "0.7.2",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-10-23T23:04:13.595145Z",
+              "version": "0.7.3",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-10-27T00:36:25.355189Z",
+              "version": "0.7.4",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-11-05T04:32:37.598633Z",
+              "version": "0.7.5",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-11-07T20:19:31.227072Z",
+              "version": "0.7.6",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-11-13T06:52:10.360103Z",
+              "version": "0.8.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-11-15T16:01:47.827430Z",
+              "version": "0.8.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-11-19T22:28:31.706305Z",
+              "version": "0.8.2",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-11-27T16:44:51.946354Z",
+              "version": "0.8.3",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-12-11T17:40:28.585204Z",
+              "version": "0.8.4",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-12-14T16:43:21.464961Z",
+              "version": "0.8.5",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-12-19T01:18:29.495054Z",
+              "version": "0.8.6",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-12-24T09:18:54.805200Z",
+              "version": "0.8.7",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-12-28T09:55:45.489845Z",
+              "version": "0.8.8",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-12-28T10:34:17.815200Z",
+              "version": "0.8.9",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2011-12-28T10:51:35.541114Z",
+              "version": "0.9.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-01-06T07:11:02.635935Z",
+              "version": "0.9.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-01-19T03:39:58.591876Z",
+              "version": "0.9.2",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-01-19T16:51:33.637035Z",
+              "version": "0.9.3",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-12-17T15:00:05.110522Z",
+              "version": "1.0.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-12-17T18:53:51.251872Z",
+              "version": "1.0.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-12-17T19:04:31.658169Z",
+              "version": "1.0.2",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-12-18T09:51:12.406576Z",
+              "version": "1.0.3",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2012-12-23T07:45:10.417631Z",
+              "version": "1.0.4",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2013-01-10T07:13:41.901588Z",
+              "version": "1.1.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2013-03-31T05:28:47.574555Z",
+              "version": "1.2.0",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2013-05-20T20:11:09.817186Z",
+              "version": "1.2.1",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2013-05-21T21:44:44.405678Z",
+              "version": "1.2.2",
+              "yanked": false
+            },
+            {
+              "file_count": 1,
+              "upload_time": "2013-05-25T16:48:36.421087Z",
+              "version": "1.2.3",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2013-09-24T18:39:33.154169Z",
+              "version": "2.0.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2013-10-24T14:33:21.606209Z",
+              "version": "2.0.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2013-12-05T22:51:38.634004Z",
+              "version": "2.1.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2016-04-29T22:12:32.122862Z",
+              "version": "2.10.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2016-08-08T15:07:32.250147Z",
+              "version": "2.11.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2016-08-17T20:04:26.747542Z",
+              "version": "2.11.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2016-11-15T10:32:00.148361Z",
+              "version": "2.12.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2016-11-16T10:45:37.051370Z",
+              "version": "2.12.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2016-11-30T12:39:31.252307Z",
+              "version": "2.12.2",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2016-12-01T10:49:02.775404Z",
+              "version": "2.12.3",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2016-12-14T11:39:35.297490Z",
+              "version": "2.12.4",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-01-18T12:43:08.631826Z",
+              "version": "2.12.5",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-01-24T12:53:25.259314Z",
+              "version": "2.13.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-09T15:45:03.006047Z",
+              "version": "2.14.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-09T19:00:26.274919Z",
+              "version": "2.14.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-10T14:05:39.911571Z",
+              "version": "2.14.2",
+              "yanked": false
+            },
+            {
+              "file_count": 0,
+              "upload_time": null,
+              "version": "2.15.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-27T02:14:19.048380Z",
+              "version": "2.15.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-27T03:45:40.367893Z",
+              "version": "2.16.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-27T13:43:53.090483Z",
+              "version": "2.16.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-27T14:53:09.839813Z",
+              "version": "2.16.2",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-27T16:24:47.512647Z",
+              "version": "2.16.3",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-27T21:17:38.023572Z",
+              "version": "2.16.4",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-28T04:35:44.914574Z",
+              "version": "2.16.5",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-29T17:24:35.939176Z",
+              "version": "2.17.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-29T19:59:39.065426Z",
+              "version": "2.17.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-29T21:33:32.234721Z",
+              "version": "2.17.2",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-05-29T21:53:19.494862Z",
+              "version": "2.17.3",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-06-14T15:44:35.080617Z",
+              "version": "2.18.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-06-14T17:51:25.096686Z",
+              "version": "2.18.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-07-25T15:23:15.338694Z",
+              "version": "2.18.2",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-08-02T13:23:31.998938Z",
+              "version": "2.18.3",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2017-08-15T13:23:43.489631Z",
+              "version": "2.18.4",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2018-06-12T14:46:15.289074Z",
+              "version": "2.19.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2018-06-14T13:40:38.236729Z",
+              "version": "2.19.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2014-01-09T19:33:32.362704Z",
+              "version": "2.2.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2014-01-23T18:26:12.018048Z",
+              "version": "2.2.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2018-10-18T15:46:10.776819Z",
+              "version": "2.20.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2018-11-08T17:20:29.533862Z",
+              "version": "2.20.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2018-12-10T15:40:08.741431Z",
+              "version": "2.21.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2019-05-16T14:37:14.357166Z",
+              "version": "2.22.0",
+              "yanked": false
+            },
+            {
+              "file_count": 3,
+              "upload_time": "2020-02-19T18:50:59.409378Z",
+              "version": "2.23.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2020-06-17T16:30:08.738735Z",
+              "version": "2.24.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2020-11-11T20:05:15.870484Z",
+              "version": "2.25.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2020-12-16T19:38:34.329342Z",
+              "version": "2.25.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2021-07-13T14:55:06.933494Z",
+              "version": "2.26.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2022-01-03T15:09:26.599400Z",
+              "version": "2.27.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2022-01-05T15:40:49.334679Z",
+              "version": "2.27.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2022-06-09T14:44:34.115743Z",
+              "version": "2.28.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2022-06-29T15:13:40.685859Z",
+              "version": "2.28.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2023-01-12T16:24:52.241259Z",
+              "version": "2.28.2",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2023-04-26T15:24:31.555832Z",
+              "version": "2.29.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2014-05-16T17:57:02.237698Z",
+              "version": "2.3.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2023-05-03T15:44:03.457714Z",
+              "version": "2.30.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2023-05-22T15:12:42.313790Z",
+              "version": "2.31.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2024-05-20T16:08:19.530618Z",
+              "version": "2.32.0",
+              "yanked": true
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2024-05-20T22:08:45.850542Z",
+              "version": "2.32.1",
+              "yanked": true
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2024-05-21T18:51:29.562156Z",
+              "version": "2.32.2",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2024-05-29T15:37:47.027275Z",
+              "version": "2.32.3",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2025-06-09T16:43:05.728107Z",
+              "version": "2.32.4",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2025-08-18T20:46:00.542304Z",
+              "version": "2.32.5",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2026-03-25T15:10:40.382036Z",
+              "version": "2.33.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2026-03-30T16:09:13.830020Z",
+              "version": "2.33.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2026-05-11T19:29:49.923155Z",
+              "version": "2.34.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2026-05-03T20:21:40.509155Z",
+              "version": "2.34.0.dev1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2026-05-13T19:20:22.827819Z",
+              "version": "2.34.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2026-05-14T19:25:26.443000Z",
+              "version": "2.34.2",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2014-08-29T14:32:45.073609Z",
+              "version": "2.4.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2014-09-09T16:35:08.552539Z",
+              "version": "2.4.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2014-10-05T17:15:45.276538Z",
+              "version": "2.4.2",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2014-10-06T09:44:44.221787Z",
+              "version": "2.4.3",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2014-12-01T23:27:51.119048Z",
+              "version": "2.5.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2014-12-23T17:55:59.876986Z",
+              "version": "2.5.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2015-02-23T22:37:39.435391Z",
+              "version": "2.5.2",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2015-02-24T16:33:49.703522Z",
+              "version": "2.5.3",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2015-03-14T16:44:37.146829Z",
+              "version": "2.6.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2015-04-23T02:27:04.893535Z",
+              "version": "2.6.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2015-04-23T16:30:52.318157Z",
+              "version": "2.6.2",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2015-05-03T15:01:21.105760Z",
+              "version": "2.7.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2015-10-06T14:47:57.677398Z",
+              "version": "2.8.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2015-10-13T12:56:34.254896Z",
+              "version": "2.8.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2015-12-15T15:29:58.086640Z",
+              "version": "2.9.0",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2015-12-21T14:55:00.266465Z",
+              "version": "2.9.1",
+              "yanked": false
+            },
+            {
+              "file_count": 2,
+              "upload_time": "2016-04-29T21:57:10.487144Z",
+              "version": "2.9.2",
+              "yanked": false
+            }
+          ],
+          "vulnerabilities": [],
+          "yanked": false,
+          "yanked_reason": null
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "pypi-org",
+        "capability": "packages/project"
+      }
+    },
+    {
+      "id": "pypi-org/packages/provenance",
+      "provider": "pypi-org",
+      "capability": "packages/provenance",
+      "name": "Provenance",
+      "description": "Verify where a specific wheel or sdist was built and published from (GitHub/GitLab Trusted Publishing) before trusting it.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "filename",
+          "type": "string",
+          "in": "body",
+          "about": "Distribution filename from `files[].filename` (e.g. `requests-2.34.2.tar.gz`). Pattern: ^[A-Za-z0-9][A-Za-z0-9._+!~-]*$.",
+          "required": true
+        },
+        {
+          "name": "project",
+          "type": "string",
+          "in": "body",
+          "about": "Project name as on PyPI, any spelling: PEP 503 normalization (case-insensitive, `-`/`_`/`.` equivalent) is applied before the request. Pattern: ^[A-Za-z0-9]([A-Za-z0-9._-]*[A-Za-z0-9])?$.",
+          "required": true
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "in": "body",
+          "about": "Release version exactly as listed by PyPI (PEP 440 string, e.g. `2.32.3`). Pattern: ^[A-Za-z0-9][A-Za-z0-9._+!~-]*$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "PEP 740 provenance for one distribution file from the integrity API (`/integrity/{project}/{version}/{filename}/provenance`): Trusted Publisher identity (kind, repository, workflow, environment) and each attestation's in-toto subjects and predicate type. A file without attestations returns `has_provenance: false`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "api_version",
+            "type": "number",
+            "about": "Integrity API `version`; null when there is no provenance."
+          },
+          {
+            "name": "bundle_count",
+            "type": "number"
+          },
+          {
+            "name": "bundles",
+            "type": "object[]"
+          },
+          {
+            "name": "filename",
+            "type": "string"
+          },
+          {
+            "name": "has_provenance",
+            "type": "boolean"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "project",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "filename": "requests-2.34.2.tar.gz",
+          "project": "requests",
+          "version": "2.34.2"
+        },
+        "response": {
+          "api_version": 1,
+          "bundle_count": 1,
+          "bundles": [
+            {
+              "attestation_count": 1,
+              "attestations": [
+                {
+                  "has_certificate": true,
+                  "predicate_type": "https://docs.pypi.org/attestations/publish/v1",
+                  "statement_type": "https://in-toto.io/Statement/v1",
+                  "subjects": [
+                    {
+                      "name": "requests-2.34.2.tar.gz",
+                      "sha256": "f288924cae4e29463698d6d60bc6a4da69c89185ad1e0bcc4104f584e960b9ed"
+                    }
+                  ],
+                  "transparency_entry_count": 1,
+                  "version": 1
+                }
+              ],
+              "publisher": {
+                "environment": "publish",
+                "kind": "GitHub",
+                "repository": "psf/requests",
+                "workflow": "publish.yml"
+              }
+            }
+          ],
+          "filename": "requests-2.34.2.tar.gz",
+          "has_provenance": true,
+          "observed_at_ms": 1790032669077,
+          "project": "requests",
+          "source_url": "https://pypi.org/integrity/requests/2.34.2/requests-2.34.2.tar.gz/provenance",
+          "version": "2.34.2"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "pypi-org",
+        "capability": "packages/provenance"
+      }
+    },
+    {
+      "id": "pypi-org/packages/recent_releases",
+      "provider": "pypi-org",
+      "capability": "packages/recent_releases",
+      "name": "Recent releases",
+      "description": "Watch for new versions of a package, or discover what was just released or created on PyPI. Fixed windows; no history beyond the feed.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "feed",
+          "type": "string",
+          "in": "body",
+          "about": "Site-wide feed when `project` is omitted: `updates` (latest releases, default) or `packages` (newest projects).",
+          "oneOf": [
+            "updates",
+            "packages"
+          ]
+        },
+        {
+          "name": "project",
+          "type": "string",
+          "in": "body",
+          "about": "Project name as on PyPI, any spelling: PEP 503 normalization (case-insensitive, `-`/`_`/`.` equivalent) is applied before the request. Pattern: ^[A-Za-z0-9]([A-Za-z0-9._-]*[A-Za-z0-9])?$."
+        }
+      ],
+      "response": {
+        "about": "PyPI's RSS feeds: the latest 40 releases of one project (`/rss/project/{project}/releases.xml`), or site-wide the latest 100 releases (`feed: updates`) or 40 newest projects (`feed: packages`). Each item carries project, version, link, summary, author and publication time.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "link",
+            "type": "string"
+          },
+          {
+            "name": "project",
+            "type": "string",
+            "about": "Project name from the item link."
+          },
+          {
+            "name": "published_at",
+            "type": "string",
+            "about": "RFC 2822 date as published."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "type": "string",
+            "about": "Version from the item link; null for the `packages` feed (new projects)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "project": "requests"
+        },
+        "response": {
+          "count": 40,
+          "feed_title": "PyPI recent updates for requests",
+          "feed_url": "https://pypi.org/rss/project/requests/releases.xml",
+          "items": [
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.34.2/",
+              "project": "requests",
+              "published_at": "Thu, 14 May 2026 19:25:26 GMT",
+              "title": "2.34.2",
+              "version": "2.34.2"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.34.1/",
+              "project": "requests",
+              "published_at": "Wed, 13 May 2026 19:20:22 GMT",
+              "title": "2.34.1",
+              "version": "2.34.1"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.34.0/",
+              "project": "requests",
+              "published_at": "Mon, 11 May 2026 19:29:49 GMT",
+              "title": "2.34.0",
+              "version": "2.34.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.34.0.dev1/",
+              "project": "requests",
+              "published_at": "Sun, 03 May 2026 20:21:40 GMT",
+              "title": "2.34.0.dev1",
+              "version": "2.34.0.dev1"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.33.1/",
+              "project": "requests",
+              "published_at": "Mon, 30 Mar 2026 16:09:13 GMT",
+              "title": "2.33.1",
+              "version": "2.33.1"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.33.0/",
+              "project": "requests",
+              "published_at": "Wed, 25 Mar 2026 15:10:40 GMT",
+              "title": "2.33.0",
+              "version": "2.33.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.32.5/",
+              "project": "requests",
+              "published_at": "Mon, 18 Aug 2025 20:46:00 GMT",
+              "title": "2.32.5",
+              "version": "2.32.5"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.32.4/",
+              "project": "requests",
+              "published_at": "Mon, 09 Jun 2025 16:43:05 GMT",
+              "title": "2.32.4",
+              "version": "2.32.4"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.32.3/",
+              "project": "requests",
+              "published_at": "Wed, 29 May 2024 15:37:47 GMT",
+              "title": "2.32.3",
+              "version": "2.32.3"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.32.2/",
+              "project": "requests",
+              "published_at": "Tue, 21 May 2024 18:51:29 GMT",
+              "title": "2.32.2",
+              "version": "2.32.2"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.32.1/",
+              "project": "requests",
+              "published_at": "Mon, 20 May 2024 22:08:45 GMT",
+              "title": "2.32.1",
+              "version": "2.32.1"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.32.0/",
+              "project": "requests",
+              "published_at": "Mon, 20 May 2024 16:08:19 GMT",
+              "title": "2.32.0",
+              "version": "2.32.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.31.0/",
+              "project": "requests",
+              "published_at": "Mon, 22 May 2023 15:12:42 GMT",
+              "title": "2.31.0",
+              "version": "2.31.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.30.0/",
+              "project": "requests",
+              "published_at": "Wed, 03 May 2023 15:44:03 GMT",
+              "title": "2.30.0",
+              "version": "2.30.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.29.0/",
+              "project": "requests",
+              "published_at": "Wed, 26 Apr 2023 15:24:31 GMT",
+              "title": "2.29.0",
+              "version": "2.29.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.28.2/",
+              "project": "requests",
+              "published_at": "Thu, 12 Jan 2023 16:24:52 GMT",
+              "title": "2.28.2",
+              "version": "2.28.2"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.28.1/",
+              "project": "requests",
+              "published_at": "Wed, 29 Jun 2022 15:13:40 GMT",
+              "title": "2.28.1",
+              "version": "2.28.1"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.28.0/",
+              "project": "requests",
+              "published_at": "Thu, 09 Jun 2022 14:44:34 GMT",
+              "title": "2.28.0",
+              "version": "2.28.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.27.1/",
+              "project": "requests",
+              "published_at": "Wed, 05 Jan 2022 15:40:49 GMT",
+              "title": "2.27.1",
+              "version": "2.27.1"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.27.0/",
+              "project": "requests",
+              "published_at": "Mon, 03 Jan 2022 15:09:26 GMT",
+              "title": "2.27.0",
+              "version": "2.27.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.26.0/",
+              "project": "requests",
+              "published_at": "Tue, 13 Jul 2021 14:55:06 GMT",
+              "title": "2.26.0",
+              "version": "2.26.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.25.1/",
+              "project": "requests",
+              "published_at": "Wed, 16 Dec 2020 19:38:34 GMT",
+              "title": "2.25.1",
+              "version": "2.25.1"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.25.0/",
+              "project": "requests",
+              "published_at": "Wed, 11 Nov 2020 20:05:15 GMT",
+              "title": "2.25.0",
+              "version": "2.25.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.24.0/",
+              "project": "requests",
+              "published_at": "Wed, 17 Jun 2020 16:30:08 GMT",
+              "title": "2.24.0",
+              "version": "2.24.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.23.0/",
+              "project": "requests",
+              "published_at": "Wed, 19 Feb 2020 18:50:59 GMT",
+              "title": "2.23.0",
+              "version": "2.23.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.22.0/",
+              "project": "requests",
+              "published_at": "Thu, 16 May 2019 14:37:14 GMT",
+              "title": "2.22.0",
+              "version": "2.22.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.21.0/",
+              "project": "requests",
+              "published_at": "Mon, 10 Dec 2018 15:40:08 GMT",
+              "title": "2.21.0",
+              "version": "2.21.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.20.1/",
+              "project": "requests",
+              "published_at": "Thu, 08 Nov 2018 17:20:29 GMT",
+              "title": "2.20.1",
+              "version": "2.20.1"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.20.0/",
+              "project": "requests",
+              "published_at": "Thu, 18 Oct 2018 15:46:10 GMT",
+              "title": "2.20.0",
+              "version": "2.20.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.19.1/",
+              "project": "requests",
+              "published_at": "Thu, 14 Jun 2018 13:40:38 GMT",
+              "title": "2.19.1",
+              "version": "2.19.1"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.19.0/",
+              "project": "requests",
+              "published_at": "Tue, 12 Jun 2018 14:46:15 GMT",
+              "title": "2.19.0",
+              "version": "2.19.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.18.4/",
+              "project": "requests",
+              "published_at": "Tue, 15 Aug 2017 13:23:43 GMT",
+              "title": "2.18.4",
+              "version": "2.18.4"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.18.3/",
+              "project": "requests",
+              "published_at": "Wed, 02 Aug 2017 13:23:31 GMT",
+              "title": "2.18.3",
+              "version": "2.18.3"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.18.2/",
+              "project": "requests",
+              "published_at": "Tue, 25 Jul 2017 15:23:15 GMT",
+              "title": "2.18.2",
+              "version": "2.18.2"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.18.1/",
+              "project": "requests",
+              "published_at": "Wed, 14 Jun 2017 17:51:25 GMT",
+              "title": "2.18.1",
+              "version": "2.18.1"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.18.0/",
+              "project": "requests",
+              "published_at": "Wed, 14 Jun 2017 15:44:35 GMT",
+              "title": "2.18.0",
+              "version": "2.18.0"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.17.3/",
+              "project": "requests",
+              "published_at": "Mon, 29 May 2017 21:53:19 GMT",
+              "title": "2.17.3",
+              "version": "2.17.3"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.17.2/",
+              "project": "requests",
+              "published_at": "Mon, 29 May 2017 21:33:32 GMT",
+              "title": "2.17.2",
+              "version": "2.17.2"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.17.1/",
+              "project": "requests",
+              "published_at": "Mon, 29 May 2017 19:59:39 GMT",
+              "title": "2.17.1",
+              "version": "2.17.1"
+            },
+            {
+              "author": "me@kennethreitz.org",
+              "description": "Python HTTP for Humans.",
+              "link": "https://pypi.org/project/requests/2.17.0/",
+              "project": "requests",
+              "published_at": "Mon, 29 May 2017 17:24:35 GMT",
+              "title": "2.17.0",
+              "version": "2.17.0"
+            }
+          ],
+          "observed_at_ms": 1790032673819
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "pypi-org",
+        "capability": "packages/recent_releases"
+      }
+    },
+    {
+      "id": "pypi-org/packages/release",
+      "provider": "pypi-org",
+      "capability": "packages/release",
+      "name": "Release",
+      "description": "Check a specific version: dependency pins, Python compatibility, wheels/sdist available with hashes, whether it was yanked, and advisories for that exact version.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "include_description",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also return the long description."
+        },
+        {
+          "name": "project",
+          "type": "string",
+          "in": "body",
+          "about": "Project name as on PyPI, any spelling: PEP 503 normalization (case-insensitive, `-`/`_`/`.` equivalent) is applied before the request. Pattern: ^[A-Za-z0-9]([A-Za-z0-9._-]*[A-Za-z0-9])?$.",
+          "required": true
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "in": "body",
+          "about": "Release version exactly as listed by PyPI (PEP 440 string, e.g. `2.32.3`). Pattern: ^[A-Za-z0-9][A-Za-z0-9._+!~-]*$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One release from the JSON API (`/pypi/{project}/{version}/json`): that version's metadata (`requires_python`, `requires_dist`, license, classifiers, yanked state), its files with sizes, hashes and upload times, and vulnerabilities affecting it.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "author",
+            "type": "string"
+          },
+          {
+            "name": "author_email",
+            "type": "string"
+          },
+          {
+            "name": "classifiers",
+            "type": "string[]",
+            "about": "Trove classifiers."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Long description (README) only when `include_description` is true; otherwise omitted."
+          },
+          {
+            "name": "description_content_type",
+            "type": "string"
+          },
+          {
+            "name": "files",
+            "type": "object[]"
+          },
+          {
+            "name": "home_page",
+            "type": "string"
+          },
+          {
+            "name": "keywords",
+            "type": "string"
+          },
+          {
+            "name": "last_serial",
+            "type": "number",
+            "about": "PyPI's global change serial at which this project last changed (also `x-pypi-last-serial`)."
+          },
+          {
+            "name": "license",
+            "type": "string",
+            "about": "Free-text `License` metadata field; null when the project uses `license_expression` or declares none."
+          },
+          {
+            "name": "license_expression",
+            "type": "string",
+            "about": "SPDX expression (`License-Expression`, PEP 639); null for older metadata."
+          },
+          {
+            "name": "license_files",
+            "type": "string[]",
+            "about": "`License-File` entries; null when not declared."
+          },
+          {
+            "name": "maintainer",
+            "type": "string"
+          },
+          {
+            "name": "maintainer_email",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Project name as PyPI stores it (canonical spelling)."
+          },
+          {
+            "name": "normalized_name",
+            "type": "string",
+            "about": "PEP 503 normalized name used in URLs."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "project_url",
+            "type": "string",
+            "about": "https://pypi.org/project/{normalized_name}/"
+          },
+          {
+            "name": "project_urls",
+            "type": "object[]",
+            "about": "`Project-URL` entries (Documentation, Source, ...); null when none are declared."
+          },
+          {
+            "name": "provides_extra",
+            "type": "string[]",
+            "about": "Optional dependency groups; null when none are declared."
+          },
+          {
+            "name": "release_url",
+            "type": "string",
+            "about": "https://pypi.org/project/{normalized_name}/{version}/"
+          },
+          {
+            "name": "requires_dist",
+            "type": "string[]",
+            "about": "Dependencies as PEP 508 requirement strings (extras carry `; extra == \"name\"` markers). Null when the metadata declares none."
+          },
+          {
+            "name": "requires_python",
+            "type": "string",
+            "about": "`Requires-Python` specifier, e.g. `>=3.8`; null when not declared."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "summary",
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "type": "string",
+            "about": "Release version this metadata describes (the latest non-yanked release for `project`)."
+          },
+          {
+            "name": "vulnerabilities",
+            "type": "object[]",
+            "about": "Advisories affecting this version."
+          },
+          {
+            "name": "yanked",
+            "type": "boolean"
+          },
+          {
+            "name": "yanked_reason",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "project": "requests",
+          "version": "2.32.3"
+        },
+        "response": {
+          "author": "Kenneth Reitz",
+          "author_email": "me@kennethreitz.org",
+          "classifiers": [
+            "Development Status :: 5 - Production/Stable",
+            "Environment :: Web Environment",
+            "Intended Audience :: Developers",
+            "License :: OSI Approved :: Apache Software License",
+            "Natural Language :: English",
+            "Operating System :: OS Independent",
+            "Programming Language :: Python",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3 :: Only",
+            "Programming Language :: Python :: 3.10",
+            "Programming Language :: Python :: 3.11",
+            "Programming Language :: Python :: 3.12",
+            "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.9",
+            "Programming Language :: Python :: Implementation :: CPython",
+            "Programming Language :: Python :: Implementation :: PyPy",
+            "Topic :: Internet :: WWW/HTTP",
+            "Topic :: Software Development :: Libraries"
+          ],
+          "description_content_type": "text/markdown",
+          "files": [
+            {
+              "blake2b_256": "f99b335f9764261e915ed497fcdeb11df5dfd6f7bf257d4a6a2a686d80da4d54",
+              "filename": "requests-2.32.3-py3-none-any.whl",
+              "md5": "83d50f7980b330c48f3bfe86372adcca",
+              "packagetype": "bdist_wheel",
+              "python_version": "py3",
+              "requires_python": ">=3.8",
+              "sha256": "70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6",
+              "size": 64928,
+              "upload_time": "2024-05-29T15:37:47.027275Z",
+              "url": "https://files.pythonhosted.org/packages/f9/9b/335f9764261e915ed497fcdeb11df5dfd6f7bf257d4a6a2a686d80da4d54/requests-2.32.3-py3-none-any.whl",
+              "yanked": false,
+              "yanked_reason": null
+            },
+            {
+              "blake2b_256": "63702bf7780ad2d390a8d301ad0b550f1581eadbd9a20f896afe06353c2a2913",
+              "filename": "requests-2.32.3.tar.gz",
+              "md5": "fa3ee5ac3f1b3f4368bd74ab530d3f0f",
+              "packagetype": "sdist",
+              "python_version": "source",
+              "requires_python": ">=3.8",
+              "sha256": "55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760",
+              "size": 131218,
+              "upload_time": "2024-05-29T15:37:49.536140Z",
+              "url": "https://files.pythonhosted.org/packages/63/70/2bf7780ad2d390a8d301ad0b550f1581eadbd9a20f896afe06353c2a2913/requests-2.32.3.tar.gz",
+              "yanked": false,
+              "yanked_reason": null
+            }
+          ],
+          "home_page": "https://requests.readthedocs.io",
+          "keywords": null,
+          "last_serial": 37059094,
+          "license": "Apache-2.0",
+          "license_expression": null,
+          "license_files": null,
+          "maintainer": null,
+          "maintainer_email": null,
+          "name": "requests",
+          "normalized_name": "requests",
+          "observed_at_ms": 1790032659930,
+          "project_url": "https://pypi.org/project/requests/",
+          "project_urls": [
+            {
+              "label": "Documentation",
+              "url": "https://requests.readthedocs.io"
+            },
+            {
+              "label": "Homepage",
+              "url": "https://requests.readthedocs.io"
+            },
+            {
+              "label": "Source",
+              "url": "https://github.com/psf/requests"
+            }
+          ],
+          "provides_extra": [
+            "security",
+            "socks",
+            "use-chardet-on-py3"
+          ],
+          "release_url": "https://pypi.org/project/requests/2.32.3/",
+          "requires_dist": [
+            "charset-normalizer<4,>=2",
+            "idna<4,>=2.5",
+            "urllib3<3,>=1.21.1",
+            "certifi>=2017.4.17",
+            "PySocks!=1.5.7,>=1.5.6; extra == \"socks\"",
+            "chardet<6,>=3.0.2; extra == \"use-chardet-on-py3\""
+          ],
+          "requires_python": ">=3.8",
+          "source_url": "https://pypi.org/pypi/requests/2.32.3/json",
+          "summary": "Python HTTP for Humans.",
+          "version": "2.32.3",
+          "vulnerabilities": [
+            {
+              "aliases": [
+                "CVE-2024-47081",
+                "PYSEC-2026-1872"
+              ],
+              "details": "### Impact\n\nDue to a URL parsing issue, Requests releases prior to 2.32.4 may leak .netrc credentials to third parties for specific maliciously-crafted URLs.\n\n### Workarounds\nFor older versions of Requests, use of the .netrc file can be disabled with `trust_env=False` on your Requests Session ([docs](https://requests.readthedocs.io/en/latest/api/#requests.Session.trust_env)).\n\n### References\nhttps://github.com/psf/requests/pull/6965\nhttps://seclists.org/fulldisclosure/2025/Jun/2",
+              "fixed_in": [
+                "2.32.4"
+              ],
+              "id": "GHSA-9hjg-9r4m-mvj7",
+              "link": "https://osv.dev/vulnerability/GHSA-9hjg-9r4m-mvj7",
+              "source": "osv",
+              "summary": null,
+              "withdrawn": null
+            },
+            {
+              "aliases": [
+                "CVE-2026-25645",
+                "PYSEC-2026-2275"
+              ],
+              "details": "### Impact\nThe `requests.utils.extract_zipped_paths()` utility function uses a predictable filename when extracting files from zip archives into the system temporary directory. If the target file already exists, it is reused without validation. A local attacker with write access to the temp directory could pre-create a malicious file that would be loaded in place of the legitimate one.\n\n### Affected usages\n**Standard usage of the Requests library is not affected by this vulnerability.** Only applications that call `extract_zipped_paths()` directly are impacted.\n\n### Remediation\nUpgrade to at least Requests 2.33.0, where the library now extracts files to a non-deterministic location.\n\nIf developers are unable to upgrade, they can set `TMPDIR` in their environment to a directory with restricted write access.",
+              "fixed_in": [
+                "2.33.0"
+              ],
+              "id": "GHSA-gc5v-m9x4-r6x2",
+              "link": "https://osv.dev/vulnerability/GHSA-gc5v-m9x4-r6x2",
+              "source": "osv",
+              "summary": null,
+              "withdrawn": null
+            },
+            {
+              "aliases": [
+                "CVE-2024-47081",
+                "GHSA-9hjg-9r4m-mvj7"
+              ],
+              "details": "### Impact\n\nDue to a URL parsing issue, Requests releases prior to 2.32.4 may leak .netrc credentials to third parties for specific maliciously-crafted URLs.\n\n### Workarounds\nFor older versions of Requests, use of the .netrc file can be disabled with `trust_env=False` on your Requests Session ([docs](https://requests.readthedocs.io/en/latest/api/#requests.Session.trust_env)).\n\n### References\nhttps://github.com/psf/requests/pull/6965\nhttps://seclists.org/fulldisclosure/2025/Jun/2",
+              "fixed_in": [
+                "2.32.4"
+              ],
+              "id": "PYSEC-2026-1872",
+              "link": "https://osv.dev/vulnerability/PYSEC-2026-1872",
+              "source": "osv",
+              "summary": null,
+              "withdrawn": null
+            },
+            {
+              "aliases": [
+                "CVE-2026-25645",
+                "GHSA-gc5v-m9x4-r6x2"
+              ],
+              "details": "Requests is a HTTP library. Prior to version 2.33.0, the `requests.utils.extract_zipped_paths()` utility function uses a predictable filename when extracting files from zip archives into the system temporary directory. If the target file already exists, it is reused without validation. A local attacker with write access to the temp directory could pre-create a malicious file that would be loaded in place of the legitimate one. Standard usage of the Requests library is not affected by this vulnerability. Only applications that call `extract_zipped_paths()` directly are impacted. Starting in version 2.33.0, the library extracts files to a non-deterministic location. If developers are unable to upgrade, they can set `TMPDIR` in their environment to a directory with restricted write access.",
+              "fixed_in": [
+                "2.33.0"
+              ],
+              "id": "PYSEC-2026-2275",
+              "link": "https://osv.dev/vulnerability/PYSEC-2026-2275",
+              "source": "osv",
+              "summary": null,
+              "withdrawn": null
+            }
+          ],
+          "yanked": false,
+          "yanked_reason": null
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "pypi-org",
+        "capability": "packages/release"
+      }
+    },
+    {
+      "id": "pypi-org/packages/stats",
+      "provider": "pypi-org",
+      "capability": "packages/stats",
+      "name": "Stats",
+      "description": "Size PyPI as a whole or see which projects dominate its storage.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [],
+      "response": {
+        "about": "PyPI-wide storage statistics (`/stats/` JSON): total size of all packages and the 100 largest projects by total file size.",
+        "key": "top_packages",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "normalized_name",
+            "type": "string"
+          },
+          {
+            "name": "project_url",
+            "type": "string"
+          },
+          {
+            "name": "size",
+            "type": "number",
+            "about": "Bytes."
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "observed_at_ms": 1790032721392,
+          "source_url": "https://pypi.org/stats/",
+          "top_package_count": 100,
+          "top_packages": [
+            {
+              "name": "tf-nightly",
+              "normalized_name": "tf-nightly",
+              "project_url": "https://pypi.org/project/tf-nightly/",
+              "size": 745639756069
+            },
+            {
+              "name": "tf-nightly-cpu",
+              "normalized_name": "tf-nightly-cpu",
+              "project_url": "https://pypi.org/project/tf-nightly-cpu/",
+              "size": 536833001830
+            },
+            {
+              "name": "tensorflow",
+              "normalized_name": "tensorflow",
+              "project_url": "https://pypi.org/project/tensorflow/",
+              "size": 421123575981
+            },
+            {
+              "name": "torch",
+              "normalized_name": "torch",
+              "project_url": "https://pypi.org/project/torch/",
+              "size": 278941522430
+            },
+            {
+              "name": "tf-nightly-cpu-aws",
+              "normalized_name": "tf-nightly-cpu-aws",
+              "project_url": "https://pypi.org/project/tf-nightly-cpu-aws/",
+              "size": 269083651984
+            },
+            {
+              "name": "lalsuite",
+              "normalized_name": "lalsuite",
+              "project_url": "https://pypi.org/project/lalsuite/",
+              "size": 242075828370
+            },
+            {
+              "name": "tensorflow-gpu",
+              "normalized_name": "tensorflow-gpu",
+              "project_url": "https://pypi.org/project/tensorflow-gpu/",
+              "size": 237940654319
+            },
+            {
+              "name": "catboost-dev",
+              "normalized_name": "catboost-dev",
+              "project_url": "https://pypi.org/project/catboost-dev/",
+              "size": 236970052025
+            },
+            {
+              "name": "ddtrace",
+              "normalized_name": "ddtrace",
+              "project_url": "https://pypi.org/project/ddtrace/",
+              "size": 213188425527
+            },
+            {
+              "name": "tensorflow-io-nightly",
+              "normalized_name": "tensorflow-io-nightly",
+              "project_url": "https://pypi.org/project/tensorflow-io-nightly/",
+              "size": 205399652249
+            },
+            {
+              "name": "frida",
+              "normalized_name": "frida",
+              "project_url": "https://pypi.org/project/frida/",
+              "size": 202144761937
+            },
+            {
+              "name": "paddlepaddle-gpu",
+              "normalized_name": "paddlepaddle-gpu",
+              "project_url": "https://pypi.org/project/paddlepaddle-gpu/",
+              "size": 190935378882
+            },
+            {
+              "name": "tensorflow-cpu",
+              "normalized_name": "tensorflow-cpu",
+              "project_url": "https://pypi.org/project/tensorflow-cpu/",
+              "size": 175188800284
+            },
+            {
+              "name": "openvisus",
+              "normalized_name": "openvisus",
+              "project_url": "https://pypi.org/project/openvisus/",
+              "size": 171543767068
+            },
+            {
+              "name": "litert-converter",
+              "normalized_name": "litert-converter",
+              "project_url": "https://pypi.org/project/litert-converter/",
+              "size": 152845598126
+            },
+            {
+              "name": "tf-nightly-macos",
+              "normalized_name": "tf-nightly-macos",
+              "project_url": "https://pypi.org/project/tf-nightly-macos/",
+              "size": 139947452381
+            },
+            {
+              "name": "tf-nightly-intel",
+              "normalized_name": "tf-nightly-intel",
+              "project_url": "https://pypi.org/project/tf-nightly-intel/",
+              "size": 116883626387
+            },
+            {
+              "name": "ray",
+              "normalized_name": "ray",
+              "project_url": "https://pypi.org/project/ray/",
+              "size": 104023033676
+            },
+            {
+              "name": "nvidia-cudnn-cu12",
+              "normalized_name": "nvidia-cudnn-cu12",
+              "project_url": "https://pypi.org/project/nvidia-cudnn-cu12/",
+              "size": 99348285995
+            },
+            {
+              "name": "grpcio",
+              "normalized_name": "grpcio",
+              "project_url": "https://pypi.org/project/grpcio/",
+              "size": 94877404866
+            },
+            {
+              "name": "uv",
+              "normalized_name": "uv",
+              "project_url": "https://pypi.org/project/uv/",
+              "size": 91686817660
+            },
+            {
+              "name": "scipy",
+              "normalized_name": "scipy",
+              "project_url": "https://pypi.org/project/scipy/",
+              "size": 84689292799
+            },
+            {
+              "name": "duckdb",
+              "normalized_name": "duckdb",
+              "project_url": "https://pypi.org/project/duckdb/",
+              "size": 81553898162
+            },
+            {
+              "name": "torchmonarch",
+              "normalized_name": "torchmonarch",
+              "project_url": "https://pypi.org/project/torchmonarch/",
+              "size": 76800345167
+            },
+            {
+              "name": "tensorflow-rocm",
+              "normalized_name": "tensorflow-rocm",
+              "project_url": "https://pypi.org/project/tensorflow-rocm/",
+              "size": 74783104072
+            },
+            {
+              "name": "cupy-cuda92",
+              "normalized_name": "cupy-cuda92",
+              "project_url": "https://pypi.org/project/cupy-cuda92/",
+              "size": 71166097667
+            },
+            {
+              "name": "cupy-cuda100",
+              "normalized_name": "cupy-cuda100",
+              "project_url": "https://pypi.org/project/cupy-cuda100/",
+              "size": 70214494243
+            },
+            {
+              "name": "grpcio-tools",
+              "normalized_name": "grpcio-tools",
+              "project_url": "https://pypi.org/project/grpcio-tools/",
+              "size": 66508970451
+            },
+            {
+              "name": "cupy-cuda90",
+              "normalized_name": "cupy-cuda90",
+              "project_url": "https://pypi.org/project/cupy-cuda90/",
+              "size": 66016849712
+            },
+            {
+              "name": "catboost",
+              "normalized_name": "catboost",
+              "project_url": "https://pypi.org/project/catboost/",
+              "size": 64091240589
+            },
+            {
+              "name": "onnxruntime-gpu",
+              "normalized_name": "onnxruntime-gpu",
+              "project_url": "https://pypi.org/project/onnxruntime-gpu/",
+              "size": 62077871904
+            },
+            {
+              "name": "pulumi-azure-native",
+              "normalized_name": "pulumi-azure-native",
+              "project_url": "https://pypi.org/project/pulumi-azure-native/",
+              "size": 61187443571
+            },
+            {
+              "name": "jaxlib",
+              "normalized_name": "jaxlib",
+              "project_url": "https://pypi.org/project/jaxlib/",
+              "size": 61157816517
+            },
+            {
+              "name": "pyAgrum-nightly",
+              "normalized_name": "pyagrum-nightly",
+              "project_url": "https://pypi.org/project/pyagrum-nightly/",
+              "size": 59427420663
+            },
+            {
+              "name": "numpy",
+              "normalized_name": "numpy",
+              "project_url": "https://pypi.org/project/numpy/",
+              "size": 55789889803
+            },
+            {
+              "name": "cupy-cuda91",
+              "normalized_name": "cupy-cuda91",
+              "project_url": "https://pypi.org/project/cupy-cuda91/",
+              "size": 55467674599
+            },
+            {
+              "name": "cupy-cuda101",
+              "normalized_name": "cupy-cuda101",
+              "project_url": "https://pypi.org/project/cupy-cuda101/",
+              "size": 54977283452
+            },
+            {
+              "name": "claude-agent-sdk",
+              "normalized_name": "claude-agent-sdk",
+              "project_url": "https://pypi.org/project/claude-agent-sdk/",
+              "size": 52982319454
+            },
+            {
+              "name": "semgrep",
+              "normalized_name": "semgrep",
+              "project_url": "https://pypi.org/project/semgrep/",
+              "size": 52917801196
+            },
+            {
+              "name": "cmake",
+              "normalized_name": "cmake",
+              "project_url": "https://pypi.org/project/cmake/",
+              "size": 52731214062
+            },
+            {
+              "name": "homeassistant",
+              "normalized_name": "homeassistant",
+              "project_url": "https://pypi.org/project/homeassistant/",
+              "size": 52059749655
+            },
+            {
+              "name": "mindspore",
+              "normalized_name": "mindspore",
+              "project_url": "https://pypi.org/project/mindspore/",
+              "size": 51336136313
+            },
+            {
+              "name": "rerun-sdk",
+              "normalized_name": "rerun-sdk",
+              "project_url": "https://pypi.org/project/rerun-sdk/",
+              "size": 50750983621
+            },
+            {
+              "name": "chdb",
+              "normalized_name": "chdb",
+              "project_url": "https://pypi.org/project/chdb/",
+              "size": 49649845928
+            },
+            {
+              "name": "vtk",
+              "normalized_name": "vtk",
+              "project_url": "https://pypi.org/project/vtk/",
+              "size": 49110110039
+            },
+            {
+              "name": "pyarrow",
+              "normalized_name": "pyarrow",
+              "project_url": "https://pypi.org/project/pyarrow/",
+              "size": 48532263529
+            },
+            {
+              "name": "opencv-contrib-python",
+              "normalized_name": "opencv-contrib-python",
+              "project_url": "https://pypi.org/project/opencv-contrib-python/",
+              "size": 48090197556
+            },
+            {
+              "name": "tensorflow-intel",
+              "normalized_name": "tensorflow-intel",
+              "project_url": "https://pypi.org/project/tensorflow-intel/",
+              "size": 45561397381
+            },
+            {
+              "name": "home-assistant-frontend",
+              "normalized_name": "home-assistant-frontend",
+              "project_url": "https://pypi.org/project/home-assistant-frontend/",
+              "size": 45350706853
+            },
+            {
+              "name": "ruff",
+              "normalized_name": "ruff",
+              "project_url": "https://pypi.org/project/ruff/",
+              "size": 44283508290
+            },
+            {
+              "name": "Panda3D",
+              "normalized_name": "panda3d",
+              "project_url": "https://pypi.org/project/panda3d/",
+              "size": 43648330506
+            },
+            {
+              "name": "llama-cpp-cffi",
+              "normalized_name": "llama-cpp-cffi",
+              "project_url": "https://pypi.org/project/llama-cpp-cffi/",
+              "size": 43483547906
+            },
+            {
+              "name": "tf-nightly-tpu",
+              "normalized_name": "tf-nightly-tpu",
+              "project_url": "https://pypi.org/project/tf-nightly-tpu/",
+              "size": 42870464087
+            },
+            {
+              "name": "opencv-python",
+              "normalized_name": "opencv-python",
+              "project_url": "https://pypi.org/project/opencv-python/",
+              "size": 42268236387
+            },
+            {
+              "name": "bpy",
+              "normalized_name": "bpy",
+              "project_url": "https://pypi.org/project/bpy/",
+              "size": 41884608266
+            },
+            {
+              "name": "opencv-contrib-python-headless",
+              "normalized_name": "opencv-contrib-python-headless",
+              "project_url": "https://pypi.org/project/opencv-contrib-python-headless/",
+              "size": 41842317189
+            },
+            {
+              "name": "libtpu",
+              "normalized_name": "libtpu",
+              "project_url": "https://pypi.org/project/libtpu/",
+              "size": 41817751449
+            },
+            {
+              "name": "casadi",
+              "normalized_name": "casadi",
+              "project_url": "https://pypi.org/project/casadi/",
+              "size": 41777607877
+            },
+            {
+              "name": "botocore",
+              "normalized_name": "botocore",
+              "project_url": "https://pypi.org/project/botocore/",
+              "size": 41540684108
+            },
+            {
+              "name": "icechunk",
+              "normalized_name": "icechunk",
+              "project_url": "https://pypi.org/project/icechunk/",
+              "size": 39681887112
+            },
+            {
+              "name": "vllm",
+              "normalized_name": "vllm",
+              "project_url": "https://pypi.org/project/vllm/",
+              "size": 39337417089
+            },
+            {
+              "name": "passagemath-modules",
+              "normalized_name": "passagemath-modules",
+              "project_url": "https://pypi.org/project/passagemath-modules/",
+              "size": 39172789224
+            },
+            {
+              "name": "fbgemm-gpu",
+              "normalized_name": "fbgemm-gpu",
+              "project_url": "https://pypi.org/project/fbgemm-gpu/",
+              "size": 39119047216
+            },
+            {
+              "name": "ovito",
+              "normalized_name": "ovito",
+              "project_url": "https://pypi.org/project/ovito/",
+              "size": 38850578396
+            },
+            {
+              "name": "pantsbuild.pants",
+              "normalized_name": "pantsbuild-pants",
+              "project_url": "https://pypi.org/project/pantsbuild-pants/",
+              "size": 38721552680
+            },
+            {
+              "name": "passagemath-giac",
+              "normalized_name": "passagemath-giac",
+              "project_url": "https://pypi.org/project/passagemath-giac/",
+              "size": 38229935380
+            },
+            {
+              "name": "awscrt",
+              "normalized_name": "awscrt",
+              "project_url": "https://pypi.org/project/awscrt/",
+              "size": 37875704116
+            },
+            {
+              "name": "amalgam-lang",
+              "normalized_name": "amalgam-lang",
+              "project_url": "https://pypi.org/project/amalgam-lang/",
+              "size": 36732911791
+            },
+            {
+              "name": "deepspeech-gpu",
+              "normalized_name": "deepspeech-gpu",
+              "project_url": "https://pypi.org/project/deepspeech-gpu/",
+              "size": 36553794373
+            },
+            {
+              "name": "cupy-cuda80",
+              "normalized_name": "cupy-cuda80",
+              "project_url": "https://pypi.org/project/cupy-cuda80/",
+              "size": 36309185968
+            },
+            {
+              "name": "lmdeploy",
+              "normalized_name": "lmdeploy",
+              "project_url": "https://pypi.org/project/lmdeploy/",
+              "size": 36271611035
+            },
+            {
+              "name": "cupy-cuda102",
+              "normalized_name": "cupy-cuda102",
+              "project_url": "https://pypi.org/project/cupy-cuda102/",
+              "size": 35469800251
+            },
+            {
+              "name": "rasterio",
+              "normalized_name": "rasterio",
+              "project_url": "https://pypi.org/project/rasterio/",
+              "size": 35451345960
+            },
+            {
+              "name": "nvidia-cudnn-cu13",
+              "normalized_name": "nvidia-cudnn-cu13",
+              "project_url": "https://pypi.org/project/nvidia-cudnn-cu13/",
+              "size": 35370649866
+            },
+            {
+              "name": "ai-edge-litert-nightly",
+              "normalized_name": "ai-edge-litert-nightly",
+              "project_url": "https://pypi.org/project/ai-edge-litert-nightly/",
+              "size": 35190372982
+            },
+            {
+              "name": "aws-cdk-lib",
+              "normalized_name": "aws-cdk-lib",
+              "project_url": "https://pypi.org/project/aws-cdk-lib/",
+              "size": 35174786881
+            },
+            {
+              "name": "docling-parse",
+              "normalized_name": "docling-parse",
+              "project_url": "https://pypi.org/project/docling-parse/",
+              "size": 35064239858
+            },
+            {
+              "name": "ray-cpp",
+              "normalized_name": "ray-cpp",
+              "project_url": "https://pypi.org/project/ray-cpp/",
+              "size": 34682165796
+            },
+            {
+              "name": "passagemath-gap",
+              "normalized_name": "passagemath-gap",
+              "project_url": "https://pypi.org/project/passagemath-gap/",
+              "size": 34647686034
+            },
+            {
+              "name": "sickrage",
+              "normalized_name": "sickrage",
+              "project_url": "https://pypi.org/project/sickrage/",
+              "size": 34201574917
+            },
+            {
+              "name": "zeroconf",
+              "normalized_name": "zeroconf",
+              "project_url": "https://pypi.org/project/zeroconf/",
+              "size": 33425740128
+            },
+            {
+              "name": "polars",
+              "normalized_name": "polars",
+              "project_url": "https://pypi.org/project/polars/",
+              "size": 33224309314
+            },
+            {
+              "name": "pyqt5-tools",
+              "normalized_name": "pyqt5-tools",
+              "project_url": "https://pypi.org/project/pyqt5-tools/",
+              "size": 32152785635
+            },
+            {
+              "name": "chalkdf",
+              "normalized_name": "chalkdf",
+              "project_url": "https://pypi.org/project/chalkdf/",
+              "size": 31633000112
+            },
+            {
+              "name": "opencv-python-headless",
+              "normalized_name": "opencv-python-headless",
+              "project_url": "https://pypi.org/project/opencv-python-headless/",
+              "size": 31610729080
+            },
+            {
+              "name": "pulsar-client-sn",
+              "normalized_name": "pulsar-client-sn",
+              "project_url": "https://pypi.org/project/pulsar-client-sn/",
+              "size": 31182414964
+            },
+            {
+              "name": "nautilus-trader",
+              "normalized_name": "nautilus-trader",
+              "project_url": "https://pypi.org/project/nautilus-trader/",
+              "size": 31048167933
+            },
+            {
+              "name": "matplotlib",
+              "normalized_name": "matplotlib",
+              "project_url": "https://pypi.org/project/matplotlib/",
+              "size": 30910534423
+            },
+            {
+              "name": "paddlepaddle",
+              "normalized_name": "paddlepaddle",
+              "project_url": "https://pypi.org/project/paddlepaddle/",
+              "size": 30696355492
+            },
+            {
+              "name": "sgl-kernel",
+              "normalized_name": "sgl-kernel",
+              "project_url": "https://pypi.org/project/sgl-kernel/",
+              "size": 30527052182
+            },
+            {
+              "name": "pylance",
+              "normalized_name": "pylance",
+              "project_url": "https://pypi.org/project/pylance/",
+              "size": 30345665288
+            },
+            {
+              "name": "passagemath-pari",
+              "normalized_name": "passagemath-pari",
+              "project_url": "https://pypi.org/project/passagemath-pari/",
+              "size": 30318498296
+            },
+            {
+              "name": "PySide6-Addons",
+              "normalized_name": "pyside6-addons",
+              "project_url": "https://pypi.org/project/pyside6-addons/",
+              "size": 30224938200
+            },
+            {
+              "name": "passagemath-fricas",
+              "normalized_name": "passagemath-fricas",
+              "project_url": "https://pypi.org/project/passagemath-fricas/",
+              "size": 30220121381
+            },
+            {
+              "name": "openvino",
+              "normalized_name": "openvino",
+              "project_url": "https://pypi.org/project/openvino/",
+              "size": 30115273565
+            },
+            {
+              "name": "rdkit",
+              "normalized_name": "rdkit",
+              "project_url": "https://pypi.org/project/rdkit/",
+              "size": 30039294344
+            },
+            {
+              "name": "pypowsybl",
+              "normalized_name": "pypowsybl",
+              "project_url": "https://pypi.org/project/pypowsybl/",
+              "size": 29478279740
+            },
+            {
+              "name": "spacy",
+              "normalized_name": "spacy",
+              "project_url": "https://pypi.org/project/spacy/",
+              "size": 29363187661
+            },
+            {
+              "name": "tensorflow-io-2.0-preview",
+              "normalized_name": "tensorflow-io-2-0-preview",
+              "project_url": "https://pypi.org/project/tensorflow-io-2-0-preview/",
+              "size": 29282760382
+            },
+            {
+              "name": "xformers",
+              "normalized_name": "xformers",
+              "project_url": "https://pypi.org/project/xformers/",
+              "size": 29092456994
+            }
+          ],
+          "total_packages_size": 46723707242892
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "pypi-org",
+        "capability": "packages/stats"
+      }
+    },
+    {
+      "id": "pypi-org/packages/user_projects",
+      "provider": "pypi-org",
+      "capability": "packages/user_projects",
+      "name": "User projects",
+      "description": "Find every package published or maintained by a given PyPI username (from a project's ownership or maintainer links).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "username",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9._-]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Projects a PyPI user owns or maintains, over XML-RPC `user_packages`: name and role (Owner or Maintainer). The HTML profile page is behind Fastly's Client Challenge, and PyPI returns an empty list for an unknown username, so an empty result carries a warning rather than `not_found`.",
+        "key": "projects",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "normalized_name",
+            "type": "string"
+          },
+          {
+            "name": "project_url",
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "username": "nateprewitt"
+        },
+        "response": {
+          "count": 6,
+          "observed_at_ms": 1790032716721,
+          "profile_url": "https://pypi.org/user/nateprewitt/",
+          "projects": [
+            {
+              "name": "pipenv",
+              "normalized_name": "pipenv",
+              "project_url": "https://pypi.org/project/pipenv/",
+              "role": "Owner"
+            },
+            {
+              "name": "pyrofile",
+              "normalized_name": "pyrofile",
+              "project_url": "https://pypi.org/project/pyrofile/",
+              "role": "Owner"
+            },
+            {
+              "name": "requests",
+              "normalized_name": "requests",
+              "project_url": "https://pypi.org/project/requests/",
+              "role": "Owner"
+            },
+            {
+              "name": "requests-oauthlib",
+              "normalized_name": "requests-oauthlib",
+              "project_url": "https://pypi.org/project/requests-oauthlib/",
+              "role": "Owner"
+            },
+            {
+              "name": "delegator.py",
+              "normalized_name": "delegator-py",
+              "project_url": "https://pypi.org/project/delegator-py/",
+              "role": "Maintainer"
+            },
+            {
+              "name": "httpbin",
+              "normalized_name": "httpbin",
+              "project_url": "https://pypi.org/project/httpbin/",
+              "role": "Maintainer"
+            }
+          ],
+          "source_url": "https://pypi.org/pypi",
+          "username": "nateprewitt"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "pypi-org",
+        "capability": "packages/user_projects"
+      }
+    }
+  ]
+}

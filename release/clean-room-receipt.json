@@ -1,0 +1,66 @@
+{
+  "schema": "legends-firecrawl-clean-room/v1",
+  "version": "0.2.0",
+  "artifact": "E:\\legends-firecrawl\\release\\legends-firecrawl-0.2.0.zip",
+  "expected_sha256": "96125f34a81b43bbc50e88faa7c8676466feb0d94e58ed41dcd405e754855781",
+  "measured_sha256": "96125f34a81b43bbc50e88faa7c8676466feb0d94e58ed41dcd405e754855781",
+  "checks": [
+    {
+      "command": [
+        "C:\\Users\\rccol\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe",
+        "-m",
+        "legends_firecrawl.cli",
+        "version"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"kit_version\": \"0.2.0\",\n  \"vendor_cli_expected\": \"1.23.3\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\rccol\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe",
+        "-m",
+        "legends_firecrawl.cli",
+        "routes"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema\": \"legends-firecrawl-routes/v1\",\n  \"version\": \"0.2.0\",\n  \"vendor_cli\": \"firecrawl-cli@1.23.3\",\n  \"routes\": [\n    {\n      \"name\": \"credits\",\n      \"aliases\": [\n        \"credit-usage\",\n        \"whoami\"\n      ],\n      \"method\": \"GET\",\n      \"path\": \"/v2/team/credit-usage\",\n      \"charged\": false,\n      \"risk\": \"read-only\"\n    },\n    {\n      \"name\": \"scrape\",\n      \"aliases\": [\n        \"page\"\n      ],\n      \"method\": \"POST\",\n      \"path\": \"/v2/scrape\",\n      \"charged\": true,\n      \"risk\": \"bounded-single-page\",\n      \"default_scope\": {\n        \"pages\": 1,\n        \"formats\": [\n          \"markdown\"\n        ]\n      }\n    },\n    {\n      \"name\": \"map\",\n      \"aliases\": [\n        \"site-map\",\n        \"discover\"\n      ],\n      \"method\": \"POST\",\n      \"path\": \"/v2/map\",\n      \"charged\": true,\n      \"risk\": \"bounded-discovery\",\n      \"default_scope\": {\n        \"limit\": 100,\n        \"include_subdomains\": false\n      }\n    },\n    {\n      \"name\": \"search\",\n      \"aliases\": [\n        \"web-search\"\n      ],\n      \"method\": \"POST\",\n      \"path\": \"/v2/search\",\n      \"charged\": true,\n      \"risk\": \"bounded-search\",\n      \"default_scope\": {\n        \"limit\": 5,\n        \"scrape_results\": false\n      }\n    },\n    {\n      \"name\": \"crawl\",\n      \"aliases\": [\n        \"site-crawl\"\n      ],\n      \"method\": \"POST\",\n      \"path\": \"/v2/crawl\",\n      \"charged\": true,\n      \"risk\": \"multi-page-confirm-required\",\n      \"default_scope\": {\n        \"limit\": 25,\n        \"max_depth\": 2\n      }\n    },\n    {\n      \"name\": \"crawl-status\",\n      \"aliases\": [\n        \"crawl-get\"\n      ],\n      \"method\": \"GET\",\n      \"path\": \"/v2/crawl/{id}\",\n      \"charged\": false,\n      \"risk\": \"read-only\"\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\rccol\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe",
+        "-m",
+        "legends_firecrawl.cli",
+        "crawl-preview",
+        "https://example.com"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"operation\": \"crawl\",\n  \"dry_run\": true,\n  \"requires_confirm\": true,\n  \"url\": \"https://example.com\",\n  \"limit\": 25,\n  \"max_depth\": 2,\n  \"include_paths\": [],\n  \"exclude_paths\": [],\n  \"estimated_credits\": null,\n  \"note\": \"No HTTP request was made. Review scope and re-run crawl with --confirm.\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "C:\\Users\\rccol\\AppData\\Local\\Temp\\legends-firecrawl-clean-room-w5zq9adk\\legends-firecrawl\\alexandria-src\\cli.js",
+        "audit"
+      ],
+      "exit_code": 0,
+      "stdout": "\n======================================================\n       Legends Alexandria: CATALOG AUDIT\n======================================================\nTotal Providers:            114\nTotal Capabilities (Tools): 797\nFree / Public Providers:    72 (63.2%)\n\nBreakdown by Tier:\n  - Public Commercial Web / Frontend JSON Endpoints: 32 (28.1%)\n  - Proprietary Commercial B2B Data Brokers       : 42 (36.8%)\n  - Public Government & Intergovernmental Data    : 31 (27.2%)\n  - Open Non-Profit, Legal & Community Ecosystems : 9 (7.9%)\n\nIP Safety & Proxy Shielding Breakdown:\n  \u00e2\u20ac\u00a2 \u001b[32mGREEN_SAFE (Official Open APIs)\u001b[0m     : 26 providers (Direct connection safe at scale)\n  \u00e2\u20ac\u00a2 \u001b[33mYELLOW_SHIELDED (Scraped Frontends)\u001b[0m : 32 providers (High IP ban risk; use Firecrawl proxies)\n  \u00e2\u20ac\u00a2 \u001b[34mBLUE_LICENSED (Proprietary B2B)\u001b[0m    : 56 providers (Requires credits or partner key)\n======================================================\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\rccol\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit_code": 0,
+      "stdout": "....................................                                     [100%]\n",
+      "stderr": ""
+    }
+  ],
+  "temporary_root_removed": true,
+  "result": "pass"
+}

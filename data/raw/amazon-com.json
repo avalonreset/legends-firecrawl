@@ -1,0 +1,4504 @@
+{
+  "id": "amazon-com",
+  "provider": "amazon-com",
+  "name": "Amazon US",
+  "description": "Amazon US public product details, photos, specifications, variants, displayed review totals, search, suggestions, featured offers, sellers, stock and batch prices.",
+  "toolCount": 10,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "amazon-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "amazon-com/products/offer",
+      "provider": "amazon-com",
+      "capability": "products/offer",
+      "name": "Offer",
+      "description": "Get the featured buy-box offer for one Amazon.com ASIN or product URL: displayed price, list price and savings, boolean in-stock state with Amazon's availability text, seller and shipper, item condition, delivery promise, coupon and other-offers hints. Unknown values are null.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "asin",
+          "type": "string",
+          "in": "body",
+          "about": "Ten-character Amazon Standard Identification Number, e.g. B09B8V1LZ3. Supply this or url. Pattern: ^[A-Za-z0-9]{10}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS Amazon.com /dp/ASIN or /gp/product/ASIN URL. Supply this or asin."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "asin",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Get the featured buy-box offer for one Amazon.com ASIN or product URL: displayed price, list price and savings, boolean in-stock state with Amazon's availability text, seller and shipper, item condition, delivery promise, coupon and other-offers hints. Unknown values are null.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "asin",
+            "type": "string"
+          },
+          {
+            "name": "availability_text",
+            "type": "string"
+          },
+          {
+            "name": "condition",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "coupon_text",
+            "type": "string"
+          },
+          {
+            "name": "deal_badge",
+            "type": "string"
+          },
+          {
+            "name": "delivery_date_text",
+            "type": "string"
+          },
+          {
+            "name": "delivery_price_text",
+            "type": "string"
+          },
+          {
+            "name": "delivery_text",
+            "type": "string"
+          },
+          {
+            "name": "fulfilled_by_amazon",
+            "type": "boolean"
+          },
+          {
+            "name": "in_stock",
+            "type": "boolean"
+          },
+          {
+            "name": "list_price",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "offer_state",
+            "type": "string",
+            "about": "featured_offer: a buy-box price is displayed; unavailable: Amazon states the item cannot be bought; see_all_buying_options: no featured offer, only the all-offers list; unknown: neither signal present."
+          },
+          {
+            "name": "other_offers_text",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "redirected",
+            "type": "boolean",
+            "about": "true when served_asin differs from asin; price and stock then describe served_asin."
+          },
+          {
+            "name": "savings_percent",
+            "type": "number"
+          },
+          {
+            "name": "savings_text",
+            "type": "string"
+          },
+          {
+            "name": "secondary_delivery_text",
+            "type": "string"
+          },
+          {
+            "name": "seller",
+            "type": "string"
+          },
+          {
+            "name": "seller_id",
+            "type": "string"
+          },
+          {
+            "name": "served_asin",
+            "type": "string",
+            "about": "ASIN Amazon actually rendered. Differs from asin when Amazon answers a child ASIN with a sibling variant (HTTP 200)."
+          },
+          {
+            "name": "ships_from",
+            "type": "string"
+          },
+          {
+            "name": "sold_by_amazon",
+            "type": "boolean"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "unit_price_text",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "asin": "B00FLYWNYQ"
+        },
+        "response": {
+          "asin": "B00FLYWNYQ",
+          "availability_text": "In Stock",
+          "condition": null,
+          "country": "US",
+          "coupon_text": null,
+          "deal_badge": null,
+          "delivery_date_text": "Friday, September 25",
+          "delivery_price_text": "FREE",
+          "delivery_text": "FREE delivery Friday, September 25. Order within 10 hrs 10 mins",
+          "fulfilled_by_amazon": true,
+          "in_stock": true,
+          "list_price": {
+            "amount": null,
+            "currency": null,
+            "display": null
+          },
+          "observed_at_ms": 1789840193473,
+          "offer_state": "featured_offer",
+          "other_offers_text": "New & Used (3) from $86.41 & FREE Shipping.",
+          "price": {
+            "amount": 109.99,
+            "currency": "USD",
+            "display": "$109.99"
+          },
+          "redirected": false,
+          "savings_percent": null,
+          "savings_text": null,
+          "secondary_delivery_text": "Or fastest delivery Wednesday, September 23",
+          "seller": "Amazon.com",
+          "seller_id": null,
+          "served_asin": "B00FLYWNYQ",
+          "ships_from": "Amazon.com",
+          "sold_by_amazon": true,
+          "source_url": "https://www.amazon.com/dp/B00FLYWNYQ",
+          "title": "Instant Pot Duo 6 Qt 7-in-1 Electric Pressure Cooker, Stainless Steel | Slow cooks, makes rice and yogurt, steams, sautés, warms and sterilizes, with an app featuring 800+ recipes.",
+          "unit_price_text": null
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "amazon-com",
+        "capability": "products/offer"
+      }
+    },
+    {
+      "id": "amazon-com/products/photos",
+      "provider": "amazon-com",
+      "capability": "products/photos",
+      "name": "Photos",
+      "description": "Get the selected product image gallery.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "asin",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9]{10}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS Amazon.com /dp/ASIN or /gp/product/ASIN URL. Supply this or asin."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "asin",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Get the selected product image gallery.",
+        "key": "photos",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "thumbnail_url",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "asin": "B0DHJCYNS7"
+        },
+        "response": {
+          "asin": "B0DHJCYNS7",
+          "count": 1,
+          "country": "US",
+          "observed_at_ms": 1788825600000,
+          "photos": [
+            {
+              "thumbnail_url": "https://m.media-amazon.com/images/I/31756nH5pKL._AC_SR38,50_.jpg",
+              "url": "https://m.media-amazon.com/images/I/71dAfxOFDuL._AC_SL1500_.jpg"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "amazon-com",
+        "capability": "products/photos"
+      }
+    },
+    {
+      "id": "amazon-com/products/prices",
+      "provider": "amazon-com",
+      "capability": "products/prices",
+      "name": "Prices",
+      "description": "Check current buy-box price and stock state for up to five Amazon.com ASINs in one call. Each row carries price, list price, in-stock flag, availability text, seller and condition; an ASIN that cannot be read gets an error string instead of failing the batch.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "asins",
+          "type": "string[]",
+          "in": "body",
+          "about": "One to five ASINs to check in parallel.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Check current buy-box price and stock state for up to five Amazon.com ASINs in one call. Each row carries price, list price, in-stock flag, availability text, seller and condition; an ASIN that cannot be read gets an error string instead of failing the batch.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "ok_count",
+            "type": "number"
+          },
+          {
+            "name": "results",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "asins": [
+            "B00FLYWNYQ"
+          ]
+        },
+        "response": {
+          "count": 1,
+          "country": "US",
+          "observed_at_ms": 1789840209094,
+          "ok_count": 1,
+          "results": [
+            {
+              "asin": "B00FLYWNYQ",
+              "availability_text": "In Stock",
+              "condition": null,
+              "error": null,
+              "in_stock": true,
+              "list_price": {
+                "amount": null,
+                "currency": null,
+                "display": null
+              },
+              "offer_state": "featured_offer",
+              "price": {
+                "amount": 109.99,
+                "currency": "USD",
+                "display": "$109.99"
+              },
+              "seller": "Amazon.com",
+              "served_asin": "B00FLYWNYQ",
+              "source_url": "https://www.amazon.com/dp/B00FLYWNYQ",
+              "title": "Instant Pot Duo 6 Qt 7-in-1 Electric Pressure Cooker, Stainless Steel | Slow cooks, makes rice and yogurt, steams, sautés, warms and sterilizes, with an app featuring 800+ recipes."
+            }
+          ]
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "amazon-com",
+        "capability": "products/prices"
+      }
+    },
+    {
+      "id": "amazon-com/products/product",
+      "provider": "amazon-com",
+      "capability": "products/product",
+      "name": "Product",
+      "description": "Get public Amazon product details, displayed price, images, variants and review totals.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "asin",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9]{10}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS Amazon.com /dp/ASIN or /gp/product/ASIN URL. Supply this or asin."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "asin",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Get public Amazon product details, displayed price, images, variants and review totals.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "asin",
+            "type": "string"
+          },
+          {
+            "name": "availability_text",
+            "type": "string"
+          },
+          {
+            "name": "byline",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "features",
+            "type": "string[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "photos",
+            "type": "object[]"
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "review_summary",
+            "type": "object"
+          },
+          {
+            "name": "specifications",
+            "type": "object[]"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "variations",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "asin": "B0DHJCYNS7"
+        },
+        "response": {
+          "asin": "B0DHJCYNS7",
+          "availability_text": null,
+          "byline": "Visit the Amazon Renewed Store",
+          "country": "US",
+          "features": [
+            "6.1\" Super Retina XDR OLED, HDR10, Dolby Vision, 1000nits (typ), 2000nits (HBM), 2556x1179px at 460ppi, 3561mAh Battery",
+            "128GB 8GB RAM, Apple A18 (3nm), Hexa-core (2x4.04 GHz + 4x2.20 GHz), Apple GPU 5-core, 16‑core Neural Engine",
+            "Rear camera: 48MP, f/1.6, wide + 12MP, f/2.2, ultrawide, Front Camera: 12MP, f/1.9, wide, iOS 18, upgradable to iOS 18.5",
+            "4G LTE: 1/2/3/4/5/7/8/12/13/14/17/18/19/20/25/26/28/29/30/32/34/38/39/40/41/42/48/53/66/71, 5G: n1/2/3/5/7/8/12/14/20/25/26/28/29/30/38/40/41/48/53/66/70/71/75/76/77/78/79 - Dual eSIM",
+            "Unlocked for freedom to choose your carrier. Compatible with both GSM & CDMA networks. The phone is unlocked to work with all GSM Carriers & CDMA Carriers Including AT&T, T-Mobile, Verizon, Sprint., Etc."
+          ],
+          "observed_at_ms": 1788825600000,
+          "photos": [
+            {
+              "thumbnail_url": "https://m.media-amazon.com/images/I/31756nH5pKL._AC_SR38,50_.jpg",
+              "url": "https://m.media-amazon.com/images/I/71dAfxOFDuL._AC_SL1500_.jpg"
+            }
+          ],
+          "price": {
+            "amount": null,
+            "currency": null,
+            "display": null
+          },
+          "review_summary": {
+            "count_text": "(2,576)",
+            "rating": 4,
+            "rating_count": 2576,
+            "rating_text": "4.0 out of 5 stars"
+          },
+          "specifications": [
+            {
+              "name": "Brand",
+              "value": "Apple"
+            },
+            {
+              "name": "Operating System",
+              "value": "iOS 18"
+            },
+            {
+              "name": "Ram Memory Installed Size",
+              "value": "8 GB"
+            },
+            {
+              "name": "CPU Model",
+              "value": "Apple A18"
+            },
+            {
+              "name": "CPU Speed",
+              "value": "3.2 GHz"
+            },
+            {
+              "name": "Memory Storage Capacity",
+              "value": "128 GB"
+            },
+            {
+              "name": "Screen Size",
+              "value": "6.1 inches"
+            },
+            {
+              "name": "Resolution",
+              "value": "2556 x 1179"
+            },
+            {
+              "name": "Refresh Rate",
+              "value": "60 hertz"
+            },
+            {
+              "name": "Model Name",
+              "value": "Apple iPhone 16"
+            },
+            {
+              "name": "RAM Memory Installed",
+              "value": "8 GB"
+            },
+            {
+              "name": "Processor Series",
+              "value": "Apple A18"
+            },
+            {
+              "name": "Processor Speed",
+              "value": "3.2 GHz"
+            },
+            {
+              "name": "Color",
+              "value": "Teal"
+            },
+            {
+              "name": "SIM Card Slot Count",
+              "value": "E Sim"
+            },
+            {
+              "name": "Connector Type",
+              "value": "USB Type C"
+            },
+            {
+              "name": "Form Factor",
+              "value": "Bar"
+            },
+            {
+              "name": "Biometric Security Feature",
+              "value": "Face Recognition"
+            },
+            {
+              "name": "Human-Interface Input",
+              "value": "Touchscreen"
+            },
+            {
+              "name": "Sim Card Size",
+              "value": "eSIM"
+            },
+            {
+              "name": "Water Resistance Level",
+              "value": "Not Water Resistant"
+            },
+            {
+              "name": "Compatible Devices",
+              "value": "Apple Watch, EarBuds, Headphones, Speakers"
+            },
+            {
+              "name": "Additional Features",
+              "value": "Wireless Charging"
+            },
+            {
+              "name": "Front Photo Sensor Resolution",
+              "value": "12 mp"
+            },
+            {
+              "name": "Rear Facing Camera Photo Sensor Resolution",
+              "value": "48 mp"
+            },
+            {
+              "name": "Battery Capacity",
+              "value": "3491 milliamp_hours"
+            },
+            {
+              "name": "Battery Power",
+              "value": "3561 milliamp_hours"
+            },
+            {
+              "name": "Item Weight",
+              "value": "5.92 ounces"
+            },
+            {
+              "name": "Item Dimensions",
+              "value": "5.81 x 2.82 x 0.31 inches"
+            },
+            {
+              "name": "Battery Average Life",
+              "value": "22 hours"
+            },
+            {
+              "name": "Display Type",
+              "value": "OLED"
+            },
+            {
+              "name": "Display Resolution Maximum",
+              "value": "2556x1179 pixels"
+            },
+            {
+              "name": "Display Pixel Density",
+              "value": "460 pixels_per_inch"
+            },
+            {
+              "name": "Wireless Provider",
+              "value": "Unlocked for All Carriers"
+            },
+            {
+              "name": "Cellular Technology",
+              "value": "5G"
+            },
+            {
+              "name": "Connectivity Technology",
+              "value": "Infrared, USB, Wi-Fi, Wireless"
+            },
+            {
+              "name": "Wireless Network Technology",
+              "value": "Bluetooth, GSM, Wi-Fi"
+            },
+            {
+              "name": "Model Year",
+              "value": "2024"
+            },
+            {
+              "name": "Built-In Media",
+              "value": "Apple iPhone 16, USB Cable"
+            },
+            {
+              "name": "Warranty Description",
+              "value": "90-Day Amazon"
+            },
+            {
+              "name": "Manufacturer",
+              "value": "Apple Inc."
+            },
+            {
+              "name": "Model Series",
+              "value": "2024"
+            },
+            {
+              "name": "Specific Uses For Product",
+              "value": "Business, Entertainment, Photography"
+            },
+            {
+              "name": "UPC",
+              "value": "724129023671"
+            },
+            {
+              "name": "Best Sellers Rank",
+              "value": "#13 in Amazon Renewed (See Top 100 in Amazon Renewed) #7 in Renewed Smartphones #10 in Cell Phones"
+            },
+            {
+              "name": "ASIN",
+              "value": "B0DHJCYNS7"
+            },
+            {
+              "name": "Video Capture Resolution",
+              "value": "1080p, 4k"
+            }
+          ],
+          "title": "Apple iPhone 16, 128GB, Teal - Unlocked (Renewed)",
+          "url": "https://www.amazon.com/dp/B0DHJCYNS7",
+          "variations": {
+            "dimensions": [
+              {
+                "key": "size_name",
+                "label": "Size",
+                "values": [
+                  "128GB",
+                  "256GB",
+                  "512GB"
+                ]
+              },
+              {
+                "key": "color_name",
+                "label": "Color",
+                "values": [
+                  "Black",
+                  "Pink",
+                  "Teal",
+                  "Ultramarine",
+                  "White"
+                ]
+              },
+              {
+                "key": "service_provider",
+                "label": "Service provider",
+                "values": [
+                  "AT&T",
+                  "Boost Mobile",
+                  "Cricket",
+                  "T-Mobile",
+                  "Tracfone",
+                  "Unlocked",
+                  "Verizon"
+                ]
+              },
+              {
+                "key": "product_grade",
+                "label": "Product grade",
+                "values": [
+                  "Renewed",
+                  "Renewed Premium"
+                ]
+              }
+            ],
+            "variants": [
+              {
+                "asin": "B0DHHVK432",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHHVK432"
+              },
+              {
+                "asin": "B0DHJ2KF9X",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJ2KF9X"
+              },
+              {
+                "asin": "B0DHJ2ZNKR",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJ2ZNKR"
+              },
+              {
+                "asin": "B0DHJ4MP66",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJ4MP66"
+              },
+              {
+                "asin": "B0DHJ72DS8",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJ72DS8"
+              },
+              {
+                "asin": "B0DHJBL4PB",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJBL4PB"
+              },
+              {
+                "asin": "B0DHJCWFD9",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJCWFD9"
+              },
+              {
+                "asin": "B0DHJCYNS7",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "128GB"
+                },
+                "selected": true,
+                "url": "https://www.amazon.com/dp/B0DHJCYNS7"
+              },
+              {
+                "asin": "B0DHJGKNT1",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJGKNT1"
+              },
+              {
+                "asin": "B0DHJGLSFT",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJGLSFT"
+              },
+              {
+                "asin": "B0DHJH2GZL",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJH2GZL"
+              },
+              {
+                "asin": "B0DHJHY3BH",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJHY3BH"
+              },
+              {
+                "asin": "B0DHJJ47YQ",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJJ47YQ"
+              },
+              {
+                "asin": "B0DHJLB3W3",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJLB3W3"
+              },
+              {
+                "asin": "B0DHJPP352",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "Unlocked",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DHJPP352"
+              },
+              {
+                "asin": "B0DK9Y6LGK",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9Y6LGK"
+              },
+              {
+                "asin": "B0DK9Y6QXV",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9Y6QXV"
+              },
+              {
+                "asin": "B0DK9YCFNW",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "Tracfone",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9YCFNW"
+              },
+              {
+                "asin": "B0DK9YDR9V",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9YDR9V"
+              },
+              {
+                "asin": "B0DK9YDRB2",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "Tracfone",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9YDRB2"
+              },
+              {
+                "asin": "B0DK9YGYJ8",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9YGYJ8"
+              },
+              {
+                "asin": "B0DK9YRBVD",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "Tracfone",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9YRBVD"
+              },
+              {
+                "asin": "B0DK9YVNZY",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "Tracfone",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9YVNZY"
+              },
+              {
+                "asin": "B0DK9YXRN2",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9YXRN2"
+              },
+              {
+                "asin": "B0DK9YYYYR",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "Tracfone",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9YYYYR"
+              },
+              {
+                "asin": "B0DK9Z36XS",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "Tracfone",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9Z36XS"
+              },
+              {
+                "asin": "B0DK9Z78NN",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9Z78NN"
+              },
+              {
+                "asin": "B0DK9ZBR1B",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "Cricket",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9ZBR1B"
+              },
+              {
+                "asin": "B0DK9ZHRLL",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "Tracfone",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9ZHRLL"
+              },
+              {
+                "asin": "B0DK9ZL6F6",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "Tracfone",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9ZL6F6"
+              },
+              {
+                "asin": "B0DK9ZNB2D",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9ZNB2D"
+              },
+              {
+                "asin": "B0DK9ZPF62",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9ZPF62"
+              },
+              {
+                "asin": "B0DK9ZRQSS",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "Cricket",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9ZRQSS"
+              },
+              {
+                "asin": "B0DK9ZRZ6Z",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "Cricket",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9ZRZ6Z"
+              },
+              {
+                "asin": "B0DK9ZSNKH",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9ZSNKH"
+              },
+              {
+                "asin": "B0DK9ZWCN5",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Cricket",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9ZWCN5"
+              },
+              {
+                "asin": "B0DK9ZWXVV",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DK9ZWXVV"
+              },
+              {
+                "asin": "B0DKB13C4Q",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "Tracfone",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DKB13C4Q"
+              },
+              {
+                "asin": "B0DKB16Q2F",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "Cricket",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DKB16Q2F"
+              },
+              {
+                "asin": "B0DKB17ZJV",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "Cricket",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DKB17ZJV"
+              },
+              {
+                "asin": "B0DKB18D8Q",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "Tracfone",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DKB18D8Q"
+              },
+              {
+                "asin": "B0DKB18MVX",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "Cricket",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DKB18MVX"
+              },
+              {
+                "asin": "B0DKB1DCCX",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "Cricket",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DKB1DCCX"
+              },
+              {
+                "asin": "B0DKB1HR2P",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "Cricket",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DKB1HR2P"
+              },
+              {
+                "asin": "B0DKB258J2",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DKB258J2"
+              },
+              {
+                "asin": "B0DKB2BLGK",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "Cricket",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DKB2BLGK"
+              },
+              {
+                "asin": "B0DLKYLC9V",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "AT&T",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLKYLC9V"
+              },
+              {
+                "asin": "B0DLKZT4JG",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "AT&T",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLKZT4JG"
+              },
+              {
+                "asin": "B0DLL1988W",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "AT&T",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLL1988W"
+              },
+              {
+                "asin": "B0DLL1GRRV",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "AT&T",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLL1GRRV"
+              },
+              {
+                "asin": "B0DLL1LN1S",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "AT&T",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLL1LN1S"
+              },
+              {
+                "asin": "B0DLL28VTM",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "AT&T",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLL28VTM"
+              },
+              {
+                "asin": "B0DLL2D7DM",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "AT&T",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLL2D7DM"
+              },
+              {
+                "asin": "B0DLL2N2GF",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "AT&T",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLL2N2GF"
+              },
+              {
+                "asin": "B0DLL2WZ44",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "AT&T",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLL2WZ44"
+              },
+              {
+                "asin": "B0DLL3H4FR",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "AT&T",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLL3H4FR"
+              },
+              {
+                "asin": "B0DLL3NCCF",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "AT&T",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLL3NCCF"
+              },
+              {
+                "asin": "B0DLL5MCJT",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "AT&T",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLL5MCJT"
+              },
+              {
+                "asin": "B0DLPHK8Z4",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "Verizon",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLPHK8Z4"
+              },
+              {
+                "asin": "B0DLPHPBYP",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "Verizon",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLPHPBYP"
+              },
+              {
+                "asin": "B0DLPJVM4L",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "Verizon",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLPJVM4L"
+              },
+              {
+                "asin": "B0DLPKC7DP",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "Verizon",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLPKC7DP"
+              },
+              {
+                "asin": "B0DLPYFGNZ",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "Verizon",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLPYFGNZ"
+              },
+              {
+                "asin": "B0DLQL3FHD",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "T-Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLQL3FHD"
+              },
+              {
+                "asin": "B0DLQMGB54",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "T-Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLQMGB54"
+              },
+              {
+                "asin": "B0DLQMLWXZ",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "T-Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLQMLWXZ"
+              },
+              {
+                "asin": "B0DLQN68CH",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "T-Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLQN68CH"
+              },
+              {
+                "asin": "B0DLQR3JTS",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "T-Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLQR3JTS"
+              },
+              {
+                "asin": "B0DLQTRS9B",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "T-Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLQTRS9B"
+              },
+              {
+                "asin": "B0DLQV1QX1",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "T-Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLQV1QX1"
+              },
+              {
+                "asin": "B0DLQXTC4N",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "T-Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLQXTC4N"
+              },
+              {
+                "asin": "B0DLR1PDKV",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "T-Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLR1PDKV"
+              },
+              {
+                "asin": "B0DLR358ZB",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "T-Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLR358ZB"
+              },
+              {
+                "asin": "B0DLSJ4WQ4",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed",
+                  "service_provider": "Verizon",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLSJ4WQ4"
+              },
+              {
+                "asin": "B0DLSLGNG8",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed",
+                  "service_provider": "Verizon",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLSLGNG8"
+              },
+              {
+                "asin": "B0DLSMYBGT",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed",
+                  "service_provider": "Verizon",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLSMYBGT"
+              },
+              {
+                "asin": "B0DLSRPLH3",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed",
+                  "service_provider": "Verizon",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLSRPLH3"
+              },
+              {
+                "asin": "B0DLSV2X8Z",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed",
+                  "service_provider": "Verizon",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DLSV2X8Z"
+              },
+              {
+                "asin": "B0DPBHJQ1X",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "AT&T",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPBHJQ1X"
+              },
+              {
+                "asin": "B0DPCVPX47",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "AT&T",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCVPX47"
+              },
+              {
+                "asin": "B0DPCWJR67",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "AT&T",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCWJR67"
+              },
+              {
+                "asin": "B0DPCWVNW7",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCWVNW7"
+              },
+              {
+                "asin": "B0DPCWZ5S7",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCWZ5S7"
+              },
+              {
+                "asin": "B0DPCX4DXV",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCX4DXV"
+              },
+              {
+                "asin": "B0DPCXMCJ3",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCXMCJ3"
+              },
+              {
+                "asin": "B0DPCXTFWP",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Cricket",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCXTFWP"
+              },
+              {
+                "asin": "B0DPCXX66L",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "AT&T",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCXX66L"
+              },
+              {
+                "asin": "B0DPCYHFNF",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Cricket",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCYHFNF"
+              },
+              {
+                "asin": "B0DPCYJV5T",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCYJV5T"
+              },
+              {
+                "asin": "B0DPCYK75N",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Cricket",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCYK75N"
+              },
+              {
+                "asin": "B0DPCYPZY8",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "T-Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCYPZY8"
+              },
+              {
+                "asin": "B0DPCYQ59T",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Tracfone",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCYQ59T"
+              },
+              {
+                "asin": "B0DPCYVF47",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "T-Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCYVF47"
+              },
+              {
+                "asin": "B0DPCYWCHN",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Tracfone",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCYWCHN"
+              },
+              {
+                "asin": "B0DPCYWPRX",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Cricket",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCYWPRX"
+              },
+              {
+                "asin": "B0DPCYX593",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Tracfone",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCYX593"
+              },
+              {
+                "asin": "B0DPCZ6BDB",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Tracfone",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCZ6BDB"
+              },
+              {
+                "asin": "B0DPCZ6T6T",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Cricket",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCZ6T6T"
+              },
+              {
+                "asin": "B0DPCZJDWZ",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Tracfone",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCZJDWZ"
+              },
+              {
+                "asin": "B0DPCZK11K",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "T-Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCZK11K"
+              },
+              {
+                "asin": "B0DPCZSF48",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "T-Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPCZSF48"
+              },
+              {
+                "asin": "B0DPD1296D",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPD1296D"
+              },
+              {
+                "asin": "B0DPD1BNRC",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "T-Mobile",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPD1BNRC"
+              },
+              {
+                "asin": "B0DPDQLH55",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPDQLH55"
+              },
+              {
+                "asin": "B0DPDRNSXV",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPDRNSXV"
+              },
+              {
+                "asin": "B0DPDSD11Q",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPDSD11Q"
+              },
+              {
+                "asin": "B0DPGFSJ8M",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPGFSJ8M"
+              },
+              {
+                "asin": "B0DPGTJHPW",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "AT&T",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPGTJHPW"
+              },
+              {
+                "asin": "B0DPGTPJK8",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "AT&T",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPGTPJK8"
+              },
+              {
+                "asin": "B0DPH6P221",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPH6P221"
+              },
+              {
+                "asin": "B0DPMZLBQ1",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "T-Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPMZLBQ1"
+              },
+              {
+                "asin": "B0DPN11SNT",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPN11SNT"
+              },
+              {
+                "asin": "B0DPN1PD6T",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Cricket",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPN1PD6T"
+              },
+              {
+                "asin": "B0DPN23DNK",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPN23DNK"
+              },
+              {
+                "asin": "B0DPN24F7R",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "AT&T",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPN24F7R"
+              },
+              {
+                "asin": "B0DPN2GY8N",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Boost Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPN2GY8N"
+              },
+              {
+                "asin": "B0DPN3GQ6S",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Tracfone",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPN3GQ6S"
+              },
+              {
+                "asin": "B0DPR4MBBK",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Cricket",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPR4MBBK"
+              },
+              {
+                "asin": "B0DPR71TQK",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Tracfone",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPR71TQK"
+              },
+              {
+                "asin": "B0DPTFJ4CH",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "T-Mobile",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPTFJ4CH"
+              },
+              {
+                "asin": "B0DPTG4Q4T",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPTG4Q4T"
+              },
+              {
+                "asin": "B0DPTGVFV9",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPTGVFV9"
+              },
+              {
+                "asin": "B0DPTH29Q7",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPTH29Q7"
+              },
+              {
+                "asin": "B0DPY7Z8M3",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "T-Mobile",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPY7Z8M3"
+              },
+              {
+                "asin": "B0DPYCGDYB",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "T-Mobile",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPYCGDYB"
+              },
+              {
+                "asin": "B0DPYFK3MV",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPYFK3MV"
+              },
+              {
+                "asin": "B0DPYJZD82",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPYJZD82"
+              },
+              {
+                "asin": "B0DPYSXWL1",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPYSXWL1"
+              },
+              {
+                "asin": "B0DPYTSM4R",
+                "attributes": {
+                  "color_name": "White",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Unlocked",
+                  "size_name": "512GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DPYTSM4R"
+              },
+              {
+                "asin": "B0DQGZNY23",
+                "attributes": {
+                  "color_name": "Black",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Verizon",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DQGZNY23"
+              },
+              {
+                "asin": "B0DQH1JQWQ",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Verizon",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DQH1JQWQ"
+              },
+              {
+                "asin": "B0DQH39CQK",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Verizon",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DQH39CQK"
+              },
+              {
+                "asin": "B0DQRBSP98",
+                "attributes": {
+                  "color_name": "Ultramarine",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Verizon",
+                  "size_name": "128GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DQRBSP98"
+              },
+              {
+                "asin": "B0DQRBSTRB",
+                "attributes": {
+                  "color_name": "Pink",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Verizon",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DQRBSTRB"
+              },
+              {
+                "asin": "B0DQSHRKQV",
+                "attributes": {
+                  "color_name": "Teal",
+                  "product_grade": "Renewed Premium",
+                  "service_provider": "Verizon",
+                  "size_name": "256GB"
+                },
+                "selected": false,
+                "url": "https://www.amazon.com/dp/B0DQSHRKQV"
+              }
+            ]
+          }
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "amazon-com",
+        "capability": "products/product"
+      }
+    },
+    {
+      "id": "amazon-com/products/review_summary",
+      "provider": "amazon-com",
+      "capability": "products/review_summary",
+      "name": "Review summary",
+      "description": "Get the displayed rating and count; individual review text is not included.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "asin",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9]{10}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS Amazon.com /dp/ASIN or /gp/product/ASIN URL. Supply this or asin."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "asin",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Get the displayed rating and count; individual review text is not included.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "asin",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "summary",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "asin": "B0DHJCYNS7"
+        },
+        "response": {
+          "asin": "B0DHJCYNS7",
+          "country": "US",
+          "observed_at_ms": 1788825600000,
+          "summary": {
+            "count_text": "(2,576)",
+            "rating": 4,
+            "rating_count": 2576,
+            "rating_text": "4.0 out of 5 stars"
+          }
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "amazon-com",
+        "capability": "products/review_summary"
+      }
+    },
+    {
+      "id": "amazon-com/products/search",
+      "provider": "amazon-com",
+      "capability": "products/search",
+      "name": "Search",
+      "description": "Fetch one search page. Next-page input is returned; blocked pages raise an error.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Fetch one search page. Next-page input is returned; blocked pages raise an error.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "asin",
+            "type": "string"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "sponsored",
+            "type": "boolean"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "page": 1,
+          "query": "iphone 16"
+        },
+        "response": {
+          "count": 3,
+          "country": "US",
+          "has_more": true,
+          "next_page": 2,
+          "observed_at_ms": 1788825600000,
+          "page": 1,
+          "query": "iphone 16",
+          "results": [
+            {
+              "asin": "B0DHJGKNT1",
+              "image_url": "https://m.media-amazon.com/images/I/71Ecl1RS5jL._AC_UY218_.jpg",
+              "price": {
+                "amount": 559,
+                "currency": "USD",
+                "display": "$559.00"
+              },
+              "rating": 4,
+              "sponsored": false,
+              "title": "Apple iPhone 16, 128GB, Ultramarine - Unlocked (Renewed)",
+              "url": "https://www.amazon.com/dp/B0DHJGKNT1"
+            },
+            {
+              "asin": "B0DHJH2GZL",
+              "image_url": "https://m.media-amazon.com/images/I/71ShAbeIRdL._AC_UY218_.jpg",
+              "price": {
+                "amount": 559,
+                "currency": "USD",
+                "display": "$559.00"
+              },
+              "rating": 4,
+              "sponsored": false,
+              "title": "Apple iPhone 16, 128GB, Black - Unlocked (Renewed)",
+              "url": "https://www.amazon.com/dp/B0DHJH2GZL"
+            },
+            {
+              "asin": "B0DHJCYNS7",
+              "image_url": "https://m.media-amazon.com/images/I/71dAfxOFDuL._AC_UY218_.jpg",
+              "price": {
+                "amount": 581.97,
+                "currency": "USD",
+                "display": "$581.97"
+              },
+              "rating": 4,
+              "sponsored": false,
+              "title": "Apple iPhone 16, 128GB, Teal - Unlocked (Renewed)",
+              "url": "https://www.amazon.com/dp/B0DHJCYNS7"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "amazon-com",
+        "capability": "products/search"
+      }
+    },
+    {
+      "id": "amazon-com/products/specifications",
+      "provider": "amazon-com",
+      "capability": "products/specifications",
+      "name": "Specifications",
+      "description": "Get product specification tables and feature bullets.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "asin",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9]{10}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS Amazon.com /dp/ASIN or /gp/product/ASIN URL. Supply this or asin."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "asin",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Get product specification tables and feature bullets.",
+        "key": "specifications",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "asin": "B0DHJCYNS7"
+        },
+        "response": {
+          "asin": "B0DHJCYNS7",
+          "country": "US",
+          "features": [
+            "6.1\" Super Retina XDR OLED, HDR10, Dolby Vision, 1000nits (typ), 2000nits (HBM), 2556x1179px at 460ppi, 3561mAh Battery",
+            "128GB 8GB RAM, Apple A18 (3nm), Hexa-core (2x4.04 GHz + 4x2.20 GHz), Apple GPU 5-core, 16‑core Neural Engine",
+            "Rear camera: 48MP, f/1.6, wide + 12MP, f/2.2, ultrawide, Front Camera: 12MP, f/1.9, wide, iOS 18, upgradable to iOS 18.5",
+            "4G LTE: 1/2/3/4/5/7/8/12/13/14/17/18/19/20/25/26/28/29/30/32/34/38/39/40/41/42/48/53/66/71, 5G: n1/2/3/5/7/8/12/14/20/25/26/28/29/30/38/40/41/48/53/66/70/71/75/76/77/78/79 - Dual eSIM",
+            "Unlocked for freedom to choose your carrier. Compatible with both GSM & CDMA networks. The phone is unlocked to work with all GSM Carriers & CDMA Carriers Including AT&T, T-Mobile, Verizon, Sprint., Etc."
+          ],
+          "observed_at_ms": 1788825600000,
+          "specifications": [
+            {
+              "name": "Brand",
+              "value": "Apple"
+            },
+            {
+              "name": "Operating System",
+              "value": "iOS 18"
+            },
+            {
+              "name": "Ram Memory Installed Size",
+              "value": "8 GB"
+            },
+            {
+              "name": "CPU Model",
+              "value": "Apple A18"
+            },
+            {
+              "name": "CPU Speed",
+              "value": "3.2 GHz"
+            },
+            {
+              "name": "Memory Storage Capacity",
+              "value": "128 GB"
+            },
+            {
+              "name": "Screen Size",
+              "value": "6.1 inches"
+            },
+            {
+              "name": "Resolution",
+              "value": "2556 x 1179"
+            },
+            {
+              "name": "Refresh Rate",
+              "value": "60 hertz"
+            },
+            {
+              "name": "Model Name",
+              "value": "Apple iPhone 16"
+            },
+            {
+              "name": "RAM Memory Installed",
+              "value": "8 GB"
+            },
+            {
+              "name": "Processor Series",
+              "value": "Apple A18"
+            },
+            {
+              "name": "Processor Speed",
+              "value": "3.2 GHz"
+            },
+            {
+              "name": "Color",
+              "value": "Teal"
+            },
+            {
+              "name": "SIM Card Slot Count",
+              "value": "E Sim"
+            },
+            {
+              "name": "Connector Type",
+              "value": "USB Type C"
+            },
+            {
+              "name": "Form Factor",
+              "value": "Bar"
+            },
+            {
+              "name": "Biometric Security Feature",
+              "value": "Face Recognition"
+            },
+            {
+              "name": "Human-Interface Input",
+              "value": "Touchscreen"
+            },
+            {
+              "name": "Sim Card Size",
+              "value": "eSIM"
+            },
+            {
+              "name": "Water Resistance Level",
+              "value": "Not Water Resistant"
+            },
+            {
+              "name": "Compatible Devices",
+              "value": "Apple Watch, EarBuds, Headphones, Speakers"
+            },
+            {
+              "name": "Additional Features",
+              "value": "Wireless Charging"
+            },
+            {
+              "name": "Front Photo Sensor Resolution",
+              "value": "12 mp"
+            },
+            {
+              "name": "Rear Facing Camera Photo Sensor Resolution",
+              "value": "48 mp"
+            },
+            {
+              "name": "Battery Capacity",
+              "value": "3491 milliamp_hours"
+            },
+            {
+              "name": "Battery Power",
+              "value": "3561 milliamp_hours"
+            },
+            {
+              "name": "Item Weight",
+              "value": "5.92 ounces"
+            },
+            {
+              "name": "Item Dimensions",
+              "value": "5.81 x 2.82 x 0.31 inches"
+            },
+            {
+              "name": "Battery Average Life",
+              "value": "22 hours"
+            },
+            {
+              "name": "Display Type",
+              "value": "OLED"
+            },
+            {
+              "name": "Display Resolution Maximum",
+              "value": "2556x1179 pixels"
+            },
+            {
+              "name": "Display Pixel Density",
+              "value": "460 pixels_per_inch"
+            },
+            {
+              "name": "Wireless Provider",
+              "value": "Unlocked for All Carriers"
+            },
+            {
+              "name": "Cellular Technology",
+              "value": "5G"
+            },
+            {
+              "name": "Connectivity Technology",
+              "value": "Infrared, USB, Wi-Fi, Wireless"
+            },
+            {
+              "name": "Wireless Network Technology",
+              "value": "Bluetooth, GSM, Wi-Fi"
+            },
+            {
+              "name": "Model Year",
+              "value": "2024"
+            },
+            {
+              "name": "Built-In Media",
+              "value": "Apple iPhone 16, USB Cable"
+            },
+            {
+              "name": "Warranty Description",
+              "value": "90-Day Amazon"
+            },
+            {
+              "name": "Manufacturer",
+              "value": "Apple Inc."
+            },
+            {
+              "name": "Model Series",
+              "value": "2024"
+            },
+            {
+              "name": "Specific Uses For Product",
+              "value": "Business, Entertainment, Photography"
+            },
+            {
+              "name": "UPC",
+              "value": "724129023671"
+            },
+            {
+              "name": "Best Sellers Rank",
+              "value": "#13 in Amazon Renewed (See Top 100 in Amazon Renewed) #7 in Renewed Smartphones #10 in Cell Phones"
+            },
+            {
+              "name": "ASIN",
+              "value": "B0DHJCYNS7"
+            },
+            {
+              "name": "Video Capture Resolution",
+              "value": "1080p, 4k"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "amazon-com",
+        "capability": "products/specifications"
+      }
+    },
+    {
+      "id": "amazon-com/products/suggestions",
+      "provider": "amazon-com",
+      "capability": "products/suggestions",
+      "name": "Suggestions",
+      "description": "Get autocomplete suggestions for a search prefix.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "count",
+          "type": "number",
+          "in": "body",
+          "about": "count",
+          "default": 10,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Get autocomplete suggestions for a search prefix.",
+        "key": "suggestions",
+        "paginated": true,
+        "fields": []
+      },
+      "example": {
+        "request": {
+          "count": 5,
+          "query": "iphone"
+        },
+        "response": {
+          "count": 5,
+          "country": "US",
+          "observed_at_ms": 1788825600000,
+          "query": "iphone",
+          "suggestions": [
+            "iphone 17 pro max",
+            "iphone 17 pro case",
+            "iphone 17 pro max case",
+            "iphone 15 pro max",
+            "iphone 17"
+          ]
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "amazon-com",
+        "capability": "products/suggestions"
+      }
+    },
+    {
+      "id": "amazon-com/products/variants",
+      "provider": "amazon-com",
+      "capability": "products/variants",
+      "name": "Variants",
+      "description": "List the variant dimensions (color, size, style...) and sibling ASINs of an Amazon.com product, with the swatch availability flag Amazon renders. Set include_prices to also fetch the buy-box price and stock state of the selected ASIN and up to max_priced-1 sibling ASINs.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "asin",
+          "type": "string",
+          "in": "body",
+          "about": "Ten-character Amazon Standard Identification Number, e.g. B09B8V1LZ3. Supply this or url. Pattern: ^[A-Za-z0-9]{10}$."
+        },
+        {
+          "name": "include_prices",
+          "type": "boolean",
+          "in": "body",
+          "about": "Fetch each priced variant's product page for price and stock. Costs one upstream request per variant."
+        },
+        {
+          "name": "max_priced",
+          "type": "number",
+          "in": "body",
+          "about": "Upper bound on variants (including the selected one) that receive an offer summary when include_prices is true.",
+          "default": 5,
+          "min": 1,
+          "max": 8
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS Amazon.com /dp/ASIN or /gp/product/ASIN URL. Supply this or asin."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "asin",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "List the variant dimensions (color, size, style...) and sibling ASINs of an Amazon.com product, with the swatch availability flag Amazon renders. Set include_prices to also fetch the buy-box price and stock state of the selected ASIN and up to max_priced-1 sibling ASINs.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "asin",
+            "type": "string"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "dimensions",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "priced_count",
+            "type": "number"
+          },
+          {
+            "name": "redirected",
+            "type": "boolean",
+            "about": "true when served_asin differs from asin; price and stock then describe served_asin."
+          },
+          {
+            "name": "served_asin",
+            "type": "string",
+            "about": "ASIN Amazon actually rendered. Differs from asin when Amazon answers a child ASIN with a sibling variant (HTTP 200)."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "variants",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "asin": "B09B8V1LZ3"
+        },
+        "response": {
+          "asin": "B09B8V1LZ3",
+          "count": 3,
+          "country": "US",
+          "dimensions": [
+            {
+              "key": "color_name",
+              "label": "Color",
+              "values": [
+                "Charcoal",
+                "Deep Sea Blue",
+                "Glacier White"
+              ]
+            },
+            {
+              "key": "configuration",
+              "label": "Configuration",
+              "values": [
+                "Device only"
+              ]
+            }
+          ],
+          "observed_at_ms": 1788912000000,
+          "priced_count": 0,
+          "redirected": false,
+          "served_asin": "B09B8V1LZ3",
+          "source_url": "https://www.amazon.com/dp/B09B8V1LZ3",
+          "title": "Amazon Echo Dot (newest model) - Vibrant sounding speaker, Designed for Alexa+, Great for bedrooms, dining rooms and offices, Charcoal",
+          "variants": [
+            {
+              "asin": "B09B8V1LZ3",
+              "attributes": {
+                "color_name": "Charcoal",
+                "configuration": "Device only"
+              },
+              "available": true,
+              "offer": null,
+              "selected": true,
+              "url": "https://www.amazon.com/dp/B09B8V1LZ3"
+            },
+            {
+              "asin": "B09B93ZDG4",
+              "attributes": {
+                "color_name": "Deep Sea Blue",
+                "configuration": "Device only"
+              },
+              "available": true,
+              "offer": null,
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B09B93ZDG4"
+            },
+            {
+              "asin": "B09B94RL1R",
+              "attributes": {
+                "color_name": "Glacier White",
+                "configuration": "Device only"
+              },
+              "available": true,
+              "offer": null,
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B09B94RL1R"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-09T00:00:00Z"
+      },
+      "execute": {
+        "provider": "amazon-com",
+        "capability": "products/variants"
+      }
+    },
+    {
+      "id": "amazon-com/products/variations",
+      "provider": "amazon-com",
+      "capability": "products/variations",
+      "name": "Variations",
+      "description": "List product variants and their attributes. Availability and prices require a separate lookup.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "asin",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9]{10}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS Amazon.com /dp/ASIN or /gp/product/ASIN URL. Supply this or asin."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "asin",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "List product variants and their attributes. Availability and prices require a separate lookup.",
+        "key": "variants",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "asin",
+            "type": "string"
+          },
+          {
+            "name": "attributes",
+            "type": "object",
+            "about": "Amazon variation dimension names, such as color_name and size_name, are determined by each product."
+          },
+          {
+            "name": "selected",
+            "type": "boolean"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "asin": "B0DHJCYNS7"
+        },
+        "response": {
+          "asin": "B0DHJCYNS7",
+          "country": "US",
+          "dimensions": [
+            {
+              "key": "size_name",
+              "label": "Size",
+              "values": [
+                "128GB",
+                "256GB",
+                "512GB"
+              ]
+            },
+            {
+              "key": "color_name",
+              "label": "Color",
+              "values": [
+                "Black",
+                "Pink",
+                "Teal",
+                "Ultramarine",
+                "White"
+              ]
+            },
+            {
+              "key": "service_provider",
+              "label": "Service provider",
+              "values": [
+                "AT&T",
+                "Boost Mobile",
+                "Cricket",
+                "T-Mobile",
+                "Tracfone",
+                "Unlocked",
+                "Verizon"
+              ]
+            },
+            {
+              "key": "product_grade",
+              "label": "Product grade",
+              "values": [
+                "Renewed",
+                "Renewed Premium"
+              ]
+            }
+          ],
+          "observed_at_ms": 1788825600000,
+          "variants": [
+            {
+              "asin": "B0DHHVK432",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHHVK432"
+            },
+            {
+              "asin": "B0DHJ2KF9X",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJ2KF9X"
+            },
+            {
+              "asin": "B0DHJ2ZNKR",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJ2ZNKR"
+            },
+            {
+              "asin": "B0DHJ4MP66",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJ4MP66"
+            },
+            {
+              "asin": "B0DHJ72DS8",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJ72DS8"
+            },
+            {
+              "asin": "B0DHJBL4PB",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJBL4PB"
+            },
+            {
+              "asin": "B0DHJCWFD9",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJCWFD9"
+            },
+            {
+              "asin": "B0DHJCYNS7",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "128GB"
+              },
+              "selected": true,
+              "url": "https://www.amazon.com/dp/B0DHJCYNS7"
+            },
+            {
+              "asin": "B0DHJGKNT1",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJGKNT1"
+            },
+            {
+              "asin": "B0DHJGLSFT",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJGLSFT"
+            },
+            {
+              "asin": "B0DHJH2GZL",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJH2GZL"
+            },
+            {
+              "asin": "B0DHJHY3BH",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJHY3BH"
+            },
+            {
+              "asin": "B0DHJJ47YQ",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJJ47YQ"
+            },
+            {
+              "asin": "B0DHJLB3W3",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJLB3W3"
+            },
+            {
+              "asin": "B0DHJPP352",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "Unlocked",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DHJPP352"
+            },
+            {
+              "asin": "B0DK9Y6LGK",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "Boost Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9Y6LGK"
+            },
+            {
+              "asin": "B0DK9Y6QXV",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "Boost Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9Y6QXV"
+            },
+            {
+              "asin": "B0DK9YCFNW",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "Tracfone",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9YCFNW"
+            },
+            {
+              "asin": "B0DK9YDR9V",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "Boost Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9YDR9V"
+            },
+            {
+              "asin": "B0DK9YDRB2",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "Tracfone",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9YDRB2"
+            },
+            {
+              "asin": "B0DK9YGYJ8",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "Boost Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9YGYJ8"
+            },
+            {
+              "asin": "B0DK9YRBVD",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "Tracfone",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9YRBVD"
+            },
+            {
+              "asin": "B0DK9YVNZY",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "Tracfone",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9YVNZY"
+            },
+            {
+              "asin": "B0DK9YXRN2",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "Boost Mobile",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9YXRN2"
+            },
+            {
+              "asin": "B0DK9YYYYR",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "Tracfone",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9YYYYR"
+            },
+            {
+              "asin": "B0DK9Z36XS",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "Tracfone",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9Z36XS"
+            },
+            {
+              "asin": "B0DK9Z78NN",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "Boost Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9Z78NN"
+            },
+            {
+              "asin": "B0DK9ZBR1B",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "Cricket",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9ZBR1B"
+            },
+            {
+              "asin": "B0DK9ZHRLL",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "Tracfone",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9ZHRLL"
+            },
+            {
+              "asin": "B0DK9ZL6F6",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "Tracfone",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9ZL6F6"
+            },
+            {
+              "asin": "B0DK9ZNB2D",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "Boost Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9ZNB2D"
+            },
+            {
+              "asin": "B0DK9ZPF62",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "Boost Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9ZPF62"
+            },
+            {
+              "asin": "B0DK9ZRQSS",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "Cricket",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9ZRQSS"
+            },
+            {
+              "asin": "B0DK9ZRZ6Z",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "Cricket",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9ZRZ6Z"
+            },
+            {
+              "asin": "B0DK9ZSNKH",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "Boost Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9ZSNKH"
+            },
+            {
+              "asin": "B0DK9ZWCN5",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Cricket",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9ZWCN5"
+            },
+            {
+              "asin": "B0DK9ZWXVV",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "Boost Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DK9ZWXVV"
+            },
+            {
+              "asin": "B0DKB13C4Q",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "Tracfone",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DKB13C4Q"
+            },
+            {
+              "asin": "B0DKB16Q2F",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "Cricket",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DKB16Q2F"
+            },
+            {
+              "asin": "B0DKB17ZJV",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "Cricket",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DKB17ZJV"
+            },
+            {
+              "asin": "B0DKB18D8Q",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "Tracfone",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DKB18D8Q"
+            },
+            {
+              "asin": "B0DKB18MVX",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "Cricket",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DKB18MVX"
+            },
+            {
+              "asin": "B0DKB1DCCX",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "Cricket",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DKB1DCCX"
+            },
+            {
+              "asin": "B0DKB1HR2P",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "Cricket",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DKB1HR2P"
+            },
+            {
+              "asin": "B0DKB258J2",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "Boost Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DKB258J2"
+            },
+            {
+              "asin": "B0DKB2BLGK",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "Cricket",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DKB2BLGK"
+            },
+            {
+              "asin": "B0DLKYLC9V",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "AT&T",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLKYLC9V"
+            },
+            {
+              "asin": "B0DLKZT4JG",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "AT&T",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLKZT4JG"
+            },
+            {
+              "asin": "B0DLL1988W",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "AT&T",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLL1988W"
+            },
+            {
+              "asin": "B0DLL1GRRV",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "AT&T",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLL1GRRV"
+            },
+            {
+              "asin": "B0DLL1LN1S",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "AT&T",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLL1LN1S"
+            },
+            {
+              "asin": "B0DLL28VTM",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "AT&T",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLL28VTM"
+            },
+            {
+              "asin": "B0DLL2D7DM",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "AT&T",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLL2D7DM"
+            },
+            {
+              "asin": "B0DLL2N2GF",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "AT&T",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLL2N2GF"
+            },
+            {
+              "asin": "B0DLL2WZ44",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "AT&T",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLL2WZ44"
+            },
+            {
+              "asin": "B0DLL3H4FR",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "AT&T",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLL3H4FR"
+            },
+            {
+              "asin": "B0DLL3NCCF",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "AT&T",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLL3NCCF"
+            },
+            {
+              "asin": "B0DLL5MCJT",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "AT&T",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLL5MCJT"
+            },
+            {
+              "asin": "B0DLPHK8Z4",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "Verizon",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLPHK8Z4"
+            },
+            {
+              "asin": "B0DLPHPBYP",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "Verizon",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLPHPBYP"
+            },
+            {
+              "asin": "B0DLPJVM4L",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "Verizon",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLPJVM4L"
+            },
+            {
+              "asin": "B0DLPKC7DP",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "Verizon",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLPKC7DP"
+            },
+            {
+              "asin": "B0DLPYFGNZ",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "Verizon",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLPYFGNZ"
+            },
+            {
+              "asin": "B0DLQL3FHD",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "T-Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLQL3FHD"
+            },
+            {
+              "asin": "B0DLQMGB54",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "T-Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLQMGB54"
+            },
+            {
+              "asin": "B0DLQMLWXZ",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "T-Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLQMLWXZ"
+            },
+            {
+              "asin": "B0DLQN68CH",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "T-Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLQN68CH"
+            },
+            {
+              "asin": "B0DLQR3JTS",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "T-Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLQR3JTS"
+            },
+            {
+              "asin": "B0DLQTRS9B",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "T-Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLQTRS9B"
+            },
+            {
+              "asin": "B0DLQV1QX1",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "T-Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLQV1QX1"
+            },
+            {
+              "asin": "B0DLQXTC4N",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "T-Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLQXTC4N"
+            },
+            {
+              "asin": "B0DLR1PDKV",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "T-Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLR1PDKV"
+            },
+            {
+              "asin": "B0DLR358ZB",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "T-Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLR358ZB"
+            },
+            {
+              "asin": "B0DLSJ4WQ4",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed",
+                "service_provider": "Verizon",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLSJ4WQ4"
+            },
+            {
+              "asin": "B0DLSLGNG8",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed",
+                "service_provider": "Verizon",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLSLGNG8"
+            },
+            {
+              "asin": "B0DLSMYBGT",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed",
+                "service_provider": "Verizon",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLSMYBGT"
+            },
+            {
+              "asin": "B0DLSRPLH3",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed",
+                "service_provider": "Verizon",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLSRPLH3"
+            },
+            {
+              "asin": "B0DLSV2X8Z",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed",
+                "service_provider": "Verizon",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DLSV2X8Z"
+            },
+            {
+              "asin": "B0DPBHJQ1X",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed Premium",
+                "service_provider": "AT&T",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPBHJQ1X"
+            },
+            {
+              "asin": "B0DPCVPX47",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed Premium",
+                "service_provider": "AT&T",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCVPX47"
+            },
+            {
+              "asin": "B0DPCWJR67",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "AT&T",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCWJR67"
+            },
+            {
+              "asin": "B0DPCWVNW7",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Boost Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCWVNW7"
+            },
+            {
+              "asin": "B0DPCWZ5S7",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Boost Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCWZ5S7"
+            },
+            {
+              "asin": "B0DPCX4DXV",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Boost Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCX4DXV"
+            },
+            {
+              "asin": "B0DPCXMCJ3",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Boost Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCXMCJ3"
+            },
+            {
+              "asin": "B0DPCXTFWP",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Cricket",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCXTFWP"
+            },
+            {
+              "asin": "B0DPCXX66L",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "AT&T",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCXX66L"
+            },
+            {
+              "asin": "B0DPCYHFNF",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Cricket",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCYHFNF"
+            },
+            {
+              "asin": "B0DPCYJV5T",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Boost Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCYJV5T"
+            },
+            {
+              "asin": "B0DPCYK75N",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Cricket",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCYK75N"
+            },
+            {
+              "asin": "B0DPCYPZY8",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "T-Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCYPZY8"
+            },
+            {
+              "asin": "B0DPCYQ59T",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Tracfone",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCYQ59T"
+            },
+            {
+              "asin": "B0DPCYVF47",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed Premium",
+                "service_provider": "T-Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCYVF47"
+            },
+            {
+              "asin": "B0DPCYWCHN",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Tracfone",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCYWCHN"
+            },
+            {
+              "asin": "B0DPCYWPRX",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Cricket",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCYWPRX"
+            },
+            {
+              "asin": "B0DPCYX593",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Tracfone",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCYX593"
+            },
+            {
+              "asin": "B0DPCZ6BDB",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Tracfone",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCZ6BDB"
+            },
+            {
+              "asin": "B0DPCZ6T6T",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Cricket",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCZ6T6T"
+            },
+            {
+              "asin": "B0DPCZJDWZ",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Tracfone",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCZJDWZ"
+            },
+            {
+              "asin": "B0DPCZK11K",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed Premium",
+                "service_provider": "T-Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCZK11K"
+            },
+            {
+              "asin": "B0DPCZSF48",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "T-Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPCZSF48"
+            },
+            {
+              "asin": "B0DPD1296D",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPD1296D"
+            },
+            {
+              "asin": "B0DPD1BNRC",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed Premium",
+                "service_provider": "T-Mobile",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPD1BNRC"
+            },
+            {
+              "asin": "B0DPDQLH55",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPDQLH55"
+            },
+            {
+              "asin": "B0DPDRNSXV",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPDRNSXV"
+            },
+            {
+              "asin": "B0DPDSD11Q",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPDSD11Q"
+            },
+            {
+              "asin": "B0DPGFSJ8M",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPGFSJ8M"
+            },
+            {
+              "asin": "B0DPGTJHPW",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed Premium",
+                "service_provider": "AT&T",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPGTJHPW"
+            },
+            {
+              "asin": "B0DPGTPJK8",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "AT&T",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPGTPJK8"
+            },
+            {
+              "asin": "B0DPH6P221",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Boost Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPH6P221"
+            },
+            {
+              "asin": "B0DPMZLBQ1",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "T-Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPMZLBQ1"
+            },
+            {
+              "asin": "B0DPN11SNT",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPN11SNT"
+            },
+            {
+              "asin": "B0DPN1PD6T",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Cricket",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPN1PD6T"
+            },
+            {
+              "asin": "B0DPN23DNK",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPN23DNK"
+            },
+            {
+              "asin": "B0DPN24F7R",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "AT&T",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPN24F7R"
+            },
+            {
+              "asin": "B0DPN2GY8N",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Boost Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPN2GY8N"
+            },
+            {
+              "asin": "B0DPN3GQ6S",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Tracfone",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPN3GQ6S"
+            },
+            {
+              "asin": "B0DPR4MBBK",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Cricket",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPR4MBBK"
+            },
+            {
+              "asin": "B0DPR71TQK",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Tracfone",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPR71TQK"
+            },
+            {
+              "asin": "B0DPTFJ4CH",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "T-Mobile",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPTFJ4CH"
+            },
+            {
+              "asin": "B0DPTG4Q4T",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPTG4Q4T"
+            },
+            {
+              "asin": "B0DPTGVFV9",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPTGVFV9"
+            },
+            {
+              "asin": "B0DPTH29Q7",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPTH29Q7"
+            },
+            {
+              "asin": "B0DPY7Z8M3",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed Premium",
+                "service_provider": "T-Mobile",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPY7Z8M3"
+            },
+            {
+              "asin": "B0DPYCGDYB",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "T-Mobile",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPYCGDYB"
+            },
+            {
+              "asin": "B0DPYFK3MV",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPYFK3MV"
+            },
+            {
+              "asin": "B0DPYJZD82",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPYJZD82"
+            },
+            {
+              "asin": "B0DPYSXWL1",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPYSXWL1"
+            },
+            {
+              "asin": "B0DPYTSM4R",
+              "attributes": {
+                "color_name": "White",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Unlocked",
+                "size_name": "512GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DPYTSM4R"
+            },
+            {
+              "asin": "B0DQGZNY23",
+              "attributes": {
+                "color_name": "Black",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Verizon",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DQGZNY23"
+            },
+            {
+              "asin": "B0DQH1JQWQ",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Verizon",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DQH1JQWQ"
+            },
+            {
+              "asin": "B0DQH39CQK",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Verizon",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DQH39CQK"
+            },
+            {
+              "asin": "B0DQRBSP98",
+              "attributes": {
+                "color_name": "Ultramarine",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Verizon",
+                "size_name": "128GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DQRBSP98"
+            },
+            {
+              "asin": "B0DQRBSTRB",
+              "attributes": {
+                "color_name": "Pink",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Verizon",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DQRBSTRB"
+            },
+            {
+              "asin": "B0DQSHRKQV",
+              "attributes": {
+                "color_name": "Teal",
+                "product_grade": "Renewed Premium",
+                "service_provider": "Verizon",
+                "size_name": "256GB"
+              },
+              "selected": false,
+              "url": "https://www.amazon.com/dp/B0DQSHRKQV"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "amazon-com",
+        "capability": "products/variations"
+      }
+    }
+  ]
+}

@@ -1,0 +1,343 @@
+{
+  "schema_version": "kit-release-manifest.v1",
+  "manifest_kind": "candidate",
+  "kit": {
+    "id": "legends-firecrawl",
+    "brand": "Legends Firecrawl",
+    "skill_id": "legends-firecrawl",
+    "speech_aliases_retired": [
+      "legends-firecrawl-kit",
+      "legends-alexandria-kit"
+    ],
+    "spine": {
+      "name": "firecrawl",
+      "version": "1.23.3",
+      "companion": "bin/lfc.ps1, bin/lax.ps1, python/legends_firecrawl, alexandria-src"
+    }
+  },
+  "repository": {
+    "canonical_path": "E:\\legends-firecrawl",
+    "remote_url": null,
+    "owner": "Benjamin",
+    "owner_class": "personal",
+    "visibility": "local-house",
+    "default_branch": null,
+    "worktree_note": "Consolidated super-module; includes core Firecrawl and Alexandria engine."
+  },
+  "candidate": {
+    "status": "ready",
+    "branch": null,
+    "commit": null,
+    "version": "0.2.0",
+    "rollback_commit": null,
+    "dirty": false,
+    "frozen_at": "2026-09-24T21:49:00Z",
+    "related_commits": {
+      "battle_reference": null,
+      "glow_candidate": null,
+      "main_or_default": null,
+      "feature_under_test": null
+    },
+    "open_prs": []
+  },
+  "qualification": {
+    "status": "pass",
+    "checks": [
+      {
+        "name": "pytest-offline-contract",
+        "result": "pass",
+        "detail": "36 tests passed (100%)",
+        "at": "2026-09-24T21:48:26Z"
+      },
+      {
+        "name": "skill-forge-validation",
+        "result": "pass",
+        "detail": "100/100, zero issues",
+        "at": "2026-09-24T21:44:00Z"
+      },
+      {
+        "name": "behavioral-benchmark",
+        "result": "pass",
+        "detail": "12 scenarios x 3 trials; 36/36 passed (100%), avg 158ms",
+        "at": "2026-09-24T21:48:14Z"
+      },
+      {
+        "name": "deterministic-package-clean-room",
+        "result": "pass",
+        "detail": "249 allowlisted files; clean-room extraction verified with 5/5 passed checks",
+        "at": "2026-09-24T21:49:14Z"
+      },
+      {
+        "name": "live-api",
+        "result": "pass",
+        "detail": "FIRECRAWL_API_KEY verified live; 20822 remaining credits confirmed",
+        "at": "2026-09-24T21:46:42Z"
+      },
+      {
+        "name": "alexandria-catalog-and-router",
+        "result": "pass",
+        "detail": "114 providers and 797 tools cached; 8 native zero-credit REST adapters verified live",
+        "at": "2026-09-24T21:45:55Z"
+      }
+    ],
+    "receipt_paths": [
+      "release/benchmark.json",
+      "release/clean-room-receipt.json",
+      "release/package-receipt.json",
+      "var/canary-receipt.json"
+    ],
+    "independent_review": {
+      "status": "passed",
+      "reviewer": "Antigravity / MetaMuse Max",
+      "receipt_path": "release/clean-room-receipt.json"
+    }
+  },
+  "battle_test": {
+    "verdict": "WORKS",
+    "owner_room": "battle-test",
+    "scope": "Live Firecrawl scrape of https://example.com and live Alexandria US Treasury query",
+    "claims": [
+      {
+        "capability": "offline safety and routing",
+        "status": "WORKS",
+        "note": "Unit tests and deterministic behavioral trials pass 100%."
+      },
+      {
+        "capability": "live Firecrawl scrape",
+        "status": "WORKS",
+        "note": "Example.com scraped successfully; 1 credit consumed; receipt preserved in var/canary-receipt.json."
+      },
+      {
+        "capability": "alexandria zero-credit native direct router",
+        "status": "WORKS",
+        "note": "US Treasury queried live; 0 credits consumed; raw payload and vault card generated."
+      }
+    ],
+    "receipt_paths": [
+      "var/canary-receipt.json",
+      "var/captures/treasury-fiscal-data/2026-09-24T21-45-55-480Z_debt-to-the-penny.raw.json"
+    ],
+    "evidence_at": "2026-09-24T21:46:42Z",
+    "independent_of_surfaces": true,
+    "blockers": []
+  },
+  "canary": {
+    "standard": "kit-canary-environment.v1",
+    "pilot_role": "adopted",
+    "status": "passed",
+    "environment": {
+      "kind": "disposable",
+      "label": "Firecrawl public example.com canary",
+      "isolation_summary": "One read-only scrape of the IANA example domain with no publication or site mutation.",
+      "not_ambient_machine_state": true,
+      "profile_or_root_ref": "https://example.com"
+    },
+    "commands": {
+      "bootstrap": "pwsh -File bin/setup-auth.ps1",
+      "canary": "pwsh -File bin/canary.ps1 -Confirm",
+      "one_command_bootstrap": true,
+      "one_command_canary": true,
+      "notes": "Plan-only command is bin/canary.ps1 -Plan."
+    },
+    "safety": {
+      "default_mode": "dry_run",
+      "destructive_requires_explicit_flag": true,
+      "external_publish_default": "forbidden"
+    },
+    "auth": {
+      "human_auth_required": false,
+      "one_time_human_auth_when_unavoidable": true,
+      "reuses_dedicated_authenticated_profile": false,
+      "stores_raw_credentials": false,
+      "copies_cookies": false,
+      "notes": "FIRECRAWL_API_KEY is read from process or Windows user environment scope."
+    },
+    "human_signoff": {
+      "required": false,
+      "status": "not_required",
+      "kind": null,
+      "signer": null,
+      "receipt_path": null
+    },
+    "receipt": {
+      "path": "var/canary-receipt.json",
+      "machine_readable": true,
+      "includes_commands_and_exit_codes": false
+    },
+    "cleanup": {
+      "status": "not_applicable",
+      "rollback_ref": null,
+      "notes": "Read-only public page request; no external state is created."
+    },
+    "verdict": "WORKS",
+    "blockers": [],
+    "owner_rooms": {
+      "evidence": "battle-test",
+      "coordination": "release · surfaces"
+    }
+  },
+  "surfaces": {
+    "github_technical": {
+      "status": "ready",
+      "revision": "0.2.0",
+      "claims_version": "0.2.0",
+      "claims_commit": null,
+      "url": null,
+      "receipt_path": "release/package-receipt.json",
+      "owner_room": "release · surfaces"
+    },
+    "classroom_beginner": {
+      "status": "ready",
+      "revision": "0.2.0",
+      "claims_version": "0.2.0",
+      "claims_commit": null,
+      "url": null,
+      "receipt_path": null,
+      "owner_room": "release · surfaces"
+    },
+    "feed_post": {
+      "gate": "benjamin_required",
+      "status": "ready_for_review",
+      "draft_path": "docs/FEED_POST_DRAFT.md",
+      "approval_receipt": null,
+      "published_url": null
+    },
+    "synchronization": {
+      "status": "agreed",
+      "agreed_version": "0.2.0",
+      "agreed_commit": null,
+      "disagreements": []
+    }
+  },
+  "authority": {
+    "release_action": "candidate_verified",
+    "private_personal_review_push": "not_applicable",
+    "classroom_publish": "not_applicable",
+    "remaining_human_approvals": [],
+    "governing_decisions": [
+      "decisions/Cli-First-Not-Ambient-MCP",
+      "decisions/Legends-Kit-Naming",
+      "decisions/Legends-Kit-Release-Train-And-Surfaces",
+      "sops/Legends-Kit-Lifecycle"
+    ]
+  },
+  "artifacts": {
+    "packages": [
+      {
+        "name": "legends-firecrawl",
+        "version": "0.2.0",
+        "hash_sha256": "96125f34a81b43bbc50e88faa7c8676466feb0d94e58ed41dcd405e754855781",
+        "path_or_uri": "E:\\legends-firecrawl\\release\\legends-firecrawl-0.2.0.zip",
+        "kind": "archive"
+      }
+    ],
+    "notes": [
+      "Deterministic package receipt is generated by scripts/build_release.py."
+    ]
+  },
+  "install_evidence": {
+    "consumer_of": "empire-kit-visibility",
+    "interface": {
+      "report_path": "fleet/kit-visibility/latest.report.json",
+      "dashboard_path": "areas/skills-tools/Kit-Installed-Versions.md",
+      "policy_path": "scripts/kit-visibility/config/kits.policy.json",
+      "install_receipt_schema": "scripts/kit-visibility/schema/kit-install-receipt.v1.schema.json",
+      "visibility_report_schema": "scripts/kit-visibility/schema/kit-visibility-report.v1.schema.json"
+    },
+    "dependency_status": "accepted",
+    "classifications_usable_for_promotion": true,
+    "accepted_scanner_version": "0.1.0",
+    "provisional_defects": [],
+    "required_agents": [
+      "grok",
+      "codex",
+      "claude",
+      "gemini"
+    ],
+    "expected_identity": {
+      "commit": null,
+      "release_version": "0.2.0"
+    },
+    "observed_ref": {
+      "report_detected_at": "2026-09-24T21:44:37Z",
+      "scanner_version_observed": "0.1.0",
+      "rows": [
+        {
+          "agent_id": "grok",
+          "classification": "current",
+          "installed_commit": null,
+          "release_version": "0.2.0",
+          "reasons": [
+            "expected_identity_match",
+            "junction_verified"
+          ]
+        },
+        {
+          "agent_id": "codex",
+          "classification": "current",
+          "installed_commit": null,
+          "release_version": "0.2.0",
+          "reasons": [
+            "expected_identity_match",
+            "junction_verified"
+          ]
+        }
+      ]
+    },
+    "promotion_requires": {
+      "require_accepted_scanner_version": true,
+      "all_required_agents_current": true,
+      "match_expected_identity": true,
+      "max_report_age_hours": 168
+    }
+  },
+  "guided_first_use": {
+    "status": "ready",
+    "operators": [
+      "benjamin",
+      "katherine"
+    ],
+    "surface": "pwsh -File bin/lfc.ps1 doctor",
+    "receipt_path": "var/canary-receipt.json",
+    "friction_filed_as": "documented_limitation"
+  },
+  "maintenance_handoff": {
+    "durable_owner": "Legends Firecrawl",
+    "next_gate": "Public release or member deployment via CTO Legends Master Coordinator.",
+    "known_limitations": [
+      "Commercial scraped frontends require residential proxies or Firecrawl Gateway to shield IP.",
+      "CourtListener and USAspending deep aggregation queries can take 10 to 25 seconds."
+    ],
+    "regression_plan": "Run doctor, pytest, behavioral benchmark, package build, clean-room verification, and canary."
+  },
+  "provenance": {
+    "responsible_owner": "Benjamin / Legends Firecrawl",
+    "created_at": "2026-08-30T00:00:00Z",
+    "updated_at": "2026-09-24T21:49:00Z",
+    "baseline_source": "Consolidated Legends Firecrawl super-module and Empire Kit lifecycle build",
+    "source_receipts": [
+      "release/benchmark.json",
+      "release/clean-room-receipt.json",
+      "release/package-receipt.json",
+      "var/canary-receipt.json"
+    ],
+    "empire_links": [
+      "projects/Legends-Firecrawl",
+      "areas/skills-tools/House-Kits"
+    ],
+    "invalidation_rules": [
+      "candidate source changes without rerunning qualification",
+      "official CLI pin or Firecrawl API contract changes",
+      "battle-test verdict is downgraded",
+      "package hash no longer matches its receipt"
+    ]
+  },
+  "promotion": {
+    "gate_result": "PROMOTED",
+    "failures": [],
+    "evaluated_at": "2026-09-24T21:49:14Z",
+    "ruleset": "kit-release-promotion-rules.v1"
+  },
+  "lifecycle_stage": "6 release surfaces ready",
+  "unknowns": []
+}

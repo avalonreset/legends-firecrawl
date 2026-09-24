@@ -1,0 +1,876 @@
+{
+  "id": "shopify",
+  "provider": "shopify",
+  "name": "Shopify Catalog",
+  "description": "Search products across Shopify merchants or within one store, resolve product identifiers and inspect variants through Shopify's UCP catalogs.",
+  "toolCount": 6,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "shopify"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "shopify/catalog/get_product",
+      "provider": "shopify",
+      "capability": "catalog/get_product",
+      "name": "Product details",
+      "description": "Get details, variants and availability for a product_id returned by search or lookup. Optional selected options refine the variant. Does not create a cart or place an order.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "product_id",
+          "type": "string",
+          "required": true,
+          "about": "Paste one product ID returned by search or lookup in the same catalog.",
+          "in": "body"
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "about": "Buyer's two-letter country code, such as US, CA or GB, for localized results.",
+          "in": "body"
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "about": "Three-letter currency code, such as USD, CAD or GBP.",
+          "in": "body"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "about": "Preferred language tag, such as en or en-US.",
+          "in": "body"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "about": "Buyer's state, province or region, such as CA.",
+          "in": "body"
+        },
+        {
+          "name": "postal_code",
+          "type": "string",
+          "about": "Buyer's postal or ZIP code for localized results.",
+          "in": "body"
+        },
+        {
+          "name": "intent",
+          "type": "string",
+          "about": "Optional shopping preferences or intended use.",
+          "in": "body"
+        },
+        {
+          "name": "filters",
+          "type": "object",
+          "about": "Advanced filters, such as {\"available\":true,\"price\":{\"max\":15000}}. Price amounts use minor currency units: 15000 means USD 150.",
+          "in": "body"
+        },
+        {
+          "name": "selected",
+          "type": "object[]",
+          "about": "Optional variant selections, such as [{\"name\":\"Color\",\"label\":\"Black\"}].",
+          "in": "body"
+        },
+        {
+          "name": "preferences",
+          "type": "string[]",
+          "about": "Optional preferences to help select a variant.",
+          "in": "body"
+        },
+        {
+          "name": "view",
+          "type": "string",
+          "about": "Advanced Shopify output view. Leave empty for the default representation.",
+          "in": "body"
+        }
+      ],
+      "response": {
+        "key": "product",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Shopify product identifier; use unchanged for lookup or get_product."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "object",
+            "about": "May be inferred by Shopify; not necessarily merchant-authored."
+          },
+          {
+            "name": "price_range",
+            "type": "object",
+            "about": "Amounts in minor currency units, with currency codes."
+          },
+          {
+            "name": "variants",
+            "type": "object[]"
+          },
+          {
+            "name": "media",
+            "type": "object[]"
+          },
+          {
+            "name": "rating",
+            "type": "object",
+            "about": "Aggregate product rating, when available."
+          },
+          {
+            "name": "options",
+            "type": "object[]",
+            "about": "Product options and their available values."
+          },
+          {
+            "name": "metadata",
+            "type": "object",
+            "about": "Shopify catalog extension metadata, when available."
+          },
+          {
+            "name": "selected",
+            "type": "object[]",
+            "about": "Effective product option selections."
+          }
+        ],
+        "about": "Product records, product metadata and optional messages. Search includes pagination.cursor/has_next_page; repeat the original query with the returned cursor."
+      },
+      "execute": {
+        "provider": "shopify",
+        "capability": "catalog/get_product"
+      }
+    },
+    {
+      "id": "shopify/catalog/lookup_catalog",
+      "provider": "shopify",
+      "capability": "catalog/lookup_catalog",
+      "name": "Look up products",
+      "description": "Look up 1-50 products using product_ids returned by search, or product URLs. Inspect messages for unmatched identifiers.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "product_ids",
+          "type": "string[]",
+          "required": true,
+          "min": 1,
+          "max": 50,
+          "about": "Paste 1-50 product IDs from search or product URLs. In the web form, separate entries with commas.",
+          "in": "body"
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "about": "Buyer's two-letter country code, such as US, CA or GB, for localized results.",
+          "in": "body"
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "about": "Three-letter currency code, such as USD, CAD or GBP.",
+          "in": "body"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "about": "Preferred language tag, such as en or en-US.",
+          "in": "body"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "about": "Buyer's state, province or region, such as CA.",
+          "in": "body"
+        },
+        {
+          "name": "postal_code",
+          "type": "string",
+          "about": "Buyer's postal or ZIP code for localized results.",
+          "in": "body"
+        },
+        {
+          "name": "intent",
+          "type": "string",
+          "about": "Optional shopping preferences or intended use.",
+          "in": "body"
+        },
+        {
+          "name": "filters",
+          "type": "object",
+          "about": "Advanced filters, such as {\"available\":true,\"price\":{\"max\":15000}}. Price amounts use minor currency units: 15000 means USD 150.",
+          "in": "body"
+        },
+        {
+          "name": "view",
+          "type": "string",
+          "about": "Advanced Shopify output view. Leave empty for the default representation.",
+          "in": "body"
+        }
+      ],
+      "response": {
+        "key": "products",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Shopify product identifier; use unchanged for lookup or get_product."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "object",
+            "about": "May be inferred by Shopify; not necessarily merchant-authored."
+          },
+          {
+            "name": "price_range",
+            "type": "object",
+            "about": "Amounts in minor currency units, with currency codes."
+          },
+          {
+            "name": "variants",
+            "type": "object[]"
+          },
+          {
+            "name": "media",
+            "type": "object[]"
+          },
+          {
+            "name": "rating",
+            "type": "object",
+            "about": "Aggregate product rating, when available."
+          },
+          {
+            "name": "options",
+            "type": "object[]",
+            "about": "Product options and their available values."
+          },
+          {
+            "name": "metadata",
+            "type": "object",
+            "about": "Shopify catalog extension metadata, when available."
+          }
+        ],
+        "about": "Product records, product metadata and optional messages. Search includes pagination.cursor/has_next_page; repeat the original query with the returned cursor."
+      },
+      "execute": {
+        "provider": "shopify",
+        "capability": "catalog/lookup_catalog"
+      }
+    },
+    {
+      "id": "shopify/catalog/search_catalog",
+      "provider": "shopify",
+      "capability": "catalog/search_catalog",
+      "name": "Search products",
+      "description": "Search products across Shopify merchants by query, such as trail running shoes under $150. Narrow results by country and use limit and cursor to page through them. Results are estimates, not an exhaustive merchant inventory.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "query",
+          "type": "string",
+          "about": "What are you looking for? For example: `trail running shoes`. Required unless using like for similarity search.",
+          "in": "body"
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "about": "Buyer's two-letter country code, such as US, CA or GB, for localized results.",
+          "in": "body"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "min": 1,
+          "max": 50,
+          "about": "Number of products per page, from 1 to 50. Shopify defaults to 10.",
+          "in": "body"
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "about": "Three-letter currency code, such as USD, CAD or GBP.",
+          "in": "body"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "about": "Preferred language tag, such as en or en-US.",
+          "in": "body"
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "about": "For the next page, paste pagination.cursor from the previous response and keep the same search and filters.",
+          "in": "body"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "about": "Buyer's state, province or region, such as CA.",
+          "in": "body"
+        },
+        {
+          "name": "postal_code",
+          "type": "string",
+          "about": "Buyer's postal or ZIP code for localized results.",
+          "in": "body"
+        },
+        {
+          "name": "intent",
+          "type": "string",
+          "about": "Optional shopping preferences or intended use.",
+          "in": "body"
+        },
+        {
+          "name": "filters",
+          "type": "object",
+          "about": "Advanced filters, such as {\"available\":true,\"price\":{\"max\":15000}}. Price amounts use minor currency units: 15000 means USD 150.",
+          "in": "body"
+        },
+        {
+          "name": "like",
+          "type": "object[]",
+          "min": 1,
+          "max": 2,
+          "about": "Advanced similarity search instead of, or alongside, query. Provide up to two items as {\"id\":\"gid://shopify/...\"} or {\"image\":{\"content_type\":\"image/jpeg\",\"data\":\"<base64>\"}}.",
+          "in": "body"
+        },
+        {
+          "name": "catalog_id",
+          "type": "string",
+          "about": "Optional saved Shopify catalog ID to restrict the search.",
+          "in": "body"
+        },
+        {
+          "name": "view",
+          "type": "string",
+          "about": "Advanced Shopify output view. Leave empty for the default representation.",
+          "in": "body"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "query",
+          "like"
+        ]
+      ],
+      "response": {
+        "key": "products",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Shopify product identifier; use unchanged for lookup or get_product."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "object",
+            "about": "May be inferred by Shopify; not necessarily merchant-authored."
+          },
+          {
+            "name": "price_range",
+            "type": "object",
+            "about": "Amounts in minor currency units, with currency codes."
+          },
+          {
+            "name": "variants",
+            "type": "object[]"
+          },
+          {
+            "name": "media",
+            "type": "object[]"
+          },
+          {
+            "name": "rating",
+            "type": "object",
+            "about": "Aggregate product rating, when available."
+          },
+          {
+            "name": "options",
+            "type": "object[]",
+            "about": "Product options and their available values."
+          },
+          {
+            "name": "metadata",
+            "type": "object",
+            "about": "Shopify catalog extension metadata, when available."
+          }
+        ],
+        "about": "Product records, product metadata and optional messages. Search includes pagination.cursor/has_next_page; repeat the original query with the returned cursor."
+      },
+      "execute": {
+        "provider": "shopify",
+        "capability": "catalog/search_catalog"
+      }
+    },
+    {
+      "id": "shopify/storefront/get_product",
+      "provider": "shopify",
+      "capability": "storefront/get_product",
+      "name": "Storefront: Product details",
+      "description": "Get details and availability for a product_id from the selected store's search or lookup. Keep the same store_domain. Optional selected options refine the variant without executing checkout.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "store_domain",
+          "type": "string",
+          "required": true,
+          "about": "Store domain, such as `www.lemsshoes.com`. Enter the canonical hostname without https://, a path or port.",
+          "in": "body"
+        },
+        {
+          "name": "product_id",
+          "type": "string",
+          "required": true,
+          "about": "Paste one product ID returned by search or lookup in the same catalog.",
+          "in": "body"
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "about": "Buyer's two-letter country code, such as US, CA or GB, for localized results.",
+          "in": "body"
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "about": "Three-letter currency code, such as USD, CAD or GBP.",
+          "in": "body"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "about": "Preferred language tag, such as en or en-US.",
+          "in": "body"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "about": "Buyer's state, province or region, such as CA.",
+          "in": "body"
+        },
+        {
+          "name": "postal_code",
+          "type": "string",
+          "about": "Buyer's postal or ZIP code for localized results.",
+          "in": "body"
+        },
+        {
+          "name": "intent",
+          "type": "string",
+          "about": "Optional shopping preferences or intended use.",
+          "in": "body"
+        },
+        {
+          "name": "filters",
+          "type": "object",
+          "about": "Advanced filters, such as {\"available\":true,\"price\":{\"max\":15000}}. Price amounts use minor currency units: 15000 means USD 150.",
+          "in": "body"
+        },
+        {
+          "name": "selected",
+          "type": "object[]",
+          "about": "Optional variant selections, such as [{\"name\":\"Color\",\"label\":\"Black\"}].",
+          "in": "body"
+        },
+        {
+          "name": "preferences",
+          "type": "string[]",
+          "about": "Optional preferences to help select a variant.",
+          "in": "body"
+        }
+      ],
+      "response": {
+        "key": "product",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Shopify product identifier; use unchanged for lookup or get_product."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "object",
+            "about": "May be inferred by Shopify; not necessarily merchant-authored."
+          },
+          {
+            "name": "price_range",
+            "type": "object",
+            "about": "Amounts in minor currency units, with currency codes."
+          },
+          {
+            "name": "variants",
+            "type": "object[]"
+          },
+          {
+            "name": "media",
+            "type": "object[]"
+          },
+          {
+            "name": "options",
+            "type": "object[]",
+            "about": "Product options and their available values."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "handle",
+            "type": "string"
+          },
+          {
+            "name": "list_price_range",
+            "type": "object"
+          },
+          {
+            "name": "categories",
+            "type": "object[]"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "gift_card",
+            "type": "boolean"
+          },
+          {
+            "name": "collections",
+            "type": "object[]"
+          },
+          {
+            "name": "selected",
+            "type": "object[]",
+            "about": "Effective product option selections."
+          }
+        ],
+        "about": "Product records, product metadata and optional messages. Search includes pagination.cursor/has_next_page; repeat the original query with the returned cursor."
+      },
+      "execute": {
+        "provider": "shopify",
+        "capability": "storefront/get_product"
+      }
+    },
+    {
+      "id": "shopify/storefront/lookup_catalog",
+      "provider": "shopify",
+      "capability": "storefront/lookup_catalog",
+      "name": "Storefront: Look up products",
+      "description": "Look up 1-10 product_ids within store_domain. Use IDs returned by that store's search, not Global Catalog IDs. Inspect messages for unmatched identifiers.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "store_domain",
+          "type": "string",
+          "required": true,
+          "about": "Store domain, such as `www.lemsshoes.com`. Enter the canonical hostname without https://, a path or port.",
+          "in": "body"
+        },
+        {
+          "name": "product_ids",
+          "type": "string[]",
+          "required": true,
+          "min": 1,
+          "max": 10,
+          "about": "Paste 1-10 product IDs from search in this store. In the web form, separate entries with commas.",
+          "in": "body"
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "about": "Buyer's two-letter country code, such as US, CA or GB, for localized results.",
+          "in": "body"
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "about": "Three-letter currency code, such as USD, CAD or GBP.",
+          "in": "body"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "about": "Preferred language tag, such as en or en-US.",
+          "in": "body"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "about": "Buyer's state, province or region, such as CA.",
+          "in": "body"
+        },
+        {
+          "name": "postal_code",
+          "type": "string",
+          "about": "Buyer's postal or ZIP code for localized results.",
+          "in": "body"
+        },
+        {
+          "name": "intent",
+          "type": "string",
+          "about": "Optional shopping preferences or intended use.",
+          "in": "body"
+        },
+        {
+          "name": "filters",
+          "type": "object",
+          "about": "Advanced filters, such as {\"available\":true,\"price\":{\"max\":15000}}. Price amounts use minor currency units: 15000 means USD 150.",
+          "in": "body"
+        }
+      ],
+      "response": {
+        "key": "products",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Shopify product identifier; use unchanged for lookup or get_product."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "object",
+            "about": "May be inferred by Shopify; not necessarily merchant-authored."
+          },
+          {
+            "name": "price_range",
+            "type": "object",
+            "about": "Amounts in minor currency units, with currency codes."
+          },
+          {
+            "name": "variants",
+            "type": "object[]"
+          },
+          {
+            "name": "media",
+            "type": "object[]"
+          },
+          {
+            "name": "options",
+            "type": "object[]",
+            "about": "Product options and their available values."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "handle",
+            "type": "string"
+          },
+          {
+            "name": "list_price_range",
+            "type": "object"
+          },
+          {
+            "name": "categories",
+            "type": "object[]"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "gift_card",
+            "type": "boolean"
+          },
+          {
+            "name": "collections",
+            "type": "object[]"
+          }
+        ],
+        "about": "Product records, product metadata and optional messages. Search includes pagination.cursor/has_next_page; repeat the original query with the returned cursor."
+      },
+      "execute": {
+        "provider": "shopify",
+        "capability": "storefront/lookup_catalog"
+      }
+    },
+    {
+      "id": "shopify/storefront/search_catalog",
+      "provider": "shopify",
+      "capability": "storefront/search_catalog",
+      "name": "Storefront: Search products",
+      "description": "Search products in a Shopify store by store_domain and query, or leave query empty to browse. Use limit and cursor for pagination. The store must expose Shopify's Storefront Catalog endpoint.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "store_domain",
+          "type": "string",
+          "required": true,
+          "about": "Store domain, such as `www.lemsshoes.com`. Enter the canonical hostname without https://, a path or port.",
+          "in": "body"
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "about": "What are you looking for? For example: `trail shoes`. Leave empty to browse the store.",
+          "in": "body"
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "about": "Buyer's two-letter country code, such as US, CA or GB, for localized results.",
+          "in": "body"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "min": 1,
+          "max": 250,
+          "about": "Number of products per page, from 1 to 250. Shopify defaults to 10.",
+          "in": "body"
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "about": "Three-letter currency code, such as USD, CAD or GBP.",
+          "in": "body"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "about": "Preferred language tag, such as en or en-US.",
+          "in": "body"
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "about": "For the next page, paste pagination.cursor from the previous response and keep the same search and filters.",
+          "in": "body"
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "about": "Buyer's state, province or region, such as CA.",
+          "in": "body"
+        },
+        {
+          "name": "postal_code",
+          "type": "string",
+          "about": "Buyer's postal or ZIP code for localized results.",
+          "in": "body"
+        },
+        {
+          "name": "intent",
+          "type": "string",
+          "about": "Optional shopping preferences or intended use.",
+          "in": "body"
+        },
+        {
+          "name": "filters",
+          "type": "object",
+          "about": "Advanced filters, such as {\"available\":true,\"price\":{\"max\":15000}}. Price amounts use minor currency units: 15000 means USD 150.",
+          "in": "body"
+        }
+      ],
+      "response": {
+        "key": "products",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Shopify product identifier; use unchanged for lookup or get_product."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "object",
+            "about": "May be inferred by Shopify; not necessarily merchant-authored."
+          },
+          {
+            "name": "price_range",
+            "type": "object",
+            "about": "Amounts in minor currency units, with currency codes."
+          },
+          {
+            "name": "variants",
+            "type": "object[]"
+          },
+          {
+            "name": "media",
+            "type": "object[]"
+          },
+          {
+            "name": "options",
+            "type": "object[]",
+            "about": "Product options and their available values."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "handle",
+            "type": "string"
+          },
+          {
+            "name": "list_price_range",
+            "type": "object"
+          },
+          {
+            "name": "categories",
+            "type": "object[]"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "gift_card",
+            "type": "boolean"
+          },
+          {
+            "name": "collections",
+            "type": "object[]"
+          }
+        ],
+        "about": "Product records, product metadata and optional messages. Search includes pagination.cursor/has_next_page; repeat the original query with the returned cursor."
+      },
+      "execute": {
+        "provider": "shopify",
+        "capability": "storefront/search_catalog"
+      }
+    }
+  ]
+}

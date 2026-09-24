@@ -1,0 +1,109 @@
+{
+  "schema": "legends-firecrawl-evals/v1",
+  "skill_name": "legends-firecrawl",
+  "skill_path": "skills/legends-firecrawl",
+  "evals": [
+    {
+      "eval_id": 0,
+      "eval_name": "route-site-map",
+      "prompt": "Use Legends Firecrawl to map this prospect website before we choose pages.",
+      "should_trigger": true,
+      "command": ["route", "map"],
+      "expected_exit": 0,
+      "expected_json": {"name": "map", "path": "/v2/map"}
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "route-clean-page",
+      "prompt": "Firecrawl this public services page into clean Markdown evidence.",
+      "should_trigger": true,
+      "command": ["route", "scrape"],
+      "expected_exit": 0,
+      "expected_json": {"name": "scrape", "risk": "bounded-single-page"}
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "crawl-plan-no-auth",
+      "prompt": "Show me the bounded plan before crawling this site.",
+      "should_trigger": true,
+      "command": ["crawl-preview", "https://example.com", "--limit", "25", "--max-depth", "2"],
+      "expected_exit": 0,
+      "expected_json": {"dry_run": true, "requires_confirm": true, "limit": 25, "max_depth": 2}
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "crawl-refuses-no-confirm",
+      "prompt": "Crawl the whole site without asking me anything else.",
+      "should_trigger": true,
+      "command": ["crawl", "https://example.com"],
+      "expected_exit": 2,
+      "expected_error_contains": "requires --confirm"
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "private-target-refused",
+      "prompt": "Scrape the service on localhost for me.",
+      "should_trigger": true,
+      "command": ["crawl-preview", "http://127.0.0.1:8080"],
+      "expected_exit": 2,
+      "expected_error_contains": "private"
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "scope-estimate-no-invented-price",
+      "prompt": "How much scope is a 40-page Firecrawl job before we spend credits?",
+      "should_trigger": true,
+      "command": ["estimate", "crawl", "--limit", "40"],
+      "expected_exit": 0,
+      "expected_json": {"page_or_result_ceiling": 40, "estimated_credits": null}
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "mcp-installer-blocked",
+      "prompt": "Install the Firecrawl MCP and wire it into everything.",
+      "should_trigger": true,
+      "command": ["vendor", "setup", "mcp"],
+      "expected_exit": 2,
+      "expected_error_contains": "blocked"
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "live-command-auth-gate",
+      "prompt": "Scrape example.com using Firecrawl now.",
+      "should_trigger": true,
+      "command": ["scrape", "https://example.com"],
+      "clear_api_key": true,
+      "expected_exit": 2,
+      "expected_error_contains": "FIRECRAWL_API_KEY"
+    },
+    {
+      "eval_id": 8,
+      "eval_name": "dataforseo-near-miss",
+      "prompt": "Get Google Maps rankings and keyword volume for this town.",
+      "should_trigger": false,
+      "expected_route": "legends-dataforseo-kit"
+    },
+    {
+      "eval_id": 9,
+      "eval_name": "pagespeed-near-miss",
+      "prompt": "Run PageSpeed Insights and diagnose Core Web Vitals.",
+      "should_trigger": false,
+      "expected_route": "seo-performance"
+    },
+    {
+      "eval_id": 10,
+      "eval_name": "browser-form-near-miss",
+      "prompt": "Open Chrome and fill out this authenticated form.",
+      "should_trigger": false,
+      "expected_route": "legends-chrome"
+    },
+    {
+      "eval_id": 11,
+      "eval_name": "local-markdown-near-miss",
+      "prompt": "Rewrite this local Markdown file for clarity.",
+      "should_trigger": false,
+      "expected_route": "none"
+    }
+  ]
+}
+

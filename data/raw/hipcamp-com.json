@@ -1,0 +1,2478 @@
+{
+  "id": "hipcamp-com",
+  "provider": "hipcamp-com",
+  "name": "Hipcamp",
+  "description": "Hipcamp campsite, cabin, glamping and RV listing discovery: dated search with location, group size and amenity filters, land details, per-site availability and displayed price quotes, blocked-date calendars, reviews, place autocomplete and public campground daily availability. Anonymous, read-only.",
+  "toolCount": 7,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "hipcamp-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "hipcamp-com/campsite-listings/autocomplete",
+      "provider": "hipcamp-com",
+      "capability": "campsite-listings/autocomplete",
+      "name": "Autocomplete",
+      "description": "Turn a place name into coordinates for search_lands, or find a land or public campground by name.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 8,
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "term",
+          "type": "string",
+          "in": "body",
+          "about": "term",
+          "required": true
+        },
+        {
+          "name": "types",
+          "type": "string[]",
+          "in": "body",
+          "about": "Listing types to include besides places. Default: all four, as the site sends."
+        }
+      ],
+      "response": {
+        "about": "Hipcamp place and listing suggestions for a typed term: regions, cities, public areas (national/state parks, points of interest), private lands (park_private, with masked_id) and public campgrounds (campground_public, with the numeric id public_campground_availability needs), each with coordinates and the site URL.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Hipcamp id: numeric for lands and public campgrounds, prefixed (region_2, city_47334, public_area_26) for places."
+          },
+          {
+            "name": "label",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "masked_id",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "subtitle",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string",
+            "about": "geo_region, geo_city, geo_public_area, public_area, park_private, park_private_external or campground_public."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "term": "Yosemite"
+        },
+        "response": {
+          "count": 13,
+          "observed_at_ms": 1790020998448,
+          "results": [
+            {
+              "id": "region_2",
+              "label": "Yosemite, California, United States",
+              "latitude": 37.8651011,
+              "longitude": -119.5405181,
+              "masked_id": null,
+              "slug": "yosemite",
+              "subtitle": "Region in CA",
+              "type": "geo_region",
+              "url": "https://www.hipcamp.com/d/united-states/california/yosemite/camping/all"
+            },
+            {
+              "id": "city_47334",
+              "label": "Yosemite, Kentucky, United States",
+              "latitude": 37.34636,
+              "longitude": -84.82465,
+              "masked_id": null,
+              "slug": "yosemite",
+              "subtitle": "Yosemite, KY",
+              "type": "geo_city",
+              "url": "https://www.hipcamp.com/discover/kentucky/yosemite"
+            },
+            {
+              "id": "public_area_26",
+              "label": "Yosemite National Park, California, United States",
+              "latitude": 37.84847896791602,
+              "longitude": -119.55713036187738,
+              "masked_id": null,
+              "slug": "yosemite-national-park",
+              "subtitle": "National Park System in California",
+              "type": "geo_public_area",
+              "url": "https://www.hipcamp.com/national-park/united-states/california/yosemite/all"
+            },
+            {
+              "id": "city_10038",
+              "label": "Yosemite Valley, California, United States",
+              "latitude": 37.7425227,
+              "longitude": -119.577626,
+              "masked_id": null,
+              "slug": "yosemite-valley",
+              "subtitle": "Yosemite Valley, CA",
+              "type": "geo_city",
+              "url": "https://www.hipcamp.com/d/united-states/california/yosemite-valley/camping/all"
+            },
+            {
+              "id": "city_46646",
+              "label": "Yosemite West, California, United States",
+              "latitude": 37.64923,
+              "longitude": -119.72037,
+              "masked_id": null,
+              "slug": "yosemite-west",
+              "subtitle": "Yosemite West, CA",
+              "type": "geo_city",
+              "url": "https://www.hipcamp.com/discover/california/yosemite-west"
+            },
+            {
+              "id": "185342",
+              "label": "Camping At Yosemite's Doorstep",
+              "latitude": null,
+              "longitude": null,
+              "masked_id": "lz9hk605",
+              "slug": "camping-at-yosemite-s-doorstep",
+              "subtitle": "Tuolumne County, CA",
+              "type": "park_private",
+              "url": "https://www.hipcamp.com/land/california-camping-at-yosemite-s-doorstep-lz9hk605"
+            },
+            {
+              "id": "124",
+              "label": "Yosemite Creek Campground",
+              "latitude": null,
+              "longitude": null,
+              "masked_id": "9gqmc3w5",
+              "slug": "yosemite-creek-campground",
+              "subtitle": "Campground in Yosemite National Park, CA",
+              "type": "campground_public",
+              "url": "https://www.hipcamp.com/campground/united-states/california/yosemite-creek-campground-9gqmc3w5"
+            },
+            {
+              "id": "4954",
+              "label": "Lower Yosemite Falls",
+              "latitude": 37.751318,
+              "longitude": -119.5969462,
+              "masked_id": "7zqkhjr9",
+              "slug": "lower-yosemite-falls",
+              "subtitle": "Point of Interest · California",
+              "type": "public_area",
+              "url": "https://www.hipcamp.com/p/united-states/california/point-of-interest/lower-yosemite-falls/all"
+            },
+            {
+              "id": "4964",
+              "label": "Upper Yosemite Falls",
+              "latitude": 37.7570252,
+              "longitude": -119.5967826,
+              "masked_id": "74n1hp1q",
+              "slug": "upper-yosemite-falls",
+              "subtitle": "Point of Interest · California",
+              "type": "public_area",
+              "url": "https://www.hipcamp.com/p/united-states/california/point-of-interest/upper-yosemite-falls/all"
+            },
+            {
+              "id": "26",
+              "label": "Yosemite National Park",
+              "latitude": 37.84847896791602,
+              "longitude": -119.55713036187738,
+              "masked_id": "01wlhv37",
+              "slug": "yosemite-national-park",
+              "subtitle": "National Park · California",
+              "type": "public_area",
+              "url": "https://www.hipcamp.com/national-park/united-states/california/yosemite/all"
+            },
+            {
+              "id": "186570",
+              "label": "Shangrilog Near Yosemite",
+              "latitude": null,
+              "longitude": null,
+              "masked_id": "06yhp0w2",
+              "slug": "shangrilog-near-yosemite",
+              "subtitle": "Tuolumne County, CA",
+              "type": "park_private",
+              "url": "https://www.hipcamp.com/land/california-shangrilog-near-yosemite-06yhp0w2"
+            },
+            {
+              "id": "199382",
+              "label": "Yosemite Foothills Camp",
+              "latitude": null,
+              "longitude": null,
+              "masked_id": "xryhwxow",
+              "slug": "yosemite-foothills-camp",
+              "subtitle": "Mariposa County, CA",
+              "type": "park_private",
+              "url": "https://www.hipcamp.com/land/california-yosemite-foothills-camp-xryhwxow"
+            },
+            {
+              "id": "110236",
+              "label": "Yosemite Colfax Spring",
+              "latitude": null,
+              "longitude": null,
+              "masked_id": "ex9ho9ye",
+              "slug": "yosemite-colfax-spring",
+              "subtitle": "Tuolumne County, CA",
+              "type": "park_private",
+              "url": "https://www.hipcamp.com/land/california-yosemite-colfax-spring-ex9ho9ye"
+            }
+          ],
+          "term": "Yosemite"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "hipcamp-com",
+        "capability": "campsite-listings/autocomplete"
+      }
+    },
+    {
+      "id": "hipcamp-com/campsite-listings/land",
+      "provider": "hipcamp-com",
+      "capability": "campsite-listings/land",
+      "name": "Land",
+      "description": "After search_lands or a pasted hipcamp.com/land URL. For dated availability and full quotes call land_sites.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "masked_id",
+          "type": "string",
+          "in": "body",
+          "about": "Hipcamp land maskedId, the 8-character token at the end of a land URL (…-v1qhzdl7). Pattern: ^[a-z0-9]{6,12}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A hipcamp.com land page URL (…/land/<state>-<slug>-<maskedId>)."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "masked_id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Details for one Hipcamp land (a host's property with one or more bookable sites): name, location, overview, host, amenities, review summaries, policies, sites with undated one-night price estimates and the minimum displayed nightly price with its ISO currency.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "acreage",
+            "type": "number"
+          },
+          {
+            "name": "amenities",
+            "type": "object"
+          },
+          {
+            "name": "available_filters",
+            "type": "string[]"
+          },
+          {
+            "name": "bookings_count",
+            "type": "number"
+          },
+          {
+            "name": "campsite_count",
+            "type": "number"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "county",
+            "type": "string"
+          },
+          {
+            "name": "external_booking_url",
+            "type": "string"
+          },
+          {
+            "name": "host",
+            "type": "object"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "is_bookable",
+            "type": "boolean"
+          },
+          {
+            "name": "is_external",
+            "type": "boolean",
+            "about": "True for externally managed parks that book on their own site (see external_booking_url)."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "masked_id",
+            "type": "string"
+          },
+          {
+            "name": "max_booking_window_months",
+            "type": "number"
+          },
+          {
+            "name": "max_site_capacity",
+            "type": "number"
+          },
+          {
+            "name": "min_price_per_night",
+            "type": "object"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "overview",
+            "type": "string"
+          },
+          {
+            "name": "recommends_count",
+            "type": "number"
+          },
+          {
+            "name": "recommends_percentage",
+            "type": "number"
+          },
+          {
+            "name": "review_summaries",
+            "type": "object[]"
+          },
+          {
+            "name": "reviews_count",
+            "type": "number"
+          },
+          {
+            "name": "sites",
+            "type": "object[]"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "state_code",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Hipcamp listing status (LIVE, PAUSED, ...)."
+          },
+          {
+            "name": "structure_count",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "uuid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "masked_id": "v1qhzdl7"
+        },
+        "response": {
+          "acreage": 45,
+          "amenities": {
+            "activities": [],
+            "basic": [
+              {
+                "description": null,
+                "name": "Picnic table",
+                "slug": "picnic-table"
+              }
+            ],
+            "core": [
+              {
+                "description": "We have a $15 pet fee, please add through the extras feature!",
+                "name": "Pets",
+                "slug": "pets"
+              },
+              {
+                "description": "We offer a Yeti cooler of potable water at every cabin. ",
+                "name": "Potable water",
+                "slug": "water"
+              },
+              {
+                "description": null,
+                "name": "Toilets",
+                "slug": "toilet"
+              },
+              {
+                "description": "We have hot showers available across the highway at our sister property. ",
+                "name": "Showers",
+                "slug": "shower"
+              },
+              {
+                "description": null,
+                "name": "Trash",
+                "slug": "trash"
+              }
+            ],
+            "rv": [],
+            "terrain": [
+              {
+                "description": null,
+                "name": "Forest",
+                "slug": "forest"
+              },
+              {
+                "description": "Rainbow Pools is a popular swimming hole less than a half mile away. ",
+                "name": "Swimming hole",
+                "slug": "swimming-hole"
+              },
+              {
+                "description": null,
+                "name": "Mountainous",
+                "slug": "mountainous"
+              },
+              {
+                "description": null,
+                "name": "Ranch",
+                "slug": "ranch"
+              }
+            ]
+          },
+          "available_filters": [
+            "instant-book",
+            "pets",
+            "water",
+            "picnic-table",
+            "toilet",
+            "shower",
+            "trash",
+            "drive-in",
+            "two-wheel-drive",
+            "lodging"
+          ],
+          "bookings_count": 367,
+          "campsite_count": 4,
+          "city": "Colfax Springs",
+          "country": "United States",
+          "county": "Tuolumne",
+          "external_booking_url": null,
+          "host": {
+            "member_since": "2024-06-01T10:27:08-07:00",
+            "name": "Liza And Tom M.",
+            "response_rate": null,
+            "response_time": null
+          },
+          "id": "195109",
+          "is_bookable": true,
+          "is_external": false,
+          "latitude": 37.82253247862765,
+          "longitude": -120.0196216543665,
+          "masked_id": "v1qhzdl7",
+          "max_booking_window_months": 12,
+          "max_site_capacity": 6,
+          "min_price_per_night": {
+            "amount": 139.5,
+            "currency": "USD",
+            "formatted": "$139.50"
+          },
+          "name": "Nolla A-Frames Near Yosemite",
+          "observed_at_ms": 1790020981342,
+          "overview": "Off-Grid A-Frame Glamping Near Yosemite 🌄🛖\n\nTucked just 15 miles east of Groveland and about 20 minutes from the Yosemite National Park entrance, our modern A-frame cabins offer a unique, off-grid experience for those who want a little more comfort than a tent - without giving up the adventure.\n\nDesigned by the Finnish group Nolla, these minimalist and cozy cabins are built to help you unplug and unwind. Each cabin is well insulated, includes fresh linens, and Rumpl blankets to keep you warm.\n\nPerfect for couples, small families, or close-knit friends, the cabin can be arranged as either two twin beds or a king-sized bed to accommodate up to four people. Whether you’re here for a romantic getaway under the stars or a no-frills glamping basecamp for Yosemite exploration, these cabins offer a mix of simplicity and comfort.\n\nEach A-frame is equipped with solar power for small device charging, a portable fan, and access to an odorless composting toilet (cabin 2,3) or a pottery (cabin 1) near the cabin. The cabins also have access to hot showers and flushing toilets across the highway at our sister property. It’s a true step off the beaten path and into a more immersive experience.\n\nThe cabins include a bed, shelter from the elements, and solar-powered lighting and charging. Because this is a rustic glamping experience, the cabin doors do not lock. We are located in a quiet, remote setting, and guests should plan accordingly. \n\n • Cabin 1: Easily accessible for most vehicles. \n\n • Cabins 2 and 3: A bit more adventurous - AWD or 4x4 recommended during rain or wet conditions.\n\nNote that when temperatures in Groveland are above 90 degrees, the cabins do get quite warm. The best ways we have found to manage the heat is by leaving the doors open during the day (with the screen door closed), curtain closed, and fan on all day. \n\nIf you're looking for a cozy basecamp that combines the comfort of a cabin with the spirit of camping, you'll feel right at home here.",
+          "recommends_count": 193,
+          "recommends_percentage": 96,
+          "review_summaries": [
+            {
+              "negative_reviews": 0,
+              "positive_reviews": 66,
+              "summary": "This campsite offers a cozy and convenient base for exploring Yosemite National Park. Guests frequently mention the stunning views, from sunrises to starry nights, enhancing the tranquil atmosphere. The cabins are praised for their cleanliness and comfort, though some visitors noted minor issues like cobwebs or ants. Access to clean showers and proximity to the park entrance are appreciated, making it a practical choice for nature lovers.",
+              "topic": "General Vibe",
+              "total_reviews": 66
+            },
+            {
+              "negative_reviews": 1,
+              "positive_reviews": 6,
+              "summary": "The campsite offers a clean and well-maintained bathroom experience, which many guests appreciated after a long day exploring Yosemite. While most found the facilities to be spotless, a few guests noted the presence of cobwebs, which could be improved. The showers, available at a nearby sister property, were highlighted as a convenient perk, providing a refreshing end to the day. Overall, the bathroom facilities were a hit for those seeking comfort in nature.",
+              "topic": "Bathroom",
+              "total_reviews": 7
+            },
+            {
+              "negative_reviews": 0,
+              "positive_reviews": 3,
+              "summary": "The campsite warmly welcomes pets, making it a perfect getaway for travelers who want to bring their furry companions along. Reviews indicate that pet owners had a delightful experience, with plenty of space for dogs to roam. While some pets might get a bit dusty from the red clay, the overall stay remains enjoyable. The hosts ensure that pet-friendly accommodations are comfortable for both pets and their humans.",
+              "topic": "Pets",
+              "total_reviews": 3
+            },
+            {
+              "negative_reviews": 0,
+              "positive_reviews": 20,
+              "summary": "The campsite provides a sense of seclusion and privacy, ideal for those looking to escape the hustle and bustle. Many guests appreciated the quiet and peaceful environment, which allowed for a relaxing retreat. While some cabins are near each other, they are positioned to maintain privacy, creating a serene atmosphere. Overall, the campsite offers a tranquil getaway surrounded by nature's beauty.",
+              "topic": "Privacy",
+              "total_reviews": 20
+            },
+            {
+              "negative_reviews": 1,
+              "positive_reviews": 27,
+              "summary": "The hosts, Liza and Tom, are consistently praised for their hospitality and attentiveness. Guests found them to be responsive and accommodating, enhancing the overall experience. Their efforts to provide clear directions and helpful tips were particularly appreciated. The personalized service from the hosts contributes to a welcoming and enjoyable stay.",
+              "topic": "Host",
+              "total_reviews": 28
+            },
+            {
+              "negative_reviews": 0,
+              "positive_reviews": 6,
+              "summary": "Nestled close to Yosemite, the campsite offers easy access to the park's wonders. Guests highlighted the proximity to Yosemite's entrance, making it an excellent base for day trips. The surroundings provide stunning views that enhance the camping experience. With nearby amenities and nature spots, the location is both practical and picturesque.",
+              "topic": "Nearby Attractions",
+              "total_reviews": 6
+            },
+            {
+              "negative_reviews": 0,
+              "positive_reviews": 2,
+              "summary": "Families found the campsite to be a delightful retreat, catering well to both adults and kids. The cabins provide a cozy and comfortable environment, making it ideal for family bonding. The serene surroundings and engaging nature experiences create lasting memories for all ages. The site is well-suited for family outings, offering both adventure and relaxation.",
+              "topic": "Families",
+              "total_reviews": 2
+            }
+          ],
+          "reviews_count": 164,
+          "sites": [
+            {
+              "accommodation_keys": [
+                "house"
+              ],
+              "accommodation_type": "a-frame",
+              "advance_notice_hours": 12,
+              "base_capacity": 2,
+              "campground_id": "357101",
+              "campsites_count": 1,
+              "id": "1067082",
+              "is_instant_bookable": true,
+              "latitude": 37.822534073681,
+              "longitude": -120.020760239249,
+              "max_capacity": 3,
+              "max_nights": 29,
+              "min_nights": 1,
+              "name": "Cabin 1",
+              "overview": "Cabin 1 is our most accessible site, while still offering plenty of privacy and quiet. It is a short drive to this site, and offers beautiful views, a picnic table, and a composting toilet. This Nolla Cabin has 2 Twin beds, or you can convert them into a King sized bed by adding our provided planks in between. Perfect for a couple, two friends, or a family of 4 (with young kids). The cabin includes a solar battery (enough to charge your devices and more). We will provide bedding: sheets, pillows, and cozy Rumpl blankets.",
+              "price_per_night": {
+                "amount": 139.5,
+                "formatted": "$139.50",
+                "symbol": "$"
+              }
+            },
+            {
+              "accommodation_keys": [
+                "house"
+              ],
+              "accommodation_type": "a-frame",
+              "advance_notice_hours": 12,
+              "base_capacity": 2,
+              "campground_id": "357105",
+              "campsites_count": 1,
+              "id": "1067090",
+              "is_instant_bookable": true,
+              "latitude": 37.822534073681,
+              "longitude": -120.020760239249,
+              "max_capacity": 3,
+              "max_nights": 29,
+              "min_nights": 1,
+              "name": "Cabin 2",
+              "overview": "Cabin 2 is located near Cabin 3. While still offering privacy from one another, separated by trees, these Nolla Cabins are also a good option if traveling with a group. Cabin 2 is farther back on the property, tucked away near a stream. You will truly feel like you are in the wilderness here. There is a picnic table and Yeti cooler provided, as well as a composting toilet, shared by Cabin 3. During the rainy season, All Wheel or 4 Wheel Drive is required to access this cabin. The cabin includes a solar battery (enough to charge your devices and more). We will provide bedding: sheets, pillows, and cozy Rumple blankets.",
+              "price_per_night": {
+                "amount": 139.5,
+                "formatted": "$139.50",
+                "symbol": "$"
+              }
+            },
+            {
+              "accommodation_keys": [
+                "house"
+              ],
+              "accommodation_type": "a-frame",
+              "advance_notice_hours": 12,
+              "base_capacity": 2,
+              "campground_id": "357107",
+              "campsites_count": 1,
+              "id": "1067093",
+              "is_instant_bookable": true,
+              "latitude": 37.822534073681,
+              "longitude": -120.020760239249,
+              "max_capacity": 3,
+              "max_nights": 29,
+              "min_nights": 1,
+              "name": "Cabin 3",
+              "overview": "Cabin 3 is located near Cabin 2. While still offering privacy from one another, separated by trees, this Nolla Cabin is also a good option if traveling with a group. Cabin 2 is farther back on the property, tucked away near a stream. You will truly feel like you are in the wilderness here. There is a picnic table and Yeti cooler provided, as well as a composting toilet, shared by Cabin 2. During the rainy season, All Wheel or 4 Wheel Drive is required to access this cabin.\n\nThe cabin includes a solar battery (enough to charge your devices and more). We will provide bedding: sheets, pillows, and cozy Rumple blankets.",
+              "price_per_night": {
+                "amount": 139.5,
+                "formatted": "$139.50",
+                "symbol": "$"
+              }
+            },
+            {
+              "accommodation_keys": [
+                "house"
+              ],
+              "accommodation_type": "a-frame",
+              "advance_notice_hours": 48,
+              "base_capacity": 4,
+              "campground_id": "357716",
+              "campsites_count": 1,
+              "id": "1067966",
+              "is_instant_bookable": true,
+              "latitude": 37.822534073681,
+              "longitude": -120.020760239249,
+              "max_capacity": 6,
+              "max_nights": 29,
+              "min_nights": 1,
+              "name": "Cabin 2 + Cabin 3",
+              "overview": "This site allows you to book Cabin 2 and Cabin 3 together.\n\nThese Nolla Cabins are close together while still offering privacy from one another. This is a great option if you're travelling with a small group. Cabin 2 is farther back on the property, tucked away near a stream.\n\nThere is a picnic table and Yeti cooler provided, as well as a composting toilet. \n\nDuring the rainy season, All Wheel or 4 Wheel Drive is required to access this cabin.\n\nThe cabin includes a solar battery (enough to charge your devices and more). We will provide bedding: sheets, pillows, and cozy Rumple blankets.",
+              "price_per_night": {
+                "amount": 279,
+                "formatted": "$279.00",
+                "symbol": "$"
+              }
+            }
+          ],
+          "state": "California",
+          "state_code": "CA",
+          "status": "LIVE",
+          "structure_count": 4,
+          "url": "https://www.hipcamp.com/en-US/land/california-nolla-a-frames-near-yosemite-v1qhzdl7",
+          "uuid": "92039c6a-49e5-48ed-86c2-c51e02d19e24"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "hipcamp-com",
+        "capability": "campsite-listings/land"
+      }
+    },
+    {
+      "id": "hipcamp-com/campsite-listings/land_calendar",
+      "provider": "hipcamp-com",
+      "capability": "campsite-listings/land_calendar",
+      "name": "Land calendar",
+      "description": "Calendar view of what is already booked or closed for a land or a single site.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "masked_id",
+          "type": "string",
+          "in": "body",
+          "about": "Hipcamp land maskedId, the 8-character token at the end of a land URL (…-v1qhzdl7). Pattern: ^[a-z0-9]{6,12}$.",
+          "required": true
+        },
+        {
+          "name": "site_id",
+          "type": "string",
+          "in": "body",
+          "about": "Numeric site id from land or land_sites; when given, the per-site calendar is returned. Pattern: ^[0-9]{1,12}$."
+        }
+      ],
+      "response": {
+        "about": "Blocked dates for a land (reserved days with the affected site ids and closed-to-arrival/departure flags) or, with site_id, for one site (blocked_for_booking per date). Lists blocked dates only: a date absent from the list is not a confirmed availability; use land_sites for a dated check.",
+        "key": "reserved_days",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "blocked_for_booking",
+            "type": "boolean",
+            "about": "Site-level calendar only; null for a land calendar."
+          },
+          {
+            "name": "campsite_ids",
+            "type": "string[]",
+            "about": "Site ids reserved on that date (land-level calendar only; null for a site calendar)."
+          },
+          {
+            "name": "closed_to_arrival",
+            "type": "boolean"
+          },
+          {
+            "name": "closed_to_departure",
+            "type": "boolean"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "masked_id": "v1qhzdl7"
+        },
+        "response": {
+          "count": 23,
+          "masked_id": "v1qhzdl7",
+          "observed_at_ms": 1790020992266,
+          "reserved_days": [
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067966",
+                "1067093",
+                "1067090",
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-09-21"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067966",
+                "1067090"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-09-25"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067966",
+                "1067093",
+                "1067090",
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-09-26"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067966",
+                "1067090"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-09-27"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067966",
+                "1067090",
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-02"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067966",
+                "1067090",
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-03"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067966",
+                "1067090",
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-17"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-09-22"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-09-30"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-01"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-12"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-13"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-14"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-16"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-24"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-25"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-26"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-27"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-28"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-29"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-10-31"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-11-01"
+            },
+            {
+              "blocked_for_booking": null,
+              "campsite_ids": [
+                "1067082"
+              ],
+              "closed_to_arrival": false,
+              "closed_to_departure": false,
+              "date": "2026-11-22"
+            }
+          ],
+          "site_id": null
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "hipcamp-com",
+        "capability": "campsite-listings/land_calendar"
+      }
+    },
+    {
+      "id": "hipcamp-com/campsite-listings/land_reviews",
+      "provider": "hipcamp-com",
+      "capability": "campsite-listings/land_reviews",
+      "name": "Land reviews",
+      "description": "Read reviews for a land from search_lands or land; pass next_cursor to continue.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page. Pattern: ^[A-Za-z0-9=_-]{1,64}$."
+        },
+        {
+          "name": "masked_id",
+          "type": "string",
+          "in": "body",
+          "about": "Hipcamp land maskedId, the 8-character token at the end of a land URL (…-v1qhzdl7). Pattern: ^[a-z0-9]{6,12}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Public camper reviews for a land, newest first, 30 per page with cursor pagination: title, text, recommend verdict, display date, reviewer display name, site stayed at, trip details and the host's public reply.",
+        "key": "reviews",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "author_name",
+            "type": "string"
+          },
+          {
+            "name": "author_reviews_count",
+            "type": "number"
+          },
+          {
+            "name": "created_at_text",
+            "type": "string",
+            "about": "Display date as Hipcamp formats it (e.g. `May 29, 2026`)."
+          },
+          {
+            "name": "group_type",
+            "type": "string",
+            "about": "Group type the camper declared (KIDS, PETS, GROUP, ...)."
+          },
+          {
+            "name": "host_reply",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "photo_count",
+            "type": "number"
+          },
+          {
+            "name": "recommend",
+            "type": "string",
+            "about": "positive, neutral or negative as Hipcamp records it."
+          },
+          {
+            "name": "rv_length",
+            "type": "string",
+            "about": "Declared RV length as the site formats it (`24 ft`); null when not an RV stay."
+          },
+          {
+            "name": "rv_type",
+            "type": "string",
+            "about": "RV type slug the camper declared for the stay (class_a, class_b, campervan, fifth_wheeler, ...); null for non-RV stays."
+          },
+          {
+            "name": "shelter_type",
+            "type": "string",
+            "about": "Shelter the camper declared (Tent, Vehicle, ...)."
+          },
+          {
+            "name": "site_id",
+            "type": "string"
+          },
+          {
+            "name": "site_name",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "upvotes_count",
+            "type": "number"
+          },
+          {
+            "name": "uuid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "masked_id": "1xmhry2k"
+        },
+        "response": {
+          "count": 13,
+          "land_id": "251297",
+          "masked_id": "1xmhry2k",
+          "next_cursor": null,
+          "observed_at_ms": 1790021221070,
+          "recommends_count": 14,
+          "recommends_percentage": 100,
+          "reviews": [
+            {
+              "author_name": "Jean K.",
+              "author_reviews_count": 1,
+              "created_at_text": "August 26, 2026",
+              "group_type": "PETS",
+              "host_reply": null,
+              "id": "1480337",
+              "photo_count": 0,
+              "recommend": "positive",
+              "rv_length": "50 ft",
+              "rv_type": "fifth_wheeler",
+              "shelter_type": "Vehicle",
+              "site_id": "2002489",
+              "site_name": "Meadow View Haven RV/Trailer Spot",
+              "text": "Lovely spot in a quiet neighborhood within a hourish drive to Yosemite",
+              "title": "",
+              "upvotes_count": 0,
+              "uuid": "fcbfb17d-3155-4695-b076-6cb325a5aca1"
+            },
+            {
+              "author_name": "Hanna H.",
+              "author_reviews_count": 1,
+              "created_at_text": "July 5, 2026",
+              "group_type": null,
+              "host_reply": null,
+              "id": "1423650",
+              "photo_count": 0,
+              "recommend": "positive",
+              "rv_length": null,
+              "rv_type": null,
+              "shelter_type": "Tent",
+              "site_id": "2006792",
+              "site_name": "Meadow View Haven Tent Spot",
+              "text": "The site was lovely, and the hosts were very kind. I would recommend this to anyone. Very great location too, about an hour out from the park.",
+              "title": "",
+              "upvotes_count": 0,
+              "uuid": "ac2ee3a4-1589-4927-86d4-305ec8b30690"
+            },
+            {
+              "author_name": "Jonas R.",
+              "author_reviews_count": 1,
+              "created_at_text": "June 26, 2026",
+              "group_type": null,
+              "host_reply": null,
+              "id": "1414080",
+              "photo_count": 0,
+              "recommend": "positive",
+              "rv_length": null,
+              "rv_type": null,
+              "shelter_type": "Tent",
+              "site_id": "2006792",
+              "site_name": "Meadow View Haven Tent Spot",
+              "text": "Wonderful hosts! Great little camping place and very affordable!",
+              "title": "",
+              "upvotes_count": 0,
+              "uuid": "841dc410-92f0-4432-80e2-554dda80c358"
+            },
+            {
+              "author_name": "Scamper C.",
+              "author_reviews_count": 4,
+              "created_at_text": "June 22, 2026",
+              "group_type": null,
+              "host_reply": null,
+              "id": "1411611",
+              "photo_count": 0,
+              "recommend": "positive",
+              "rv_length": "33 ft",
+              "rv_type": "class_a",
+              "shelter_type": "Vehicle",
+              "site_id": "2002489",
+              "site_name": "Meadow View Haven RV/Trailer Spot",
+              "text": "I’m always hesitant to rave about someplace I’ve stayed for fear more campers will come and it will no longer be available to book in the future.  However, Meadow View Haven was an absolutely beautiful location with all the amenities needed for me to stay while visiting family in the area.  The host(s) were very responsive to any questions I had.  I would highly recommend staying here.  Just one note: bring extra sewer lines as the sewer port was far away after finding the most level spot.  ",
+              "title": "Beautiful location",
+              "upvotes_count": 0,
+              "uuid": "a23dbfc0-a360-423e-99d0-2825c25b5224"
+            },
+            {
+              "author_name": "Delia G.",
+              "author_reviews_count": 1,
+              "created_at_text": "June 20, 2026",
+              "group_type": "GROUP",
+              "host_reply": null,
+              "id": "1408233",
+              "photo_count": 0,
+              "recommend": "positive",
+              "rv_length": null,
+              "rv_type": null,
+              "shelter_type": "Tent",
+              "site_id": "2006792",
+              "site_name": "Meadow View Haven Tent Spot",
+              "text": "Directions were clear. Good place to Camp of you are planning to visit Yosemite ",
+              "title": "Flexible check in time",
+              "upvotes_count": 0,
+              "uuid": "ce4dddc5-bcc6-419d-8160-e8b696b75149"
+            },
+            {
+              "author_name": "Keri L.",
+              "author_reviews_count": 0,
+              "created_at_text": "June 9, 2026",
+              "group_type": null,
+              "host_reply": null,
+              "id": "1399938",
+              "photo_count": 0,
+              "recommend": "positive",
+              "rv_length": null,
+              "rv_type": null,
+              "shelter_type": null,
+              "site_id": "2006792",
+              "site_name": "Meadow View Haven Tent Spot",
+              "text": "Easy place to car camp before heading to Yosemite. Didn’t meet the host because we arrived late and left early but was easy to find and set up for the night. Would stay again",
+              "title": "",
+              "upvotes_count": 0,
+              "uuid": "e62aaf66-ed70-4910-a6d1-a26802611973"
+            },
+            {
+              "author_name": "Aleksandra L.",
+              "author_reviews_count": 1,
+              "created_at_text": "June 3, 2026",
+              "group_type": null,
+              "host_reply": null,
+              "id": "1394888",
+              "photo_count": 0,
+              "recommend": "positive",
+              "rv_length": "21 ft",
+              "rv_type": "class_b",
+              "shelter_type": "Vehicle",
+              "site_id": "2002489",
+              "site_name": "Meadow View Haven RV/Trailer Spot",
+              "text": "We had a very pleasant stay. The hosts were kind, helpful, and easy to communicate with. Everything went smoothly, and we appreciated having a great and peaceful spot for our RV. Thank you.",
+              "title": "Pleasant stay with helpful hosts",
+              "upvotes_count": 0,
+              "uuid": "8d3b308b-ac81-4469-8410-cd41e4004c2c"
+            },
+            {
+              "author_name": "Canaan E.",
+              "author_reviews_count": 2,
+              "created_at_text": "June 1, 2026",
+              "group_type": null,
+              "host_reply": null,
+              "id": "1393287",
+              "photo_count": 0,
+              "recommend": "positive",
+              "rv_length": null,
+              "rv_type": null,
+              "shelter_type": "Tent",
+              "site_id": "2006792",
+              "site_name": "Meadow View Haven Tent Spot",
+              "text": "Our hosts were wonderful and the site was perfect. Thank you so much!",
+              "title": "",
+              "upvotes_count": 0,
+              "uuid": "b4ca697c-3558-4f3e-a234-9005e34f0a9e"
+            },
+            {
+              "author_name": "Kevin D.",
+              "author_reviews_count": 1,
+              "created_at_text": "May 29, 2026",
+              "group_type": null,
+              "host_reply": null,
+              "id": "1390657",
+              "photo_count": 1,
+              "recommend": "positive",
+              "rv_length": null,
+              "rv_type": null,
+              "shelter_type": "Tent",
+              "site_id": "2006792",
+              "site_name": "Meadow View Haven Tent Spot",
+              "text": "I loved camping on Kiya’s land! I know a lot of people talked about using this spot as a prep/debrief launch pad before or after their trip to Yosemite, but I used it as my base camp. \n\nIt was so nice to have a quiet space all to myself away from the insane crowds and packed campgrounds in the park. \n\nThe drive in was an hour to the entrances, but that gave me time to reflect on my trip, get psyched with a playlist, and have my breakfast! Seeing the sun set on the way out of the park was so beautiful every day, and it was so peaceful. For context, I wanna mention that I love driving. \n\nAbout their site: I definitely overpacked, because they have water access and a power outlet to charge your devices/lights etc. There is also an outdoor makeshift bathroom for you to use which was a really considerate touch! The solar panels nearby are perfect to put things you want to keep dry under, but be mindful of the separations between panels, as rain may sprinkle down in between them. \n\nI felt very welcome there, they came out to check on me the first night I was there, and even gave me some recommendations on where to go in the park, and even was left a friendly note giving me a head’s up about some rain on the way so my gear wouldn’t get soaked! Very gracious, warm, and considerate. \n\nI would absolutely come back again, I want more time to check out not only the park but also what Mariposa has to offer. \n\nA perfect spot for both a couple days or spending the night when passing through",
+              "title": "Yosemite Adjacent Oasis",
+              "upvotes_count": 0,
+              "uuid": "f098d8d3-a00e-4d76-8e47-8df678730f4c"
+            },
+            {
+              "author_name": "Makenzie S.",
+              "author_reviews_count": 3,
+              "created_at_text": "May 27, 2026",
+              "group_type": null,
+              "host_reply": null,
+              "id": "1389614",
+              "photo_count": 0,
+              "recommend": "positive",
+              "rv_length": "24 ft",
+              "rv_type": "campervan",
+              "shelter_type": "Vehicle",
+              "site_id": "2002489",
+              "site_name": "Meadow View Haven RV/Trailer Spot",
+              "text": "Extremely sweet and accommodating hosts. Easy directions/instructions for staying at their site which is in such a quiet, gorgeous area. The animals on property were also amazing. Would definitely recommend staying here and hope to stay again in the future if we're ever in the area. ",
+              "title": "Perfect,little spot with great host",
+              "upvotes_count": 0,
+              "uuid": "7e2cf044-cc7b-46e7-8cb2-f73ad245369f"
+            },
+            {
+              "author_name": "Frank C.",
+              "author_reviews_count": 3,
+              "created_at_text": "May 9, 2026",
+              "group_type": null,
+              "host_reply": null,
+              "id": "1375905",
+              "photo_count": 0,
+              "recommend": "positive",
+              "rv_length": null,
+              "rv_type": null,
+              "shelter_type": "Tent",
+              "site_id": "2006792",
+              "site_name": "Meadow View Haven Tent Spot",
+              "text": "The hosts were fantastic and had wonderful hospitality. They responded quickly every time I had a question.",
+              "title": "",
+              "upvotes_count": 0,
+              "uuid": "0b7d8e31-9149-4484-92bc-a189366df0e8"
+            },
+            {
+              "author_name": "Paula N.",
+              "author_reviews_count": 37,
+              "created_at_text": "May 2, 2026",
+              "group_type": null,
+              "host_reply": null,
+              "id": "1371454",
+              "photo_count": 1,
+              "recommend": "positive",
+              "rv_length": "22 ft",
+              "rv_type": "campervan",
+              "shelter_type": "Vehicle",
+              "site_id": "2002489",
+              "site_name": "Meadow View Haven RV/Trailer Spot",
+              "text": "My second time staying here in a week. It's a great spot to get things done before going into Yosemite and out of Yosemite which I did both times. I couldn't go in at the closest entrance from this hip camp because the HWY was closed due to a rock slide, but going through the South entrance instead was fine. The host is super responsive and nice. ",
+              "title": "",
+              "upvotes_count": 0,
+              "uuid": "fefb2873-f4c1-4260-af81-6e7b0b298ef2"
+            },
+            {
+              "author_name": "Paula N.",
+              "author_reviews_count": 37,
+              "created_at_text": "April 27, 2026",
+              "group_type": null,
+              "host_reply": null,
+              "id": "1369287",
+              "photo_count": 0,
+              "recommend": "positive",
+              "rv_length": "22 ft",
+              "rv_type": "campervan",
+              "shelter_type": "Vehicle",
+              "site_id": "2002489",
+              "site_name": "Meadow View Haven RV/Trailer Spot",
+              "text": "This is a great spot with FULL hookup in Mariposa. I love staying at places with all the amenities so I can do a full reset of the van before I head into a national park. Host was super helpful and accommodating. I'm staying again when I leave Yosemite. ",
+              "title": "Great spot near Yosemite",
+              "upvotes_count": 0,
+              "uuid": "0a4af5ae-fe47-4483-8f99-4151c99e72f2"
+            }
+          ],
+          "total_count": 13
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "hipcamp-com",
+        "capability": "campsite-listings/land_reviews"
+      }
+    },
+    {
+      "id": "hipcamp-com/campsite-listings/land_sites",
+      "provider": "hipcamp-com",
+      "capability": "campsite-listings/land_sites",
+      "name": "Land sites",
+      "description": "Dated availability check and price breakdown for a land found by search_lands or land.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "adults",
+          "type": "number",
+          "in": "body",
+          "about": "adults",
+          "default": 1,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "arrive",
+          "type": "string",
+          "in": "body",
+          "about": "Calendar date, YYYY-MM-DD, in the land's local time. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "children",
+          "type": "number",
+          "in": "body",
+          "about": "children",
+          "default": 0,
+          "min": 0,
+          "max": 50
+        },
+        {
+          "name": "depart",
+          "type": "string",
+          "in": "body",
+          "about": "Calendar date, YYYY-MM-DD, in the land's local time. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "include_unmatched",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also return sites that do not match the party or dates (is_exact_match false)."
+        },
+        {
+          "name": "masked_id",
+          "type": "string",
+          "in": "body",
+          "about": "Hipcamp land maskedId, the 8-character token at the end of a land URL (…-v1qhzdl7). Pattern: ^[a-z0-9]{6,12}$.",
+          "required": true
+        },
+        {
+          "name": "pets",
+          "type": "number",
+          "in": "body",
+          "about": "pets",
+          "default": 0,
+          "min": 0,
+          "max": 20
+        }
+      ],
+      "response": {
+        "about": "Per-site availability and Hipcamp's displayed price quote for one land and a stay: for each site whether it is available for the dates and party, the number of available sites, booking restrictions, minimum nights, and the itemised quote (nightly price, cleaning fee, service fee and tax, occupancy tax, extra fees, total). Quotes are as displayed at observation time, not confirmed bookings. Without dates, is_available is null and the quote is a one-night estimate.",
+        "key": "sites",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "accommodation_keys",
+            "type": "string[]"
+          },
+          {
+            "name": "accommodation_type",
+            "type": "string"
+          },
+          {
+            "name": "advance_notice_hours",
+            "type": "number"
+          },
+          {
+            "name": "available_sites",
+            "type": "number"
+          },
+          {
+            "name": "base_capacity",
+            "type": "number"
+          },
+          {
+            "name": "booking_restriction_reason",
+            "type": "string",
+            "about": "Hipcamp's reason code when the site cannot be booked for the stay (NONE when it can)."
+          },
+          {
+            "name": "campsites_count",
+            "type": "number"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "is_available",
+            "type": "boolean",
+            "about": "Hipcamp's availability answer for the requested dates; null when the request was undated."
+          },
+          {
+            "name": "is_exact_match",
+            "type": "boolean"
+          },
+          {
+            "name": "is_instant_bookable",
+            "type": "boolean"
+          },
+          {
+            "name": "max_capacity",
+            "type": "number"
+          },
+          {
+            "name": "max_nights",
+            "type": "number"
+          },
+          {
+            "name": "min_nights",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "quote",
+            "type": "object",
+            "about": "Hipcamp's displayed price breakdown for the requested dates and party. A quote, not a confirmed booking price; fees and taxes are itemised, `total_price` includes them. Undated requests return a one-night estimate."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "masked_id": "v1qhzdl7"
+        },
+        "response": {
+          "adults": 1,
+          "arrive": null,
+          "children": 0,
+          "count": 4,
+          "depart": null,
+          "masked_id": "v1qhzdl7",
+          "observed_at_ms": 1790020986871,
+          "pets": 0,
+          "sites": [
+            {
+              "accommodation_keys": [
+                "house"
+              ],
+              "accommodation_type": "a-frame",
+              "advance_notice_hours": 12,
+              "available_sites": null,
+              "base_capacity": 2,
+              "booking_restriction_reason": null,
+              "campsites_count": 1,
+              "id": "1067082",
+              "is_available": null,
+              "is_exact_match": true,
+              "is_instant_bookable": true,
+              "max_capacity": 3,
+              "max_nights": 29,
+              "min_nights": 1,
+              "name": "Cabin 1",
+              "quote": {
+                "additional_guests_fee": null,
+                "cleaning_fee": {
+                  "amount": 25,
+                  "formatted": "$25.00",
+                  "symbol": "$"
+                },
+                "fees": [],
+                "is_discounted": true,
+                "occupancy_tax": {
+                  "amount": 19.74,
+                  "formatted": "$19.74",
+                  "symbol": "$"
+                },
+                "price_per_night": {
+                  "amount": 139.5,
+                  "formatted": "$139.50",
+                  "symbol": "$"
+                },
+                "price_per_night_base": {
+                  "amount": 155,
+                  "formatted": "$155.00",
+                  "symbol": "$"
+                },
+                "service_fee": {
+                  "amount": 25.38,
+                  "formatted": "$25.38",
+                  "symbol": "$"
+                },
+                "service_fee_tax": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "total_nights_discount": {
+                  "amount": -15.5,
+                  "formatted": "-$15.50",
+                  "symbol": "$"
+                },
+                "total_nights_price": {
+                  "amount": 139.5,
+                  "formatted": "$139.50",
+                  "symbol": "$"
+                },
+                "total_price": {
+                  "amount": 209.62,
+                  "formatted": "$209.62",
+                  "symbol": "$"
+                },
+                "total_price_per_night": {
+                  "amount": 209.62,
+                  "formatted": "$209.62",
+                  "symbol": "$"
+                }
+              }
+            },
+            {
+              "accommodation_keys": [
+                "house"
+              ],
+              "accommodation_type": "a-frame",
+              "advance_notice_hours": 12,
+              "available_sites": null,
+              "base_capacity": 2,
+              "booking_restriction_reason": null,
+              "campsites_count": 1,
+              "id": "1067090",
+              "is_available": null,
+              "is_exact_match": true,
+              "is_instant_bookable": true,
+              "max_capacity": 3,
+              "max_nights": 29,
+              "min_nights": 1,
+              "name": "Cabin 2",
+              "quote": {
+                "additional_guests_fee": null,
+                "cleaning_fee": {
+                  "amount": 25,
+                  "formatted": "$25.00",
+                  "symbol": "$"
+                },
+                "fees": [],
+                "is_discounted": true,
+                "occupancy_tax": {
+                  "amount": 19.74,
+                  "formatted": "$19.74",
+                  "symbol": "$"
+                },
+                "price_per_night": {
+                  "amount": 139.5,
+                  "formatted": "$139.50",
+                  "symbol": "$"
+                },
+                "price_per_night_base": {
+                  "amount": 155,
+                  "formatted": "$155.00",
+                  "symbol": "$"
+                },
+                "service_fee": {
+                  "amount": 25.38,
+                  "formatted": "$25.38",
+                  "symbol": "$"
+                },
+                "service_fee_tax": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "total_nights_discount": {
+                  "amount": -15.5,
+                  "formatted": "-$15.50",
+                  "symbol": "$"
+                },
+                "total_nights_price": {
+                  "amount": 139.5,
+                  "formatted": "$139.50",
+                  "symbol": "$"
+                },
+                "total_price": {
+                  "amount": 209.62,
+                  "formatted": "$209.62",
+                  "symbol": "$"
+                },
+                "total_price_per_night": {
+                  "amount": 209.62,
+                  "formatted": "$209.62",
+                  "symbol": "$"
+                }
+              }
+            },
+            {
+              "accommodation_keys": [
+                "house"
+              ],
+              "accommodation_type": "a-frame",
+              "advance_notice_hours": 12,
+              "available_sites": null,
+              "base_capacity": 2,
+              "booking_restriction_reason": null,
+              "campsites_count": 1,
+              "id": "1067093",
+              "is_available": null,
+              "is_exact_match": true,
+              "is_instant_bookable": true,
+              "max_capacity": 3,
+              "max_nights": 29,
+              "min_nights": 1,
+              "name": "Cabin 3",
+              "quote": {
+                "additional_guests_fee": null,
+                "cleaning_fee": {
+                  "amount": 25,
+                  "formatted": "$25.00",
+                  "symbol": "$"
+                },
+                "fees": [],
+                "is_discounted": true,
+                "occupancy_tax": {
+                  "amount": 19.74,
+                  "formatted": "$19.74",
+                  "symbol": "$"
+                },
+                "price_per_night": {
+                  "amount": 139.5,
+                  "formatted": "$139.50",
+                  "symbol": "$"
+                },
+                "price_per_night_base": {
+                  "amount": 155,
+                  "formatted": "$155.00",
+                  "symbol": "$"
+                },
+                "service_fee": {
+                  "amount": 25.38,
+                  "formatted": "$25.38",
+                  "symbol": "$"
+                },
+                "service_fee_tax": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "total_nights_discount": {
+                  "amount": -15.5,
+                  "formatted": "-$15.50",
+                  "symbol": "$"
+                },
+                "total_nights_price": {
+                  "amount": 139.5,
+                  "formatted": "$139.50",
+                  "symbol": "$"
+                },
+                "total_price": {
+                  "amount": 209.62,
+                  "formatted": "$209.62",
+                  "symbol": "$"
+                },
+                "total_price_per_night": {
+                  "amount": 209.62,
+                  "formatted": "$209.62",
+                  "symbol": "$"
+                }
+              }
+            },
+            {
+              "accommodation_keys": [
+                "house"
+              ],
+              "accommodation_type": "a-frame",
+              "advance_notice_hours": 48,
+              "available_sites": null,
+              "base_capacity": 4,
+              "booking_restriction_reason": null,
+              "campsites_count": 1,
+              "id": "1067966",
+              "is_available": null,
+              "is_exact_match": true,
+              "is_instant_bookable": true,
+              "max_capacity": 6,
+              "max_nights": 29,
+              "min_nights": 1,
+              "name": "Cabin 2 + Cabin 3",
+              "quote": {
+                "additional_guests_fee": null,
+                "cleaning_fee": {
+                  "amount": 50,
+                  "formatted": "$50.00",
+                  "symbol": "$"
+                },
+                "fees": [],
+                "is_discounted": true,
+                "occupancy_tax": {
+                  "amount": 39.48,
+                  "formatted": "$39.48",
+                  "symbol": "$"
+                },
+                "price_per_night": {
+                  "amount": 279,
+                  "formatted": "$279.00",
+                  "symbol": "$"
+                },
+                "price_per_night_base": {
+                  "amount": 310,
+                  "formatted": "$310.00",
+                  "symbol": "$"
+                },
+                "service_fee": {
+                  "amount": 46.19,
+                  "formatted": "$46.19",
+                  "symbol": "$"
+                },
+                "service_fee_tax": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "total_nights_discount": {
+                  "amount": -31,
+                  "formatted": "-$31.00",
+                  "symbol": "$"
+                },
+                "total_nights_price": {
+                  "amount": 279,
+                  "formatted": "$279.00",
+                  "symbol": "$"
+                },
+                "total_price": {
+                  "amount": 414.67,
+                  "formatted": "$414.67",
+                  "symbol": "$"
+                },
+                "total_price_per_night": {
+                  "amount": 414.67,
+                  "formatted": "$414.67",
+                  "symbol": "$"
+                }
+              }
+            }
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "hipcamp-com",
+        "capability": "campsite-listings/land_sites"
+      }
+    },
+    {
+      "id": "hipcamp-com/campsite-listings/public_campground_availability",
+      "provider": "hipcamp-com",
+      "capability": "campsite-listings/public_campground_availability",
+      "name": "Public campground availability",
+      "description": "After autocomplete returns a campground_public result; pass its numeric id.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "campground_id",
+          "type": "string",
+          "in": "body",
+          "about": "Numeric public campground id (autocomplete type campground_public). Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        },
+        {
+          "name": "end_date",
+          "type": "string",
+          "in": "body",
+          "about": "Calendar date, YYYY-MM-DD, in the land's local time. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$.",
+          "required": true
+        },
+        {
+          "name": "start_date",
+          "type": "string",
+          "in": "body",
+          "about": "Calendar date, YYYY-MM-DD, in the land's local time. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Daily availability Hipcamp shows for a public (government-run) campground over a date window: per date the status (AVAILABLE, CLOSED or UNKNOWN) and the number of available campsites. Public campgrounds are external inventory (recreation.gov, state systems); UNKNOWN is common and no prices are shown.",
+        "key": "days",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "campsites_count",
+            "type": "number"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "campground_id": "125",
+          "end_date": "2027-07-14",
+          "start_date": "2027-07-01"
+        },
+        "response": {
+          "campground_id": "125",
+          "count": 14,
+          "days": [
+            {
+              "campsites_count": 0,
+              "date": "2027-07-01",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-02",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-03",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-04",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-05",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-06",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-07",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-08",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-09",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-10",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-11",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-12",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-13",
+              "status": "CLOSED"
+            },
+            {
+              "campsites_count": 0,
+              "date": "2027-07-14",
+              "status": "CLOSED"
+            }
+          ],
+          "end_date": "2027-07-14",
+          "is_available": false,
+          "is_restricted_available": false,
+          "observed_at_ms": 1790021004182,
+          "start_date": "2027-07-01",
+          "total_available_campsites_count": 0
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "hipcamp-com",
+        "capability": "campsite-listings/public_campground_availability"
+      }
+    },
+    {
+      "id": "hipcamp-com/campsite-listings/search_lands",
+      "provider": "hipcamp-com",
+      "capability": "campsite-listings/search_lands",
+      "name": "Search lands",
+      "description": "Start here to find lands near a place; use autocomplete first to turn a place name into coordinates. Feed masked_id into land, land_sites, land_calendar and land_reviews.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "accommodations",
+          "type": "string[]",
+          "in": "body",
+          "about": "Accommodation keys (tent, rv, cabin, glamping, house, ...)."
+        },
+        {
+          "name": "adults",
+          "type": "number",
+          "in": "body",
+          "about": "adults",
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "amenities",
+          "type": "string[]",
+          "in": "body",
+          "about": "Amenity slugs as Hipcamp uses them in search URLs (pets, toilets, showers, campfires, potable-water, wifi, ...)."
+        },
+        {
+          "name": "arrive",
+          "type": "string",
+          "in": "body",
+          "about": "Calendar date, YYYY-MM-DD, in the land's local time. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "bounding_box",
+          "type": "object",
+          "in": "body",
+          "about": "Map viewport search. Lands inside the box only; when given with latitude/longitude, the box filters and the centroid orders by distance."
+        },
+        {
+          "name": "children",
+          "type": "number",
+          "in": "body",
+          "about": "children",
+          "min": 0,
+          "max": 50
+        },
+        {
+          "name": "depart",
+          "type": "string",
+          "in": "body",
+          "about": "Calendar date, YYYY-MM-DD, in the land's local time. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "Search centroid latitude (from autocomplete or a known place).",
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page (the site's own page is 42).",
+          "default": 20,
+          "min": 1,
+          "max": 42
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "Result offset; pass next_offset from the previous page.",
+          "default": 0,
+          "min": 0,
+          "max": 5000
+        },
+        {
+          "name": "pets",
+          "type": "boolean",
+          "in": "body",
+          "about": "Only pet-friendly lands (sets the `pets` amenity filter)."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Hipcamp sort preset. Default is the site's relevance ranking.",
+          "oneOf": [
+            "distance",
+            "recommends",
+            "price_asc",
+            "price_desc"
+          ]
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "latitude",
+          "longitude",
+          "bounding_box"
+        ]
+      ],
+      "response": {
+        "about": "Search Hipcamp private lands (campsites, cabins, glamping, RV sites) around a coordinate or inside a map bounding box, optionally for dates, party size, pets, amenity and accommodation filters. Each result carries the land's identity, location, review counts and, for dated searches, Hipcamp's displayed price quote with itemised fees and taxes. Prices are quotes as displayed, not confirmed bookings; ranking jitters slightly between calls, so dedupe by masked_id when aggregating pages.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "accommodation_keys",
+            "type": "string[]"
+          },
+          {
+            "name": "availability_status",
+            "type": "string",
+            "about": "Hipcamp's availability flag for the requested dates (AVAILABLE, ...); null when undated or not returned."
+          },
+          {
+            "name": "available_accommodation_keys",
+            "type": "string[]"
+          },
+          {
+            "name": "available_campsites_count",
+            "type": "number"
+          },
+          {
+            "name": "bookings_count",
+            "type": "number"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "country_code",
+            "type": "string"
+          },
+          {
+            "name": "county",
+            "type": "string"
+          },
+          {
+            "name": "distance_to_search",
+            "type": "string",
+            "about": "Displayed distance from the search point, as formatted by Hipcamp (e.g. `26mi`)."
+          },
+          {
+            "name": "drive_time_seconds",
+            "type": "number"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "is_external",
+            "type": "boolean"
+          },
+          {
+            "name": "is_instant_bookable",
+            "type": "boolean"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "location_summary",
+            "type": "string"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "masked_id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "quote",
+            "type": "object",
+            "about": "Hipcamp's displayed price breakdown for the requested dates and party. A quote, not a confirmed booking price; fees and taxes are itemised, `total_price` includes them. Undated requests return a one-night estimate."
+          },
+          {
+            "name": "recommends_count",
+            "type": "number"
+          },
+          {
+            "name": "recommends_percentage",
+            "type": "number"
+          },
+          {
+            "name": "state",
+            "type": "string",
+            "about": "State/region abbreviation as Hipcamp shows it (CA, NSW)."
+          },
+          {
+            "name": "total_campsites_count",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "uuid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "latitude": 37.8651011,
+          "limit": 3,
+          "longitude": -119.5405181,
+          "sort": "distance"
+        },
+        "response": {
+          "arrive": null,
+          "count": 3,
+          "depart": null,
+          "limit": 3,
+          "next_offset": 3,
+          "observed_at_ms": 1790020964842,
+          "offset": 0,
+          "results": [
+            {
+              "accommodation_keys": [
+                "house"
+              ],
+              "availability_status": "AVAILABLE",
+              "available_accommodation_keys": [
+                "house"
+              ],
+              "available_campsites_count": 6,
+              "bookings_count": 75,
+              "city": "El Portal",
+              "country_code": "US",
+              "county": "Mariposa",
+              "distance_to_search": "22mi",
+              "drive_time_seconds": 4080,
+              "id": "184088",
+              "is_external": false,
+              "is_instant_bookable": false,
+              "latitude": 37.661214,
+              "location_summary": "El Portal, CA",
+              "longitude": -119.848992,
+              "masked_id": "mxvhx2yd",
+              "name": "Indian Flat Campground",
+              "quote": {
+                "additional_guests_fee": null,
+                "cleaning_fee": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "fees": [],
+                "is_discounted": false,
+                "occupancy_tax": {
+                  "amount": 24.84,
+                  "formatted": "$24.84",
+                  "symbol": "$"
+                },
+                "price_per_night": {
+                  "amount": 184,
+                  "formatted": "$184.00",
+                  "symbol": "$"
+                },
+                "price_per_night_base": {
+                  "amount": 184,
+                  "formatted": "$184.00",
+                  "symbol": "$"
+                },
+                "service_fee": {
+                  "amount": 30.23,
+                  "formatted": "$30.23",
+                  "symbol": "$"
+                },
+                "service_fee_tax": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "total_nights_discount": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "total_nights_price": {
+                  "amount": 184,
+                  "formatted": "$184.00",
+                  "symbol": "$"
+                },
+                "total_price": {
+                  "amount": 239.07,
+                  "formatted": "$239.07",
+                  "symbol": "$"
+                },
+                "total_price_per_night": {
+                  "amount": 239.07,
+                  "formatted": "$239.07",
+                  "symbol": "$"
+                }
+              },
+              "recommends_count": 20,
+              "recommends_percentage": 78,
+              "state": "CA",
+              "total_campsites_count": 6,
+              "url": "https://www.hipcamp.com/en-US/land/california-indian-flat-campground-mxvhx2yd",
+              "uuid": "b89d6c80-5423-45b8-866e-c1c3b16dbdfc"
+            },
+            {
+              "accommodation_keys": [
+                "tent",
+                "rv"
+              ],
+              "availability_status": "AVAILABLE",
+              "available_accommodation_keys": [
+                "tent",
+                "rv"
+              ],
+              "available_campsites_count": 2,
+              "bookings_count": 284,
+              "city": "Groveland",
+              "country_code": "US",
+              "county": "Tuolumne",
+              "distance_to_search": "22mi",
+              "drive_time_seconds": 2900,
+              "id": "185342",
+              "is_external": false,
+              "is_instant_bookable": true,
+              "latitude": 37.816945,
+              "location_summary": "Groveland, CA",
+              "longitude": -119.94233,
+              "masked_id": "lz9hk605",
+              "name": "Camping At Yosemite's Doorstep",
+              "quote": {
+                "additional_guests_fee": null,
+                "cleaning_fee": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "fees": [],
+                "is_discounted": false,
+                "occupancy_tax": {
+                  "amount": 9.6,
+                  "formatted": "$9.60",
+                  "symbol": "$"
+                },
+                "price_per_night": {
+                  "amount": 80,
+                  "formatted": "$80.00",
+                  "symbol": "$"
+                },
+                "price_per_night_base": {
+                  "amount": 80,
+                  "formatted": "$80.00",
+                  "symbol": "$"
+                },
+                "service_fee": {
+                  "amount": 14.2,
+                  "formatted": "$14.20",
+                  "symbol": "$"
+                },
+                "service_fee_tax": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "total_nights_discount": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "total_nights_price": {
+                  "amount": 80,
+                  "formatted": "$80.00",
+                  "symbol": "$"
+                },
+                "total_price": {
+                  "amount": 103.8,
+                  "formatted": "$103.80",
+                  "symbol": "$"
+                },
+                "total_price_per_night": {
+                  "amount": 103.8,
+                  "formatted": "$103.80",
+                  "symbol": "$"
+                }
+              },
+              "recommends_count": 131,
+              "recommends_percentage": 94,
+              "state": "CA",
+              "total_campsites_count": 2,
+              "url": "https://www.hipcamp.com/en-US/land/california-camping-at-yosemite-s-doorstep-lz9hk605",
+              "uuid": "139360e2-a5d4-44e7-b12e-bb97bfd0ff3d"
+            },
+            {
+              "accommodation_keys": [
+                "tent",
+                "rv"
+              ],
+              "availability_status": "AVAILABLE",
+              "available_accommodation_keys": [
+                "tent",
+                "rv"
+              ],
+              "available_campsites_count": 1,
+              "bookings_count": 56,
+              "city": "El Portal",
+              "country_code": "US",
+              "county": "Mariposa",
+              "distance_to_search": "25mi",
+              "drive_time_seconds": 7952,
+              "id": "168501",
+              "is_external": false,
+              "is_instant_bookable": true,
+              "latitude": 37.63343286280566,
+              "location_summary": "El Portal, CA",
+              "longitude": -119.89613556048236,
+              "masked_id": "1xmhqyq5",
+              "name": "El Captain’s View 4X4 ONLY Yosemite",
+              "quote": {
+                "additional_guests_fee": null,
+                "cleaning_fee": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "fees": [],
+                "is_discounted": true,
+                "occupancy_tax": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "price_per_night": {
+                  "amount": 49.5,
+                  "formatted": "$49.50",
+                  "symbol": "$"
+                },
+                "price_per_night_base": {
+                  "amount": 55,
+                  "formatted": "$55.00",
+                  "symbol": "$"
+                },
+                "service_fee": {
+                  "amount": 8.79,
+                  "formatted": "$8.79",
+                  "symbol": "$"
+                },
+                "service_fee_tax": {
+                  "amount": 0,
+                  "formatted": "$0.00",
+                  "symbol": "$"
+                },
+                "total_nights_discount": {
+                  "amount": -5.5,
+                  "formatted": "-$5.50",
+                  "symbol": "$"
+                },
+                "total_nights_price": {
+                  "amount": 49.5,
+                  "formatted": "$49.50",
+                  "symbol": "$"
+                },
+                "total_price": {
+                  "amount": 58.29,
+                  "formatted": "$58.29",
+                  "symbol": "$"
+                },
+                "total_price_per_night": {
+                  "amount": 58.29,
+                  "formatted": "$58.29",
+                  "symbol": "$"
+                }
+              },
+              "recommends_count": 22,
+              "recommends_percentage": 77,
+              "state": "CA",
+              "total_campsites_count": 1,
+              "url": "https://www.hipcamp.com/en-US/land/california-el-captain-s-view-4x4-only-yosemite-1xmhqyq5",
+              "uuid": "fcbf66c2-c72d-43de-8f27-2531f450d265"
+            }
+          ],
+          "search_id": "f0d54ee8-bb46-442a-9315-07c59a159ef8",
+          "total": 654
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "hipcamp-com",
+        "capability": "campsite-listings/search_lands"
+      }
+    }
+  ]
+}

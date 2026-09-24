@@ -1,0 +1,568 @@
+{
+  "id": "turo-com",
+  "provider": "turo-com",
+  "name": "Turo",
+  "description": "Search public US Turo rental vehicles, read vehicle details and request anonymous dated price estimates. Search is a bounded source window, not exhaustive inventory. No account, booking or checkout actions.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "turo-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "turo-com/car-rentals/filters",
+      "provider": "turo-com",
+      "capability": "car-rentals/filters",
+      "name": "Filters",
+      "description": "Read Turo's public US vehicle-type, sort and fuel labels. vehicle_types and sort_options supply values accepted by search. Fuel labels are descriptive; this version does not expose a fuel filter.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [],
+      "response": {
+        "about": "Read Turo's public US vehicle-type, sort and fuel labels. vehicle_types and sort_options supply values accepted by search. Fuel labels are descriptive; this version does not expose a fuel filter.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "fuel_types",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "price_display_title",
+            "type": "string"
+          },
+          {
+            "name": "price_display_type",
+            "type": "string"
+          },
+          {
+            "name": "sort_options",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "vehicle_types",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "country": "US",
+          "fuel_types": [
+            {
+              "label": "Gas",
+              "value": "GAS"
+            },
+            {
+              "label": "Hybrid",
+              "value": "HYBRID"
+            },
+            {
+              "label": "Electric",
+              "value": "ELECTRIC"
+            },
+            {
+              "label": "Diesel",
+              "value": "DIESEL"
+            }
+          ],
+          "observed_at_ms": 1790036715790,
+          "price_display_title": "Total price before taxes",
+          "price_display_type": "TOTAL",
+          "sort_options": [
+            {
+              "label": "Relevance",
+              "value": "RELEVANCE"
+            },
+            {
+              "label": "Price: low to high",
+              "value": "PRICE_LOW"
+            },
+            {
+              "label": "Price: high to low",
+              "value": "PRICE_HIGH"
+            },
+            {
+              "label": "Distance away",
+              "value": "DISTANCE"
+            }
+          ],
+          "source_url": "https://turo.com/api/v2/search/filters?country=US",
+          "vehicle_types": [
+            {
+              "label": "Cars",
+              "value": "CAR"
+            },
+            {
+              "label": "SUVs",
+              "value": "SUV"
+            },
+            {
+              "label": "Minivans",
+              "value": "MINIVAN"
+            },
+            {
+              "label": "Trucks",
+              "value": "TRUCK"
+            },
+            {
+              "label": "Vans",
+              "value": "VAN"
+            },
+            {
+              "label": "Cargo vans",
+              "value": "CARGO_VAN"
+            },
+            {
+              "label": "Box trucks",
+              "value": "BOX_TRUCK"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "turo-com",
+        "capability": "car-rentals/filters"
+      }
+    },
+    {
+      "id": "turo-com/car-rentals/search",
+      "provider": "turo-com",
+      "capability": "car-rentals/search",
+      "name": "Search",
+      "description": "Search US Turo rentals around coordinates with optional make, vehicle type and sort. Dates use pickup-local time; omitted dates default to a three-day trip starting 21 days ahead at 10:00. Returns up to 50 vehicles from Turo's bounded source window (observed cap: 200), explicit truncation and no invented pagination cursor. Dated anonymous estimates come from the separate public pricing endpoint, with currency, source tax notice and included/excluded line items. quote=null means Turo supplied no estimate for that vehicle. Indicative daily prices are separate and must not be multiplied into trip totals. Estimates are not final booking prices.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "driver_age",
+          "type": "number",
+          "in": "body",
+          "about": "Age used for the anonymous estimate; default 30. Prices may depend on age.",
+          "default": 30,
+          "min": 18,
+          "max": 99
+        },
+        {
+          "name": "end",
+          "type": "string",
+          "in": "body",
+          "about": "Local wall-clock time at pickup; no UTC offset. Supply start and end together. Pattern: ^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "latitude",
+          "required": true,
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 10,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "required": true,
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "makes",
+          "type": "string[]",
+          "in": "body",
+          "about": "makes"
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "sort",
+          "default": "RELEVANCE",
+          "oneOf": [
+            "RELEVANCE",
+            "PRICE_LOW",
+            "PRICE_HIGH",
+            "DISTANCE"
+          ]
+        },
+        {
+          "name": "start",
+          "type": "string",
+          "in": "body",
+          "about": "Local wall-clock time at pickup; no UTC offset. Supply start and end together. Pattern: ^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$."
+        },
+        {
+          "name": "vehicle_type",
+          "type": "string",
+          "in": "body",
+          "about": "vehicle_type",
+          "oneOf": [
+            "CAR",
+            "SUV",
+            "MINIVAN",
+            "TRUCK",
+            "VAN",
+            "CARGO_VAN",
+            "BOX_TRUCK"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Search US Turo rentals around coordinates with optional make, vehicle type and sort. Dates use pickup-local time; omitted dates default to a three-day trip starting 21 days ahead at 10:00. Returns up to 50 vehicles from Turo's bounded source window (observed cap: 200), explicit truncation and no invented pagination cursor. Dated anonymous estimates come from the separate public pricing endpoint, with currency, source tax notice and included/excluded line items. quote=null means Turo supplied no estimate for that vehicle. Indicative daily prices are separate and must not be multiplied into trip totals. Estimates are not final booking prices.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "location_permitted",
+            "type": "boolean",
+            "about": "Raw Turo searchLocation.isPermitted flag. It was false even for successful US searches; do not interpret it as a guarantee of coverage or availability."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_matches",
+            "type": "number"
+          },
+          {
+            "name": "truncated",
+            "type": "boolean"
+          },
+          {
+            "name": "upstream_window_count",
+            "type": "number"
+          },
+          {
+            "name": "vehicles",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "latitude": 34.0522,
+          "limit": 1,
+          "longitude": -118.2437
+        },
+        "response": {
+          "count": 1,
+          "location_permitted": false,
+          "observed_at_ms": 1790036715194,
+          "query": {
+            "driver_age": 30,
+            "end": "2026-10-16T10:00",
+            "latitude": 34.0522,
+            "limit": 1,
+            "longitude": -118.2437,
+            "makes": [],
+            "sort": "RELEVANCE",
+            "start": "2026-10-13T10:00",
+            "vehicle_type": null
+          },
+          "source_url": "https://turo.com/us/en/search",
+          "total_matches": 7871,
+          "truncated": true,
+          "upstream_window_count": 200,
+          "vehicles": [
+            {
+              "completed_trips": 10,
+              "id": 3810588,
+              "images": [
+                "https://images.turo.com/media/vehicle/images/WrSvsj4tR8Cfk1vBh5tb_g.heic"
+              ],
+              "indicative_daily_price": {
+                "amount": 34.56,
+                "currency": "USD"
+              },
+              "location": {
+                "city": "Los Angeles",
+                "country": "US",
+                "state": "CA"
+              },
+              "make": "MINI",
+              "model": "Hardtop 4 Door",
+              "quote": {
+                "daily_after_discount": {
+                  "amount": 60.39,
+                  "currency": "USD"
+                },
+                "daily_before_discount": {
+                  "amount": 61.99,
+                  "currency": "USD"
+                },
+                "display_type": "TOTAL",
+                "displayed_total": {
+                  "amount": 181.17,
+                  "currency": "USD"
+                },
+                "excluded_items": [
+                  {
+                    "description": "Includes liability insurance and physical damage protection options; you’ll select a plan when you’re checking out",
+                    "displayed_per_day": false,
+                    "price": null,
+                    "title": "Protection plan",
+                    "type": "PROTECTION"
+                  }
+                ],
+                "included_items": [
+                  {
+                    "description": "Lowest rate. More options available at checkout.",
+                    "displayed_per_day": false,
+                    "price": {
+                      "amount": 185.97,
+                      "currency": "USD"
+                    },
+                    "title": "$62 x 3 days",
+                    "type": "VEHICLE_DAILY_TOTAL"
+                  },
+                  {
+                    "description": null,
+                    "displayed_per_day": false,
+                    "price": {
+                      "amount": -4.8,
+                      "currency": "USD"
+                    },
+                    "title": "3+ day discount",
+                    "type": "THREE_DAY_DISCOUNT"
+                  }
+                ],
+                "tax_notice": "Before taxes",
+                "total_before_discount": {
+                  "amount": 185.97,
+                  "currency": "USD"
+                }
+              },
+              "rating": 5,
+              "type": "CAR",
+              "url": "https://turo.com/us/en/car-rental/united-states/los-angeles-ca/mini/hardtop-4-door/3810588",
+              "year": 2015
+            }
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "turo-com",
+        "capability": "car-rentals/search"
+      }
+    },
+    {
+      "id": "turo-com/car-rentals/vehicle",
+      "provider": "turo-com",
+      "capability": "car-rentals/vehicle",
+      "name": "Vehicle",
+      "description": "Read one public US Turo vehicle URL: identity, listing status, location, specifications, rating and indicative daily price. Optional paired start/end times request a separate dated home-pickup estimate for driver_age (default 30); without dates, include_quote=true uses a three-day trip starting 21 days ahead at 10:00 pickup-local time; otherwise quote and pricing_query are null. A null quote with dates means the source supplied no estimate. Taxes, protection and other costs may be excluded; inspect the source tax notice and line items. No final checkout price or availability guarantee.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "driver_age",
+          "type": "number",
+          "in": "body",
+          "about": "Age used for the anonymous estimate; default 30. Prices may depend on age.",
+          "default": 30,
+          "min": 18,
+          "max": 99
+        },
+        {
+          "name": "end",
+          "type": "string",
+          "in": "body",
+          "about": "Local wall-clock time at pickup; no UTC offset. Supply start and end together. Pattern: ^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$."
+        },
+        {
+          "name": "include_quote",
+          "type": "boolean",
+          "in": "body",
+          "about": "When start/end are omitted, request an estimate for a three-day trip starting 21 days ahead at 10:00 pickup-local time. Explicit dates always request an estimate."
+        },
+        {
+          "name": "start",
+          "type": "string",
+          "in": "body",
+          "about": "Local wall-clock time at pickup; no UTC offset. Supply start and end together. Pattern: ^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A US vehicle URL returned by search. Query strings and fragments are ignored. Pattern: ^https://turo\\.com/us/en/[^/]+-rental/united-states/[^/]+/[^/]+/[^/]+/[1-9][0-9]*(?:[?#].*)?$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read one public US Turo vehicle URL: identity, listing status, location, specifications, rating and indicative daily price. Optional paired start/end times request a separate dated home-pickup estimate for driver_age (default 30); without dates, include_quote=true uses a three-day trip starting 21 days ahead at 10:00 pickup-local time; otherwise quote and pricing_query are null. A null quote with dates means the source supplied no estimate. Taxes, protection and other costs may be excluded; inspect the source tax notice and line items. No final checkout price or availability guarantee.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "indicative_daily_price",
+            "type": "object"
+          },
+          {
+            "name": "listing_enabled",
+            "type": "boolean"
+          },
+          {
+            "name": "location",
+            "type": "object"
+          },
+          {
+            "name": "make",
+            "type": "string"
+          },
+          {
+            "name": "model",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "pricing_query",
+            "type": "object"
+          },
+          {
+            "name": "quote",
+            "type": "object"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "specifications",
+            "type": "object"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "trim",
+            "type": "string"
+          },
+          {
+            "name": "trip_count",
+            "type": "number"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "year",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://turo.com/us/en/car-rental/united-states/los-angeles-ca/mini/hardtop-4-door/3810588"
+        },
+        "response": {
+          "description": null,
+          "id": 3810588,
+          "indicative_daily_price": {
+            "amount": 37.76,
+            "currency": "USD"
+          },
+          "listing_enabled": true,
+          "location": {
+            "city": "Los Angeles",
+            "country": "US",
+            "state": "CA",
+            "time_zone": "America/Los_Angeles"
+          },
+          "make": "MINI",
+          "model": "Hardtop 4 Door",
+          "observed_at_ms": 1790036730806,
+          "pricing_query": null,
+          "quote": null,
+          "rating": 5,
+          "source_url": "https://turo.com/us/en/car-rental/united-states/los-angeles-ca/mini/hardtop-4-door/3810588",
+          "specifications": {
+            "automatic_transmission": true,
+            "doors": 4,
+            "fuel_economy": "34 MPG",
+            "fuel_type": "Gas",
+            "seats": 5
+          },
+          "status": "ACTIVE",
+          "trim": "Base",
+          "trip_count": 10,
+          "type": "CAR",
+          "url": "https://turo.com/us/en/car-rental/united-states/los-angeles-ca/mini/hardtop-4-door/3810588",
+          "year": 2015
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "turo-com",
+        "capability": "car-rentals/vehicle"
+      }
+    }
+  ]
+}

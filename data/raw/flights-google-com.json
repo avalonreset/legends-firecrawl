@@ -1,0 +1,464 @@
+{
+  "id": "flights-google-com",
+  "provider": "flights-google-com",
+  "name": "Google Flights",
+  "description": "Google Flights airport/city lookup and one-way or two-step round-trip fare search.",
+  "toolCount": 2,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "flights-google-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "flights-google-com/flights/search_flights",
+      "provider": "flights-google-com",
+      "capability": "flights/search_flights",
+      "name": "Search flights",
+      "description": "Search Google Flights one-way fares or round-trip outbound options. For matching returns, call again with a chosen selection in selected_outbound. Round-trip outbound prices are starting prices; return prices cover the selected pair. Bounded first-page coverage, without retries or pagination.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "adults",
+          "type": "number",
+          "in": "body",
+          "about": "adults",
+          "default": 1,
+          "min": 1,
+          "max": 9
+        },
+        {
+          "name": "cabin_class",
+          "type": "string",
+          "in": "body",
+          "about": "cabin_class",
+          "default": "economy",
+          "oneOf": [
+            "economy",
+            "premium_economy",
+            "business",
+            "first"
+          ]
+        },
+        {
+          "name": "children",
+          "type": "number",
+          "in": "body",
+          "about": "At most 9 passengers total. Infants are not supported.",
+          "default": 0,
+          "min": 0,
+          "max": 8
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z]{3}$.",
+          "default": "USD"
+        },
+        {
+          "name": "departure_date",
+          "type": "string",
+          "in": "body",
+          "about": "departure_date"
+        },
+        {
+          "name": "destination",
+          "type": "string",
+          "in": "body",
+          "about": "Airport IATA code or Google city id returned by suggest_places. Pattern: ^(?:[A-Z]{3}|/(?:m|g)/[A-Za-z0-9_]{1,60})$.",
+          "required": true
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum rows from Google’s first results page, in its ranked order. Not pagination.",
+          "default": 10,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "market",
+          "type": "string",
+          "in": "body",
+          "about": "Display/sales market; does not change the proxy country. Pattern: ^[A-Z]{2}$.",
+          "default": "US"
+        },
+        {
+          "name": "max_stops",
+          "type": "number",
+          "in": "body",
+          "about": "max_stops"
+        },
+        {
+          "name": "origin",
+          "type": "string",
+          "in": "body",
+          "about": "Airport IATA code or Google city id returned by suggest_places. Pattern: ^(?:[A-Z]{3}|/(?:m|g)/[A-Za-z0-9_]{1,60})$.",
+          "required": true
+        },
+        {
+          "name": "return_date",
+          "type": "string",
+          "in": "body",
+          "about": "return_date"
+        },
+        {
+          "name": "selected_outbound",
+          "type": "object[]",
+          "in": "body",
+          "about": "For return options, copy a flight’s selection array from the outbound search and keep the original trip parameters. Requires return_date. No session/cursor token."
+        }
+      ],
+      "response": {
+        "about": "Search Google Flights one-way fares or round-trip outbound options. For matching returns, call again with a chosen selection in selected_outbound. Round-trip outbound prices are starting prices; return prices cover the selected pair. Bounded first-page coverage, without retries or pagination.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "available_results",
+            "type": "number"
+          },
+          {
+            "name": "continuation",
+            "type": "object"
+          },
+          {
+            "name": "coverage",
+            "type": "string"
+          },
+          {
+            "name": "flights",
+            "type": "object[]"
+          },
+          {
+            "name": "notices",
+            "type": "string[]",
+            "about": "Google’s own coverage notices for this search, e.g. “Google Flights has limited flight results on this route”. Empty when Google shows none; when present the result is also reported as partial coverage in meta. Flights not distributed to Google (tour-operator charters, some sanctioned carriers) never appear here."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "price_scope",
+            "type": "string"
+          },
+          {
+            "name": "query",
+            "type": "object"
+          },
+          {
+            "name": "returned",
+            "type": "number"
+          },
+          {
+            "name": "search_url",
+            "type": "string"
+          },
+          {
+            "name": "selected_outbound",
+            "type": "object"
+          },
+          {
+            "name": "stage",
+            "type": "string"
+          },
+          {
+            "name": "truncated",
+            "type": "boolean"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "destination": "LAX",
+          "limit": 2,
+          "origin": "JFK"
+        },
+        "response": {
+          "available_results": 32,
+          "continuation": null,
+          "coverage": "first_results_page",
+          "flights": [
+            {
+              "destination": "LAX",
+              "duration_minutes": 370,
+              "group": "top",
+              "origin": "JFK",
+              "price": {
+                "amount": 194,
+                "currency": "USD"
+              },
+              "segments": [
+                {
+                  "aircraft": "Airbus A320",
+                  "airline": "B6",
+                  "airline_name": "JetBlue",
+                  "arrival_local": "2026-10-21T09:10:00",
+                  "cabin_class": "economy",
+                  "departure_local": "2026-10-21T06:00:00",
+                  "destination": "LAX",
+                  "duration_minutes": 370,
+                  "flight_number": "123",
+                  "origin": "JFK"
+                }
+              ],
+              "selection": [
+                {
+                  "airline": "B6",
+                  "departure_date": "2026-10-21",
+                  "destination": "LAX",
+                  "flight_number": "123",
+                  "origin": "JFK"
+                }
+              ],
+              "stops": 0
+            },
+            {
+              "destination": "LAX",
+              "duration_minutes": 373,
+              "group": "top",
+              "origin": "JFK",
+              "price": {
+                "amount": 229,
+                "currency": "USD"
+              },
+              "segments": [
+                {
+                  "aircraft": "Airbus A320",
+                  "airline": "B6",
+                  "airline_name": "JetBlue",
+                  "arrival_local": "2026-10-22T01:08:00",
+                  "cabin_class": "economy",
+                  "departure_local": "2026-10-21T21:55:00",
+                  "destination": "LAX",
+                  "duration_minutes": 373,
+                  "flight_number": "923",
+                  "origin": "JFK"
+                }
+              ],
+              "selection": [
+                {
+                  "airline": "B6",
+                  "departure_date": "2026-10-21",
+                  "destination": "LAX",
+                  "flight_number": "923",
+                  "origin": "JFK"
+                }
+              ],
+              "stops": 0
+            }
+          ],
+          "observed_at_ms": 1790007507539,
+          "price_scope": "one_way_total",
+          "query": {
+            "adults": 1,
+            "cabin_class": "economy",
+            "children": 0,
+            "currency": "USD",
+            "departure_date": "2026-10-21",
+            "destination": "LAX",
+            "limit": 2,
+            "market": "US",
+            "max_stops": null,
+            "origin": "JFK",
+            "return_date": null,
+            "selected_outbound": []
+          },
+          "returned": 2,
+          "search_url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEwLTIxagcIARIDSkZLcgcIARIDTEFYQAFIAXABmAEC&hl=en&gl=US&curr=USD",
+          "selected_outbound": null,
+          "stage": "one_way",
+          "truncated": true
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "flights-google-com",
+        "capability": "flights/search_flights"
+      }
+    },
+    {
+      "id": "flights-google-com/flights/suggest_places",
+      "provider": "flights-google-com",
+      "capability": "flights/suggest_places",
+      "name": "Suggest places",
+      "description": "Find Google Flights airport and city identifiers by name or IATA code. Includes nearby airports, deduplicated; omits rail stations and regions.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Find Google Flights airport and city identifiers by name or IATA code. Includes nearby airports, deduplicated; omits rail stations and regions.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "places",
+            "type": "object[]"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "London"
+        },
+        "response": {
+          "count": 19,
+          "observed_at_ms": 1790007506157,
+          "places": [
+            {
+              "city": "London",
+              "id": "/m/04jpl",
+              "kind": "city",
+              "name": "London, United Kingdom"
+            },
+            {
+              "city": "London",
+              "id": "LHR",
+              "kind": "airport",
+              "name": "Heathrow Airport"
+            },
+            {
+              "city": "London",
+              "id": "STN",
+              "kind": "airport",
+              "name": "London Stansted Airport"
+            },
+            {
+              "city": "London",
+              "id": "LGW",
+              "kind": "airport",
+              "name": "London Gatwick Airport"
+            },
+            {
+              "city": "London",
+              "id": "LTN",
+              "kind": "airport",
+              "name": "London Luton Airport"
+            },
+            {
+              "city": "London",
+              "id": "LCY",
+              "kind": "airport",
+              "name": "London City Airport"
+            },
+            {
+              "city": "London",
+              "id": "SEN",
+              "kind": "airport",
+              "name": "London Southend Airport"
+            },
+            {
+              "city": "Derry/Londonderry",
+              "id": "/m/02hgz",
+              "kind": "city",
+              "name": "Derry/Londonderry, United Kingdom"
+            },
+            {
+              "city": "Belfast",
+              "id": "BFS",
+              "kind": "airport",
+              "name": "Belfast International Airport"
+            },
+            {
+              "city": "Derry/Londonderry",
+              "id": "LDY",
+              "kind": "airport",
+              "name": "City of Derry Airport"
+            },
+            {
+              "city": "London",
+              "id": "/m/0b1t1",
+              "kind": "city",
+              "name": "London, Ontario, Canada"
+            },
+            {
+              "city": "Toronto",
+              "id": "YYZ",
+              "kind": "airport",
+              "name": "Toronto Pearson International Airport"
+            },
+            {
+              "city": "London",
+              "id": "YXU",
+              "kind": "airport",
+              "name": "London International Airport"
+            },
+            {
+              "city": "London Borough of Richmond upon Thames",
+              "id": "/m/0nl99",
+              "kind": "city",
+              "name": "London Borough of Richmond upon Thames, United Kingdom"
+            },
+            {
+              "city": "Southampton",
+              "id": "SOU",
+              "kind": "airport",
+              "name": "Southampton Airport"
+            },
+            {
+              "city": "New London",
+              "id": "/m/0mb2b",
+              "kind": "city",
+              "name": "New London, Connecticut"
+            },
+            {
+              "city": "Providence",
+              "id": "PVD",
+              "kind": "airport",
+              "name": "Rhode Island T.F. Green International Airport"
+            },
+            {
+              "city": "Hartford",
+              "id": "BDL",
+              "kind": "airport",
+              "name": "Bradley International Airport"
+            },
+            {
+              "city": "New Haven",
+              "id": "HVN",
+              "kind": "airport",
+              "name": "Tweed New Haven Airport"
+            }
+          ],
+          "query": "London"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "flights-google-com",
+        "capability": "flights/suggest_places"
+      }
+    }
+  ]
+}

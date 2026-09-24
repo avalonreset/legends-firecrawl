@@ -1,0 +1,2008 @@
+{
+  "id": "autotrader-com",
+  "provider": "autotrader-com",
+  "name": "Autotrader",
+  "description": "Autotrader.com (Cox Automotive) US vehicle marketplace: search new, used and certified listings by location, make/model, year, price and mileage; read one listing with pricing, specifications, features and seller; resolve make/model names to codes; facet counts by model year, trim and city; model specifications by style id.",
+  "toolCount": 5,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "autotrader-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "autotrader-com/vehicles/get_listing",
+      "provider": "autotrader-com",
+      "capability": "vehicles/get_listing",
+      "name": "Get listing",
+      "description": "After search_listings, or when the user pastes an autotrader.com/cars-for-sale/vehicle/{id} URL or a VIN.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "listing_id",
+          "type": "number",
+          "in": "body",
+          "about": "Autotrader listing id, e.g. 788577333.",
+          "min": 1
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Autotrader listing URL, https://www.autotrader.com/cars-for-sale/vehicle/{listing_id}[?...]."
+        },
+        {
+          "name": "vin",
+          "type": "string",
+          "in": "body",
+          "about": "17-character VIN (I, O and Q never occur). Pattern: ^[A-HJ-NPR-Z0-9]{17}$."
+        }
+      ],
+      "response": {
+        "about": "Read one Autotrader listing by listing id, VIN or listing URL: title, year/make/model/trim, price snapshot with dealer fees and KBB Fair Purchase Price, price history, mileage, colors, powertrain, features by category, specifications, warranties, vehicle-history flags, photos, videos, dates and the seller (dealer name, address, phone, website, rating, hours; private-seller identity is withheld). Not found when the listing has expired.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "body_style",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string",
+            "about": "Always US: autotrader.com lists US inventory only (AutoTrader.ca is a separate product)."
+          },
+          {
+            "name": "currency",
+            "type": "string",
+            "about": "Always USD. Prices are dealer asking prices; dealer fees are listed separately and taxes, title and registration are excluded."
+          },
+          {
+            "name": "date_listed",
+            "type": "string",
+            "about": "ISO-8601 UTC timestamp the listing was first published, or null."
+          },
+          {
+            "name": "days_on_site",
+            "type": "number"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Seller's full description (may contain <br> markup) or null."
+          },
+          {
+            "name": "drivetrain",
+            "type": "string"
+          },
+          {
+            "name": "engine",
+            "type": "string"
+          },
+          {
+            "name": "exterior_color",
+            "type": "string"
+          },
+          {
+            "name": "features",
+            "type": "object[]",
+            "about": "Feature lists grouped by the site's categories (exterior, interior, safety, technology, ...)."
+          },
+          {
+            "name": "fuel_type",
+            "type": "string"
+          },
+          {
+            "name": "image_count",
+            "type": "number"
+          },
+          {
+            "name": "image_url",
+            "type": "string",
+            "about": "Primary photo URL or null."
+          },
+          {
+            "name": "images",
+            "type": "string[]",
+            "about": "All photo URLs in site order."
+          },
+          {
+            "name": "interior_color",
+            "type": "string"
+          },
+          {
+            "name": "kbb_vehicle_id",
+            "type": "number",
+            "about": "Kelley Blue Book vehicle id for this year/make/model/trim."
+          },
+          {
+            "name": "last_modified",
+            "type": "string",
+            "about": "ISO-8601 UTC timestamp of the last listing update, or null."
+          },
+          {
+            "name": "listing_id",
+            "type": "number",
+            "about": "Autotrader listing id; input for get_listing."
+          },
+          {
+            "name": "listing_type",
+            "type": "string",
+            "about": "NEW, USED or CERTIFIED as stated by the site."
+          },
+          {
+            "name": "make",
+            "type": "string"
+          },
+          {
+            "name": "make_code",
+            "type": "string",
+            "about": "Autotrader make code, e.g. TOYOTA."
+          },
+          {
+            "name": "mileage",
+            "type": "number",
+            "about": "Odometer miles, or null when not stated."
+          },
+          {
+            "name": "model",
+            "type": "string"
+          },
+          {
+            "name": "model_code",
+            "type": "string",
+            "about": "Autotrader model code, e.g. CAMRY."
+          },
+          {
+            "name": "mpg_city",
+            "type": "number"
+          },
+          {
+            "name": "mpg_highway",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds when this result was fetched."
+          },
+          {
+            "name": "owner_id",
+            "type": "number",
+            "about": "Seller (dealer) id; same as seller.owner_id."
+          },
+          {
+            "name": "price",
+            "type": "object",
+            "about": "Snapshot of the listing price; prices change without notice."
+          },
+          {
+            "name": "pricing_history",
+            "type": "object[]"
+          },
+          {
+            "name": "safety_recall",
+            "type": "object"
+          },
+          {
+            "name": "seller",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The API resource this record was read from."
+          },
+          {
+            "name": "specifications",
+            "type": "object[]",
+            "about": "Specification rows shown on the listing page."
+          },
+          {
+            "name": "stock_id",
+            "type": "string",
+            "about": "Dealer stock number or null."
+          },
+          {
+            "name": "style_id",
+            "type": "number",
+            "about": "Autotrader style id; input for vehicle_specs."
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "about": "Listing title as shown, e.g. 'Used 2025 Toyota Camry SE'."
+          },
+          {
+            "name": "transmission",
+            "type": "string"
+          },
+          {
+            "name": "trim",
+            "type": "string"
+          },
+          {
+            "name": "trim_code",
+            "type": "string",
+            "about": "Trim code in MODEL|TRIM form, e.g. CAMRY|SE; usable as trim_code in search_listings."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public listing page, https://autotrader.com/cars-for-sale/vehicle/{listing_id}."
+          },
+          {
+            "name": "vhr_preview",
+            "type": "string[]",
+            "about": "Vehicle-history flags from the AutoCheck preview, e.g. NO_SALVAGE_TITLE, ACCIDENTS_REPORTED."
+          },
+          {
+            "name": "videos",
+            "type": "string[]"
+          },
+          {
+            "name": "vin",
+            "type": "string",
+            "about": "17-character VIN or null when not published."
+          },
+          {
+            "name": "warranties",
+            "type": "object[]",
+            "about": "Original manufacturer warranties as reported by the site; empty when none are listed."
+          },
+          {
+            "name": "year",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "listing_id": 788577333
+        },
+        "response": {
+          "body_style": "Sedan",
+          "country": "US",
+          "currency": "USD",
+          "date_listed": "2026-08-18T04:00:00.000Z",
+          "days_on_site": 34,
+          "description": "**Recent Arrival!** **Local Trade!** **Price Leader!** **Good Miles!** **Fully Transferable Factory Warranty!** **Toyota Safety Sense!** **Premium Alloy Wheels!** **Keyless Entry!** **Push Button Start!** **Apple CarPlay!** **Android Auto!** **Ask For a Video Walk Around!**<br><br>Welcome to Alexandria Toyota! We re proud to offer our clients in Washington DC, Springfield, Fairfax, and Arlington with a premium selection of new and used cars, a customer service experience that s second to none, and a premium service department staffed by professional technicians. As one of only four Toyota dealers in the United States that has earned the coveted Toyota President s Award 34 years in a row, we re committed to striving for greatness. That s why we continue to keep a premium inventory of new Toyota vehicles in stock, and it s also why we only sell the best used and certified pre-owned models.",
+          "drivetrain": "FWD",
+          "engine": "Hybrid",
+          "exterior_color": "Midnight Black Metallic",
+          "features": [
+            {
+              "category": "exterior",
+              "items": [
+                "Alloy wheels",
+                "Auto High-beam Headlights",
+                "Bumpers: body-color",
+                "Delay-off headlights",
+                "Fully automatic headlights",
+                "Heated door mirrors",
+                "Power door mirrors",
+                "Spoiler",
+                "Turn signal indicator mirrors"
+              ]
+            },
+            {
+              "category": "interior",
+              "items": [
+                "Air Conditioning",
+                "Driver door bin",
+                "Driver vanity mirror",
+                "Front Bucket Seats",
+                "Front Center Armrest",
+                "Front dual zone A/C",
+                "Front reading lights",
+                "Leather Shift Knob",
+                "Leather steering wheel",
+                "Overhead console",
+                "Passenger door bin",
+                "Passenger vanity mirror",
+                "Power driver seat",
+                "Power windows",
+                "Rear reading lights",
+                "Rear seat center armrest",
+                "Rear window defroster",
+                "Split folding rear seat",
+                "Steering wheel mounted audio controls",
+                "Telescoping steering wheel",
+                "Tilt steering wheel",
+                "Trip computer",
+                "Variably intermittent wipers"
+              ]
+            },
+            {
+              "category": "mechanical",
+              "items": [
+                "4-Wheel Disc Brakes",
+                "Four wheel independent suspension",
+                "Power steering",
+                "Speed-sensing steering"
+              ]
+            },
+            {
+              "category": "other",
+              "items": [
+                "Apple CarPlay/Android Auto",
+                "Emergency communication system: Safety Connect (up to 10-year trial subscription)",
+                "Front anti-roll bar",
+                "Illuminated entry",
+                "Outside temperature display",
+                "Radio: Toyota Audio Multimedia w/8\" Touchscreen",
+                "Rear anti-roll bar",
+                "SofTex & Fabric Seat Trim",
+                "Wheels: 18\" Black-Finished Alloy"
+              ]
+            },
+            {
+              "category": "safety",
+              "items": [
+                "ABS brakes",
+                "Brake assist",
+                "Dual front impact airbags",
+                "Dual front side impact airbags",
+                "Electronic Stability Control",
+                "Knee airbag",
+                "Low tire pressure warning",
+                "Occupant sensing airbag",
+                "Overhead airbag",
+                "Panic alarm",
+                "Rear side impact airbag",
+                "Security system",
+                "Traction control"
+              ]
+            },
+            {
+              "category": "technology",
+              "items": [
+                "6 Speakers",
+                "AM/FM radio: SiriusXM",
+                "Active Cruise Control",
+                "Automatic temperature control",
+                "Exterior Parking Camera Rear",
+                "Radio data system",
+                "Remote keyless entry",
+                "Speed control"
+              ]
+            }
+          ],
+          "fuel_type": "Hybrid Gas/Electric",
+          "image_count": 32,
+          "image_url": "https://images.autotrader.com/hn/c/5f3db4c861ef4e3eaad3f5cbec39856d.jpg",
+          "images": [
+            "https://images.autotrader.com/hn/c/5f3db4c861ef4e3eaad3f5cbec39856d.jpg",
+            "https://images.autotrader.com/hn/c/36cae97b8d7642e3b0c9fc28d0c9b60c.jpg",
+            "https://images.autotrader.com/hn/c/5af4c5fb351a442bb4e790f4e08810ff.jpg",
+            "https://images.autotrader.com/hn/c/c36a14c2e17e4d78a2cb5c3f629f3182.jpg",
+            "https://images.autotrader.com/hn/c/0da3921fd7024940953b7329b2ca1192.jpg",
+            "https://images.autotrader.com/hn/c/75ee577cca5146e09edbf90fbf9788d6.jpg",
+            "https://images.autotrader.com/hn/c/cef0cc8dbeb348db8f4b11ef087d8921.jpg",
+            "https://images.autotrader.com/hn/c/476e4a6e9d2841538b07e1fcdb5a9628.jpg",
+            "https://images.autotrader.com/hn/c/501a77ac0f554dc8b57e5fa82804fc94.jpg",
+            "https://images.autotrader.com/hn/c/1f7c6ad84e9e4363b828f66c65068ad1.jpg",
+            "https://images.autotrader.com/hn/c/168f538edb0a4b8b89573c86f7f58085.jpg",
+            "https://images.autotrader.com/hn/c/f6de53ef089d4a8c9ef51771226f9325.jpg",
+            "https://images.autotrader.com/hn/c/da3f59743dde4fbdaf3a8e258ba976af.jpg",
+            "https://images.autotrader.com/hn/c/dfe2b4b5873c4276a49efe0ac53ed564.jpg",
+            "https://images.autotrader.com/hn/c/654f87090e91423fbeee051f197273fe.jpg",
+            "https://images.autotrader.com/hn/c/d264272da08c45aa8b7db3f26445fd0f.jpg",
+            "https://images.autotrader.com/hn/c/a2a22a6d4ff3410abbad4a7a70df2e89.jpg",
+            "https://images.autotrader.com/hn/c/6359ccf646e447d9b7600d7845b55bc0.jpg",
+            "https://images.autotrader.com/hn/c/b839d3b0aff2422da9a60c136840e124.jpg",
+            "https://images.autotrader.com/hn/c/73db326b992a4413b6545f22fa9ebf59.jpg",
+            "https://images.autotrader.com/hn/c/37a89f44b1ca4f7fbe2c9c0745f80627.jpg",
+            "https://images.autotrader.com/hn/c/de7fb0555dba4067aca36970a8277c5c.jpg",
+            "https://images.autotrader.com/hn/c/8c19ab8e3d914fcbb9517c576da6f61a.jpg",
+            "https://images.autotrader.com/hn/c/be370124f5bc41f693bd4c31f86f2b47.jpg",
+            "https://images.autotrader.com/hn/c/a242cf6ca9874ab2a74ea72cadceff40.jpg",
+            "https://images.autotrader.com/hn/c/d2a8728fa1724153a411be2b3ad05a5c.jpg",
+            "https://images.autotrader.com/hn/c/42f9b5f381be411ab262d009a8fc9cf5.jpg",
+            "https://images.autotrader.com/hn/c/a12a5fc11f82442cbefe65a23182c22c.jpg",
+            "https://images.autotrader.com/hn/c/684a218ba9134579a96ce0ea096dcb1b.jpg",
+            "https://images.autotrader.com/hn/c/00578c895f754cecb2287d566c8c3ec3.jpg",
+            "https://images.autotrader.com/hn/c/203a8605195c4cf1a9bafbc1427acb4c.jpg",
+            "https://images.autotrader.com/hn/c/307c7393495f4f1f9465338658b7d82f.jpg"
+          ],
+          "interior_color": "Black",
+          "kbb_vehicle_id": 475493,
+          "last_modified": "2026-09-21T19:15:20.447Z",
+          "listing_id": 788577333,
+          "listing_type": "USED",
+          "make": "Toyota",
+          "make_code": "TOYOTA",
+          "mileage": 35945,
+          "model": "Camry",
+          "model_code": "CAMRY",
+          "mpg_city": 53,
+          "mpg_highway": 50,
+          "observed_at_ms": 1790032982969,
+          "owner_id": 74066005,
+          "price": {
+            "currency": "USD",
+            "deal_indicator": "Good",
+            "dealer_fees_total": 995,
+            "display_price": 28427,
+            "kbb_fair_purchase_price": 28270,
+            "no_price_label": null,
+            "price_valid_until": "2027-08-18",
+            "sale_price": 27432
+          },
+          "pricing_history": [
+            {
+              "date": "09.03.2026",
+              "price": "$29,445"
+            },
+            {
+              "date": "09.10.2026",
+              "price": "$28,990"
+            },
+            {
+              "date": "09.15.2026",
+              "price": "$28,990"
+            },
+            {
+              "date": "Price Today",
+              "price": "$28,427"
+            }
+          ],
+          "safety_recall": {
+            "count": 1,
+            "link": "https://www.kbb.com/recall?vin=4T1DAACK2SU517079",
+            "text": "This vehicle has one or more recalls based on the AutoCheck report."
+          },
+          "seller": {
+            "address1": "3750 RICHMOND HWY",
+            "city": "Alexandria",
+            "hours": [
+              {
+                "close": "8:00 PM",
+                "day": "Monday",
+                "open": "9:00 AM"
+              },
+              {
+                "close": "8:00 PM",
+                "day": "Tuesday",
+                "open": "9:00 AM"
+              },
+              {
+                "close": "8:00 PM",
+                "day": "Wednesday",
+                "open": "9:00 AM"
+              },
+              {
+                "close": "8:00 PM",
+                "day": "Thursday",
+                "open": "9:00 AM"
+              },
+              {
+                "close": "8:00 PM",
+                "day": "Friday",
+                "open": "9:00 AM"
+              },
+              {
+                "close": "7:00 PM",
+                "day": "Saturday",
+                "open": "9:00 AM"
+              },
+              {
+                "close": "5:00 PM",
+                "day": "Sunday",
+                "open": "11:00 AM"
+              }
+            ],
+            "latitude": 38.83874,
+            "longitude": -77.0541,
+            "name": "Alexandria Toyota",
+            "owner_id": 74066005,
+            "phone": "7038224604",
+            "private_seller": false,
+            "rating_count": 8485,
+            "rating_value": 4.8,
+            "state": "VA",
+            "website": "https://www.alexandriatoyota.com/used-+Alexandria-2025-Toyota-Camry-SE-4T1DAACK2SU517079?utm_source=autotrader.com&utm_medium=referral&utm_campaign=autotrader_listings&stocknum=0N20370A&atc_ownerid=74066005",
+            "zip": "22305"
+          },
+          "source_url": "https://www.autotrader.com/collections/lcServices/rest/lsc/listing/id/788577333",
+          "specifications": [
+            {
+              "label": "Exterior Color",
+              "value": "Black"
+            },
+            {
+              "label": "Drive Type",
+              "value": "2 Wheel Drive - Front"
+            },
+            {
+              "label": "Engine",
+              "value": "Hybrid"
+            },
+            {
+              "label": "Fuel Type",
+              "value": "Hybrid gas/electric"
+            },
+            {
+              "label": "Interior Color",
+              "value": "Black"
+            },
+            {
+              "label": "Miles",
+              "value": "35,945"
+            },
+            {
+              "label": "MPG",
+              "value": "53 City / 50 Highway"
+            },
+            {
+              "label": "Transmission",
+              "value": "Continuously Variable Automatic"
+            }
+          ],
+          "stock_id": "0N20370A",
+          "style_id": 453130,
+          "title": "Used 2025 Toyota Camry SE",
+          "transmission": "Automatic",
+          "trim": "SE",
+          "trim_code": "CAMRY|SE",
+          "url": "https://www.autotrader.com/cars-for-sale/vehicle/788577333",
+          "vhr_preview": [
+            "NO_SALVAGE_TITLE",
+            "ACCIDENTS_REPORTED",
+            "NO_ONE_OWNER"
+          ],
+          "videos": [
+            "https://www.youtube.com/watch?v=vCniiK7BSNQ"
+          ],
+          "vin": "4T1DAACK2SU517079",
+          "warranties": [
+            {
+              "details": "3 Years/36,000 Miles",
+              "label": "Basic",
+              "miles": 36000,
+              "remaining_miles": 55,
+              "remaining_years": 2,
+              "years": 3
+            },
+            {
+              "details": "5 Years/Unlimited Miles",
+              "label": "Corrosion",
+              "miles": -1,
+              "remaining_miles": -1,
+              "remaining_years": 4,
+              "years": 5
+            },
+            {
+              "details": "5 Years/60,000 Miles",
+              "label": "Drivetrain",
+              "miles": 60000,
+              "remaining_miles": 24055,
+              "remaining_years": 4,
+              "years": 5
+            },
+            {
+              "details": "8 Years/100,000 Miles",
+              "label": "Hybrid/Electric Components",
+              "miles": 100000,
+              "remaining_miles": 64055,
+              "remaining_years": 7,
+              "years": 8
+            },
+            {
+              "details": "2 Years/25,000 Miles",
+              "label": "Maintenance",
+              "miles": 25000,
+              "remaining_miles": -10945,
+              "remaining_years": 1,
+              "years": 2
+            },
+            {
+              "details": "2 Years/Unlimited Miles",
+              "label": "Roadside Assistance",
+              "miles": -1,
+              "remaining_miles": -1,
+              "remaining_years": 1,
+              "years": 2
+            }
+          ],
+          "year": 2025
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "autotrader-com",
+        "capability": "vehicles/get_listing"
+      }
+    },
+    {
+      "id": "autotrader-com/vehicles/listing_facets",
+      "provider": "autotrader-com",
+      "capability": "vehicles/listing_facets",
+      "name": "Listing facets",
+      "description": "To see which years, trims or cities have inventory before searching, or to pick a trim_code for search_listings.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "facet",
+          "type": "string",
+          "in": "body",
+          "about": "model_years, trims or cities.",
+          "required": true,
+          "oneOf": [
+            "model_years",
+            "trims",
+            "cities"
+          ]
+        },
+        {
+          "name": "listing_type",
+          "type": "string",
+          "in": "body",
+          "about": "Filter by NEW, USED or CERTIFIED (certified pre-owned). Omit for all.",
+          "oneOf": [
+            "NEW",
+            "USED",
+            "CERTIFIED"
+          ]
+        },
+        {
+          "name": "make_code",
+          "type": "string",
+          "in": "body",
+          "about": "Autotrader make code, e.g. TOYOTA, HONDA, CHEV, MB (resolve free text with suggest_make_model). Pattern: ^[A-Z0-9]{1,20}$.",
+          "required": true
+        },
+        {
+          "name": "model_code",
+          "type": "string",
+          "in": "body",
+          "about": "Autotrader model code, e.g. CAMRY, CIVIC, 911 (from suggest_make_model). Requires make_code. Pattern: ^[A-Z0-9_-]{1,30}$."
+        },
+        {
+          "name": "radius_miles",
+          "type": "number",
+          "in": "body",
+          "about": "Search radius in miles around zip; 0 means nationwide. Default 50.",
+          "min": 0,
+          "max": 500
+        },
+        {
+          "name": "zip",
+          "type": "string",
+          "in": "body",
+          "about": "5-digit US ZIP code; ignored by the cities facet. Pattern: ^[0-9]{5}$."
+        }
+      ],
+      "response": {
+        "about": "Listing counts and price statistics grouped by model year, by trim or by US city for a make/model (optionally within a radius of a ZIP and a listing type). Model-year and trim facets carry starting, average and maximum asking prices in USD; the cities facet lists the US cities with the most matching listings (nationwide, geographic coverage).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number",
+            "about": "Number of facet values."
+          },
+          {
+            "name": "currency",
+            "type": "string",
+            "about": "Always USD. Prices are dealer asking prices; dealer fees are listed separately and taxes, title and registration are excluded."
+          },
+          {
+            "name": "facet",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds when this result was fetched."
+          },
+          {
+            "name": "query",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "values",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "facet": "model_years",
+          "listing_type": "USED",
+          "make_code": "TOYOTA",
+          "model_code": "CAMRY",
+          "zip": "22030"
+        },
+        "response": {
+          "count": 12,
+          "currency": "USD",
+          "facet": "model_years",
+          "observed_at_ms": 1790033005679,
+          "query": {
+            "listing_type": "USED",
+            "make_code": "TOYOTA",
+            "model_code": "CAMRY",
+            "radius_miles": 50,
+            "zip": "22030"
+          },
+          "source_url": "https://www.autotrader.com/collections/lcServices/rest/lsc/crawl/modelyears?makeCode=TOYOTA&modelCode=CAMRY&zip=22030&searchRadius=50&listingType=USED",
+          "values": [
+            {
+              "avg_price": 28135,
+              "city": null,
+              "count": 198,
+              "max_price": 38780,
+              "starting_price": 21566,
+              "state": null,
+              "value": "2025",
+              "zip": null
+            },
+            {
+              "avg_price": 25077,
+              "city": null,
+              "count": 92,
+              "max_price": 38500,
+              "starting_price": 16995,
+              "state": null,
+              "value": "2023",
+              "zip": null
+            },
+            {
+              "avg_price": 25982,
+              "city": null,
+              "count": 73,
+              "max_price": 38995,
+              "starting_price": 16995,
+              "state": null,
+              "value": "2024",
+              "zip": null
+            },
+            {
+              "avg_price": 22327,
+              "city": null,
+              "count": 56,
+              "max_price": 28795,
+              "starting_price": 10245,
+              "state": null,
+              "value": "2021",
+              "zip": null
+            },
+            {
+              "avg_price": 32463,
+              "city": null,
+              "count": 40,
+              "max_price": 44699,
+              "starting_price": 24999,
+              "state": null,
+              "value": "2026",
+              "zip": null
+            },
+            {
+              "avg_price": 21706,
+              "city": null,
+              "count": 37,
+              "max_price": 29650,
+              "starting_price": 14995,
+              "state": null,
+              "value": "2020",
+              "zip": null
+            },
+            {
+              "avg_price": 22751,
+              "city": null,
+              "count": 28,
+              "max_price": 29994,
+              "starting_price": 16977,
+              "state": null,
+              "value": "2022",
+              "zip": null
+            },
+            {
+              "avg_price": 19195,
+              "city": null,
+              "count": 27,
+              "max_price": 27373,
+              "starting_price": 7990,
+              "state": null,
+              "value": "2019",
+              "zip": null
+            },
+            {
+              "avg_price": 14783,
+              "city": null,
+              "count": 15,
+              "max_price": 19795,
+              "starting_price": 9950,
+              "state": null,
+              "value": "2016",
+              "zip": null
+            },
+            {
+              "avg_price": 14500,
+              "city": null,
+              "count": 15,
+              "max_price": 19988,
+              "starting_price": 9196,
+              "state": null,
+              "value": "2017",
+              "zip": null
+            },
+            {
+              "avg_price": 12419,
+              "city": null,
+              "count": 14,
+              "max_price": 17769,
+              "starting_price": 5250,
+              "state": null,
+              "value": "2015",
+              "zip": null
+            },
+            {
+              "avg_price": 17185,
+              "city": null,
+              "count": 14,
+              "max_price": 20576,
+              "starting_price": 13995,
+              "state": null,
+              "value": "2018",
+              "zip": null
+            }
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "autotrader-com",
+        "capability": "vehicles/listing_facets"
+      }
+    },
+    {
+      "id": "autotrader-com/vehicles/search_listings",
+      "provider": "autotrader-com",
+      "capability": "vehicles/search_listings",
+      "name": "Search listings",
+      "description": "Discovering vehicles for sale in the US; chain listing_id into get_listing, style_id into vehicle_specs and seller.owner_id into dealer_id. Use suggest_make_model to turn 'Toyota Camry' into make_code/model_code first.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from a previous page (the record offset). The site serves at most the first 1000 matches. Pattern: ^[0-9]{1,3}$."
+        },
+        {
+          "name": "dealer_id",
+          "type": "number",
+          "in": "body",
+          "about": "Restrict to one seller's inventory: the owner_id of a listing's seller.",
+          "min": 1
+        },
+        {
+          "name": "end_year",
+          "type": "number",
+          "in": "body",
+          "about": "Latest model year.",
+          "min": 1900,
+          "max": 2100
+        },
+        {
+          "name": "keyword",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text keyword phrase matched against listing descriptions, e.g. 'leather sunroof'."
+        },
+        {
+          "name": "listing_type",
+          "type": "string",
+          "in": "body",
+          "about": "Filter by NEW, USED or CERTIFIED (certified pre-owned). Omit for all.",
+          "oneOf": [
+            "NEW",
+            "USED",
+            "CERTIFIED"
+          ]
+        },
+        {
+          "name": "make_code",
+          "type": "string",
+          "in": "body",
+          "about": "Autotrader make code, e.g. TOYOTA, HONDA, CHEV, MB (resolve free text with suggest_make_model). Pattern: ^[A-Z0-9]{1,20}$."
+        },
+        {
+          "name": "max_mileage",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum odometer miles.",
+          "min": 0
+        },
+        {
+          "name": "max_price",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum asking price in USD.",
+          "min": 0
+        },
+        {
+          "name": "min_price",
+          "type": "number",
+          "in": "body",
+          "about": "Minimum asking price in USD.",
+          "min": 0
+        },
+        {
+          "name": "model_code",
+          "type": "string",
+          "in": "body",
+          "about": "Autotrader model code, e.g. CAMRY, CIVIC, 911 (from suggest_make_model). Requires make_code. Pattern: ^[A-Z0-9_-]{1,30}$."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Listings per page, 1-100. Default 25.",
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "radius_miles",
+          "type": "number",
+          "in": "body",
+          "about": "Search radius in miles around zip; 0 means nationwide. Default 50.",
+          "min": 0,
+          "max": 500
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Sort order. Default relevance.",
+          "oneOf": [
+            "relevance",
+            "derivedpriceASC",
+            "derivedpriceDESC",
+            "mileageASC",
+            "mileageDESC",
+            "yearASC",
+            "yearDESC",
+            "distanceASC",
+            "datelistedDESC"
+          ]
+        },
+        {
+          "name": "start_year",
+          "type": "number",
+          "in": "body",
+          "about": "Earliest model year.",
+          "min": 1900,
+          "max": 2100
+        },
+        {
+          "name": "trim_code",
+          "type": "string",
+          "in": "body",
+          "about": "Trim code in MODEL|TRIM form as returned by listing_facets(trims) or a listing's trim_code, e.g. CAMRY|SE. Pattern: ^[A-Z0-9_ .|/-]{1,60}$."
+        },
+        {
+          "name": "vehicle_style_code",
+          "type": "string",
+          "in": "body",
+          "about": "Body style code, e.g. SEDAN, SUVCROSS, TRUCKS, COUPE, CONVERT, VANS, WAGON, HATCH. Pattern: ^[A-Z_]{1,20}$."
+        },
+        {
+          "name": "zip",
+          "type": "string",
+          "in": "body",
+          "about": "5-digit US ZIP code the search radius is centred on. Pattern: ^[0-9]{5}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Search Autotrader vehicle listings within a radius of a US ZIP code, filtered by make/model/trim codes, listing type, body style, price, year, mileage, keyword or seller. Returns one page of listings (id, VIN, title, price snapshot in USD, mileage, colors, powertrain, seller summary, primary photo) plus the total match count and a cursor for the next page. Prices are dealer asking prices; dealer fees are reported separately and taxes/title/registration are excluded.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number",
+            "about": "Listings on this page."
+          },
+          {
+            "name": "country",
+            "type": "string",
+            "about": "Always US: autotrader.com lists US inventory only (AutoTrader.ca is a separate product)."
+          },
+          {
+            "name": "currency",
+            "type": "string",
+            "about": "Always USD. Prices are dealer asking prices; dealer fees are listed separately and taxes, title and registration are excluded."
+          },
+          {
+            "name": "listings",
+            "type": "object[]"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Pass as cursor to fetch the next page; null when exhausted or when the site's 1000-record window is reached."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds when this result was fetched."
+          },
+          {
+            "name": "query",
+            "type": "object",
+            "about": "The filters as applied."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The public search page equivalent to this query."
+          },
+          {
+            "name": "total_result_count",
+            "type": "number",
+            "about": "Total matches reported by the site (may exceed the 1000 records the site will page through)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "listing_type": "USED",
+          "make_code": "TOYOTA",
+          "model_code": "CAMRY",
+          "page_size": 3,
+          "zip": "22030"
+        },
+        "response": {
+          "count": 3,
+          "country": "US",
+          "currency": "USD",
+          "listings": [
+            {
+              "body_style": "Sedan",
+              "drivetrain": "FWD",
+              "engine": "Hybrid",
+              "exterior_color": "Predawn Gray Mica",
+              "fuel_type": "Hybrid Gas/Electric",
+              "image_count": 31,
+              "image_url": "https://images.autotrader.com/hn/c/391acb2e737e4b1fa93ec2cee4daf796.jpg",
+              "interior_color": "Almond",
+              "kbb_vehicle_id": 412709,
+              "listing_id": 789532341,
+              "listing_type": "USED",
+              "make": "Toyota",
+              "make_code": "TOYOTA",
+              "mileage": 85686,
+              "model": "Camry",
+              "model_code": "CAMRY",
+              "mpg_city": 40,
+              "mpg_highway": 38,
+              "owner_id": 74307361,
+              "price": {
+                "currency": "USD",
+                "deal_indicator": "Great",
+                "dealer_fees_total": 999,
+                "display_price": 17586,
+                "kbb_fair_purchase_price": 19470,
+                "no_price_label": null,
+                "price_valid_until": "2027-08-28",
+                "sale_price": 16587
+              },
+              "seller": {
+                "city": "Chantilly",
+                "distance_miles": 7.74,
+                "name": "Priority Nissan Chantilly",
+                "owner_id": 74307361,
+                "private_seller": false,
+                "rating_count": 2080,
+                "rating_value": 4.6,
+                "state": "VA",
+                "zip": "20151"
+              },
+              "style_id": 377560,
+              "title": "Used 2016 Toyota Camry XLE w/ Moonroof Package",
+              "transmission": "Automatic",
+              "trim": "XLE",
+              "trim_code": "CAMRY|XLE",
+              "url": "https://www.autotrader.com/cars-for-sale/vehicle/789532341",
+              "vin": "4T1BD1FK6GU195595",
+              "year": 2016
+            },
+            {
+              "body_style": "Sedan",
+              "drivetrain": "FWD",
+              "engine": "6-Cylinder",
+              "exterior_color": "White",
+              "fuel_type": "Gasoline",
+              "image_count": 56,
+              "image_url": "https://images.autotrader.com/hn/c/d7cedbac247840ef9a9bcdcdd8edf44b.jpg",
+              "interior_color": "Beige",
+              "kbb_vehicle_id": 402260,
+              "listing_id": 791031897,
+              "listing_type": "USED",
+              "make": "Toyota",
+              "make_code": "TOYOTA",
+              "mileage": 94788,
+              "model": "Camry",
+              "model_code": "CAMRY",
+              "mpg_city": 21,
+              "mpg_highway": 31,
+              "owner_id": 72336461,
+              "price": {
+                "currency": "USD",
+                "deal_indicator": "Great",
+                "dealer_fees_total": 1795,
+                "display_price": 16391,
+                "kbb_fair_purchase_price": 16950,
+                "no_price_label": null,
+                "price_valid_until": "2027-09-15",
+                "sale_price": 14596
+              },
+              "seller": {
+                "city": "Fairfax",
+                "distance_miles": 3.17,
+                "name": "Cars2us Of Fairfax",
+                "owner_id": 72336461,
+                "private_seller": false,
+                "rating_count": null,
+                "rating_value": null,
+                "state": "VA",
+                "zip": "22031"
+              },
+              "style_id": 370098,
+              "title": "Used 2015 Toyota Camry XLE",
+              "transmission": "Automatic",
+              "trim": "XLE",
+              "trim_code": "CAMRY|XLE",
+              "url": "https://www.autotrader.com/cars-for-sale/vehicle/791031897",
+              "vin": "4T1BK1FK2FU559063",
+              "year": 2015
+            },
+            {
+              "body_style": "Sedan",
+              "drivetrain": "AWD4WD",
+              "engine": "4-Cylinder",
+              "exterior_color": "Celestial Silver Metallic",
+              "fuel_type": "Gasoline",
+              "image_count": 28,
+              "image_url": "https://images.autotrader.com/hn/c/4eec973cda7d4d3ab6acf83a279e2bea.jpg",
+              "interior_color": "Black",
+              "kbb_vehicle_id": 456156,
+              "listing_id": 791059683,
+              "listing_type": "USED",
+              "make": "Toyota",
+              "make_code": "TOYOTA",
+              "mileage": 48310,
+              "model": "Camry",
+              "model_code": "CAMRY",
+              "mpg_city": 25,
+              "mpg_highway": 34,
+              "owner_id": 9633535,
+              "price": {
+                "currency": "USD",
+                "deal_indicator": "Good",
+                "dealer_fees_total": 999,
+                "display_price": 29994,
+                "kbb_fair_purchase_price": 28350,
+                "no_price_label": null,
+                "price_valid_until": "2027-09-15",
+                "sale_price": 29994
+              },
+              "seller": {
+                "city": "Chantilly",
+                "distance_miles": 7.97,
+                "name": "Ourisman Chantilly Toyota",
+                "owner_id": 9633535,
+                "private_seller": false,
+                "rating_count": 5484,
+                "rating_value": 4.8,
+                "state": "VA",
+                "zip": "20151"
+              },
+              "style_id": 422231,
+              "title": "Used 2022 Toyota Camry XSE",
+              "transmission": "Automatic",
+              "trim": "XSE",
+              "trim_code": "CAMRY|XSE",
+              "url": "https://www.autotrader.com/cars-for-sale/vehicle/791059683",
+              "vin": "4T1K61BK4NU058135",
+              "year": 2022
+            }
+          ],
+          "next_cursor": "3",
+          "observed_at_ms": 1790032971182,
+          "query": {
+            "dealer_id": null,
+            "end_year": null,
+            "keyword": null,
+            "listing_type": "USED",
+            "make_code": "TOYOTA",
+            "max_mileage": null,
+            "max_price": null,
+            "min_price": null,
+            "model_code": "CAMRY",
+            "offset": 0,
+            "page_size": 3,
+            "radius_miles": 50,
+            "sort": "relevance",
+            "start_year": null,
+            "trim_code": null,
+            "vehicle_style_code": null,
+            "zip": "22030"
+          },
+          "source_url": "https://www.autotrader.com/cars-for-sale/all-cars?makeCode=TOYOTA&modelCode=CAMRY&zip=22030&searchRadius=50&listingType=USED&numRecords=3&firstRecord=0&sortBy=relevance",
+          "total_result_count": 566
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "autotrader-com",
+        "capability": "vehicles/search_listings"
+      }
+    },
+    {
+      "id": "autotrader-com/vehicles/suggest_make_model",
+      "provider": "autotrader-com",
+      "capability": "vehicles/suggest_make_model",
+      "name": "Suggest make model",
+      "description": "Before search_listings or listing_facets when you have a make/model name rather than codes.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Prefix of a make or model name, 2-40 characters.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Resolve a free-text prefix (e.g. 'cam', 'civic', 'f-150') to Autotrader make and model codes, with body-style codes for truck cab variants. Returns the site's suggestions in its ranking.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds when this result was fetched."
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "suggestions",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "cam"
+        },
+        "response": {
+          "count": 10,
+          "observed_at_ms": 1790032996037,
+          "query": "cam",
+          "source_url": "https://www.autotrader.com/collections/lcServices/rest/lsc/marketplace/suggested/keywords/cam",
+          "suggestions": [
+            {
+              "body_style_subtype_codes": [],
+              "make_code": "CHEV",
+              "model_code": "CAM",
+              "name": "Chevrolet Camaro",
+              "vehicle_style_code": null
+            },
+            {
+              "body_style_subtype_codes": [],
+              "make_code": "TOYOTA",
+              "model_code": "CAMRY",
+              "name": "Toyota Camry",
+              "vehicle_style_code": null
+            },
+            {
+              "body_style_subtype_codes": [],
+              "make_code": "CHEV",
+              "model_code": "ELCAM",
+              "name": "Chevrolet El Camino",
+              "vehicle_style_code": null
+            },
+            {
+              "body_style_subtype_codes": [],
+              "make_code": "PLYM",
+              "model_code": "SCAMP",
+              "name": "Plymouth Scamp",
+              "vehicle_style_code": null
+            },
+            {
+              "body_style_subtype_codes": [],
+              "make_code": "RR",
+              "model_code": "CAMAR",
+              "name": "Rolls-Royce Camargue",
+              "vehicle_style_code": null
+            },
+            {
+              "body_style_subtype_codes": [
+                "FULLSIZE_EXTEND+COMPACT_EXTEND"
+              ],
+              "make_code": "CHEV",
+              "model_code": "ELCAM",
+              "name": "Chevrolet El Camino Extended Cab",
+              "vehicle_style_code": "TRUCKS"
+            },
+            {
+              "body_style_subtype_codes": [
+                "FULLSIZE_REG+COMPACT_REG"
+              ],
+              "make_code": "CHEV",
+              "model_code": "ELCAM",
+              "name": "Chevrolet El Camino Regular Cab",
+              "vehicle_style_code": "TRUCKS"
+            },
+            {
+              "body_style_subtype_codes": [
+                "FULLSIZE_CREW+COMPACT_CREW"
+              ],
+              "make_code": "CHEV",
+              "model_code": "ELCAM",
+              "name": "Chevrolet El Camino Crew Cab",
+              "vehicle_style_code": "TRUCKS"
+            },
+            {
+              "body_style_subtype_codes": [
+                "FULLSIZE_EXTEND+COMPACT_EXTEND"
+              ],
+              "make_code": "PLYM",
+              "model_code": "SCAMP",
+              "name": "Plymouth Scamp Extended Cab",
+              "vehicle_style_code": "TRUCKS"
+            },
+            {
+              "body_style_subtype_codes": [
+                "FULLSIZE_REG+COMPACT_REG"
+              ],
+              "make_code": "PLYM",
+              "model_code": "SCAMP",
+              "name": "Plymouth Scamp Regular Cab",
+              "vehicle_style_code": "TRUCKS"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "autotrader-com",
+        "capability": "vehicles/suggest_make_model"
+      }
+    },
+    {
+      "id": "autotrader-com/vehicles/vehicle_specs",
+      "provider": "autotrader-com",
+      "capability": "vehicles/vehicle_specs",
+      "name": "Vehicle specs",
+      "description": "After get_listing or search_listings, to read the manufacturer specifications behind a listing.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "style_id",
+          "type": "number",
+          "in": "body",
+          "about": "Autotrader style id, e.g. 453130 (listing.style_id).",
+          "required": true,
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "Model information for an Autotrader style id (from a listing's style_id): title, overview text, EPA mpg range, stock photo and specification sections (dimensions, engine, safety ratings, standard/optional equipment) as label/value rows.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "heading",
+            "type": "string",
+            "about": "Year make model heading, e.g. '2025 Toyota Camry'."
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "mpg",
+            "type": "object",
+            "about": "EPA mpg range across the model's trims; null when not published."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds when this result was fetched."
+          },
+          {
+            "name": "overview",
+            "type": "string"
+          },
+          {
+            "name": "sections",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "style_id",
+            "type": "number"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "about": "e.g. '2025 Toyota Camry LE'."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "style_id": 453130
+        },
+        "response": {
+          "heading": "2025 Toyota Camry",
+          "images": [
+            "https://images.autotrader.com/pictures/model_info/chrome_angularfront_trm/vehicle/white/1280/2025TOC022075574_1280_01.jpg"
+          ],
+          "mpg": {
+            "max_city": 53,
+            "max_highway": 50,
+            "min_city": 44,
+            "min_highway": 43
+          },
+          "observed_at_ms": 1790033021132,
+          "overview": "The 2025 Camry is available on four trims LE, SE, XLE, and XSE in both front-wheel and all-wheel drive with a 2.5L 4-cylinder hybrid powertrain that produces 184 horsepower. The electric motor adds 134 horsepower, bringing the total power to 225 horsepower.",
+          "sections": [
+            {
+              "items": [
+                {
+                  "label": "4-Wheel Anti-Lock Brakes",
+                  "value": "std"
+                },
+                {
+                  "label": "Alarm System",
+                  "value": "std"
+                },
+                {
+                  "label": "Bluetooth, Hands-Free",
+                  "value": "std"
+                },
+                {
+                  "label": "Brake Assist",
+                  "value": "std"
+                },
+                {
+                  "label": "Child Safety Locks",
+                  "value": "std"
+                },
+                {
+                  "label": "Daytime Running Lights",
+                  "value": "std"
+                },
+                {
+                  "label": "Driver Air Bag",
+                  "value": "std"
+                },
+                {
+                  "label": "Integrated Turn Signal Mirrors",
+                  "value": "std"
+                },
+                {
+                  "label": "Passenger Air Bag",
+                  "value": "std"
+                },
+                {
+                  "label": "Rear Body Air Bag",
+                  "value": "std"
+                },
+                {
+                  "label": "Rear Defrost",
+                  "value": "std"
+                },
+                {
+                  "label": "Rear Side Curtain Airbags",
+                  "value": "std"
+                },
+                {
+                  "label": "Rear Spoiler",
+                  "value": "opt"
+                },
+                {
+                  "label": "Rearview Camera",
+                  "value": "std"
+                },
+                {
+                  "label": "Side Air Bag",
+                  "value": "std"
+                },
+                {
+                  "label": "Side Head Air Bag",
+                  "value": "std"
+                },
+                {
+                  "label": "Stability Control",
+                  "value": "std"
+                },
+                {
+                  "label": "Telematics",
+                  "value": "std"
+                },
+                {
+                  "label": "Tire Pressure Monitoring System",
+                  "value": "std"
+                },
+                {
+                  "label": "Traction Control",
+                  "value": "std"
+                },
+                {
+                  "label": "Vehicle Anti-Theft System",
+                  "value": "std"
+                }
+              ],
+              "name": "Accident Prevention"
+            },
+            {
+              "items": [
+                {
+                  "label": "4-Wheel Anti-Lock Brakes",
+                  "value": "std"
+                },
+                {
+                  "label": "4-Wheel Disc Brakes",
+                  "value": "std"
+                },
+                {
+                  "label": "Brake Assist",
+                  "value": "std"
+                }
+              ],
+              "name": "Brakes"
+            },
+            {
+              "items": [
+                {
+                  "label": "Air Conditioning",
+                  "value": "std"
+                },
+                {
+                  "label": "Bluetooth, Hands-Free",
+                  "value": "std"
+                },
+                {
+                  "label": "Climate Control",
+                  "value": "std"
+                },
+                {
+                  "label": "Dual Zone Climate Control",
+                  "value": "std"
+                },
+                {
+                  "label": "Front Bucket Seats",
+                  "value": "std"
+                },
+                {
+                  "label": "Power Tilt/Sliding Sunroof",
+                  "value": "opt"
+                },
+                {
+                  "label": "Sunroof",
+                  "value": "opt"
+                },
+                {
+                  "label": "Telematics",
+                  "value": "std"
+                }
+              ],
+              "name": "Comfort"
+            },
+            {
+              "items": [
+                {
+                  "label": "Adjustable Steering Wheel",
+                  "value": "std"
+                },
+                {
+                  "label": "Auto-Off Headlights",
+                  "value": "std"
+                },
+                {
+                  "label": "Cruise Control",
+                  "value": "std"
+                },
+                {
+                  "label": "Driver Vanity Mirror",
+                  "value": "std"
+                },
+                {
+                  "label": "Front Floor Mats",
+                  "value": "opt"
+                },
+                {
+                  "label": "Heated Mirrors",
+                  "value": "std"
+                },
+                {
+                  "label": "Intermittent Wipers",
+                  "value": "std"
+                },
+                {
+                  "label": "Keyless Start",
+                  "value": "std"
+                },
+                {
+                  "label": "Navigation System",
+                  "value": "opt"
+                },
+                {
+                  "label": "Pass-Through Rear Seat",
+                  "value": "std"
+                },
+                {
+                  "label": "Passenger Vanity Mirror",
+                  "value": "std"
+                },
+                {
+                  "label": "Power Driver Mirror",
+                  "value": "std"
+                },
+                {
+                  "label": "Power Steering",
+                  "value": "std"
+                },
+                {
+                  "label": "Power Windows",
+                  "value": "std"
+                },
+                {
+                  "label": "Remote Trunk Release",
+                  "value": "std"
+                },
+                {
+                  "label": "Steering Wheel Controls",
+                  "value": "std"
+                },
+                {
+                  "label": "Trip Computer",
+                  "value": "std"
+                },
+                {
+                  "label": "Universal Garage Door Opener",
+                  "value": "opt"
+                },
+                {
+                  "label": "Variable Speed Intermittent Wipers",
+                  "value": "std"
+                },
+                {
+                  "label": "Wheel Locks",
+                  "value": "opt"
+                }
+              ],
+              "name": "Convenience"
+            },
+            {
+              "items": [
+                {
+                  "label": "AM/FM Stereo",
+                  "value": "std"
+                },
+                {
+                  "label": "Auxiliary Audio Input",
+                  "value": "std"
+                },
+                {
+                  "label": "MP3 Player",
+                  "value": "std"
+                },
+                {
+                  "label": "Satellite Radio",
+                  "value": "std"
+                }
+              ],
+              "name": "Entertainment"
+            },
+            {
+              "items": [
+                {
+                  "label": "EPA Auto City",
+                  "value": "53"
+                },
+                {
+                  "label": "EPA Auto Highway",
+                  "value": "50"
+                },
+                {
+                  "label": "EPA Manual City",
+                  "value": "Information Unavailable"
+                },
+                {
+                  "label": "EPA Manual Highway",
+                  "value": "Information Unavailable"
+                }
+              ],
+              "name": "Fuel Efficiency"
+            },
+            {
+              "items": [
+                {
+                  "label": "Auto-Dimming Rearview Mirror",
+                  "value": "opt"
+                },
+                {
+                  "label": "Driver Lumbar",
+                  "value": "opt"
+                },
+                {
+                  "label": "Keyless Entry",
+                  "value": "opt"
+                },
+                {
+                  "label": "Keyless Start",
+                  "value": "opt"
+                },
+                {
+                  "label": "Power Door Locks",
+                  "value": "opt"
+                },
+                {
+                  "label": "Power Driver Seat",
+                  "value": "opt"
+                }
+              ],
+              "name": "Package"
+            },
+            {
+              "items": [
+                {
+                  "label": "4-Wheel Anti-Lock Brakes",
+                  "value": "std"
+                },
+                {
+                  "label": "Alarm System",
+                  "value": "std"
+                },
+                {
+                  "label": "Bluetooth, Hands-Free",
+                  "value": "std"
+                },
+                {
+                  "label": "Brake Assist",
+                  "value": "std"
+                },
+                {
+                  "label": "Child Safety Locks",
+                  "value": "std"
+                },
+                {
+                  "label": "Daytime Running Lights",
+                  "value": "std"
+                },
+                {
+                  "label": "Driver Air Bag",
+                  "value": "std"
+                },
+                {
+                  "label": "Integrated Turn Signal Mirrors",
+                  "value": "std"
+                },
+                {
+                  "label": "Passenger Air Bag",
+                  "value": "std"
+                },
+                {
+                  "label": "Rear Body Air Bag",
+                  "value": "std"
+                },
+                {
+                  "label": "Rear Defrost",
+                  "value": "std"
+                },
+                {
+                  "label": "Rear Side Curtain Airbags",
+                  "value": "std"
+                },
+                {
+                  "label": "Rear Spoiler",
+                  "value": "opt"
+                },
+                {
+                  "label": "Rearview Camera",
+                  "value": "std"
+                },
+                {
+                  "label": "Side Air Bag",
+                  "value": "std"
+                },
+                {
+                  "label": "Side Head Air Bag",
+                  "value": "std"
+                },
+                {
+                  "label": "Stability Control",
+                  "value": "std"
+                },
+                {
+                  "label": "Telematics",
+                  "value": "std"
+                },
+                {
+                  "label": "Tire Pressure Monitoring System",
+                  "value": "std"
+                },
+                {
+                  "label": "Traction Control",
+                  "value": "std"
+                },
+                {
+                  "label": "Vehicle Anti-Theft System",
+                  "value": "std"
+                }
+              ],
+              "name": "Safety Features"
+            },
+            {
+              "items": [
+                {
+                  "label": "Rollover Resistance",
+                  "value": "5"
+                },
+                {
+                  "label": "Driver Crash Grade",
+                  "value": "4"
+                },
+                {
+                  "label": "Passenger Crash Grade",
+                  "value": "5"
+                },
+                {
+                  "label": "Side Impact Crash Front",
+                  "value": "5"
+                },
+                {
+                  "label": "Side Impact Crash Rear",
+                  "value": "5"
+                }
+              ],
+              "name": "Safety Ratings"
+            },
+            {
+              "items": [
+                {
+                  "label": "Cloth Seats",
+                  "value": "opt"
+                }
+              ],
+              "name": "Seat"
+            },
+            {
+              "items": [
+                {
+                  "label": "Fuel Capacity",
+                  "value": "13.0 gal"
+                },
+                {
+                  "label": "Engine Type",
+                  "value": "2.5 L Gas/Electric I-4"
+                },
+                {
+                  "label": "Horsepower",
+                  "value": "225 @ 6000 rpm"
+                },
+                {
+                  "label": "Torque (lb-ft)",
+                  "value": "163 @ 5200 rpm"
+                },
+                {
+                  "label": "Tires",
+                  "value": "P205/65VR16"
+                },
+                {
+                  "label": "Rim Size",
+                  "value": "16 X 6.5 in."
+                },
+                {
+                  "label": "Rims",
+                  "value": "Aluminum"
+                },
+                {
+                  "label": "Spare Tire Type",
+                  "value": "Compact Spare Tire"
+                },
+                {
+                  "label": "Front Headroom",
+                  "value": "38.3 in."
+                },
+                {
+                  "label": "Front Legroom",
+                  "value": "42.1 in."
+                },
+                {
+                  "label": "Locking Differential",
+                  "value": "Information Unavailable"
+                },
+                {
+                  "label": "Max Towing Capacity",
+                  "value": "Information Unavailable"
+                },
+                {
+                  "label": "Driven Wheels",
+                  "value": "FWD"
+                },
+                {
+                  "label": "Curb Weight",
+                  "value": "3450.0 lbs."
+                },
+                {
+                  "label": "Max Gross Weight",
+                  "value": "Information Unavailable"
+                },
+                {
+                  "label": "Wheelbase",
+                  "value": "111.2 in."
+                },
+                {
+                  "label": "Height",
+                  "value": "56.9 in."
+                },
+                {
+                  "label": "Seating Capacity",
+                  "value": "5"
+                },
+                {
+                  "label": "Rear Headroom",
+                  "value": "37.6 in."
+                },
+                {
+                  "label": "Rear Legroom",
+                  "value": "38.0 in."
+                }
+              ],
+              "name": "Specifications"
+            }
+          ],
+          "source_url": "https://www.autotrader.com/collections/lcServices/rest/lsc/modelinfo/453130",
+          "style_id": 453130,
+          "title": "2025 Toyota Camry LE"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "autotrader-com",
+        "capability": "vehicles/vehicle_specs"
+      }
+    }
+  ]
+}

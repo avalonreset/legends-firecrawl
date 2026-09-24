@@ -1,0 +1,574 @@
+{
+  "schema": "legends-firecrawl-benchmark/v1",
+  "skill": "legends-firecrawl",
+  "created_at": "2026-09-24T21:48:14.076327+00:00",
+  "trials_per_eval": 3,
+  "eval_count": 12,
+  "trial_count": 36,
+  "pass_rate": 1.0,
+  "behavioral_avg_duration_ms": 158.067,
+  "behavioral_duration_std_ms": 73.952,
+  "baseline": {
+    "status": "not_run",
+    "reason": "This run is deterministic contract evaluation; no sub-agent A/B was authorized."
+  },
+  "thresholds": {
+    "min_pass_rate": 1.0,
+    "max_avg_duration_ms": 2000.0
+  },
+  "thresholds_met": {
+    "min_pass_rate": true,
+    "max_avg_duration_ms": true
+  },
+  "trials": [
+    {
+      "eval_id": 0,
+      "eval_name": "route-site-map",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 0,
+      "duration_ms": 122.386,
+      "evidence": {
+        "name": "map",
+        "aliases": [
+          "site-map",
+          "discover"
+        ],
+        "method": "POST",
+        "path": "/v2/map",
+        "charged": true,
+        "risk": "bounded-discovery",
+        "default_scope": {
+          "limit": 100,
+          "include_subdomains": false
+        }
+      },
+      "trial": 1
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "route-clean-page",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 0,
+      "duration_ms": 149.574,
+      "evidence": {
+        "name": "scrape",
+        "aliases": [
+          "page"
+        ],
+        "method": "POST",
+        "path": "/v2/scrape",
+        "charged": true,
+        "risk": "bounded-single-page",
+        "default_scope": {
+          "pages": 1,
+          "formats": [
+            "markdown"
+          ]
+        }
+      },
+      "trial": 1
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "crawl-plan-no-auth",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 0,
+      "duration_ms": 131.553,
+      "evidence": {
+        "operation": "crawl",
+        "dry_run": true,
+        "requires_confirm": true,
+        "url": "https://example.com",
+        "limit": 25,
+        "max_depth": 2,
+        "include_paths": [],
+        "exclude_paths": [],
+        "estimated_credits": null,
+        "note": "No HTTP request was made. Review scope and re-run crawl with --confirm."
+      },
+      "trial": 1
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "crawl-refuses-no-confirm",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 2,
+      "duration_ms": 131.488,
+      "evidence": {
+        "success": false,
+        "error": "crawl is multi-page and requires --confirm after reviewing crawl-preview",
+        "command": "crawl"
+      },
+      "trial": 1
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "private-target-refused",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 2,
+      "duration_ms": 153.98,
+      "evidence": {
+        "success": false,
+        "error": "Private, loopback, reserved, and link-local IP targets are forbidden.",
+        "command": "crawl-preview"
+      },
+      "trial": 1
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "scope-estimate-no-invented-price",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 0,
+      "duration_ms": 142.826,
+      "evidence": {
+        "operation": "crawl",
+        "charged": true,
+        "estimate_only": true,
+        "requested_scope": {
+          "limit": 40,
+          "max_depth": 2
+        },
+        "page_or_result_ceiling": 40,
+        "estimated_credits": null,
+        "note": "Firecrawl billing varies by endpoint, formats, proxy, parsing, and current plan. The Kit reports bounded scope and actual provider-reported credits when returned; it does not invent a dollar estimate."
+      },
+      "trial": 1
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "mcp-installer-blocked",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 2,
+      "duration_ms": 361.156,
+      "evidence": {
+        "success": false,
+        "error": "vendor integration installers are blocked; use the house setup scripts",
+        "command": "vendor"
+      },
+      "trial": 1
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "live-command-auth-gate",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 2,
+      "duration_ms": 119.563,
+      "evidence": {
+        "success": false,
+        "error": "FIRECRAWL_API_KEY is unavailable at process or Windows user scope. Create a Firecrawl API key, run E:\\legends-firecrawl\\bin\\setup-auth.ps1, then run E:\\legends-firecrawl\\bin\\doctor.ps1.",
+        "command": "scrape"
+      },
+      "trial": 1
+    },
+    {
+      "eval_id": 8,
+      "eval_name": "dataforseo-near-miss",
+      "kind": "trigger-boundary-manual",
+      "passed": true,
+      "evidence": "Near-miss assigned to legends-dataforseo-kit; Firecrawl skill should not activate.",
+      "duration_ms": 0.0,
+      "trial": 1
+    },
+    {
+      "eval_id": 9,
+      "eval_name": "pagespeed-near-miss",
+      "kind": "trigger-boundary-manual",
+      "passed": true,
+      "evidence": "Near-miss assigned to seo-performance; Firecrawl skill should not activate.",
+      "duration_ms": 0.0,
+      "trial": 1
+    },
+    {
+      "eval_id": 10,
+      "eval_name": "browser-form-near-miss",
+      "kind": "trigger-boundary-manual",
+      "passed": true,
+      "evidence": "Near-miss assigned to legends-chrome; Firecrawl skill should not activate.",
+      "duration_ms": 0.0,
+      "trial": 1
+    },
+    {
+      "eval_id": 11,
+      "eval_name": "local-markdown-near-miss",
+      "kind": "trigger-boundary-manual",
+      "passed": true,
+      "evidence": "Near-miss assigned to none; Firecrawl skill should not activate.",
+      "duration_ms": 0.0,
+      "trial": 1
+    },
+    {
+      "eval_id": 0,
+      "eval_name": "route-site-map",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 0,
+      "duration_ms": 128.827,
+      "evidence": {
+        "name": "map",
+        "aliases": [
+          "site-map",
+          "discover"
+        ],
+        "method": "POST",
+        "path": "/v2/map",
+        "charged": true,
+        "risk": "bounded-discovery",
+        "default_scope": {
+          "limit": 100,
+          "include_subdomains": false
+        }
+      },
+      "trial": 2
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "route-clean-page",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 0,
+      "duration_ms": 134.097,
+      "evidence": {
+        "name": "scrape",
+        "aliases": [
+          "page"
+        ],
+        "method": "POST",
+        "path": "/v2/scrape",
+        "charged": true,
+        "risk": "bounded-single-page",
+        "default_scope": {
+          "pages": 1,
+          "formats": [
+            "markdown"
+          ]
+        }
+      },
+      "trial": 2
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "crawl-plan-no-auth",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 0,
+      "duration_ms": 114.035,
+      "evidence": {
+        "operation": "crawl",
+        "dry_run": true,
+        "requires_confirm": true,
+        "url": "https://example.com",
+        "limit": 25,
+        "max_depth": 2,
+        "include_paths": [],
+        "exclude_paths": [],
+        "estimated_credits": null,
+        "note": "No HTTP request was made. Review scope and re-run crawl with --confirm."
+      },
+      "trial": 2
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "crawl-refuses-no-confirm",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 2,
+      "duration_ms": 126.406,
+      "evidence": {
+        "success": false,
+        "error": "crawl is multi-page and requires --confirm after reviewing crawl-preview",
+        "command": "crawl"
+      },
+      "trial": 2
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "private-target-refused",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 2,
+      "duration_ms": 122.055,
+      "evidence": {
+        "success": false,
+        "error": "Private, loopback, reserved, and link-local IP targets are forbidden.",
+        "command": "crawl-preview"
+      },
+      "trial": 2
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "scope-estimate-no-invented-price",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 0,
+      "duration_ms": 113.177,
+      "evidence": {
+        "operation": "crawl",
+        "charged": true,
+        "estimate_only": true,
+        "requested_scope": {
+          "limit": 40,
+          "max_depth": 2
+        },
+        "page_or_result_ceiling": 40,
+        "estimated_credits": null,
+        "note": "Firecrawl billing varies by endpoint, formats, proxy, parsing, and current plan. The Kit reports bounded scope and actual provider-reported credits when returned; it does not invent a dollar estimate."
+      },
+      "trial": 2
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "mcp-installer-blocked",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 2,
+      "duration_ms": 354.748,
+      "evidence": {
+        "success": false,
+        "error": "vendor integration installers are blocked; use the house setup scripts",
+        "command": "vendor"
+      },
+      "trial": 2
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "live-command-auth-gate",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 2,
+      "duration_ms": 136.026,
+      "evidence": {
+        "success": false,
+        "error": "FIRECRAWL_API_KEY is unavailable at process or Windows user scope. Create a Firecrawl API key, run E:\\legends-firecrawl\\bin\\setup-auth.ps1, then run E:\\legends-firecrawl\\bin\\doctor.ps1.",
+        "command": "scrape"
+      },
+      "trial": 2
+    },
+    {
+      "eval_id": 8,
+      "eval_name": "dataforseo-near-miss",
+      "kind": "trigger-boundary-manual",
+      "passed": true,
+      "evidence": "Near-miss assigned to legends-dataforseo-kit; Firecrawl skill should not activate.",
+      "duration_ms": 0.0,
+      "trial": 2
+    },
+    {
+      "eval_id": 9,
+      "eval_name": "pagespeed-near-miss",
+      "kind": "trigger-boundary-manual",
+      "passed": true,
+      "evidence": "Near-miss assigned to seo-performance; Firecrawl skill should not activate.",
+      "duration_ms": 0.0,
+      "trial": 2
+    },
+    {
+      "eval_id": 10,
+      "eval_name": "browser-form-near-miss",
+      "kind": "trigger-boundary-manual",
+      "passed": true,
+      "evidence": "Near-miss assigned to legends-chrome; Firecrawl skill should not activate.",
+      "duration_ms": 0.0,
+      "trial": 2
+    },
+    {
+      "eval_id": 11,
+      "eval_name": "local-markdown-near-miss",
+      "kind": "trigger-boundary-manual",
+      "passed": true,
+      "evidence": "Near-miss assigned to none; Firecrawl skill should not activate.",
+      "duration_ms": 0.0,
+      "trial": 2
+    },
+    {
+      "eval_id": 0,
+      "eval_name": "route-site-map",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 0,
+      "duration_ms": 153.97,
+      "evidence": {
+        "name": "map",
+        "aliases": [
+          "site-map",
+          "discover"
+        ],
+        "method": "POST",
+        "path": "/v2/map",
+        "charged": true,
+        "risk": "bounded-discovery",
+        "default_scope": {
+          "limit": 100,
+          "include_subdomains": false
+        }
+      },
+      "trial": 3
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "route-clean-page",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 0,
+      "duration_ms": 126.996,
+      "evidence": {
+        "name": "scrape",
+        "aliases": [
+          "page"
+        ],
+        "method": "POST",
+        "path": "/v2/scrape",
+        "charged": true,
+        "risk": "bounded-single-page",
+        "default_scope": {
+          "pages": 1,
+          "formats": [
+            "markdown"
+          ]
+        }
+      },
+      "trial": 3
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "crawl-plan-no-auth",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 0,
+      "duration_ms": 123.557,
+      "evidence": {
+        "operation": "crawl",
+        "dry_run": true,
+        "requires_confirm": true,
+        "url": "https://example.com",
+        "limit": 25,
+        "max_depth": 2,
+        "include_paths": [],
+        "exclude_paths": [],
+        "estimated_credits": null,
+        "note": "No HTTP request was made. Review scope and re-run crawl with --confirm."
+      },
+      "trial": 3
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "crawl-refuses-no-confirm",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 2,
+      "duration_ms": 146.667,
+      "evidence": {
+        "success": false,
+        "error": "crawl is multi-page and requires --confirm after reviewing crawl-preview",
+        "command": "crawl"
+      },
+      "trial": 3
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "private-target-refused",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 2,
+      "duration_ms": 119.803,
+      "evidence": {
+        "success": false,
+        "error": "Private, loopback, reserved, and link-local IP targets are forbidden.",
+        "command": "crawl-preview"
+      },
+      "trial": 3
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "scope-estimate-no-invented-price",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 0,
+      "duration_ms": 116.072,
+      "evidence": {
+        "operation": "crawl",
+        "charged": true,
+        "estimate_only": true,
+        "requested_scope": {
+          "limit": 40,
+          "max_depth": 2
+        },
+        "page_or_result_ceiling": 40,
+        "estimated_credits": null,
+        "note": "Firecrawl billing varies by endpoint, formats, proxy, parsing, and current plan. The Kit reports bounded scope and actual provider-reported credits when returned; it does not invent a dollar estimate."
+      },
+      "trial": 3
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "mcp-installer-blocked",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 2,
+      "duration_ms": 337.469,
+      "evidence": {
+        "success": false,
+        "error": "vendor integration installers are blocked; use the house setup scripts",
+        "command": "vendor"
+      },
+      "trial": 3
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "live-command-auth-gate",
+      "kind": "behavioral-command",
+      "passed": true,
+      "exit_code": 2,
+      "duration_ms": 127.178,
+      "evidence": {
+        "success": false,
+        "error": "FIRECRAWL_API_KEY is unavailable at process or Windows user scope. Create a Firecrawl API key, run E:\\legends-firecrawl\\bin\\setup-auth.ps1, then run E:\\legends-firecrawl\\bin\\doctor.ps1.",
+        "command": "scrape"
+      },
+      "trial": 3
+    },
+    {
+      "eval_id": 8,
+      "eval_name": "dataforseo-near-miss",
+      "kind": "trigger-boundary-manual",
+      "passed": true,
+      "evidence": "Near-miss assigned to legends-dataforseo-kit; Firecrawl skill should not activate.",
+      "duration_ms": 0.0,
+      "trial": 3
+    },
+    {
+      "eval_id": 9,
+      "eval_name": "pagespeed-near-miss",
+      "kind": "trigger-boundary-manual",
+      "passed": true,
+      "evidence": "Near-miss assigned to seo-performance; Firecrawl skill should not activate.",
+      "duration_ms": 0.0,
+      "trial": 3
+    },
+    {
+      "eval_id": 10,
+      "eval_name": "browser-form-near-miss",
+      "kind": "trigger-boundary-manual",
+      "passed": true,
+      "evidence": "Near-miss assigned to legends-chrome; Firecrawl skill should not activate.",
+      "duration_ms": 0.0,
+      "trial": 3
+    },
+    {
+      "eval_id": 11,
+      "eval_name": "local-markdown-near-miss",
+      "kind": "trigger-boundary-manual",
+      "passed": true,
+      "evidence": "Near-miss assigned to none; Firecrawl skill should not activate.",
+      "duration_ms": 0.0,
+      "trial": 3
+    }
+  ]
+}

@@ -1,0 +1,262 @@
+{
+  "id": "web-archive-org",
+  "provider": "web-archive-org",
+  "name": "Wayback Machine",
+  "description": "Find archived website snapshots and read text from archived HTML pages.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "web-archive-org"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "web-archive-org/captures/content",
+      "provider": "web-archive-org",
+      "capability": "captures/content",
+      "name": "Content",
+      "description": "Retrieve readable static text and title from an exact archived HTML or plain-text capture. Use a timestamp from history. Reports the actual timestamp and URL after archive-only redirects. Does not execute JavaScript or load assets; maximum response 2 MiB.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "timestamp",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{14}$.",
+          "required": true
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "url",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Retrieve readable static text and title from an exact archived HTML or plain-text capture. Use a timestamp from history. Reports the actual timestamp and URL after archive-only redirects. Does not execute JavaScript or load assets; maximum response 2 MiB.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "actual_timestamp",
+            "type": "string"
+          },
+          {
+            "name": "archive_url",
+            "type": "string"
+          },
+          {
+            "name": "content_type",
+            "type": "string"
+          },
+          {
+            "name": "exact_timestamp_match",
+            "type": "boolean"
+          },
+          {
+            "name": "original_url",
+            "type": "string"
+          },
+          {
+            "name": "requested_timestamp",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "timestamp": "20240413234824",
+          "url": "https://www.firecrawl.dev/"
+        },
+        "response": {
+          "actual_timestamp": "20240413234824",
+          "archive_url": "https://web.archive.org/web/20240413234824id_/https://www.firecrawl.dev/",
+          "content_type": "text/html",
+          "exact_timestamp_match": true,
+          "original_url": "https://www.firecrawl.dev/",
+          "requested_timestamp": "20240413234824",
+          "text": "Skip to content\n🔥\nFireCrawl\nPlayground\nPricing\nLog In\nLog In\nSign Up\nNew message in: #coach-gtm\n@CoachGTM: Your meeting prep for Pied Piper < > WindFlow Dynamics is ready! Meeting starts in 30 minutes\n🦜🔗\nCheck out our LangChain integration\nTurn websites into\nLLM-ready\ndata\nCrawl and convert any website into clean markdown\nTry now (100 free credits)\nNo credit card required\nA product by\nMendable\nCrawl, Capture, Clean\nWe crawl all accessible subpages and give you clean markdown for each. No sitemap required.\n[\n{\n\"\nurl\n\"\n:\n\"\nhttps://www.mendable.ai/\n\"\n,\n\"\nmarkdown\n\"\n:\n\"\n## Welcome to Mendable\nMendable empowers teams with AI-driven solutions -\nstreamlining sales and support.\n\"\n},\n{\n\"\nurl\n\"\n:\n\"\nhttps://www.mendable.ai/features\n\"\n,\n\"\nmarkdown\n\"\n:\n\"\n## Features\nDiscover how Mendable's cutting-edge features can\ntransform your business operations.\n\"\n},\n{\n\"\nurl\n\"\n:\n\"\nhttps://www.mendable.ai/pricing\n\"\n,\n\"\nmarkdown\n\"\n:\n\"\n## Pricing Plans\nChoose the perfect plan that fits your business needs.\n\"\n},\n{\n\"\nurl\n\"\n:\n\"\nhttps://www.mendable.ai/about\n\"\n,\n\"\nmarkdown\n\"\n:\n\"\n## About Us\nLearn more about Mendable's mission and the\nteam behind our innovative platform.\n\"\n},\n{\n\"\nurl\n\"\n:\n\"\nhttps://www.mendable.ai/contact\n\"\n,\n\"\nmarkdown\n\"\n:\n\"\n## Contact Us\nGet in touch with us for any queries or support.\n\"\n},\n{\n\"\nurl\n\"\n:\n\"\nhttps://www.mendable.ai/blog\n\"\n,\n\"\nmarkdown\n\"\n:\n\"\n## Blog\nStay updated with the latest news and insights from Mendable.\n\"\n}\n]\nNote: The markdown has been edited for display purposes.\nWe handle the hard stuff\nProxies, caching, rate limits, js-blocked content and more...\nCrawling\nFireCrawl\ncrawls all accessible subpages, even without a sitemap.\nDynamic content\nFireCrawl\ngathers data even if a website uses javascript to render content.\nTo Markdown\nFireCrawl\nreturns clean, well formatted markdown - ready for use in LLM applications\nContinuous updates\nSchedule syncs with\nFireCrawl\n. No cron jobs or orchestration required.\nCaching\nFireCrawl\ncaches content, so you don't have to wait for a full scrape unless new content exists.\nBuilt for AI\nBuilt by LLM engineers, for LLM engineers. Giving you clean data the way you want it.\nPricing Plans\nStarter\n50k credits ($1.00/1k)\n$50\n/\nmonth\nScrape 50,000 pages\nCredits valid for 6 months\n2 simultaneous scrapers*\nSubscribe\nStandard\n500k credits ($0.75/1k)\n$375\n/\nmonth\nScrape 500,000 pages\nCredits valid for 6 months\n4 simultaneous scrapers*\nSubscribe\nScale\n12.5M credits ($0.30/1k)\n$1,250\n/\nmonth\nScrape 2,500,000 pages\nCredits valid for 6 months\n10 simultaneous scrapes*\nSubscribe\n* a \"scraper\" refers to how many scraper jobs you can simultaneously submit.\nWhat sites work?\nFirecrawl is best suited for business websites, docs and help centers.\nBusiness websites\nGathering business intelligence or connecting company data to your AI\nBlogs, Documentation and Help centers\nGather content from documentation and other textual sources\nSocial Media\nComing soon\nComing Soon\nBut I want it now!\n* Schedule a meeting\nNew message in: #coach-gtm\n@CoachGTM: Your meeting prep for Pied Piper < > WindFlow Dynamics is ready! Meeting starts in 30 minutes\n🔥\nReady to\nBuild?\nMeet with us\nTry 100 queries free\nDiscord\nFAQ\nFrequently asked questions about FireCrawl\nWhat is FireCrawl?\nFireCrawl is an advanced web crawling and data conversion tool designed to transform any website into clean, LLM-ready markdown. Ideal for AI developers and data scientists, it automates the collection, cleaning, and formatting of web data, streamlining the preparation process for Large Language Model (LLM) applications.\nHow does FireCrawl handle dynamic content on websites?\nUnlike traditional web scrapers, FireCrawl is equipped to handle dynamic content rendered with JavaScript. It ensures comprehensive data collection from all accessible subpages, making it a reliable tool for scraping websites that rely heavily on JS for content delivery.\nCan FireCrawl crawl websites without a sitemap?\nYes, FireCrawl can access and crawl all accessible subpages of a website, even in the absence of a sitemap. This feature enables users to gather data from a wide array of web sources with minimal setup.\nWhat formats can FireCrawl convert web data into?\nFireCrawl specializes in converting web data into clean, well-formatted markdown. This format is particularly suited for LLM applications, offering a structured yet flexible way to represent web content.\nHow does FireCrawl ensure the cleanliness of the data?\nFireCrawl employs advanced algorithms to clean and structure the scraped data, removing unnecessary elements and formatting the content into readable markdown. This process ensures that the data is ready for use in LLM applications without further preprocessing.\nIs FireCrawl suitable for large-scale data scraping projects?\nAbsolutely. FireCrawl offers various pricing plans, including a Scale plan that supports scraping of millions of pages. With features like caching and scheduled syncs, it's designed to efficiently handle large-scale data scraping and continuous updates, making it ideal for enterprises and large projects.\nWhat measures does FireCrawl take to handle web scraping challenges like rate limits and caching?\nFireCrawl is built to navigate common web scraping challenges, including reverse proxies, rate limits, and caching. It smartly manages requests and employs caching techniques to minimize bandwidth usage and avoid triggering anti-scraping mechanisms, ensuring reliable data collection.\nHow can I try FireCrawl?\nYou can start with FireCrawl by trying our free trial, which includes 100 pages. This trial allows you to experience firsthand how FireCrawl can streamline your data collection and conversion processes. Sign up and begin transforming web content into LLM-ready data today!\nWho can benefit from using FireCrawl?\nFireCrawl is tailored for LLM engineers, data scientists, AI researchers, and developers looking to harness web data for training machine learning models, market research, content aggregation, and more. It simplifies the data preparation process, allowing professionals to focus on insights and model development.\nHi, how can I help you?\n🔥\n© A product by Mendable.ai - All rights reserved.\nTwitter\nGitHub\nDiscord\nBacked by\nCompany\nAbout us\nDiversity & Inclusion\nBlog\nCareers\nFinancial statements\nResources\nCommunity\nTerms of service\nCollaboration features\nLegals\nRefund policy\nTerms & Conditions\nPrivacy policy\nBrand Kit",
+          "title": "Home - FireCrawl",
+          "url": "https://www.firecrawl.dev/"
+        },
+        "recordedAt": "2026-09-17"
+      },
+      "execute": {
+        "provider": "web-archive-org",
+        "capability": "captures/content"
+      }
+    },
+    {
+      "id": "web-archive-org/captures/history",
+      "provider": "web-archive-org",
+      "capability": "captures/history",
+      "name": "History",
+      "description": "Oldest indexed snapshots (default 5, maximum 20), or the snapshot closest to midnight UTC on date YYYYMMDD; earlier wins ties. One page, not a domain crawl. Replay may redirect.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "date",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{8}$."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 5,
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "url",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Oldest indexed snapshots (default 5, maximum 20), or the snapshot closest to midnight UTC on date YYYYMMDD; earlier wins ties. One page, not a domain crawl. Replay may redirect.",
+        "key": "captures",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "archive_url",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "number"
+          },
+          {
+            "name": "timestamp",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 2,
+          "url": "firecrawl.dev"
+        },
+        "response": {
+          "available_years": [
+            2024,
+            2025,
+            2026
+          ],
+          "captures": [
+            {
+              "archive_url": "https://web.archive.org/web/20240413234824/https://firecrawl.dev/",
+              "status": 200,
+              "timestamp": "20240413234824"
+            },
+            {
+              "archive_url": "https://web.archive.org/web/20240413235058/https://firecrawl.dev/",
+              "status": 200,
+              "timestamp": "20240413235058"
+            }
+          ],
+          "exact_date_match": null,
+          "mode": "oldest",
+          "requested_date": null,
+          "url": "https://firecrawl.dev/"
+        },
+        "recordedAt": "2026-09-17"
+      },
+      "execute": {
+        "provider": "web-archive-org",
+        "capability": "captures/history"
+      }
+    },
+    {
+      "id": "web-archive-org/captures/oldest",
+      "provider": "web-archive-org",
+      "capability": "captures/oldest",
+      "name": "Oldest",
+      "description": "Find when a website first appeared in the Internet Archive, or get its oldest archived page.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "url",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Find the earliest indexed Wayback Machine snapshot for a single URL. Returns at most one capture; replay may redirect.",
+        "key": "captures",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "archive_url",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "number"
+          },
+          {
+            "name": "timestamp",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "firecrawl.dev"
+        },
+        "response": {
+          "available_years": [
+            2024,
+            2025,
+            2026
+          ],
+          "captures": [
+            {
+              "archive_url": "https://web.archive.org/web/20240413234824/https://firecrawl.dev/",
+              "status": 200,
+              "timestamp": "20240413234824"
+            }
+          ],
+          "exact_date_match": null,
+          "mode": "oldest",
+          "requested_date": null,
+          "url": "https://firecrawl.dev/"
+        },
+        "recordedAt": "2026-09-17"
+      },
+      "execute": {
+        "provider": "web-archive-org",
+        "capability": "captures/oldest"
+      }
+    }
+  ]
+}

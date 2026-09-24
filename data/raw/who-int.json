@@ -1,0 +1,718 @@
+{
+  "id": "who-int",
+  "provider": "who-int",
+  "name": "WHO Global Health Observatory",
+  "description": "Official WHO indicator search, dimension codes and paginated observations with source licensing and attribution.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "who-int"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "who-int/indicators/data",
+      "provider": "who-int",
+      "capability": "indicators/data",
+      "name": "Data",
+      "description": "Fetch one page of observations for a GHO indicator, filtered by spatial type (COUNTRY, REGION, WORLDBANKINCOMEGROUP, GLOBAL), ISO3/region codes, year range and Dim1/Dim2/Dim3 codes (sex, age group, ...). Each record keeps the source Id, numeric value with low/high bounds as decimal strings, the display string, comments, data source and modification date; source_updated_at is the indicator's newest modification date. Unknown indicator codes fail with not_found.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page of the same filters and page_size."
+        },
+        {
+          "name": "dim1",
+          "type": "string[]",
+          "in": "body",
+          "about": "Dim1 value codes, e.g. SEX_FMLE or AGEGROUP_YEARS0-4."
+        },
+        {
+          "name": "dim2",
+          "type": "string[]",
+          "in": "body",
+          "about": "dim2"
+        },
+        {
+          "name": "dim3",
+          "type": "string[]",
+          "in": "body",
+          "about": "dim3"
+        },
+        {
+          "name": "indicator_code",
+          "type": "string",
+          "in": "body",
+          "about": "GHO indicator code, e.g. WHOSIS_000001 (life expectancy at birth) or MDG_0000000001 (infant mortality rate). Pattern: ^[A-Za-z0-9_.+-]{1,64}$.",
+          "required": true
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page; the GHO server caps $top at 1000.",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "spatial_dim_type",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict to one spatial level. Omit for all levels; spatial_dim_type on each record says which.",
+          "oneOf": [
+            "COUNTRY",
+            "REGION",
+            "WORLDBANKINCOMEGROUP",
+            "GLOBAL",
+            "null"
+          ]
+        },
+        {
+          "name": "spatial_dims",
+          "type": "string[]",
+          "in": "body",
+          "about": "ISO3 country codes (BRA), WHO region codes (AFR), income-group codes (WB_HI) or GLOBAL."
+        },
+        {
+          "name": "time_from",
+          "type": "number",
+          "in": "body",
+          "about": "Inclusive first year (TimeDim ge).",
+          "min": 1000,
+          "max": 9999
+        },
+        {
+          "name": "time_to",
+          "type": "number",
+          "in": "body",
+          "about": "Inclusive last year (TimeDim le).",
+          "min": 1000,
+          "max": 9999
+        }
+      ],
+      "response": {
+        "about": "Fetch one page of observations for a GHO indicator, filtered by spatial type (COUNTRY, REGION, WORLDBANKINCOMEGROUP, GLOBAL), ISO3/region codes, year range and Dim1/Dim2/Dim3 codes (sex, age group, ...). Each record keeps the source Id, numeric value with low/high bounds as decimal strings, the display string, comments, data source and modification date; source_updated_at is the indicator's newest modification date. Unknown indicator codes fail with not_found.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "indicator",
+            "type": "object"
+          },
+          {
+            "name": "license",
+            "type": "object",
+            "about": "Source-defined WHO metadata."
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "odata_filter",
+            "type": "string",
+            "about": "The exact $filter sent upstream."
+          },
+          {
+            "name": "page",
+            "type": "object",
+            "about": "Source-defined WHO metadata."
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Newest Date across the whole indicator, RFC 3339 UTC; null if that lookup failed (then complete=false)."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_count",
+            "type": "number",
+            "about": "@odata.count of rows matching the filter."
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "indicator_code": "WHOSIS_000001",
+          "page_size": 5,
+          "spatial_dims": [
+            "BRA"
+          ]
+        },
+        "response": {
+          "complete": true,
+          "indicator": {
+            "indicator_code": "WHOSIS_000001",
+            "name": "Life expectancy at birth (years)",
+            "unit_from_name": "years"
+          },
+          "license": {
+            "attribution": "Source: World Health Organization, Global Health Observatory (https://www.who.int/data/gho). Licence: CC BY-NC-SA 3.0 IGO.",
+            "name": "CC BY-NC-SA 3.0 IGO",
+            "restrictions": [
+              "non-commercial",
+              "share-alike",
+              "attribution"
+            ],
+            "terms_url": "https://www.who.int/about/policies/publishing/data-policy/terms-and-conditions",
+            "url": "https://creativecommons.org/licenses/by-nc-sa/3.0/igo/"
+          },
+          "next_cursor": "g1:5:2f7d586ff4f0ecb4",
+          "odata_filter": "SpatialDim eq 'BRA'",
+          "page": {
+            "max_skip": 5000000,
+            "size": 5,
+            "skip": 0
+          },
+          "records": [
+            {
+              "comments": null,
+              "data_source": null,
+              "date_modified": "2024-08-02T07:43:39Z",
+              "date_modified_source": "2024-08-02T09:43:39.193+02:00",
+              "dims": {
+                "dim1": {
+                  "code": "SEX_BTSX",
+                  "type": "SEX"
+                },
+                "dim2": null,
+                "dim3": null
+              },
+              "display_value": "72.3 [72.0-72.6]",
+              "high": "72.58864374",
+              "id": 15025,
+              "indicator_code": "WHOSIS_000001",
+              "indicator_name": "Life expectancy at birth (years)",
+              "low": "72.02894266",
+              "numeric_value": "72.30491342",
+              "observed_at_ms": 1789442400000,
+              "parent_location": "Americas",
+              "parent_location_code": "AMR",
+              "source_url": "https://ghoapi.azureedge.net/api/WHOSIS_000001?$filter=Id%20eq%2015025",
+              "spatial_dim": "BRA",
+              "spatial_dim_type": "COUNTRY",
+              "time_dim": 2003,
+              "time_dim_type": "YEAR",
+              "time_dimension_begin": "2003-01-01T00:00:00+01:00",
+              "time_dimension_end": "2003-12-31T00:00:00+01:00",
+              "time_dimension_value": "2003",
+              "unit_from_name": "years"
+            },
+            {
+              "comments": null,
+              "data_source": null,
+              "date_modified": "2024-08-02T07:43:39Z",
+              "date_modified_source": "2024-08-02T09:43:39.193+02:00",
+              "dims": {
+                "dim1": {
+                  "code": "SEX_MLE",
+                  "type": "SEX"
+                },
+                "dim2": null,
+                "dim3": null
+              },
+              "display_value": "69.0 [68.8-69.3]",
+              "high": "69.25835467",
+              "id": 1666461,
+              "indicator_code": "WHOSIS_000001",
+              "indicator_name": "Life expectancy at birth (years)",
+              "low": "68.82585739",
+              "numeric_value": "69.04410946",
+              "observed_at_ms": 1789442400000,
+              "parent_location": "Americas",
+              "parent_location_code": "AMR",
+              "source_url": "https://ghoapi.azureedge.net/api/WHOSIS_000001?$filter=Id%20eq%201666461",
+              "spatial_dim": "BRA",
+              "spatial_dim_type": "COUNTRY",
+              "time_dim": 2021,
+              "time_dim_type": "YEAR",
+              "time_dimension_begin": "2021-01-01T00:00:00+01:00",
+              "time_dimension_end": "2021-12-31T00:00:00+01:00",
+              "time_dimension_value": "2021",
+              "unit_from_name": "years"
+            },
+            {
+              "comments": null,
+              "data_source": null,
+              "date_modified": "2024-08-02T07:43:39Z",
+              "date_modified_source": "2024-08-02T09:43:39.193+02:00",
+              "dims": {
+                "dim1": {
+                  "code": "SEX_BTSX",
+                  "type": "SEX"
+                },
+                "dim2": null,
+                "dim3": null
+              },
+              "display_value": "73.8 [73.7-74.1]",
+              "high": "74.1256178",
+              "id": 1798367,
+              "indicator_code": "WHOSIS_000001",
+              "indicator_name": "Life expectancy at birth (years)",
+              "low": "73.65496259",
+              "numeric_value": "73.8424263",
+              "observed_at_ms": 1789442400000,
+              "parent_location": "Americas",
+              "parent_location_code": "AMR",
+              "source_url": "https://ghoapi.azureedge.net/api/WHOSIS_000001?$filter=Id%20eq%201798367",
+              "spatial_dim": "BRA",
+              "spatial_dim_type": "COUNTRY",
+              "time_dim": 2009,
+              "time_dim_type": "YEAR",
+              "time_dimension_begin": "2009-01-01T00:00:00+01:00",
+              "time_dimension_end": "2009-12-31T00:00:00+01:00",
+              "time_dimension_value": "2009",
+              "unit_from_name": "years"
+            },
+            {
+              "comments": null,
+              "data_source": null,
+              "date_modified": "2024-08-02T07:43:39Z",
+              "date_modified_source": "2024-08-02T09:43:39.193+02:00",
+              "dims": {
+                "dim1": {
+                  "code": "SEX_BTSX",
+                  "type": "SEX"
+                },
+                "dim2": null,
+                "dim3": null
+              },
+              "display_value": "74.6 [74.5-74.9]",
+              "high": "74.8752908",
+              "id": 2001350,
+              "indicator_code": "WHOSIS_000001",
+              "indicator_name": "Life expectancy at birth (years)",
+              "low": "74.47555423",
+              "numeric_value": "74.63621389",
+              "observed_at_ms": 1789442400000,
+              "parent_location": "Americas",
+              "parent_location_code": "AMR",
+              "source_url": "https://ghoapi.azureedge.net/api/WHOSIS_000001?$filter=Id%20eq%202001350",
+              "spatial_dim": "BRA",
+              "spatial_dim_type": "COUNTRY",
+              "time_dim": 2014,
+              "time_dim_type": "YEAR",
+              "time_dimension_begin": "2014-01-01T00:00:00+01:00",
+              "time_dimension_end": "2014-12-31T00:00:00+01:00",
+              "time_dimension_value": "2014",
+              "unit_from_name": "years"
+            },
+            {
+              "comments": null,
+              "data_source": null,
+              "date_modified": "2024-08-02T07:43:39Z",
+              "date_modified_source": "2024-08-02T09:43:39.193+02:00",
+              "dims": {
+                "dim1": {
+                  "code": "SEX_BTSX",
+                  "type": "SEX"
+                },
+                "dim2": null,
+                "dim3": null
+              },
+              "display_value": "71.5 [71.2-71.8]",
+              "high": "71.80974311",
+              "id": 2071309,
+              "indicator_code": "WHOSIS_000001",
+              "indicator_name": "Life expectancy at birth (years)",
+              "low": "71.21939341",
+              "numeric_value": "71.4995438",
+              "observed_at_ms": 1789442400000,
+              "parent_location": "Americas",
+              "parent_location_code": "AMR",
+              "source_url": "https://ghoapi.azureedge.net/api/WHOSIS_000001?$filter=Id%20eq%202071309",
+              "spatial_dim": "BRA",
+              "spatial_dim_type": "COUNTRY",
+              "time_dim": 2000,
+              "time_dim_type": "YEAR",
+              "time_dimension_begin": "2000-01-01T00:00:00+01:00",
+              "time_dimension_end": "2000-12-31T00:00:00+01:00",
+              "time_dimension_value": "2000",
+              "unit_from_name": "years"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:50:00Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": "2024-08-02T07:43:39Z",
+          "source_url": "https://ghoapi.azureedge.net/api/WHOSIS_000001?$filter=SpatialDim%20eq%20'BRA'&$orderby=Id&$top=5&$skip=0&$count=true",
+          "total_count": 66,
+          "upstream_requests": 3,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:50:00Z"
+      },
+      "execute": {
+        "provider": "who-int",
+        "capability": "indicators/data"
+      }
+    },
+    {
+      "id": "who-int/indicators/dimensions",
+      "provider": "who-int",
+      "capability": "indicators/dimensions",
+      "name": "Dimensions",
+      "description": "List the values of one GHO dimension (COUNTRY, REGION, WORLDBANKINCOMEGROUP, SEX, AGEGROUP, ...): code, title and parent (countries carry their WHO region). Omit dimension_code to list the dimensions themselves. Unknown dimension codes fail with not_found.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "dimension_code",
+          "type": "string",
+          "in": "body",
+          "about": "Dimension code from /api/Dimension. Omit or null to list all dimensions. Pattern: ^[A-Za-z0-9_.+-]{1,64}$."
+        }
+      ],
+      "response": {
+        "about": "List the values of one GHO dimension (COUNTRY, REGION, WORLDBANKINCOMEGROUP, SEX, AGEGROUP, ...): code, title and parent (countries carry their WHO region). Omit dimension_code to list the dimensions themselves. Unknown dimension codes fail with not_found.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "dimension_code",
+            "type": "string"
+          },
+          {
+            "name": "license",
+            "type": "object",
+            "about": "Source-defined WHO metadata."
+          },
+          {
+            "name": "next_cursor",
+            "type": "object",
+            "about": "Dimension value sets are returned whole (largest is COUNTRY, 234 rows)."
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_count",
+            "type": "number"
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "dimension_code": "SEX"
+        },
+        "response": {
+          "complete": true,
+          "dimension_code": "SEX",
+          "license": {
+            "attribution": "Source: World Health Organization, Global Health Observatory (https://www.who.int/data/gho). Licence: CC BY-NC-SA 3.0 IGO.",
+            "name": "CC BY-NC-SA 3.0 IGO",
+            "restrictions": [
+              "non-commercial",
+              "share-alike",
+              "attribution"
+            ],
+            "terms_url": "https://www.who.int/about/policies/publishing/data-policy/terms-and-conditions",
+            "url": "https://creativecommons.org/licenses/by-nc-sa/3.0/igo/"
+          },
+          "next_cursor": null,
+          "records": [
+            {
+              "code": "SEX_BTSX",
+              "dimension_code": "SEX",
+              "observed_at_ms": 1789442400000,
+              "parent_code": null,
+              "parent_dimension": null,
+              "parent_title": null,
+              "source_url": "https://ghoapi.azureedge.net/api/DIMENSION/SEX/DimensionValues",
+              "title": "Both sexes"
+            },
+            {
+              "code": "SEX_FMLE",
+              "dimension_code": "SEX",
+              "observed_at_ms": 1789442400000,
+              "parent_code": null,
+              "parent_dimension": null,
+              "parent_title": null,
+              "source_url": "https://ghoapi.azureedge.net/api/DIMENSION/SEX/DimensionValues",
+              "title": "Female"
+            },
+            {
+              "code": "SEX_MLE",
+              "dimension_code": "SEX",
+              "observed_at_ms": 1789442400000,
+              "parent_code": null,
+              "parent_dimension": null,
+              "parent_title": null,
+              "source_url": "https://ghoapi.azureedge.net/api/DIMENSION/SEX/DimensionValues",
+              "title": "Male"
+            },
+            {
+              "code": "SEX_NOA",
+              "dimension_code": "SEX",
+              "observed_at_ms": 1789442400000,
+              "parent_code": null,
+              "parent_dimension": null,
+              "parent_title": null,
+              "source_url": "https://ghoapi.azureedge.net/api/DIMENSION/SEX/DimensionValues",
+              "title": "Not applicable"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:50:00Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://ghoapi.azureedge.net/api/DIMENSION/SEX/DimensionValues",
+          "total_count": 4,
+          "upstream_requests": 1,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:50:00Z"
+      },
+      "execute": {
+        "provider": "who-int",
+        "capability": "indicators/dimensions"
+      }
+    },
+    {
+      "id": "who-int/indicators/indicators",
+      "provider": "who-int",
+      "capability": "indicators/indicators",
+      "name": "Indicators",
+      "description": "Search the GHO indicator catalogue by words in the indicator name or code (case-insensitive substring; empty query lists everything). Returns one page of indicator records (code, official name, language, unit as written in the name, data URL) with a cursor for the next page.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page of the same query and page_size."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Substring matched case-insensitively against IndicatorName and IndicatorCode. Empty lists all ~3100 indicators.",
+          "default": ""
+        }
+      ],
+      "response": {
+        "about": "Search the GHO indicator catalogue by words in the indicator name or code (case-insensitive substring; empty query lists everything). Returns one page of indicator records (code, official name, language, unit as written in the name, data URL) with a cursor for the next page.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "license",
+            "type": "object",
+            "about": "Source-defined WHO metadata."
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "type": "object",
+            "about": "Source-defined WHO metadata."
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_count",
+            "type": "number",
+            "about": "@odata.count for the whole query; null if the server omitted it."
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "page_size": 5,
+          "query": "Life"
+        },
+        "response": {
+          "complete": true,
+          "license": {
+            "attribution": "Source: World Health Organization, Global Health Observatory (https://www.who.int/data/gho). Licence: CC BY-NC-SA 3.0 IGO.",
+            "name": "CC BY-NC-SA 3.0 IGO",
+            "restrictions": [
+              "non-commercial",
+              "share-alike",
+              "attribution"
+            ],
+            "terms_url": "https://www.who.int/about/policies/publishing/data-policy/terms-and-conditions",
+            "url": "https://creativecommons.org/licenses/by-nc-sa/3.0/igo/"
+          },
+          "next_cursor": "g1:5:83c695f910bf6b08",
+          "page": {
+            "size": 5,
+            "skip": 0
+          },
+          "query": "Life",
+          "records": [
+            {
+              "indicator_code": "FOODBORNE_DALY",
+              "language": "EN",
+              "metadata_url": "https://www.who.int/data/gho/data/indicators",
+              "name": "Foodborne disability-adjusted life years",
+              "observed_at_ms": 1789442400000,
+              "source_url": "https://ghoapi.azureedge.net/api/FOODBORNE_DALY",
+              "unit_from_name": null
+            },
+            {
+              "indicator_code": "FOODBORNE_DALY_100k",
+              "language": "EN",
+              "metadata_url": "https://www.who.int/data/gho/data/indicators",
+              "name": "Foodborne disability-adjusted life years per 100 000",
+              "observed_at_ms": 1789442400000,
+              "source_url": "https://ghoapi.azureedge.net/api/FOODBORNE_DALY_100k",
+              "unit_from_name": null
+            },
+            {
+              "indicator_code": "FOODBORNE_DALY_100k_GE5",
+              "language": "EN",
+              "metadata_url": "https://www.who.int/data/gho/data/indicators",
+              "name": "Foodborne disability-adjusted life years per 100 000, aged 5 years and above",
+              "observed_at_ms": 1789442400000,
+              "source_url": "https://ghoapi.azureedge.net/api/FOODBORNE_DALY_100k_GE5",
+              "unit_from_name": null
+            },
+            {
+              "indicator_code": "FOODBORNE_DALY_100k_LT5",
+              "language": "EN",
+              "metadata_url": "https://www.who.int/data/gho/data/indicators",
+              "name": "Foodborne disability-adjusted life years per 100 000, aged less than 5 years",
+              "observed_at_ms": 1789442400000,
+              "source_url": "https://ghoapi.azureedge.net/api/FOODBORNE_DALY_100k_LT5",
+              "unit_from_name": null
+            },
+            {
+              "indicator_code": "FOODBORNE_DALY_100k_TOTAL",
+              "language": "EN",
+              "metadata_url": "https://www.who.int/data/gho/data/indicators",
+              "name": "Foodborne disability-adjusted life years per 100 000, all ages",
+              "observed_at_ms": 1789442400000,
+              "source_url": "https://ghoapi.azureedge.net/api/FOODBORNE_DALY_100k_TOTAL",
+              "unit_from_name": null
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:50:00Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://ghoapi.azureedge.net/api/Indicator?$filter=contains(IndicatorName,'Life')%20or%20contains(IndicatorCode,'Life')&$orderby=IndicatorCode&$top=5&$skip=0&$count=true",
+          "total_count": 71,
+          "upstream_requests": 1,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:50:00Z"
+      },
+      "execute": {
+        "provider": "who-int",
+        "capability": "indicators/indicators"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1644 @@
+{
+  "id": "bcb-gov-br",
+  "provider": "bcb-gov-br",
+  "name": "Banco Central do Brasil open data",
+  "description": "Banco Central do Brasil open data: SGS time series (Selic, CDI, IPCA, IGP-M, IBC-Br, USD/BRL and ~3,600 more series by code), PTAX official exchange rates (USD and other currencies, by date or date range), Focus market expectations (IPCA, Selic, PIB, cambio: median, mean, standard deviation, respondents), PIX statistics (by municipality, aggregate, registered keys, DICT users), retail credit rates by institution, SPI settlement and payment-instrument statistics, currency in circulation, plus discovery of Olinda OData services and of the dadosabertos.bcb.gov.br dataset catalogue. Anonymous JSON APIs; no key or session.",
+  "toolCount": 10,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "bcb-gov-br"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "bcb-gov-br/economic-data/credit_rates",
+      "provider": "bcb-gov-br",
+      "capability": "economic-data/credit_rates",
+      "name": "Credit rates",
+      "description": "Compare bank lending rates (mortgage, payroll loans, vehicle, credit card, ...) for a month.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "mes",
+          "type": "string",
+          "in": "body",
+          "about": "Month: YYYY-MM (e.g. 2026-08) or the server's Mmm-yyyy Portuguese abbreviation (Jan, Fev, Mar, Abr, Mai, Jun, Jul, Ago, Set, Out, Nov, Dez). Pattern: ^([0-9]{4}-[0-9]{2}|[A-Za-z]{3}-[0-9]{4})$.",
+          "required": true
+        },
+        {
+          "name": "modalidade",
+          "type": "string",
+          "in": "body",
+          "about": "Case-sensitive substring of the modality name, e.g. 'imobiliário' or 'Cartão de crédito'."
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "skip",
+          "default": 0,
+          "min": 0
+        },
+        {
+          "name": "top",
+          "type": "number",
+          "in": "body",
+          "about": "top",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "Retail credit interest rates by financial institution from the Olinda taxaJuros service (TaxasJurosMensalPorMes): for one month, every credit modality's ranking of institutions with monthly and annual rates (`Modalidade`, `Posicao`, `InstituicaoFinanceira`, `TaxaJurosAoMes`, `TaxaJurosAoAno`). `mes` accepts YYYY-MM or the server's Portuguese form (e.g. Ago-2026). Optional `modalidade` substring filter (OData contains). Paged with `top`/`skip`; `count` 0 means the month is not published yet.",
+        "key": "rows",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "AnoMes",
+            "type": "number"
+          },
+          {
+            "name": "Data",
+            "type": "string"
+          },
+          {
+            "name": "DataReferencia",
+            "type": "string"
+          },
+          {
+            "name": "DesvioPadrao",
+            "type": "number"
+          },
+          {
+            "name": "Estado",
+            "type": "string"
+          },
+          {
+            "name": "Indicador",
+            "type": "string"
+          },
+          {
+            "name": "InstituicaoFinanceira",
+            "type": "string"
+          },
+          {
+            "name": "Maximo",
+            "type": "number"
+          },
+          {
+            "name": "Media",
+            "type": "number"
+          },
+          {
+            "name": "Mediana",
+            "type": "number"
+          },
+          {
+            "name": "Mes",
+            "type": "string"
+          },
+          {
+            "name": "Minimo",
+            "type": "number"
+          },
+          {
+            "name": "Modalidade",
+            "type": "string"
+          },
+          {
+            "name": "Municipio",
+            "type": "string"
+          },
+          {
+            "name": "Municipio_Ibge",
+            "type": "number"
+          },
+          {
+            "name": "Posicao",
+            "type": "number"
+          },
+          {
+            "name": "Quantidade",
+            "type": "number"
+          },
+          {
+            "name": "Reuniao",
+            "type": "string"
+          },
+          {
+            "name": "TaxaJurosAoAno",
+            "type": "number"
+          },
+          {
+            "name": "TaxaJurosAoMes",
+            "type": "number"
+          },
+          {
+            "name": "Total",
+            "type": "number"
+          },
+          {
+            "name": "Valor",
+            "type": "number"
+          },
+          {
+            "name": "baseCalculo",
+            "type": "number"
+          },
+          {
+            "name": "numeroRespondentes",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "mes": "2026-08",
+          "top": 2
+        },
+        "response": {
+          "count": 2,
+          "entity": "TaxasJurosMensalPorMes",
+          "next_skip": 2,
+          "observed_at_ms": 1790048498763,
+          "rows": [
+            {
+              "InstituicaoFinanceira": "CAIXA ECONOMICA FEDERAL",
+              "Mes": "Ago-2026",
+              "Modalidade": "Financiamento imobiliário com taxas de mercado - Prefixado",
+              "Posicao": 1,
+              "TaxaJurosAoAno": 10.76,
+              "TaxaJurosAoMes": 0.86
+            },
+            {
+              "InstituicaoFinanceira": "BCO SANTANDER (BRASIL) S.A.",
+              "Mes": "Ago-2026",
+              "Modalidade": "Financiamento imobiliário com taxas de mercado - Prefixado",
+              "Posicao": 2,
+              "TaxaJurosAoAno": 15.12,
+              "TaxaJurosAoMes": 1.18
+            }
+          ],
+          "servico": "taxaJuros",
+          "skip": 0,
+          "top": 2,
+          "url": "https://olinda.bcb.gov.br/olinda/servico/taxaJuros/versao/v1/odata/TaxasJurosMensalPorMes(Mes=@Mes)?@Mes=%27Ago-2026%27&$top=2&$skip=0&$format=json"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "bcb-gov-br",
+        "capability": "economic-data/credit_rates"
+      }
+    },
+    {
+      "id": "bcb-gov-br/economic-data/datasets_search",
+      "provider": "bcb-gov-br",
+      "capability": "economic-data/datasets_search",
+      "name": "Datasets search",
+      "description": "Find an SGS series code or an Olinda service name before calling `sgs_series` or `olinda_service`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "q",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text query (Solr syntax accepted, e.g. `selic`, `title:IPCA`, `codigo_sgs:433`), or a pasted package_search URL (its `q` is used).",
+          "required": true
+        },
+        {
+          "name": "rows",
+          "type": "number",
+          "in": "body",
+          "about": "rows",
+          "default": 10,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "start",
+          "type": "number",
+          "in": "body",
+          "about": "Offset of the first result; pass `next_start` from the previous page.",
+          "default": 0,
+          "min": 0
+        }
+      ],
+      "response": {
+        "about": "Search the Banco Central open-data catalogue (dadosabertos.bcb.gov.br, CKAN package_search) by free text: dataset name, title, maintainer, notes, tags and, for SGS series, `codigo_sgs`, `periodicidade`, `unidade_medida`, `inicio_periodo`, `fim_periodo`, `tipo_serie`, plus the dataset's resources (API/JSON/CSV/OData URLs, including the api.bcb.gov.br SGS URL and Olinda service URLs). `count` is the catalogue's total for the query; `rows`/`start` page it (at most 50 per call: the portal's robots.txt asks for sparse API use).",
+        "key": "datasets",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "codigo_sgs",
+            "type": "number",
+            "about": "SGS series code when the dataset is an SGS series."
+          },
+          {
+            "name": "fim_periodo",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "inicio_periodo",
+            "type": "string"
+          },
+          {
+            "name": "maintainer",
+            "type": "string"
+          },
+          {
+            "name": "metadata_modified",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "notes",
+            "type": "string",
+            "about": "Description, trimmed to 600 characters."
+          },
+          {
+            "name": "organization",
+            "type": "string"
+          },
+          {
+            "name": "periodicidade",
+            "type": "string"
+          },
+          {
+            "name": "resources",
+            "type": "object[]"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "tipo_serie",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "unidade_medida",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Dataset page on dadosabertos.bcb.gov.br."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "q": "codigo_sgs:432",
+          "rows": 2
+        },
+        "response": {
+          "count": 1,
+          "datasets": [
+            {
+              "codigo_sgs": 432,
+              "fim_periodo": null,
+              "id": "63be5d3e-6f6e-4194-8a8f-f40638786911",
+              "inicio_periodo": "1999-03-05",
+              "maintainer": null,
+              "metadata_modified": "2026-09-08T20:24:16.527027",
+              "name": "432-taxa-de-juros---meta-selic-definida-pelo-copom",
+              "notes": "---\r\n```A partir de 26 de março de 2025, para consultas que retornam informações nos formatos JSON e CSV de séries históricas diárias, o volume de dados retornados será limitado, tornando-se obrigatório o uso de filtros para a recuperação das informações. \r\nConsultas por período de datas serão limitadas a 10 anos, retornando erro caso não satisfaça essa condição. \r\nPara mais detalhes, consulte as informações dos recursos que retornam os formatos JSON e CSV.\r\n``` \r\n--- \r\n\r\nConceito: Taxa de juros que representa a meta, definida pelo Copom, para a taxa Selic. Divulgação em % a.a.\r\n\r\n* Tipo da sé…",
+              "organization": "BCB/Demab",
+              "periodicidade": "Diária",
+              "resources": [
+                {
+                  "format": "HTML",
+                  "name": "Site do BC - Metadados detalhados da série",
+                  "url": "https://www3.bcb.gov.br/sgspub/consultarmetadados/consultarMetadadosSeries.do?method=consultarMetadadosSeriesInternet&hdOidSerieSelecionada=432"
+                },
+                {
+                  "format": "HTML",
+                  "name": "Site do BC - Visualização da série",
+                  "url": "https://www3.bcb.gov.br/sgspub/consultarvalores/consultarValoresSeries.do?method=consultarGraficoPorId&hdOidSeriesSelecionadas=432"
+                },
+                {
+                  "format": "JSON",
+                  "name": "json_serie-sgs-432",
+                  "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=01/01/2023&dataFinal=31/12/2023"
+                },
+                {
+                  "format": "CSV",
+                  "name": "csv_serie-sgs-432",
+                  "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=csv&dataInicial=01/01/2023&dataFinal=31/12/2023"
+                },
+                {
+                  "format": "wsdl",
+                  "name": "wsdl_serie-sgs-432",
+                  "url": "https://www3.bcb.gov.br/sgspub/JSP/sgsgeral/FachadaWSSGS.wsdl"
+                }
+              ],
+              "tags": [
+                "Estatísticas monetárias",
+                "IBC",
+                "Política monetária",
+                "Taxa SELIC"
+              ],
+              "tipo_serie": "Série temporal diária",
+              "title": "Taxa de juros - Meta Selic definida pelo Copom",
+              "unidade_medida": "Percentual ao ano",
+              "url": "https://dadosabertos.bcb.gov.br/dataset/432-taxa-de-juros---meta-selic-definida-pelo-copom"
+            }
+          ],
+          "next_start": null,
+          "observed_at_ms": 1790048962381,
+          "q": "codigo_sgs:432",
+          "rows": 2,
+          "start": 0,
+          "url": "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=codigo_sgs:432&rows=2&start=0"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "bcb-gov-br",
+        "capability": "economic-data/datasets_search"
+      }
+    },
+    {
+      "id": "bcb-gov-br/economic-data/focus_expectations",
+      "provider": "bcb-gov-br",
+      "capability": "economic-data/focus_expectations",
+      "name": "Focus expectations",
+      "description": "Market consensus for inflation, policy rate, GDP or FX by reference month/year or Copom meeting.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "base_calculo",
+          "type": "number",
+          "in": "body",
+          "about": "0: all respondents; 1: respondents of the last 30 days.",
+          "oneOf": [
+            "0",
+            "1"
+          ]
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "in": "body",
+          "about": "Exact survey date (`Data`), YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "data_referencia",
+          "type": "string",
+          "in": "body",
+          "about": "Exact `DataReferencia` value: MM/yyyy on monthly sets, yyyy on annual sets, Q/yyyy on quarterly sets."
+        },
+        {
+          "name": "entity_set",
+          "type": "string",
+          "in": "body",
+          "about": "Olinda Expectativas entity set.",
+          "default": "ExpectativaMercadoMensais",
+          "oneOf": [
+            "ExpectativaMercadoMensais",
+            "ExpectativasMercadoAnuais",
+            "ExpectativasMercadoTrimestrais",
+            "ExpectativasMercadoSelic",
+            "ExpectativasMercadoInflacao12Meses",
+            "ExpectativasMercadoInflacao24Meses",
+            "ExpectativasMercadoTop5Mensais",
+            "ExpectativasMercadoTop5Anuais",
+            "ExpectativaMercadoTop5Trimestral",
+            "ExpectativasMercadoTop5Selic",
+            "ExpectativasMercadoTop5Inflacao12Meses",
+            "ExpectativasMercadoTop5Inflacao24Meses",
+            "ExpectativasMercadoInstituicoes",
+            "DatasReferencia"
+          ]
+        },
+        {
+          "name": "indicador",
+          "type": "string",
+          "in": "body",
+          "about": "Exact `Indicador` value, e.g. IPCA, Selic, PIB Total, Câmbio."
+        },
+        {
+          "name": "reuniao",
+          "type": "string",
+          "in": "body",
+          "about": "Copom meeting on the Selic sets, e.g. R6/2028. Pattern: ^R[0-9]/[0-9]{4}$."
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "skip",
+          "default": 0,
+          "min": 0
+        },
+        {
+          "name": "top",
+          "type": "number",
+          "in": "body",
+          "about": "top",
+          "default": 50,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "Focus survey market expectations from the Olinda Expectativas service, one OData entity set per call (`entity_set`: ExpectativaMercadoMensais monthly, ExpectativasMercadoAnuais annual, ExpectativasMercadoTrimestrais quarterly, ExpectativasMercadoSelic per Copom meeting, ExpectativasMercadoInflacao12Meses/24Meses, the Top5 variants, ExpectativasMercadoInstituicoes, DatasReferencia). Optional filters: `indicador` (IPCA, Selic, PIB Total, Câmbio, IGP-M, ...), `data_referencia` (MM/yyyy for monthly, yyyy for annual, e.g. 2027), `reuniao` (Copom meeting, e.g. R6/2028), `data` (survey date, ISO), `base_calculo` (0 all respondents, 1 last 30 days). Rows are returned as served (Portuguese property names: Indicador, Data, DataReferencia, Media, Mediana, DesvioPadrao, Minimo, Maximo, numeroRespondentes, baseCalculo, ...), newest survey date first, paged with `top`/`skip`. The server never truncates, so `top` is always sent.",
+        "key": "rows",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "AnoMes",
+            "type": "number"
+          },
+          {
+            "name": "Data",
+            "type": "string"
+          },
+          {
+            "name": "DataReferencia",
+            "type": "string"
+          },
+          {
+            "name": "DesvioPadrao",
+            "type": "number"
+          },
+          {
+            "name": "Estado",
+            "type": "string"
+          },
+          {
+            "name": "Indicador",
+            "type": "string"
+          },
+          {
+            "name": "InstituicaoFinanceira",
+            "type": "string"
+          },
+          {
+            "name": "Maximo",
+            "type": "number"
+          },
+          {
+            "name": "Media",
+            "type": "number"
+          },
+          {
+            "name": "Mediana",
+            "type": "number"
+          },
+          {
+            "name": "Mes",
+            "type": "string"
+          },
+          {
+            "name": "Minimo",
+            "type": "number"
+          },
+          {
+            "name": "Modalidade",
+            "type": "string"
+          },
+          {
+            "name": "Municipio",
+            "type": "string"
+          },
+          {
+            "name": "Municipio_Ibge",
+            "type": "number"
+          },
+          {
+            "name": "Posicao",
+            "type": "number"
+          },
+          {
+            "name": "Quantidade",
+            "type": "number"
+          },
+          {
+            "name": "Reuniao",
+            "type": "string"
+          },
+          {
+            "name": "TaxaJurosAoAno",
+            "type": "number"
+          },
+          {
+            "name": "TaxaJurosAoMes",
+            "type": "number"
+          },
+          {
+            "name": "Total",
+            "type": "number"
+          },
+          {
+            "name": "Valor",
+            "type": "number"
+          },
+          {
+            "name": "baseCalculo",
+            "type": "number"
+          },
+          {
+            "name": "numeroRespondentes",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "data": "2026-09-18",
+          "data_referencia": "2027",
+          "entity_set": "ExpectativasMercadoAnuais",
+          "indicador": "Selic",
+          "top": 5
+        },
+        "response": {
+          "count": 2,
+          "entity": "ExpectativasMercadoAnuais",
+          "next_skip": null,
+          "observed_at_ms": 1790048485899,
+          "rows": [
+            {
+              "Data": "2026-09-18",
+              "DataReferencia": "2027",
+              "DesvioPadrao": 0.7317,
+              "Indicador": "Selic",
+              "IndicadorDetalhe": null,
+              "Maximo": 13.75,
+              "Media": 11.8717,
+              "Mediana": 12,
+              "Minimo": 9.75,
+              "baseCalculo": 1,
+              "numeroRespondentes": 76
+            },
+            {
+              "Data": "2026-09-18",
+              "DataReferencia": "2027",
+              "DesvioPadrao": 0.7469,
+              "Indicador": "Selic",
+              "IndicadorDetalhe": null,
+              "Maximo": 14,
+              "Media": 11.9874,
+              "Mediana": 12,
+              "Minimo": 9.75,
+              "baseCalculo": 0,
+              "numeroRespondentes": 139
+            }
+          ],
+          "servico": "Expectativas",
+          "skip": 0,
+          "top": 5,
+          "url": "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?$filter=Indicador%20eq%20%27Selic%27%20and%20DataReferencia%20eq%20%272027%27%20and%20Data%20eq%20%272026-09-18%27&$orderby=Data%20desc&$top=5&$skip=0&$format=json"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "bcb-gov-br",
+        "capability": "economic-data/focus_expectations"
+      }
+    },
+    {
+      "id": "bcb-gov-br/economic-data/olinda_service",
+      "provider": "bcb-gov-br",
+      "capability": "economic-data/olinda_service",
+      "name": "Olinda service",
+      "description": "See which entity sets and functions an Olinda service exposes before querying it.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "servico",
+          "type": "string",
+          "in": "body",
+          "about": "Olinda service name (case-sensitive, e.g. PTAX, Pix_DadosAbertos) or a pasted https://olinda.bcb.gov.br/olinda/servico/<servico>/... URL.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Discovery of one Olinda OData service (olinda.bcb.gov.br/olinda/servico/<servico>/versao/v1/odata/): its service document listing entity sets and function imports (names ending in `FunctionImport` take parameters such as @dataCotacao or @DataBase), plus the URLs of its $metadata and human documentation. Known services include PTAX, Expectativas, Pix_DadosAbertos, taxaJuros, SPI, MPV_DadosAbertos, mecir_dinheiro_em_circulacao, Informes_Agencias, IFDATA. An unknown service name is `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "documentation_url",
+            "type": "string"
+          },
+          {
+            "name": "entity_sets",
+            "type": "object[]"
+          },
+          {
+            "name": "function_imports",
+            "type": "object[]"
+          },
+          {
+            "name": "metadata_url",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "servico",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "servico": "PTAX"
+        },
+        "response": {
+          "count": 13,
+          "documentation_url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/documentacao",
+          "entity_sets": [
+            {
+              "name": "Moedas",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/Moedas"
+            },
+            {
+              "name": "_CotacaoDolarDia",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/_CotacaoDolarDia"
+            },
+            {
+              "name": "_CotacaoMoedaAberturaOuIntermediario",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/_CotacaoMoedaAberturaOuIntermediario"
+            },
+            {
+              "name": "_CotacaoDolarPeriodo",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/_CotacaoDolarPeriodo"
+            },
+            {
+              "name": "_CotacaoMoedaPeriodo",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/_CotacaoMoedaPeriodo"
+            },
+            {
+              "name": "_CotacaoMoedaPeriodoFechamento",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/_CotacaoMoedaPeriodoFechamento"
+            },
+            {
+              "name": "_CotacaoMoedaDia",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/_CotacaoMoedaDia"
+            }
+          ],
+          "function_imports": [
+            {
+              "name": "CotacaoMoedaPeriodoFechamento",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaPeriodoFechamento"
+            },
+            {
+              "name": "CotacaoMoedaAberturaOuIntermediario",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaAberturaOuIntermediario"
+            },
+            {
+              "name": "CotacaoMoedaDia",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia"
+            },
+            {
+              "name": "CotacaoMoedaPeriodo",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaPeriodo"
+            },
+            {
+              "name": "CotacaoDolarDia",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia"
+            },
+            {
+              "name": "CotacaoDolarPeriodo",
+              "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarPeriodo"
+            }
+          ],
+          "metadata_url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/$metadata",
+          "observed_at_ms": 1790048535320,
+          "servico": "PTAX",
+          "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "bcb-gov-br",
+        "capability": "economic-data/olinda_service"
+      }
+    },
+    {
+      "id": "bcb-gov-br/economic-data/payment_statistics",
+      "provider": "bcb-gov-br",
+      "capability": "economic-data/payment_statistics",
+      "name": "Payment statistics",
+      "description": "SPI settlement volumes, payment-instrument mix, cash in circulation.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "ano_mes",
+          "type": "string",
+          "in": "body",
+          "about": "First month yyyyMM (inclusive); required by `meios_pagamento_mensal`, which returns that month and the later ones newest first. Pattern: ^[0-9]{6}$."
+        },
+        {
+          "name": "dataset",
+          "type": "string",
+          "in": "body",
+          "about": "dataset",
+          "required": true,
+          "oneOf": [
+            "spi_pix_liquidados",
+            "spi_pix_intradia",
+            "spi_disponibilidade",
+            "meios_pagamento_mensal",
+            "dinheiro_em_circulacao"
+          ]
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "Rows to skip; only `dinheiro_em_circulacao` accepts a non-zero value (SPI and MPV answer 500 to $skip).",
+          "default": 0,
+          "min": 0
+        },
+        {
+          "name": "top",
+          "type": "number",
+          "in": "body",
+          "about": "top",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "Payment-system statistics from Olinda, one dataset per call: `spi_pix_liquidados` (PIX settled per day in SPI: quantity, primary/secondary channel, total BRL thousands, average ticket; newest first), `spi_pix_intradia` (average settled PIX per half hour), `spi_disponibilidade` (monthly SPI availability index vs the regulatory minimum), `meios_pagamento_mensal` (monthly quantity and value of Pix, TED, TEC, cheque, boleto and DOC from MPV_DadosAbertos: `ano_mes` is the first month, the server returns it and every later month newest first, bounded by `top`; this function import rejects $filter, $orderby and $skip, so `skip` must be 0, `next_skip` is null and a full page is reported as partial coverage), `dinheiro_em_circulacao` (banknotes and coins in circulation per denomination per day, newest first, mecir). Rows are returned as served (Portuguese property names). Only `dinheiro_em_circulacao` pages with `top`/`skip`; the SPI datasets and `meios_pagamento_mensal` reject $skip on the server (500), so `skip` must be 0 there, `next_skip` is null and a full page (`count` == `top`) is reported as partial coverage; raise `top` (up to 1000) instead.",
+        "key": "rows",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "AnoMes",
+            "type": "number"
+          },
+          {
+            "name": "Data",
+            "type": "string"
+          },
+          {
+            "name": "DataReferencia",
+            "type": "string"
+          },
+          {
+            "name": "DesvioPadrao",
+            "type": "number"
+          },
+          {
+            "name": "Estado",
+            "type": "string"
+          },
+          {
+            "name": "Indicador",
+            "type": "string"
+          },
+          {
+            "name": "InstituicaoFinanceira",
+            "type": "string"
+          },
+          {
+            "name": "Maximo",
+            "type": "number"
+          },
+          {
+            "name": "Media",
+            "type": "number"
+          },
+          {
+            "name": "Mediana",
+            "type": "number"
+          },
+          {
+            "name": "Mes",
+            "type": "string"
+          },
+          {
+            "name": "Minimo",
+            "type": "number"
+          },
+          {
+            "name": "Modalidade",
+            "type": "string"
+          },
+          {
+            "name": "Municipio",
+            "type": "string"
+          },
+          {
+            "name": "Municipio_Ibge",
+            "type": "number"
+          },
+          {
+            "name": "Posicao",
+            "type": "number"
+          },
+          {
+            "name": "Quantidade",
+            "type": "number"
+          },
+          {
+            "name": "Reuniao",
+            "type": "string"
+          },
+          {
+            "name": "TaxaJurosAoAno",
+            "type": "number"
+          },
+          {
+            "name": "TaxaJurosAoMes",
+            "type": "number"
+          },
+          {
+            "name": "Total",
+            "type": "number"
+          },
+          {
+            "name": "Valor",
+            "type": "number"
+          },
+          {
+            "name": "baseCalculo",
+            "type": "number"
+          },
+          {
+            "name": "numeroRespondentes",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "dataset": "spi_pix_liquidados",
+          "top": 2
+        },
+        "response": {
+          "count": 2,
+          "entity": "PixLiquidadosAtual",
+          "next_skip": null,
+          "observed_at_ms": 1790048753585,
+          "rows": [
+            {
+              "CanalPrimario": 186628742,
+              "CanalSecundario": 678195,
+              "Data": "2026-09-20",
+              "Media": 126.76,
+              "Quantidade": 187306937,
+              "Total": 23742471.83
+            },
+            {
+              "CanalPrimario": 246967136,
+              "CanalSecundario": 607507,
+              "Data": "2026-09-19",
+              "Media": 149.78,
+              "Quantidade": 247574643,
+              "Total": 37081820.24
+            }
+          ],
+          "servico": "SPI",
+          "skip": 0,
+          "top": 2,
+          "url": "https://olinda.bcb.gov.br/olinda/servico/SPI/versao/v1/odata/PixLiquidadosAtual?$orderby=Data%20desc&$top=2&$format=json"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "bcb-gov-br",
+        "capability": "economic-data/payment_statistics"
+      }
+    },
+    {
+      "id": "bcb-gov-br/economic-data/pix_statistics",
+      "provider": "bcb-gov-br",
+      "capability": "economic-data/pix_statistics",
+      "name": "Pix statistics",
+      "description": "PIX volumes by municipality or segment, registered keys, DICT users.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "ano_mes",
+          "type": "string",
+          "in": "body",
+          "about": "Month yyyyMM, e.g. 202507. Required by `transacoes_por_municipio` and `estatisticas_transacoes`. Pattern: ^[0-9]{6}$."
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "in": "body",
+          "about": "Month-end date YYYY-MM-DD for `chaves` (e.g. 2026-08-31). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "dataset",
+          "type": "string",
+          "in": "body",
+          "about": "dataset",
+          "required": true,
+          "oneOf": [
+            "transacoes_por_municipio",
+            "estatisticas_transacoes",
+            "chaves",
+            "usuarios_dict"
+          ]
+        },
+        {
+          "name": "estado",
+          "type": "string",
+          "in": "body",
+          "about": "`transacoes_por_municipio`: exact state name as served, upper case, e.g. SÃO PAULO."
+        },
+        {
+          "name": "municipio_ibge",
+          "type": "number",
+          "in": "body",
+          "about": "`transacoes_por_municipio`: IBGE municipality code, e.g. 3550308.",
+          "min": 1
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "Must be 0: Pix_DadosAbertos rejects $skip on the server. Kept for symmetry with the other Olinda functions.",
+          "default": 0,
+          "min": 0
+        },
+        {
+          "name": "top",
+          "type": "number",
+          "in": "body",
+          "about": "Page size.",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "PIX open statistics from the Olinda Pix_DadosAbertos service, one dataset per call: `transacoes_por_municipio` (values and counts of payers/receivers per municipality for one `ano_mes`, optionally narrowed to an `estado` name or a `municipio_ibge` code), `estatisticas_transacoes` (aggregate value and count by payer/receiver type, region, age, initiation form, nature and purpose for one `ano_mes`), `chaves` (registered PIX keys per institution ISPB, user nature and key type at a month-end `data`), `usuarios_dict` (users registered in DICT per month, newest first). Month keys are pinned with an OData $filter because the service's function parameter alone acts as a lower bound. Rows are returned as served (Portuguese property names). The service cannot be paged: every path answers 500 to `$skip`, so `skip` must be 0, `next_skip` is always null and a full page (`count` == `top`) is reported as partial coverage; narrow with `estado`/`municipio_ibge` or raise `top` (up to 1000). `count` 0 means the month or date has no rows (statistics are published monthly with a lag).",
+        "key": "rows",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "AnoMes",
+            "type": "number"
+          },
+          {
+            "name": "Data",
+            "type": "string"
+          },
+          {
+            "name": "DataReferencia",
+            "type": "string"
+          },
+          {
+            "name": "DesvioPadrao",
+            "type": "number"
+          },
+          {
+            "name": "Estado",
+            "type": "string"
+          },
+          {
+            "name": "Indicador",
+            "type": "string"
+          },
+          {
+            "name": "InstituicaoFinanceira",
+            "type": "string"
+          },
+          {
+            "name": "Maximo",
+            "type": "number"
+          },
+          {
+            "name": "Media",
+            "type": "number"
+          },
+          {
+            "name": "Mediana",
+            "type": "number"
+          },
+          {
+            "name": "Mes",
+            "type": "string"
+          },
+          {
+            "name": "Minimo",
+            "type": "number"
+          },
+          {
+            "name": "Modalidade",
+            "type": "string"
+          },
+          {
+            "name": "Municipio",
+            "type": "string"
+          },
+          {
+            "name": "Municipio_Ibge",
+            "type": "number"
+          },
+          {
+            "name": "Posicao",
+            "type": "number"
+          },
+          {
+            "name": "Quantidade",
+            "type": "number"
+          },
+          {
+            "name": "Reuniao",
+            "type": "string"
+          },
+          {
+            "name": "TaxaJurosAoAno",
+            "type": "number"
+          },
+          {
+            "name": "TaxaJurosAoMes",
+            "type": "number"
+          },
+          {
+            "name": "Total",
+            "type": "number"
+          },
+          {
+            "name": "Valor",
+            "type": "number"
+          },
+          {
+            "name": "baseCalculo",
+            "type": "number"
+          },
+          {
+            "name": "numeroRespondentes",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "ano_mes": "202507",
+          "dataset": "transacoes_por_municipio",
+          "municipio_ibge": 3550308
+        },
+        "response": {
+          "count": 1,
+          "entity": "TransacoesPixPorMunicipio",
+          "next_skip": null,
+          "observed_at_ms": 1790048493056,
+          "rows": [
+            {
+              "AnoMes": 202507,
+              "Estado": "SÃO PAULO",
+              "Estado_Ibge": 35,
+              "Municipio": "SÃO PAULO",
+              "Municipio_Ibge": 3550308,
+              "QT_PES_PagadorPF": 9343896,
+              "QT_PES_PagadorPJ": 1076202,
+              "QT_PES_RecebedorPF": 9183716,
+              "QT_PES_RecebedorPJ": 995818,
+              "QT_PagadorPF": 303386198,
+              "QT_PagadorPJ": 194758728,
+              "QT_RecebedorPF": 182931874,
+              "QT_RecebedorPJ": 843231874,
+              "Regiao": "SUDESTE",
+              "Sigla_Regiao": "SE",
+              "VL_PagadorPF": 79084373380.65,
+              "VL_PagadorPJ": 385878773282.29,
+              "VL_RecebedorPF": 83709839045.21,
+              "VL_RecebedorPJ": 370858515479.84
+            }
+          ],
+          "servico": "Pix_DadosAbertos",
+          "skip": 0,
+          "top": 100,
+          "url": "https://olinda.bcb.gov.br/olinda/servico/Pix_DadosAbertos/versao/v1/odata/TransacoesPixPorMunicipio(DataBase=@DataBase)?@DataBase=%27202507%27&$filter=AnoMes%20eq%20202507%20and%20Municipio_Ibge%20eq%203550308&$top=100&$format=json"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "bcb-gov-br",
+        "capability": "economic-data/pix_statistics"
+      }
+    },
+    {
+      "id": "bcb-gov-br/economic-data/ptax_currencies",
+      "provider": "bcb-gov-br",
+      "capability": "economic-data/ptax_currencies",
+      "name": "Ptax currencies",
+      "description": "Discover which currency symbols `ptax_currency` accepts.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [],
+      "response": {
+        "about": "Currencies quoted by PTAX (Olinda PTAX `Moedas`): symbol, formatted name and type (`A`: parity quoted as currency per USD; `B`: USD per currency). The symbol is the `moeda` input of `ptax_currency`.",
+        "key": "currencies",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "nome_formatado",
+            "type": "string"
+          },
+          {
+            "name": "simbolo",
+            "type": "string"
+          },
+          {
+            "name": "tipo_moeda",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "count": 10,
+          "currencies": [
+            {
+              "nome_formatado": "Dólar australiano",
+              "simbolo": "AUD",
+              "tipo_moeda": "B"
+            },
+            {
+              "nome_formatado": "Dólar canadense",
+              "simbolo": "CAD",
+              "tipo_moeda": "A"
+            },
+            {
+              "nome_formatado": "Franco suíço",
+              "simbolo": "CHF",
+              "tipo_moeda": "A"
+            },
+            {
+              "nome_formatado": "Coroa dinamarquesa",
+              "simbolo": "DKK",
+              "tipo_moeda": "A"
+            },
+            {
+              "nome_formatado": "Euro",
+              "simbolo": "EUR",
+              "tipo_moeda": "B"
+            },
+            {
+              "nome_formatado": "Libra Esterlina",
+              "simbolo": "GBP",
+              "tipo_moeda": "B"
+            },
+            {
+              "nome_formatado": "Iene",
+              "simbolo": "JPY",
+              "tipo_moeda": "A"
+            },
+            {
+              "nome_formatado": "Coroa norueguesa",
+              "simbolo": "NOK",
+              "tipo_moeda": "A"
+            },
+            {
+              "nome_formatado": "Coroa sueca",
+              "simbolo": "SEK",
+              "tipo_moeda": "A"
+            },
+            {
+              "nome_formatado": "Dólar dos Estados Unidos",
+              "simbolo": "USD",
+              "tipo_moeda": "A"
+            }
+          ],
+          "observed_at_ms": 1790048474486,
+          "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/Moedas?$format=json"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "bcb-gov-br",
+        "capability": "economic-data/ptax_currencies"
+      }
+    },
+    {
+      "id": "bcb-gov-br/economic-data/ptax_currency",
+      "provider": "bcb-gov-br",
+      "capability": "economic-data/ptax_currency",
+      "name": "Ptax currency",
+      "description": "Rates for EUR, GBP, JPY, ... against BRL. Take `moeda` from `ptax_currencies`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "date",
+          "type": "string",
+          "in": "body",
+          "about": "One quotation date, YYYY-MM-DD. Mutually exclusive with the range. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "end_date",
+          "type": "string",
+          "in": "body",
+          "about": "Range end (inclusive), YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "moeda",
+          "type": "string",
+          "in": "body",
+          "about": "Currency symbol from `ptax_currencies`, e.g. EUR. Pattern: ^[A-Za-z]{3}$.",
+          "required": true
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "skip",
+          "default": 0,
+          "min": 0
+        },
+        {
+          "name": "start_date",
+          "type": "string",
+          "in": "body",
+          "about": "Range start (inclusive), YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "top",
+          "type": "number",
+          "in": "body",
+          "about": "top",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "date",
+          "start_date",
+          "end_date"
+        ]
+      ],
+      "response": {
+        "about": "PTAX bulletins for one non-BRL currency from the Olinda PTAX service: every bulletin of one `date` (CotacaoMoedaDia: opening, intermediates, closing) or of a `start_date`..`end_date` range (CotacaoMoedaPeriodo), paged with `top`/`skip`. Each row carries the parity against USD (`paridade_*`), the BRL rate (`cotacao_*`), the timestamp and the bulletin type (`tipo_boletim`: Abertura, Intermediário, Fechamento PTAX, ...). An empty `quotes` list on a weekend or holiday is legitimate; a symbol that is not in `ptax_currencies` is `not_found`.",
+        "key": "quotes",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "cotacao_compra",
+            "type": "number"
+          },
+          {
+            "name": "cotacao_venda",
+            "type": "number"
+          },
+          {
+            "name": "data_hora_cotacao",
+            "type": "string"
+          },
+          {
+            "name": "paridade_compra",
+            "type": "number"
+          },
+          {
+            "name": "paridade_venda",
+            "type": "number"
+          },
+          {
+            "name": "tipo_boletim",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "date": "2026-09-18",
+          "moeda": "EUR"
+        },
+        "response": {
+          "count": 5,
+          "date": "2026-09-18",
+          "end_date": null,
+          "moeda": "EUR",
+          "next_skip": null,
+          "observed_at_ms": 1790048479947,
+          "quotes": [
+            {
+              "cotacao_compra": 5.8993,
+              "cotacao_venda": 5.9005,
+              "data_hora_cotacao": "2026-09-18 10:02:17.05066",
+              "paridade_compra": 1.1468,
+              "paridade_venda": 1.1469,
+              "tipo_boletim": "Abertura"
+            },
+            {
+              "cotacao_compra": 5.9112,
+              "cotacao_venda": 5.9124,
+              "data_hora_cotacao": "2026-09-18 11:10:13.770843",
+              "paridade_compra": 1.1458,
+              "paridade_venda": 1.1459,
+              "tipo_boletim": "Intermediário"
+            },
+            {
+              "cotacao_compra": 5.9175,
+              "cotacao_venda": 5.9187,
+              "data_hora_cotacao": "2026-09-18 12:07:11.945424",
+              "paridade_compra": 1.1461,
+              "paridade_venda": 1.1462,
+              "tipo_boletim": "Intermediário"
+            },
+            {
+              "cotacao_compra": 5.9163,
+              "cotacao_venda": 5.9175,
+              "data_hora_cotacao": "2026-09-18 13:03:34.528962",
+              "paridade_compra": 1.1463,
+              "paridade_venda": 1.1464,
+              "tipo_boletim": "Intermediário"
+            },
+            {
+              "cotacao_compra": 5.9114,
+              "cotacao_venda": 5.9126,
+              "data_hora_cotacao": "2026-09-18 13:03:34.742036",
+              "paridade_compra": 1.1463,
+              "paridade_venda": 1.1464,
+              "tipo_boletim": "Fechamento PTAX"
+            }
+          ],
+          "start_date": null,
+          "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda=%27EUR%27&@dataCotacao=%2709-18-2026%27&$top=100&$skip=0&$format=json"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "bcb-gov-br",
+        "capability": "economic-data/ptax_currency"
+      }
+    },
+    {
+      "id": "bcb-gov-br/economic-data/ptax_usd",
+      "provider": "bcb-gov-br",
+      "capability": "economic-data/ptax_usd",
+      "name": "Ptax usd",
+      "description": "USD/BRL PTAX for a day or a range. Use `ptax_currency` for other currencies.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "date",
+          "type": "string",
+          "in": "body",
+          "about": "One quotation date, YYYY-MM-DD. Mutually exclusive with the range. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "end_date",
+          "type": "string",
+          "in": "body",
+          "about": "Range end (inclusive), YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "Rows to skip (OData $skip); pass `next_skip` from the previous page.",
+          "default": 0,
+          "min": 0
+        },
+        {
+          "name": "start_date",
+          "type": "string",
+          "in": "body",
+          "about": "Range start (inclusive), YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "top",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (OData $top).",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "date",
+          "start_date",
+          "end_date"
+        ]
+      ],
+      "response": {
+        "about": "PTAX USD/BRL official rate from the Olinda PTAX service: the closing quote for one `date` (CotacaoDolarDia) or the daily closing series for a `start_date`..`end_date` range (CotacaoDolarPeriodo), paged with `top`/`skip`. Rates are BRL per USD (`cotacao_compra` buy, `cotacao_venda` sell) with the bulletin timestamp. Weekends and holidays have no bulletin: `count` 0 and an empty `quotes` list is the server's legitimate answer.",
+        "key": "quotes",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "cotacao_compra",
+            "type": "number"
+          },
+          {
+            "name": "cotacao_venda",
+            "type": "number"
+          },
+          {
+            "name": "data_hora_cotacao",
+            "type": "string",
+            "about": "Bulletin timestamp as served, `yyyy-MM-dd HH:mm:ss.SSSSSS` (Brasília time)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "date": "2026-09-18"
+        },
+        "response": {
+          "count": 1,
+          "date": "2026-09-18",
+          "end_date": null,
+          "moeda": "USD",
+          "next_skip": null,
+          "observed_at_ms": 1790048468664,
+          "quotes": [
+            {
+              "cotacao_compra": 5.1569,
+              "cotacao_venda": 5.1575,
+              "data_hora_cotacao": "2026-09-18 13:03:34.742036"
+            }
+          ],
+          "start_date": null,
+          "url": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao=%2709-18-2026%27&$top=100&$skip=0&$format=json"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "bcb-gov-br",
+        "capability": "economic-data/ptax_usd"
+      }
+    },
+    {
+      "id": "bcb-gov-br/economic-data/sgs_series",
+      "provider": "bcb-gov-br",
+      "capability": "economic-data/sgs_series",
+      "name": "Sgs series",
+      "description": "Get the numbers for a known SGS code. Find codes with `datasets_search` (CKAN `codigo_sgs`).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "codigo",
+          "type": "number",
+          "in": "body",
+          "about": "SGS series code (e.g. 432), or a pasted https://api.bcb.gov.br/dados/serie/bcdata.sgs.<code>/... URL; the URL's own `/ultimos/N` or `dataInicial`/`dataFinal` apply unless `ultimos`/`data_inicial`/`data_final` are given.",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "data_final",
+          "type": "string",
+          "in": "body",
+          "about": "Last observation date (inclusive), YYYY-MM-DD. Defaults to today on the server. At most 10 years after `data_inicial`. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "data_inicial",
+          "type": "string",
+          "in": "body",
+          "about": "First observation date (inclusive), YYYY-MM-DD. Required by the server for daily series. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "ultimos",
+          "type": "number",
+          "in": "body",
+          "about": "Return only the last N observations (server maximum 20). Mutually exclusive with the date window.",
+          "min": 1,
+          "max": 20
+        }
+      ],
+      "response": {
+        "about": "Observations of one SGS time series (Sistema Gerenciador de Séries Temporais) by numeric code from api.bcb.gov.br: either the last N observations (`ultimos`, 1..20, the server's maximum) or a date window (`data_inicial`/`data_final`, ISO dates; the server rejects windows longer than 10 years on daily series and requires `data_inicial` for them). Without either, monthly and lower-frequency series return their full history. Values are returned as the server's decimal strings in `valor` plus a parsed `value` (null when the string is not numeric). Common codes: 432 Selic target, 11 Selic daily, 12 CDI daily, 433 IPCA monthly, 13522 IPCA 12-month, 189 IGP-M, 24364 IBC-Br, 1 USD/BRL PTAX sell. An unknown code is `not_found`; a rejected window is `invalid_input`.",
+        "key": "observations",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "data",
+            "type": "string",
+            "about": "Observation date exactly as served (dd/MM/yyyy)."
+          },
+          {
+            "name": "date",
+            "type": "string",
+            "about": "Observation date, ISO."
+          },
+          {
+            "name": "valor",
+            "type": "string",
+            "about": "Value exactly as served (decimal string)."
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "about": "`valor` parsed as a number; null when the server's string is not numeric."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "codigo": 433,
+          "data_final": "2026-08-31",
+          "data_inicial": "2026-01-01"
+        },
+        "response": {
+          "codigo": 433,
+          "count": 8,
+          "data_final": "2026-08-31",
+          "data_inicial": "2026-01-01",
+          "observations": [
+            {
+              "data": "01/01/2026",
+              "date": "2026-01-01",
+              "valor": "0.33",
+              "value": 0.33
+            },
+            {
+              "data": "01/02/2026",
+              "date": "2026-02-01",
+              "valor": "0.70",
+              "value": 0.7
+            },
+            {
+              "data": "01/03/2026",
+              "date": "2026-03-01",
+              "valor": "0.88",
+              "value": 0.88
+            },
+            {
+              "data": "01/04/2026",
+              "date": "2026-04-01",
+              "valor": "0.67",
+              "value": 0.67
+            },
+            {
+              "data": "01/05/2026",
+              "date": "2026-05-01",
+              "valor": "0.58",
+              "value": 0.58
+            },
+            {
+              "data": "01/06/2026",
+              "date": "2026-06-01",
+              "valor": "0.16",
+              "value": 0.16
+            },
+            {
+              "data": "01/07/2026",
+              "date": "2026-07-01",
+              "valor": "0.07",
+              "value": 0.07
+            },
+            {
+              "data": "01/08/2026",
+              "date": "2026-08-01",
+              "valor": "-0.32",
+              "value": -0.32
+            }
+          ],
+          "observed_at_ms": 1790048457499,
+          "ultimos": null,
+          "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados?formato=json&dataInicial=01/01/2026&dataFinal=31/08/2026"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "bcb-gov-br",
+        "capability": "economic-data/sgs_series"
+      }
+    }
+  ]
+}

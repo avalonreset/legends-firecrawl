@@ -1,0 +1,532 @@
+{
+  "id": "psacard-com",
+  "provider": "psacard-com",
+  "name": "PSA",
+  "description": "Browse public collectible price-guide categories, sets, grade values and featured dealer profiles. No cert or population lookup.",
+  "toolCount": 5,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "psacard-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "psacard-com/collectibles/categories",
+      "provider": "psacard-com",
+      "capability": "collectibles/categories",
+      "name": "Categories",
+      "description": "Browse public PSA price-guide categories.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 50,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "offset",
+          "default": 0,
+          "min": 0,
+          "max": 10000
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.psacard\\.com/priceguide$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Browse public PSA price-guide categories.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.psacard.com/priceguide"
+        },
+        "response": {
+          "complete": false,
+          "next_offset": null,
+          "observed_at_ms": 1789507293468,
+          "records": [
+            {
+              "name": "Baseball Cards",
+              "url": "https://www.psacard.com/priceguide/baseball-card-values/13"
+            }
+          ],
+          "source_url": "https://www.psacard.com/priceguide",
+          "total_on_page": 15,
+          "warnings": [
+            "Public price-guide and featured-dealer coverage only. Guide values are not sale offers or cert verification; currency is unknown when the page does not state it. Population and auction search require sign-in and are excluded. Pagination slices the current public page."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:20:00Z"
+      },
+      "execute": {
+        "provider": "psacard-com",
+        "capability": "collectibles/categories"
+      }
+    },
+    {
+      "id": "psacard-com/collectibles/dealer",
+      "provider": "psacard-com",
+      "capability": "collectibles/dealer",
+      "name": "Dealer",
+      "description": "Read one public PSA dealer profile: address, phone, specialties and services.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 50,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "offset",
+          "default": 0,
+          "min": 0,
+          "max": 10000
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.psacard\\.com/dealers/detail/[a-zA-Z0-9-]+/[0-9]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read one public PSA dealer profile: address, phone, specialties and services.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "sections",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.psacard.com/dealers/detail/heritage-auctions/2242"
+        },
+        "response": {
+          "complete": false,
+          "next_offset": null,
+          "observed_at_ms": 1789507293513,
+          "records": [
+            {
+              "address": "2801 W. Airport Freeway Dallas, TX 75261, US",
+              "name": "Heritage Auctions",
+              "phone": "(800) 872-6467",
+              "sections": [
+                {
+                  "items": [
+                    "Non-Sports Cards",
+                    "Autographs",
+                    "Baseballs",
+                    "Game-Used Bats",
+                    "Tickets",
+                    "Original Photographs",
+                    "Unopened Packs",
+                    "Other Memorabilia",
+                    "TCG Cards",
+                    "Championship Rings, Trophies, and Awards",
+                    "Modern",
+                    "Vintage"
+                  ],
+                  "name": "Specialties"
+                },
+                {
+                  "items": [
+                    "Auctions",
+                    "Internet site",
+                    "Appraisals",
+                    "Buying and Estate Liquidation"
+                  ],
+                  "name": "Services"
+                }
+              ]
+            }
+          ],
+          "source_url": "https://www.psacard.com/dealers/detail/heritage-auctions/2242",
+          "total_on_page": 1,
+          "warnings": [
+            "Public price-guide and featured-dealer coverage only. Guide values are not sale offers or cert verification; currency is unknown when the page does not state it. Population and auction search require sign-in and are excluded. Pagination slices the current public page."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:20:00Z"
+      },
+      "execute": {
+        "provider": "psacard-com",
+        "capability": "collectibles/dealer"
+      }
+    },
+    {
+      "id": "psacard-com/collectibles/dealers",
+      "provider": "psacard-com",
+      "capability": "collectibles/dealers",
+      "name": "Dealers",
+      "description": "List featured dealers from the public PSA dealer directory, not the complete dealer database.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 50,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "offset",
+          "default": 0,
+          "min": 0,
+          "max": 10000
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.psacard\\.com/dealers$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "List featured dealers from the public PSA dealer directory, not the complete dealer database.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "services",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.psacard.com/dealers"
+        },
+        "response": {
+          "complete": false,
+          "next_offset": null,
+          "observed_at_ms": 1789507293512,
+          "records": [
+            {
+              "location": "Dallas, TX, US",
+              "name": "Heritage Auctions",
+              "phone": "(800) 872-6467",
+              "services": "SERVICES Auctions, Internet site, Appraisals, Buying and Estate Liquidation",
+              "url": "https://www.psacard.com/dealers/detail/heritage-auctions/2242"
+            }
+          ],
+          "source_url": "https://www.psacard.com/dealers",
+          "total_on_page": 10,
+          "warnings": [
+            "Public price-guide and featured-dealer coverage only. Guide values are not sale offers or cert verification; currency is unknown when the page does not state it. Population and auction search require sign-in and are excluded. Pagination slices the current public page."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:20:00Z"
+      },
+      "execute": {
+        "provider": "psacard-com",
+        "capability": "collectibles/dealers"
+      }
+    },
+    {
+      "id": "psacard-com/collectibles/sets",
+      "provider": "psacard-com",
+      "capability": "collectibles/sets",
+      "name": "Sets",
+      "description": "List collectible sets within a PSA price-guide category. Offset/limit slice the fetched page.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 50,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "offset",
+          "default": 0,
+          "min": 0,
+          "max": 10000
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.psacard\\.com/priceguide/[a-zA-Z0-9-]+/[0-9]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "List collectible sets within a PSA price-guide category. Offset/limit slice the fetched page.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.psacard.com/priceguide/baseball-card-values/13"
+        },
+        "response": {
+          "complete": false,
+          "next_offset": 50,
+          "observed_at_ms": 1789507293504,
+          "records": [
+            {
+              "name": "1888 N28 Allen & Ginter",
+              "url": "https://www.psacard.com/priceguide/baseball-card-values/1888-n28-allen-ginter/1044"
+            }
+          ],
+          "source_url": "https://www.psacard.com/priceguide/baseball-card-values/13",
+          "total_on_page": 916,
+          "warnings": [
+            "Public price-guide and featured-dealer coverage only. Guide values are not sale offers or cert verification; currency is unknown when the page does not state it. Population and auction search require sign-in and are excluded. Pagination slices the current public page."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:20:00Z"
+      },
+      "execute": {
+        "provider": "psacard-com",
+        "capability": "collectibles/sets"
+      }
+    },
+    {
+      "id": "psacard-com/collectibles/values",
+      "provider": "psacard-com",
+      "capability": "collectibles/values",
+      "name": "Values",
+      "description": "Read card names and published guide values by grade. Blank cells remain unknown; +/- change markers are retained. These are not offers or recent sales.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 50,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "offset",
+          "default": 0,
+          "min": 0,
+          "max": 10000
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.psacard\\.com/priceguide/[a-zA-Z0-9-]+/[a-zA-Z0-9-]+/[0-9]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read card names and published guide values by grade. Blank cells remain unknown; +/- change markers are retained. These are not offers or recent sales.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "set",
+            "type": "string"
+          },
+          {
+            "name": "value_kind",
+            "type": "string"
+          },
+          {
+            "name": "values",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.psacard.com/priceguide/baseball-card-values/1888-n28-allen-ginter/1044"
+        },
+        "response": {
+          "complete": false,
+          "next_offset": null,
+          "observed_at_ms": 1789507293507,
+          "records": [
+            {
+              "name": "Commons",
+              "set": "1888 N28 Allen & Ginter",
+              "value_kind": "published_price_guide",
+              "values": [
+                {
+                  "amount": 50,
+                  "currency": null,
+                  "grade": "PR 1",
+                  "movement": null,
+                  "raw": "50"
+                },
+                {
+                  "amount": 80,
+                  "currency": null,
+                  "grade": "Good 2",
+                  "movement": null,
+                  "raw": "80"
+                },
+                {
+                  "amount": 125,
+                  "currency": null,
+                  "grade": "VG 3",
+                  "movement": null,
+                  "raw": "125"
+                },
+                {
+                  "amount": 190,
+                  "currency": null,
+                  "grade": "VG-EX 4",
+                  "movement": null,
+                  "raw": "190"
+                },
+                {
+                  "amount": 375,
+                  "currency": null,
+                  "grade": "EX 5",
+                  "movement": null,
+                  "raw": "375"
+                },
+                {
+                  "amount": 525,
+                  "currency": null,
+                  "grade": "EX-MT 6",
+                  "movement": null,
+                  "raw": "525"
+                },
+                {
+                  "amount": 875,
+                  "currency": null,
+                  "grade": "NM 7",
+                  "movement": null,
+                  "raw": "875"
+                },
+                {
+                  "amount": 2200,
+                  "currency": null,
+                  "grade": "NM-MT 8",
+                  "movement": null,
+                  "raw": "2,200"
+                },
+                {
+                  "amount": 5500,
+                  "currency": null,
+                  "grade": "MT 9",
+                  "movement": null,
+                  "raw": "5,500"
+                }
+              ]
+            }
+          ],
+          "source_url": "https://www.psacard.com/priceguide/baseball-card-values/1888-n28-allen-ginter/1044",
+          "total_on_page": 11,
+          "warnings": [
+            "Public price-guide and featured-dealer coverage only. Guide values are not sale offers or cert verification; currency is unknown when the page does not state it. Population and auction search require sign-in and are excluded. Pagination slices the current public page."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:20:00Z"
+      },
+      "execute": {
+        "provider": "psacard-com",
+        "capability": "collectibles/values"
+      }
+    }
+  ]
+}

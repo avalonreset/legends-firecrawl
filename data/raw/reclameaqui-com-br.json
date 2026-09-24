@@ -1,0 +1,2354 @@
+{
+  "id": "reclameaqui-com-br",
+  "provider": "reclameaqui-com-br",
+  "name": "Reclame Aqui",
+  "description": "Reclame Aqui (reclameaqui.com.br), Brazil's consumer complaints platform: company reputation profiles (score, RA1000/Otimo/Bom/Regular/Ruim/Nao recomendada status, response and solution rates), company search by name or CNPJ, a company's complaints with tabs and pagination, full-text complaint search, single complaint text with the company reply and consumer evaluation, segment tree and best/worst segment rankings. Public read surfaces only; Portuguese (pt-BR) content.",
+  "toolCount": 7,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "reclameaqui-com-br"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "reclameaqui-com-br/complaints/company",
+      "provider": "reclameaqui-com-br",
+      "capability": "complaints/company",
+      "name": "Company",
+      "description": "Look up a company's reputation and identity when you know its shortname (from search_companies or a pasted profile URL).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "shortname",
+          "type": "string",
+          "in": "body",
+          "about": "Profile slug, e.g. magazine-luiza-loja-online. Either shortname or url is required."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Profile URL such as https://www.reclameaqui.com.br/empresa/magazine-luiza-loja-online/ (any sub-path of the profile is accepted)."
+        }
+      ],
+      "response": {
+        "about": "One company's reputation profile by shortname or profile URL (iosite company/shortname): identity (name, fantasy name, CNPJ, status), description, website, contact URL, phones, address, segments, the headline 6-month reputation index (score, status, totals, response/solution/deal-again rates) and every published reputation window. Unknown shortnames are not_found.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "cnpj",
+            "type": "string"
+          },
+          {
+            "name": "cnpj_validated",
+            "type": "boolean"
+          },
+          {
+            "name": "complaint_count",
+            "type": "number",
+            "about": "All-time complaint count on the profile."
+          },
+          {
+            "name": "complaints_url",
+            "type": "string"
+          },
+          {
+            "name": "contact_url",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "fantasy_name",
+            "type": "string"
+          },
+          {
+            "name": "has_sub_brands",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Numeric company id as a string."
+          },
+          {
+            "name": "indexes",
+            "type": "object[]",
+            "about": "Every published reputation window (SIX_MONTHS, TWELVE_MONTHS, LAST_YEAR, PAST_LAST_YEAR, LAST_THREE_YEARS)."
+          },
+          {
+            "name": "language",
+            "type": "string"
+          },
+          {
+            "name": "legacy_id",
+            "type": "number"
+          },
+          {
+            "name": "logo",
+            "type": "string"
+          },
+          {
+            "name": "main_segment",
+            "type": "object"
+          },
+          {
+            "name": "modified",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "phones",
+            "type": "string[]"
+          },
+          {
+            "name": "previous_names",
+            "type": "string[]"
+          },
+          {
+            "name": "reputation",
+            "type": "object",
+            "about": "The headline reputation index (SIX_MONTHS window); null when the company has no published index."
+          },
+          {
+            "name": "secondary_segments",
+            "type": "object[]"
+          },
+          {
+            "name": "shortname",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Company account status as published (e.g. ACTIVE)."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "verified_label",
+            "type": "string",
+            "about": "ravLabel as published (SHOW_VERIFIED, DONT_SHOW, ...)."
+          },
+          {
+            "name": "website",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "shortname": "magazine-luiza-loja-online"
+        },
+        "response": {
+          "address": {
+            "city": "FRANCA",
+            "neighborhood": "CENTRO",
+            "route": "DA FRANCA, 1465",
+            "state": "SP",
+            "zip_code": "14400490"
+          },
+          "cnpj": "47960950000121",
+          "cnpj_validated": true,
+          "complaint_count": 59859,
+          "complaints_url": "https://www.reclameaqui.com.br/empresa/magazine-luiza-loja-online/lista-reclamacoes/",
+          "contact_url": "https://www.magazineluiza.com.br/central-de-atendimento/",
+          "country": "BR",
+          "created": "2008-07-28T00:01:00",
+          "description": "O Magazine Luiza é uma empresa que tem o varejo na alma. Somos uma plataforma digital com pontos físicos e calor humano, e damos acesso à tecnologia que desenvolvemos para todos que contam com a gente",
+          "fantasy_name": "Magazine Luiza - Loja Online",
+          "has_sub_brands": false,
+          "id": "29266",
+          "indexes": [
+            {
+              "answered_rate": 95,
+              "average_answer_time": 1078115.0833086767,
+              "consumer_score": 7.11,
+              "deal_again_rate": 74.9,
+              "end": "2026-08-31T23:59:59",
+              "has_stamp": true,
+              "score": 8.3,
+              "solved_rate": 90.8,
+              "start": "2026-03-01T00:00:00",
+              "status": "RA1000",
+              "total_answered": 54076,
+              "total_complaints": 56901,
+              "total_complaints_30d": 8276,
+              "total_evaluated": 30924,
+              "total_not_answered": 2187,
+              "window": "SIX_MONTHS"
+            },
+            {
+              "answered_rate": 96.7,
+              "average_answer_time": 992381.2351282052,
+              "consumer_score": 7,
+              "deal_again_rate": 74,
+              "end": "2026-08-31T23:59:59",
+              "has_stamp": true,
+              "score": 8.2,
+              "solved_rate": 90.4,
+              "start": "2025-09-01T00:00:00",
+              "status": "RA1000",
+              "total_answered": 124800,
+              "total_complaints": 129083,
+              "total_complaints_30d": 8276,
+              "total_evaluated": 72770,
+              "total_not_answered": 3148,
+              "window": "TWELVE_MONTHS"
+            },
+            {
+              "answered_rate": 97.9,
+              "average_answer_time": 1036094.2461428181,
+              "consumer_score": 7.03,
+              "deal_again_rate": 74.4,
+              "end": "2025-12-31T23:59:59",
+              "has_stamp": true,
+              "score": 8.3,
+              "solved_rate": 90.2,
+              "start": "2025-01-01T00:00:00",
+              "status": "RA1000",
+              "total_answered": 117184,
+              "total_complaints": 119665,
+              "total_complaints_30d": 8276,
+              "total_evaluated": 71354,
+              "total_not_answered": 1487,
+              "window": "LAST_YEAR"
+            },
+            {
+              "answered_rate": 98.2,
+              "average_answer_time": 1054504.0498761034,
+              "consumer_score": 6.97,
+              "deal_again_rate": 74.3,
+              "end": "2024-12-31T23:59:59",
+              "has_stamp": false,
+              "score": 8.2,
+              "solved_rate": 89.5,
+              "start": "2024-01-01T00:00:00",
+              "status": "GREAT",
+              "total_answered": 113401,
+              "total_complaints": 115500,
+              "total_complaints_30d": 8276,
+              "total_evaluated": 68375,
+              "total_not_answered": 1201,
+              "window": "PAST_LAST_YEAR"
+            },
+            {
+              "answered_rate": 96.8,
+              "average_answer_time": 1030148.400961632,
+              "consumer_score": 6.99,
+              "deal_again_rate": 74,
+              "end": "2026-09-21T23:59:59",
+              "has_stamp": false,
+              "score": 8.2,
+              "solved_rate": 90.1,
+              "start": "2023-09-22T00:00:00",
+              "status": "GREAT",
+              "total_answered": 359805,
+              "total_complaints": 371883,
+              "total_complaints_30d": 8276,
+              "total_evaluated": 213927,
+              "total_not_answered": 8993,
+              "window": "LAST_THREE_YEARS"
+            }
+          ],
+          "language": "pt-BR",
+          "legacy_id": 29266,
+          "logo": "https://raichu-uploads.s3.amazonaws.com/logo_magazine-luiza-loja-online_asIky4.png",
+          "main_segment": {
+            "id": "31",
+            "shortname": "varejo",
+            "title": "Varejo"
+          },
+          "modified": "2026-09-21T10:32:49",
+          "name": "Magazine Luiza - Loja Online",
+          "observed_at_ms": 1790047688558,
+          "phones": [
+            "0800 310 0002"
+          ],
+          "previous_names": [
+            "Magalu"
+          ],
+          "reputation": {
+            "answered_rate": 95,
+            "average_answer_time": 1078115.0833086767,
+            "consumer_score": 7.11,
+            "deal_again_rate": 74.9,
+            "end": "2026-08-31T23:59:59",
+            "has_stamp": true,
+            "score": 8.3,
+            "solved_rate": 90.8,
+            "start": "2026-03-01T00:00:00",
+            "status": "RA1000",
+            "total_answered": 54076,
+            "total_complaints": 56901,
+            "total_complaints_30d": 8276,
+            "total_evaluated": 30924,
+            "total_not_answered": 2187,
+            "window": "SIX_MONTHS"
+          },
+          "secondary_segments": [
+            {
+              "id": "159MzpScABSe7kAS",
+              "shortname": "marketplaces",
+              "title": "Marketplaces"
+            }
+          ],
+          "shortname": "magazine-luiza-loja-online",
+          "status": "ACTIVE",
+          "url": "https://www.reclameaqui.com.br/empresa/magazine-luiza-loja-online/",
+          "verified_label": "DONT_SHOW",
+          "website": "http://www.magazineluiza.com.br"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "reclameaqui-com-br",
+        "capability": "complaints/company"
+      }
+    },
+    {
+      "id": "reclameaqui-com-br/complaints/company_complaints",
+      "provider": "reclameaqui-com-br",
+      "capability": "complaints/company_complaints",
+      "name": "Company complaints",
+      "description": "List or paginate a company's complaints. Pass company_id from search_companies or company (or shortname). Use page for the next page while next_page is set.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "category",
+          "type": "string",
+          "in": "body",
+          "about": "Category id from facets.categories. Pattern: ^-?[0-9]{1,16}$."
+        },
+        {
+          "name": "company_id",
+          "type": "string",
+          "in": "body",
+          "about": "Numeric or opaque company id from company.id or search_companies.companies[].id. Either company_id or shortname is required; do not substitute legacy_id. Pattern: ^[A-Za-z0-9_-]{1,64}$."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Logical page size. Requests larger than ten are assembled from upstream batches of at most ten, preserving the page offset.",
+          "default": 10,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "problem_type",
+          "type": "string",
+          "in": "body",
+          "about": "Problem type id from facets.problems. Pattern: ^-?[0-9]{1,16}$."
+        },
+        {
+          "name": "product_type",
+          "type": "string",
+          "in": "body",
+          "about": "Product type id from facets.products. Pattern: ^-?[0-9]{1,16}$."
+        },
+        {
+          "name": "shortname",
+          "type": "string",
+          "in": "body",
+          "about": "Profile slug; resolved to its current company id with one extra request."
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "in": "body",
+          "about": "Site tab: all (ultimas), unanswered (nao respondidas), answered (respondidas), evaluated (avaliadas), solved (resolvidas), unsolved (nao resolvidas).",
+          "default": "all",
+          "oneOf": [
+            "all",
+            "unanswered",
+            "answered",
+            "evaluated",
+            "solved",
+            "unsolved"
+          ]
+        }
+      ],
+      "response": {
+        "about": "One page of a company's public complaints (iosearch companyComplains), newest first, with the site's tabs: all, unanswered (nao respondidas), answered (respondidas), evaluated (avaliadas), solved (resolvidas) and unsolved (nao resolvidas), plus optional category, product type and problem type filters whose ids come from the facets in the response. Each complaint carries id, title, masked public text, status, solved/evaluated flags, consumer score, location, created date and its page URL. Takes the numeric company id or resolves a shortname first.",
+        "key": "complaints",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "category_id",
+            "type": "string"
+          },
+          {
+            "name": "company_id",
+            "type": "string"
+          },
+          {
+            "name": "company_name",
+            "type": "string"
+          },
+          {
+            "name": "company_shortname",
+            "type": "string"
+          },
+          {
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "name": "deal_again",
+            "type": "boolean"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Public (masked) complaint text."
+          },
+          {
+            "name": "evaluated",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "interaction_count",
+            "type": "number"
+          },
+          {
+            "name": "legacy_id",
+            "type": "number"
+          },
+          {
+            "name": "modified",
+            "type": "string"
+          },
+          {
+            "name": "problem_type_id",
+            "type": "string"
+          },
+          {
+            "name": "product_type_id",
+            "type": "string"
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "about": "Consumer's evaluation score 0-10; null until evaluated."
+          },
+          {
+            "name": "solved",
+            "type": "boolean"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "PENDING (unanswered) or ANSWERED as published."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "user_city",
+            "type": "string"
+          },
+          {
+            "name": "user_state",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_id": "29266",
+          "page_size": 3
+        },
+        "response": {
+          "company_id": "29266",
+          "company_name": "Magazine Luiza - Loja Online",
+          "company_shortname": "magazine-luiza-loja-online",
+          "complaints": [
+            {
+              "category_id": null,
+              "company_id": "29266",
+              "company_name": "Magazine Luiza - Loja Online",
+              "company_shortname": "magazine-luiza-loja-online",
+              "created": "2026-09-22T00:06:49",
+              "deal_again": null,
+              "description": "<br/>Fiz uma compra dia 05/09 ,e no dia 11/09 foi cancelado a compra mas até agora nada do meu reembolso",
+              "evaluated": false,
+              "id": "clOOck1KWrpbbqp4",
+              "interaction_count": 0,
+              "legacy_id": 259695969,
+              "modified": "2026-09-22T00:20:35",
+              "problem_type_id": null,
+              "product_type_id": null,
+              "score": null,
+              "solved": false,
+              "status": "PENDING",
+              "title": "Reembolso",
+              "url": "https://www.reclameaqui.com.br/magazine-luiza-loja-online/reembolso_clOOck1KWrpbbqp4/",
+              "user_city": "Embu das Artes",
+              "user_state": "SP"
+            },
+            {
+              "category_id": "0000000000000000",
+              "company_id": "29266",
+              "company_name": "Magazine Luiza - Loja Online",
+              "company_shortname": "magazine-luiza-loja-online",
+              "created": "2026-09-22T00:03:07",
+              "deal_again": null,
+              "description": "Tentei cancelar o meu cadastro no site no aplicativo não consegui. <br/>Por favor cancele meu cadastro porque eu não estou mais comprando online só presencial",
+              "evaluated": false,
+              "id": "fvjWVDI7hSQCY3H2",
+              "interaction_count": 0,
+              "legacy_id": 259695841,
+              "modified": "2026-09-22T00:12:11",
+              "problem_type_id": "0000000000001227",
+              "product_type_id": "000000000000247",
+              "score": null,
+              "solved": false,
+              "status": "PENDING",
+              "title": "Não consigo cancelar meu cadastro no site e aplicativo",
+              "url": "https://www.reclameaqui.com.br/magazine-luiza-loja-online/nao-consigo-cancelar-meu-cadastro-no-site-e-aplicativo_fvjWVDI7hSQCY3H2/",
+              "user_city": "São Paulo",
+              "user_state": "SP"
+            },
+            {
+              "category_id": null,
+              "company_id": "29266",
+              "company_name": "Magazine Luiza - Loja Online",
+              "company_shortname": "magazine-luiza-loja-online",
+              "created": "2026-09-21T23:58:24",
+              "deal_again": null,
+              "description": "Minha compra nao chegou",
+              "evaluated": false,
+              "id": "KW7q4ZaYJjaSyfZs",
+              "interaction_count": 0,
+              "legacy_id": 259695653,
+              "modified": "2026-09-22T00:06:20",
+              "problem_type_id": null,
+              "product_type_id": null,
+              "score": null,
+              "solved": false,
+              "status": "PENDING",
+              "title": "Compra não entregue",
+              "url": "https://www.reclameaqui.com.br/magazine-luiza-loja-online/compra-nao-entregue_KW7q4ZaYJjaSyfZs/",
+              "user_city": "Belford Roxo",
+              "user_state": "RJ"
+            }
+          ],
+          "count": 3,
+          "country": "BR",
+          "facets": {
+            "categories": [
+              {
+                "count": 135687,
+                "id": "0000000000000060",
+                "name": "Eletrodomésticos"
+              },
+              {
+                "count": 105411,
+                "id": "0000000000000000",
+                "name": "Não encontrei meu problema"
+              },
+              {
+                "count": 90782,
+                "id": "0000000000000064",
+                "name": "Celulares e Smartphones"
+              },
+              {
+                "count": 83118,
+                "id": "0000000000000192",
+                "name": "Móveis em Geral"
+              },
+              {
+                "count": 56737,
+                "id": "0000000000000059",
+                "name": "Eletroeletrônicos"
+              },
+              {
+                "count": 36388,
+                "id": "0000000000000058",
+                "name": "Informática"
+              },
+              {
+                "count": 32390,
+                "id": "0000000000000061",
+                "name": "Eletroportáteis"
+              },
+              {
+                "count": 23866,
+                "id": "-000000000000001",
+                "name": "Não categorizado"
+              },
+              {
+                "count": 20389,
+                "id": "0000000000000062",
+                "name": "Utilidades domésticas"
+              },
+              {
+                "count": 13966,
+                "id": "0000000000000074",
+                "name": "Brinquedos e jogos"
+              },
+              {
+                "count": 13398,
+                "id": "0000000000000167",
+                "name": "Móveis Modulados"
+              },
+              {
+                "count": 10043,
+                "id": "0000000000000091",
+                "name": "Colchões"
+              },
+              {
+                "count": 8251,
+                "id": "0000000000000011",
+                "name": "Acessórios para Carros"
+              },
+              {
+                "count": 8229,
+                "id": "0000000000000054",
+                "name": "Acessórios de Vestuário"
+              },
+              {
+                "count": 8218,
+                "id": "0000000000000255",
+                "name": "Problemas com o Atendimento"
+              },
+              {
+                "count": 8098,
+                "id": "0000000000000038",
+                "name": "Cama, Mesa e Banho"
+              },
+              {
+                "count": 7895,
+                "id": "0000000000000075",
+                "name": "Games e Jogos"
+              },
+              {
+                "count": 7666,
+                "id": "0000000000000045",
+                "name": "Higiene e Limpeza Pessoal"
+              },
+              {
+                "count": 7552,
+                "id": "0000000000000275",
+                "name": "Marketplace"
+              },
+              {
+                "count": 6535,
+                "id": "0000000000000253",
+                "name": "Equipamentos de Beleza e Estética"
+              },
+              {
+                "count": 5651,
+                "id": "0000000000000123",
+                "name": "Acessórios para Bebê"
+              },
+              {
+                "count": 4894,
+                "id": "0000000000000124",
+                "name": "Artigos para bebê"
+              },
+              {
+                "count": 4099,
+                "id": "0000000000000049",
+                "name": "Relógios"
+              },
+              {
+                "count": 3841,
+                "id": "0000000000000224",
+                "name": "Calçados Femininos"
+              },
+              {
+                "count": 3738,
+                "id": "0000000000000094",
+                "name": "Livros"
+              },
+              {
+                "count": 3722,
+                "id": "0000000000000227",
+                "name": "Calçados Masculinos"
+              },
+              {
+                "count": 3719,
+                "id": "0000000000000121",
+                "name": "Suplementos Alimentares"
+              },
+              {
+                "count": 3376,
+                "id": "0000000000000092",
+                "name": "Perfumarias"
+              },
+              {
+                "count": 3369,
+                "id": "0000000000000048",
+                "name": "Equipamentos de academia"
+              },
+              {
+                "count": 3275,
+                "id": "0000000000000118",
+                "name": "Logística e Entrega Rápida"
+              },
+              {
+                "count": 3261,
+                "id": "0000000000000055",
+                "name": "Bolsas e Malas"
+              },
+              {
+                "count": 2884,
+                "id": "0000000000000260",
+                "name": "Problemas na Loja"
+              },
+              {
+                "count": 2817,
+                "id": "0000000000000079",
+                "name": "Pets Produtos e Acessórios"
+              },
+              {
+                "count": 2706,
+                "id": "0000000000000271",
+                "name": "Cabelos"
+              },
+              {
+                "count": 2518,
+                "id": "0000000000000259",
+                "name": "Problemas com o Site"
+              },
+              {
+                "count": 2393,
+                "id": "0000000000000095",
+                "name": "Material Escolar e Escritórios"
+              },
+              {
+                "count": 1794,
+                "id": "0000000000000258",
+                "name": "Troca de Fraldas"
+              },
+              {
+                "count": 1541,
+                "id": "0000000000000003",
+                "name": "Cartões de Crédito"
+              },
+              {
+                "count": 1516,
+                "id": "0000000000000103",
+                "name": "Corpo e Banho"
+              },
+              {
+                "count": 1410,
+                "id": "0000000000000229",
+                "name": "Moda Masculina"
+              },
+              {
+                "count": 1184,
+                "id": "0000000000000057",
+                "name": "Foto e Vídeo"
+              },
+              {
+                "count": 1183,
+                "id": "0000000000000128",
+                "name": "Acessórios para Motos"
+              },
+              {
+                "count": 1099,
+                "id": "0000000000000126",
+                "name": "Chuveiros e Aquecedores"
+              },
+              {
+                "count": 1074,
+                "id": "0000000000000078",
+                "name": "Pets Alimentos"
+              },
+              {
+                "count": 1073,
+                "id": "0000000000000065",
+                "name": "Telefones fixos (aparelhos)"
+              },
+              {
+                "count": 924,
+                "id": "0000000000000233",
+                "name": "Moda Feminina"
+              },
+              {
+                "count": 762,
+                "id": "0000000000000113",
+                "name": "Óculos, Lentes e Acessórios"
+              }
+            ],
+            "problems": [
+              {
+                "count": 223660,
+                "id": "0000000000000001",
+                "name": "Atraso na entrega"
+              },
+              {
+                "count": 134556,
+                "id": "0000000000001454",
+                "name": "Produto não recebido"
+              },
+              {
+                "count": 110007,
+                "id": "0000000000000007",
+                "name": "Estorno do valor pago"
+              },
+              {
+                "count": 63661,
+                "id": "0000000000001458",
+                "name": "Produto com defeito"
+              },
+              {
+                "count": 58248,
+                "id": "0000000000000000",
+                "name": "Outro problema"
+              },
+              {
+                "count": 54764,
+                "id": "0000000000001457",
+                "name": "Troca-Devolução de produto"
+              },
+              {
+                "count": 35394,
+                "id": "0000000000000009",
+                "name": "Propaganda enganosa"
+              },
+              {
+                "count": 29063,
+                "id": "0000000000000014",
+                "name": "Produto errado"
+              },
+              {
+                "count": 16768,
+                "id": "0000000000001577",
+                "name": "Problemas na finalização da compra"
+              },
+              {
+                "count": 12924,
+                "id": "0000000000001459",
+                "name": "Mau atendimento no SAC"
+              },
+              {
+                "count": 7668,
+                "id": "0000000000000078",
+                "name": "Cancelamento"
+              },
+              {
+                "count": 5908,
+                "id": "0000000000000008",
+                "name": "Produto indisponível"
+              },
+              {
+                "count": 3141,
+                "id": "0000000000000304",
+                "name": "Atraso"
+              },
+              {
+                "count": 3140,
+                "id": "0000000000000011",
+                "name": "Divergência de valores"
+              },
+              {
+                "count": 2909,
+                "id": "0000000000000394",
+                "name": "Produto com peças faltando"
+              },
+              {
+                "count": 2717,
+                "id": "0000000000000075",
+                "name": "Cobrança indevida"
+              },
+              {
+                "count": 2496,
+                "id": "0000000000000387",
+                "name": "Má qualidade do produto"
+              },
+              {
+                "count": 2362,
+                "id": "0000000000000137",
+                "name": "Amassado"
+              },
+              {
+                "count": 2024,
+                "id": "0000000000001635",
+                "name": "Produto danificado"
+              },
+              {
+                "count": 1970,
+                "id": "0000000000000158",
+                "name": "Má qualidade"
+              },
+              {
+                "count": 1875,
+                "id": "0000000000001227",
+                "name": "Não consigo cancelar"
+              },
+              {
+                "count": 1842,
+                "id": "0000000000001462",
+                "name": "Demora na execução"
+              },
+              {
+                "count": 1692,
+                "id": "0000000000000002",
+                "name": "Mau Atendimento"
+              },
+              {
+                "count": 1483,
+                "id": "0000000000000395",
+                "name": "Peças quebradas"
+              },
+              {
+                "count": 1294,
+                "id": "0000000000000029",
+                "name": "Não liga"
+              },
+              {
+                "count": 1286,
+                "id": "0000000000000728",
+                "name": "Descumprimento de prazos"
+              },
+              {
+                "count": 1181,
+                "id": "0000000000000716",
+                "name": "Instalação-Reparo não concluídos"
+              },
+              {
+                "count": 996,
+                "id": "0000000000000006",
+                "name": "Produto usado"
+              },
+              {
+                "count": 899,
+                "id": "0000000000001456",
+                "name": "Valor de frete"
+              },
+              {
+                "count": 896,
+                "id": "0000000000001576",
+                "name": "Forma de pagamento indisponível"
+              },
+              {
+                "count": 880,
+                "id": "0000000000000568",
+                "name": "Não recebi"
+              },
+              {
+                "count": 844,
+                "id": "0000000000000175",
+                "name": "Peças faltando"
+              },
+              {
+                "count": 751,
+                "id": "0000000000001578",
+                "name": "Maquiagem de preço"
+              },
+              {
+                "count": 711,
+                "id": "0000000000000866",
+                "name": "Assistência técnica"
+              },
+              {
+                "count": 660,
+                "id": "0000000000000159",
+                "name": "Quebrado"
+              },
+              {
+                "count": 636,
+                "id": "0000000000000704",
+                "name": "Falso"
+              },
+              {
+                "count": 627,
+                "id": "0000000000000022",
+                "name": "Tela trincada"
+              },
+              {
+                "count": 621,
+                "id": "0000000000000620",
+                "name": "Propagada enganosa"
+              },
+              {
+                "count": 578,
+                "id": "0000000000000834",
+                "name": "Falta de peças"
+              },
+              {
+                "count": 563,
+                "id": "0000000000000772",
+                "name": "Não gela"
+              },
+              {
+                "count": 535,
+                "id": "0000000000000800",
+                "name": "Produto quebrou com pouco tempo de uso"
+              },
+              {
+                "count": 527,
+                "id": "0000000000000396",
+                "name": "Peças erradas"
+              },
+              {
+                "count": 488,
+                "id": "0000000000000778",
+                "name": "Pintura riscada-descascando"
+              },
+              {
+                "count": 483,
+                "id": "0000000000000005",
+                "name": "Produto quebrado"
+              },
+              {
+                "count": 453,
+                "id": "0000000000000067",
+                "name": "Problemas com a tela"
+              },
+              {
+                "count": 449,
+                "id": "0000000000001498",
+                "name": "Site fora do ar-Lento"
+              },
+              {
+                "count": 446,
+                "id": "0000000000000385",
+                "name": "Estofamento rasgado"
+              }
+            ],
+            "products": [
+              {
+                "count": 102449,
+                "id": "0000000000000000",
+                "name": "Outro Tipo de produto/Serviço"
+              },
+              {
+                "count": 62117,
+                "id": "0000000000001270",
+                "name": "Móveis"
+              },
+              {
+                "count": 53048,
+                "id": "0000000000000020",
+                "name": "Smartphone"
+              },
+              {
+                "count": 40350,
+                "id": "0000000000001395",
+                "name": "Celular"
+              },
+              {
+                "count": 36702,
+                "id": "0000000000000010",
+                "name": "TV"
+              },
+              {
+                "count": 32565,
+                "id": "0000000000000248",
+                "name": "Entrega"
+              },
+              {
+                "count": 28896,
+                "id": "0000000000000385",
+                "name": "Geladeira-Refrigerador"
+              },
+              {
+                "count": 23617,
+                "id": "0000000000000386",
+                "name": "Fogão-Forno"
+              },
+              {
+                "count": 22248,
+                "id": "0000000000000388",
+                "name": "Lavadora de roupas e Tanquinho"
+              },
+              {
+                "count": 16860,
+                "id": "0000000000000370",
+                "name": "Notebooks"
+              },
+              {
+                "count": 13683,
+                "id": "0000000000000019",
+                "name": "Outros"
+              },
+              {
+                "count": 11894,
+                "id": "0000000000000392",
+                "name": "Ar condicionado"
+              },
+              {
+                "count": 11577,
+                "id": "0000000000000183",
+                "name": "Sofás e Estofados"
+              },
+              {
+                "count": 10493,
+                "id": "0000000000000422",
+                "name": "Ventiladores e Circuladores de ar"
+              },
+              {
+                "count": 8227,
+                "id": "0000000000001269",
+                "name": "Mesas e Cadeiras"
+              },
+              {
+                "count": 7594,
+                "id": "0000000000000187",
+                "name": "Camas e camas-box"
+              },
+              {
+                "count": 7216,
+                "id": "0000000000000347",
+                "name": "Tênis"
+              },
+              {
+                "count": 6501,
+                "id": "0000000000000387",
+                "name": "Micro-ondas"
+              },
+              {
+                "count": 4762,
+                "id": "0000000000000408",
+                "name": "Fritadeira elétrica"
+              },
+              {
+                "count": 4458,
+                "id": "0000000000001396",
+                "name": "Acessórios e Periféricos"
+              },
+              {
+                "count": 4271,
+                "id": "0000000000000689",
+                "name": "Colchões e acessórios"
+              },
+              {
+                "count": 4236,
+                "id": "0000000000000640",
+                "name": "Fraldas"
+              },
+              {
+                "count": 3618,
+                "id": "0000000000000581",
+                "name": "Console (Videogame)"
+              },
+              {
+                "count": 3598,
+                "id": "0000000000000411",
+                "name": "Liquidificadores"
+              },
+              {
+                "count": 3597,
+                "id": "0000000000000372",
+                "name": "Tablets"
+              },
+              {
+                "count": 3258,
+                "id": "0000000000000382",
+                "name": "Componentes, peças e acessórios"
+              },
+              {
+                "count": 3251,
+                "id": "0000000000000401",
+                "name": "Cafeteiras e Chaleiras"
+              },
+              {
+                "count": 3242,
+                "id": "0000000000000286",
+                "name": "Escovas - Modeladores - Babyliss"
+              },
+              {
+                "count": 3229,
+                "id": "0000000000000398",
+                "name": "Aspiradores e vassouras"
+              },
+              {
+                "count": 3165,
+                "id": "0000000000000328",
+                "name": "Relógios"
+              },
+              {
+                "count": 3143,
+                "id": "0000000000000373",
+                "name": "Impressoras"
+              },
+              {
+                "count": 3142,
+                "id": "0000000000000379",
+                "name": "Caixas de som e fone de ouvido"
+              },
+              {
+                "count": 3059,
+                "id": "0000000000000375",
+                "name": "Monitores"
+              },
+              {
+                "count": 3036,
+                "id": "0000000000000011",
+                "name": "Aparelhos de som"
+              },
+              {
+                "count": 3020,
+                "id": "0000000000000692",
+                "name": "Livros"
+              },
+              {
+                "count": 3020,
+                "id": "0000000000000427",
+                "name": "Panela"
+              },
+              {
+                "count": 2946,
+                "id": "0000000000000690",
+                "name": "Perfume"
+              },
+              {
+                "count": 2931,
+                "id": "0000000000001267",
+                "name": "Móveis para Escritório"
+              },
+              {
+                "count": 2812,
+                "id": "0000000000001004",
+                "name": "Secador de cabelo"
+              },
+              {
+                "count": 2433,
+                "id": "0000000000000396",
+                "name": "Cooktop"
+              },
+              {
+                "count": 2374,
+                "id": "0000000000000566",
+                "name": "Bonecos e Bonecas"
+              },
+              {
+                "count": 2153,
+                "id": "0000000000000568",
+                "name": "Bicicleta infantil"
+              },
+              {
+                "count": 1982,
+                "id": "0000000000000025",
+                "name": "Cartão de crédito"
+              },
+              {
+                "count": 1954,
+                "id": "0000000000000418",
+                "name": "Panelas elétricas"
+              },
+              {
+                "count": 1898,
+                "id": "0000000000000022",
+                "name": "Fone de ouvido"
+              },
+              {
+                "count": 1796,
+                "id": "0000000000000389",
+                "name": "Lava louças"
+              },
+              {
+                "count": 1730,
+                "id": "0000000000000582",
+                "name": "Jogos"
+              },
+              {
+                "count": 1713,
+                "id": "0000000000000247",
+                "name": "Cadastro e Assinatura"
+              }
+            ]
+          },
+          "language": "pt-BR",
+          "next_page": 2,
+          "observed_at_ms": 1790047693799,
+          "page": 1,
+          "page_size": 3,
+          "status": "all",
+          "total": 1078185
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "reclameaqui-com-br",
+        "capability": "complaints/company_complaints"
+      }
+    },
+    {
+      "id": "reclameaqui-com-br/complaints/complaint",
+      "provider": "reclameaqui-com-br",
+      "capability": "complaints/complaint",
+      "name": "Complaint",
+      "description": "Read one complaint's text, the company reply and the consumer's evaluation. Ids and URLs come from company_complaints or search_complaints.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company_shortname",
+          "type": "string",
+          "in": "body",
+          "about": "company_shortname"
+        },
+        {
+          "name": "complaint_id",
+          "type": "string",
+          "in": "body",
+          "about": "16-character complaint id (the suffix after the last underscore in the page URL). Pattern: ^[A-Za-z0-9_-]{16}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Complaint page URL https://www.reclameaqui.com.br/<company-shortname>/<slug>_<complaintId>/. Either url, or company_shortname and complaint_id, is required."
+        }
+      ],
+      "response": {
+        "about": "One public complaint by page URL or by company shortname plus complaint id (SSR complaint page, ComplaintReadingClient island props): title, full public text, status, solved/evaluated flags, consumer score and 'would deal again' answer, location, problem/product/category, every public interaction (company ANSWER, consumer FINAL_ANSWER and others) with its text and date, and a company summary with its current reputation. Unknown ids are not_found.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "category",
+            "type": "object"
+          },
+          {
+            "name": "company",
+            "type": "object"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "name": "deal_again",
+            "type": "boolean"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Full public complaint text (may contain HTML line breaks as published)."
+          },
+          {
+            "name": "evaluated",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "interactions",
+            "type": "object[]"
+          },
+          {
+            "name": "language",
+            "type": "string"
+          },
+          {
+            "name": "legacy_id",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "problem_type",
+            "type": "object"
+          },
+          {
+            "name": "product_type",
+            "type": "object"
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "about": "Consumer's evaluation score 0-10; null until evaluated."
+          },
+          {
+            "name": "solved",
+            "type": "boolean"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Complaint status as published on the page (e.g. PENDING, ANSWERED, SOLVED, NOT_SOLVED)."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "user_city",
+            "type": "string"
+          },
+          {
+            "name": "user_state",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.reclameaqui.com.br/magazine-luiza-loja-online/nao-cancelaram-minha-compra-e-nao-fizeram-o-reembolso_vsmgTXfXsbIl9vqB/"
+        },
+        "response": {
+          "category": null,
+          "company": {
+            "id": "29266",
+            "name": "Magazine Luiza - Loja Online",
+            "reputation": "RA1000",
+            "score": 8.3,
+            "shortname": "magazine-luiza-loja-online",
+            "url": "https://www.reclameaqui.com.br/empresa/magazine-luiza-loja-online/"
+          },
+          "country": "BR",
+          "created": "2026-09-20T19:55:34.000Z",
+          "deal_again": true,
+          "description": "Cancelamento de compra! Recebi o produto dia 02/09 solicitei cancelamento pois nãos gostei dia 08:09 até hoje não houve o cancelamento o produto já foi recebido pelo loja e nada do reembolso",
+          "evaluated": true,
+          "id": "vsmgTXfXsbIl9vqB",
+          "interactions": [
+            {
+              "created": "2026-09-21T11:31:27",
+              "id": "FiY73QGfFEyjNHbl",
+              "message": "Olá, [nome], espero que esteja tudo bem!<br /><br />Meu nome é Maria Eduarda e faço parte da equipe Magalu, fiquei responsável por te ajudar a resolver a sua publicação.<br /><br />Eu, primeiramente, gostaria de lhe pedir desculpas por todo transtorno ocasionado, pois esta não é a experiência que a empresa deseja com seus clientes, sinto muito por ter essa experiência negativa com nossa empresa!<br /><br />Verifiquei o andamento do seu caso e todas as pendências foram acertadas, está tudo certo.<br /><br />Caso tenha algo pendente ou sinta que o caso não foi resolvido, peço que não avalie o atendimento no site do Reclame Aqui, pois assim nossos campos para interações serão bloqueados, impossibilitando a continuidade de nosso contato, peço que me responda no WhatsApp, estou à disposição.<br /><br />Se estiver tudo resolvido, peço que, durante a avaliação, a senhora leve em consideração o meu atendimento. Para que eu possa crescer profissionalmente aqui na empresa, preciso da sua avaliação com a nota 10. Conto com sua ajuda! 😊️<br /><br />Atenciosamente,<br /><br />Maria Eduarda | Reclame Aqui | Equipe Magalu 💙🚀️<br /><br />Confira os nossos canais de atendimento e perguntas frequentes:<br /><br />https://atendimento.magazineluiza.com.br",
+              "type": "ANSWER"
+            },
+            {
+              "created": "2026-09-21T11:33:21",
+              "id": "LT1D88VNfoSCS1-s",
+              "message": "Rápida",
+              "type": "FINAL_ANSWER"
+            }
+          ],
+          "language": "pt-BR",
+          "legacy_id": 259571877,
+          "observed_at_ms": 1790047704061,
+          "problem_type": {
+            "id": "0000000000001227",
+            "name": "Não consigo cancelar"
+          },
+          "product_type": {
+            "id": null,
+            "name": "Produto"
+          },
+          "score": 10,
+          "solved": true,
+          "status": "SOLVED",
+          "title": "Não cancelaram minha compra e não fizeram o reembolso",
+          "url": "https://www.reclameaqui.com.br/magazine-luiza-loja-online/nao-cancelaram-minha-compra-e-nao-fizeram-o-reembolso_vsmgTXfXsbIl9vqB/",
+          "user_city": "São Paulo",
+          "user_state": "SP"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "reclameaqui-com-br",
+        "capability": "complaints/complaint"
+      }
+    },
+    {
+      "id": "reclameaqui-com-br/complaints/search_companies",
+      "provider": "reclameaqui-com-br",
+      "capability": "complaints/search_companies",
+      "name": "Search companies",
+      "description": "Start here to resolve a company's shortname and numeric id from a name or CNPJ before calling company, company_complaints or search_complaints.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Company name, brand, previous name or CNPJ (digits only or formatted).",
+          "required": true
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum number of companies to return (default 10, at most 50).",
+          "default": 10,
+          "min": 1,
+          "max": 50
+        }
+      ],
+      "response": {
+        "about": "Search Reclame Aqui company profiles by name, brand or CNPJ (search-service). Returns the profile shortname, numeric company id, CNPJ, reputation status and score, solution rate, 6-month complaint count, segment and location for each match; brands with several profiles (e.g. 'Magazine Luiza - Loja Online' vs 'Loja Fisica') come back as separate rows. An empty list is a legitimate no-match result.",
+        "key": "companies",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "cnpj",
+            "type": "string",
+            "about": "14-digit CNPJ (first document on the profile) or null."
+          },
+          {
+            "name": "complaints_6m",
+            "type": "number",
+            "about": "Complaints in the 6-month reputation window."
+          },
+          {
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Numeric company id as a string (key for company_complaints and search_complaints)."
+          },
+          {
+            "name": "logo",
+            "type": "string"
+          },
+          {
+            "name": "main_segment",
+            "type": "object"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "reputation",
+            "type": "string",
+            "about": "Reputation status as published: RA1000, GREAT (Otimo), GOOD (Bom), REGULAR, BAD (Ruim), NOT_RECOMMENDED (Nao recomendada), or other source values."
+          },
+          {
+            "name": "score",
+            "type": "number",
+            "about": "Reputation score 0-10 (last 6 months)."
+          },
+          {
+            "name": "segment",
+            "type": "object"
+          },
+          {
+            "name": "shortname",
+            "type": "string",
+            "about": "Profile slug (key for company and the profile URL)."
+          },
+          {
+            "name": "solved_rate",
+            "type": "number",
+            "about": "Percentage of evaluated complaints marked solved."
+          },
+          {
+            "name": "state",
+            "type": "string",
+            "about": "Brazilian state code (UF)."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Profile page https://www.reclameaqui.com.br/empresa/<shortname>/"
+          },
+          {
+            "name": "verified",
+            "type": "boolean",
+            "about": "hasVerificada: the company carries the 'Verificada' label."
+          },
+          {
+            "name": "website",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "magazine luiza",
+          "size": 5
+        },
+        "response": {
+          "companies": [
+            {
+              "city": "FRANCA",
+              "cnpj": "47960950000121",
+              "complaints_6m": 56901,
+              "created": "2008-07-28T00:01:00",
+              "id": "29266",
+              "logo": "https://raichu-uploads.s3.amazonaws.com/logo_magazine-luiza-loja-online_asIky4.png",
+              "main_segment": {
+                "shortname": "varejo",
+                "title": "Varejo"
+              },
+              "name": "Magazine Luiza - Loja Online",
+              "reputation": "RA1000",
+              "score": 8.3,
+              "segment": {
+                "shortname": "marketplaces",
+                "title": "Marketplaces"
+              },
+              "shortname": "magazine-luiza-loja-online",
+              "solved_rate": 90.8,
+              "state": "SP",
+              "url": "https://www.reclameaqui.com.br/empresa/magazine-luiza-loja-online/",
+              "verified": false,
+              "website": "http://www.magazineluiza.com.br"
+            },
+            {
+              "city": "São Paulo",
+              "cnpj": "02206577000180",
+              "complaints_6m": 5835,
+              "created": "2002-01-23T22:33:00",
+              "id": "637",
+              "logo": "https://raichu-uploads.s3.amazonaws.com/logo_magazine-luiza-loja-fisica_jOkH3u.png",
+              "main_segment": {
+                "shortname": "varejo",
+                "title": "Varejo"
+              },
+              "name": "Magazine Luiza - Loja Física",
+              "reputation": "GREAT",
+              "score": 8.2,
+              "segment": {
+                "shortname": "marketplaces",
+                "title": "Marketplaces"
+              },
+              "shortname": "magazine-luiza-loja-fisica",
+              "solved_rate": 89.8,
+              "state": "SP",
+              "url": "https://www.reclameaqui.com.br/empresa/magazine-luiza-loja-fisica/",
+              "verified": false,
+              "website": "http://www.magazineluiza.com.br"
+            },
+            {
+              "city": "AAAAAA",
+              "cnpj": "46930793000149",
+              "complaints_6m": 4,
+              "created": "2022-12-02T13:19:28",
+              "id": "T8FsgYHIKtIwsg_Y",
+              "logo": null,
+              "main_segment": {
+                "shortname": "moveis-e-decoracao",
+                "title": "Móveis e Decoração"
+              },
+              "name": "Inbox Shop ",
+              "reputation": "NO_INDEX",
+              "score": null,
+              "segment": {
+                "shortname": "ecommerce-moveis-e-decoracao",
+                "title": "Ecommerce - Móveis e Decoração"
+              },
+              "shortname": "inbox-shop",
+              "solved_rate": null,
+              "state": "AA",
+              "url": "https://www.reclameaqui.com.br/empresa/inbox-shop/",
+              "verified": false,
+              "website": "https://www.magazineluiza.com.br/lojista/inboxmoveis/"
+            },
+            {
+              "city": null,
+              "cnpj": "37621777000183",
+              "complaints_6m": 1,
+              "created": "2024-10-14T10:31:47",
+              "id": "yzTm2jM7FyznfqIp",
+              "logo": null,
+              "main_segment": null,
+              "name": "Cosmeticos e Produtos Comercio de Luxo Cevelo Ltda",
+              "reputation": "NO_INDEX",
+              "score": null,
+              "segment": null,
+              "shortname": "cosmeticos-e-produtos-comercio-de-luxo-cevelo-ltda",
+              "solved_rate": null,
+              "state": null,
+              "url": "https://www.reclameaqui.com.br/empresa/cosmeticos-e-produtos-comercio-de-luxo-cevelo-ltda/",
+              "verified": false,
+              "website": "https://www.magazineluiza.com.br/lojista/sie/"
+            },
+            {
+              "city": "AAAAAA",
+              "cnpj": null,
+              "complaints_6m": 0,
+              "created": "2023-03-17T10:10:48",
+              "id": "DiUPEVrJEXb8Yu-T",
+              "logo": null,
+              "main_segment": {
+                "shortname": "eletroeletronicos",
+                "title": "Eletroeletrônicos"
+              },
+              "name": "JOTA STORE",
+              "reputation": "NO_INDEX",
+              "score": null,
+              "segment": {
+                "shortname": "eletroeletronicos-e-commerce",
+                "title": "Eletroeletrônicos - E-commerce"
+              },
+              "shortname": "jota-store",
+              "solved_rate": null,
+              "state": "AA",
+              "url": "https://www.reclameaqui.com.br/empresa/jota-store/",
+              "verified": false,
+              "website": "https://www.magazineluiza.com.br/lojista/jotastoreoficial/"
+            }
+          ],
+          "count": 5,
+          "country": "BR",
+          "language": "pt-BR",
+          "observed_at_ms": 1790047681500,
+          "query": "magazine luiza"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "reclameaqui-com-br",
+        "capability": "complaints/search_companies"
+      }
+    },
+    {
+      "id": "reclameaqui-com-br/complaints/search_complaints",
+      "provider": "reclameaqui-com-br",
+      "capability": "complaints/search_complaints",
+      "name": "Search complaints",
+      "description": "Find complaints about a topic ('reembolso', a product name) across Reclame Aqui or within one company. Use company_complaints to browse a company without a search term.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company_id",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict to one company (numeric id). Pattern: ^[0-9]{1,12}$."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 10,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Search term (Portuguese).",
+          "required": true
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict to unanswered (PENDING) or answered (ANSWERED) complaints.",
+          "oneOf": [
+            "PENDING",
+            "ANSWERED"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Full-text search over public complaints (iosearch query), site-wide or scoped to one company by numeric id, with an optional PENDING/ANSWERED status filter and pagination. Returns the matching complaints (same fields as company_complaints) and, for a site-wide search, the top companies facet with each company's complaint count and current reputation. Zero matches is a legitimate empty result.",
+        "key": "complaints",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "category_id",
+            "type": "string"
+          },
+          {
+            "name": "company_id",
+            "type": "string"
+          },
+          {
+            "name": "company_name",
+            "type": "string"
+          },
+          {
+            "name": "company_shortname",
+            "type": "string"
+          },
+          {
+            "name": "created",
+            "type": "string"
+          },
+          {
+            "name": "deal_again",
+            "type": "boolean"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "evaluated",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "interaction_count",
+            "type": "number"
+          },
+          {
+            "name": "legacy_id",
+            "type": "number"
+          },
+          {
+            "name": "modified",
+            "type": "string"
+          },
+          {
+            "name": "problem_type_id",
+            "type": "string"
+          },
+          {
+            "name": "product_type_id",
+            "type": "string"
+          },
+          {
+            "name": "score",
+            "type": "number"
+          },
+          {
+            "name": "solved",
+            "type": "boolean"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "user_city",
+            "type": "string"
+          },
+          {
+            "name": "user_state",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_id": "29266",
+          "page_size": 3,
+          "query": "reembolso"
+        },
+        "response": {
+          "companies": [
+            {
+              "id": "29266",
+              "matching_complaints": 86289,
+              "name": "Magazine Luiza - Loja Online",
+              "reputation": "RA1000",
+              "score": 8.3,
+              "shortname": "magazine-luiza-loja-online",
+              "solved_rate": 90.8,
+              "verified": false
+            }
+          ],
+          "company_id": "29266",
+          "complaints": [
+            {
+              "category_id": null,
+              "company_id": "29266",
+              "company_name": "Magazine Luiza - Loja Online",
+              "company_shortname": "magazine-luiza-loja-online",
+              "created": "2026-09-22T00:06:49",
+              "deal_again": null,
+              "description": "<br/>Fiz uma compra dia 05/09 ,e no dia 11/09 foi cancelado a compra mas até agora nada do meu reembolso",
+              "evaluated": false,
+              "id": "clOOck1KWrpbbqp4",
+              "interaction_count": 0,
+              "legacy_id": 259695969,
+              "modified": "2026-09-22T00:20:35",
+              "problem_type_id": null,
+              "product_type_id": null,
+              "score": null,
+              "solved": false,
+              "status": "PENDING",
+              "title": "Reembolso",
+              "url": "https://www.reclameaqui.com.br/magazine-luiza-loja-online/reembolso_clOOck1KWrpbbqp4/",
+              "user_city": "Embu das Artes",
+              "user_state": "SP"
+            },
+            {
+              "category_id": null,
+              "company_id": "29266",
+              "company_name": "Magazine Luiza - Loja Online",
+              "company_shortname": "magazine-luiza-loja-online",
+              "created": "2026-09-21T23:22:11",
+              "deal_again": null,
+              "description": "Assunto: Atraso no reembolso - Pedido enviado incorretamente e devolvido<br/><br/>Realizei uma compra no dia 28/08 e o produto foi entregue em 08/09. Porém, recebi o item errado e solicitei a devolução imediata.<br/><br/>Acompanhando a devolução, recebi uma mensagem da Magalu confirmando que o produto já havia chegado à loja, informando um prazo de 3 dias úteis para a conferência e liberação do reembolso.<br/><br/>Esse prazo já expirou e até o momento não recebi nenhuma atualização ou confirmação do estorno. O valor retido está me impossibilitando de adquirir outro aparelho. Solicito a regularização imediata e o comprovante do reembolso.",
+              "evaluated": false,
+              "id": "ju5pPpsp2ND9Ik4i",
+              "interaction_count": 0,
+              "legacy_id": 259694083,
+              "modified": "2026-09-21T23:29:13",
+              "problem_type_id": "0000000000000007",
+              "product_type_id": null,
+              "score": null,
+              "solved": false,
+              "status": "PENDING",
+              "title": "Não recebi meu reembolso após devolução de item errado",
+              "url": "https://www.reclameaqui.com.br/magazine-luiza-loja-online/nao-recebi-meu-reembolso-apos-devolucao-de-item-errado_ju5pPpsp2ND9Ik4i/",
+              "user_city": "Recife",
+              "user_state": "PE"
+            },
+            {
+              "category_id": "0000000000000060",
+              "company_id": "29266",
+              "company_name": "Magazine Luiza - Loja Online",
+              "company_shortname": "magazine-luiza-loja-online",
+              "created": "2026-09-21T22:47:51",
+              "deal_again": null,
+              "description": "Título: Reembolso não realizado 24 dias após devolução de cafeteira com defeito<br/><br/>No dia 23/08/2026, comprei no Magazine Luiza uma cafeteira Cadence para preparo de dois cafés.<br/><br/>Assim que recebi o produto, fui realizar o primeiro teste e constatei que um dos lados funcionava normalmente, enquanto o outro não funcionava corretamente. Inclusive, o lado que estava funcionando fez com que a xícara enchesse e o café transbordasse.<br/><br/>Diante do problema, solicitei a devolução do produto, o cancelamento da compra e o respectivo reembolso.<br/><br/>A cafeteira foi devolvida no dia 26/08/2026 e, no dia 27/08/2026, consta no sistema que o objeto foi postado nos Correios.<br/><br/>Hoje, 21/09/2026, já se passaram 24 dias desde a devolução, e até o momento não recebi o reembolso.<br/><br/>No próprio site do Magazine Luiza, o andamento da solicitação continua parado da seguinte forma:<br/><br/>Andamento da solicitação<br/> Solicitação de cancelamento recebida  26/08/2026 às 13:36<br/> Objeto postado nos Correios  27/08/2026 às 13:19<br/><br/>Quando já haviam se passado 18 dias sem que o reembolso fosse realizado, entrei em contato com o Magazine Luiza pelo WhatsApp para registrar uma reclamação. Na ocasião, o atendente informou que, no máximo em alguns dias, eu seria reembolsada.<br/><br/>Esse prazo também já terminou e, até agora, não houve reembolso nem uma solução para o problema.<br/><br/>Já devolvi o produto há 24 dias e continuo sem o produto e sem receber de volta o valor pago. Além disso, o próprio sistema da empresa não apresenta nenhuma atualização sobre a conclusão do cancelamento.<br/><br/>Diante disso, solicito o reembolso imediato e integral do valor pago. Não desejo receber uma nova previsão ou promessa de prazo, pois os prazos anteriormente informados já foram ultrapassados. Quero apenas que o reembolso seja efetivamente realizado.",
+              "evaluated": false,
+              "id": "5-SzJx8XOmGTg3xX",
+              "interaction_count": 0,
+              "legacy_id": 259692103,
+              "modified": "2026-09-21T22:58:15",
+              "problem_type_id": "0000000000000007",
+              "product_type_id": "0000000000000401",
+              "score": null,
+              "solved": false,
+              "status": "PENDING",
+              "title": "Não recebi o reembolso de 24 dias após devolver cafeteira com defeito",
+              "url": "https://www.reclameaqui.com.br/magazine-luiza-loja-online/nao-recebi-o-reembolso-de-24-dias-apos-devolver-cafeteira-com-defeito_5-SzJx8XOmGTg3xX/",
+              "user_city": "Campinas",
+              "user_state": "SP"
+            }
+          ],
+          "count": 3,
+          "country": "BR",
+          "language": "pt-BR",
+          "next_page": 2,
+          "observed_at_ms": 1790047699039,
+          "page": 1,
+          "page_size": 3,
+          "query": "reembolso",
+          "status": null,
+          "total": 86289
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "reclameaqui-com-br",
+        "capability": "complaints/search_complaints"
+      }
+    },
+    {
+      "id": "reclameaqui-com-br/complaints/segment_ranking",
+      "provider": "reclameaqui-com-br",
+      "capability": "complaints/segment_ranking",
+      "name": "Segment ranking",
+      "description": "Rank companies in a category, e.g. the best marketplaces (varejo/marketplaces) or the worst online courses.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "main_segment",
+          "type": "string",
+          "in": "body",
+          "about": "Main segment shortname, e.g. varejo. Pattern: ^[a-z0-9-]{1,120}$.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 10,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "sub_segment",
+          "type": "string",
+          "in": "body",
+          "about": "Sub-segment shortname, e.g. marketplaces. Pattern: ^[a-z0-9-]{1,120}$.",
+          "required": true
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "in": "body",
+          "about": "type",
+          "default": "best",
+          "oneOf": [
+            "best",
+            "worst"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Best or worst companies of one segment (segments/api/ranking): ranked position, reputation status and score, solution and response rates, solved/unsolved complaint counts and the 6-month complaint count, with pagination. Segment shortnames come from segments. Unknown segments are not_found.",
+        "key": "companies",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "answered_rate",
+            "type": "number"
+          },
+          {
+            "name": "complaints_6m",
+            "type": "number"
+          },
+          {
+            "name": "logo",
+            "type": "string"
+          },
+          {
+            "name": "main_segment",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "position",
+            "type": "number"
+          },
+          {
+            "name": "reputation",
+            "type": "string"
+          },
+          {
+            "name": "score",
+            "type": "number"
+          },
+          {
+            "name": "shortname",
+            "type": "string"
+          },
+          {
+            "name": "solved_complaints",
+            "type": "number"
+          },
+          {
+            "name": "solved_rate",
+            "type": "number"
+          },
+          {
+            "name": "sub_segment",
+            "type": "string"
+          },
+          {
+            "name": "unsolved_complaints",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "verified",
+            "type": "boolean"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "main_segment": "varejo",
+          "page_size": 3,
+          "sub_segment": "marketplaces",
+          "type": "best"
+        },
+        "response": {
+          "companies": [
+            {
+              "answered_rate": 95,
+              "complaints_6m": 56901,
+              "logo": "https://raichu-uploads.s3.amazonaws.com/logo_magazine-luiza-loja-online_asIky4.png",
+              "main_segment": "varejo",
+              "name": "Magazine Luiza - Loja Online",
+              "position": 1,
+              "reputation": "RA1000",
+              "score": 8.3,
+              "shortname": "magazine-luiza-loja-online",
+              "solved_complaints": 28079,
+              "solved_rate": 90.8,
+              "sub_segment": "marketplaces",
+              "unsolved_complaints": 2845,
+              "url": "https://www.reclameaqui.com.br/empresa/magazine-luiza-loja-online/",
+              "verified": false,
+              "website": "http://www.magazineluiza.com.br"
+            },
+            {
+              "answered_rate": 100,
+              "complaints_6m": 32,
+              "logo": "https://raichu-uploads.s3.amazonaws.com/logo_na-web-utilidades_zVYnGW.png",
+              "main_segment": "varejo",
+              "name": "Na Web Utilidades ",
+              "position": 2,
+              "reputation": "GREAT",
+              "score": 9.4,
+              "shortname": "na-web-utilidades",
+              "solved_complaints": 16,
+              "solved_rate": 100,
+              "sub_segment": "marketplaces",
+              "unsolved_complaints": 0,
+              "url": "https://www.reclameaqui.com.br/empresa/na-web-utilidades/",
+              "verified": false,
+              "website": "https://www.nawebutilidades.com.br/"
+            },
+            {
+              "answered_rate": 100,
+              "complaints_6m": 21,
+              "logo": "https://raichu-uploads.s3.amazonaws.com/logo_null_tzDxYO.png",
+              "main_segment": "varejo",
+              "name": "Mercado Fácil ",
+              "position": 3,
+              "reputation": "GREAT",
+              "score": 9.3,
+              "shortname": "mercado-facil",
+              "solved_complaints": 12,
+              "solved_rate": 92.3,
+              "sub_segment": "marketplaces",
+              "unsolved_complaints": 1,
+              "url": "https://www.reclameaqui.com.br/empresa/mercado-facil/",
+              "verified": false,
+              "website": "https://www.mercadofacil.com.br/"
+            }
+          ],
+          "count": 3,
+          "country": "BR",
+          "language": "pt-BR",
+          "main_segment": "varejo",
+          "next_page": 2,
+          "observed_at_ms": 1790047709087,
+          "page": 1,
+          "page_size": 3,
+          "pages": 9,
+          "sub_segment": "marketplaces",
+          "total": 27,
+          "type": "best",
+          "url": "https://www.reclameaqui.com.br/segmentos/varejo/marketplaces/"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "reclameaqui-com-br",
+        "capability": "complaints/segment_ranking"
+      }
+    },
+    {
+      "id": "reclameaqui-com-br/complaints/segments",
+      "provider": "reclameaqui-com-br",
+      "capability": "complaints/segments",
+      "name": "Segments",
+      "description": "Discover the main_segment/sub_segment pair for segment_ranking or browse Reclame Aqui's category taxonomy.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "main_segment",
+          "type": "string",
+          "in": "body",
+          "about": "Return only this main segment (shortname). Unknown shortnames are not_found. Pattern: ^[a-z0-9-]{1,120}$."
+        }
+      ],
+      "response": {
+        "about": "The segment tree (iosearch segments/main): every main segment with its id, title and shortname and its sub-segments, optionally filtered to one main segment. Shortnames key segment_ranking and the /segmentos/ pages.",
+        "key": "segments",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "children",
+            "type": "object[]"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "shortname",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "main_segment": "varejo"
+        },
+        "response": {
+          "count": 1,
+          "country": "BR",
+          "language": "pt-BR",
+          "observed_at_ms": 1790047714157,
+          "segments": [
+            {
+              "children": [
+                {
+                  "id": "k0ymWpaDXvtm8RTr",
+                  "shortname": "agregadores-de-cupons-e-ofertas",
+                  "title": "Agregadores de Cupons e Ofertas",
+                  "url": "https://www.reclameaqui.com.br/segmentos/varejo/agregadores-de-cupons-e-ofertas/"
+                },
+                {
+                  "id": "_5bRrMd-ZMtASKxU",
+                  "shortname": "cartao-de-credito-para-varejo",
+                  "title": "Cartão de crédito para varejo",
+                  "url": "https://www.reclameaqui.com.br/segmentos/varejo/cartao-de-credito-para-varejo/"
+                },
+                {
+                  "id": "_Lj30NRZqNyBLZnH",
+                  "shortname": "comparadores-de-precos",
+                  "title": "Comparadores de Preços",
+                  "url": "https://www.reclameaqui.com.br/segmentos/varejo/comparadores-de-precos/"
+                },
+                {
+                  "id": "GpMvgFyotfPBVo-M",
+                  "shortname": "compras-coletivas",
+                  "title": "Compras Coletivas",
+                  "url": "https://www.reclameaqui.com.br/segmentos/varejo/compras-coletivas/"
+                },
+                {
+                  "id": "zwIgnFoV9APahVP6",
+                  "shortname": "dropshipping-venda-sem-estoque",
+                  "title": "Dropshipping (Venda sem estoque)",
+                  "url": "https://www.reclameaqui.com.br/segmentos/varejo/dropshipping-venda-sem-estoque/"
+                },
+                {
+                  "id": "3MsCBoa2bu0ar3vU",
+                  "shortname": "lojas-de-departamento",
+                  "title": "Lojas de departamento",
+                  "url": "https://www.reclameaqui.com.br/segmentos/varejo/lojas-de-departamento/"
+                },
+                {
+                  "id": "159MzpScABSe7kAS",
+                  "shortname": "marketplaces",
+                  "title": "Marketplaces",
+                  "url": "https://www.reclameaqui.com.br/segmentos/varejo/marketplaces/"
+                },
+                {
+                  "id": "OHh-AL-SThd5zHPb",
+                  "shortname": "plataformas-de-e-commerce",
+                  "title": "Plataformas de E-commerce",
+                  "url": "https://www.reclameaqui.com.br/segmentos/varejo/plataformas-de-e-commerce/"
+                },
+                {
+                  "id": "R2cFsCb2oQ6mtbsV",
+                  "shortname": "produtos-importados",
+                  "title": "Produtos Importados",
+                  "url": "https://www.reclameaqui.com.br/segmentos/varejo/produtos-importados/"
+                },
+                {
+                  "id": "TWQKkTR0CVG1wgd4",
+                  "shortname": "produtos-personalizados",
+                  "title": "Produtos Personalizados",
+                  "url": "https://www.reclameaqui.com.br/segmentos/varejo/produtos-personalizados/"
+                },
+                {
+                  "id": "uuTs8RIj3njCRmes",
+                  "shortname": "varejo-lojas-fisicas",
+                  "title": "Varejo - Lojas Físicas",
+                  "url": "https://www.reclameaqui.com.br/segmentos/varejo/varejo-lojas-fisicas/"
+                },
+                {
+                  "id": "bc3nd3fSY9l16Uad",
+                  "shortname": "varejo-online-e-commerce-em-geral",
+                  "title": "Varejo Online - E-commerce em geral",
+                  "url": "https://www.reclameaqui.com.br/segmentos/varejo/varejo-online-e-commerce-em-geral/"
+                }
+              ],
+              "id": "31",
+              "shortname": "varejo",
+              "title": "Varejo"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "reclameaqui-com-br",
+        "capability": "complaints/segments"
+      }
+    }
+  ]
+}

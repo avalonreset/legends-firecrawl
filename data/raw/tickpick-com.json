@@ -1,0 +1,3798 @@
+{
+  "id": "tickpick-com",
+  "provider": "tickpick-com",
+  "name": "TickPick",
+  "description": "TickPick (US resale ticket marketplace, all-in pricing): discover sports, concert, theater and comedy events by free text, performer, venue or location, and read event details with event-level listing statistics (count, min/max/average all-in per-ticket price) and daily/hourly price history from TickPick's own web API. Per-listing offers are not available (DataDome-protected).",
+  "toolCount": 7,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "tickpick-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "tickpick-com/events/categories",
+      "provider": "tickpick-com",
+      "capability": "events/categories",
+      "name": "Categories",
+      "description": "Browse without a query: list leagues, teams, genres and shows and get performer slugs. Cached daily by the site.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "group",
+          "type": "string",
+          "in": "body",
+          "about": "Return only the group with this name (case-insensitive), for example Baseball or Concerts. not_found when no group matches."
+        }
+      ],
+      "response": {
+        "about": "TickPick's navigation tree (api.tickpick.com/1.0/performers/navigation/categories/v3): groups (Baseball, Basketball, Concerts, Theater, ...) with sections (MLB, NBA, ...), sub-sections and items, each item a performer or category link with the slug and url_category that performer_events takes. Optionally filtered to one group by name.",
+        "key": "groups",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "sections",
+            "type": "object[]"
+          },
+          {
+            "name": "slug",
+            "type": "string",
+            "about": "Category slug of the 'See all' link; null when the group has none."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "group": "Baseball"
+        },
+        "response": {
+          "group_count": 16,
+          "groups": [
+            {
+              "name": "Baseball",
+              "sections": [
+                {
+                  "name": "MLB",
+                  "slug": "mlb",
+                  "sub_sections": [
+                    {
+                      "items": [
+                        {
+                          "name": "World Series",
+                          "slug": "world-series",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/world-series-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Spring Training",
+                          "slug": "spring-training",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/spring-training-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "MLB All Star Game",
+                          "slug": "mlb-all-star-game",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/mlb-all-star-game-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "MLB Home Run Derby",
+                          "slug": "mlb-home-run-derby",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/mlb-home-run-derby-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "MLB Playoffs",
+                          "slug": "mlb-playoffs",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/mlb-playoffs-tickets/",
+                          "url_category": "mlb"
+                        }
+                      ],
+                      "name": "Featured"
+                    },
+                    {
+                      "items": [
+                        {
+                          "name": "Arizona Diamondbacks",
+                          "slug": "arizona-diamondbacks",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/arizona-diamondbacks-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Athletics",
+                          "slug": "athletics",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/athletics-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Atlanta Braves",
+                          "slug": "atlanta-braves",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/atlanta-braves-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Baltimore Orioles",
+                          "slug": "baltimore-orioles",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/baltimore-orioles-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Boston Red Sox",
+                          "slug": "boston-red-sox",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/boston-red-sox-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Chicago Cubs",
+                          "slug": "chicago-cubs",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/chicago-cubs-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Chicago White Sox",
+                          "slug": "chicago-white-sox",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/chicago-white-sox-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Cincinnati Reds",
+                          "slug": "cincinnati-reds",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/cincinnati-reds-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Cleveland Guardians",
+                          "slug": "cleveland-guardians",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/cleveland-guardians-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Colorado Rockies",
+                          "slug": "colorado-rockies",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/colorado-rockies-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Detroit Tigers",
+                          "slug": "detroit-tigers",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/detroit-tigers-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Houston Astros",
+                          "slug": "houston-astros",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/houston-astros-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Kansas City Royals",
+                          "slug": "kansas-city-royals",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/kansas-city-royals-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Los Angeles Angels",
+                          "slug": "los-angeles-angels",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/los-angeles-angels-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Los Angeles Dodgers",
+                          "slug": "los-angeles-dodgers",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/los-angeles-dodgers-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Miami Marlins",
+                          "slug": "miami-marlins",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/miami-marlins-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Milwaukee Brewers",
+                          "slug": "milwaukee-brewers",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/milwaukee-brewers-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Minnesota Twins",
+                          "slug": "minnesota-twins",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/minnesota-twins-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "New York Mets",
+                          "slug": "new-york-mets",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/new-york-mets-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "New York Yankees",
+                          "slug": "new-york-yankees",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/new-york-yankees-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Philadelphia Phillies",
+                          "slug": "philadelphia-phillies",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/philadelphia-phillies-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Pittsburgh Pirates",
+                          "slug": "pittsburgh-pirates",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/pittsburgh-pirates-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "San Diego Padres",
+                          "slug": "san-diego-padres",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/san-diego-padres-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "San Francisco Giants",
+                          "slug": "san-francisco-giants",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/san-francisco-giants-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Seattle Mariners",
+                          "slug": "seattle-mariners",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/seattle-mariners-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "St. Louis Cardinals",
+                          "slug": "st-louis-cardinals",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/st-louis-cardinals-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Tampa Bay Rays",
+                          "slug": "tampa-bay-rays",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/tampa-bay-rays-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Texas Rangers",
+                          "slug": "texas-rangers",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/texas-rangers-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Toronto Blue Jays",
+                          "slug": "toronto-blue-jays",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/toronto-blue-jays-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Washington Nationals",
+                          "slug": "washington-nationals",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "See all MLB teams",
+                          "slug": "mlb",
+                          "type": "Category",
+                          "url": "https://www.tickpick.com/mlb-tickets/",
+                          "url_category": null
+                        }
+                      ],
+                      "name": "MLB"
+                    },
+                    {
+                      "items": [
+                        {
+                          "name": "Los Angeles Dodgers vs San Diego Padres",
+                          "slug": "los-angeles-dodgers-vs-san-diego-padres",
+                          "type": "Explore",
+                          "url": null,
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Boston Red Sox vs New York Yankees",
+                          "slug": "boston-red-sox-vs-new-york-yankees",
+                          "type": "Explore",
+                          "url": null,
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "Colorado Rockies vs Los Angeles Dodgers",
+                          "slug": "colorado-rockies-vs-los-angeles-dodgers",
+                          "type": "Explore",
+                          "url": null,
+                          "url_category": "mlb"
+                        },
+                        {
+                          "name": "New York Mets vs Philadelphia Phillies",
+                          "slug": "new-york-mets-vs-philadelphia-phillies",
+                          "type": "Explore",
+                          "url": null,
+                          "url_category": "mlb"
+                        }
+                      ],
+                      "name": "Featured Matchups"
+                    }
+                  ],
+                  "url": "https://www.tickpick.com/mlb-tickets/"
+                },
+                {
+                  "name": "NCAA Baseball",
+                  "slug": "ncaa-baseball",
+                  "sub_sections": [
+                    {
+                      "items": [
+                        {
+                          "name": "NCAA Baseball Regionals",
+                          "slug": "ncaa-baseball-regionals",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/ncaa-baseball-regionals-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "NCAA Baseball Super Regionals",
+                          "slug": "ncaa-baseball-super-regionals",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/college/ncaa-baseball-super-regionals-tickets/",
+                          "url_category": "college"
+                        },
+                        {
+                          "name": "NCAA Baseball College World Series",
+                          "slug": "ncaa-baseball-college-world-series",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/ncaa-baseball-college-world-series-tickets/",
+                          "url_category": "ncaa-baseball"
+                        }
+                      ],
+                      "name": "Featured"
+                    },
+                    {
+                      "items": [
+                        {
+                          "name": "Alabama Crimson Tide",
+                          "slug": "alabama-crimson-tide-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/alabama-crimson-tide-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Arizona State Sun Devils",
+                          "slug": "arizona-state-sun-devils-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/arizona-state-sun-devils-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Arizona Wildcats",
+                          "slug": "arizona-wildcats-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/arizona-wildcats-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Arkansas Razorbacks",
+                          "slug": "arkansas-razorbacks-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/arkansas-razorbacks-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Auburn Tigers",
+                          "slug": "auburn-tigers-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/auburn-tigers-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "BYU Cougars",
+                          "slug": "byu-cougars-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/byu-cougars-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Clemson Tigers",
+                          "slug": "clemson-tigers-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/clemson-tigers-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Creighton Bluejays",
+                          "slug": "creighton-bluejays-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/creighton-bluejays-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Dayton Flyers",
+                          "slug": "dayton-flyers-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/dayton-flyers-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Duke Blue Devils",
+                          "slug": "duke-blue-devils-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/duke-blue-devils-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Florida Gators",
+                          "slug": "florida-gators-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/florida-gators-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Florida State Seminoles",
+                          "slug": "florida-state-seminoles-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/florida-state-seminoles-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Georgetown Hoyas",
+                          "slug": "georgetown-hoyas-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/georgetown-hoyas-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Georgia Bulldogs",
+                          "slug": "georgia-bulldogs-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/georgia-bulldogs-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Georgia Tech Yellow Jackets",
+                          "slug": "georgia-tech-yellow-jackets-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/georgia-tech-yellow-jackets-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Gonzaga Bulldogs",
+                          "slug": "gonzaga-bulldogs-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/gonzaga-bulldogs-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Grand Canyon Lopes",
+                          "slug": "grand-canyon-lopes-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/grand-canyon-lopes-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Houston Cougars",
+                          "slug": "houston-cougars-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/houston-cougars-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Illinois Fighting Illini",
+                          "slug": "illinois-fighting-illini-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/illinois-fighting-illini-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Indiana Hoosiers",
+                          "slug": "indiana-hoosiers-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/indiana-hoosiers-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Indiana State Sycamores",
+                          "slug": "indiana-state-sycamores-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/indiana-state-sycamores-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Iowa Hawkeyes",
+                          "slug": "iowa-hawkeyes-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/iowa-hawkeyes-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "James Madison Dukes",
+                          "slug": "james-madison-dukes-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/james-madison-dukes-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Kansas Jayhawks",
+                          "slug": "kansas-jayhawks-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/kansas-jayhawks-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "Mississippi State Bulldogs",
+                          "slug": "mississippi-state-bulldogs-baseball",
+                          "type": "Performer",
+                          "url": "https://www.tickpick.com/ncaa-baseball/mississippi-state-bulldogs-baseball-tickets/",
+                          "url_category": "ncaa-baseball"
+                        },
+                        {
+                          "name": "See all NCAA Baseball teams",
+                          "slug": "ncaa-baseball",
+                          "type": "Category",
+                          "url": "https://www.tickpick.com/ncaa-baseball-tickets/",
+                          "url_category": null
+                        }
+                      ],
+                      "name": "NCAA Baseball"
+                    }
+                  ],
+                  "url": "https://www.tickpick.com/ncaa-baseball-tickets/"
+                }
+              ],
+              "slug": "baseball",
+              "url": "https://www.tickpick.com/baseball-tickets/"
+            }
+          ],
+          "observed_at_ms": 1790034770227,
+          "source_url": "https://api.tickpick.com/1.0/performers/navigation/categories/v3"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "tickpick-com",
+        "capability": "events/categories"
+      }
+    },
+    {
+      "id": "tickpick-com/events/event",
+      "provider": "tickpick-com",
+      "capability": "events/event",
+      "name": "Event",
+      "description": "After search, performer_events or venue_events returned an event_id, or when the user pastes a tickpick.com/buy-... URL.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "event_id",
+          "type": "string",
+          "in": "body",
+          "about": "TickPick event id, for example 7368513. Pattern: ^[0-9]{1,12}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A tickpick.com event page URL, https://www.tickpick.com/buy-.../{event_id}/. Alternative to event_id."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "event_id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One TickPick event by id or buy-page URL (api.tickpick.com/1.0/events/{id}/details): identity, status, venue-local and UTC start with the venue timezone, venue, performers, categories, the seating-chart configuration and price_stats (listing count and min/max/average all-in per-ticket price across current resale listings). Availability is a snapshot; per-listing offers are not available.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "event",
+            "type": "object",
+            "about": "One TickPick event record (from /events/{id}/details, the venue worker or the performer page)."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "seating_chart",
+            "type": "object",
+            "about": "Seating-chart configuration when the site has one for this event; null otherwise."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "event_id": "8140819"
+        },
+        "response": {
+          "event": {
+            "child_category": "BASEBALL",
+            "city": "Washington",
+            "event_date_local": "2027-09-15T03:30:00",
+            "event_date_utc": "2027-09-15T07:30:00",
+            "event_id": "8140819",
+            "event_type": "SPORTS",
+            "grandchild_category": "Professional (MLB)",
+            "has_map": true,
+            "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+            "is_marketplace_enabled": false,
+            "main_performer": {
+              "name": "Washington Nationals",
+              "performer_id": "2732",
+              "role": "Home Team",
+              "short_name": "Nationals",
+              "slug": "washington-nationals",
+              "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+              "url_category": "mlb"
+            },
+            "name": "Washington Nationals vs. New York Mets",
+            "original_event_date": "2027-09-15T03:30:00",
+            "price_stats": {
+              "avg_price": 797.4,
+              "currency": "USD",
+              "fees_included": true,
+              "listing_count": 10,
+              "max_price": 1118,
+              "min_price": 111
+            },
+            "primary_marketplace": null,
+            "promotions": [],
+            "secondary_performers": [
+              {
+                "name": "New York Mets",
+                "performer_id": "733",
+                "role": "Away Team",
+                "short_name": "Mets",
+                "slug": "new-york-mets",
+                "url": "https://www.tickpick.com/mlb/new-york-mets-tickets/",
+                "url_category": "mlb"
+              }
+            ],
+            "short_name": "Nationals vs. Mets",
+            "state": "DC",
+            "status": "Scheduled",
+            "tags": [],
+            "timezone": "America/New_York",
+            "url": "https://www.tickpick.com/buy-washington-nationals-vs-new-york-mets-tickets-nationals-park-9-15-27-3am/8140819/",
+            "venue": {
+              "address": "1500 South Capitol Street Southeast",
+              "city": "Washington",
+              "country": "US",
+              "latitude": 38.87301,
+              "longitude": -77.00743,
+              "name": "Nationals Park",
+              "postal_code": "20003",
+              "slug": "nationals-park",
+              "state": "DC",
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+              "venue_id": 11412
+            }
+          },
+          "observed_at_ms": 1790034744282,
+          "seating_chart": {
+            "config_name": "NATP_MLB2",
+            "overview_image_url": "https://static-maps.tickpick.com/1.0/venues/11412/NATP_MLB2/9113ef4c7348.webp",
+            "style_url": "https://maps.tickpick.com/style/NATP_MLB2/venue_tiles.json"
+          },
+          "source_url": "https://api.tickpick.com/1.0/events/8140819/details?includeRtbBanners=true&includeAnnouncements=true"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "tickpick-com",
+        "capability": "events/event"
+      }
+    },
+    {
+      "id": "tickpick-com/events/event_price_history",
+      "provider": "tickpick-com",
+      "capability": "events/event_price_history",
+      "name": "Event price history",
+      "description": "To see how the cheapest ticket and the listing count moved over time for an event_id from search, performer_events or venue_events.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "event_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Price history for one TickPick event: daily points (date, lowest and average all-in per-ticket price, listing count) from /events/{id}/pricing/historical plus the recent hourly lowest-price trend from /events/{id}/price-trends/preview. An unknown id is not_found (verified against the event details); a known event with no history yet returns empty series.",
+        "key": "daily",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "avg_price",
+            "type": "number"
+          },
+          {
+            "name": "date",
+            "type": "string",
+            "about": "Day as published (ISO 8601 date-time at midnight, no offset)."
+          },
+          {
+            "name": "listing_count",
+            "type": "number"
+          },
+          {
+            "name": "min_price",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "event_id": "8140819"
+        },
+        "response": {
+          "currency": "USD",
+          "daily": [
+            {
+              "avg_price": 111,
+              "date": "2026-08-01T00:00:00",
+              "listing_count": 2,
+              "min_price": 111
+            },
+            {
+              "avg_price": 111,
+              "date": "2026-08-02T00:00:00",
+              "listing_count": 2,
+              "min_price": 111
+            },
+            {
+              "avg_price": 111,
+              "date": "2026-08-03T00:00:00",
+              "listing_count": 2,
+              "min_price": 111
+            },
+            {
+              "avg_price": 111,
+              "date": "2026-08-04T00:00:00",
+              "listing_count": 2,
+              "min_price": 111
+            },
+            {
+              "avg_price": 111,
+              "date": "2026-08-05T00:00:00",
+              "listing_count": 2,
+              "min_price": 111
+            },
+            {
+              "avg_price": 111,
+              "date": "2026-08-06T00:00:00",
+              "listing_count": 2,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-07T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-08T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-09T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-10T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-11T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-12T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-13T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-14T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-15T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-16T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-17T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-18T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-19T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-20T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-21T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-22T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-23T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-24T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-25T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-26T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-27T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-28T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-29T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-30T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-08-31T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 994.8,
+              "date": "2026-09-01T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-02T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-03T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-04T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-05T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-06T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-07T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-08T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-09T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-10T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-11T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-12T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-13T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-14T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-15T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-16T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-17T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-18T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-19T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-20T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            },
+            {
+              "avg_price": 797.4,
+              "date": "2026-09-21T00:00:00",
+              "listing_count": 10,
+              "min_price": 111
+            }
+          ],
+          "event_id": "8140819",
+          "fees_included": true,
+          "observed_at_ms": 1790034753488,
+          "recent_hourly": {
+            "from": "2026-09-18T23:00:00Z",
+            "granularity": "1h",
+            "metric": "min_price",
+            "points": [
+              {
+                "time": "2026-09-18T23:00:00Z",
+                "value": 111
+              },
+              {
+                "time": "2026-09-19T02:00:00Z",
+                "value": 111
+              },
+              {
+                "time": "2026-09-21T02:00:00Z",
+                "value": 111
+              }
+            ],
+            "to": "2026-09-21T23:49:00Z"
+          },
+          "source_url": "https://api.tickpick.com/1.0/events/8140819/pricing/historical"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "tickpick-com",
+        "capability": "events/event_price_history"
+      }
+    },
+    {
+      "id": "tickpick-com/events/nearby_events",
+      "provider": "tickpick-com",
+      "capability": "events/nearby_events",
+      "name": "Nearby events",
+      "description": "Location-first discovery: 'what is happening in Chicago'. Pass latitude/longitude; add the TickPick market slug (dma, for example washington-dc-md or chicago-il) for venues and just-announced lists.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "dma",
+          "type": "string",
+          "in": "body",
+          "about": "TickPick market slug (designated market area), for example washington-dc-md, chicago-il, los-angeles-ca. Pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "latitude",
+          "required": true,
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum rows per list (sports, concerts, theater, comedy, just_announced, venues, events). The site returns 12-20 per list.",
+          "default": 20,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "required": true,
+          "min": -180,
+          "max": 180
+        }
+      ],
+      "response": {
+        "about": "What is on near a point (api.tickpick.com/1.0/search/nearby): performers with upcoming events in the market grouped as sports, concerts, theater and comedy (with next_event_date), the market's top events with lowest all-in prices, and, when a dma market slug is given, just-announced performers and the market's venues.",
+        "key": "events",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "categories",
+            "type": "string[]",
+            "about": "Index category labels; null when the endpoint does not return them (search/all)."
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "event_date_local",
+            "type": "string",
+            "about": "Venue-local start, ISO 8601 without offset; the timezone is on the event detail."
+          },
+          {
+            "name": "event_id",
+            "type": "string"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "is_primary",
+            "type": "boolean",
+            "about": "True when the row is a primary (organizer) event rather than resale."
+          },
+          {
+            "name": "min_price",
+            "type": "number",
+            "about": "Lowest all-in per-ticket price in the index; null when the index carries none."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "venue_name",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "dma": "washington-dc-md",
+          "latitude": 39.11566,
+          "limit": 6,
+          "longitude": -77.5636
+        },
+        "response": {
+          "comedy": [
+            {
+              "categories": [
+                "Comedy",
+                "CONCERTS"
+              ],
+              "image_url": "https://static.tickpick.com/performers/katt-williams.jpg",
+              "is_primary": false,
+              "name": "Katt Williams",
+              "next_event_date": "2026-10-18T19:00:00",
+              "num_upcoming_events": 1,
+              "performer_id": "4148",
+              "short_name": null,
+              "slug": "katt-williams",
+              "url": "https://www.tickpick.com/comedy/katt-williams-tickets/",
+              "url_category": "comedy"
+            },
+            {
+              "categories": [
+                "Comedy",
+                "CONCERTS"
+              ],
+              "image_url": "https://static.tickpick.com/performers-generic/comedy/comedy-1.jpg",
+              "is_primary": false,
+              "name": "Karlous Miller",
+              "next_event_date": "2026-09-26T20:00:00",
+              "num_upcoming_events": 1,
+              "performer_id": "137222",
+              "short_name": null,
+              "slug": "karlous-miller",
+              "url": "https://www.tickpick.com/comedy/karlous-miller-tickets/",
+              "url_category": "comedy"
+            },
+            {
+              "categories": [
+                "Comedy",
+                "CONCERTS"
+              ],
+              "image_url": "https://static.tickpick.com/performers/morgan-jay.jpg",
+              "is_primary": false,
+              "name": "Morgan Jay",
+              "next_event_date": "2027-02-12T19:00:00",
+              "num_upcoming_events": 3,
+              "performer_id": "160457",
+              "short_name": null,
+              "slug": "morgan-jay",
+              "url": "https://www.tickpick.com/comedy/morgan-jay-tickets/",
+              "url_category": "comedy"
+            },
+            {
+              "categories": [
+                "Comedy",
+                "CONCERTS"
+              ],
+              "image_url": "https://static.tickpick.com/performers/max-amini.jpg",
+              "is_primary": false,
+              "name": "Max Amini",
+              "next_event_date": "2026-09-26T18:00:00",
+              "num_upcoming_events": 2,
+              "performer_id": "57837",
+              "short_name": null,
+              "slug": "max-amini",
+              "url": "https://www.tickpick.com/comedy/max-amini-tickets/",
+              "url_category": "comedy"
+            },
+            {
+              "categories": [
+                "Comedy",
+                "CONCERTS"
+              ],
+              "image_url": "https://static.tickpick.com/performers-generic/comedy/comedy-1.jpg",
+              "is_primary": false,
+              "name": "Josh Johnson",
+              "next_event_date": "2026-10-02T19:00:00",
+              "num_upcoming_events": 4,
+              "performer_id": "115588",
+              "short_name": null,
+              "slug": "josh-johnson",
+              "url": "https://www.tickpick.com/comedy/josh-johnson-tickets/",
+              "url_category": "comedy"
+            },
+            {
+              "categories": [
+                "Comedy",
+                "CONCERTS"
+              ],
+              "image_url": "https://static.tickpick.com/performers/jerry-seinfeld.jpg",
+              "is_primary": false,
+              "name": "Jerry Seinfeld",
+              "next_event_date": "2026-10-23T19:00:00",
+              "num_upcoming_events": 3,
+              "performer_id": "1179",
+              "short_name": null,
+              "slug": "jerry-seinfeld",
+              "url": "https://www.tickpick.com/comedy/jerry-seinfeld-tickets/",
+              "url_category": "comedy"
+            }
+          ],
+          "concerts": [
+            {
+              "categories": [
+                "Concerts",
+                "R&B SOUL"
+              ],
+              "image_url": "https://static.tickpick.com/performers/stevie-wonder.jpg",
+              "is_primary": false,
+              "name": "Stevie Wonder",
+              "next_event_date": "2026-11-23T20:00:00",
+              "num_upcoming_events": 1,
+              "performer_id": "2908",
+              "short_name": null,
+              "slug": "stevie-wonder",
+              "url": "https://www.tickpick.com/concerts/stevie-wonder-tickets/",
+              "url_category": "concerts"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "COUNTRY FOLK"
+              ],
+              "image_url": "https://static.tickpick.com/performers/chris-stapletons-all-american-road-show.jpg",
+              "is_primary": false,
+              "name": "Chris Stapleton's All-American Road Show",
+              "next_event_date": "2026-10-02T19:30:00",
+              "num_upcoming_events": 1,
+              "performer_id": "216480",
+              "short_name": null,
+              "slug": "chris-stapletons-all-american-road-show",
+              "url": "https://www.tickpick.com/concerts/chris-stapletons-all-american-road-show-tickets/",
+              "url_category": "concerts"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "POP ROCK"
+              ],
+              "image_url": "https://static.tickpick.com/performers/olivia-rodrigo.jpg",
+              "is_primary": false,
+              "name": "Olivia Rodrigo",
+              "next_event_date": "2026-10-03T19:00:00",
+              "num_upcoming_events": 2,
+              "performer_id": "187082",
+              "short_name": null,
+              "slug": "olivia-rodrigo",
+              "url": "https://www.tickpick.com/concerts/olivia-rodrigo-tickets/",
+              "url_category": "concerts"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "RAP HIP HOP"
+              ],
+              "image_url": "https://static.tickpick.com/performers/rod-wave.jpg",
+              "is_primary": false,
+              "name": "Rod Wave",
+              "next_event_date": "2026-10-16T20:30:00",
+              "num_upcoming_events": 1,
+              "performer_id": "175487",
+              "short_name": null,
+              "slug": "rod-wave",
+              "url": "https://www.tickpick.com/concerts/rod-wave-tickets/",
+              "url_category": "concerts"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "RAP HIP HOP"
+              ],
+              "image_url": "https://static.tickpick.com/performers/steve-lacy.jpg",
+              "is_primary": false,
+              "name": "Steve Lacy",
+              "next_event_date": "2026-10-18T19:00:00",
+              "num_upcoming_events": 1,
+              "performer_id": "115746",
+              "short_name": null,
+              "slug": "steve-lacy",
+              "url": "https://www.tickpick.com/concerts/steve-lacy-tickets/",
+              "url_category": "concerts"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "TECHNO ELECTRONIC"
+              ],
+              "image_url": "https://static.tickpick.com/performers/john-summit.jpg",
+              "is_primary": false,
+              "name": "John Summit",
+              "next_event_date": "2026-10-31T19:00:00",
+              "num_upcoming_events": 1,
+              "performer_id": "161996",
+              "short_name": null,
+              "slug": "john-summit",
+              "url": "https://www.tickpick.com/concerts/john-summit-tickets/",
+              "url_category": "concerts"
+            }
+          ],
+          "dma": "washington-dc-md",
+          "events": [
+            {
+              "categories": [
+                "BASEBALL",
+                "SPORTS",
+                "MLB"
+              ],
+              "city": "Washington",
+              "country": "US",
+              "currency": "USD",
+              "event_date_local": "2026-09-25T18:45:00",
+              "event_id": "7368513",
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_primary": false,
+              "min_price": 13,
+              "name": "Washington Nationals vs. New York Mets",
+              "short_name": "Nationals vs. Mets",
+              "state": "DC",
+              "url": "https://www.tickpick.com/buy-washington-nationals-vs-new-york-mets-tickets-nationals-park-9-25-26-6pm/7368513/",
+              "venue_name": "Nationals Park"
+            },
+            {
+              "categories": [
+                "FOOTBALL",
+                "SPORTS",
+                "NFL"
+              ],
+              "city": "Landover",
+              "country": "US",
+              "currency": "USD",
+              "event_date_local": "2026-09-27T13:00:00",
+              "event_id": "7730257",
+              "image_url": "https://static.tickpick.com/performers/washington-commanders.jpg",
+              "is_primary": false,
+              "min_price": 22,
+              "name": "Washington Commanders vs. Seattle Seahawks",
+              "short_name": "Commanders vs. Seahawks",
+              "state": "MD",
+              "url": "https://www.tickpick.com/buy-washington-commanders-vs-seattle-seahawks-tickets-northwest-stadium-9-27-26-1pm/7730257/",
+              "venue_name": "Northwest Stadium"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "COUNTRY FOLK"
+              ],
+              "city": "Bristow",
+              "country": "US",
+              "currency": "USD",
+              "event_date_local": "2026-10-02T19:30:00",
+              "event_id": "7668748",
+              "image_url": "https://static.tickpick.com/performers/chris-stapletons-all-american-road-show.jpg",
+              "is_primary": false,
+              "min_price": 99,
+              "name": "Chris Stapleton's All-American Road Show: Chris Stapleton & Mike Campbell and The Dirty Knobs",
+              "short_name": null,
+              "state": "VA",
+              "url": "https://www.tickpick.com/buy-chris-stapletons-all-american-road-show-chris-stapleton-mike-campbell-and-the-dirty-knobs-tickets-jiffy-lube-live-10-2-26-7pm/7668748/",
+              "venue_name": "Jiffy Lube Live"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "FESTIVAL TOUR"
+              ],
+              "city": "Columbia",
+              "country": "US",
+              "currency": "USD",
+              "event_date_local": "2026-10-03T13:00:00",
+              "event_id": "8003435",
+              "image_url": "https://static.tickpick.com/performers/power-to-the-people-festival.jpg",
+              "is_primary": false,
+              "min_price": 185,
+              "name": "Power to the People Festival",
+              "short_name": null,
+              "state": "MD",
+              "url": "https://www.tickpick.com/buy-power-to-the-people-festival-tickets-merriweather-post-pavilion-10-3-26-1pm/8003435/",
+              "venue_name": "Merriweather Post Pavilion"
+            },
+            {
+              "categories": [
+                "FOOTBALL",
+                "SPORTS",
+                "NFL"
+              ],
+              "city": "Landover",
+              "country": "US",
+              "currency": "USD",
+              "event_date_local": "2026-10-11T13:00:00",
+              "event_id": "7730248",
+              "image_url": "https://static.tickpick.com/performers/washington-commanders.jpg",
+              "is_primary": false,
+              "min_price": 22,
+              "name": "Washington Commanders vs. New York Giants",
+              "short_name": "Commanders vs. Giants",
+              "state": "MD",
+              "url": "https://www.tickpick.com/buy-washington-commanders-vs-new-york-giants-tickets-northwest-stadium-10-11-26-1pm/7730248/",
+              "venue_name": "Northwest Stadium"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "RAP HIP HOP"
+              ],
+              "city": "Washington",
+              "country": "US",
+              "currency": "USD",
+              "event_date_local": "2026-10-16T20:30:00",
+              "event_id": "8063448",
+              "image_url": "https://static.tickpick.com/performers/rod-wave.jpg",
+              "is_primary": false,
+              "min_price": 211,
+              "name": "Rod Wave",
+              "short_name": null,
+              "state": "DC",
+              "url": "https://www.tickpick.com/buy-rod-wave-tickets-capital-one-arena-10-16-26-8pm/8063448/",
+              "venue_name": "Capital One Arena"
+            }
+          ],
+          "just_announced": [
+            {
+              "categories": [
+                "Concerts",
+                "TECHNO ELECTRONIC"
+              ],
+              "image_url": "https://static.tickpick.com/performers/alan-walker.jpg",
+              "is_primary": false,
+              "name": "Alan Walker",
+              "next_event_date": "2027-02-06T20:00:00",
+              "num_upcoming_events": 1,
+              "performer_id": "102317",
+              "short_name": null,
+              "slug": "alan-walker",
+              "url": "https://www.tickpick.com/concerts/alan-walker-tickets/",
+              "url_category": "concerts"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "RAP HIP HOP"
+              ],
+              "image_url": "https://static.tickpick.com/performers-generic/concerts/concerts-3.jpg",
+              "is_primary": false,
+              "name": "Syd",
+              "next_event_date": "2026-12-03T20:00:00",
+              "num_upcoming_events": 1,
+              "performer_id": "112813",
+              "short_name": null,
+              "slug": "syd",
+              "url": "https://www.tickpick.com/concerts/syd-tickets/",
+              "url_category": "concerts"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "LATIN"
+              ],
+              "image_url": "https://static.tickpick.com/performers-generic/concerts/concerts-1.jpg",
+              "is_primary": false,
+              "name": "Lomiiel",
+              "next_event_date": "2026-10-08T21:00:00",
+              "num_upcoming_events": 2,
+              "performer_id": "245478",
+              "short_name": null,
+              "slug": "lomiiel",
+              "url": "https://www.tickpick.com/concerts/lomiiel-tickets/",
+              "url_category": "concerts"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "ALTERNATIVE"
+              ],
+              "image_url": "https://static.tickpick.com/performers-generic/concerts/concerts-2.jpg",
+              "is_primary": false,
+              "name": "Hamilton Leithauser",
+              "next_event_date": "2026-11-05T19:00:00",
+              "num_upcoming_events": 1,
+              "performer_id": "62010",
+              "short_name": null,
+              "slug": "hamilton-leithauser",
+              "url": "https://www.tickpick.com/concerts/hamilton-leithauser-tickets/",
+              "url_category": "concerts"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "ALTERNATIVE"
+              ],
+              "image_url": "https://static.tickpick.com/performers-generic/concerts/concerts-1.jpg",
+              "is_primary": false,
+              "name": "Valley - Band",
+              "next_event_date": "2027-03-14T19:00:00",
+              "num_upcoming_events": 1,
+              "performer_id": "128546",
+              "short_name": null,
+              "slug": "valley-band",
+              "url": "https://www.tickpick.com/concerts/valley-band-tickets/",
+              "url_category": "concerts"
+            },
+            {
+              "categories": [
+                "Concerts",
+                "ALTERNATIVE"
+              ],
+              "image_url": "https://static.tickpick.com/performers-generic/concerts/concerts-2.jpg",
+              "is_primary": false,
+              "name": "Claud - Band",
+              "next_event_date": "2027-02-20T19:00:00",
+              "num_upcoming_events": 1,
+              "performer_id": "142265",
+              "short_name": null,
+              "slug": "claud-band",
+              "url": "https://www.tickpick.com/concerts/claud-band-tickets/",
+              "url_category": "concerts"
+            }
+          ],
+          "latitude": 39.11566,
+          "longitude": -77.5636,
+          "observed_at_ms": 1790034766120,
+          "source_url": "https://api.tickpick.com/1.0/search/nearby?lat=39.11566&lng=-77.5636&dma=washington-dc-md",
+          "sports": [
+            {
+              "categories": [
+                "FOOTBALL",
+                "SPORTS",
+                "NFL"
+              ],
+              "image_url": "https://static.tickpick.com/performers/washington-commanders.jpg",
+              "is_primary": false,
+              "name": "Washington Commanders",
+              "next_event_date": "2026-09-27T13:00:00",
+              "num_upcoming_events": 8,
+              "performer_id": "1133",
+              "short_name": "Commanders",
+              "slug": "washington-commanders",
+              "url": "https://www.tickpick.com/nfl/washington-commanders-tickets/",
+              "url_category": "nfl"
+            },
+            {
+              "categories": [
+                "BASEBALL",
+                "SPORTS",
+                "MLB"
+              ],
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_primary": false,
+              "name": "Washington Nationals",
+              "next_event_date": "2026-09-25T18:45:00",
+              "num_upcoming_events": 99,
+              "performer_id": "2732",
+              "short_name": "Nationals",
+              "slug": "washington-nationals",
+              "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+              "url_category": "mlb"
+            },
+            {
+              "categories": [
+                "HOCKEY",
+                "SPORTS",
+                "NHL"
+              ],
+              "image_url": "https://static.tickpick.com/performers/washington-capitals.jpg",
+              "is_primary": false,
+              "name": "Washington Capitals",
+              "next_event_date": "2026-09-25T19:00:00",
+              "num_upcoming_events": 43,
+              "performer_id": "1131",
+              "short_name": "Capitals",
+              "slug": "washington-capitals",
+              "url": "https://www.tickpick.com/nhl/washington-capitals-tickets/",
+              "url_category": "nhl"
+            },
+            {
+              "categories": [
+                "BASKETBALL",
+                "SPORTS",
+                "NBA"
+              ],
+              "image_url": "https://static.tickpick.com/performers/washington-wizards.jpg",
+              "is_primary": false,
+              "name": "Washington Wizards",
+              "next_event_date": "2026-10-10T19:00:00",
+              "num_upcoming_events": 43,
+              "performer_id": "1135",
+              "short_name": "Wizards",
+              "slug": "washington-wizards",
+              "url": "https://www.tickpick.com/nba/washington-wizards-tickets/",
+              "url_category": "nba"
+            },
+            {
+              "categories": [
+                "College",
+                "WRESTLING",
+                "VOLLEYBALL",
+                "FOOTBALL",
+                "HOCKEY",
+                "LACROSSE",
+                "SOFTBALL",
+                "SPORTS"
+              ],
+              "image_url": "https://static.tickpick.com/performers/maryland-terrapins.jpg",
+              "is_primary": false,
+              "name": "Maryland Terrapins",
+              "next_event_date": "2026-09-26T13:30:00",
+              "num_upcoming_events": 40,
+              "performer_id": "633",
+              "short_name": "Maryland",
+              "slug": "maryland-terrapins",
+              "url": "https://www.tickpick.com/college/maryland-terrapins-tickets/",
+              "url_category": "college"
+            },
+            {
+              "categories": [
+                "FOOTBALL",
+                "SPORTS",
+                "NCAA Football"
+              ],
+              "image_url": "https://static.tickpick.com/performers/maryland-terrapins.jpg",
+              "is_primary": false,
+              "name": "Maryland Terrapins Football",
+              "next_event_date": "2026-09-26T13:30:00",
+              "num_upcoming_events": 5,
+              "performer_id": "95355",
+              "short_name": null,
+              "slug": "maryland-terrapins-football",
+              "url": "https://www.tickpick.com/ncaa-football/maryland-terrapins-football-tickets/",
+              "url_category": "ncaa-football"
+            }
+          ],
+          "theater": [
+            {
+              "categories": [
+                "Theater",
+                "MUSICAL PLAY",
+                "BROADWAY",
+                "WEST END",
+                "THEATRE"
+              ],
+              "image_url": "https://static.tickpick.com/performers/hamilton.jpg",
+              "is_primary": false,
+              "name": "Hamilton",
+              "next_event_date": "2026-12-16T13:00:00",
+              "num_upcoming_events": 66,
+              "performer_id": "68098",
+              "short_name": null,
+              "slug": "hamilton",
+              "url": "https://www.tickpick.com/theater/hamilton-tickets/",
+              "url_category": "theater"
+            },
+            {
+              "categories": [
+                "Theater",
+                "CHILDREN FAMILY",
+                "THEATRE"
+              ],
+              "image_url": "https://static.tickpick.com/performers/disney-on-ice.jpg",
+              "is_primary": false,
+              "name": "Disney On Ice",
+              "next_event_date": "2026-10-08T19:00:00",
+              "num_upcoming_events": 10,
+              "performer_id": "17332",
+              "short_name": null,
+              "slug": "disney-on-ice",
+              "url": "https://www.tickpick.com/theater/disney-on-ice-tickets/",
+              "url_category": "theater"
+            },
+            {
+              "categories": [
+                "Theater",
+                "CHILDREN FAMILY",
+                "THEATRE"
+              ],
+              "image_url": "https://static.tickpick.com/performers-generic/theater/theater-2.jpg",
+              "is_primary": false,
+              "name": "Disney On Ice: Spotlight Magic!",
+              "next_event_date": "2026-10-08T19:00:00",
+              "num_upcoming_events": 10,
+              "performer_id": "283812",
+              "short_name": null,
+              "slug": "disney-on-ice-spotlight-magic!",
+              "url": "https://www.tickpick.com/theater/disney-on-ice-spotlight-magic!-tickets/",
+              "url_category": "theater"
+            },
+            {
+              "categories": [
+                "Theater",
+                "MUSICAL PLAY",
+                "THEATRE"
+              ],
+              "image_url": "https://static.tickpick.com/performers-generic/theater/theater-2.jpg",
+              "is_primary": false,
+              "name": "MARVIN: The Marvin Gaye Musical",
+              "next_event_date": "2027-02-19T20:00:00",
+              "num_upcoming_events": 4,
+              "performer_id": "291877",
+              "short_name": null,
+              "slug": "marvin-the-marvin-gaye-musical",
+              "url": "https://www.tickpick.com/theater/marvin-the-marvin-gaye-musical-tickets/",
+              "url_category": "theater"
+            },
+            {
+              "categories": [
+                "Theater",
+                "MUSICAL PLAY",
+                "BROADWAY",
+                "THEATRE"
+              ],
+              "image_url": "https://static.tickpick.com/performers/come-from-away.jpg",
+              "is_primary": false,
+              "name": "Come From Away",
+              "next_event_date": "2026-09-24T12:00:00",
+              "num_upcoming_events": 30,
+              "performer_id": "98791",
+              "short_name": null,
+              "slug": "come-from-away",
+              "url": "https://www.tickpick.com/theater/come-from-away-tickets/",
+              "url_category": "theater"
+            },
+            {
+              "categories": [
+                "Theater",
+                "MUSICAL PLAY",
+                "BROADWAY",
+                "THEATRE"
+              ],
+              "image_url": "https://static.tickpick.com/performers-generic/theater/theater-3.jpg",
+              "is_primary": false,
+              "name": "Hell's Kitchen - The Musical",
+              "next_event_date": "2026-11-24T19:30:00",
+              "num_upcoming_events": 18,
+              "performer_id": "213746",
+              "short_name": null,
+              "slug": "hells-kitchen-the-musical",
+              "url": "https://www.tickpick.com/theater/hells-kitchen-the-musical-tickets/",
+              "url_category": "theater"
+            }
+          ],
+          "venues": [
+            {
+              "city": "Washington",
+              "country": "US",
+              "image_url": "https://static.tickpick.com/venues/nationals-park.jpg",
+              "is_primary": false,
+              "name": "Nationals Park",
+              "num_upcoming_events": 100,
+              "slug": "nationals-park",
+              "state": "DC",
+              "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+              "venue_id": "11412"
+            },
+            {
+              "city": "Bristow",
+              "country": "US",
+              "image_url": "https://static.tickpick.com/venues/jiffy-lube-live.jpg",
+              "is_primary": false,
+              "name": "Jiffy Lube Live",
+              "num_upcoming_events": 4,
+              "slug": "jiffy-lube-live",
+              "state": "VA",
+              "url": "https://www.tickpick.com/venues/jiffy-lube-live/tickets/",
+              "venue_id": "410"
+            },
+            {
+              "city": "Washington",
+              "country": "US",
+              "image_url": "https://static.tickpick.com/venues/capital-one-arena.jpg",
+              "is_primary": false,
+              "name": "Capital One Arena",
+              "num_upcoming_events": 138,
+              "slug": "capital-one-arena",
+              "state": "DC",
+              "url": "https://www.tickpick.com/venues/capital-one-arena/tickets/",
+              "venue_id": "11781"
+            },
+            {
+              "city": "Landover",
+              "country": "US",
+              "image_url": "https://static.tickpick.com/venues/fedexfield.jpg",
+              "is_primary": false,
+              "name": "Northwest Stadium",
+              "num_upcoming_events": 8,
+              "slug": "northwest-stadium",
+              "state": "MD",
+              "url": "https://www.tickpick.com/venues/northwest-stadium/tickets/",
+              "venue_id": "271"
+            },
+            {
+              "city": "College Park",
+              "country": "US",
+              "image_url": "https://static.tickpick.com/venues/secu-stadium.jpg",
+              "is_primary": false,
+              "name": "SECU Stadium",
+              "num_upcoming_events": 5,
+              "slug": "secu-stadium",
+              "state": "MD",
+              "url": "https://www.tickpick.com/venues/secu-stadium/tickets/",
+              "venue_id": "147"
+            },
+            {
+              "city": "Washington",
+              "country": "US",
+              "image_url": "https://static.tickpick.com/venues/audi-field.jpg",
+              "is_primary": false,
+              "name": "Audi Field",
+              "num_upcoming_events": 17,
+              "slug": "audi-field",
+              "state": "DC",
+              "url": "https://www.tickpick.com/venues/audi-field/tickets/",
+              "venue_id": "6697"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "tickpick-com",
+        "capability": "events/nearby_events"
+      }
+    },
+    {
+      "id": "tickpick-com/events/performer_events",
+      "provider": "tickpick-com",
+      "capability": "events/performer_events",
+      "name": "Performer events",
+      "description": "Events for a performer whose slug and url_category came from search (performers[]) or categories (items[]).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "include_nearby",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also return the page's nearby_events (relative to the proxy exit location) and international_events lists."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum events returned from the page's embedded first page (the site embeds 20). Fewer events than total_count is reported as partial coverage.",
+          "default": 20,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "performer_slug",
+          "type": "string",
+          "in": "body",
+          "about": "Performer slug, for example washington-nationals. Pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A tickpick.com performer page URL, https://www.tickpick.com/{url_category}/{slug}-tickets/. Alternative to performer_slug + url_category."
+        },
+        {
+          "name": "url_category",
+          "type": "string",
+          "in": "body",
+          "about": "Performer page category segment, for example mlb, concerts, theater (search performers[].url_category). Pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "performer_slug",
+          "url_category",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Upcoming events for one TickPick performer (team, artist, show) read from the performer page's embedded data (www.tickpick.com/{url_category}/{slug}-tickets/): the first page of events (20 observed) with venue, venue-local and UTC start, status and price_stats (listing count, min/max/average all-in per-ticket price), the site's total_count, and optionally the nearby and international event lists. Coverage is marked partial when total_count exceeds the returned events; the site pages the rest through a per-deploy server action that is not exposed here.",
+        "key": "events",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "child_category",
+            "type": "string"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "event_date_local",
+            "type": "string",
+            "about": "Venue-local start, ISO 8601 without offset (see timezone). TBD dates appear with a placeholder time such as 03:30:00."
+          },
+          {
+            "name": "event_date_utc",
+            "type": "string",
+            "about": "UTC start, ISO 8601 without offset."
+          },
+          {
+            "name": "event_id",
+            "type": "string",
+            "about": "Stable TickPick event id; the event and event_price_history input."
+          },
+          {
+            "name": "event_type",
+            "type": "string",
+            "about": "Top-level type as stated (SPORTS, CONCERTS, THEATER, ...)."
+          },
+          {
+            "name": "grandchild_category",
+            "type": "string"
+          },
+          {
+            "name": "has_map",
+            "type": "boolean"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "is_marketplace_enabled",
+            "type": "boolean"
+          },
+          {
+            "name": "main_performer",
+            "type": "object"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "original_event_date",
+            "type": "string",
+            "about": "Original venue-local date when the event was rescheduled or its time was set later."
+          },
+          {
+            "name": "price_stats",
+            "type": "object",
+            "about": "Event-level snapshot of the live resale listings as published by TickPick (stats/summary): the number of listings and the per-ticket all-in price range. Null when the site publishes no statistics for the event (observed on TBD / if-necessary playoff dates). This is not a per-listing offer."
+          },
+          {
+            "name": "primary_marketplace",
+            "type": "string",
+            "about": "Primary ticketing marketplace code as stated (e.g. TDC); null when absent."
+          },
+          {
+            "name": "promotions",
+            "type": "object[]"
+          },
+          {
+            "name": "secondary_performers",
+            "type": "object[]"
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Event status as the site states it ('Scheduled' observed; other values pass through unchanged)."
+          },
+          {
+            "name": "tags",
+            "type": "string[]",
+            "about": "Site event tags (HotEvent, FeaturedEvent, ...); empty when none."
+          },
+          {
+            "name": "timezone",
+            "type": "string",
+            "about": "IANA timezone of the venue."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Event (buy) page on tickpick.com; the source URL."
+          },
+          {
+            "name": "venue",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 8,
+          "performer_slug": "washington-nationals",
+          "url_category": "mlb"
+        },
+        "response": {
+          "events": [
+            {
+              "child_category": "BASEBALL",
+              "city": "Detroit",
+              "event_date_local": "2026-09-22T18:40:00",
+              "event_date_utc": "2026-09-22T22:40:00",
+              "event_id": "7369613",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/detroit-tigers.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Detroit Tigers",
+                "performer_id": "308",
+                "role": "Home Team",
+                "short_name": "Tigers",
+                "slug": "detroit-tigers",
+                "url": "https://www.tickpick.com/mlb/detroit-tigers-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "Detroit Tigers vs. Washington Nationals",
+              "original_event_date": "2026-09-22T03:30:00",
+              "price_stats": {
+                "avg_price": 41.09,
+                "currency": "USD",
+                "fees_included": true,
+                "listing_count": 3802,
+                "max_price": 509,
+                "min_price": 3
+              },
+              "primary_marketplace": "TDC",
+              "promotions": [
+                {
+                  "description": "Fans can grab an exclusive FREE T-Shirt on select Tuesdays throughout the season. Designed by local artists.",
+                  "text": "Tuesday Tee Drops",
+                  "type": "Apparel"
+                }
+              ],
+              "secondary_performers": [
+                {
+                  "name": "Washington Nationals",
+                  "performer_id": "2732",
+                  "role": "Away Team",
+                  "short_name": "Nationals",
+                  "slug": "washington-nationals",
+                  "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "Tigers vs. Nationals",
+              "state": "MI",
+              "status": "Scheduled",
+              "tags": [
+                "HotEvent",
+                "FeaturedEvent"
+              ],
+              "timezone": "America/Detroit",
+              "url": "https://www.tickpick.com/buy-detroit-tigers-vs-washington-nationals-tickets-comerica-park-9-22-26-6pm/7369613/",
+              "venue": {
+                "address": "2100 Woodward Avenue",
+                "city": "Detroit",
+                "country": "US",
+                "latitude": 42.339,
+                "longitude": -83.04852,
+                "name": "Comerica Park",
+                "postal_code": "48201",
+                "slug": "comerica-park",
+                "state": "MI",
+                "timezone": "America/Detroit",
+                "url": "https://www.tickpick.com/venues/comerica-park/tickets/",
+                "venue_id": 201
+              }
+            },
+            {
+              "child_category": "BASEBALL",
+              "city": "Detroit",
+              "event_date_local": "2026-09-23T13:10:00",
+              "event_date_utc": "2026-09-23T17:10:00",
+              "event_id": "7369614",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/detroit-tigers.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Detroit Tigers",
+                "performer_id": "308",
+                "role": "Home Team",
+                "short_name": "Tigers",
+                "slug": "detroit-tigers",
+                "url": "https://www.tickpick.com/mlb/detroit-tigers-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "Detroit Tigers vs. Washington Nationals",
+              "original_event_date": "2026-09-23T03:30:00",
+              "price_stats": {
+                "avg_price": 44.36,
+                "currency": "USD",
+                "fees_included": true,
+                "listing_count": 3714,
+                "max_price": 1281,
+                "min_price": 3
+              },
+              "primary_marketplace": "TDC",
+              "promotions": [],
+              "secondary_performers": [
+                {
+                  "name": "Washington Nationals",
+                  "performer_id": "2732",
+                  "role": "Away Team",
+                  "short_name": "Nationals",
+                  "slug": "washington-nationals",
+                  "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "Tigers vs. Nationals",
+              "state": "MI",
+              "status": "Scheduled",
+              "tags": [],
+              "timezone": "America/Detroit",
+              "url": "https://www.tickpick.com/buy-detroit-tigers-vs-washington-nationals-tickets-comerica-park-9-23-26-1pm/7369614/",
+              "venue": {
+                "address": "2100 Woodward Avenue",
+                "city": "Detroit",
+                "country": "US",
+                "latitude": 42.339,
+                "longitude": -83.04852,
+                "name": "Comerica Park",
+                "postal_code": "48201",
+                "slug": "comerica-park",
+                "state": "MI",
+                "timezone": "America/Detroit",
+                "url": "https://www.tickpick.com/venues/comerica-park/tickets/",
+                "venue_id": 201
+              }
+            },
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2026-09-25T18:45:00",
+              "event_date_utc": "2026-09-25T22:45:00",
+              "event_id": "7368513",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Washington Nationals",
+                "performer_id": "2732",
+                "role": "Home Team",
+                "short_name": "Nationals",
+                "slug": "washington-nationals",
+                "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "Washington Nationals vs. New York Mets",
+              "original_event_date": "2026-09-25T03:30:00",
+              "price_stats": {
+                "avg_price": 70.52,
+                "currency": "USD",
+                "fees_included": true,
+                "listing_count": 2601,
+                "max_price": 2593,
+                "min_price": 13
+              },
+              "primary_marketplace": "TDC",
+              "promotions": [
+                {
+                  "description": "20,000 fans",
+                  "text": "Nationals Football Jersey",
+                  "type": "Apparel"
+                },
+                {
+                  "description": null,
+                  "text": "Friday Night Fireworks",
+                  "type": "Fireworks"
+                }
+              ],
+              "secondary_performers": [
+                {
+                  "name": "New York Mets",
+                  "performer_id": "733",
+                  "role": "Away Team",
+                  "short_name": "Mets",
+                  "slug": "new-york-mets",
+                  "url": "https://www.tickpick.com/mlb/new-york-mets-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "Nationals vs. Mets",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [
+                "HotEvent"
+              ],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-washington-nationals-vs-new-york-mets-tickets-nationals-park-9-25-26-6pm/7368513/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            },
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2026-09-26T16:05:00",
+              "event_date_utc": "2026-09-26T20:05:00",
+              "event_id": "7368514",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Washington Nationals",
+                "performer_id": "2732",
+                "role": "Home Team",
+                "short_name": "Nationals",
+                "slug": "washington-nationals",
+                "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "Washington Nationals vs. New York Mets",
+              "original_event_date": "2026-09-26T03:30:00",
+              "price_stats": {
+                "avg_price": 67.38,
+                "currency": "USD",
+                "fees_included": true,
+                "listing_count": 2866,
+                "max_price": 1628,
+                "min_price": 15
+              },
+              "primary_marketplace": "TDC",
+              "promotions": [],
+              "secondary_performers": [
+                {
+                  "name": "New York Mets",
+                  "performer_id": "733",
+                  "role": "Away Team",
+                  "short_name": "Mets",
+                  "slug": "new-york-mets",
+                  "url": "https://www.tickpick.com/mlb/new-york-mets-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "Nationals vs. Mets",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-washington-nationals-vs-new-york-mets-tickets-nationals-park-9-26-26-4pm/7368514/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            },
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2026-09-27T15:05:00",
+              "event_date_utc": "2026-09-27T19:05:00",
+              "event_id": "7368515",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Washington Nationals",
+                "performer_id": "2732",
+                "role": "Home Team",
+                "short_name": "Nationals",
+                "slug": "washington-nationals",
+                "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "Washington Nationals vs. New York Mets",
+              "original_event_date": "2026-09-27T03:30:00",
+              "price_stats": {
+                "avg_price": 64.78,
+                "currency": "USD",
+                "fees_included": true,
+                "listing_count": 2528,
+                "max_price": 417,
+                "min_price": 13
+              },
+              "primary_marketplace": "TDC",
+              "promotions": [],
+              "secondary_performers": [
+                {
+                  "name": "New York Mets",
+                  "performer_id": "733",
+                  "role": "Away Team",
+                  "short_name": "Mets",
+                  "slug": "new-york-mets",
+                  "url": "https://www.tickpick.com/mlb/new-york-mets-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "Nationals vs. Mets",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-washington-nationals-vs-new-york-mets-tickets-nationals-park-9-27-26-3pm/7368515/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            },
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2026-09-29T03:30:00",
+              "event_date_utc": "2026-09-29T07:30:00",
+              "event_id": "8173857",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Washington Nationals",
+                "performer_id": "2732",
+                "role": "Home Team",
+                "short_name": "Nationals",
+                "slug": "washington-nationals",
+                "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "NL Wild Card: Washington Nationals vs. TBD - Game 1 (If Necessary)",
+              "original_event_date": "2026-09-29T03:30:00",
+              "price_stats": null,
+              "primary_marketplace": "TDC",
+              "promotions": [],
+              "secondary_performers": [
+                {
+                  "name": "NL Wild Card Game",
+                  "performer_id": "136698",
+                  "role": "Featured",
+                  "short_name": null,
+                  "slug": "nl-wild-card-game",
+                  "url": "https://www.tickpick.com/mlb/nl-wild-card-game-tickets/",
+                  "url_category": "mlb"
+                },
+                {
+                  "name": "MLB Playoffs",
+                  "performer_id": "37868",
+                  "role": "Featured",
+                  "short_name": null,
+                  "slug": "mlb-playoffs",
+                  "url": "https://www.tickpick.com/mlb/mlb-playoffs-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "NL Wild Card: Nationals vs. TBD - Game 1",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-nl-wild-card-washington-nationals-vs-tbd-game-1-(if-necessary)-tickets-nationals-park-9-29-26-3am/8173857/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            },
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2026-09-30T03:30:00",
+              "event_date_utc": "2026-09-30T07:30:00",
+              "event_id": "8173858",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Washington Nationals",
+                "performer_id": "2732",
+                "role": "Home Team",
+                "short_name": "Nationals",
+                "slug": "washington-nationals",
+                "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "NL Wild Card: Washington Nationals vs. TBD - Game 2 (If Necessary)",
+              "original_event_date": "2026-09-30T03:30:00",
+              "price_stats": null,
+              "primary_marketplace": "TDC",
+              "promotions": [],
+              "secondary_performers": [
+                {
+                  "name": "NL Wild Card Game",
+                  "performer_id": "136698",
+                  "role": "Featured",
+                  "short_name": null,
+                  "slug": "nl-wild-card-game",
+                  "url": "https://www.tickpick.com/mlb/nl-wild-card-game-tickets/",
+                  "url_category": "mlb"
+                },
+                {
+                  "name": "MLB Playoffs",
+                  "performer_id": "37868",
+                  "role": "Featured",
+                  "short_name": null,
+                  "slug": "mlb-playoffs",
+                  "url": "https://www.tickpick.com/mlb/mlb-playoffs-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "NL Wild Card: Nationals vs. TBD - Game 2",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-nl-wild-card-washington-nationals-vs-tbd-game-2-(if-necessary)-tickets-nationals-park-9-30-26-3am/8173858/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            },
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2026-10-01T03:30:00",
+              "event_date_utc": "2026-10-01T07:30:00",
+              "event_id": "8173859",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Washington Nationals",
+                "performer_id": "2732",
+                "role": "Home Team",
+                "short_name": "Nationals",
+                "slug": "washington-nationals",
+                "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "NL Wild Card: Washington Nationals vs. TBD - Game 3 (If Necessary)",
+              "original_event_date": "2026-10-01T03:30:00",
+              "price_stats": null,
+              "primary_marketplace": "TDC",
+              "promotions": [],
+              "secondary_performers": [
+                {
+                  "name": "NL Wild Card Game",
+                  "performer_id": "136698",
+                  "role": "Featured",
+                  "short_name": null,
+                  "slug": "nl-wild-card-game",
+                  "url": "https://www.tickpick.com/mlb/nl-wild-card-game-tickets/",
+                  "url_category": "mlb"
+                },
+                {
+                  "name": "MLB Playoffs",
+                  "performer_id": "37868",
+                  "role": "Featured",
+                  "short_name": null,
+                  "slug": "mlb-playoffs",
+                  "url": "https://www.tickpick.com/mlb/mlb-playoffs-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "NL Wild Card: Nationals vs. TBD - Game 3",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-nl-wild-card-washington-nationals-vs-tbd-game-3-(if-necessary)-tickets-nationals-park-10-1-26-3am/8173859/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            }
+          ],
+          "international_events": null,
+          "nearby_events": null,
+          "non_us_count": 3,
+          "observed_at_ms": 1790034762033,
+          "performer": {
+            "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+            "name": "Washington Nationals",
+            "short_name": "Nationals",
+            "slug": "washington-nationals",
+            "type": "Performer",
+            "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+            "url_category": "mlb"
+          },
+          "source_url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+          "total_count": 210
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "tickpick-com",
+        "capability": "events/performer_events"
+      }
+    },
+    {
+      "id": "tickpick-com/events/search",
+      "provider": "tickpick-com",
+      "capability": "events/search",
+      "name": "Search",
+      "description": "Start here to resolve a team, artist, show, venue or event name to TickPick identifiers. For a full event list use performer_events or venue_events; for one event use event.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum rows returned per list (events, performers, venues). The site itself returns at most 300 events.",
+          "default": 50,
+          "min": 1,
+          "max": 300
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Search text, for example 'new york mets' or 'hamilton'.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Free-text search of TickPick's index (api.tickpick.com/1.0/search/all): events with venue-local date, venue, city/state/country and the lowest all-in per-ticket price; performers with their slug and url_category (the performer_events input); venues with their slug (the venue_events input); the index's exact match and top hit. The site returns at most 300 events with no paging; limit trims each list client-side and site_cap_reached says when the 300 cap was hit.",
+        "key": "events",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "categories",
+            "type": "string[]",
+            "about": "Index category labels; null when the endpoint does not return them (search/all)."
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "event_date_local",
+            "type": "string",
+            "about": "Venue-local start, ISO 8601 without offset; the timezone is on the event detail."
+          },
+          {
+            "name": "event_id",
+            "type": "string"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "is_primary",
+            "type": "boolean",
+            "about": "True when the row is a primary (organizer) event rather than resale."
+          },
+          {
+            "name": "min_price",
+            "type": "number",
+            "about": "Lowest all-in per-ticket price in the index; null when the index carries none."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "venue_name",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 5,
+          "query": "new york mets"
+        },
+        "response": {
+          "event_count": 300,
+          "events": [
+            {
+              "categories": null,
+              "city": "Arlington",
+              "country": "US",
+              "currency": "USD",
+              "event_date_local": "2026-09-22T19:05:00",
+              "event_id": "7369133",
+              "image_url": "https://static.tickpick.com/performers/texas-rangers.jpg",
+              "is_primary": false,
+              "min_price": 9,
+              "name": "Texas Rangers vs. New York Mets",
+              "short_name": "Rangers vs. Mets",
+              "state": "TX",
+              "url": "https://www.tickpick.com/buy-texas-rangers-vs-new-york-mets-tickets-globe-life-field-9-22-26-7pm/7369133/",
+              "venue_name": "Globe Life Field"
+            },
+            {
+              "categories": null,
+              "city": "Arlington",
+              "country": "US",
+              "currency": "USD",
+              "event_date_local": "2026-09-23T19:05:00",
+              "event_id": "7369134",
+              "image_url": "https://static.tickpick.com/performers/texas-rangers.jpg",
+              "is_primary": false,
+              "min_price": 16,
+              "name": "Texas Rangers vs. New York Mets",
+              "short_name": "Rangers vs. Mets",
+              "state": "TX",
+              "url": "https://www.tickpick.com/buy-texas-rangers-vs-new-york-mets-tickets-globe-life-field-9-23-26-7pm/7369134/",
+              "venue_name": "Globe Life Field"
+            },
+            {
+              "categories": null,
+              "city": "Arlington",
+              "country": "US",
+              "currency": "USD",
+              "event_date_local": "2026-09-24T13:35:00",
+              "event_id": "7369136",
+              "image_url": "https://static.tickpick.com/performers/texas-rangers.jpg",
+              "is_primary": false,
+              "min_price": 6,
+              "name": "Texas Rangers vs. New York Mets",
+              "short_name": "Rangers vs. Mets",
+              "state": "TX",
+              "url": "https://www.tickpick.com/buy-texas-rangers-vs-new-york-mets-tickets-globe-life-field-9-24-26-1pm/7369136/",
+              "venue_name": "Globe Life Field"
+            },
+            {
+              "categories": null,
+              "city": "Washington",
+              "country": "US",
+              "currency": "USD",
+              "event_date_local": "2026-09-25T18:45:00",
+              "event_id": "7368513",
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_primary": false,
+              "min_price": 13,
+              "name": "Washington Nationals vs. New York Mets",
+              "short_name": "Nationals vs. Mets",
+              "state": "DC",
+              "url": "https://www.tickpick.com/buy-washington-nationals-vs-new-york-mets-tickets-nationals-park-9-25-26-6pm/7368513/",
+              "venue_name": "Nationals Park"
+            },
+            {
+              "categories": null,
+              "city": "Washington",
+              "country": "US",
+              "currency": "USD",
+              "event_date_local": "2026-09-26T16:05:00",
+              "event_id": "7368514",
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_primary": false,
+              "min_price": 15,
+              "name": "Washington Nationals vs. New York Mets",
+              "short_name": "Nationals vs. Mets",
+              "state": "DC",
+              "url": "https://www.tickpick.com/buy-washington-nationals-vs-new-york-mets-tickets-nationals-park-9-26-26-4pm/7368514/",
+              "venue_name": "Nationals Park"
+            }
+          ],
+          "exact_match": {
+            "id": "733",
+            "name": "New York Mets",
+            "slug": "new-york-mets",
+            "type": "Performer",
+            "url": "https://www.tickpick.com/mlb/new-york-mets-tickets/"
+          },
+          "observed_at_ms": 1790034707835,
+          "performer_count": 59,
+          "performers": [
+            {
+              "categories": null,
+              "image_url": "https://static.tickpick.com/performers/new-york-mets-fanfest.jpg?cat=mlb",
+              "is_primary": false,
+              "name": "New York Mets FanFest",
+              "next_event_date": null,
+              "num_upcoming_events": 0,
+              "performer_id": "173442",
+              "short_name": null,
+              "slug": "new-york-mets-fanfest",
+              "url": "https://www.tickpick.com/mlb/new-york-mets-fanfest-tickets/",
+              "url_category": "mlb"
+            },
+            {
+              "categories": null,
+              "image_url": "https://static.tickpick.com/performers/an-amazin-evening-of-myth-baseball-with-the-world-champion-69-new-york-mets.jpg?cat=other",
+              "is_primary": false,
+              "name": "An Amazin’ Evening of Myth & Baseball With The World Champion ’69 New York Mets",
+              "next_event_date": null,
+              "num_upcoming_events": 0,
+              "performer_id": "160777",
+              "short_name": null,
+              "slug": "an-amazin-evening-of-myth-baseball-with-the-world-champion-69-new-york-mets",
+              "url": "https://www.tickpick.com/other/an-amazin-evening-of-myth-baseball-with-the-world-champion-69-new-york-mets-tickets/",
+              "url_category": "other"
+            },
+            {
+              "categories": null,
+              "image_url": "https://static.tickpick.com/performers/new-york-yankees.jpg?cat=mlb",
+              "is_primary": false,
+              "name": "New York Yankees",
+              "next_event_date": null,
+              "num_upcoming_events": 215,
+              "performer_id": "735",
+              "short_name": "Yankees",
+              "slug": "new-york-yankees",
+              "url": "https://www.tickpick.com/mlb/new-york-yankees-tickets/",
+              "url_category": "mlb"
+            },
+            {
+              "categories": null,
+              "image_url": "https://static.tickpick.com/performers/new-york-giants.jpg?cat=nfl",
+              "is_primary": false,
+              "name": "New York Giants",
+              "next_event_date": null,
+              "num_upcoming_events": 16,
+              "performer_id": "729",
+              "short_name": "Giants",
+              "slug": "new-york-giants",
+              "url": "https://www.tickpick.com/nfl/new-york-giants-tickets/",
+              "url_category": "nfl"
+            },
+            {
+              "categories": null,
+              "image_url": "https://static.tickpick.com/performers/new-york-jets.jpg?cat=nfl",
+              "is_primary": false,
+              "name": "New York Jets",
+              "next_event_date": null,
+              "num_upcoming_events": 15,
+              "performer_id": "731",
+              "short_name": "Jets",
+              "slug": "new-york-jets",
+              "url": "https://www.tickpick.com/nfl/new-york-jets-tickets/",
+              "url_category": "nfl"
+            }
+          ],
+          "query": "new york mets",
+          "site_cap_reached": true,
+          "source_url": "https://api.tickpick.com/1.0/search/all?q=new+york+mets&th=1&include_primary=true&include_categories=true",
+          "top_hit": {
+            "id": "733",
+            "name": "New York Mets",
+            "slug": "new-york-mets",
+            "type": "Performer",
+            "url": "https://www.tickpick.com/mlb/new-york-mets-tickets/"
+          },
+          "venue_count": 60,
+          "venues": [
+            {
+              "city": "New York",
+              "country": "US",
+              "image_url": "https://static.tickpick.com/venues/pacha-new-york.jpg?cat=venue",
+              "is_primary": false,
+              "name": "Pacha New York",
+              "num_upcoming_events": 14,
+              "slug": "pacha-new-york",
+              "state": "NY",
+              "url": "https://www.tickpick.com/venues/pacha-new-york/tickets/",
+              "venue_id": "9623"
+            },
+            {
+              "city": "New York",
+              "country": "US",
+              "image_url": "https://static.tickpick.com/venues/st-james-theatre.jpg?cat=venue",
+              "is_primary": false,
+              "name": "St. James Theatre",
+              "num_upcoming_events": 443,
+              "slug": "st-james-theatre",
+              "state": "NY",
+              "url": "https://www.tickpick.com/venues/st-james-theatre/tickets/",
+              "venue_id": "11668"
+            },
+            {
+              "city": "New York",
+              "country": "US",
+              "image_url": "https://static.tickpick.com/venues/lyceum-theatre-new-york.jpg?cat=venue",
+              "is_primary": false,
+              "name": "Lyceum Theatre - New York",
+              "num_upcoming_events": 336,
+              "slug": "lyceum-theatre-new-york",
+              "state": "NY",
+              "url": "https://www.tickpick.com/venues/lyceum-theatre-new-york/tickets/",
+              "venue_id": "466"
+            },
+            {
+              "city": "New York",
+              "country": "US",
+              "image_url": "https://static.tickpick.com/venues/lyric-theatre.jpg?cat=venue",
+              "is_primary": false,
+              "name": "Lyric Theatre - New York",
+              "num_upcoming_events": 290,
+              "slug": "lyric-theatre-new-york",
+              "state": "NY",
+              "url": "https://www.tickpick.com/venues/lyric-theatre-new-york/tickets/",
+              "venue_id": "305"
+            },
+            {
+              "city": "New York",
+              "country": "US",
+              "image_url": "https://static.tickpick.com/venues/broadway-theatre-new-york.jpg?cat=venue",
+              "is_primary": false,
+              "name": "Broadway Theatre - New York",
+              "num_upcoming_events": 122,
+              "slug": "broadway-theatre-new-york",
+              "state": "NY",
+              "url": "https://www.tickpick.com/venues/broadway-theatre-new-york/tickets/",
+              "venue_id": "136"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "tickpick-com",
+        "capability": "events/search"
+      }
+    },
+    {
+      "id": "tickpick-com/events/venue_events",
+      "provider": "tickpick-com",
+      "capability": "events/venue_events",
+      "name": "Venue events",
+      "description": "Everything at a venue whose slug came from search or an event's venue. Page with offset = next_offset until it is null.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Events per page (the site uses 20).",
+          "default": 20,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "Start index; pass next_offset from the previous page.",
+          "default": 0,
+          "min": 0
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A tickpick.com venue URL, https://www.tickpick.com/venues/{slug}/tickets/. Alternative to venue_slug."
+        },
+        {
+          "name": "venue_slug",
+          "type": "string",
+          "in": "body",
+          "about": "Venue slug, for example nationals-park (from search venues[].slug or an event's venue.slug). Pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "venue_slug",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Upcoming events at one TickPick venue (api.tickpick.com/1.0/workers/paginate/venues/{slug}/events), paged with limit/offset and total_count: full event records with venue-local and UTC start, performers, status and price_stats (listing count, min/max/average all-in per-ticket price; null for TBD dates without statistics), plus the venue record, recently announced events and nearby venues.",
+        "key": "events",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "child_category",
+            "type": "string"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "event_date_local",
+            "type": "string",
+            "about": "Venue-local start, ISO 8601 without offset (see timezone). TBD dates appear with a placeholder time such as 03:30:00."
+          },
+          {
+            "name": "event_date_utc",
+            "type": "string",
+            "about": "UTC start, ISO 8601 without offset."
+          },
+          {
+            "name": "event_id",
+            "type": "string",
+            "about": "Stable TickPick event id; the event and event_price_history input."
+          },
+          {
+            "name": "event_type",
+            "type": "string",
+            "about": "Top-level type as stated (SPORTS, CONCERTS, THEATER, ...)."
+          },
+          {
+            "name": "grandchild_category",
+            "type": "string"
+          },
+          {
+            "name": "has_map",
+            "type": "boolean"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "is_marketplace_enabled",
+            "type": "boolean"
+          },
+          {
+            "name": "main_performer",
+            "type": "object"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "original_event_date",
+            "type": "string",
+            "about": "Original venue-local date when the event was rescheduled or its time was set later."
+          },
+          {
+            "name": "price_stats",
+            "type": "object",
+            "about": "Event-level snapshot of the live resale listings as published by TickPick (stats/summary): the number of listings and the per-ticket all-in price range. Null when the site publishes no statistics for the event (observed on TBD / if-necessary playoff dates). This is not a per-listing offer."
+          },
+          {
+            "name": "primary_marketplace",
+            "type": "string",
+            "about": "Primary ticketing marketplace code as stated (e.g. TDC); null when absent."
+          },
+          {
+            "name": "promotions",
+            "type": "object[]"
+          },
+          {
+            "name": "secondary_performers",
+            "type": "object[]"
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Event status as the site states it ('Scheduled' observed; other values pass through unchanged)."
+          },
+          {
+            "name": "tags",
+            "type": "string[]",
+            "about": "Site event tags (HotEvent, FeaturedEvent, ...); empty when none."
+          },
+          {
+            "name": "timezone",
+            "type": "string",
+            "about": "IANA timezone of the venue."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Event (buy) page on tickpick.com; the source URL."
+          },
+          {
+            "name": "venue",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 5,
+          "venue_slug": "nationals-park"
+        },
+        "response": {
+          "events": [
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2026-09-25T18:45:00",
+              "event_date_utc": "2026-09-25T22:45:00",
+              "event_id": "7368513",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Washington Nationals",
+                "performer_id": "2732",
+                "role": "Home Team",
+                "short_name": "Nationals",
+                "slug": "washington-nationals",
+                "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "Washington Nationals vs. New York Mets",
+              "original_event_date": "2026-09-25T03:30:00",
+              "price_stats": {
+                "avg_price": 70.5,
+                "currency": "USD",
+                "fees_included": true,
+                "listing_count": 2608,
+                "max_price": 2593,
+                "min_price": 15
+              },
+              "primary_marketplace": "TDC",
+              "promotions": [
+                {
+                  "description": "20,000 fans",
+                  "text": "Nationals Football Jersey",
+                  "type": "Apparel"
+                },
+                {
+                  "description": null,
+                  "text": "Friday Night Fireworks",
+                  "type": "Fireworks"
+                }
+              ],
+              "secondary_performers": [
+                {
+                  "name": "New York Mets",
+                  "performer_id": "733",
+                  "role": "Away Team",
+                  "short_name": "Mets",
+                  "slug": "new-york-mets",
+                  "url": "https://www.tickpick.com/mlb/new-york-mets-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "Nationals vs. Mets",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [
+                "HotEvent",
+                "RisingEvent",
+                "FeaturedEvent"
+              ],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-washington-nationals-vs-new-york-mets-tickets-nationals-park-9-25-26-6pm/7368513/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            },
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2026-09-26T16:05:00",
+              "event_date_utc": "2026-09-26T20:05:00",
+              "event_id": "7368514",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Washington Nationals",
+                "performer_id": "2732",
+                "role": "Home Team",
+                "short_name": "Nationals",
+                "slug": "washington-nationals",
+                "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "Washington Nationals vs. New York Mets",
+              "original_event_date": "2026-09-26T03:30:00",
+              "price_stats": {
+                "avg_price": 67.1,
+                "currency": "USD",
+                "fees_included": true,
+                "listing_count": 2887,
+                "max_price": 1628,
+                "min_price": 15
+              },
+              "primary_marketplace": "TDC",
+              "promotions": [],
+              "secondary_performers": [
+                {
+                  "name": "New York Mets",
+                  "performer_id": "733",
+                  "role": "Away Team",
+                  "short_name": "Mets",
+                  "slug": "new-york-mets",
+                  "url": "https://www.tickpick.com/mlb/new-york-mets-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "Nationals vs. Mets",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [
+                "HotEvent",
+                "RisingEvent",
+                "FeaturedEvent"
+              ],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-washington-nationals-vs-new-york-mets-tickets-nationals-park-9-26-26-4pm/7368514/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            },
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2026-09-27T15:05:00",
+              "event_date_utc": "2026-09-27T19:05:00",
+              "event_id": "7368515",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Washington Nationals",
+                "performer_id": "2732",
+                "role": "Home Team",
+                "short_name": "Nationals",
+                "slug": "washington-nationals",
+                "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "Washington Nationals vs. New York Mets",
+              "original_event_date": "2026-09-27T03:30:00",
+              "price_stats": {
+                "avg_price": 64.72,
+                "currency": "USD",
+                "fees_included": true,
+                "listing_count": 2529,
+                "max_price": 415,
+                "min_price": 13
+              },
+              "primary_marketplace": "TDC",
+              "promotions": [],
+              "secondary_performers": [
+                {
+                  "name": "New York Mets",
+                  "performer_id": "733",
+                  "role": "Away Team",
+                  "short_name": "Mets",
+                  "slug": "new-york-mets",
+                  "url": "https://www.tickpick.com/mlb/new-york-mets-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "Nationals vs. Mets",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [
+                "HotEvent",
+                "RisingEvent",
+                "FeaturedEvent"
+              ],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-washington-nationals-vs-new-york-mets-tickets-nationals-park-9-27-26-3pm/7368515/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            },
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2026-09-29T03:30:00",
+              "event_date_utc": "2026-09-29T07:30:00",
+              "event_id": "8173857",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Washington Nationals",
+                "performer_id": "2732",
+                "role": "Home Team",
+                "short_name": "Nationals",
+                "slug": "washington-nationals",
+                "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "NL Wild Card: Washington Nationals vs. TBD - Game 1 (If Necessary)",
+              "original_event_date": "2026-09-29T03:30:00",
+              "price_stats": null,
+              "primary_marketplace": "TDC",
+              "promotions": [],
+              "secondary_performers": [
+                {
+                  "name": "NL Wild Card Game",
+                  "performer_id": "136698",
+                  "role": "Featured",
+                  "short_name": null,
+                  "slug": "nl-wild-card-game",
+                  "url": "https://www.tickpick.com/mlb/nl-wild-card-game-tickets/",
+                  "url_category": "mlb"
+                },
+                {
+                  "name": "MLB Playoffs",
+                  "performer_id": "37868",
+                  "role": "Featured",
+                  "short_name": null,
+                  "slug": "mlb-playoffs",
+                  "url": "https://www.tickpick.com/mlb/mlb-playoffs-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "NL Wild Card: Nationals vs. TBD - Game 1",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-nl-wild-card-washington-nationals-vs-tbd-game-1-(if-necessary)-tickets-nationals-park-9-29-26-3am/8173857/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            },
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2026-09-30T03:30:00",
+              "event_date_utc": "2026-09-30T07:30:00",
+              "event_id": "8173858",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_marketplace_enabled": true,
+              "main_performer": {
+                "name": "Washington Nationals",
+                "performer_id": "2732",
+                "role": "Home Team",
+                "short_name": "Nationals",
+                "slug": "washington-nationals",
+                "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "NL Wild Card: Washington Nationals vs. TBD - Game 2 (If Necessary)",
+              "original_event_date": "2026-09-30T03:30:00",
+              "price_stats": null,
+              "primary_marketplace": "TDC",
+              "promotions": [],
+              "secondary_performers": [
+                {
+                  "name": "NL Wild Card Game",
+                  "performer_id": "136698",
+                  "role": "Featured",
+                  "short_name": null,
+                  "slug": "nl-wild-card-game",
+                  "url": "https://www.tickpick.com/mlb/nl-wild-card-game-tickets/",
+                  "url_category": "mlb"
+                },
+                {
+                  "name": "MLB Playoffs",
+                  "performer_id": "37868",
+                  "role": "Featured",
+                  "short_name": null,
+                  "slug": "mlb-playoffs",
+                  "url": "https://www.tickpick.com/mlb/mlb-playoffs-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "NL Wild Card: Nationals vs. TBD - Game 2",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [
+                "HotEvent"
+              ],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-nl-wild-card-washington-nationals-vs-tbd-game-2-(if-necessary)-tickets-nationals-park-9-30-26-3am/8173858/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            }
+          ],
+          "limit": 5,
+          "nearby_venues": [
+            {
+              "city": "Landover",
+              "name": "Northwest Stadium",
+              "slug": "northwest-stadium",
+              "state": "MD",
+              "url": "https://www.tickpick.com/venues/northwest-stadium/tickets/"
+            },
+            {
+              "city": "Washington",
+              "name": "Capital One Arena",
+              "slug": "capital-one-arena",
+              "state": "DC",
+              "url": "https://www.tickpick.com/venues/capital-one-arena/tickets/"
+            },
+            {
+              "city": "Washington",
+              "name": "The Anthem - D.C.",
+              "slug": "the-anthem-d-c-",
+              "state": "DC",
+              "url": "https://www.tickpick.com/venues/the-anthem-d-c-/tickets/"
+            },
+            {
+              "city": "Bristow",
+              "name": "Jiffy Lube Live",
+              "slug": "jiffy-lube-live",
+              "state": "VA",
+              "url": "https://www.tickpick.com/venues/jiffy-lube-live/tickets/"
+            },
+            {
+              "city": "Silver Spring",
+              "name": "The Fillmore Silver Spring",
+              "slug": "the-fillmore-silver-spring",
+              "state": "MD",
+              "url": "https://www.tickpick.com/venues/the-fillmore-silver-spring/tickets/"
+            },
+            {
+              "city": "Washington",
+              "name": "9:30 Club",
+              "slug": "930-club",
+              "state": "DC",
+              "url": "https://www.tickpick.com/venues/930-club/tickets/"
+            },
+            {
+              "city": "College Park",
+              "name": "SECU Stadium",
+              "slug": "secu-stadium",
+              "state": "MD",
+              "url": "https://www.tickpick.com/venues/secu-stadium/tickets/"
+            },
+            {
+              "city": "Washington",
+              "name": "Audi Field",
+              "slug": "audi-field",
+              "state": "DC",
+              "url": "https://www.tickpick.com/venues/audi-field/tickets/"
+            },
+            {
+              "city": "Washington",
+              "name": "Lincoln Theatre - DC",
+              "slug": "lincoln-theatre-dc",
+              "state": "DC",
+              "url": "https://www.tickpick.com/venues/lincoln-theatre-dc/tickets/"
+            },
+            {
+              "city": "Washington",
+              "name": "Warner Theatre - DC",
+              "slug": "warner-theatre-dc",
+              "state": "DC",
+              "url": "https://www.tickpick.com/venues/warner-theatre-dc/tickets/"
+            }
+          ],
+          "next_offset": 5,
+          "observed_at_ms": 1790034757507,
+          "offset": 0,
+          "recently_announced": [
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2026-10-10T19:00:00",
+              "event_date_utc": "2026-10-10T23:00:00",
+              "event_id": "8234977",
+              "event_type": "SPORTS",
+              "grandchild_category": "Other",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/savannah-bananas.jpg",
+              "is_marketplace_enabled": false,
+              "main_performer": {
+                "name": "Savannah Bananas",
+                "performer_id": "128203",
+                "role": "Headliner",
+                "short_name": null,
+                "slug": "savannah-bananas",
+                "url": "https://www.tickpick.com/baseball/savannah-bananas-tickets/",
+                "url_category": "baseball"
+              },
+              "name": "Banana Bowl: Savannah Bananas vs. TBD",
+              "original_event_date": "2026-10-10T19:00:00",
+              "price_stats": {
+                "avg_price": 452.02,
+                "currency": "USD",
+                "fees_included": true,
+                "listing_count": 313,
+                "max_price": 1694,
+                "min_price": 127
+              },
+              "primary_marketplace": null,
+              "promotions": [],
+              "secondary_performers": [
+                {
+                  "name": "Banana Ball",
+                  "performer_id": "283811",
+                  "role": "Featured",
+                  "short_name": null,
+                  "slug": "banana-ball",
+                  "url": "https://www.tickpick.com/baseball/banana-ball-tickets/",
+                  "url_category": "baseball"
+                }
+              ],
+              "short_name": "Banana Bowl: Savannah Bananas vs. TBD",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [
+                "HotEvent"
+              ],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-banana-bowl-savannah-bananas-vs-tbd-tickets-nationals-park-10-10-26-7pm/8234977/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            },
+            {
+              "child_category": "BASEBALL",
+              "city": "Washington",
+              "event_date_local": "2027-03-22T03:30:00",
+              "event_date_utc": "2027-03-22T07:30:00",
+              "event_id": "8253732",
+              "event_type": "SPORTS",
+              "grandchild_category": "Professional (MLB)",
+              "has_map": true,
+              "image_url": "https://static.tickpick.com/performers/washington-nationals.jpg",
+              "is_marketplace_enabled": false,
+              "main_performer": {
+                "name": "Washington Nationals",
+                "performer_id": "2732",
+                "role": "Home Team",
+                "short_name": "Nationals",
+                "slug": "washington-nationals",
+                "url": "https://www.tickpick.com/mlb/washington-nationals-tickets/",
+                "url_category": "mlb"
+              },
+              "name": "Spring Training: Washington Nationals vs. Baltimore Orioles",
+              "original_event_date": "2027-03-22T03:30:00",
+              "price_stats": null,
+              "primary_marketplace": null,
+              "promotions": [],
+              "secondary_performers": [
+                {
+                  "name": "Spring Training",
+                  "performer_id": "102180",
+                  "role": "Featured",
+                  "short_name": null,
+                  "slug": "spring-training",
+                  "url": "https://www.tickpick.com/mlb/spring-training-tickets/",
+                  "url_category": "mlb"
+                },
+                {
+                  "name": "Baltimore Orioles",
+                  "performer_id": "92",
+                  "role": "Away Team",
+                  "short_name": "Orioles",
+                  "slug": "baltimore-orioles",
+                  "url": "https://www.tickpick.com/mlb/baltimore-orioles-tickets/",
+                  "url_category": "mlb"
+                }
+              ],
+              "short_name": "Spring Training: Nationals vs. Orioles",
+              "state": "DC",
+              "status": "Scheduled",
+              "tags": [],
+              "timezone": "America/New_York",
+              "url": "https://www.tickpick.com/buy-spring-training-washington-nationals-vs-baltimore-orioles-tickets-nationals-park-3-22-27-3am/8253732/",
+              "venue": {
+                "address": "1500 South Capitol Street Southeast",
+                "city": "Washington",
+                "country": "US",
+                "latitude": 38.87301,
+                "longitude": -77.00743,
+                "name": "Nationals Park",
+                "postal_code": "20003",
+                "slug": "nationals-park",
+                "state": "DC",
+                "timezone": "America/New_York",
+                "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+                "venue_id": 11412
+              }
+            }
+          ],
+          "source_url": "https://api.tickpick.com/1.0/workers/paginate/venues/nationals-park/events?limit=5&offset=0",
+          "total_count": 100,
+          "venue": {
+            "address": "1500 South Capitol Street Southeast",
+            "city": "Washington",
+            "country": "US",
+            "latitude": 38.87301,
+            "longitude": -77.00743,
+            "name": "Nationals Park",
+            "postal_code": "20003",
+            "slug": "nationals-park",
+            "state": "DC",
+            "timezone": "America/New_York",
+            "url": "https://www.tickpick.com/venues/nationals-park/tickets/",
+            "venue_id": 11412
+          }
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "tickpick-com",
+        "capability": "events/venue_events"
+      }
+    }
+  ]
+}

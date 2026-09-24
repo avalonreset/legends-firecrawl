@@ -1,0 +1,1732 @@
+{
+  "id": "gleif-org",
+  "provider": "gleif-org",
+  "name": "GLEIF",
+  "description": "Global LEI search, identity and reported direct/ultimate accounting-consolidation parents and children. Preserves reporting exceptions.",
+  "toolCount": 6,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "gleif-org"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "gleif-org/entities/direct_children",
+      "provider": "gleif-org",
+      "capability": "entities/direct_children",
+      "name": "Direct children",
+      "description": "Page through reported direct accounting-consolidated children for an LEI. This excludes unreported ownership relationships.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "lei",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z0-9]{20}$.",
+          "required": true
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "Page through reported direct accounting-consolidated children for an LEI. This excludes unreported ownership relationships.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "attributes",
+            "type": "object",
+            "about": "GLEIF JSON:API source attributes, including entity identity, registration, or reporting-exception reason. Preserved without inference."
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "relationships",
+            "type": "object"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "lei": "HWUPKR0MPOU8FGXBT394",
+          "limit": 2
+        },
+        "response": {
+          "golden_copy_published_at": "2026-09-15T08:00:00Z",
+          "next_url": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/direct-children?page%5Bnumber%5D=2&page%5Bsize%5D=2",
+          "observed_at_ms": 1789508186710,
+          "pagination": {
+            "currentPage": 1,
+            "from": 1,
+            "lastPage": 4,
+            "perPage": 2,
+            "to": 2,
+            "total": 8
+          },
+          "records": [
+            {
+              "attributes": {
+                "bic": null,
+                "conformityFlag": "CONFORMING",
+                "entity": {
+                  "associatedEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "category": "GENERAL",
+                  "creationDate": "2023-05-10T12:00:00Z",
+                  "eventGroups": [
+                    {
+                      "events": [
+                        {
+                          "effectiveDate": "2023-12-15T00:00:00Z",
+                          "recordedDate": "2024-07-15T16:44:12Z",
+                          "status": "COMPLETED",
+                          "type": "CHANGE_LEGAL_ADDRESS",
+                          "validationDocuments": "REGULATORY_FILING"
+                        }
+                      ],
+                      "groupType": "STANDALONE"
+                    },
+                    {
+                      "events": [
+                        {
+                          "effectiveDate": "2023-12-15T00:00:00Z",
+                          "recordedDate": "2024-07-15T16:44:12Z",
+                          "status": "COMPLETED",
+                          "type": "CHANGE_HQ_ADDRESS",
+                          "validationDocuments": "REGULATORY_FILING"
+                        }
+                      ],
+                      "groupType": "STANDALONE"
+                    }
+                  ],
+                  "expiration": {
+                    "date": null,
+                    "reason": null
+                  },
+                  "headquartersAddress": {
+                    "addressLines": [
+                      "Ground Floor of Tower B, PrimeCo Union City",
+                      "Plot Nos. 18, 19A And 19B, Sy No. 76 & 87",
+                      "Sadarmangala Industrial Area",
+                      "Krishnarajapuram Hobli, Kadugodi"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Bangalore",
+                    "country": "IN",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "560067",
+                    "region": "IN-KA"
+                  },
+                  "jurisdiction": "IN",
+                  "legalAddress": {
+                    "addressLines": [
+                      "Ground Floor of Tower B, PrimeCo Union City",
+                      "Plot Nos. 18, 19A And 19B, Sy No. 76 & 87",
+                      "Sadarmangala Industrial Area",
+                      "Krishnarajapuram Hobli, Kadugodi"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Bangalore",
+                    "country": "IN",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "560067",
+                    "region": "IN-KA"
+                  },
+                  "legalForm": {
+                    "id": "YSP9",
+                    "other": null
+                  },
+                  "legalName": {
+                    "language": "en",
+                    "name": "APPLE OPERATIONS INDIA PRIVATE LIMITED"
+                  },
+                  "otherAddresses": [],
+                  "otherNames": [
+                    {
+                      "language": "en",
+                      "name": "Apple Operations India Pvt. Ltd.",
+                      "type": "TRADING_OR_OPERATING_NAME"
+                    }
+                  ],
+                  "registeredAs": "U72100KA2023PTC173466",
+                  "registeredAt": {
+                    "id": "RA000394",
+                    "other": null
+                  },
+                  "status": "ACTIVE",
+                  "subCategory": null,
+                  "successorEntities": [],
+                  "successorEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "transliteratedOtherNames": []
+                },
+                "gem": null,
+                "lei": "2549008YU9EOMHFUA249",
+                "mic": null,
+                "ocid": null,
+                "qcc": "QIN6Y5HW6U",
+                "registration": {
+                  "corroborationLevel": "FULLY_CORROBORATED",
+                  "initialRegistrationDate": "2023-08-25T14:07:19Z",
+                  "lastUpdateDate": "2026-05-19T07:01:11Z",
+                  "managingLou": "5493001KJTIIGC8Y1R12",
+                  "nextRenewalDate": "2027-05-25T14:07:19Z",
+                  "otherValidationAuthorities": [],
+                  "status": "ISSUED",
+                  "validatedAs": "U72100KA2023PTC173466",
+                  "validatedAt": {
+                    "id": "RA000394",
+                    "other": null
+                  }
+                },
+                "spglobal": [
+                  "1853971159"
+                ]
+              },
+              "id": "2549008YU9EOMHFUA249",
+              "relationships": {
+                "direct-parent": {
+                  "links": {
+                    "lei-record": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/direct-parent",
+                    "relationship-record": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/direct-parent-relationship"
+                  }
+                },
+                "field-modifications": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/field-modifications"
+                  }
+                },
+                "lei-issuer": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/lei-issuer"
+                  }
+                },
+                "managing-lou": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/managing-lou"
+                  }
+                },
+                "ultimate-parent": {
+                  "links": {
+                    "lei-record": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/ultimate-parent",
+                    "relationship-record": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/ultimate-parent-relationship"
+                  }
+                }
+              },
+              "type": "lei-records"
+            },
+            {
+              "attributes": {
+                "bic": null,
+                "conformityFlag": "CONFORMING",
+                "entity": {
+                  "associatedEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "category": "GENERAL",
+                  "creationDate": "2012-03-30T00:00:00Z",
+                  "eventGroups": [],
+                  "expiration": {
+                    "date": null,
+                    "reason": null
+                  },
+                  "headquartersAddress": {
+                    "addressLines": [
+                      "Cerro El Plomo 5630",
+                      "Torre 8 Piso 20",
+                      "Las Condes"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Santiago",
+                    "country": "CL",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "7560742",
+                    "region": "CL-RM"
+                  },
+                  "jurisdiction": "CL",
+                  "legalAddress": {
+                    "addressLines": [
+                      "Cerro El Plomo 5630",
+                      "Torre 8 Piso 20",
+                      "Las Condes"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Santiago",
+                    "country": "CL",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "7560742",
+                    "region": "CL-RM"
+                  },
+                  "legalForm": {
+                    "id": "CVDP",
+                    "other": null
+                  },
+                  "legalName": {
+                    "language": "es",
+                    "name": "APPLE CHILE COMERCIAL LIMITADA"
+                  },
+                  "otherAddresses": [],
+                  "otherNames": [],
+                  "registeredAs": "76.203.916-8",
+                  "registeredAt": {
+                    "id": "RA000091",
+                    "other": null
+                  },
+                  "status": "ACTIVE",
+                  "subCategory": null,
+                  "successorEntities": [],
+                  "successorEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "transliteratedOtherNames": []
+                },
+                "gem": null,
+                "lei": "5493004QI6E3PJNCEB09",
+                "mic": null,
+                "ocid": null,
+                "qcc": null,
+                "registration": {
+                  "corroborationLevel": "FULLY_CORROBORATED",
+                  "initialRegistrationDate": "2019-12-26T15:31:00Z",
+                  "lastUpdateDate": "2026-03-03T16:34:34Z",
+                  "managingLou": "5493001KJTIIGC8Y1R12",
+                  "nextRenewalDate": "2027-03-08T17:20:49Z",
+                  "otherValidationAuthorities": [],
+                  "status": "ISSUED",
+                  "validatedAs": "76.203.916-8",
+                  "validatedAt": {
+                    "id": "RA000091",
+                    "other": null
+                  }
+                },
+                "spglobal": [
+                  "649322987"
+                ]
+              },
+              "id": "5493004QI6E3PJNCEB09",
+              "relationships": {
+                "direct-parent": {
+                  "links": {
+                    "lei-record": "https://api.gleif.org/api/v1/lei-records/5493004QI6E3PJNCEB09/direct-parent",
+                    "relationship-record": "https://api.gleif.org/api/v1/lei-records/5493004QI6E3PJNCEB09/direct-parent-relationship"
+                  }
+                },
+                "field-modifications": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/5493004QI6E3PJNCEB09/field-modifications"
+                  }
+                },
+                "lei-issuer": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/5493004QI6E3PJNCEB09/lei-issuer"
+                  }
+                },
+                "managing-lou": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/5493004QI6E3PJNCEB09/managing-lou"
+                  }
+                },
+                "ultimate-parent": {
+                  "links": {
+                    "lei-record": "https://api.gleif.org/api/v1/lei-records/5493004QI6E3PJNCEB09/ultimate-parent",
+                    "relationship-record": "https://api.gleif.org/api/v1/lei-records/5493004QI6E3PJNCEB09/ultimate-parent-relationship"
+                  }
+                }
+              },
+              "type": "lei-records"
+            }
+          ],
+          "scope": "Global registered LEIs. Parent/child links describe reported accounting consolidation, not every ownership relationship. Reporting exceptions preserve their source reasons.",
+          "source_url": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/direct-children?page%5Bnumber%5D=1&page%5Bsize%5D=2"
+        },
+        "recordedAt": "2026-09-15T21:36:26Z"
+      },
+      "execute": {
+        "provider": "gleif-org",
+        "capability": "entities/direct_children"
+      }
+    },
+    {
+      "id": "gleif-org/entities/direct_parent",
+      "provider": "gleif-org",
+      "capability": "entities/direct_parent",
+      "name": "Direct parent",
+      "description": "Retrieve the reported direct accounting-consolidating parent, or its reporting-exception record and reason. This is not a complete beneficial-ownership graph.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "lei",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z0-9]{20}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Retrieve the reported direct accounting-consolidating parent, or its reporting-exception record and reason. This is not a complete beneficial-ownership graph.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "attributes",
+            "type": "object",
+            "about": "GLEIF JSON:API source attributes, including entity identity, registration, or reporting-exception reason. Preserved without inference."
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "relationships",
+            "type": "object"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "lei": "2549008YU9EOMHFUA249"
+        },
+        "response": {
+          "golden_copy_published_at": "2026-09-15T08:00:00Z",
+          "next_url": null,
+          "observed_at_ms": 1789508186710,
+          "pagination": null,
+          "records": [
+            {
+              "attributes": {
+                "bic": [
+                  "APLEUS66XXX"
+                ],
+                "conformityFlag": "CONFORMING",
+                "entity": {
+                  "associatedEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "category": "GENERAL",
+                  "creationDate": "1977-01-03T00:00:00Z",
+                  "eventGroups": [],
+                  "expiration": {
+                    "date": null,
+                    "reason": null
+                  },
+                  "headquartersAddress": {
+                    "addressLines": [
+                      "One Apple Park Way"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Cupertino",
+                    "country": "US",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "95014",
+                    "region": "US-CA"
+                  },
+                  "jurisdiction": "US-CA",
+                  "legalAddress": {
+                    "addressLines": [
+                      "C/O C T Corporation System",
+                      "330 N. Brand Blvd",
+                      "Suite 700"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Glendale",
+                    "country": "US",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "91203",
+                    "region": "US-CA"
+                  },
+                  "legalForm": {
+                    "id": "H1UM",
+                    "other": null
+                  },
+                  "legalName": {
+                    "language": "en",
+                    "name": "Apple Inc."
+                  },
+                  "otherAddresses": [],
+                  "otherNames": [
+                    {
+                      "language": "en",
+                      "name": "Apple Computer, Inc.",
+                      "type": "PREVIOUS_LEGAL_NAME"
+                    }
+                  ],
+                  "registeredAs": "806592",
+                  "registeredAt": {
+                    "id": "RA000598",
+                    "other": null
+                  },
+                  "status": "ACTIVE",
+                  "subCategory": null,
+                  "successorEntities": [],
+                  "successorEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "transliteratedOtherNames": []
+                },
+                "gem": null,
+                "lei": "HWUPKR0MPOU8FGXBT394",
+                "mic": null,
+                "ocid": null,
+                "qcc": null,
+                "registration": {
+                  "corroborationLevel": "FULLY_CORROBORATED",
+                  "initialRegistrationDate": "2012-06-06T15:53:00Z",
+                  "lastUpdateDate": "2026-03-03T16:34:33Z",
+                  "managingLou": "5493001KJTIIGC8Y1R12",
+                  "nextRenewalDate": "2027-03-08T17:27:20Z",
+                  "otherValidationAuthorities": [],
+                  "status": "ISSUED",
+                  "validatedAs": "806592",
+                  "validatedAt": {
+                    "id": "RA000598",
+                    "other": null
+                  }
+                },
+                "spglobal": [
+                  "24937"
+                ]
+              },
+              "id": "HWUPKR0MPOU8FGXBT394",
+              "relationships": {
+                "direct-children": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/direct-children",
+                    "relationship-records": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/direct-child-relationships"
+                  }
+                },
+                "direct-parent": {
+                  "links": {
+                    "reporting-exception": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/direct-parent-reporting-exception"
+                  }
+                },
+                "field-modifications": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/field-modifications"
+                  }
+                },
+                "isins": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/isins"
+                  }
+                },
+                "lei-issuer": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/lei-issuer"
+                  }
+                },
+                "managing-lou": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/managing-lou"
+                  }
+                },
+                "ultimate-children": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/ultimate-children",
+                    "relationship-records": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/ultimate-child-relationships"
+                  }
+                },
+                "ultimate-parent": {
+                  "links": {
+                    "reporting-exception": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/ultimate-parent-reporting-exception"
+                  }
+                }
+              },
+              "type": "lei-records"
+            }
+          ],
+          "scope": "Global registered LEIs. Parent/child links describe reported accounting consolidation, not every ownership relationship. Reporting exceptions preserve their source reasons.",
+          "source_url": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/direct-parent"
+        },
+        "recordedAt": "2026-09-15T21:36:26Z"
+      },
+      "execute": {
+        "provider": "gleif-org",
+        "capability": "entities/direct_parent"
+      }
+    },
+    {
+      "id": "gleif-org/entities/entity",
+      "provider": "gleif-org",
+      "capability": "entities/entity",
+      "name": "Entity",
+      "description": "Resolve an exact 20-character LEI to source identity, registration, mapped identifiers and relationship links. Unknown LEIs fail as upstream not-found, not an empty success.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "lei",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z0-9]{20}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Resolve an exact 20-character LEI to source identity, registration, mapped identifiers and relationship links. Unknown LEIs fail as upstream not-found, not an empty success.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "attributes",
+            "type": "object",
+            "about": "GLEIF JSON:API source attributes, including entity identity, registration, or reporting-exception reason. Preserved without inference."
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "relationships",
+            "type": "object"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "lei": "HWUPKR0MPOU8FGXBT394"
+        },
+        "response": {
+          "golden_copy_published_at": "2026-09-15T08:00:00Z",
+          "next_url": null,
+          "observed_at_ms": 1789508186710,
+          "pagination": null,
+          "records": [
+            {
+              "attributes": {
+                "bic": [
+                  "APLEUS66XXX"
+                ],
+                "conformityFlag": "CONFORMING",
+                "entity": {
+                  "associatedEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "category": "GENERAL",
+                  "creationDate": "1977-01-03T00:00:00Z",
+                  "eventGroups": [],
+                  "expiration": {
+                    "date": null,
+                    "reason": null
+                  },
+                  "headquartersAddress": {
+                    "addressLines": [
+                      "One Apple Park Way"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Cupertino",
+                    "country": "US",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "95014",
+                    "region": "US-CA"
+                  },
+                  "jurisdiction": "US-CA",
+                  "legalAddress": {
+                    "addressLines": [
+                      "C/O C T Corporation System",
+                      "330 N. Brand Blvd",
+                      "Suite 700"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Glendale",
+                    "country": "US",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "91203",
+                    "region": "US-CA"
+                  },
+                  "legalForm": {
+                    "id": "H1UM",
+                    "other": null
+                  },
+                  "legalName": {
+                    "language": "en",
+                    "name": "Apple Inc."
+                  },
+                  "otherAddresses": [],
+                  "otherNames": [
+                    {
+                      "language": "en",
+                      "name": "Apple Computer, Inc.",
+                      "type": "PREVIOUS_LEGAL_NAME"
+                    }
+                  ],
+                  "registeredAs": "806592",
+                  "registeredAt": {
+                    "id": "RA000598",
+                    "other": null
+                  },
+                  "status": "ACTIVE",
+                  "subCategory": null,
+                  "successorEntities": [],
+                  "successorEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "transliteratedOtherNames": []
+                },
+                "gem": null,
+                "lei": "HWUPKR0MPOU8FGXBT394",
+                "mic": null,
+                "ocid": null,
+                "qcc": null,
+                "registration": {
+                  "corroborationLevel": "FULLY_CORROBORATED",
+                  "initialRegistrationDate": "2012-06-06T15:53:00Z",
+                  "lastUpdateDate": "2026-03-03T16:34:33Z",
+                  "managingLou": "5493001KJTIIGC8Y1R12",
+                  "nextRenewalDate": "2027-03-08T17:27:20Z",
+                  "otherValidationAuthorities": [],
+                  "status": "ISSUED",
+                  "validatedAs": "806592",
+                  "validatedAt": {
+                    "id": "RA000598",
+                    "other": null
+                  }
+                },
+                "spglobal": [
+                  "24937"
+                ]
+              },
+              "id": "HWUPKR0MPOU8FGXBT394",
+              "relationships": {
+                "direct-children": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/direct-children",
+                    "relationship-records": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/direct-child-relationships"
+                  }
+                },
+                "direct-parent": {
+                  "links": {
+                    "reporting-exception": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/direct-parent-reporting-exception"
+                  }
+                },
+                "field-modifications": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/field-modifications"
+                  }
+                },
+                "isins": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/isins"
+                  }
+                },
+                "lei-issuer": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/lei-issuer"
+                  }
+                },
+                "managing-lou": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/managing-lou"
+                  }
+                },
+                "ultimate-children": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/ultimate-children",
+                    "relationship-records": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/ultimate-child-relationships"
+                  }
+                },
+                "ultimate-parent": {
+                  "links": {
+                    "reporting-exception": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/ultimate-parent-reporting-exception"
+                  }
+                }
+              },
+              "type": "lei-records"
+            }
+          ],
+          "scope": "Global registered LEIs. Parent/child links describe reported accounting consolidation, not every ownership relationship. Reporting exceptions preserve their source reasons.",
+          "source_url": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394"
+        },
+        "recordedAt": "2026-09-15T21:36:26Z"
+      },
+      "execute": {
+        "provider": "gleif-org",
+        "capability": "entities/entity"
+      }
+    },
+    {
+      "id": "gleif-org/entities/search",
+      "provider": "gleif-org",
+      "capability": "entities/search",
+      "name": "Search",
+      "description": "Search global registered entities by legal name, with optional legal-address country. Page through matching LEIs; name matches are candidates, not guaranteed identity equivalence.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "country",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z]{2}$."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "in": "body",
+          "about": "name",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "Search global registered entities by legal name, with optional legal-address country. Page through matching LEIs; name matches are candidates, not guaranteed identity equivalence.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "attributes",
+            "type": "object",
+            "about": "GLEIF JSON:API source attributes, including entity identity, registration, or reporting-exception reason. Preserved without inference."
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "relationships",
+            "type": "object"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 2,
+          "name": "Apple"
+        },
+        "response": {
+          "golden_copy_published_at": "2026-09-15T08:00:00Z",
+          "next_url": "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalName%5D=Apple&page%5Bnumber%5D=2&page%5Bsize%5D=2",
+          "observed_at_ms": 1789508186710,
+          "pagination": {
+            "currentPage": 1,
+            "from": 1,
+            "lastPage": 185,
+            "perPage": 2,
+            "to": 2,
+            "total": 369
+          },
+          "records": [
+            {
+              "attributes": {
+                "bic": null,
+                "conformityFlag": null,
+                "entity": {
+                  "associatedEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "category": "GENERAL",
+                  "creationDate": "2024-08-31T00:00:00Z",
+                  "eventGroups": [],
+                  "expiration": {
+                    "date": null,
+                    "reason": null
+                  },
+                  "headquartersAddress": {
+                    "addressLines": [
+                      "Plot No.15 to 29, Apple Textile Park"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Navsari",
+                    "country": "IN",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "396415",
+                    "region": null
+                  },
+                  "jurisdiction": "IN",
+                  "legalAddress": {
+                    "addressLines": [
+                      "Plot No.15 to 29, Apple Textile Park"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Navsari",
+                    "country": "IN",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "396415",
+                    "region": null
+                  },
+                  "legalForm": {
+                    "id": "A0PS",
+                    "other": null
+                  },
+                  "legalName": {
+                    "language": "en",
+                    "name": "APPLE FABRICS"
+                  },
+                  "otherAddresses": [],
+                  "otherNames": [],
+                  "registeredAs": "24ACFFA6449J1Z9",
+                  "registeredAt": {
+                    "id": "RA000754",
+                    "other": null
+                  },
+                  "status": "ACTIVE",
+                  "subCategory": null,
+                  "successorEntities": [],
+                  "successorEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "transliteratedOtherNames": []
+                },
+                "gem": null,
+                "lei": "6488000AOMRUL4037J06",
+                "mic": null,
+                "ocid": null,
+                "qcc": null,
+                "registration": {
+                  "corroborationLevel": "FULLY_CORROBORATED",
+                  "initialRegistrationDate": "2026-07-28T05:55:19Z",
+                  "lastUpdateDate": "2026-07-28T05:55:19Z",
+                  "managingLou": "485100001PLJJ09NZT59",
+                  "nextRenewalDate": "2027-07-28T00:00:00Z",
+                  "otherValidationAuthorities": [],
+                  "status": "ISSUED",
+                  "validatedAs": "24ACFFA6449J1Z9",
+                  "validatedAt": {
+                    "id": "RA000754",
+                    "other": null
+                  }
+                },
+                "spglobal": [
+                  "2012924861"
+                ]
+              },
+              "id": "6488000AOMRUL4037J06",
+              "relationships": {
+                "direct-parent": {
+                  "links": {
+                    "reporting-exception": "https://api.gleif.org/api/v1/lei-records/6488000AOMRUL4037J06/direct-parent-reporting-exception"
+                  }
+                },
+                "field-modifications": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/6488000AOMRUL4037J06/field-modifications"
+                  }
+                },
+                "lei-issuer": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/6488000AOMRUL4037J06/lei-issuer"
+                  }
+                },
+                "managing-lou": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/6488000AOMRUL4037J06/managing-lou"
+                  }
+                },
+                "ultimate-parent": {
+                  "links": {
+                    "reporting-exception": "https://api.gleif.org/api/v1/lei-records/6488000AOMRUL4037J06/ultimate-parent-reporting-exception"
+                  }
+                }
+              },
+              "type": "lei-records"
+            },
+            {
+              "attributes": {
+                "bic": null,
+                "conformityFlag": "CONFORMING",
+                "entity": {
+                  "associatedEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "category": "GENERAL",
+                  "creationDate": "2011-04-11T22:00:00Z",
+                  "eventGroups": [],
+                  "expiration": {
+                    "date": null,
+                    "reason": null
+                  },
+                  "headquartersAddress": {
+                    "addressLines": [
+                      "PLOT NO. 409 AND 410, INDUSTRIAL AREA, BAIKAMPADY",
+                      "Dakshina Kannada, Karnataka"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "MANGALURU",
+                    "country": "IN",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "575011",
+                    "region": null
+                  },
+                  "jurisdiction": "IN",
+                  "legalAddress": {
+                    "addressLines": [
+                      "PLOT NO. 409 AND 410, INDUSTRIAL AREA, BAIKAMPADY",
+                      "Dakshina Kannada, Karnataka"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "MANGALURU",
+                    "country": "IN",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "575011",
+                    "region": null
+                  },
+                  "legalForm": {
+                    "id": "A0PS",
+                    "other": null
+                  },
+                  "legalName": {
+                    "language": "en",
+                    "name": "APPLE DEVELOPERS"
+                  },
+                  "otherAddresses": [],
+                  "otherNames": [],
+                  "registeredAs": "29AAUFA3337N1ZR",
+                  "registeredAt": {
+                    "id": "RA000754",
+                    "other": null
+                  },
+                  "status": "ACTIVE",
+                  "subCategory": null,
+                  "successorEntities": [],
+                  "successorEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "transliteratedOtherNames": []
+                },
+                "gem": null,
+                "lei": "6488453HW65OH2VUY541",
+                "mic": null,
+                "ocid": null,
+                "qcc": null,
+                "registration": {
+                  "corroborationLevel": "PARTIALLY_CORROBORATED",
+                  "initialRegistrationDate": "2026-06-29T06:37:24Z",
+                  "lastUpdateDate": "2026-06-29T08:37:25Z",
+                  "managingLou": "485100001PLJJ09NZT59",
+                  "nextRenewalDate": "2027-06-28T22:00:00Z",
+                  "otherValidationAuthorities": [],
+                  "status": "ISSUED",
+                  "validatedAs": "29AAUFA3337N1ZR",
+                  "validatedAt": {
+                    "id": "RA000754",
+                    "other": null
+                  }
+                },
+                "spglobal": [
+                  "2007260824"
+                ]
+              },
+              "id": "6488453HW65OH2VUY541",
+              "relationships": {
+                "direct-parent": {
+                  "links": {
+                    "reporting-exception": "https://api.gleif.org/api/v1/lei-records/6488453HW65OH2VUY541/direct-parent-reporting-exception"
+                  }
+                },
+                "field-modifications": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/6488453HW65OH2VUY541/field-modifications"
+                  }
+                },
+                "lei-issuer": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/6488453HW65OH2VUY541/lei-issuer"
+                  }
+                },
+                "managing-lou": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/6488453HW65OH2VUY541/managing-lou"
+                  }
+                },
+                "ultimate-parent": {
+                  "links": {
+                    "reporting-exception": "https://api.gleif.org/api/v1/lei-records/6488453HW65OH2VUY541/ultimate-parent-reporting-exception"
+                  }
+                }
+              },
+              "type": "lei-records"
+            }
+          ],
+          "scope": "Global registered LEIs. Parent/child links describe reported accounting consolidation, not every ownership relationship. Reporting exceptions preserve their source reasons.",
+          "source_url": "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalName%5D=Apple&page%5Bnumber%5D=1&page%5Bsize%5D=2"
+        },
+        "recordedAt": "2026-09-15T21:36:26Z"
+      },
+      "execute": {
+        "provider": "gleif-org",
+        "capability": "entities/search"
+      }
+    },
+    {
+      "id": "gleif-org/entities/ultimate_children",
+      "provider": "gleif-org",
+      "capability": "entities/ultimate_children",
+      "name": "Ultimate children",
+      "description": "Page through reported ultimate accounting-consolidated children for an LEI. This excludes unreported ownership relationships.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "lei",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z0-9]{20}$.",
+          "required": true
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "Page through reported ultimate accounting-consolidated children for an LEI. This excludes unreported ownership relationships.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "attributes",
+            "type": "object",
+            "about": "GLEIF JSON:API source attributes, including entity identity, registration, or reporting-exception reason. Preserved without inference."
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "relationships",
+            "type": "object"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "lei": "HWUPKR0MPOU8FGXBT394",
+          "limit": 2
+        },
+        "response": {
+          "golden_copy_published_at": "2026-09-15T08:00:00Z",
+          "next_url": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/ultimate-children?page%5Bnumber%5D=2&page%5Bsize%5D=2",
+          "observed_at_ms": 1789508186710,
+          "pagination": {
+            "currentPage": 1,
+            "from": 1,
+            "lastPage": 10,
+            "perPage": 2,
+            "to": 2,
+            "total": 20
+          },
+          "records": [
+            {
+              "attributes": {
+                "bic": null,
+                "conformityFlag": "CONFORMING",
+                "entity": {
+                  "associatedEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "category": "GENERAL",
+                  "creationDate": "2026-04-10T00:00:00Z",
+                  "eventGroups": [],
+                  "expiration": {
+                    "date": null,
+                    "reason": null
+                  },
+                  "headquartersAddress": {
+                    "addressLines": [
+                      "13th Floor, Concorde Tower C",
+                      "No. 24, Vittal Mallya Road",
+                      "Mahatma Gandhi Road",
+                      "Bangalore North"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Bengaluru",
+                    "country": "IN",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "560001",
+                    "region": "IN-KA"
+                  },
+                  "jurisdiction": "IN",
+                  "legalAddress": {
+                    "addressLines": [
+                      "13th Floor, Concorde Tower C",
+                      "No. 24, Vittal Mallya Road",
+                      "Mahatma Gandhi Road",
+                      "Bangalore North"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Bengaluru",
+                    "country": "IN",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "560001",
+                    "region": "IN-KA"
+                  },
+                  "legalForm": {
+                    "id": "YSP9",
+                    "other": null
+                  },
+                  "legalName": {
+                    "language": "en",
+                    "name": "Apple Technology Services India Private Limited"
+                  },
+                  "otherAddresses": [],
+                  "otherNames": [],
+                  "registeredAs": "U62099KA2026FTC219177",
+                  "registeredAt": {
+                    "id": "RA000394",
+                    "other": null
+                  },
+                  "status": "ACTIVE",
+                  "subCategory": null,
+                  "successorEntities": [],
+                  "successorEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "transliteratedOtherNames": []
+                },
+                "gem": null,
+                "lei": "2549005JJKRFXSM5CC84",
+                "mic": null,
+                "ocid": null,
+                "qcc": null,
+                "registration": {
+                  "corroborationLevel": "FULLY_CORROBORATED",
+                  "initialRegistrationDate": "2026-06-04T13:26:57Z",
+                  "lastUpdateDate": "2026-06-04T13:37:41Z",
+                  "managingLou": "5493001KJTIIGC8Y1R12",
+                  "nextRenewalDate": "2027-06-04T13:26:57Z",
+                  "otherValidationAuthorities": [],
+                  "status": "ISSUED",
+                  "validatedAs": "U62099KA2026FTC219177",
+                  "validatedAt": {
+                    "id": "RA000394",
+                    "other": null
+                  }
+                },
+                "spglobal": [
+                  "2003524511"
+                ]
+              },
+              "id": "2549005JJKRFXSM5CC84",
+              "relationships": {
+                "direct-parent": {
+                  "links": {
+                    "lei-record": "https://api.gleif.org/api/v1/lei-records/2549005JJKRFXSM5CC84/direct-parent",
+                    "relationship-record": "https://api.gleif.org/api/v1/lei-records/2549005JJKRFXSM5CC84/direct-parent-relationship"
+                  }
+                },
+                "field-modifications": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/2549005JJKRFXSM5CC84/field-modifications"
+                  }
+                },
+                "lei-issuer": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/2549005JJKRFXSM5CC84/lei-issuer"
+                  }
+                },
+                "managing-lou": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/2549005JJKRFXSM5CC84/managing-lou"
+                  }
+                },
+                "ultimate-parent": {
+                  "links": {
+                    "lei-record": "https://api.gleif.org/api/v1/lei-records/2549005JJKRFXSM5CC84/ultimate-parent",
+                    "relationship-record": "https://api.gleif.org/api/v1/lei-records/2549005JJKRFXSM5CC84/ultimate-parent-relationship"
+                  }
+                }
+              },
+              "type": "lei-records"
+            },
+            {
+              "attributes": {
+                "bic": null,
+                "conformityFlag": "CONFORMING",
+                "entity": {
+                  "associatedEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "category": "GENERAL",
+                  "creationDate": "2023-05-10T12:00:00Z",
+                  "eventGroups": [
+                    {
+                      "events": [
+                        {
+                          "effectiveDate": "2023-12-15T00:00:00Z",
+                          "recordedDate": "2024-07-15T16:44:12Z",
+                          "status": "COMPLETED",
+                          "type": "CHANGE_LEGAL_ADDRESS",
+                          "validationDocuments": "REGULATORY_FILING"
+                        }
+                      ],
+                      "groupType": "STANDALONE"
+                    },
+                    {
+                      "events": [
+                        {
+                          "effectiveDate": "2023-12-15T00:00:00Z",
+                          "recordedDate": "2024-07-15T16:44:12Z",
+                          "status": "COMPLETED",
+                          "type": "CHANGE_HQ_ADDRESS",
+                          "validationDocuments": "REGULATORY_FILING"
+                        }
+                      ],
+                      "groupType": "STANDALONE"
+                    }
+                  ],
+                  "expiration": {
+                    "date": null,
+                    "reason": null
+                  },
+                  "headquartersAddress": {
+                    "addressLines": [
+                      "Ground Floor of Tower B, PrimeCo Union City",
+                      "Plot Nos. 18, 19A And 19B, Sy No. 76 & 87",
+                      "Sadarmangala Industrial Area",
+                      "Krishnarajapuram Hobli, Kadugodi"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Bangalore",
+                    "country": "IN",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "560067",
+                    "region": "IN-KA"
+                  },
+                  "jurisdiction": "IN",
+                  "legalAddress": {
+                    "addressLines": [
+                      "Ground Floor of Tower B, PrimeCo Union City",
+                      "Plot Nos. 18, 19A And 19B, Sy No. 76 & 87",
+                      "Sadarmangala Industrial Area",
+                      "Krishnarajapuram Hobli, Kadugodi"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Bangalore",
+                    "country": "IN",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "560067",
+                    "region": "IN-KA"
+                  },
+                  "legalForm": {
+                    "id": "YSP9",
+                    "other": null
+                  },
+                  "legalName": {
+                    "language": "en",
+                    "name": "APPLE OPERATIONS INDIA PRIVATE LIMITED"
+                  },
+                  "otherAddresses": [],
+                  "otherNames": [
+                    {
+                      "language": "en",
+                      "name": "Apple Operations India Pvt. Ltd.",
+                      "type": "TRADING_OR_OPERATING_NAME"
+                    }
+                  ],
+                  "registeredAs": "U72100KA2023PTC173466",
+                  "registeredAt": {
+                    "id": "RA000394",
+                    "other": null
+                  },
+                  "status": "ACTIVE",
+                  "subCategory": null,
+                  "successorEntities": [],
+                  "successorEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "transliteratedOtherNames": []
+                },
+                "gem": null,
+                "lei": "2549008YU9EOMHFUA249",
+                "mic": null,
+                "ocid": null,
+                "qcc": "QIN6Y5HW6U",
+                "registration": {
+                  "corroborationLevel": "FULLY_CORROBORATED",
+                  "initialRegistrationDate": "2023-08-25T14:07:19Z",
+                  "lastUpdateDate": "2026-05-19T07:01:11Z",
+                  "managingLou": "5493001KJTIIGC8Y1R12",
+                  "nextRenewalDate": "2027-05-25T14:07:19Z",
+                  "otherValidationAuthorities": [],
+                  "status": "ISSUED",
+                  "validatedAs": "U72100KA2023PTC173466",
+                  "validatedAt": {
+                    "id": "RA000394",
+                    "other": null
+                  }
+                },
+                "spglobal": [
+                  "1853971159"
+                ]
+              },
+              "id": "2549008YU9EOMHFUA249",
+              "relationships": {
+                "direct-parent": {
+                  "links": {
+                    "lei-record": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/direct-parent",
+                    "relationship-record": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/direct-parent-relationship"
+                  }
+                },
+                "field-modifications": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/field-modifications"
+                  }
+                },
+                "lei-issuer": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/lei-issuer"
+                  }
+                },
+                "managing-lou": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/managing-lou"
+                  }
+                },
+                "ultimate-parent": {
+                  "links": {
+                    "lei-record": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/ultimate-parent",
+                    "relationship-record": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/ultimate-parent-relationship"
+                  }
+                }
+              },
+              "type": "lei-records"
+            }
+          ],
+          "scope": "Global registered LEIs. Parent/child links describe reported accounting consolidation, not every ownership relationship. Reporting exceptions preserve their source reasons.",
+          "source_url": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/ultimate-children?page%5Bnumber%5D=1&page%5Bsize%5D=2"
+        },
+        "recordedAt": "2026-09-15T21:36:26Z"
+      },
+      "execute": {
+        "provider": "gleif-org",
+        "capability": "entities/ultimate_children"
+      }
+    },
+    {
+      "id": "gleif-org/entities/ultimate_parent",
+      "provider": "gleif-org",
+      "capability": "entities/ultimate_parent",
+      "name": "Ultimate parent",
+      "description": "Retrieve the reported ultimate accounting-consolidating parent, or its reporting-exception record and reason. Preserve exceptions rather than claiming there is no parent.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "lei",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z0-9]{20}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Retrieve the reported ultimate accounting-consolidating parent, or its reporting-exception record and reason. Preserve exceptions rather than claiming there is no parent.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "attributes",
+            "type": "object",
+            "about": "GLEIF JSON:API source attributes, including entity identity, registration, or reporting-exception reason. Preserved without inference."
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "relationships",
+            "type": "object"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "lei": "2549008YU9EOMHFUA249"
+        },
+        "response": {
+          "golden_copy_published_at": "2026-09-15T08:00:00Z",
+          "next_url": null,
+          "observed_at_ms": 1789508186710,
+          "pagination": null,
+          "records": [
+            {
+              "attributes": {
+                "bic": [
+                  "APLEUS66XXX"
+                ],
+                "conformityFlag": "CONFORMING",
+                "entity": {
+                  "associatedEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "category": "GENERAL",
+                  "creationDate": "1977-01-03T00:00:00Z",
+                  "eventGroups": [],
+                  "expiration": {
+                    "date": null,
+                    "reason": null
+                  },
+                  "headquartersAddress": {
+                    "addressLines": [
+                      "One Apple Park Way"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Cupertino",
+                    "country": "US",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "95014",
+                    "region": "US-CA"
+                  },
+                  "jurisdiction": "US-CA",
+                  "legalAddress": {
+                    "addressLines": [
+                      "C/O C T Corporation System",
+                      "330 N. Brand Blvd",
+                      "Suite 700"
+                    ],
+                    "addressNumber": null,
+                    "addressNumberWithinBuilding": null,
+                    "city": "Glendale",
+                    "country": "US",
+                    "language": "en",
+                    "mailRouting": null,
+                    "postalCode": "91203",
+                    "region": "US-CA"
+                  },
+                  "legalForm": {
+                    "id": "H1UM",
+                    "other": null
+                  },
+                  "legalName": {
+                    "language": "en",
+                    "name": "Apple Inc."
+                  },
+                  "otherAddresses": [],
+                  "otherNames": [
+                    {
+                      "language": "en",
+                      "name": "Apple Computer, Inc.",
+                      "type": "PREVIOUS_LEGAL_NAME"
+                    }
+                  ],
+                  "registeredAs": "806592",
+                  "registeredAt": {
+                    "id": "RA000598",
+                    "other": null
+                  },
+                  "status": "ACTIVE",
+                  "subCategory": null,
+                  "successorEntities": [],
+                  "successorEntity": {
+                    "lei": null,
+                    "name": null
+                  },
+                  "transliteratedOtherNames": []
+                },
+                "gem": null,
+                "lei": "HWUPKR0MPOU8FGXBT394",
+                "mic": null,
+                "ocid": null,
+                "qcc": null,
+                "registration": {
+                  "corroborationLevel": "FULLY_CORROBORATED",
+                  "initialRegistrationDate": "2012-06-06T15:53:00Z",
+                  "lastUpdateDate": "2026-03-03T16:34:33Z",
+                  "managingLou": "5493001KJTIIGC8Y1R12",
+                  "nextRenewalDate": "2027-03-08T17:27:20Z",
+                  "otherValidationAuthorities": [],
+                  "status": "ISSUED",
+                  "validatedAs": "806592",
+                  "validatedAt": {
+                    "id": "RA000598",
+                    "other": null
+                  }
+                },
+                "spglobal": [
+                  "24937"
+                ]
+              },
+              "id": "HWUPKR0MPOU8FGXBT394",
+              "relationships": {
+                "direct-children": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/direct-children",
+                    "relationship-records": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/direct-child-relationships"
+                  }
+                },
+                "direct-parent": {
+                  "links": {
+                    "reporting-exception": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/direct-parent-reporting-exception"
+                  }
+                },
+                "field-modifications": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/field-modifications"
+                  }
+                },
+                "isins": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/isins"
+                  }
+                },
+                "lei-issuer": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/lei-issuer"
+                  }
+                },
+                "managing-lou": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/managing-lou"
+                  }
+                },
+                "ultimate-children": {
+                  "links": {
+                    "related": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/ultimate-children",
+                    "relationship-records": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/ultimate-child-relationships"
+                  }
+                },
+                "ultimate-parent": {
+                  "links": {
+                    "reporting-exception": "https://api.gleif.org/api/v1/lei-records/HWUPKR0MPOU8FGXBT394/ultimate-parent-reporting-exception"
+                  }
+                }
+              },
+              "type": "lei-records"
+            }
+          ],
+          "scope": "Global registered LEIs. Parent/child links describe reported accounting consolidation, not every ownership relationship. Reporting exceptions preserve their source reasons.",
+          "source_url": "https://api.gleif.org/api/v1/lei-records/2549008YU9EOMHFUA249/ultimate-parent"
+        },
+        "recordedAt": "2026-09-15T21:36:26Z"
+      },
+      "execute": {
+        "provider": "gleif-org",
+        "capability": "entities/ultimate_parent"
+      }
+    }
+  ]
+}

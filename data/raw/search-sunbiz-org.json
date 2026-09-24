@@ -1,0 +1,425 @@
+{
+  "id": "search-sunbiz-org",
+  "provider": "search-sunbiz-org",
+  "name": "Florida Sunbiz",
+  "description": "Florida official entity name lists and business registration records, including source-labelled officers, registered agents and filing links.",
+  "toolCount": 2,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "search-sunbiz-org"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "search-sunbiz-org/entities/entity",
+      "provider": "search-sunbiz-org",
+      "capability": "entities/entity",
+      "name": "Entity",
+      "description": "Look up a Florida corporate registration by document number. Returns filing attributes, source-labelled officer and registered-agent sections, annual report history and PDF links. Unsupported registration layouts fail explicitly.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "document_number",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z0-9]{1,12}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Look up a Florida corporate registration by document number. Returns filing attributes, source-labelled officer and registered-agent sections, annual report history and PDF links. Unsupported registration layouts fail explicitly.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "document_number",
+            "type": "string"
+          },
+          {
+            "name": "entity_type",
+            "type": "string"
+          },
+          {
+            "name": "filing_information",
+            "type": "object",
+            "about": "Source-labelled filing attributes. Labels vary with registration type; values are strings."
+          },
+          {
+            "name": "filings",
+            "type": "object[]"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "scope",
+            "type": "string"
+          },
+          {
+            "name": "sections",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "document_number": "P01000027088"
+        },
+        "response": {
+          "document_number": "P01000027088",
+          "entity_type": "Florida Profit Corporation",
+          "filing_information": {
+            "Date Filed": "03/15/2001",
+            "Document Number": "P01000027088",
+            "FEI/EIN Number": "59-3703636",
+            "State": "FL",
+            "Status": "ACTIVE"
+          },
+          "filings": [
+            {
+              "label": "04/02/2026 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-6910a23a-47ee-4b54-bc56-c6b4f5ac3578&formatType=PDF"
+            },
+            {
+              "label": "04/16/2025 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-ae9f49a6-e1b3-4321-bc6f-168e6358db50&formatType=PDF"
+            },
+            {
+              "label": "03/28/2024 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-48ad1b3a-0f18-4e47-b356-eb9e94d46955&formatType=PDF"
+            },
+            {
+              "label": "03/20/2023 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-9eb95578-6a7c-489f-8a35-2258d1c9f07d&formatType=PDF"
+            },
+            {
+              "label": "04/05/2022 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-a8b885a2-a2df-471e-b590-1dac00a51b15&formatType=PDF"
+            },
+            {
+              "label": "04/16/2021 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-944b4276-6801-48cb-b2a0-10f4424542c7&formatType=PDF"
+            },
+            {
+              "label": "04/07/2020 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-73fdc4b3-210a-47bf-80d1-342b86273c71&formatType=PDF"
+            },
+            {
+              "label": "06/04/2019 -- Reg. Agent Change",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR%5C2019%5C0617%5C29919414.Tif&documentNumber=P01000027088"
+            },
+            {
+              "label": "04/09/2019 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-ea79b7eb-ec00-4b79-914e-a581667d8634&formatType=PDF"
+            },
+            {
+              "label": "02/09/2018 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-8c033fd3-6377-4478-b895-44753711ddc5&formatType=PDF"
+            },
+            {
+              "label": "02/08/2017 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-445debb0-3676-44ff-92de-65e09ff7367d&formatType=PDF"
+            },
+            {
+              "label": "02/11/2016 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-a783947f-0dcf-498e-83bc-35d9d8aed37c&formatType=PDF"
+            },
+            {
+              "label": "02/23/2015 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-42225c1f-76a8-4bf3-a381-17d0f80be00c&formatType=PDF"
+            },
+            {
+              "label": "04/15/2014 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-39e56cb6-55da-4d2b-ad89-3f1dd69390af&formatType=PDF"
+            },
+            {
+              "label": "04/02/2013 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/GetDocument?aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&transactionId=p01000027088-67347fea-62df-48db-b8e0-b4d29830187c&formatType=PDF"
+            },
+            {
+              "label": "03/06/2012 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR%5C2012%5C0330%5C23939282.tif&documentNumber=P01000027088"
+            },
+            {
+              "label": "04/13/2011 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR%5C2011%5C0427%5C01629283.tif&documentNumber=P01000027088"
+            },
+            {
+              "label": "03/24/2010 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR%5C2010%5C0423%5C72982884.tif&documentNumber=P01000027088"
+            },
+            {
+              "label": "02/26/2009 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR%5C2009%5C0503%5C44541155.tif&documentNumber=P01000027088"
+            },
+            {
+              "label": "04/07/2008 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR%5C2008%5C0416%5C66330819.tif&documentNumber=P01000027088"
+            },
+            {
+              "label": "04/16/2007 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR%5C2007%5C0421%5C5995047C.tif&documentNumber=P01000027088"
+            },
+            {
+              "label": "04/24/2006 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR%5C2006%5C0509%5CU0527795.Tif&documentNumber=P01000027088"
+            },
+            {
+              "label": "04/27/2005 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR%5C2005%5C0510%5C46711763.tif&documentNumber=P01000027088"
+            },
+            {
+              "label": "04/12/2004 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR%5C2004%5C0412%5C50480805.tif&documentNumber=P01000027088"
+            },
+            {
+              "label": "03/07/2003 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR1%5C2003%5C0310%5C45201393.tif&documentNumber=P01000027088"
+            },
+            {
+              "label": "02/26/2002 -- ANNUAL REPORT",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR%5C2002%5C0304%5C14300FD1.tif&documentNumber=P01000027088"
+            },
+            {
+              "label": "03/15/2001 -- Domestic Profit",
+              "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ConvertTiffToPDF?storagePath=COR%5C2001%5C0316%5CH0027438.tif&documentNumber=P01000027088"
+            }
+          ],
+          "name": "PUBLIX ASSET MANAGEMENT COMPANY",
+          "observed_at_ms": 1789508369000,
+          "scope": "Florida registry source record. Sections retain source labels and text, including officers and registered agent when supplied. Filing links are references, not downloaded documents.",
+          "sections": [
+            {
+              "heading": "Principal Address",
+              "text": "Principal Address 3300 PUBLIX CORPORATE PKWY LAKELAND, FL 33811 Changed: 03/20/2023"
+            },
+            {
+              "heading": "Mailing Address",
+              "text": "Mailing Address P.O. BOX 407 LAKELAND, FL 33802 Changed: 03/20/2023"
+            },
+            {
+              "heading": "Registered Agent Name & Address",
+              "text": "Registered Agent Name & Address Corporate Creations Network Inc. 801 US Highway 1 North Palm Beach, FL 33408 Name Changed: 04/16/2025 Address Changed: 04/07/2020"
+            },
+            {
+              "heading": "Officer/Director Detail",
+              "text": "Officer/Director Detail Name & Address Title President, Director RENFROE, MALINDA G. 3300 PUBLIX CORPORATE PKWY LAKELAND, FL 33811 Title Treasurer, Director PHILLIPS, DAVID P. 3300 PUBLIX CORPORATE PKWY LAKELAND, FL 33811 Title Secretary, Director Metz, Merriann M. 3300 PUBLIX CORPORATE PKWY LAKELAND, FL 33811 Title CEO, Director MURPHY, KEVIN S. 3300 PUBLIX CORPORATE PKWY LAKELAND, FL 33811"
+            },
+            {
+              "heading": "Annual Reports",
+              "text": "Annual Reports Report Year Filed Date 2024 03/28/2024 2025 04/16/2025 2026 04/02/2026"
+            }
+          ],
+          "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ByDocumentNumber"
+        },
+        "recordedAt": "2026-09-15T21:39:29Z"
+      },
+      "execute": {
+        "provider": "search-sunbiz-org",
+        "capability": "entities/entity"
+      }
+    },
+    {
+      "id": "search-sunbiz-org/entities/search",
+      "provider": "search-sunbiz-org",
+      "capability": "entities/search",
+      "name": "Search",
+      "description": "Browse the official alphabetical entity name list from a query. Results can include nearby names, historical registrations and trademarks, not exact matches. Follow next_cursor for the next source page.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Unmodified next_cursor from the preceding response; retain the original query."
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Browse the official alphabetical entity name list from a query. Results can include nearby names, historical registrations and trademarks, not exact matches. Follow next_cursor for the next source page.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "document_number",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "Publix"
+        },
+        "response": {
+          "next_cursor": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResults?InquiryType=EntityName&inquiryDirectionType=ForwardList&searchNameOrder=PUBLIXDIRECT%20L000000097760&SearchTerm=Publix&entityId=L00000009776&listNameOrder=PUBLIX%209109400",
+          "observed_at_ms": 1789508369000,
+          "records": [
+            {
+              "document_number": "910940",
+              "name": "PUBLIX",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIX%209109400&aggregateId=trade-910940-9d670eee-3ef4-45ec-ae61-2cf4fa2d2118&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "INACT"
+            },
+            {
+              "document_number": "913749",
+              "name": "PUBLIX",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIX%209137490&aggregateId=trade-913749-41ebfa8e-678f-4451-9e59-d40d358fcb07&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "INACT"
+            },
+            {
+              "document_number": "928735",
+              "name": "PUBLIX",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIX%209287350&aggregateId=trade-928735-1c98a74d-6c0b-418e-b6cd-37a00fb4ba88&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "Active"
+            },
+            {
+              "document_number": "928736",
+              "name": "PUBLIX",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIX%209287360&aggregateId=trade-928736-9a223583-15e4-4931-9ba9-3d44d7c3aa66&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "Active"
+            },
+            {
+              "document_number": "928737",
+              "name": "PUBLIX",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIX%209287370&aggregateId=trade-928737-ab61fc61-b7d0-4ec2-8baf-67b0b82d7376&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "Active"
+            },
+            {
+              "document_number": "T08547",
+              "name": "PUBLIX",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIX%20T085470&aggregateId=trade-t08547-96b3e14e-0322-473b-bf56-3420c90bee75&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "INACT"
+            },
+            {
+              "document_number": "P01000085676",
+              "name": "PUBLIX ADVERTISING, INC.",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXADVERTISING%20P010000856760&aggregateId=domp-p01000085676-ec8785c0-e351-42a7-9411-232a65d45c68&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "INACT"
+            },
+            {
+              "document_number": "L12000031753",
+              "name": "PUBLIX APRON'S EVENT PLANNING AND CATERING, LLC",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXAPRONSEVENTPLANNINGCATER%20L120000317530&aggregateId=flal-l12000031753-37b42d08-831e-4e29-9034-f46f092e6be0&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "Active"
+            },
+            {
+              "document_number": "L25000402888",
+              "name": "PUBLIXA SOLUTIONS, LLC",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXASOLUTIONS%20L250004028880&aggregateId=flal-l25000402888-e071179c-78c2-4ca6-99da-44cd1747093c&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "Active"
+            },
+            {
+              "document_number": "P01000027088",
+              "name": "PUBLIX ASSET MANAGEMENT COMPANY",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXASSETMANAGEMENT%20P010000270880&aggregateId=domp-p01000027088-b82e65e9-e463-45df-afd3-6d9515197b20&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "Active"
+            },
+            {
+              "document_number": "L22000189256",
+              "name": "PUBLIX ASSOCIATE SERVICES, LLC",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXASSOCIATESERVICES%20L220001892560&aggregateId=flal-l22000189256-566f73da-f2ba-44c1-b2b3-b531c3e4cf83&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "Active"
+            },
+            {
+              "document_number": "342316",
+              "name": "PUBLIX ASSURANCE AGENCY, INC.",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXASSURANCEAGENCY%203423160&aggregateId=domp-342316-1b83dacd-f413-4a91-8762-f1c3cb2f7847&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "INACT"
+            },
+            {
+              "document_number": "P01000017602",
+              "name": "PUBLIX AUTO SALES, CORP.",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXAUTOSALES%20P010000176020&aggregateId=domp-p01000017602-42400ece-e4e3-40f5-8cf3-44a60be086c2&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "NAME HS"
+            },
+            {
+              "document_number": "P12000060036",
+              "name": "PUBLIX CA INC",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXCA%20P120000600360&aggregateId=domp-p12000060036-9ae75fbc-3f35-4eff-a69c-6e48eafc65d1&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "NAME HS"
+            },
+            {
+              "document_number": "113212",
+              "name": "THE PUBLIX CLEANERS, INCORPORATED",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXCLEANERS%201132120&aggregateId=domp-113212-880ff867-1de2-4244-9594-a7f4e0cb8f25&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "INACT"
+            },
+            {
+              "document_number": "P96000012131",
+              "name": "PUBLIX CLEANING SERVICE, INC.",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXCLEANINGSERVICE%20P960000121310&aggregateId=domp-p96000012131-53f55198-0aaf-472e-86e4-bb545abae723&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "INACT"
+            },
+            {
+              "document_number": "P22000014578",
+              "name": "PUBLIX CONSTRUCTION INC",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXCONSTRUCTION%20P220000145780&aggregateId=domp-p22000014578-1c79535a-f798-4812-a87c-973da6c79b0a&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "INACT"
+            },
+            {
+              "document_number": "P95000003377",
+              "name": "PUBLIX DEVELOPERS CORPORATION",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXDEVELOPERS%20P950000033770&aggregateId=domp-p95000003377-bcc8a995-1bab-4dc6-a1ef-98d30dc707bb&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "INACT"
+            },
+            {
+              "document_number": "438026",
+              "name": "PUBLIX DEVELOPMENT CORPORATION",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXDEVELOPMENT%204380261&aggregateId=domp-438026-6e5fee8d-3924-4d2d-980c-98c6b04ba278&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "INACT"
+            },
+            {
+              "document_number": "L00000009776",
+              "name": "PUBLIXDIRECT, LLC",
+              "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=EntityName&directionType=Initial&searchNameOrder=PUBLIXDIRECT%20L000000097760&aggregateId=flal-l00000009776-6ceeca8f-4f69-4ea3-b412-5d5809fc91eb&searchTerm=Publix&listNameOrder=PUBLIX%209109400",
+              "status": "INACT"
+            }
+          ],
+          "scope": "One source-ordered entity-name list, including trademarks and historical names; not an exhaustive exact-name result set.",
+          "source_url": "https://search.sunbiz.org/Inquiry/CorporationSearch/ByName"
+        },
+        "recordedAt": "2026-09-15T21:39:29Z"
+      },
+      "execute": {
+        "provider": "search-sunbiz-org",
+        "capability": "entities/search"
+      }
+    }
+  ]
+}

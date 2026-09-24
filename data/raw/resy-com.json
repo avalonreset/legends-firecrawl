@@ -1,0 +1,2198 @@
+{
+  "id": "resy-com",
+  "provider": "resy-com",
+  "name": "Resy",
+  "description": "Resy restaurant discovery and reservation availability from Resy's own web API: city lookup, venue search with inline slots, venue details, per-day availability with booked-out vs closed distinction, availability calendars and slot deposit/cancellation conditions. Read-only: no bookings, holds or notifications.",
+  "toolCount": 6,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "resy-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "resy-com/restaurants/availability",
+      "provider": "resy-com",
+      "capability": "restaurants/availability",
+      "name": "Availability",
+      "description": "Given a venue_id (from search_venues or venue) and a date. One upstream availability call plus one calendar call.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "day",
+          "type": "string",
+          "in": "body",
+          "about": "Calendar day: YYYY-MM-DD, `today`, `tomorrow` or `+N` days from today. Relative days resolve on the UTC calendar. Pattern: ^([0-9]{4}-[0-9]{2}-[0-9]{2}|today|tomorrow|\\+[0-9]{1,3})$.",
+          "required": true
+        },
+        {
+          "name": "party_size",
+          "type": "number",
+          "in": "body",
+          "about": "Number of guests (default 2).",
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "time_filter",
+          "type": "string",
+          "in": "body",
+          "about": "Preferred time HH:MM (24h, venue-local); the site returns slots around it. Pattern: ^([01][0-9]|2[0-3]):[0-5][0-9]$."
+        },
+        {
+          "name": "venue_id",
+          "type": "number",
+          "in": "body",
+          "about": "Resy venue id (`id.resy`, e.g. 77859).",
+          "required": true,
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "Bookable reservation slots of one venue for a day and party size (venue-local times, seating type, payment/cancellation terms, slot tokens), with the venue's calendar state for that day so an empty result says whether the venue is closed on Resy, booked out or beyond its booking horizon.",
+        "key": "slots",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "config_token",
+            "type": "string",
+            "about": "Slot token `rgs://resy/...`; input to `slot_conditions`."
+          },
+          {
+            "name": "end",
+            "type": "string"
+          },
+          {
+            "name": "exclusive",
+            "type": "boolean",
+            "about": "True when the slot is card-member exclusive inventory."
+          },
+          {
+            "name": "has_add_ons",
+            "type": "boolean"
+          },
+          {
+            "name": "payment",
+            "type": "object"
+          },
+          {
+            "name": "quantity",
+            "type": "number",
+            "about": "Tables the site reports for this slot; null when not disclosed."
+          },
+          {
+            "name": "seating_type",
+            "type": "string",
+            "about": "Site's seating label (`Counter`, `Table`, `Dining Room`, ...)."
+          },
+          {
+            "name": "service_type_id",
+            "type": "number",
+            "about": "1 breakfast, 2 dinner, 3 lunch, 4 brunch as used by the site."
+          },
+          {
+            "name": "size",
+            "type": "object"
+          },
+          {
+            "name": "start",
+            "type": "string",
+            "about": "Venue-local wall clock `YYYY-MM-DD HH:MM:SS` (no offset; see `time_zone`)."
+          },
+          {
+            "name": "template_id",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "day": "+7",
+          "party_size": 2,
+          "venue_id": 92564
+        },
+        "response": {
+          "booking_url": "https://resy.com/cities/new-york-ny/venues/sushi-aozora?date=2026-09-28&seats=2",
+          "calendar": {
+            "event": "not available",
+            "last_calendar_day": "2026-11-30",
+            "reservation": "available",
+            "walk_in": "available"
+          },
+          "currency": "USD",
+          "day": "2026-09-28",
+          "location": {
+            "code": "ny",
+            "name": "New York",
+            "url_slug": "new-york-ny"
+          },
+          "notify_available": true,
+          "notify_windows": [
+            {
+              "max_request_datetime": "2026-09-28 21:00:00",
+              "min_request_datetime": "2026-09-28 17:00:00",
+              "service_type_id": 2,
+              "step_minutes": 30
+            },
+            {
+              "max_request_datetime": "2026-09-28 14:30:00",
+              "min_request_datetime": "2026-09-28 12:00:00",
+              "service_type_id": 3,
+              "step_minutes": 30
+            }
+          ],
+          "observed_at_ms": 1790033217645,
+          "party_size": 2,
+          "slot_count": 29,
+          "slots": [
+            {
+              "config_token": "rgs://resy/92564/4301230/3/2026-09-28/2026-09-28/12:00:00/2/$165 Omakase",
+              "end": "2026-09-28 13:00:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 7200,
+                "cancellation_fee": 15,
+                "change_cutoff_seconds": 7200,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 24,
+              "seating_type": "Aozora Lunch",
+              "service_type_id": 3,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 12:00:00",
+              "template_id": 4301230
+            },
+            {
+              "config_token": "rgs://resy/92564/4301230/3/2026-09-28/2026-09-28/12:15:00/2/$165 Omakase",
+              "end": "2026-09-28 13:15:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 7200,
+                "cancellation_fee": 15,
+                "change_cutoff_seconds": 7200,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 24,
+              "seating_type": "Aozora Lunch",
+              "service_type_id": 3,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 12:15:00",
+              "template_id": 4301230
+            },
+            {
+              "config_token": "rgs://resy/92564/4301230/3/2026-09-28/2026-09-28/12:30:00/2/$165 Omakase",
+              "end": "2026-09-28 13:30:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 7200,
+                "cancellation_fee": 15,
+                "change_cutoff_seconds": 7200,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 24,
+              "seating_type": "Aozora Lunch",
+              "service_type_id": 3,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 12:30:00",
+              "template_id": 4301230
+            },
+            {
+              "config_token": "rgs://resy/92564/4301230/3/2026-09-28/2026-09-28/12:45:00/2/$165 Omakase",
+              "end": "2026-09-28 13:45:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 7200,
+                "cancellation_fee": 15,
+                "change_cutoff_seconds": 7200,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 24,
+              "seating_type": "Aozora Lunch",
+              "service_type_id": 3,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 12:45:00",
+              "template_id": 4301230
+            },
+            {
+              "config_token": "rgs://resy/92564/4301230/3/2026-09-28/2026-09-28/13:00:00/2/$165 Omakase",
+              "end": "2026-09-28 14:00:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 7200,
+                "cancellation_fee": 15,
+                "change_cutoff_seconds": 7200,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 24,
+              "seating_type": "Aozora Lunch",
+              "service_type_id": 3,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 13:00:00",
+              "template_id": 4301230
+            },
+            {
+              "config_token": "rgs://resy/92564/4301230/3/2026-09-28/2026-09-28/13:15:00/2/$165 Omakase",
+              "end": "2026-09-28 14:15:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 7200,
+                "cancellation_fee": 15,
+                "change_cutoff_seconds": 7200,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 24,
+              "seating_type": "Aozora Lunch",
+              "service_type_id": 3,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 13:15:00",
+              "template_id": 4301230
+            },
+            {
+              "config_token": "rgs://resy/92564/4301230/3/2026-09-28/2026-09-28/13:30:00/2/$165 Omakase",
+              "end": "2026-09-28 14:30:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 7200,
+                "cancellation_fee": 15,
+                "change_cutoff_seconds": 7200,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 24,
+              "seating_type": "Aozora Lunch",
+              "service_type_id": 3,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 13:30:00",
+              "template_id": 4301230
+            },
+            {
+              "config_token": "rgs://resy/92564/4301230/3/2026-09-28/2026-09-28/13:45:00/2/$165 Omakase",
+              "end": "2026-09-28 14:45:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 7200,
+                "cancellation_fee": 15,
+                "change_cutoff_seconds": 7200,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 24,
+              "seating_type": "Aozora Lunch",
+              "service_type_id": 3,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 13:45:00",
+              "template_id": 4301230
+            },
+            {
+              "config_token": "rgs://resy/92564/4301230/3/2026-09-28/2026-09-28/14:00:00/2/$165 Omakase",
+              "end": "2026-09-28 15:00:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 7200,
+                "cancellation_fee": 15,
+                "change_cutoff_seconds": 7200,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 24,
+              "seating_type": "Aozora Lunch",
+              "service_type_id": 3,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 14:00:00",
+              "template_id": 4301230
+            },
+            {
+              "config_token": "rgs://resy/92564/4301230/3/2026-09-28/2026-09-28/14:15:00/2/$165 Omakase",
+              "end": "2026-09-28 15:15:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 7200,
+                "cancellation_fee": 15,
+                "change_cutoff_seconds": 7200,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 24,
+              "seating_type": "Aozora Lunch",
+              "service_type_id": 3,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 14:15:00",
+              "template_id": 4301230
+            },
+            {
+              "config_token": "rgs://resy/92564/4301230/3/2026-09-28/2026-09-28/14:30:00/2/$165 Omakase",
+              "end": "2026-09-28 15:30:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 7200,
+                "cancellation_fee": 15,
+                "change_cutoff_seconds": 7200,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 24,
+              "seating_type": "Aozora Lunch",
+              "service_type_id": 3,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 14:30:00",
+              "template_id": 4301230
+            },
+            {
+              "config_token": "rgs://resy/92564/3865085/2/2026-09-28/2026-09-28/17:00:00/2/$165 Omakase",
+              "end": "2026-09-28 18:30:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 10,
+              "seating_type": "$165 Signature",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 17:00:00",
+              "template_id": 3865085
+            },
+            {
+              "config_token": "rgs://resy/92564/4107774/2/2026-09-28/2026-09-28/17:00:00/2/$165 Omakase",
+              "end": "2026-09-28 18:00:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 14,
+              "seating_type": "$95 Chef’s Menu",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 17:00:00",
+              "template_id": 4107774
+            },
+            {
+              "config_token": "rgs://resy/92564/3865085/2/2026-09-28/2026-09-28/17:30:00/2/$165 Omakase",
+              "end": "2026-09-28 19:00:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 10,
+              "seating_type": "$165 Signature",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 17:30:00",
+              "template_id": 3865085
+            },
+            {
+              "config_token": "rgs://resy/92564/4107774/2/2026-09-28/2026-09-28/17:30:00/2/$165 Omakase",
+              "end": "2026-09-28 18:30:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 14,
+              "seating_type": "$95 Chef’s Menu",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 17:30:00",
+              "template_id": 4107774
+            },
+            {
+              "config_token": "rgs://resy/92564/3865085/2/2026-09-28/2026-09-28/18:00:00/2/$165 Omakase",
+              "end": "2026-09-28 19:30:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 10,
+              "seating_type": "$165 Signature",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 18:00:00",
+              "template_id": 3865085
+            },
+            {
+              "config_token": "rgs://resy/92564/4107774/2/2026-09-28/2026-09-28/18:00:00/2/$165 Omakase",
+              "end": "2026-09-28 19:00:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 14,
+              "seating_type": "$95 Chef’s Menu",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 18:00:00",
+              "template_id": 4107774
+            },
+            {
+              "config_token": "rgs://resy/92564/3865085/2/2026-09-28/2026-09-28/18:30:00/2/$165 Omakase",
+              "end": "2026-09-28 20:00:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 10,
+              "seating_type": "$165 Signature",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 18:30:00",
+              "template_id": 3865085
+            },
+            {
+              "config_token": "rgs://resy/92564/4107774/2/2026-09-28/2026-09-28/18:30:00/2/$165 Omakase",
+              "end": "2026-09-28 19:30:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 14,
+              "seating_type": "$95 Chef’s Menu",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 18:30:00",
+              "template_id": 4107774
+            },
+            {
+              "config_token": "rgs://resy/92564/3865085/2/2026-09-28/2026-09-28/19:00:00/2/$165 Omakase",
+              "end": "2026-09-28 20:30:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 10,
+              "seating_type": "$165 Signature",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 19:00:00",
+              "template_id": 3865085
+            },
+            {
+              "config_token": "rgs://resy/92564/4107774/2/2026-09-28/2026-09-28/19:00:00/2/$165 Omakase",
+              "end": "2026-09-28 20:00:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 14,
+              "seating_type": "$95 Chef’s Menu",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 19:00:00",
+              "template_id": 4107774
+            },
+            {
+              "config_token": "rgs://resy/92564/3865085/2/2026-09-28/2026-09-28/19:30:00/2/$165 Omakase",
+              "end": "2026-09-28 21:00:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 10,
+              "seating_type": "$165 Signature",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 19:30:00",
+              "template_id": 3865085
+            },
+            {
+              "config_token": "rgs://resy/92564/4107774/2/2026-09-28/2026-09-28/19:30:00/2/$165 Omakase",
+              "end": "2026-09-28 20:30:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 14,
+              "seating_type": "$95 Chef’s Menu",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 19:30:00",
+              "template_id": 4107774
+            },
+            {
+              "config_token": "rgs://resy/92564/3865085/2/2026-09-28/2026-09-28/20:00:00/2/$165 Omakase",
+              "end": "2026-09-28 21:30:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 10,
+              "seating_type": "$165 Signature",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 20:00:00",
+              "template_id": 3865085
+            },
+            {
+              "config_token": "rgs://resy/92564/4107774/2/2026-09-28/2026-09-28/20:00:00/2/$165 Omakase",
+              "end": "2026-09-28 21:00:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 14,
+              "seating_type": "$95 Chef’s Menu",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 20:00:00",
+              "template_id": 4107774
+            },
+            {
+              "config_token": "rgs://resy/92564/3865085/2/2026-09-28/2026-09-28/20:30:00/2/$165 Omakase",
+              "end": "2026-09-28 22:00:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 10,
+              "seating_type": "$165 Signature",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 20:30:00",
+              "template_id": 3865085
+            },
+            {
+              "config_token": "rgs://resy/92564/4107774/2/2026-09-28/2026-09-28/20:30:00/2/$165 Omakase",
+              "end": "2026-09-28 21:30:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 14,
+              "seating_type": "$95 Chef’s Menu",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 20:30:00",
+              "template_id": 4107774
+            },
+            {
+              "config_token": "rgs://resy/92564/3865085/2/2026-09-28/2026-09-28/21:00:00/2/$165 Omakase",
+              "end": "2026-09-28 22:30:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 10,
+              "seating_type": "$165 Signature",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 21:00:00",
+              "template_id": 3865085
+            },
+            {
+              "config_token": "rgs://resy/92564/4107774/2/2026-09-28/2026-09-28/21:00:00/2/$165 Omakase",
+              "end": "2026-09-28 22:00:00",
+              "exclusive": false,
+              "has_add_ons": false,
+              "payment": {
+                "add_on_required": false,
+                "cancel_cutoff_seconds": 86400,
+                "cancellation_fee": 50,
+                "change_cutoff_seconds": 86400,
+                "deposit_fee": null,
+                "is_paid": true,
+                "service_charge": null
+              },
+              "quantity": 14,
+              "seating_type": "$95 Chef’s Menu",
+              "service_type_id": 2,
+              "size": {
+                "max": 2,
+                "min": 2
+              },
+              "start": "2026-09-28 21:00:00",
+              "template_id": 4107774
+            }
+          ],
+          "source_url": "https://api.resy.com/4/find",
+          "status": "slots_available",
+          "status_reason": "29 bookable slot(s) for 2 on 2026-09-28",
+          "templates": [
+            {
+              "about": "At Sushi Aozora, we honor the timeless traditions of Japanese omakase while embracing a spirit of modern refinement. Nestled in the heart of Union Square, our intimate counter offers a serene setting where guests can experience the artistry of sushi and kappo dining up close.\n\nOur tasting menu is thoughtfully curated by a Michelin-awarded chef, blending classical techniques with contemporary sensibilities. Each course highlights the finest seasonal ingredients from Japan and beyond - from delicate, hand-formed nigiri to intricately composed small plates.\n\nGuided by balance, seasonality, and elegance, every experience at Sushi Aozora reflects a deep respect for Japanese tradition while inviting guests to discover sushi through a lens of creativity, precision, and harmony.",
+              "cancel_cutoff_seconds": 86400,
+              "cancellation_fee": 50,
+              "change_cutoff_seconds": 86400,
+              "deposit_fee": null,
+              "is_paid": true,
+              "large_party_cancellation_fee": null,
+              "large_party_size": null,
+              "need_to_know": "Our Omakase, tasting menu is priced at $165 per person for 17 courses .\n\nSeating times: 5:00 PM to 9:00 PM\n\nParties of 1 to 2 are provided with a 2 hour dining time.\n\nPlease plan to arrive promptly-within 10 to 15 minutes of your scheduled seating-to ensure you are able to enjoy the full 17-course experience. Late arrivals may result in missed courses, as our chef prepares ingredients daily based on the number of reservations in order to maintain the freshness and quality of the dishes served.\n\nRunning Late?\nPlease contact us by text at (347) 622-6776 if you anticipate being late. We will make every effort to accommodate you; however, we cannot guarantee the full omakase experience in the event of a delayed arrival.\n\nAny arrival more than 30 minutes late without prior notification may result in the cancellation of your reservation.\n\nPlease make sure you can make your reservation date and time before finalizing your booking. We have a strict cancellation policy and do not provide refunds or credits for last minute cancellations. \n\nOur counter is intentionally intimate, and we kindly ask for punctuality and respect for the flow of service. \n\nDietary Restrictions\nIf you or your guests have any food allergies or dietary restrictions, please kindly inform us when making your reservation. \nCan be accommodated: Shellfish, gluten free and kosher style restrictions. \nCannot be accommodated: Gluten free, vegan and vegetarian diets. ",
+              "template_id": 3865085
+            },
+            {
+              "about": "At Sushi Aozora, we honor the timeless traditions of Japanese omakase while embracing a spirit of modern refinement. Nestled in the heart of Union Square, our intimate counter offers a serene setting where guests can experience the artistry of sushi and kappo dining up close.\n\nOur tasting menu is thoughtfully curated by a Michelin-awarded chef, blending classical techniques with contemporary sensibilities. Each course highlights the finest seasonal ingredients from Japan and beyond - from delicate, hand-formed nigiri to intricately composed small plates.\n\nGuided by balance, seasonality, and elegance, every experience at Sushi Aozora reflects a deep respect for Japanese tradition while inviting guests to discover sushi through a lens of creativity, precision, and harmony.",
+              "cancel_cutoff_seconds": null,
+              "cancellation_fee": null,
+              "change_cutoff_seconds": null,
+              "deposit_fee": null,
+              "is_paid": false,
+              "large_party_cancellation_fee": null,
+              "large_party_size": null,
+              "need_to_know": "Ready to elevate your night? We’ve lined up two incredible sake flights to help you sip, contrast, and find your absolute favorite style. Perfect for sharing (or keeping all to yourself)-each flight comes with 3 distinct glasses of sake to guide you through the experience.\n\n-----------------------------------------\nAozora World Cup Challenge:\n\nPredict the World Cup Champion for a chance to win the ultimate sushi experience:\n\nGrand Prize: A Year of Free Omakase\nSecond Prize: $165 Omakase for Two\nThird Prize: $95 Omakase for Two\n\nHow to Enter:\n\n1. Dine at Sushi Aozora starting this Sunday 06/14/26.\n2. Submit your champion prediction at checkout.\n3. Multiply your chances: Every repeat visit earns you more entries!\n\n*Entries close July 14th before the Semi-Finals kick off.\n\n(*Terms & Conditions Apply.*)\n\n\nSushi Aozora is featuring two specially curated prix fixe menus: a 15-course menu priced at $95 and an 18-course menu priced at $165.\n\nAll reservations are final. Cancellations made with less than two (2) days’ notice will incur a $50 cancellation fee. Reservations may, however, be transferred to another guest.\n\nGuests are hereby requested to arrive punctually-within 10 to 15 minutes of their scheduled seating time-in order to partake in the complete 18-course experience, offered at a rate of $165 per guest or the 15-Course experience, offered at a rate of $95 per guest. Please be advised that late arrivals may result in the forfeiture of one or more courses, as the ingredients for our omakase are prepared fresh each day and allocated individually to each guest to uphold the highest standards of quality and freshness.\n\nOur counter is intentionally intimate, and we kindly ask for punctuality and respect for the flow of service. ",
+              "template_id": 3898112
+            },
+            {
+              "about": null,
+              "cancel_cutoff_seconds": 86400,
+              "cancellation_fee": 50,
+              "change_cutoff_seconds": 86400,
+              "deposit_fee": null,
+              "is_paid": true,
+              "large_party_cancellation_fee": null,
+              "large_party_size": null,
+              "need_to_know": "Our 12-course tasting menu is offered at a price of $95 per person.\n\nSeating times: 5:00 PM to 9:00 PM\n\nParties of 1 to 2 are provided with a 2 hour dining time.\n\nPlease plan to arrive promptly-within 10 to 15 minutes of your scheduled seating-to ensure you are able to enjoy the full 12-course experience. Late arrivals may result in missed courses, as our chef prepares ingredients daily based on the number of reservations in order to maintain the freshness and quality of the dishes served.\n\nRunning Late?\nPlease contact us by text at (347) 622-6776 if you anticipate being late. We will make every effort to accommodate you; however, we cannot guarantee the full omakase experience in the event of a delayed arrival.\n\nAny arrival more than 30 minutes late without prior notification may result in the cancellation of your reservation.\n\nPlease make sure you can make your reservation date and time before finalizing your booking. We have a strict cancellation policy and do not provide refunds or credits for last minute cancellations. \n\nOur counter is intentionally intimate, and we kindly ask for punctuality and respect for the flow of service. Gratuity is not included and may be added at your discretion.\n\nDietary Restrictions\nIf you or your guests have any food allergies or dietary restrictions, please kindly inform us when making your reservation. \nCan be accommodated: Shellfish, gluten free and kosher style restrictions. \nCannot be accommodated: Gluten free, vegan and vegetarian diets. ",
+              "template_id": 4107774
+            },
+            {
+              "about": "Discover a refined midday experience at Sushi Aozora in the heart of Union Square. Our lunch menu features thoughtfully composed sushi sets, from salmon and premium tuna selections to a chef-curated seasonal nigiri experience. Each selection is accompanied by a daily appetizer, seasonal dessert, and complimentary soba tea.",
+              "cancel_cutoff_seconds": 7200,
+              "cancellation_fee": 15,
+              "change_cutoff_seconds": 7200,
+              "deposit_fee": null,
+              "is_paid": true,
+              "large_party_cancellation_fee": null,
+              "large_party_size": null,
+              "need_to_know": "Lunch sets begin at $38 per person. Choose from our Salmon Set, Maguro Set featuring akami, chutoro, and otoro, or the Chef’s Choice Seasonal Nigiri Set. Each selection includes a daily appetizer, seasonal dessert, and complimentary soba tea. Menu items may vary based on seasonal availability.",
+              "template_id": 4301230
+            }
+          ],
+          "time_filter": null,
+          "time_zone": "EST5EDT",
+          "venue_id": 92564,
+          "venue_name": "Sushi Aozora",
+          "venue_url_slug": "sushi-aozora"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "resy-com",
+        "capability": "restaurants/availability"
+      }
+    },
+    {
+      "id": "resy-com/restaurants/calendar",
+      "provider": "resy-com",
+      "capability": "restaurants/calendar",
+      "name": "Calendar",
+      "description": "To find which days a venue has any table for a party size before calling availability, or to tell a closed day from a sold-out one.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "days",
+          "type": "number",
+          "in": "body",
+          "about": "Range length from start_date when end_date is omitted (default 30).",
+          "min": 1,
+          "max": 366
+        },
+        {
+          "name": "end_date",
+          "type": "string",
+          "in": "body",
+          "about": "Calendar day: YYYY-MM-DD, `today`, `tomorrow` or `+N` days from today. Relative days resolve on the UTC calendar. Pattern: ^([0-9]{4}-[0-9]{2}-[0-9]{2}|today|tomorrow|\\+[0-9]{1,3})$."
+        },
+        {
+          "name": "party_size",
+          "type": "number",
+          "in": "body",
+          "about": "Number of guests (default 2).",
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "start_date",
+          "type": "string",
+          "in": "body",
+          "about": "Calendar day: YYYY-MM-DD, `today`, `tomorrow` or `+N` days from today. Relative days resolve on the UTC calendar. Pattern: ^([0-9]{4}-[0-9]{2}-[0-9]{2}|today|tomorrow|\\+[0-9]{1,3})$."
+        },
+        {
+          "name": "venue_id",
+          "type": "number",
+          "in": "body",
+          "about": "Resy venue id (`id.resy`, e.g. 77859).",
+          "required": true,
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "Day-by-day reservation, event and walk-in inventory state of one venue for a party size over a date range (`available`, `not available`, `closed`), plus the last day the venue currently releases inventory for.",
+        "key": "days",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "event",
+            "type": "string"
+          },
+          {
+            "name": "reservation",
+            "type": "string",
+            "about": "`available`, `not available` or `closed` as the site states."
+          },
+          {
+            "name": "walk_in",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "days": 14,
+          "party_size": 2,
+          "start_date": "today",
+          "venue_id": 77859
+        },
+        "response": {
+          "count": 14,
+          "counts": {
+            "reservation_available": 12,
+            "reservation_closed": 2,
+            "reservation_not_available": 0
+          },
+          "days": [
+            {
+              "date": "2026-09-21",
+              "event": "closed",
+              "reservation": "closed",
+              "walk_in": "closed"
+            },
+            {
+              "date": "2026-09-22",
+              "event": "not available",
+              "reservation": "available",
+              "walk_in": "not available"
+            },
+            {
+              "date": "2026-09-23",
+              "event": "not available",
+              "reservation": "available",
+              "walk_in": "not available"
+            },
+            {
+              "date": "2026-09-24",
+              "event": "not available",
+              "reservation": "available",
+              "walk_in": "not available"
+            },
+            {
+              "date": "2026-09-25",
+              "event": "not available",
+              "reservation": "available",
+              "walk_in": "not available"
+            },
+            {
+              "date": "2026-09-26",
+              "event": "not available",
+              "reservation": "available",
+              "walk_in": "not available"
+            },
+            {
+              "date": "2026-09-27",
+              "event": "not available",
+              "reservation": "available",
+              "walk_in": "not available"
+            },
+            {
+              "date": "2026-09-28",
+              "event": "closed",
+              "reservation": "closed",
+              "walk_in": "closed"
+            },
+            {
+              "date": "2026-09-29",
+              "event": "not available",
+              "reservation": "available",
+              "walk_in": "not available"
+            },
+            {
+              "date": "2026-09-30",
+              "event": "not available",
+              "reservation": "available",
+              "walk_in": "not available"
+            },
+            {
+              "date": "2026-10-01",
+              "event": "not available",
+              "reservation": "available",
+              "walk_in": "not available"
+            },
+            {
+              "date": "2026-10-02",
+              "event": "not available",
+              "reservation": "available",
+              "walk_in": "not available"
+            },
+            {
+              "date": "2026-10-03",
+              "event": "not available",
+              "reservation": "available",
+              "walk_in": "not available"
+            },
+            {
+              "date": "2026-10-04",
+              "event": "not available",
+              "reservation": "available",
+              "walk_in": "not available"
+            }
+          ],
+          "end_date": "2026-10-04",
+          "last_calendar_day": "2026-11-19",
+          "observed_at_ms": 1790033173028,
+          "party_size": 2,
+          "source_url": "https://api.resy.com/4/venue/calendar?venue_id=77859&num_seats=2&start_date=2026-09-21&end_date=2026-10-04",
+          "start_date": "2026-09-21",
+          "venue_id": 77859
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "resy-com",
+        "capability": "restaurants/calendar"
+      }
+    },
+    {
+      "id": "resy-com/restaurants/locations",
+      "provider": "resy-com",
+      "capability": "restaurants/locations",
+      "name": "Locations",
+      "description": "First hop when you know a city name but not its Resy slug or coordinates. Returns the coordinates to pass to search_venues.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "country_code",
+          "type": "string",
+          "in": "body",
+          "about": "ISO 3166-1 alpha-2 filter (e.g. `US`). Pattern: ^[A-Za-z]{2}$."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "latitude",
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Rows to return (default 50).",
+          "min": 1,
+          "max": 200
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "With latitude: order by distance and report `distance_km`.",
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive substring of the city name, code or slug (e.g. `new york`, `ny`)."
+        }
+      ],
+      "response": {
+        "about": "List Resy cities (location code, slug, coordinates, time zone) filtered by name, country or proximity to coordinates. Codes and slugs are the identifiers other functions take.",
+        "key": "locations",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "code",
+            "type": "string",
+            "about": "Location code (`ny`); accepted by the site's collection and book-tonight routes."
+          },
+          {
+            "name": "country_code",
+            "type": "string"
+          },
+          {
+            "name": "country_name",
+            "type": "string"
+          },
+          {
+            "name": "distance_km",
+            "type": "number",
+            "about": "Great-circle distance from the input coordinates; null without them."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "radius",
+            "type": "number",
+            "about": "City radius as the site states it (the web client multiplies it by 1610, i.e. miles)."
+          },
+          {
+            "name": "time_zone",
+            "type": "string",
+            "about": "Site's zone name (IANA or POSIX-style such as `EST5EDT`)."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "url_slug",
+            "type": "string",
+            "about": "City slug (`new-york-ny`); the `location` input of `venue`."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "new york"
+        },
+        "response": {
+          "count": 1,
+          "locations": [
+            {
+              "code": "ny",
+              "country_code": "US",
+              "country_name": "United States",
+              "distance_km": null,
+              "latitude": 40.7128,
+              "longitude": -74.006,
+              "name": "New York",
+              "radius": 10,
+              "time_zone": "EST5EDT",
+              "url": "https://resy.com/cities/new-york-ny",
+              "url_slug": "new-york-ny"
+            }
+          ],
+          "observed_at_ms": 1790033159536,
+          "source_url": "https://api.resy.com/3/location/config?lat=40.712941&long=-74.006393",
+          "total_locations": 2131
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "resy-com",
+        "capability": "restaurants/locations"
+      }
+    },
+    {
+      "id": "resy-com/restaurants/search_venues",
+      "provider": "resy-com",
+      "capability": "restaurants/search_venues",
+      "name": "Search venues",
+      "description": "Discovery: find restaurants near a point (optionally by name or cuisine keyword) that have a table on a day. Follow with venue, availability or slot_conditions using venue_id and config_token.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "day",
+          "type": "string",
+          "in": "body",
+          "about": "Calendar day: YYYY-MM-DD, `today`, `tomorrow` or `+N` days from today. Relative days resolve on the UTC calendar. Pattern: ^([0-9]{4}-[0-9]{2}-[0-9]{2}|today|tomorrow|\\+[0-9]{1,3})$.",
+          "required": true
+        },
+        {
+          "name": "include_tock_inventory",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also return Tock-hosted venues the site merges into search (default false)."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "latitude",
+          "required": true,
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "required": true,
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page; pass `next_page` from the previous result.",
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "party_size",
+          "type": "number",
+          "in": "body",
+          "about": "Number of guests (default 2).",
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Hits per page (default 20).",
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Free text (name, cuisine); empty or omitted browses every venue in the radius."
+        },
+        {
+          "name": "radius_m",
+          "type": "number",
+          "in": "body",
+          "about": "Search radius as the site takes it (default 16100, the web client's 10 miles).",
+          "min": 500,
+          "max": 161000
+        },
+        {
+          "name": "time_filter",
+          "type": "string",
+          "in": "body",
+          "about": "Preferred time HH:MM (24h, venue-local); the site returns slots around it. Pattern: ^([01][0-9]|2[0-3]):[0-5][0-9]$."
+        }
+      ],
+      "response": {
+        "about": "Search Resy venues around coordinates by text, with each venue's bookable slots for a day and party size inline. One page per call.",
+        "key": "venues",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "availability",
+            "type": "object"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "cuisine",
+            "type": "string[]"
+          },
+          {
+            "name": "currency_code",
+            "type": "string",
+            "about": "ISO 4217 code the venue prices in."
+          },
+          {
+            "name": "is_tock_inventory",
+            "type": "boolean",
+            "about": "True when the row is Tock-hosted inventory merged into Resy search."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "locality",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "object"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "max_party_size",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "neighborhood",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "price_range_id",
+            "type": "number",
+            "about": "Site's price band 1-4 ($ to $$$$)."
+          },
+          {
+            "name": "rating",
+            "type": "object"
+          },
+          {
+            "name": "region",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public venue page `https://resy.com/cities/{location}/venues/{slug}`."
+          },
+          {
+            "name": "url_slug",
+            "type": "string"
+          },
+          {
+            "name": "venue_id",
+            "type": "number"
+          },
+          {
+            "name": "why_we_like_it",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "day": "+7",
+          "latitude": 40.712941,
+          "longitude": -74.006393,
+          "party_size": 2,
+          "per_page": 3,
+          "query": "sushi",
+          "time_filter": "19:00"
+        },
+        "response": {
+          "count": 3,
+          "cuisines": [
+            "Sushi",
+            "Japanese",
+            "Asian"
+          ],
+          "day": "2026-09-28",
+          "latitude": 40.712941,
+          "longitude": -74.006393,
+          "next_page": 2,
+          "observed_at_ms": 1790033196253,
+          "page": 1,
+          "party_size": 2,
+          "per_page": 3,
+          "query": "sushi",
+          "radius_m": 16100,
+          "source_url": "https://api.resy.com/3/venuesearch/search",
+          "time_filter": "19:00",
+          "total": 122,
+          "total_pages": 41,
+          "venues": [
+            {
+              "availability": {
+                "notify_available": true,
+                "slot_count": 1,
+                "slots": [
+                  {
+                    "config_token": "rgs://resy/95012/4245249/2/2026-09-28/2026-09-28/19:00:00/2/Bar Seat",
+                    "end": "2026-09-28 20:30:00",
+                    "seating_type": "Bar Seat",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:00:00",
+                    "template_id": 4245249
+                  }
+                ],
+                "status": "slots_available"
+              },
+              "country": "United States",
+              "cuisine": [
+                "Omakase"
+              ],
+              "currency_code": "USD",
+              "is_tock_inventory": false,
+              "latitude": 40.72365897107675,
+              "locality": "New York",
+              "location": {
+                "code": "ny",
+                "name": "New York",
+                "url_slug": "new-york-ny"
+              },
+              "longitude": -73.99399167474402,
+              "max_party_size": 4,
+              "name": "Sushi Yukimi",
+              "neighborhood": "Nolita",
+              "phone": "+12127181388",
+              "price_range_id": 2,
+              "rating": {
+                "average": 4.79412,
+                "count": 68
+              },
+              "region": "NY",
+              "url": "https://resy.com/cities/new-york-ny/venues/sushi-yukimi",
+              "url_slug": "sushi-yukimi",
+              "venue_id": 95012,
+              "why_we_like_it": "It’s an intimate omakase spot, so named for the Japanese concept of “viewing snow,” or appreciating fleeting beauty. That’s exactly what we suggest you do when you dine here."
+            },
+            {
+              "availability": {
+                "notify_available": true,
+                "slot_count": 6,
+                "slots": [
+                  {
+                    "config_token": "rgs://resy/96915/4202503/2/2026-09-28/2026-09-28/18:30:00/2/Dining Room",
+                    "end": "2026-09-28 20:30:00",
+                    "seating_type": "Omakase Counter",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 18:30:00",
+                    "template_id": 4202503
+                  },
+                  {
+                    "config_token": "rgs://resy/96915/4309005/2/2026-09-28/2026-09-28/18:30:00/2/Dining Room",
+                    "end": "2026-09-28 19:30:00",
+                    "seating_type": "Restaurant Week",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 18:30:00",
+                    "template_id": 4309005
+                  },
+                  {
+                    "config_token": "rgs://resy/96915/4202503/2/2026-09-28/2026-09-28/19:00:00/2/Dining Room",
+                    "end": "2026-09-28 21:00:00",
+                    "seating_type": "Omakase Counter",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:00:00",
+                    "template_id": 4202503
+                  },
+                  {
+                    "config_token": "rgs://resy/96915/4309005/2/2026-09-28/2026-09-28/19:00:00/2/Dining Room",
+                    "end": "2026-09-28 20:00:00",
+                    "seating_type": "Restaurant Week",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:00:00",
+                    "template_id": 4309005
+                  },
+                  {
+                    "config_token": "rgs://resy/96915/4202503/2/2026-09-28/2026-09-28/19:30:00/2/Dining Room",
+                    "end": "2026-09-28 21:30:00",
+                    "seating_type": "Omakase Counter",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:30:00",
+                    "template_id": 4202503
+                  },
+                  {
+                    "config_token": "rgs://resy/96915/4309005/2/2026-09-28/2026-09-28/19:30:00/2/Dining Room",
+                    "end": "2026-09-28 20:30:00",
+                    "seating_type": "Restaurant Week",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:30:00",
+                    "template_id": 4309005
+                  }
+                ],
+                "status": "slots_available"
+              },
+              "country": "United States",
+              "cuisine": [
+                "Sushi"
+              ],
+              "currency_code": "USD",
+              "is_tock_inventory": false,
+              "latitude": 40.71930517073863,
+              "locality": "New York",
+              "location": {
+                "code": "ny",
+                "name": "New York",
+                "url_slug": "new-york-ny"
+              },
+              "longitude": -73.98573470373773,
+              "max_party_size": 7,
+              "name": "Edoya Sushi",
+              "neighborhood": "Lower East Side",
+              "phone": "+12122560571",
+              "price_range_id": 1,
+              "rating": {
+                "average": 4.84507,
+                "count": 71
+              },
+              "region": "NY",
+              "url": "https://resy.com/cities/new-york-ny/venues/edoya-sushi",
+              "url_slug": "edoya-sushi",
+              "venue_id": 96915,
+              "why_we_like_it": "This spot is a family affair, with chef Edgar working in the kitchen alongside his son. Together, they have a combined 30-plus years of experience, so you’re in good hands. They serve omakase, à la carte, lunch, and even breakfast. Only in New York could you order a BEC on a roll at the same place where you can have 13 courses of seasonal nigiri."
+            },
+            {
+              "availability": {
+                "notify_available": true,
+                "slot_count": 14,
+                "slots": [
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/18:15:00/2/Dining Room",
+                    "end": "2026-09-28 18:45:00",
+                    "seating_type": "Dining Room",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 18:15:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/18:15:00/2/Out Door",
+                    "end": "2026-09-28 18:45:00",
+                    "seating_type": "Out Door",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 18:15:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/18:30:00/2/Dining Room",
+                    "end": "2026-09-28 19:00:00",
+                    "seating_type": "Dining Room",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 18:30:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/18:30:00/2/Out Door",
+                    "end": "2026-09-28 19:00:00",
+                    "seating_type": "Out Door",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 18:30:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/18:45:00/2/Dining Room",
+                    "end": "2026-09-28 19:15:00",
+                    "seating_type": "Dining Room",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 18:45:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/18:45:00/2/Out Door",
+                    "end": "2026-09-28 19:15:00",
+                    "seating_type": "Out Door",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 18:45:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/19:00:00/2/Dining Room",
+                    "end": "2026-09-28 19:30:00",
+                    "seating_type": "Dining Room",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:00:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/19:00:00/2/Out Door",
+                    "end": "2026-09-28 19:30:00",
+                    "seating_type": "Out Door",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:00:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/19:15:00/2/Dining Room",
+                    "end": "2026-09-28 19:45:00",
+                    "seating_type": "Dining Room",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:15:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/19:15:00/2/Out Door",
+                    "end": "2026-09-28 19:45:00",
+                    "seating_type": "Out Door",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:15:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/19:30:00/2/Dining Room",
+                    "end": "2026-09-28 20:00:00",
+                    "seating_type": "Dining Room",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:30:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/19:30:00/2/Out Door",
+                    "end": "2026-09-28 20:00:00",
+                    "seating_type": "Out Door",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:30:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/19:45:00/2/Dining Room",
+                    "end": "2026-09-28 20:15:00",
+                    "seating_type": "Dining Room",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:45:00",
+                    "template_id": 4237104
+                  },
+                  {
+                    "config_token": "rgs://resy/97385/4237104/2/2026-09-28/2026-09-28/19:45:00/2/Out Door",
+                    "end": "2026-09-28 20:15:00",
+                    "seating_type": "Out Door",
+                    "service_type_id": 2,
+                    "start": "2026-09-28 19:45:00",
+                    "template_id": 4237104
+                  }
+                ],
+                "status": "slots_available"
+              },
+              "country": "United States",
+              "cuisine": [
+                "Japanese"
+              ],
+              "currency_code": "USD",
+              "is_tock_inventory": false,
+              "latitude": 40.7274939128455,
+              "locality": "New York",
+              "location": {
+                "code": "ny",
+                "name": "New York",
+                "url_slug": "new-york-ny"
+              },
+              "longitude": -73.98899047551106,
+              "max_party_size": 16,
+              "name": "Tang Sushi",
+              "neighborhood": "Ukrainian Village",
+              "phone": "+12122020953",
+              "price_range_id": 1,
+              "rating": {
+                "average": 4.45455,
+                "count": 22
+              },
+              "region": "NY",
+              "url": "https://resy.com/cities/new-york-ny/venues/tang-sushi-nyc",
+              "url_slug": "tang-sushi-nyc",
+              "venue_id": 97385,
+              "why_we_like_it": null
+            }
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "resy-com",
+        "capability": "restaurants/search_venues"
+      }
+    },
+    {
+      "id": "resy-com/restaurants/slot_conditions",
+      "provider": "resy-com",
+      "capability": "restaurants/slot_conditions",
+      "name": "Slot conditions",
+      "description": "After availability or search_venues returned a slot `config_token`. Alternatively give venue_id + day (+ optional start time and seating type) and the first matching slot of that day is described.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "config_token",
+          "type": "string",
+          "in": "body",
+          "about": "Slot token from availability or search_venues. Pattern: ^rgs://resy/[0-9]+/[0-9]+/[0-9]+/[0-9]{4}-[0-9]{2}-[0-9]{2}/[0-9]{4}-[0-9]{2}-[0-9]{2}/[0-9]{2}:[0-9]{2}:[0-9]{2}/[0-9]+/[^/]+$."
+        },
+        {
+          "name": "day",
+          "type": "string",
+          "in": "body",
+          "about": "Calendar day: YYYY-MM-DD, `today`, `tomorrow` or `+N` days from today. Relative days resolve on the UTC calendar. Pattern: ^([0-9]{4}-[0-9]{2}-[0-9]{2}|today|tomorrow|\\+[0-9]{1,3})$.",
+          "required": true
+        },
+        {
+          "name": "party_size",
+          "type": "number",
+          "in": "body",
+          "about": "Number of guests (default 2).",
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "seating_type",
+          "type": "string",
+          "in": "body",
+          "about": "With venue_id: pick a slot with this seating label (e.g. `Counter`)."
+        },
+        {
+          "name": "start_time",
+          "type": "string",
+          "in": "body",
+          "about": "With venue_id: pick the slot starting at this venue-local time (default: first slot of the day). Pattern: ^([01][0-9]|2[0-3]):[0-5][0-9]$."
+        },
+        {
+          "name": "venue_id",
+          "type": "number",
+          "in": "body",
+          "about": "Resy venue id (`id.resy`, e.g. 77859).",
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "Deposit, prepayment and cancellation conditions of one reservation slot as the site discloses them before booking: policy text, fee amount and cut-off, charge breakdown (reservation charge, Resy fee, service fee, tax, total), currency and time zone. Read-only: no hold or booking is made.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "amounts",
+            "type": "object",
+            "about": "Amounts in `currency` for the whole party as the site displays them before booking; tax is the site's figure (0 when none is charged) and `tax_included` says whether venue prices include tax."
+          },
+          {
+            "name": "booking_url",
+            "type": "string"
+          },
+          {
+            "name": "cancellation",
+            "type": "object"
+          },
+          {
+            "name": "change_cutoff_utc",
+            "type": "string"
+          },
+          {
+            "name": "config_token",
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "day",
+            "type": "string"
+          },
+          {
+            "name": "menu_items",
+            "type": "string[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "party_size",
+            "type": "number"
+          },
+          {
+            "name": "payment_type",
+            "type": "string",
+            "about": "Site's payment configuration (`free`, `deposit`, `prepay`, ...)."
+          },
+          {
+            "name": "requires_payment",
+            "type": "boolean",
+            "about": "False when `payment_type` is `free` and the total is 0."
+          },
+          {
+            "name": "seating_type",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "type": "string",
+            "about": "Venue-local start `YYYY-MM-DD HH:MM:SS` from the token."
+          },
+          {
+            "name": "tax_included",
+            "type": "boolean"
+          },
+          {
+            "name": "time_zone",
+            "type": "string"
+          },
+          {
+            "name": "venue_id",
+            "type": "number"
+          },
+          {
+            "name": "venue_name",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "day": "+7",
+          "party_size": 2,
+          "venue_id": 92564
+        },
+        "response": {
+          "amounts": {
+            "price_per_unit": 0,
+            "quantity": 2,
+            "reservation_charge": 0,
+            "resy_fee": 0,
+            "service_charge": 0,
+            "service_fee": 0,
+            "tax": 0,
+            "total": 0
+          },
+          "booking_url": "https://resy.com/cities/new-york-ny/venues/sushi-aozora?date=2026-09-28&seats=2",
+          "cancellation": {
+            "fee_amount": 15,
+            "fee_cutoff_utc": "2026-09-28T14:00:00Z",
+            "fee_display": "$15.00",
+            "policy": [
+              "A cancellation fee will not be charged if you cancel before Mon, Sep. 28 at 10:00am.\nIf you cancel after that, you agree to be charged a fee of $15.00 + tax per guest on the reservation. Any waiver of the fee is at the sole discretion of the restaurant."
+            ],
+            "refund_cutoff_utc": "2026-09-28T14:00:00Z"
+          },
+          "change_cutoff_utc": "2026-09-28T14:00:00Z",
+          "config_token": "rgs://resy/92564/4301230/3/2026-09-28/2026-09-28/12:00:00/2/$165 Omakase",
+          "currency": "USD",
+          "day": "2026-09-28",
+          "menu_items": [],
+          "observed_at_ms": 1790033290801,
+          "party_size": 2,
+          "payment_type": "free",
+          "requires_payment": false,
+          "seating_type": "$165 Omakase",
+          "source_url": "https://api.resy.com/3/details",
+          "start": "2026-09-28 12:00:00",
+          "tax_included": false,
+          "time_zone": "EST5EDT",
+          "venue_id": 92564,
+          "venue_name": "Sushi Aozora"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "resy-com",
+        "capability": "restaurants/slot_conditions"
+      }
+    },
+    {
+      "id": "resy-com/restaurants/venue",
+      "provider": "resy-com",
+      "capability": "restaurants/venue",
+      "name": "Venue",
+      "description": "Detail hop after search_venues, or when given a resy.com/cities/{city}/venues/{slug} URL. Use availability for slots.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "location",
+          "type": "string",
+          "in": "body",
+          "about": "City slug (`new-york-ny`) from locations or a search hit. Pattern: ^[a-z0-9]+(-[a-z0-9]+)*$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pasted `https://resy.com/cities/{city}/venues/{slug}` URL (query string ignored)."
+        },
+        {
+          "name": "url_slug",
+          "type": "string",
+          "in": "body",
+          "about": "Venue slug (`sushi-ouji`); requires `location`. Pattern: ^[a-z0-9]+(-[a-z0-9]+)*$."
+        },
+        {
+          "name": "venue_id",
+          "type": "number",
+          "in": "body",
+          "about": "Resy venue id (`id.resy`, e.g. 77859).",
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "One Resy venue by id, by city slug + venue slug, or by pasted resy.com venue URL: address, coordinates, contact, cuisine, price band, rating, party size limits, currency, time zone, editorial content and collections.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "average_bill",
+            "type": "object"
+          },
+          {
+            "name": "collections",
+            "type": "object[]"
+          },
+          {
+            "name": "contact",
+            "type": "object"
+          },
+          {
+            "name": "content",
+            "type": "object[]"
+          },
+          {
+            "name": "cuisine",
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "google_place_id",
+            "type": "string"
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "is_active",
+            "type": "boolean"
+          },
+          {
+            "name": "large_party_message",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "object"
+          },
+          {
+            "name": "max_party_size",
+            "type": "number"
+          },
+          {
+            "name": "min_party_size",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "price_range_id",
+            "type": "number"
+          },
+          {
+            "name": "rating",
+            "type": "object"
+          },
+          {
+            "name": "social",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "tax_included",
+            "type": "boolean",
+            "about": "Whether the venue's disclosed prices include tax."
+          },
+          {
+            "name": "time_zone",
+            "type": "string",
+            "about": "Zone slot times are expressed in (site name, e.g. `EST5EDT`)."
+          },
+          {
+            "name": "transaction_processor",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "url_slug",
+            "type": "string"
+          },
+          {
+            "name": "venue_id",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "location": "new-york-ny",
+          "url_slug": "sushi-ouji"
+        },
+        "response": {
+          "average_bill": {
+            "amount": 50,
+            "display": "$50"
+          },
+          "collections": [
+            {
+              "id": "878",
+              "name": "Where to Dine with a Crew in New York",
+              "slug": "where-to-dine-with-a-crew-in-new-york"
+            },
+            {
+              "id": "888",
+              "name": "Book Tonight",
+              "slug": "book-tonight"
+            },
+            {
+              "id": "891",
+              "name": "Top Rated",
+              "slug": "top-rated"
+            }
+          ],
+          "contact": {
+            "menu_url": null,
+            "phone": "+16466378322",
+            "website": "http://ouji196.com"
+          },
+          "content": [
+            {
+              "body": "At Sushi Ouji, you’re encouraged to grab a seat at the counter and revel in an enjoyable omakase menu that showcases specially sourced ingredients - fresh fish from Tokyo and sushi-grade rice from Hokkaido - from a talented chef who’s honed his skills in Taiwan and New York.",
+              "name": "why_we_like_it",
+              "title": null
+            },
+            {
+              "body": null,
+              "name": "tagline",
+              "title": null
+            },
+            {
+              "body": null,
+              "name": "from_the_venue",
+              "title": null
+            },
+            {
+              "body": "Welcome to SUSHI OUJI • SOHO\n\n** Recognized by The New York Times as one of New York City’s Best 100 Restaurants (2025) ** \n\nWe focus on high-quality seafood, primarily sourced directly from Japan, including bluefin tuna, Hokkaido uni, and kuruma ebi, selected based on seasonality and availability.\nSeating is available at our 12-seat counter for a more immersive experience, as well as table seating for a relaxed pace.\n-\nMenu\nSeasonal Omakase - $150 per guest\nA 14-course progression centered on Japanese fish and seafood.\n-\nDietary Restrictions\nWe are happy to accommodate certain dietary restrictions with advance notice, including gluten-free, dairy-free, pescatarian, and some allergies.\nWe are unable to accommodate vegetarian, vegan, or fully cooked menus.\nPlease inform us of any allergies or restrictions at the time of booking.\n-\nCancellation Policy\nCancellations made within 24 hours (48 hours for larger parties) are subject to a $100 per person fee.\nReductions in party size within this window and no-shows will be charged accordingly.\n-\nArrival\nWe allow a 15-minute grace period. We recommend arriving on time to fully enjoy the experience.\n\nPrivate Events & Buyouts\nFor inquiries:\nouji196nyc@gmail.com\n646-637-8322",
+              "name": "need_to_know",
+              "title": null
+            },
+            {
+              "body": "Taiwanese chef Ben brings over 18 years of experience from some of New York City’s leading sushi counters.\nAt Sushi Ouji, his SoHo debut, he presents a seasonal omakase in an intimate setting, guided by a simple philosophy - let the fish speak.\nWith a focus on sourcing, balance, and restraint, each piece is crafted to highlight the natural character of the seafood.",
+              "name": "about",
+              "title": null
+            },
+            {
+              "body": null,
+              "name": "pickup_description",
+              "title": null
+            }
+          ],
+          "cuisine": "Japanese",
+          "currency": "USD",
+          "description": "Sushi Ouji is a Japanese restaurant in the Soho neighborhood of New York.",
+          "google_place_id": "ChIJiXCfJk9ZwokRaUvhHlQpido",
+          "images": [
+            "https://image.resy.com/3/003/2/77859/e0018ea160da2e4cfdbbee7da31e0be7dd337511/jpg/640x360",
+            "https://image.resy.com/3/003/2/77859/7368c6ba5e1abbce01c773ae51eef4a6f7cc6563/jpg/640x360",
+            "https://image.resy.com/3/003/2/77859/04a3eb7b0f2bb30a631919ad5afa19ea7f4bb94f/jpg/640x360",
+            "https://image.resy.com/3/003/2/77859/225ec07f4ee69c5302d244a4c86633a8d1d93467/jpg/640x360",
+            "https://image.resy.com/3/003/2/77859/b513b6b4c3bd1623b3d6814428c2602b384e981e/jpg/640x360",
+            "https://image.resy.com/3/003/2/77859/4678d3eef6d8483b69e1db2406a2f457fa98e817/jpg/640x360",
+            "https://image.resy.com/3/003/2/77859/127459587452c8f930ab02d7a45797de91be724a/jpg/640x360",
+            "https://image.resy.com/3/003/2/77859/b89f920f92e81ee7bfdb29f92fd263be44ee5825/jpg/640x360",
+            "https://image.resy.com/3/003/2/77859/39fc1770b5ab41ddc8a8c9cb37c16610a42bbe6a/jpg/640x360",
+            "https://image.resy.com/3/003/2/77859/8e8aab14a5b31392dd7161e8fbcfe83ad698dfc0/jpg/640x360"
+          ],
+          "is_active": true,
+          "large_party_message": "If you’re looking to make reservations for a larger party of 7+, please contact restaurant directly at 646-637-8322.",
+          "location": {
+            "address_1": "196 Prince St",
+            "address_2": null,
+            "code": "ny",
+            "country": "United States",
+            "country_code": "US",
+            "latitude": 40.7266347005327,
+            "locality": "New York",
+            "longitude": -74.0027223741768,
+            "neighborhood": "Soho",
+            "postal_code": "10012",
+            "region": "NY",
+            "url_slug": "new-york-ny"
+          },
+          "max_party_size": 6,
+          "min_party_size": 1,
+          "name": "Sushi Ouji",
+          "observed_at_ms": 1790033166832,
+          "price_range_id": 2,
+          "rating": {
+            "average": 4.91018,
+            "count": 1592,
+            "scale": 5
+          },
+          "social": [
+            {
+              "name": "instagram",
+              "url": "https://www.instagram.com/ouji_nyc/"
+            }
+          ],
+          "source_url": "https://api.resy.com/3/venue?url_slug=sushi-ouji&location=new-york-ny",
+          "tax_included": false,
+          "time_zone": "EST5EDT",
+          "transaction_processor": "stripe",
+          "url": "https://resy.com/cities/new-york-ny/venues/sushi-ouji",
+          "url_slug": "sushi-ouji",
+          "venue_id": 77859
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "resy-com",
+        "capability": "restaurants/venue"
+      }
+    }
+  ]
+}

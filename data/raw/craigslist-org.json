@@ -1,0 +1,974 @@
+{
+  "id": "craigslist-org",
+  "provider": "craigslist-org",
+  "name": "Craigslist",
+  "description": "Craigslist housing rentals: every region worldwide, filtered search of apartments, rooms, sublets and swaps by rent, beds, baths, pets, type and keyword, and full postings with attributes, photos, map location and timestamps.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "craigslist-org"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "craigslist-org/housing/posting",
+      "provider": "craigslist-org",
+      "capability": "housing/posting",
+      "name": "Posting",
+      "description": "Pass a card's `url` (or its posting_token as posting_id). A numeric post id also needs `region` (and optionally `category`). A deleted or unknown posting is not_found; flagged or expired ones return with flagged/expired true.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "category",
+          "type": "string",
+          "in": "body",
+          "about": "Optional with a numeric posting_id; otherwise all four housing categories are tried.",
+          "oneOf": [
+            "apa",
+            "roo",
+            "sub",
+            "swp"
+          ]
+        },
+        {
+          "name": "posting_id",
+          "type": "string",
+          "in": "body",
+          "about": "Numeric post id (with `region`) or the 22-character token from the posting URL. Pattern: ^[A-Za-z0-9]+$."
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "in": "body",
+          "about": "Required with a numeric posting_id: the subdomain hosting the posting. Pattern: ^[A-Za-z0-9-]+$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Posting URL, new (www.craigslist.org/view/d/...) or legacy (<region>.craigslist.org/<sub>/<cat>/d/<slug>/<id>.html). Pattern: ^https://([a-z0-9-]+\\.)?craigslist\\.org/."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "posting_id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One housing posting in full: title, rent and price text, rent period, beds/baths/sqft, housing type, every attribute chip with its source code, pets, laundry, parking, availability, street address and map coordinates with accuracy, photo URLs, plain-text body, posted and updated timestamps, reply availability, flagged/expired state.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string",
+            "about": "Street address when the poster shows one."
+          },
+          {
+            "name": "attribute_params",
+            "type": "string[]",
+            "about": "Source attribute codes (housing_type=1, laundry=3, pets_cat=1...)."
+          },
+          {
+            "name": "attributes",
+            "type": "string[]",
+            "about": "Every attribute chip as displayed."
+          },
+          {
+            "name": "available_from",
+            "type": "string",
+            "about": "'now' or an ISO date when stated."
+          },
+          {
+            "name": "baths",
+            "type": "number",
+            "about": "Numeric bathrooms; 'shared'/'split' stay in attributes."
+          },
+          {
+            "name": "beds",
+            "type": "number"
+          },
+          {
+            "name": "body",
+            "type": "string",
+            "about": "Posting body as plain text; contact relay links are never included."
+          },
+          {
+            "name": "category",
+            "type": "string",
+            "about": "Leaf category (apa, roo, sub, swp) from the breadcrumb or reply link."
+          },
+          {
+            "name": "currency",
+            "type": "object",
+            "about": "Posting pages do not state an ISO currency; always null here (see currency_symbol and the search card)."
+          },
+          {
+            "name": "currency_symbol",
+            "type": "string",
+            "about": "Leading symbol of price_text ($, £, €, C$...)."
+          },
+          {
+            "name": "expired",
+            "type": "boolean",
+            "about": "True when Craigslist shows 'expired'. A deleted posting is not_found."
+          },
+          {
+            "name": "flagged",
+            "type": "boolean",
+            "about": "True when Craigslist shows 'flagged for removal'."
+          },
+          {
+            "name": "furnished",
+            "type": "boolean"
+          },
+          {
+            "name": "housing_line",
+            "type": "string",
+            "about": "Raw '/ 1br - 670ft2 -' fragment from the title bar."
+          },
+          {
+            "name": "housing_type",
+            "type": "string"
+          },
+          {
+            "name": "labelled_attributes",
+            "type": "object",
+            "about": "Labelled attributes such as 'listed by', 'broker fee details', keyed by label."
+          },
+          {
+            "name": "lat",
+            "type": "number"
+          },
+          {
+            "name": "laundry",
+            "type": "string"
+          },
+          {
+            "name": "lon",
+            "type": "number"
+          },
+          {
+            "name": "map_accuracy",
+            "type": "number",
+            "about": "Craigslist map accuracy code (data-accuracy); lower is more precise."
+          },
+          {
+            "name": "neighborhood",
+            "type": "string"
+          },
+          {
+            "name": "no_smoking",
+            "type": "boolean"
+          },
+          {
+            "name": "parking",
+            "type": "string"
+          },
+          {
+            "name": "pets",
+            "type": "object"
+          },
+          {
+            "name": "photo_urls",
+            "type": "string[]"
+          },
+          {
+            "name": "posted_at",
+            "type": "string",
+            "about": "RFC3339 UTC converted from the page's local-offset timestamp."
+          },
+          {
+            "name": "posting_id",
+            "type": "string"
+          },
+          {
+            "name": "posting_token",
+            "type": "string"
+          },
+          {
+            "name": "price_text",
+            "type": "string",
+            "about": "Price as rendered, e.g. \"$2,486\"."
+          },
+          {
+            "name": "region",
+            "type": "string"
+          },
+          {
+            "name": "rent",
+            "type": "number",
+            "about": "Digits of the listed price in whole currency units; null when no price is shown."
+          },
+          {
+            "name": "rent_period",
+            "type": "string",
+            "about": "'monthly', 'weekly', 'daily' when stated."
+          },
+          {
+            "name": "reply_available",
+            "type": "boolean"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "sqft",
+            "type": "number"
+          },
+          {
+            "name": "subarea",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string",
+            "about": "RFC3339 UTC; null when never updated."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "wheelchair_accessible",
+            "type": "boolean"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.craigslist.org/view/d/union-city-granite-countertop-gated/eDe9HoEm6ojngn5qKtUczL"
+        },
+        "response": {
+          "complete": true,
+          "count": 1,
+          "function": "posting",
+          "license": {
+            "attribution": "Source: craigslist (craigslist.org)",
+            "name": "Craigslist Terms of Use",
+            "restrictions": "Public posting data retrieved live for the caller's own use. Craigslist's terms prohibit scraping for redistribution, bulk copying and any commercial reuse of postings; contact relay addresses are never stored and photos are URLs only.",
+            "url": "https://www.craigslist.org/about/terms.of.use"
+          },
+          "next_cursor": null,
+          "observed_at_ms": 1789474000000,
+          "query": {
+            "url": "https://www.craigslist.org/view/d/union-city-granite-countertop-gated/eDe9HoEm6ojngn5qKtUczL"
+          },
+          "records": [
+            {
+              "address": "34077 Paseo Padre Pkwy, Fremont, CA 94555",
+              "attribute_params": [
+                "rent_period=3",
+                "pets_cat=1",
+                "housing_type=1",
+                "pets_dog=1",
+                "laundry=3",
+                "parking=1",
+                "no_smoking=1",
+                "wheelchaccess=1"
+              ],
+              "attributes": [
+                "rent period: monthly",
+                "cats are OK - purrr",
+                "apartment",
+                "dogs are OK - wooof",
+                "laundry on site",
+                "carport",
+                "no smoking",
+                "wheelchair accessible",
+                "1BR / 1Ba",
+                "670ft2",
+                "available now"
+              ],
+              "available_from": "now",
+              "baths": 1,
+              "beds": 1,
+              "body": "34077 Paseo Padre Pkwy, Fremont, CA 94555\nCome home to the quiet and comfort of Northgate Apartments. All of our studio, one-, and two-bedroom Fremont, CA, apartments for rent have private patios or decks. Interiors feature plush carpeting, vertical blinds, ceiling fans, and cable hookups. Newly remodeled kitchens offer efficient appliances, including gas ranges and frost-free refrigerators. Residents have use of seven laundry rooms and a swimming pool. Enjoy a park-like setting in one of Fremont's best neighborhoods. This gated community is conveniently located near 880, Northgate Park, shopping, and schools. Please call for an appointment today.\nUnit Amenities:\n\nGranite Countertop\nLarge Closets\nDishwasher\nEfficient Appliances\nPatio/Balcony\nMicrowave\nDisposal*In Select Homes\nCommunity Amenities:\n\nReserved Covered Parking\nPicnic & BBQ Area\nHot Tub\nSwimming Pool\n7 Card System Laundry Facilities\nGated Community\n\nCall: show contact info\n\nWebsite: https://livecushwake.com/xo7pz7za/northgate-apartments\n\nDRE# 1973501\nProfessionally Managed by Cushman & Wakefield\nEqual Opportunity Housing Provider.",
+              "category": "apa",
+              "currency": null,
+              "currency_symbol": "$",
+              "expired": false,
+              "flagged": false,
+              "furnished": null,
+              "housing_line": "/ 1br - 670ft2 -",
+              "housing_type": "apartment",
+              "labelled_attributes": {
+                "rent period": "monthly"
+              },
+              "lat": 37.576646,
+              "laundry": "laundry on site",
+              "lon": -122.039675,
+              "map_accuracy": 5,
+              "neighborhood": "fremont / union city / newark",
+              "no_smoking": true,
+              "parking": "carport",
+              "pets": {
+                "cats": true,
+                "dogs": true
+              },
+              "photo_urls": [
+                "https://images.craigslist.org/00A0A_dtNPnrM4puK_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/00s0s_9NDzga5ZztM_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/00000_6zxM2ioBs3e_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/00t0t_2Eumadww3rb_0PC0yp_600x450.jpg",
+                "https://images.craigslist.org/00101_ex4O2JV5VnT_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/01414_6kyres4wxYr_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/00o0o_h0slo3r4B7x_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/00j0j_PbeX5MuX4F_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/00a0a_dik9iRIyYDj_0kM0fA_600x450.jpg"
+              ],
+              "posted_at": "2026-09-10T19:03:37Z",
+              "posting_id": "7964202744",
+              "posting_token": "eDe9HoEm6ojngn5qKtUczL",
+              "price_text": "$2,486",
+              "region": "sfbay",
+              "rent": 2486,
+              "rent_period": "monthly",
+              "reply_available": true,
+              "source_url": "https://www.craigslist.org/view/d/union-city-granite-countertop-gated/eDe9HoEm6ojngn5qKtUczL",
+              "sqft": 670,
+              "subarea": "eby",
+              "title": "Granite Countertop, Gated Community, Swimming Pool",
+              "updated_at": "2026-09-15T11:58:23Z",
+              "url": "https://www.craigslist.org/view/d/union-city-granite-countertop-gated/eDe9HoEm6ojngn5qKtUczL",
+              "wheelchair_accessible": true
+            }
+          ],
+          "retrieved_at": "2026-09-15T12:06:40Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": "2026-09-15T11:58:23Z",
+          "source_url": "https://www.craigslist.org/view/d/union-city-granite-countertop-gated/eDe9HoEm6ojngn5qKtUczL",
+          "total": 1,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "craigslist-org",
+        "capability": "housing/posting"
+      }
+    },
+    {
+      "id": "craigslist-org/housing/regions",
+      "provider": "craigslist-org",
+      "capability": "housing/regions",
+      "name": "Regions",
+      "description": "Find the `region` slug for search (sfbay, newyork, austin, london) or list all regions in a country.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "country",
+          "type": "string",
+          "in": "body",
+          "about": "ISO 3166-1 alpha-2 filter (US, CA, GB...). Pattern: ^[A-Za-z]{2}$."
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive substring over slug, name, state, abbreviation and subarea names."
+        }
+      ],
+      "response": {
+        "about": "Every Craigslist region (subdomain) worldwide with country, state, area id, coordinates, timezone and subareas, optionally filtered by name substring and country.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "abbreviation",
+            "type": "string",
+            "about": "Three-letter area abbreviation (sfo, nyc, ldn)."
+          },
+          {
+            "name": "area_id",
+            "type": "number",
+            "about": "Numeric area id used by the search API."
+          },
+          {
+            "name": "country",
+            "type": "string",
+            "about": "ISO 3166-1 alpha-2 from the source."
+          },
+          {
+            "name": "lat",
+            "type": "number"
+          },
+          {
+            "name": "lon",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Region name as Craigslist writes it (Description)."
+          },
+          {
+            "name": "region",
+            "type": "string",
+            "about": "State/province code; null when the source leaves it blank."
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string",
+            "about": "Craigslist subdomain, e.g. sfbay, newyork, london. Stable identifier; use as `region` in search."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "subareas",
+            "type": "object[]"
+          },
+          {
+            "name": "timezone",
+            "type": "string",
+            "about": "IANA timezone when the source gives one."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "https://<slug>.craigslist.org/"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "san francisco"
+        },
+        "response": {
+          "complete": true,
+          "count": 1,
+          "function": "regions",
+          "license": {
+            "attribution": "Source: craigslist (craigslist.org)",
+            "name": "Craigslist Terms of Use",
+            "restrictions": "Public posting data retrieved live for the caller's own use. Craigslist's terms prohibit scraping for redistribution, bulk copying and any commercial reuse of postings; contact relay addresses are never stored and photos are URLs only.",
+            "url": "https://www.craigslist.org/about/terms.of.use"
+          },
+          "next_cursor": null,
+          "observed_at_ms": 1789474000000,
+          "query": {
+            "query": "san francisco"
+          },
+          "records": [
+            {
+              "abbreviation": "sfo",
+              "area_id": 1,
+              "country": "US",
+              "lat": 37.5,
+              "lon": -122.25,
+              "name": "SF bay area",
+              "region": "CA",
+              "short_name": "SF bay area",
+              "slug": "sfbay",
+              "source_url": "https://reference.craigslist.org/Areas",
+              "subareas": [
+                {
+                  "abbreviation": "sfc",
+                  "name": "city of san francisco",
+                  "short_name": "san francisco",
+                  "subarea_id": 1
+                },
+                {
+                  "abbreviation": "sby",
+                  "name": "south bay area",
+                  "short_name": "south bay",
+                  "subarea_id": 2
+                },
+                {
+                  "abbreviation": "eby",
+                  "name": "east bay area",
+                  "short_name": "east bay",
+                  "subarea_id": 3
+                },
+                {
+                  "abbreviation": "pen",
+                  "name": "peninsula",
+                  "short_name": "peninsula",
+                  "subarea_id": 4
+                },
+                {
+                  "abbreviation": "nby",
+                  "name": "north bay / marin",
+                  "short_name": "north bay",
+                  "subarea_id": 5
+                },
+                {
+                  "abbreviation": "scz",
+                  "name": "santa cruz co",
+                  "short_name": "santa cruz",
+                  "subarea_id": 6
+                }
+              ],
+              "timezone": "America/Los_Angeles",
+              "url": "https://sfbay.craigslist.org/"
+            }
+          ],
+          "retrieved_at": "2026-09-15T12:06:40Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://reference.craigslist.org/Areas",
+          "total": 1,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "craigslist-org",
+        "capability": "housing/regions"
+      }
+    },
+    {
+      "id": "craigslist-org/housing/search",
+      "provider": "craigslist-org",
+      "capability": "housing/search",
+      "name": "Search",
+      "description": "Search rentals in a region; then call `posting` with a card's url or posting_id for the full text and attributes. Page with `cursor` (pages of 36, up to 91 pages).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "baths_min",
+          "type": "number",
+          "in": "body",
+          "about": "baths_min",
+          "min": 0,
+          "max": 8
+        },
+        {
+          "name": "beds_min",
+          "type": "number",
+          "in": "body",
+          "about": "Minimum bedrooms (0 = studio allowed).",
+          "min": 0,
+          "max": 8
+        },
+        {
+          "name": "category",
+          "type": "string",
+          "in": "body",
+          "about": "apa apartments/housing for rent, roo rooms & shares, sub sublets & temporary, swp housing swap, hhh all housing.",
+          "required": true,
+          "oneOf": [
+            "apa",
+            "roo",
+            "sub",
+            "swp",
+            "hhh"
+          ]
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page. Pattern: ^o:[0-9]{1,5}$."
+        },
+        {
+          "name": "furnished",
+          "type": "boolean",
+          "in": "body",
+          "about": "True to require furnished."
+        },
+        {
+          "name": "housing_type",
+          "type": "string[]",
+          "in": "body",
+          "about": "Any of these types; omit for all."
+        },
+        {
+          "name": "max_rent",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum rent in whole units of the region currency.",
+          "min": 0,
+          "max": 100000000
+        },
+        {
+          "name": "min_rent",
+          "type": "number",
+          "in": "body",
+          "about": "Minimum rent in whole units of the region currency.",
+          "min": 0,
+          "max": 100000000
+        },
+        {
+          "name": "no_broker_fee",
+          "type": "boolean",
+          "in": "body",
+          "about": "True to require no broker fee."
+        },
+        {
+          "name": "pets",
+          "type": "string[]",
+          "in": "body",
+          "about": "Require cats OK and/or dogs OK."
+        },
+        {
+          "name": "posted_since_hours",
+          "type": "number",
+          "in": "body",
+          "about": "Only postings posted within this many hours; enforced on the source posted timestamps (Craigslist's own switch is 'posted today' for <= 24).",
+          "min": 1,
+          "max": 1080
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Keyword search over title and body."
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "in": "body",
+          "about": "Craigslist subdomain or area abbreviation from `regions`. Pattern: ^[A-Za-z0-9-]+$.",
+          "required": true
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Default newest.",
+          "oneOf": [
+            "newest",
+            "rent_low",
+            "rent_high",
+            "relevance"
+          ]
+        }
+      ],
+      "response": {
+        "about": "One page (36 cards) of housing postings in a Craigslist region and category (apa apartments, roo rooms, sub sublets, swp swaps, hhh all housing) filtered by rent range, minimum beds/baths, housing type, pets, furnished, no broker fee, keyword and posting age, sorted newest, rent low/high or relevance. Cards carry post id, title, rent and currency, beds, sqft, neighborhood, coordinates, posted time and photo URLs.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "area_id",
+            "type": "number"
+          },
+          {
+            "name": "baths",
+            "type": "number",
+            "about": "Always null on cards: the search API does not carry bathrooms. Use `posting`."
+          },
+          {
+            "name": "beds",
+            "type": "number",
+            "about": "Bedrooms from the search API; 0 means studio; null when not given."
+          },
+          {
+            "name": "category",
+            "type": "string",
+            "about": "Category searched."
+          },
+          {
+            "name": "category_id",
+            "type": "number",
+            "about": "Source leaf category id of the posting (1 = apartments/housing)."
+          },
+          {
+            "name": "currency",
+            "type": "string",
+            "about": "ISO currency of the posting's area from the search API area table (USD, GBP, CAD...). Null only for nearby postings whose area is absent from that table."
+          },
+          {
+            "name": "lat",
+            "type": "number"
+          },
+          {
+            "name": "lon",
+            "type": "number"
+          },
+          {
+            "name": "nearby",
+            "type": "boolean",
+            "about": "True when Craigslist appended this posting from a nearby region."
+          },
+          {
+            "name": "neighborhood",
+            "type": "string",
+            "about": "Location text shown on the card (source locationDescriptions)."
+          },
+          {
+            "name": "neighborhood_canonical",
+            "type": "string",
+            "about": "Craigslist's canonical neighborhood name for the location (source neighborhoods)."
+          },
+          {
+            "name": "photo_ids",
+            "type": "string[]",
+            "about": "Source image ids as returned."
+          },
+          {
+            "name": "photo_urls",
+            "type": "string[]",
+            "about": "600x450 image URLs on images.craigslist.org; URLs only."
+          },
+          {
+            "name": "posted_at",
+            "type": "string",
+            "about": "RFC3339 UTC, from the search API posted date."
+          },
+          {
+            "name": "posting_id",
+            "type": "string",
+            "about": "Numeric Craigslist post id (stable, shown as 'post id' on the page)."
+          },
+          {
+            "name": "posting_token",
+            "type": "string",
+            "about": "Token from the posting URL; pass either to `posting`."
+          },
+          {
+            "name": "price_text",
+            "type": "string",
+            "about": "Price exactly as Craigslist renders it, e.g. \"$2,486\" or \"£80\"."
+          },
+          {
+            "name": "region",
+            "type": "string",
+            "about": "Subdomain that hosts the posting (differs from the searched region for nearby results)."
+          },
+          {
+            "name": "rent",
+            "type": "number",
+            "about": "Asking rent in whole units of `currency`, as listed; null when the posting states no price (source -1)."
+          },
+          {
+            "name": "source_codes",
+            "type": "string[]",
+            "about": "Unmapped source tags (open-house day offsets, dedupe keys) preserved verbatim."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "sqft",
+            "type": "number",
+            "about": "Square feet (Craigslist always uses ft²); null when not given (source 0)."
+          },
+          {
+            "name": "subarea",
+            "type": "string",
+            "about": "Subarea abbreviation (eby, sfc, brk...) when the region has subareas."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string",
+            "about": "Always null on cards; the posting page carries the updated time."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Canonical posting page https://www.craigslist.org/view/d/<slug>/<token>."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "category": "apa",
+          "max_rent": 2500,
+          "region": "sfbay"
+        },
+        "response": {
+          "complete": true,
+          "count": 36,
+          "function": "search",
+          "license": {
+            "attribution": "Source: craigslist (craigslist.org)",
+            "name": "Craigslist Terms of Use",
+            "restrictions": "Public posting data retrieved live for the caller's own use. Craigslist's terms prohibit scraping for redistribution, bulk copying and any commercial reuse of postings; contact relay addresses are never stored and photos are URLs only.",
+            "url": "https://www.craigslist.org/about/terms.of.use"
+          },
+          "next_cursor": "o:36",
+          "observed_at_ms": 1789474000000,
+          "query": {
+            "category": "apa",
+            "max_rent": 2500,
+            "region": "sfbay"
+          },
+          "records": [
+            {
+              "area_id": 1,
+              "baths": null,
+              "beds": 1,
+              "category": "apa",
+              "category_id": 1,
+              "currency": "USD",
+              "lat": 37.5766,
+              "lon": -122.0397,
+              "nearby": false,
+              "neighborhood": "fremont / union city / newark",
+              "neighborhood_canonical": "fremont / union city / newark",
+              "photo_ids": [
+                "3:00A0A_dtNPnrM4puK_0x20m1",
+                "3:00s0s_9NDzga5ZztM_0x20m1",
+                "3:00000_6zxM2ioBs3e_0x20m1",
+                "3:00t0t_2Eumadww3rb_0PC0yp",
+                "3:00101_ex4O2JV5VnT_0x20m1",
+                "3:01414_6kyres4wxYr_0x20m1",
+                "3:00o0o_h0slo3r4B7x_0x20m1",
+                "3:00j0j_PbeX5MuX4F_0x20m1",
+                "3:00a0a_dik9iRIyYDj_0kM0fA"
+              ],
+              "photo_urls": [
+                "https://images.craigslist.org/00A0A_dtNPnrM4puK_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/00s0s_9NDzga5ZztM_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/00000_6zxM2ioBs3e_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/00t0t_2Eumadww3rb_0PC0yp_600x450.jpg",
+                "https://images.craigslist.org/00101_ex4O2JV5VnT_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/01414_6kyres4wxYr_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/00o0o_h0slo3r4B7x_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/00j0j_PbeX5MuX4F_0x20m1_600x450.jpg",
+                "https://images.craigslist.org/00a0a_dik9iRIyYDj_0kM0fA_600x450.jpg"
+              ],
+              "posted_at": "2026-09-15T12:03:23Z",
+              "posting_id": "7964202744",
+              "posting_token": "eDe9HoEm6ojngn5qKtUczL",
+              "price_text": "$2,486",
+              "region": "sfbay",
+              "rent": 2486,
+              "source_codes": [],
+              "source_url": "https://sapi.craigslist.org/web/v8/postings/search/full?batch=1-0-360-0-0&cc=US&lang=en&searchPath=apa&max_price=2500",
+              "sqft": 670,
+              "subarea": "eby",
+              "title": "Granite Countertop, Gated Community, Swimming Pool",
+              "updated_at": null,
+              "url": "https://www.craigslist.org/view/d/union-city-granite-countertop-gated/eDe9HoEm6ojngn5qKtUczL"
+            },
+            {
+              "area_id": 1,
+              "baths": null,
+              "beds": 2,
+              "category": "apa",
+              "category_id": 1,
+              "currency": "USD",
+              "lat": 37.9834,
+              "lon": -122.3323,
+              "nearby": false,
+              "neighborhood": "richmond / point / annex",
+              "neighborhood_canonical": "richmond / point / annex",
+              "photo_ids": [
+                "3:00404_fbq9hmGng54_0jm0es",
+                "3:01616_aCtca3q7l3N_0jm0ex",
+                "3:00g0g_fbcGQDEgxNC_0dF0ij",
+                "3:00p0p_cczCHAuoCcz_0bO07k",
+                "3:01616_3sHlcg1STNP_0bf07Q",
+                "3:01616_k5uLhvC9tlv_0jm0ew",
+                "3:00707_7Y6HO4shDSc_0i00gi",
+                "3:00K0K_a3cgAnvGyjc_0oc0oj"
+              ],
+              "photo_urls": [
+                "https://images.craigslist.org/00404_fbq9hmGng54_0jm0es_600x450.jpg",
+                "https://images.craigslist.org/01616_aCtca3q7l3N_0jm0ex_600x450.jpg",
+                "https://images.craigslist.org/00g0g_fbcGQDEgxNC_0dF0ij_600x450.jpg",
+                "https://images.craigslist.org/00p0p_cczCHAuoCcz_0bO07k_600x450.jpg",
+                "https://images.craigslist.org/01616_3sHlcg1STNP_0bf07Q_600x450.jpg",
+                "https://images.craigslist.org/01616_k5uLhvC9tlv_0jm0ew_600x450.jpg",
+                "https://images.craigslist.org/00707_7Y6HO4shDSc_0i00gi_600x450.jpg",
+                "https://images.craigslist.org/00K0K_a3cgAnvGyjc_0oc0oj_600x450.jpg"
+              ],
+              "posted_at": "2026-09-15T11:57:33Z",
+              "posting_id": "7954158086",
+              "posting_token": "gXrdvYEvHNEFRQ2bBve3EG",
+              "price_text": "$2,182",
+              "region": "sfbay",
+              "rent": 2182,
+              "source_codes": [],
+              "source_url": "https://sapi.craigslist.org/web/v8/postings/search/full?batch=1-0-360-0-0&cc=US&lang=en&searchPath=apa&max_price=2500",
+              "sqft": 804,
+              "subarea": "eby",
+              "title": "Garden, On-Site Maintenance, Fitness Center",
+              "updated_at": null,
+              "url": "https://www.craigslist.org/view/d/san-pablo-garden-on-site-maintenance/gXrdvYEvHNEFRQ2bBve3EG"
+            },
+            {
+              "area_id": 1,
+              "baths": null,
+              "beds": 1,
+              "category": "apa",
+              "category_id": 1,
+              "currency": "USD",
+              "lat": 37.5308,
+              "lon": -121.9712,
+              "nearby": false,
+              "neighborhood": "fremont / union city / newark",
+              "neighborhood_canonical": "fremont / union city / newark",
+              "photo_ids": [
+                "3:01212_1vepuYGA9kO_0g80aL",
+                "3:00202_3LqgBtqa2RM_0g80aL",
+                "3:00G0G_1Wo382FdABS_0g80aL",
+                "3:01414_7DSuMIbkeZ5_0g80aL",
+                "3:01616_fp47cGkJ0ij_0g80aL",
+                "3:00h0h_bQeprQBhnRu_0g80aL",
+                "3:00Y0Y_dv6I9Ibx8UD_0g80aL",
+                "3:00H0H_3P8yPHa1T1n_0g80aL",
+                "3:00g0g_fqgj7jCzCwl_0kY0kY"
+              ],
+              "photo_urls": [
+                "https://images.craigslist.org/01212_1vepuYGA9kO_0g80aL_600x450.jpg",
+                "https://images.craigslist.org/00202_3LqgBtqa2RM_0g80aL_600x450.jpg",
+                "https://images.craigslist.org/00G0G_1Wo382FdABS_0g80aL_600x450.jpg",
+                "https://images.craigslist.org/01414_7DSuMIbkeZ5_0g80aL_600x450.jpg",
+                "https://images.craigslist.org/01616_fp47cGkJ0ij_0g80aL_600x450.jpg",
+                "https://images.craigslist.org/00h0h_bQeprQBhnRu_0g80aL_600x450.jpg",
+                "https://images.craigslist.org/00Y0Y_dv6I9Ibx8UD_0g80aL_600x450.jpg",
+                "https://images.craigslist.org/00H0H_3P8yPHa1T1n_0g80aL_600x450.jpg",
+                "https://images.craigslist.org/00g0g_fqgj7jCzCwl_0kY0kY_600x450.jpg"
+              ],
+              "posted_at": "2026-09-15T11:57:04Z",
+              "posting_id": "7960857369",
+              "posting_token": "pCKgDgFDN7hrTaBW6yBRrr",
+              "price_text": "$2,300",
+              "region": "sfbay",
+              "rent": 2300,
+              "source_codes": [],
+              "source_url": "https://sapi.craigslist.org/web/v8/postings/search/full?batch=1-0-360-0-0&cc=US&lang=en&searchPath=apa&max_price=2500",
+              "sqft": 585,
+              "subarea": "eby",
+              "title": "1/bd 1/ba, Energy-Efficient Appliances, Situated in Fremont!",
+              "updated_at": null,
+              "url": "https://www.craigslist.org/view/d/fremont-bd-ba-energy-efficient/pCKgDgFDN7hrTaBW6yBRrr"
+            }
+          ],
+          "retrieved_at": "2026-09-15T12:06:40Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": "2026-09-15T12:04:37Z",
+          "source_url": "https://sapi.craigslist.org/web/v8/postings/search/full?batch=1-0-360-0-0&cc=US&lang=en&searchPath=apa&max_price=2500",
+          "total": 6644,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "craigslist-org",
+        "capability": "housing/search"
+      }
+    }
+  ]
+}

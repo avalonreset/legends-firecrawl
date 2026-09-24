@@ -1,0 +1,1941 @@
+{
+  "id": "treasury-fiscal-data",
+  "provider": "treasury-fiscal-data",
+  "name": "Treasury Fiscal Data",
+  "description": "US Treasury Fiscal Data: the national debt to the penny, daily cash balances and tax receipts, monthly receipts and outlays, Treasury auction results, interest rates and expense on the debt, the gold reserve and official exchange rates.",
+  "toolCount": 12,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "treasury-fiscal-data"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "treasury-fiscal-data/auctions/results",
+      "provider": "treasury-fiscal-data",
+      "capability": "auctions/results",
+      "name": "Auction results",
+      "description": "How an auction went: filter `security_type:eq:Note,security_term:eq:10-Year` and sort `-auction_date` for the last ten-year, then read `high_yield` and `bid_to_cover_ratio`. Bidder takedown comes as amounts, not shares: `indirect_bidder_accepted`, `direct_bidder_accepted` and `primary_dealer_accepted` in dollars, beside the `_tendered` amounts; an indirect share is `indirect_bidder_accepted` divided by `total_accepted`. `cusip:eq:` reaches one security. Bills report discount rates, notes and bonds yields, TIPS real yields, FRNs discount margins.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Columns to return, comma-separated, in place of all of them. A column not in the declared list answers HTTP 400 naming it.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Filter, as `column:operator:value`, several joined by commas: `record_date:gte:2026-01-01`, `security_type:eq:Bill,auction_date:gte:2026-08-01`. Operators: eq, lt, lte, gt, gte, and in with a parenthesised list `security_type:in:(Bill,Note)`. An unknown column answers HTTP 400.",
+          "name": "filter",
+          "type": "string"
+        },
+        {
+          "about": "Sort column, prefixed with `-` for descending: `-record_date` puts the latest first. Comma-separated for several. Unsorted results come back oldest first.",
+          "name": "sort",
+          "type": "string"
+        },
+        {
+          "about": "Rows per page, 1 to 10,000. The default of 100 is fine for a summary series and far too small for a full auction history.",
+          "default": 100,
+          "max": 10000,
+          "name": "page[size]",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed. `meta.total-pages` in the response says how many there are.",
+          "default": 1,
+          "name": "page[number]",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Records at `data`, oldest first unless sorted. Every value is a string, amounts included, and a missing value is the string `null` rather than JSON null. `meta` beside it carries `count`, `total-count`, `total-pages`, and a `labels`, `dataTypes` and `dataFormats` map for the returned columns; `links` carries the paging query strings. One row per auctioned security since November 1979, keyed by CUSIP and auction date: the terms, the high, low and median rates or yields, bid-to-cover, and the amounts tendered and accepted by competitive, non-competitive, direct, indirect, primary-dealer, SOMA and FIMA bidders. A column that does not apply to the security type - a discount rate on a note, a coupon on a bill - is `null`. Amounts, `offering_amt` included, are whole dollars, not millions. 114 columns, and none of the `src_line_nbr` or fiscal-period columns the other datasets end with.",
+        "fields": [
+          {
+            "about": "Record Date. YYYY-MM-DD.",
+            "name": "record_date",
+            "type": "string"
+          },
+          {
+            "about": "CUSIP. Text.",
+            "name": "cusip",
+            "type": "string"
+          },
+          {
+            "about": "Security Type. Text.",
+            "name": "security_type",
+            "type": "string"
+          },
+          {
+            "about": "Security Term. Text.",
+            "name": "security_term",
+            "type": "string"
+          },
+          {
+            "about": "Auction Date. YYYY-MM-DD.",
+            "name": "auction_date",
+            "type": "string"
+          },
+          {
+            "about": "Issue Date. YYYY-MM-DD.",
+            "name": "issue_date",
+            "type": "string"
+          },
+          {
+            "about": "Maturity Date. YYYY-MM-DD.",
+            "name": "maturity_date",
+            "type": "string"
+          },
+          {
+            "about": "Price per $100. Text.",
+            "name": "price_per100",
+            "type": "string"
+          },
+          {
+            "about": "Accrued Interest per $100. A number, as a decimal string; `null` when not reported.",
+            "name": "accrued_int_per100",
+            "type": "string"
+          },
+          {
+            "about": "Accrued Interest per $1,000. A number, as a decimal string; `null` when not reported.",
+            "name": "accrued_int_per1000",
+            "type": "string"
+          },
+          {
+            "about": "Adjusted Accrued Interest per $1,000. A number, as a decimal string; `null` when not reported.",
+            "name": "adj_accrued_int_per1000",
+            "type": "string"
+          },
+          {
+            "about": "Adjusted Price. A number, as a decimal string; `null` when not reported.",
+            "name": "adj_price",
+            "type": "string"
+          },
+          {
+            "about": "Allocation Percentage. A number, as a decimal string; `null` when not reported.",
+            "name": "allocation_pctage",
+            "type": "string"
+          },
+          {
+            "about": "Allocation Percentage Decimals. A number, as a decimal string; `null` when not reported.",
+            "name": "allocation_pctage_decimals",
+            "type": "string"
+          },
+          {
+            "about": "Announced CUSIP. Text.",
+            "name": "announcemtd_cusip",
+            "type": "string"
+          },
+          {
+            "about": "Announcement Date. YYYY-MM-DD.",
+            "name": "announcemt_date",
+            "type": "string"
+          },
+          {
+            "about": "Auction Format. Text.",
+            "name": "auction_format",
+            "type": "string"
+          },
+          {
+            "about": "Average/Median Discount Rate. A number, as a decimal string; `null` when not reported.",
+            "name": "avg_med_discnt_rate",
+            "type": "string"
+          },
+          {
+            "about": "Average/Median Investment Rate. A number, as a decimal string; `null` when not reported.",
+            "name": "avg_med_investment_rate",
+            "type": "string"
+          },
+          {
+            "about": "Average/Median Price. Text.",
+            "name": "avg_med_price",
+            "type": "string"
+          },
+          {
+            "about": "Average/Median Discount Margin. A number, as a decimal string; `null` when not reported.",
+            "name": "avg_med_discnt_margin",
+            "type": "string"
+          },
+          {
+            "about": "Average/Median Yield. A number, as a decimal string; `null` when not reported.",
+            "name": "avg_med_yield",
+            "type": "string"
+          },
+          {
+            "about": "Back Dated. Text.",
+            "name": "back_dated",
+            "type": "string"
+          },
+          {
+            "about": "Back Dated Date. YYYY-MM-DD.",
+            "name": "back_dated_date",
+            "type": "string"
+          },
+          {
+            "about": "Bid-to-Cover Ratio. A number, as a decimal string; `null` when not reported.",
+            "name": "bid_to_cover_ratio",
+            "type": "string"
+          },
+          {
+            "about": "Callable. Text.",
+            "name": "callable",
+            "type": "string"
+          },
+          {
+            "about": "Call Date. YYYY-MM-DD.",
+            "name": "call_date",
+            "type": "string"
+          },
+          {
+            "about": "Called Date. YYYY-MM-DD.",
+            "name": "called_date",
+            "type": "string"
+          },
+          {
+            "about": "Cash Management Bill (CMB). Text.",
+            "name": "cash_management_bill_cmb",
+            "type": "string"
+          },
+          {
+            "about": "Closing Time (ET) - Competitive. Text.",
+            "name": "closing_time_comp",
+            "type": "string"
+          },
+          {
+            "about": "Closing Time (ET) - Noncompetitive. Text.",
+            "name": "closing_time_noncomp",
+            "type": "string"
+          },
+          {
+            "about": "Competitive Accepted. A number, as a decimal string; `null` when not reported.",
+            "name": "comp_accepted",
+            "type": "string"
+          },
+          {
+            "about": "Competitive Bid Decimals. A number, as a decimal string; `null` when not reported.",
+            "name": "comp_bid_decimals",
+            "type": "string"
+          },
+          {
+            "about": "Competitive Tendered. A number, as a decimal string; `null` when not reported.",
+            "name": "comp_tendered",
+            "type": "string"
+          },
+          {
+            "about": "Competitive Tenders Accepted. Text.",
+            "name": "comp_tenders_accepted",
+            "type": "string"
+          },
+          {
+            "about": "Corpus CUSIP. Text.",
+            "name": "corpus_cusip",
+            "type": "string"
+          },
+          {
+            "about": "CPI Base Reference Period. Text.",
+            "name": "cpi_base_reference_period",
+            "type": "string"
+          },
+          {
+            "about": "Currently Outstanding. A number, as a decimal string; `null` when not reported.",
+            "name": "currently_outstanding",
+            "type": "string"
+          },
+          {
+            "about": "Dated Date. YYYY-MM-DD.",
+            "name": "dated_date",
+            "type": "string"
+          },
+          {
+            "about": "Direct Bidder Accepted. A number, as a decimal string; `null` when not reported.",
+            "name": "direct_bidder_accepted",
+            "type": "string"
+          },
+          {
+            "about": "Direct Bidder Tendered. A number, as a decimal string; `null` when not reported.",
+            "name": "direct_bidder_tendered",
+            "type": "string"
+          },
+          {
+            "about": "Estimated Amount of Publicly Held Maturing Securities by Type. A number, as a decimal string; `null` when not reported.",
+            "name": "est_pub_held_mat_by_type_amt",
+            "type": "string"
+          },
+          {
+            "about": "FIMA Included. Text.",
+            "name": "fima_included",
+            "type": "string"
+          },
+          {
+            "about": "FIMA Noncompetitive Accepted. A number, as a decimal string; `null` when not reported.",
+            "name": "fima_noncomp_accepted",
+            "type": "string"
+          },
+          {
+            "about": "FIMA Noncompetitive Tendered. A number, as a decimal string; `null` when not reported.",
+            "name": "fima_noncomp_tendered",
+            "type": "string"
+          },
+          {
+            "about": "First Interest Period. Text.",
+            "name": "first_int_period",
+            "type": "string"
+          },
+          {
+            "about": "First Interest Payment Date. YYYY-MM-DD.",
+            "name": "first_int_payment_date",
+            "type": "string"
+          },
+          {
+            "about": "Floating Rate. Text.",
+            "name": "floating_rate",
+            "type": "string"
+          },
+          {
+            "about": "FRN Index Determination Date. YYYY-MM-DD.",
+            "name": "frn_index_determination_date",
+            "type": "string"
+          },
+          {
+            "about": "FRN Index Determination Rate. A number, as a decimal string; `null` when not reported.",
+            "name": "frn_index_determination_rate",
+            "type": "string"
+          },
+          {
+            "about": "High Discount Rate. A number, as a decimal string; `null` when not reported.",
+            "name": "high_discnt_rate",
+            "type": "string"
+          },
+          {
+            "about": "High Investment Rate. A number, as a decimal string; `null` when not reported.",
+            "name": "high_investment_rate",
+            "type": "string"
+          },
+          {
+            "about": "High Price. Text.",
+            "name": "high_price",
+            "type": "string"
+          },
+          {
+            "about": "High Discount Margin. A number, as a decimal string; `null` when not reported.",
+            "name": "high_discnt_margin",
+            "type": "string"
+          },
+          {
+            "about": "High Yield. A number, as a decimal string; `null` when not reported.",
+            "name": "high_yield",
+            "type": "string"
+          },
+          {
+            "about": "Index Ratio On Issue Date. A number, as a decimal string; `null` when not reported.",
+            "name": "index_ratio_on_issue_date",
+            "type": "string"
+          },
+          {
+            "about": "Indirect Bidder Accepted. A number, as a decimal string; `null` when not reported.",
+            "name": "indirect_bidder_accepted",
+            "type": "string"
+          },
+          {
+            "about": "Indirect Bidder Tendered. A number, as a decimal string; `null` when not reported.",
+            "name": "indirect_bidder_tendered",
+            "type": "string"
+          },
+          {
+            "about": "Interest Payment Frequency. Text.",
+            "name": "int_payment_frequency",
+            "type": "string"
+          },
+          {
+            "about": "Interest Rate. A number, as a decimal string; `null` when not reported.",
+            "name": "int_rate",
+            "type": "string"
+          },
+          {
+            "about": "Low Discount Rate. A number, as a decimal string; `null` when not reported.",
+            "name": "low_discnt_rate",
+            "type": "string"
+          },
+          {
+            "about": "Low Investment Rate. A number, as a decimal string; `null` when not reported.",
+            "name": "low_investment_rate",
+            "type": "string"
+          },
+          {
+            "about": "Low Price. Text.",
+            "name": "low_price",
+            "type": "string"
+          },
+          {
+            "about": "Low Discount Margin. A number, as a decimal string; `null` when not reported.",
+            "name": "low_discnt_margin",
+            "type": "string"
+          },
+          {
+            "about": "Low Yield. A number, as a decimal string; `null` when not reported.",
+            "name": "low_yield",
+            "type": "string"
+          },
+          {
+            "about": "Maturing Date. YYYY-MM-DD.",
+            "name": "mat_date",
+            "type": "string"
+          },
+          {
+            "about": "Maximum Competitive Award. A number, as a decimal string; `null` when not reported.",
+            "name": "max_comp_award",
+            "type": "string"
+          },
+          {
+            "about": "Maximum Noncompetitive Award. A number, as a decimal string; `null` when not reported.",
+            "name": "max_noncomp_award",
+            "type": "string"
+          },
+          {
+            "about": "Maximum Single Bid. A number, as a decimal string; `null` when not reported.",
+            "name": "max_single_bid",
+            "type": "string"
+          },
+          {
+            "about": "Minimum Bid Amount. A number, as a decimal string; `null` when not reported.",
+            "name": "min_bid_amt",
+            "type": "string"
+          },
+          {
+            "about": "Minimum Strip Amount. A number, as a decimal string; `null` when not reported.",
+            "name": "min_strip_amt",
+            "type": "string"
+          },
+          {
+            "about": "Minimum To Issue. A number, as a decimal string; `null` when not reported.",
+            "name": "min_to_issue",
+            "type": "string"
+          },
+          {
+            "about": "Multiples To Bid. A number, as a decimal string; `null` when not reported.",
+            "name": "multiples_to_bid",
+            "type": "string"
+          },
+          {
+            "about": "Multiples To Issue. A number, as a decimal string; `null` when not reported.",
+            "name": "multiples_to_issue",
+            "type": "string"
+          },
+          {
+            "about": "NLP Exclusion Amount. A number, as a decimal string; `null` when not reported.",
+            "name": "nlp_exclusion_amt",
+            "type": "string"
+          },
+          {
+            "about": "NLP Reporting Threshold. A number, as a decimal string; `null` when not reported.",
+            "name": "nlp_reporting_threshold",
+            "type": "string"
+          },
+          {
+            "about": "Noncompetitive Accepted. A number, as a decimal string; `null` when not reported.",
+            "name": "noncomp_accepted",
+            "type": "string"
+          },
+          {
+            "about": "Noncompetitive Tenders Accepted. Text.",
+            "name": "noncomp_tenders_accepted",
+            "type": "string"
+          },
+          {
+            "about": "Offering Amount. A whole-number amount as a string, in the unit the capability states - millions of dollars in the Daily Treasury Statement tables, whole dollars in the auction datasets; `null` when not reported.",
+            "name": "offering_amt",
+            "type": "string"
+          },
+          {
+            "about": "Original CUSIP. Text.",
+            "name": "original_cusip",
+            "type": "string"
+          },
+          {
+            "about": "Original Dated Date. YYYY-MM-DD.",
+            "name": "original_dated_date",
+            "type": "string"
+          },
+          {
+            "about": "Original Issue Date. YYYY-MM-DD.",
+            "name": "original_issue_date",
+            "type": "string"
+          },
+          {
+            "about": "Original Security Term. Text.",
+            "name": "original_security_term",
+            "type": "string"
+          },
+          {
+            "about": "Download PDF - Announcement. Text.",
+            "name": "pdf_filenm_announcemt",
+            "type": "string"
+          },
+          {
+            "about": "Download PDF - Competitive Results. Text.",
+            "name": "pdf_filenm_comp_results",
+            "type": "string"
+          },
+          {
+            "about": "Download PDF - Noncompetitive Results. Text.",
+            "name": "pdf_filenm_noncomp_results",
+            "type": "string"
+          },
+          {
+            "about": "Primary Dealer Accepted. A number, as a decimal string; `null` when not reported.",
+            "name": "primary_dealer_accepted",
+            "type": "string"
+          },
+          {
+            "about": "Primary Dealer Tendered. A number, as a decimal string; `null` when not reported.",
+            "name": "primary_dealer_tendered",
+            "type": "string"
+          },
+          {
+            "about": "Reference CPI On Dated Date. A number, as a decimal string; `null` when not reported.",
+            "name": "ref_cpi_on_dated_date",
+            "type": "string"
+          },
+          {
+            "about": "Reference CPI On Issue Date. A number, as a decimal string; `null` when not reported.",
+            "name": "ref_cpi_on_issue_date",
+            "type": "string"
+          },
+          {
+            "about": "Reopening. Text.",
+            "name": "reopening",
+            "type": "string"
+          },
+          {
+            "about": "Security Term Day Month. Text.",
+            "name": "security_term_day_month",
+            "type": "string"
+          },
+          {
+            "about": "Security Term Week Year. Text.",
+            "name": "security_term_week_year",
+            "type": "string"
+          },
+          {
+            "about": "Series. Text.",
+            "name": "series",
+            "type": "string"
+          },
+          {
+            "about": "SOMA Accepted. A number, as a decimal string; `null` when not reported.",
+            "name": "soma_accepted",
+            "type": "string"
+          },
+          {
+            "about": "SOMA Holdings. A number, as a decimal string; `null` when not reported.",
+            "name": "soma_holdings",
+            "type": "string"
+          },
+          {
+            "about": "SOMA Included. Text.",
+            "name": "soma_included",
+            "type": "string"
+          },
+          {
+            "about": "SOMA Tendered. A number, as a decimal string; `null` when not reported.",
+            "name": "soma_tendered",
+            "type": "string"
+          },
+          {
+            "about": "Spread. A number, as a decimal string; `null` when not reported.",
+            "name": "spread",
+            "type": "string"
+          },
+          {
+            "about": "Standard Interest Payment per $1,000. A number, as a decimal string; `null` when not reported.",
+            "name": "std_int_payment_per1000",
+            "type": "string"
+          },
+          {
+            "about": "Strippable. Text.",
+            "name": "strippable",
+            "type": "string"
+          },
+          {
+            "about": "TIIN Conversion Factor per $1,000. A number, as a decimal string; `null` when not reported.",
+            "name": "tiin_conversion_factor_per1000",
+            "type": "string"
+          },
+          {
+            "about": "Total Accepted. A number, as a decimal string; `null` when not reported.",
+            "name": "total_accepted",
+            "type": "string"
+          },
+          {
+            "about": "Total Tendered. A number, as a decimal string; `null` when not reported.",
+            "name": "total_tendered",
+            "type": "string"
+          },
+          {
+            "about": "Treasury Retail Accepted. A number, as a decimal string; `null` when not reported.",
+            "name": "treas_retail_accepted",
+            "type": "string"
+          },
+          {
+            "about": "Treasury Retail Tenders Accepted. Text.",
+            "name": "treas_retail_tenders_accepted",
+            "type": "string"
+          },
+          {
+            "about": "Unadjusted Accrued Interest per $1,000. A number, as a decimal string; `null` when not reported.",
+            "name": "unadj_accrued_int_per1000",
+            "type": "string"
+          },
+          {
+            "about": "Unadjusted Price. A number, as a decimal string; `null` when not reported.",
+            "name": "unadj_price",
+            "type": "string"
+          },
+          {
+            "about": "Download XML - Announcement. Text.",
+            "name": "xml_filenm_announcemt",
+            "type": "string"
+          },
+          {
+            "about": "Download XML - Competitive Results. Text.",
+            "name": "xml_filenm_comp_results",
+            "type": "string"
+          },
+          {
+            "about": "Inflation Index Security. Text.",
+            "name": "inflation_index_security",
+            "type": "string"
+          },
+          {
+            "about": "Tint CUSIP 1. Text.",
+            "name": "tint_cusip_1",
+            "type": "string"
+          },
+          {
+            "about": "Tint CUSIP 2. Text.",
+            "name": "tint_cusip_2",
+            "type": "string"
+          },
+          {
+            "about": "PDF Filename - Special Announcement. Text.",
+            "name": "pdf_filenm_spec_announcemt",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "treasury-fiscal-data",
+        "capability": "auctions/results"
+      }
+    },
+    {
+      "id": "treasury-fiscal-data/auctions/upcoming",
+      "provider": "treasury-fiscal-data",
+      "capability": "auctions/upcoming",
+      "name": "Upcoming auctions",
+      "description": "What the Treasury is about to sell: the auction calendar for the coming days with sizes. No history here - once an auction settles it moves to auctions/results.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Columns to return, comma-separated, in place of all of them. A column not in the declared list answers HTTP 400 naming it.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Filter, as `column:operator:value`, several joined by commas: `record_date:gte:2026-01-01`, `security_type:eq:Bill,auction_date:gte:2026-08-01`. Operators: eq, lt, lte, gt, gte, and in with a parenthesised list `security_type:in:(Bill,Note)`. An unknown column answers HTTP 400.",
+          "name": "filter",
+          "type": "string"
+        },
+        {
+          "about": "Sort column, prefixed with `-` for descending: `-record_date` puts the latest first. Comma-separated for several. Unsorted results come back oldest first.",
+          "name": "sort",
+          "type": "string"
+        },
+        {
+          "about": "Rows per page, 1 to 10,000. The default of 100 is fine for a summary series and far too small for a full auction history.",
+          "default": 100,
+          "max": 10000,
+          "name": "page[size]",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed. `meta.total-pages` in the response says how many there are.",
+          "default": 1,
+          "name": "page[number]",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Records at `data`, oldest first unless sorted. Every value is a string, amounts included, and a missing value is the string `null` rather than JSON null. `meta` beside it carries `count`, `total-count`, `total-pages`, and a `labels`, `dataTypes` and `dataFormats` map for the returned columns; `links` carries the paging query strings. One row per auction announced but not yet settled: the security, whether it reopens an existing CUSIP, the offering amount, and the announcement, auction and issue dates. `offering_amt` is whole dollars despite its `CURRENCY0` type - `90000000000` is a $90 billion bill - not the millions the Daily Treasury Statement uses. No `src_line_nbr` or fiscal-period columns here. A short list - the current week or two of the calendar.",
+        "fields": [
+          {
+            "about": "Record Date. YYYY-MM-DD.",
+            "name": "record_date",
+            "type": "string"
+          },
+          {
+            "about": "Security Type. Text.",
+            "name": "security_type",
+            "type": "string"
+          },
+          {
+            "about": "Security Term. Text.",
+            "name": "security_term",
+            "type": "string"
+          },
+          {
+            "about": "Reopening. Text.",
+            "name": "reopening",
+            "type": "string"
+          },
+          {
+            "about": "CUSIP. Text.",
+            "name": "cusip",
+            "type": "string"
+          },
+          {
+            "about": "Offering Amount. A whole-number amount as a string, in the unit the capability states - millions of dollars in the Daily Treasury Statement tables, whole dollars in the auction datasets; `null` when not reported.",
+            "name": "offering_amt",
+            "type": "string"
+          },
+          {
+            "about": "Announcement Date. YYYY-MM-DD.",
+            "name": "announcemt_date",
+            "type": "string"
+          },
+          {
+            "about": "Auction Date. YYYY-MM-DD.",
+            "name": "auction_date",
+            "type": "string"
+          },
+          {
+            "about": "Issue Date. YYYY-MM-DD.",
+            "name": "issue_date",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "treasury-fiscal-data",
+        "capability": "auctions/upcoming"
+      }
+    },
+    {
+      "id": "treasury-fiscal-data/daily-statement/deposits-and-withdrawals",
+      "provider": "treasury-fiscal-data",
+      "capability": "daily-statement/deposits-and-withdrawals",
+      "name": "Deposits and withdrawals",
+      "description": "Where the government's cash came from and went each day: withheld income taxes, corporate taxes, Social Security benefits, Medicare, defence vendor payments, interest on the debt. The daily tax-receipt categories are the real-time read on the economy that the monthly statement only confirms later.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Columns to return, comma-separated, in place of all of them. A column not in the declared list answers HTTP 400 naming it.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Filter, as `column:operator:value`, several joined by commas: `record_date:gte:2026-01-01`, `security_type:eq:Bill,auction_date:gte:2026-08-01`. Operators: eq, lt, lte, gt, gte, and in with a parenthesised list `security_type:in:(Bill,Note)`. An unknown column answers HTTP 400.",
+          "name": "filter",
+          "type": "string"
+        },
+        {
+          "about": "Sort column, prefixed with `-` for descending: `-record_date` puts the latest first. Comma-separated for several. Unsorted results come back oldest first.",
+          "name": "sort",
+          "type": "string"
+        },
+        {
+          "about": "Rows per page, 1 to 10,000. The default of 100 is fine for a summary series and far too small for a full auction history.",
+          "default": 100,
+          "max": 10000,
+          "name": "page[size]",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed. `meta.total-pages` in the response says how many there are.",
+          "default": 1,
+          "name": "page[number]",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Records at `data`, oldest first unless sorted. Every value is a string, amounts included, and a missing value is the string `null` rather than JSON null. `meta` beside it carries `count`, `total-count`, `total-pages`, and a `labels`, `dataTypes` and `dataFormats` map for the returned columns; `links` carries the paging query strings. Table II of the Daily Treasury Statement: one row per transaction category per business day since October 2005, deposits and withdrawals alike, with the day's amount and the month- and fiscal-year-to-date totals. Millions of dollars. Around a hundred rows a day, so filter by `transaction_catg` or take one date.",
+        "fields": [
+          {
+            "about": "Record Date. YYYY-MM-DD.",
+            "name": "record_date",
+            "type": "string"
+          },
+          {
+            "about": "Type of Account. Text.",
+            "name": "account_type",
+            "type": "string"
+          },
+          {
+            "about": "Transaction Type. Text.",
+            "name": "transaction_type",
+            "type": "string"
+          },
+          {
+            "about": "Transaction Category. Text.",
+            "name": "transaction_catg",
+            "type": "string"
+          },
+          {
+            "about": "Transaction Category Description. Text.",
+            "name": "transaction_catg_desc",
+            "type": "string"
+          },
+          {
+            "about": "Transaction Today Amount. A whole-number amount as a string, in the unit the capability states - millions of dollars in the Daily Treasury Statement tables, whole dollars in the auction datasets; `null` when not reported.",
+            "name": "transaction_today_amt",
+            "type": "string"
+          },
+          {
+            "about": "Transaction Month to Date Amount. A whole-number amount as a string, in the unit the capability states - millions of dollars in the Daily Treasury Statement tables, whole dollars in the auction datasets; `null` when not reported.",
+            "name": "transaction_mtd_amt",
+            "type": "string"
+          },
+          {
+            "about": "Transaction Fiscal Year to Date Amount. A whole-number amount as a string, in the unit the capability states - millions of dollars in the Daily Treasury Statement tables, whole dollars in the auction datasets; `null` when not reported.",
+            "name": "transaction_fytd_amt",
+            "type": "string"
+          },
+          {
+            "about": "Table Number. Text.",
+            "name": "table_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Table Name. Text.",
+            "name": "table_nm",
+            "type": "string"
+          },
+          {
+            "about": "Source Line Number. A whole number, as a string.",
+            "name": "src_line_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Year. Four-digit year.",
+            "name": "record_fiscal_year",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Quarter Number. Quarter, 1 to 4.",
+            "name": "record_fiscal_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Year. Four-digit year.",
+            "name": "record_calendar_year",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Quarter Number. Quarter, 1 to 4.",
+            "name": "record_calendar_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Month Number. Month of the year, two digits.",
+            "name": "record_calendar_month",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Day Number. Day of the month, two digits.",
+            "name": "record_calendar_day",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "treasury-fiscal-data",
+        "capability": "daily-statement/deposits-and-withdrawals"
+      }
+    },
+    {
+      "id": "treasury-fiscal-data/daily-statement/operating-cash-balance",
+      "provider": "treasury-fiscal-data",
+      "capability": "daily-statement/operating-cash-balance",
+      "name": "Operating cash balance",
+      "description": "The Treasury General Account balance - the government's cash on hand - which is what debt-ceiling coverage tracks day by day. For the current figure filter `account_type:eq:Treasury General Account (TGA) Closing Balance`, sort `-record_date` and read `open_today_bal`; `close_today_bal` is `null` on every row since 2022-04-18. The same balance is `close_today_bal` on `account_type:eq:Federal Reserve Account` rows through 2021-09-30 and on `account_type:eq:Treasury General Account (TGA)` rows for the six months between, so a series across the 2022 relabelling is those three filters stitched together.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Columns to return, comma-separated, in place of all of them. A column not in the declared list answers HTTP 400 naming it.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Filter, as `column:operator:value`, several joined by commas: `record_date:gte:2026-01-01`, `security_type:eq:Bill,auction_date:gte:2026-08-01`. Operators: eq, lt, lte, gt, gte, and in with a parenthesised list `security_type:in:(Bill,Note)`. An unknown column answers HTTP 400.",
+          "name": "filter",
+          "type": "string"
+        },
+        {
+          "about": "Sort column, prefixed with `-` for descending: `-record_date` puts the latest first. Comma-separated for several. Unsorted results come back oldest first.",
+          "name": "sort",
+          "type": "string"
+        },
+        {
+          "about": "Rows per page, 1 to 10,000. The default of 100 is fine for a summary series and far too small for a full auction history.",
+          "default": 100,
+          "max": 10000,
+          "name": "page[size]",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed. `meta.total-pages` in the response says how many there are.",
+          "default": 1,
+          "name": "page[number]",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Records at `data`, oldest first unless sorted. Every value is a string, amounts included, and a missing value is the string `null` rather than JSON null. `meta` beside it carries `count`, `total-count`, `total-pages`, and a `labels`, `dataTypes` and `dataFormats` map for the returned columns; `links` carries the paging query strings. Table I of the Daily Treasury Statement: one row per account type per business day since October 2005, in millions of dollars. The account labels follow the statement's own layout, which changed twice. Through 2021-09-30 the cash balance is the `Federal Reserve Account` row and from 2021-10-01 to 2022-04-15 the `Treasury General Account (TGA)` row, each with the day's close in `close_today_bal` and the opening balances for the day, month and fiscal year alongside; the Tax and Loan Note, Supplementary Financing Program and Short-Term Cash Investment accounts are rows of their own over that period. From 2022-04-18 the table is four TGA rows - `Treasury General Account (TGA) Opening Balance`, `Total TGA Deposits (Table II)`, `Total TGA Withdrawals (Table II) (-)` and `Treasury General Account (TGA) Closing Balance` - on which `close_today_bal` is `null` and the day's figure sits in `open_today_bal`, with `open_month_bal` and `open_fiscal_year_bal` carrying the month and fiscal-year figures of the same line (on the closing-balance row all three repeat the day's close).",
+        "fields": [
+          {
+            "about": "Record Date. YYYY-MM-DD.",
+            "name": "record_date",
+            "type": "string"
+          },
+          {
+            "about": "Type of Account. Text.",
+            "name": "account_type",
+            "type": "string"
+          },
+          {
+            "about": "Closing Balance Today. A whole-number amount as a string, in the unit the capability states - millions of dollars in the Daily Treasury Statement tables, whole dollars in the auction datasets; `null` when not reported.",
+            "name": "close_today_bal",
+            "type": "string"
+          },
+          {
+            "about": "Opening Balance Today. A whole-number amount as a string, in the unit the capability states - millions of dollars in the Daily Treasury Statement tables, whole dollars in the auction datasets; `null` when not reported.",
+            "name": "open_today_bal",
+            "type": "string"
+          },
+          {
+            "about": "Opening Balance This Month. A whole-number amount as a string, in the unit the capability states - millions of dollars in the Daily Treasury Statement tables, whole dollars in the auction datasets; `null` when not reported.",
+            "name": "open_month_bal",
+            "type": "string"
+          },
+          {
+            "about": "Opening Balance This Fiscal Year. A whole-number amount as a string, in the unit the capability states - millions of dollars in the Daily Treasury Statement tables, whole dollars in the auction datasets; `null` when not reported.",
+            "name": "open_fiscal_year_bal",
+            "type": "string"
+          },
+          {
+            "about": "Table Number. Text.",
+            "name": "table_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Table Name. Text.",
+            "name": "table_nm",
+            "type": "string"
+          },
+          {
+            "about": "Sub Table Name. Text.",
+            "name": "sub_table_name",
+            "type": "string"
+          },
+          {
+            "about": "Source Line Number. A whole number, as a string.",
+            "name": "src_line_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Year. Four-digit year.",
+            "name": "record_fiscal_year",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Quarter Number. Quarter, 1 to 4.",
+            "name": "record_fiscal_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Year. Four-digit year.",
+            "name": "record_calendar_year",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Quarter Number. Quarter, 1 to 4.",
+            "name": "record_calendar_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Month Number. Month of the year, two digits.",
+            "name": "record_calendar_month",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Day Number. Day of the month, two digits.",
+            "name": "record_calendar_day",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "treasury-fiscal-data",
+        "capability": "daily-statement/operating-cash-balance"
+      }
+    },
+    {
+      "id": "treasury-fiscal-data/daily-statement/public-debt-transactions",
+      "provider": "treasury-fiscal-data",
+      "capability": "daily-statement/public-debt-transactions",
+      "name": "Public debt transactions",
+      "description": "Gross issuance and redemption of Treasury securities by day: how much in bills was issued and how much rolled off. Net issuance is issues minus redemptions across the same security type.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Columns to return, comma-separated, in place of all of them. A column not in the declared list answers HTTP 400 naming it.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Filter, as `column:operator:value`, several joined by commas: `record_date:gte:2026-01-01`, `security_type:eq:Bill,auction_date:gte:2026-08-01`. Operators: eq, lt, lte, gt, gte, and in with a parenthesised list `security_type:in:(Bill,Note)`. An unknown column answers HTTP 400.",
+          "name": "filter",
+          "type": "string"
+        },
+        {
+          "about": "Sort column, prefixed with `-` for descending: `-record_date` puts the latest first. Comma-separated for several. Unsorted results come back oldest first.",
+          "name": "sort",
+          "type": "string"
+        },
+        {
+          "about": "Rows per page, 1 to 10,000. The default of 100 is fine for a summary series and far too small for a full auction history.",
+          "default": 100,
+          "max": 10000,
+          "name": "page[size]",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed. `meta.total-pages` in the response says how many there are.",
+          "default": 1,
+          "name": "page[number]",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Records at `data`, oldest first unless sorted. Every value is a string, amounts included, and a missing value is the string `null` rather than JSON null. `meta` beside it carries `count`, `total-count`, `total-pages`, and a `labels`, `dataTypes` and `dataFormats` map for the returned columns; `links` carries the paging query strings. Table III-A of the Daily Treasury Statement: one row per transaction type, market and security type per business day since October 2005 - issues and redemptions of bills, notes, bonds, TIPS, FRNs, savings bonds and Government Account Series - with the day's amount and the month- and fiscal-year-to-date totals. Millions of dollars.",
+        "fields": [
+          {
+            "about": "Record Date. YYYY-MM-DD.",
+            "name": "record_date",
+            "type": "string"
+          },
+          {
+            "about": "Transaction Type. Text.",
+            "name": "transaction_type",
+            "type": "string"
+          },
+          {
+            "about": "Security Marketability, `Marketable` or `Nonmarketable`. Text.",
+            "name": "security_market",
+            "type": "string"
+          },
+          {
+            "about": "Security Type. Text.",
+            "name": "security_type",
+            "type": "string"
+          },
+          {
+            "about": "Security Type Description. Text.",
+            "name": "security_type_desc",
+            "type": "string"
+          },
+          {
+            "about": "Transaction Today Amount. A whole-number amount as a string, in the unit the capability states - millions of dollars in the Daily Treasury Statement tables, whole dollars in the auction datasets; `null` when not reported.",
+            "name": "transaction_today_amt",
+            "type": "string"
+          },
+          {
+            "about": "Transaction Month to Date Amount. A whole-number amount as a string, in the unit the capability states - millions of dollars in the Daily Treasury Statement tables, whole dollars in the auction datasets; `null` when not reported.",
+            "name": "transaction_mtd_amt",
+            "type": "string"
+          },
+          {
+            "about": "Transaction Fiscal Year to Date Amount. A whole-number amount as a string, in the unit the capability states - millions of dollars in the Daily Treasury Statement tables, whole dollars in the auction datasets; `null` when not reported.",
+            "name": "transaction_fytd_amt",
+            "type": "string"
+          },
+          {
+            "about": "Table Number. Text.",
+            "name": "table_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Table Name. Text.",
+            "name": "table_nm",
+            "type": "string"
+          },
+          {
+            "about": "Source Line Number. A whole number, as a string.",
+            "name": "src_line_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Year. Four-digit year.",
+            "name": "record_fiscal_year",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Quarter Number. Quarter, 1 to 4.",
+            "name": "record_fiscal_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Year. Four-digit year.",
+            "name": "record_calendar_year",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Quarter Number. Quarter, 1 to 4.",
+            "name": "record_calendar_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Month Number. Month of the year, two digits.",
+            "name": "record_calendar_month",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Day Number. Day of the month, two digits.",
+            "name": "record_calendar_day",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "treasury-fiscal-data",
+        "capability": "daily-statement/public-debt-transactions"
+      }
+    },
+    {
+      "id": "treasury-fiscal-data/debt/average-interest-rates",
+      "provider": "treasury-fiscal-data",
+      "capability": "debt/average-interest-rates",
+      "name": "Average interest rates",
+      "description": "What the government is paying on its debt, by kind of security: the average coupon on outstanding notes, the rate on bills, the blended rate on everything marketable. Filter `security_desc:eq:Treasury Notes` for one class, sort `-record_date` for the latest month.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Columns to return, comma-separated, in place of all of them. A column not in the declared list answers HTTP 400 naming it.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Filter, as `column:operator:value`, several joined by commas: `record_date:gte:2026-01-01`, `security_type:eq:Bill,auction_date:gte:2026-08-01`. Operators: eq, lt, lte, gt, gte, and in with a parenthesised list `security_type:in:(Bill,Note)`. An unknown column answers HTTP 400.",
+          "name": "filter",
+          "type": "string"
+        },
+        {
+          "about": "Sort column, prefixed with `-` for descending: `-record_date` puts the latest first. Comma-separated for several. Unsorted results come back oldest first.",
+          "name": "sort",
+          "type": "string"
+        },
+        {
+          "about": "Rows per page, 1 to 10,000. The default of 100 is fine for a summary series and far too small for a full auction history.",
+          "default": 100,
+          "max": 10000,
+          "name": "page[size]",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed. `meta.total-pages` in the response says how many there are.",
+          "default": 1,
+          "name": "page[number]",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Records at `data`, oldest first unless sorted. Every value is a string, amounts included, and a missing value is the string `null` rather than JSON null. `meta` beside it carries `count`, `total-count`, `total-pages`, and a `labels`, `dataTypes` and `dataFormats` map for the returned columns; `links` carries the paging query strings. One row per security class per month since January 2001: marketable (bills, notes, bonds, TIPS, FRNs) and non-marketable (savings bonds, Government Account Series and the rest), each with a class total, so a month is around twenty rows.",
+        "fields": [
+          {
+            "about": "Record Date. YYYY-MM-DD.",
+            "name": "record_date",
+            "type": "string"
+          },
+          {
+            "about": "Security Type Description. Text.",
+            "name": "security_type_desc",
+            "type": "string"
+          },
+          {
+            "about": "Security Description. Text.",
+            "name": "security_desc",
+            "type": "string"
+          },
+          {
+            "about": "Average Interest Rate Amount. A percentage, as a decimal string.",
+            "name": "avg_interest_rate_amt",
+            "type": "string"
+          },
+          {
+            "about": "Source Line Number. A whole number, as a string.",
+            "name": "src_line_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Year. Four-digit year.",
+            "name": "record_fiscal_year",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Quarter Number. Quarter, 1 to 4.",
+            "name": "record_fiscal_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Year. Four-digit year.",
+            "name": "record_calendar_year",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Quarter Number. Quarter, 1 to 4.",
+            "name": "record_calendar_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Month Number. Month of the year, two digits.",
+            "name": "record_calendar_month",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Day Number. Day of the month, two digits.",
+            "name": "record_calendar_day",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "treasury-fiscal-data",
+        "capability": "debt/average-interest-rates"
+      }
+    },
+    {
+      "id": "treasury-fiscal-data/debt/historical-outstanding",
+      "provider": "treasury-fiscal-data",
+      "capability": "debt/historical-outstanding",
+      "name": "Historical debt outstanding",
+      "description": "The long series: one figure per year from the first Treasury report in 1790. Use it for anything before 1993 or for a year-end comparison, filtering `record_fiscal_year:eq:<year>` rather than `record_date`; debt/to-the-penny is the daily figure.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Columns to return, comma-separated, in place of all of them. A column not in the declared list answers HTTP 400 naming it.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Filter, as `column:operator:value`, several joined by commas: `record_date:gte:2026-01-01`, `security_type:eq:Bill,auction_date:gte:2026-08-01`. Operators: eq, lt, lte, gt, gte, and in with a parenthesised list `security_type:in:(Bill,Note)`. An unknown column answers HTTP 400.",
+          "name": "filter",
+          "type": "string"
+        },
+        {
+          "about": "Sort column, prefixed with `-` for descending: `-record_date` puts the latest first. Comma-separated for several. Unsorted results come back oldest first.",
+          "name": "sort",
+          "type": "string"
+        },
+        {
+          "about": "Rows per page, 1 to 10,000. The default of 100 is fine for a summary series and far too small for a full auction history.",
+          "default": 100,
+          "max": 10000,
+          "name": "page[size]",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed. `meta.total-pages` in the response says how many there are.",
+          "default": 1,
+          "name": "page[number]",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Records at `data`, oldest first unless sorted. Every value is a string, amounts included, and a missing value is the string `null` rather than JSON null. `meta` beside it carries `count`, `total-count`, `total-pages`, and a `labels`, `dataTypes` and `dataFormats` map for the returned columns; `links` carries the paging query strings. One row per fiscal year since 1790, 237 rows in all (1843, when the fiscal year moved, has two). `record_date` is the date Treasury's historical source carries, not a consistent fiscal-year end: 1 January through 1842, 1 July from 1843 to 1920, the last business day of June from 1921 and the last business day of September from 1977 - 1790-01-01, 1843-07-01, 1946-06-28 and 1990-09-28 are all rows. Pick a year with `record_fiscal_year` rather than a date filter.",
+        "fields": [
+          {
+            "about": "Record Date. YYYY-MM-DD.",
+            "name": "record_date",
+            "type": "string"
+          },
+          {
+            "about": "Debt Outstanding Amount. Dollars, as a decimal string; `null` when not reported.",
+            "name": "debt_outstanding_amt",
+            "type": "string"
+          },
+          {
+            "about": "Source Line Number. A whole number, as a string.",
+            "name": "src_line_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Year. Four-digit year.",
+            "name": "record_fiscal_year",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Quarter Number. Quarter, 1 to 4.",
+            "name": "record_fiscal_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Year. Four-digit year.",
+            "name": "record_calendar_year",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Quarter Number. Quarter, 1 to 4.",
+            "name": "record_calendar_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Month Number. Month of the year, two digits.",
+            "name": "record_calendar_month",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Day Number. Day of the month, two digits.",
+            "name": "record_calendar_day",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "treasury-fiscal-data",
+        "capability": "debt/historical-outstanding"
+      }
+    },
+    {
+      "id": "treasury-fiscal-data/debt/interest-expense",
+      "provider": "treasury-fiscal-data",
+      "capability": "debt/interest-expense",
+      "name": "Interest expense",
+      "description": "How much interest the debt costs in dollars, monthly, by kind of security. The fiscal-year-to-date column is the one quoted when interest is compared to other outlays; filter `record_calendar_month:eq:09` for fiscal-year totals.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Columns to return, comma-separated, in place of all of them. A column not in the declared list answers HTTP 400 naming it.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Filter, as `column:operator:value`, several joined by commas: `record_date:gte:2026-01-01`, `security_type:eq:Bill,auction_date:gte:2026-08-01`. Operators: eq, lt, lte, gt, gte, and in with a parenthesised list `security_type:in:(Bill,Note)`. An unknown column answers HTTP 400.",
+          "name": "filter",
+          "type": "string"
+        },
+        {
+          "about": "Sort column, prefixed with `-` for descending: `-record_date` puts the latest first. Comma-separated for several. Unsorted results come back oldest first.",
+          "name": "sort",
+          "type": "string"
+        },
+        {
+          "about": "Rows per page, 1 to 10,000. The default of 100 is fine for a summary series and far too small for a full auction history.",
+          "default": 100,
+          "max": 10000,
+          "name": "page[size]",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed. `meta.total-pages` in the response says how many there are.",
+          "default": 1,
+          "name": "page[number]",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Records at `data`, oldest first unless sorted. Every value is a string, amounts included, and a missing value is the string `null` rather than JSON null. `meta` beside it carries `count`, `total-count`, `total-pages`, and a `labels`, `dataTypes` and `dataFormats` map for the returned columns; `links` carries the paging query strings. One row per expense category, group and type per month since May 2010, with the month's expense and the fiscal-year-to-date total. Categories split public issues from intragovernmental holdings; types are the security classes.",
+        "fields": [
+          {
+            "about": "Record Date. YYYY-MM-DD.",
+            "name": "record_date",
+            "type": "string"
+          },
+          {
+            "about": "Expense Category Description. Text.",
+            "name": "expense_catg_desc",
+            "type": "string"
+          },
+          {
+            "about": "Expense Group Description. Text.",
+            "name": "expense_group_desc",
+            "type": "string"
+          },
+          {
+            "about": "Expense Type Description. Text.",
+            "name": "expense_type_desc",
+            "type": "string"
+          },
+          {
+            "about": "Current Month Expense Amount. Dollars, as a decimal string; `null` when not reported.",
+            "name": "month_expense_amt",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Year to Date Expense Amount. Dollars, as a decimal string; `null` when not reported.",
+            "name": "fytd_expense_amt",
+            "type": "string"
+          },
+          {
+            "about": "Source Line Number. A whole number, as a string.",
+            "name": "src_line_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Year. Four-digit year.",
+            "name": "record_fiscal_year",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Quarter Number. Quarter, 1 to 4.",
+            "name": "record_fiscal_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Year. Four-digit year.",
+            "name": "record_calendar_year",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Quarter Number. Quarter, 1 to 4.",
+            "name": "record_calendar_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Month Number. Month of the year, two digits.",
+            "name": "record_calendar_month",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Day Number. Day of the month, two digits.",
+            "name": "record_calendar_day",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "treasury-fiscal-data",
+        "capability": "debt/interest-expense"
+      }
+    },
+    {
+      "id": "treasury-fiscal-data/debt/to-the-penny",
+      "provider": "treasury-fiscal-data",
+      "capability": "debt/to-the-penny",
+      "name": "Debt to the penny",
+      "description": "The headline national debt figure: total public debt outstanding on a given day, to the cent. Sort `-record_date` with `page[size]=1` for today's number, or filter a date range for the series. For the figure before 1993 use debt/historical-outstanding.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Columns to return, comma-separated, in place of all of them. A column not in the declared list answers HTTP 400 naming it.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Filter, as `column:operator:value`, several joined by commas: `record_date:gte:2026-01-01`, `security_type:eq:Bill,auction_date:gte:2026-08-01`. Operators: eq, lt, lte, gt, gte, and in with a parenthesised list `security_type:in:(Bill,Note)`. An unknown column answers HTTP 400.",
+          "name": "filter",
+          "type": "string"
+        },
+        {
+          "about": "Sort column, prefixed with `-` for descending: `-record_date` puts the latest first. Comma-separated for several. Unsorted results come back oldest first.",
+          "name": "sort",
+          "type": "string"
+        },
+        {
+          "about": "Rows per page, 1 to 10,000. The default of 100 is fine for a summary series and far too small for a full auction history.",
+          "default": 100,
+          "max": 10000,
+          "name": "page[size]",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed. `meta.total-pages` in the response says how many there are.",
+          "default": 1,
+          "name": "page[number]",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Records at `data`, oldest first unless sorted. Every value is a string, amounts included, and a missing value is the string `null` rather than JSON null. `meta` beside it carries `count`, `total-count`, `total-pages`, and a `labels`, `dataTypes` and `dataFormats` map for the returned columns; `links` carries the paging query strings. One row per business day since April 1993. The total is on every row; the split between debt held by the public and intragovernmental holdings is sparse before 2005 - `null` on every row before September 1997, then only on the fiscal-year-end (30 September) row through 2000, only on month-end rows from October 2001, and on every business day from 31 March 2005. A caller wanting the split for an earlier date takes the nearest month- or year-end row that carries it.",
+        "fields": [
+          {
+            "about": "Record Date. YYYY-MM-DD.",
+            "name": "record_date",
+            "type": "string"
+          },
+          {
+            "about": "Debt Held by the Public. Dollars, as a decimal string; `null` when not reported.",
+            "name": "debt_held_public_amt",
+            "type": "string"
+          },
+          {
+            "about": "Intragovernmental Holdings. Dollars, as a decimal string; `null` when not reported.",
+            "name": "intragov_hold_amt",
+            "type": "string"
+          },
+          {
+            "about": "Total Public Debt Outstanding. Dollars, as a decimal string; `null` when not reported.",
+            "name": "tot_pub_debt_out_amt",
+            "type": "string"
+          },
+          {
+            "about": "Source Line Number. A whole number, as a string.",
+            "name": "src_line_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Year. Four-digit year.",
+            "name": "record_fiscal_year",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Quarter Number. Quarter, 1 to 4.",
+            "name": "record_fiscal_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Year. Four-digit year.",
+            "name": "record_calendar_year",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Quarter Number. Quarter, 1 to 4.",
+            "name": "record_calendar_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Month Number. Month of the year, two digits.",
+            "name": "record_calendar_month",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Day Number. Day of the month, two digits.",
+            "name": "record_calendar_day",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "treasury-fiscal-data",
+        "capability": "debt/to-the-penny"
+      }
+    },
+    {
+      "id": "treasury-fiscal-data/monthly-statement/receipts-and-outlays",
+      "provider": "treasury-fiscal-data",
+      "capability": "monthly-statement/receipts-and-outlays",
+      "name": "Receipts, outlays and deficit",
+      "description": "The monthly deficit: filter `record_date:eq:2026-07-31,classification_desc:eq:July` and read `current_month_dfct_sur_amt` on the row with the higher `line_code_nbr` - the current fiscal year's July; the other row is the prior year's July for comparison. `classification_desc:eq:Year-to-Date` on the same record date gives the fiscal-year running total the same way. Published around the eighth business day of the following month.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Columns to return, comma-separated, in place of all of them. A column not in the declared list answers HTTP 400 naming it.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Filter, as `column:operator:value`, several joined by commas: `record_date:gte:2026-01-01`, `security_type:eq:Bill,auction_date:gte:2026-08-01`. Operators: eq, lt, lte, gt, gte, and in with a parenthesised list `security_type:in:(Bill,Note)`. An unknown column answers HTTP 400.",
+          "name": "filter",
+          "type": "string"
+        },
+        {
+          "about": "Sort column, prefixed with `-` for descending: `-record_date` puts the latest first. Comma-separated for several. Unsorted results come back oldest first.",
+          "name": "sort",
+          "type": "string"
+        },
+        {
+          "about": "Rows per page, 1 to 10,000. The default of 100 is fine for a summary series and far too small for a full auction history.",
+          "default": 100,
+          "max": 10000,
+          "name": "page[size]",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed. `meta.total-pages` in the response says how many there are.",
+          "default": 1,
+          "name": "page[number]",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Records at `data`, oldest first unless sorted. Every value is a string, amounts included, and a missing value is the string `null` rather than JSON null. `meta` beside it carries `count`, `total-count`, `total-pages`, and a `labels`, `dataTypes` and `dataFormats` map for the returned columns; `links` carries the paging query strings. Table 1 of the Monthly Treasury Statement since March 2015, one row per line of the table per statement month: gross receipts, gross outlays and the deficit (positive) or surplus (negative), in dollars. Each `record_date` carries two fiscal-year sections, the prior year printed first and the current year second. `classification_desc` names the line: `FY 2026` on a section heading (`sequence_level_nbr` 1, amounts `null`), a month name - `October` through `September` - on a month row (`record_type_cd` `MTH`), and `Year-to-Date` on the section's running total. A month name therefore appears twice per record date, once per section; the current fiscal year's row is the one with the higher `line_code_nbr` (160 to 280, against 20 to 140 for the prior year), or equivalently the one whose `parent_id` is the `classification_id` of the current `FY` heading. Line codes are strings, so `gte` on them compares text, not numbers.",
+        "fields": [
+          {
+            "about": "Record Date. YYYY-MM-DD.",
+            "name": "record_date",
+            "type": "string"
+          },
+          {
+            "about": "Parent ID. Text.",
+            "name": "parent_id",
+            "type": "string"
+          },
+          {
+            "about": "Classification ID. Text.",
+            "name": "classification_id",
+            "type": "string"
+          },
+          {
+            "about": "Classification Description. Text.",
+            "name": "classification_desc",
+            "type": "string"
+          },
+          {
+            "about": "Current Month Gross Receipts Amount. Dollars, as a decimal string; `null` when not reported.",
+            "name": "current_month_gross_rcpt_amt",
+            "type": "string"
+          },
+          {
+            "about": "Current Month Gross Outlay Amount. Dollars, as a decimal string; `null` when not reported.",
+            "name": "current_month_gross_outly_amt",
+            "type": "string"
+          },
+          {
+            "about": "Current Month Deficit Surplus Amount. Dollars, as a decimal string; `null` when not reported.",
+            "name": "current_month_dfct_sur_amt",
+            "type": "string"
+          },
+          {
+            "about": "Table Number. Text.",
+            "name": "table_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Source Line Number. A whole number, as a string.",
+            "name": "src_line_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Print Order Sequence Number. Text.",
+            "name": "print_order_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Line Code Number. Text.",
+            "name": "line_code_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Data Type Code. Text.",
+            "name": "data_type_cd",
+            "type": "string"
+          },
+          {
+            "about": "Record Type Code. Text.",
+            "name": "record_type_cd",
+            "type": "string"
+          },
+          {
+            "about": "Sequence Level Number. Text.",
+            "name": "sequence_level_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Sequence Number Code. Text.",
+            "name": "sequence_number_cd",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Year. Four-digit year.",
+            "name": "record_fiscal_year",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Quarter Number. Quarter, 1 to 4.",
+            "name": "record_fiscal_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Year. Four-digit year.",
+            "name": "record_calendar_year",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Quarter Number. Quarter, 1 to 4.",
+            "name": "record_calendar_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Month Number. Month of the year, two digits.",
+            "name": "record_calendar_month",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Day Number. Day of the month, two digits.",
+            "name": "record_calendar_day",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "treasury-fiscal-data",
+        "capability": "monthly-statement/receipts-and-outlays"
+      }
+    },
+    {
+      "id": "treasury-fiscal-data/rates/exchange",
+      "provider": "treasury-fiscal-data",
+      "capability": "rates/exchange",
+      "name": "Treasury reporting rates of exchange",
+      "description": "The official rate a US agency reports a foreign balance at, per quarter. Filter `country_currency_desc:eq:Euro Zone-Euro` or `country:eq:Japan`, add `effective_date:lte:<date>` for the date being reported, and sort `-record_date,-effective_date`, so the first row is the rate in force on that date rather than an amendment that came after it. For a market rate on a given day this is the wrong source.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Columns to return, comma-separated, in place of all of them. A column not in the declared list answers HTTP 400 naming it.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Filter, as `column:operator:value`, several joined by commas: `record_date:gte:2026-01-01`, `security_type:eq:Bill,auction_date:gte:2026-08-01`. Operators: eq, lt, lte, gt, gte, and in with a parenthesised list `security_type:in:(Bill,Note)`. An unknown column answers HTTP 400.",
+          "name": "filter",
+          "type": "string"
+        },
+        {
+          "about": "Sort column, prefixed with `-` for descending: `-record_date` puts the latest first. Comma-separated for several. Unsorted results come back oldest first.",
+          "name": "sort",
+          "type": "string"
+        },
+        {
+          "about": "Rows per page, 1 to 10,000. The default of 100 is fine for a summary series and far too small for a full auction history.",
+          "default": 100,
+          "max": 10000,
+          "name": "page[size]",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed. `meta.total-pages` in the response says how many there are.",
+          "default": 1,
+          "name": "page[number]",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Records at `data`, oldest first unless sorted. Every value is a string, amounts included, and a missing value is the string `null` rather than JSON null. `meta` beside it carries `count`, `total-count`, `total-pages`, and a `labels`, `dataTypes` and `dataFormats` map for the returned columns; `links` carries the paging query strings. The rate, in units of foreign currency per US dollar, that federal agencies use to convert foreign-currency balances for reporting, per country and currency per quarter-end since March 2001. A quarter-end is not always one row: when a rate is amended mid-quarter the amendment is a further row with the same `record_date`, country and currency and a later `effective_date` - Bolivia at 2026-06-30 carries 6.85 effective 2026-06-30 and 10.35 effective 2026-07-15. A caller wanting one value per quarter takes the row whose `effective_date` is the latest on or before the date in question: filter `effective_date:lte:<date>` first, then sort `-effective_date` so that row comes first. Sorting alone picks the latest amendment, which for a date before it took effect is the wrong rate. Not a market rate and not daily.",
+        "fields": [
+          {
+            "about": "Record Date. YYYY-MM-DD.",
+            "name": "record_date",
+            "type": "string"
+          },
+          {
+            "about": "Country. Text.",
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "about": "Currency. Text.",
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "about": "Country - Currency Description. Text.",
+            "name": "country_currency_desc",
+            "type": "string"
+          },
+          {
+            "about": "Exchange Rate. A number, as a decimal string; `null` when not reported.",
+            "name": "exchange_rate",
+            "type": "string"
+          },
+          {
+            "about": "Effective Date. YYYY-MM-DD.",
+            "name": "effective_date",
+            "type": "string"
+          },
+          {
+            "about": "Source Line Number. A whole number, as a string.",
+            "name": "src_line_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Year. Four-digit year.",
+            "name": "record_fiscal_year",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Quarter Number. Quarter, 1 to 4.",
+            "name": "record_fiscal_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Year. Four-digit year.",
+            "name": "record_calendar_year",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Quarter Number. Quarter, 1 to 4.",
+            "name": "record_calendar_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Month Number. Month of the year, two digits.",
+            "name": "record_calendar_month",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Day Number. Day of the month, two digits.",
+            "name": "record_calendar_day",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "treasury-fiscal-data",
+        "capability": "rates/exchange"
+      }
+    },
+    {
+      "id": "treasury-fiscal-data/reserves/gold",
+      "provider": "treasury-fiscal-data",
+      "capability": "reserves/gold",
+      "name": "Gold reserve",
+      "description": "How much gold the Treasury holds and where. The book value is the statutory price, not the market price, so a market valuation is the ounces times a spot price from elsewhere. Sort `-record_date` for the current holding.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Columns to return, comma-separated, in place of all of them. A column not in the declared list answers HTTP 400 naming it.",
+          "name": "fields",
+          "type": "string"
+        },
+        {
+          "about": "Filter, as `column:operator:value`, several joined by commas: `record_date:gte:2026-01-01`, `security_type:eq:Bill,auction_date:gte:2026-08-01`. Operators: eq, lt, lte, gt, gte, and in with a parenthesised list `security_type:in:(Bill,Note)`. An unknown column answers HTTP 400.",
+          "name": "filter",
+          "type": "string"
+        },
+        {
+          "about": "Sort column, prefixed with `-` for descending: `-record_date` puts the latest first. Comma-separated for several. Unsorted results come back oldest first.",
+          "name": "sort",
+          "type": "string"
+        },
+        {
+          "about": "Rows per page, 1 to 10,000. The default of 100 is fine for a summary series and far too small for a full auction history.",
+          "default": 100,
+          "max": 10000,
+          "name": "page[size]",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed. `meta.total-pages` in the response says how many there are.",
+          "default": 1,
+          "name": "page[number]",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Records at `data`, oldest first unless sorted. Every value is a string, amounts included, and a missing value is the string `null` rather than JSON null. `meta` beside it carries `count`, `total-count`, `total-pages`, and a `labels`, `dataTypes` and `dataFormats` map for the returned columns; `links` carries the paging query strings. The Status Report of U.S. Government Gold Reserve: one row per facility, form and location per month since January 2012 - Fort Knox, Denver and West Point deep storage, working stock at the Mint, and the gold held at the Federal Reserve Bank of New York - with fine troy ounces and the book value at the statutory $42.2222 an ounce. Subtotal and total rows are included, so sum only the leaf rows.",
+        "fields": [
+          {
+            "about": "Record Date. YYYY-MM-DD.",
+            "name": "record_date",
+            "type": "string"
+          },
+          {
+            "about": "Facility Description. Text.",
+            "name": "facility_desc",
+            "type": "string"
+          },
+          {
+            "about": "Form Description. Text.",
+            "name": "form_desc",
+            "type": "string"
+          },
+          {
+            "about": "Location Description. Text.",
+            "name": "location_desc",
+            "type": "string"
+          },
+          {
+            "about": "Fine Troy Ounces. A number, as a decimal string; `null` when not reported.",
+            "name": "fine_troy_ounce_qty",
+            "type": "string"
+          },
+          {
+            "about": "Book Value. Dollars, as a decimal string; `null` when not reported.",
+            "name": "book_value_amt",
+            "type": "string"
+          },
+          {
+            "about": "Source Line Number. A whole number, as a string.",
+            "name": "src_line_nbr",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Year. Four-digit year.",
+            "name": "record_fiscal_year",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal Quarter Number. Quarter, 1 to 4.",
+            "name": "record_fiscal_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Year. Four-digit year.",
+            "name": "record_calendar_year",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Quarter Number. Quarter, 1 to 4.",
+            "name": "record_calendar_quarter",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Month Number. Month of the year, two digits.",
+            "name": "record_calendar_month",
+            "type": "string"
+          },
+          {
+            "about": "Calendar Day Number. Day of the month, two digits.",
+            "name": "record_calendar_day",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "treasury-fiscal-data",
+        "capability": "reserves/gold"
+      }
+    }
+  ]
+}

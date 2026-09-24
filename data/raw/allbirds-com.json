@@ -1,0 +1,471 @@
+{
+  "id": "allbirds-com",
+  "provider": "allbirds-com",
+  "name": "Allbirds",
+  "description": "Explore Allbirds collections, product suggestions, size-level offers and published materials/care details.",
+  "toolCount": 6,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "allbirds-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "allbirds-com/products/collections",
+      "provider": "allbirds-com",
+      "capability": "products/collections",
+      "name": "Collections",
+      "description": "List curated collection links from the Allbirds US homepage. Partial discovery, not every archived collection.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [],
+      "response": {
+        "about": "List curated collection links from the Allbirds US homepage. Partial discovery, not every archived collection.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "handle",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "complete": false,
+          "next_page": null,
+          "observed_at_ms": 1789506000000,
+          "records": [
+            {
+              "handle": "new-arrivals-26",
+              "name": "New Arrivals",
+              "url": "https://www.allbirds.com/collections/new-arrivals-26"
+            }
+          ],
+          "source_url": "https://www.allbirds.com/",
+          "warnings": [
+            "US storefront only. Discovery omits unlabelled prices; product offers retain explicit source currency. Tax and shipping basis are unknown. Stock is a source snapshot, not a reservation. Search suggestions and homepage collections are partial."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:10:00Z"
+      },
+      "execute": {
+        "provider": "allbirds-com",
+        "capability": "products/collections"
+      }
+    },
+    {
+      "id": "allbirds-com/products/details",
+      "provider": "allbirds-com",
+      "capability": "products/details",
+      "name": "Details",
+      "description": "Read substantive product design, materials, sustainability and care sections. Unsupported layouts fail closed.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.allbirds\\.com/products/[a-z0-9-]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read substantive product design, materials, sustainability and care sections. Unsupported layouts fail closed.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "section",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.allbirds.com/products/mens-dasher-nz-anthracite"
+        },
+        "response": {
+          "complete": true,
+          "next_page": null,
+          "observed_at_ms": 1789506000000,
+          "records": [
+            {
+              "section": "whyWeMadeThis",
+              "text": "A new take on our fan-favorite Dasher, made for busy days and spontaneous plans. Lightweight, breathable comfort keeps you cool as you move, with added heel protection where it counts. Fast when you want. Comfortable always. Thoughtfully designed Breathable tree knit upper for a light, cool feel Easy-entry heel tab for quick slip on and off Wool-blend lining for softness, socks optional Sugarcane-based SweetFoam® cushioning with responsive energy return Plush Featherbed™ memory foam insole for extra comfort and bounce Redesigned traction pattern for more grip on paved surfaces Best for Walking Jogging Commuting Light Workouts Everyday-ing Weight: 10.9oz (M9) 9.0oz (W7) Heel/Toe Drop: 7mm Stack Height: Heel: 22.9mm Toe: 15.9mm Country of Origin: Vietnam"
+            }
+          ],
+          "source_url": "https://www.allbirds.com/products/mens-dasher-nz-anthracite",
+          "warnings": [
+            "US storefront only. Discovery omits unlabelled prices; product offers retain explicit source currency. Tax and shipping basis are unknown. Stock is a source snapshot, not a reservation. Search suggestions and homepage collections are partial."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:10:00Z"
+      },
+      "execute": {
+        "provider": "allbirds-com",
+        "capability": "products/details"
+      }
+    },
+    {
+      "id": "allbirds-com/products/product",
+      "provider": "allbirds-com",
+      "capability": "products/product",
+      "name": "Product",
+      "description": "Read the canonical product profile and source-labelled offer currency; stock is a source snapshot.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.allbirds\\.com/products/[a-z0-9-]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read the canonical product profile and source-labelled offer currency; stock is a source snapshot.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "brand",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "group_id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "offer",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.allbirds.com/products/mens-dasher-nz-anthracite"
+        },
+        "response": {
+          "complete": true,
+          "next_page": null,
+          "observed_at_ms": 1789506000000,
+          "records": [
+            {
+              "brand": "Allbirds",
+              "description": "A new take on our fan-favorite Dasher, made for busy days and spontaneous plans. Lightweight, breathable comfort keeps you cool as you move, with added heel protection where it counts. Fast when you want. Comfortable always.",
+              "group_id": "MENS_DASHER_NZ",
+              "name": "Men's Dasher NZ",
+              "offer": {
+                "amount": 140,
+                "available": true,
+                "currency": "USD",
+                "shipping_included": null,
+                "tax_basis": "unknown"
+              }
+            }
+          ],
+          "source_url": "https://www.allbirds.com/products/mens-dasher-nz-anthracite",
+          "warnings": [
+            "US storefront only. Discovery omits unlabelled prices; product offers retain explicit source currency. Tax and shipping basis are unknown. Stock is a source snapshot, not a reservation. Search suggestions and homepage collections are partial."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:10:00Z"
+      },
+      "execute": {
+        "provider": "allbirds-com",
+        "capability": "products/product"
+      }
+    },
+    {
+      "id": "allbirds-com/products/products",
+      "provider": "allbirds-com",
+      "capability": "products/products",
+      "name": "Products",
+      "description": "Browse one Allbirds collection page. Follow next_page with the same collection and limit; prices are omitted until product details supply currency.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "collection",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[a-z0-9-]+$.",
+          "required": true
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 20,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 100
+        }
+      ],
+      "response": {
+        "about": "Browse one Allbirds collection page. Follow next_page with the same collection and limit; prices are omitted until product details supply currency.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "available",
+            "type": "boolean"
+          },
+          {
+            "name": "handle",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "collection": "mens",
+          "limit": 2,
+          "page": 1
+        },
+        "response": {
+          "complete": false,
+          "next_page": 2,
+          "observed_at_ms": 1789506000000,
+          "records": [
+            {
+              "available": true,
+              "handle": "mens-dasher-nz-anthracite",
+              "name": "Men's Dasher NZ - Anthracite (Dark Anthracite Sole)",
+              "price": null,
+              "url": "https://www.allbirds.com/products/mens-dasher-nz-anthracite"
+            }
+          ],
+          "source_url": "https://www.allbirds.com/collections/mens/products.json?limit=2&page=1",
+          "warnings": [
+            "US storefront only. Discovery omits unlabelled prices; product offers retain explicit source currency. Tax and shipping basis are unknown. Stock is a source snapshot, not a reservation. Search suggestions and homepage collections are partial."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:10:00Z"
+      },
+      "execute": {
+        "provider": "allbirds-com",
+        "capability": "products/products"
+      }
+    },
+    {
+      "id": "allbirds-com/products/search",
+      "provider": "allbirds-com",
+      "capability": "products/search",
+      "name": "Search",
+      "description": "Find predictive product suggestions for a query. Up to ten results; this is not exhaustive or paginated search.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 10,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[^\\x00-\\x1F\\x7F]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Find predictive product suggestions for a query. Up to ten results; this is not exhaustive or paginated search.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "available",
+            "type": "boolean"
+          },
+          {
+            "name": "handle",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 2,
+          "query": "dasher"
+        },
+        "response": {
+          "complete": false,
+          "next_page": null,
+          "observed_at_ms": 1789506000000,
+          "records": [
+            {
+              "available": true,
+              "handle": "mens-dasher-nz-natural-black-blizzard",
+              "name": "Men's Dasher NZ - Natural Black (Blizzard Sole)",
+              "price": null,
+              "url": "https://www.allbirds.com/products/mens-dasher-nz-natural-black-blizzard"
+            }
+          ],
+          "source_url": "https://www.allbirds.com/search/suggest.json?q=dasher&resources%5Btype%5D=product&resources%5Blimit%5D=2",
+          "warnings": [
+            "US storefront only. Discovery omits unlabelled prices; product offers retain explicit source currency. Tax and shipping basis are unknown. Stock is a source snapshot, not a reservation. Search suggestions and homepage collections are partial."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:10:00Z"
+      },
+      "execute": {
+        "provider": "allbirds-com",
+        "capability": "products/search"
+      }
+    },
+    {
+      "id": "allbirds-com/products/variants",
+      "provider": "allbirds-com",
+      "capability": "products/variants",
+      "name": "Variants",
+      "description": "Compare published sizes, SKUs, color labels and size-level prices and stock for one product.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.allbirds\\.com/products/[a-z0-9-]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Compare published sizes, SKUs, color labels and size-level prices and stock for one product.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "color",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "offer",
+            "type": "object"
+          },
+          {
+            "name": "size",
+            "type": "string"
+          },
+          {
+            "name": "sku",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.allbirds.com/products/mens-dasher-nz-anthracite"
+        },
+        "response": {
+          "complete": true,
+          "next_page": null,
+          "observed_at_ms": 1789506000000,
+          "records": [
+            {
+              "color": "Men's Dasher NZ - Anthracite (Dark Anthracite Sole)",
+              "name": "Men's Dasher NZ - Anthracite (Dark Anthracite Sole) - Size 8",
+              "offer": {
+                "amount": 140,
+                "available": false,
+                "currency": "USD",
+                "shipping_included": null,
+                "tax_basis": "unknown"
+              },
+              "size": "8",
+              "sku": "A12417M080",
+              "url": "https://www.allbirds.com/products/mens-dasher-nz-anthracite?size=8"
+            }
+          ],
+          "source_url": "https://www.allbirds.com/products/mens-dasher-nz-anthracite",
+          "warnings": [
+            "US storefront only. Discovery omits unlabelled prices; product offers retain explicit source currency. Tax and shipping basis are unknown. Stock is a source snapshot, not a reservation. Search suggestions and homepage collections are partial."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:10:00Z"
+      },
+      "execute": {
+        "provider": "allbirds-com",
+        "capability": "products/variants"
+      }
+    }
+  ]
+}

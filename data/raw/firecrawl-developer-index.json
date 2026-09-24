@@ -1,0 +1,138 @@
+{
+  "id": "firecrawl-developer-index",
+  "provider": "firecrawl-developer-index",
+  "name": "Developer Index",
+  "description": "Search developer documentation, repositories, issues and agent skills with matched passages.",
+  "toolCount": 1,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "firecrawl-developer-index"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "firecrawl-developer-index/search",
+      "provider": "firecrawl-developer-index",
+      "capability": "search",
+      "name": "Search developer sources",
+      "description": "Find code examples, official documentation, repository discussions or agent skills for a development task.",
+      "creditsCost": 2,
+      "perRecord": true,
+      "recordsPerUnit": 10,
+      "zeroDataRetentionCreditsCost": 10,
+      "options": [
+        {
+          "name": "query",
+          "type": "string",
+          "required": true,
+          "about": "Question or search phrase."
+        },
+        {
+          "name": "k",
+          "type": "number",
+          "min": 1,
+          "max": 100,
+          "default": 10,
+          "about": "Maximum results to return."
+        },
+        {
+          "name": "types",
+          "type": "string[]",
+          "about": "Filter by types; sent as repeated query parameters."
+        },
+        {
+          "name": "repos",
+          "type": "string[]",
+          "about": "Filter by repos; sent as repeated query parameters."
+        },
+        {
+          "name": "sources",
+          "type": "string[]",
+          "about": "Filter by sources; sent as repeated query parameters."
+        },
+        {
+          "name": "topic",
+          "type": "string[]",
+          "about": "Filter by topic; sent as repeated query parameters."
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "about": "Filter by language."
+        },
+        {
+          "name": "license",
+          "type": "string",
+          "about": "Filter by license."
+        },
+        {
+          "name": "min_stars",
+          "type": "number",
+          "min": 0,
+          "about": "Repository min stars."
+        },
+        {
+          "name": "max_stars",
+          "type": "number",
+          "min": 0,
+          "about": "Repository max stars."
+        },
+        {
+          "name": "archived",
+          "type": "boolean",
+          "about": "Filter repositories by archived status."
+        },
+        {
+          "name": "fork",
+          "type": "boolean",
+          "about": "Filter repositories by fork status."
+        },
+        {
+          "name": "passages",
+          "type": "number",
+          "min": 1,
+          "max": 5,
+          "about": "Matched passages per result."
+        },
+        {
+          "name": "skills",
+          "type": "string",
+          "oneOf": [
+            "only"
+          ],
+          "about": "Return only agent-skill files."
+        }
+      ],
+      "response": {
+        "key": "results",
+        "paginated": true,
+        "about": "Ranked sources with passages. The complete upstream envelope, including partial results and filter status, is preserved.",
+        "fields": [
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "passages",
+            "type": "object[]"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "firecrawl-developer-index",
+        "capability": "search"
+      }
+    }
+  ]
+}

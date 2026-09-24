@@ -1,0 +1,678 @@
+{
+  "id": "sos-state-co-us",
+  "provider": "sos-state-co-us",
+  "name": "Colorado Secretary of State business database",
+  "description": "Colorado Secretary of State business database (the live registry at www.sos.state.co.us/biz): business name, ID and document-number search, entity summary with periodic report month and registered agent, and the filing history with document links and periodic-report due dates.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "sos-state-co-us"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "sos-state-co-us/entities/entity",
+      "provider": "sos-state-co-us",
+      "capability": "entities/entity",
+      "name": "Entity",
+      "description": "You have an entity_id from `search` (or a Colorado SOS ID number) and need the current record.",
+      "creditsCost": 3,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "entity_id",
+          "type": "string",
+          "in": "body",
+          "about": "11-digit Colorado SOS ID number of a business entity (e.g. 20201707433 for Palantir Technologies Inc.). Trade name and trademark IDs (record_kind other than entity in `search`) are not entities and answer not_found. Pattern: ^[0-9]{11}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Summary of one Colorado business entity by its 11-digit ID number (the site's BusinessEntityDetail page): name (with the site's status suffix such as ', Dissolved December 2, 2018' when present), status, formation date, form (spelled out, e.g. 'Foreign Corporation'), periodic report month, jurisdiction, principal office street and mailing addresses, registered agent name and addresses. Colorado does not publish officers or directors; the filing history (`filings`) links to the filed documents.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "additional_details",
+            "type": "object",
+            "about": "Other label/value rows of the summary page's Details table that are not modelled above (e.g. 'Term of duration', 'Delinquent date'), passed through as displayed so nothing the site shows is dropped."
+          },
+          {
+            "name": "entity_id",
+            "type": "string",
+            "about": "ID number as displayed on the summary page."
+          },
+          {
+            "name": "filings_url",
+            "type": "string",
+            "about": "The entity's 'Filing history and documents' page (session-bound; use `filings`)."
+          },
+          {
+            "name": "form",
+            "type": "string",
+            "about": "Entity form as displayed (e.g. 'Foreign Corporation', 'Limited Liability Company')."
+          },
+          {
+            "name": "formation_date",
+            "type": "string",
+            "about": "Formation date, YYYY-MM-DD; null when the page shows none."
+          },
+          {
+            "name": "jurisdiction",
+            "type": "string",
+            "about": "Jurisdiction of formation as displayed (e.g. 'Colorado', 'Delaware'); null when not shown."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "periodic_report_month",
+            "type": "string",
+            "about": "Month the periodic (annual) report is due, as displayed (e.g. 'August'); null when the page shows none (dissolved or withdrawn entities). The exact due date is in `filings` ('Periodic report due by')."
+          },
+          {
+            "name": "principal_office",
+            "type": "object"
+          },
+          {
+            "name": "registered_agent",
+            "type": "object",
+            "about": "Registered agent as displayed; null when the page has no Registered Agent table (typical for dissolved or withdrawn records)."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Status as displayed (e.g. 'Good Standing', 'Delinquent', 'Voluntarily Dissolved', 'Withdrawn')."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "entity_id": "20201707433"
+        },
+        "response": {
+          "additional_details": {},
+          "entity_id": "20201707433",
+          "filings_url": "https://www.sos.state.co.us/biz/BusinessEntityHistory.do?quitButtonDestination=BusinessEntityDetail&pi1=1&nameTyp=ENT&masterFileId=20201707433&entityId2=20201707433&srchTyp=ENTITY",
+          "form": "Foreign Corporation",
+          "formation_date": "2020-08-18",
+          "jurisdiction": "Delaware",
+          "name": "Palantir Technologies Inc.",
+          "observed_at_ms": 1790037348869,
+          "periodic_report_month": "August",
+          "principal_office": {
+            "mailing_address": "19505 Biscayne Boulevard, Suite 2350, Aventura, FL 33180, US",
+            "street_address": "19505 Biscayne Boulevard, Suite 2350, Aventura, FL 33180, US"
+          },
+          "registered_agent": {
+            "mailing_address": "7700 E Arapahoe Rd Ste 220, Centennial, CO 80112, US",
+            "name": "C T CORPORATION SYSTEM",
+            "street_address": "7700 E Arapahoe Rd Ste 220, Centennial, CO 80112, US"
+          },
+          "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20201707433&entityId2=20201707433&fileId=20201707433&srchTyp=ENTITY",
+          "status": "Good Standing"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "sos-state-co-us",
+        "capability": "entities/entity"
+      }
+    },
+    {
+      "id": "sos-state-co-us/entities/filings",
+      "provider": "sos-state-co-us",
+      "capability": "entities/filings",
+      "name": "Filings",
+      "description": "You need due dates, filed documents or the event timeline for an entity_id from `search` or `entity`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "entity_id",
+          "type": "string",
+          "in": "body",
+          "about": "11-digit Colorado SOS ID number. Pattern: ^[0-9]{11}$.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based history page (about 20 rows per page, oldest first).",
+          "default": 1,
+          "min": 1,
+          "max": 200
+        }
+      ],
+      "response": {
+        "about": "Filing history and documents of one Colorado business entity (the site's BusinessEntityHistory page), one page of about 20 rows: event, date filed, date posted, effective date and time, document number with its PDF link (ViewImage.do), and comment. 'Periodic Report due' rows carry the due date in the comment; it is parsed into periodic_report_due, and the latest one on the page into latest_periodic_report_due. Officers are not part of Colorado filings; the PDFs name only the individual causing delivery.",
+        "key": "filings",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "comment",
+            "type": "string",
+            "about": "Comment as displayed (e.g. 'Periodic report due by: 10/31/2026', 'Registered Agent Address Change'); null when blank."
+          },
+          {
+            "name": "date_filed",
+            "type": "string"
+          },
+          {
+            "name": "date_posted",
+            "type": "string"
+          },
+          {
+            "name": "document_id",
+            "type": "string",
+            "about": "11-digit document number; null for rows without a document (e.g. 'Periodic Report due')."
+          },
+          {
+            "name": "document_url",
+            "type": "string",
+            "about": "PDF of the filed document (ViewImage.do), fetchable without a session."
+          },
+          {
+            "name": "effective_at",
+            "type": "string",
+            "about": "Effective date and time as displayed by the site (Mountain Time, no zone), YYYY-MM-DDTHH:MM; date only when the site shows no time."
+          },
+          {
+            "name": "event",
+            "type": "string",
+            "about": "Event as displayed (e.g. 'Report', 'Periodic Report due', 'Statement of Change', 'Articles of Incorporation')."
+          },
+          {
+            "name": "periodic_report_due",
+            "type": "string",
+            "about": "Due date parsed from the comment: 'Periodic report due by: MM/DD/YYYY' on current 'Periodic Report due' rows, or 'annual/periodic report due: <date>' on pre-2012 postcard-notification rows; null for other rows."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "entity_id": "20201707433"
+        },
+        "response": {
+          "entity_id": "20201707433",
+          "filings": [
+            {
+              "comment": null,
+              "date_filed": "2020-08-18",
+              "date_posted": "2020-08-18",
+              "document_id": "20201707433",
+              "document_url": "https://www.sos.state.co.us/biz/ViewImage.do?masterFileId=20201707433&fileId=20201707433",
+              "effective_at": "2020-08-18T13:51",
+              "event": "Statement of Foreign Entity Authority",
+              "periodic_report_due": null
+            },
+            {
+              "comment": "Periodic report due by: 10/31/2021",
+              "date_filed": "2021-07-23",
+              "date_posted": "2021-07-23",
+              "document_id": null,
+              "document_url": null,
+              "effective_at": "2021-07-23T03:05",
+              "event": "Periodic Report due",
+              "periodic_report_due": "2021-10-31"
+            },
+            {
+              "comment": null,
+              "date_filed": "2021-08-20",
+              "date_posted": "2021-08-20",
+              "document_id": "20211758694",
+              "document_url": "https://www.sos.state.co.us/biz/ViewImage.do?masterFileId=20201707433&fileId=20211758694",
+              "effective_at": "2021-08-20T17:16",
+              "event": "Report",
+              "periodic_report_due": null
+            },
+            {
+              "comment": "Periodic report due by: 10/31/2022",
+              "date_filed": "2022-07-23",
+              "date_posted": "2022-07-23",
+              "document_id": null,
+              "document_url": null,
+              "effective_at": "2022-07-23T02:37",
+              "event": "Periodic Report due",
+              "periodic_report_due": "2022-10-31"
+            },
+            {
+              "comment": null,
+              "date_filed": "2022-09-02",
+              "date_posted": "2022-09-02",
+              "document_id": "20221866767",
+              "document_url": "https://www.sos.state.co.us/biz/ViewImage.do?masterFileId=20201707433&fileId=20221866767",
+              "effective_at": "2022-09-02T16:14",
+              "event": "Report",
+              "periodic_report_due": null
+            },
+            {
+              "comment": "Periodic report due by: 10/31/2023",
+              "date_filed": "2023-07-23",
+              "date_posted": "2023-07-23",
+              "document_id": null,
+              "document_url": null,
+              "effective_at": "2023-07-23T02:09",
+              "event": "Periodic Report due",
+              "periodic_report_due": "2023-10-31"
+            },
+            {
+              "comment": "Principal address changed",
+              "date_filed": "2023-07-27",
+              "date_posted": "2023-07-27",
+              "document_id": "20231792190",
+              "document_url": "https://www.sos.state.co.us/biz/ViewImage.do?masterFileId=20201707433&fileId=20231792190",
+              "effective_at": "2023-07-27T13:48",
+              "event": "Report",
+              "periodic_report_due": null
+            },
+            {
+              "comment": "Periodic report due by: 10/31/2024",
+              "date_filed": "2024-07-23",
+              "date_posted": "2024-07-23",
+              "document_id": null,
+              "document_url": null,
+              "effective_at": "2024-07-23T01:52",
+              "event": "Periodic Report due",
+              "periodic_report_due": "2024-10-31"
+            },
+            {
+              "comment": "Principal address changed",
+              "date_filed": "2024-07-30",
+              "date_posted": "2024-07-30",
+              "document_id": "20241808640",
+              "document_url": "https://www.sos.state.co.us/biz/ViewImage.do?masterFileId=20201707433&fileId=20241808640",
+              "effective_at": "2024-07-30T09:55",
+              "event": "Report",
+              "periodic_report_due": null
+            },
+            {
+              "comment": "Periodic report due by: 10/31/2025",
+              "date_filed": "2025-07-23",
+              "date_posted": "2025-07-23",
+              "document_id": null,
+              "document_url": null,
+              "effective_at": "2025-07-23T01:55",
+              "event": "Periodic Report due",
+              "periodic_report_due": "2025-10-31"
+            },
+            {
+              "comment": "Principal address changed",
+              "date_filed": "2025-08-07",
+              "date_posted": "2025-08-07",
+              "document_id": "20251869771",
+              "document_url": "https://www.sos.state.co.us/biz/ViewImage.do?masterFileId=20201707433&fileId=20251869771",
+              "effective_at": "2025-08-07T13:49",
+              "event": "Report",
+              "periodic_report_due": null
+            },
+            {
+              "comment": "Principal address changed",
+              "date_filed": "2026-02-09",
+              "date_posted": "2026-02-09",
+              "document_id": "20261168180",
+              "document_url": "https://www.sos.state.co.us/biz/ViewImage.do?masterFileId=20201707433&fileId=20261168180",
+              "effective_at": "2026-02-09T09:49",
+              "event": "Statement of Change",
+              "periodic_report_due": null
+            },
+            {
+              "comment": "Registered agent information changed;",
+              "date_filed": "2026-02-12",
+              "date_posted": "2026-02-12",
+              "document_id": "20261178257",
+              "document_url": "https://www.sos.state.co.us/biz/ViewImage.do?masterFileId=20201707433&fileId=20261178257",
+              "effective_at": "2026-02-12T06:12",
+              "event": "Statement of Change",
+              "periodic_report_due": null
+            },
+            {
+              "comment": "Principal address changed",
+              "date_filed": "2026-02-18",
+              "date_posted": "2026-02-18",
+              "document_id": "20261193293",
+              "document_url": "https://www.sos.state.co.us/biz/ViewImage.do?masterFileId=20201707433&fileId=20261193293",
+              "effective_at": "2026-02-18T15:05",
+              "event": "Statement of Change",
+              "periodic_report_due": null
+            },
+            {
+              "comment": "Registered agent information changed;",
+              "date_filed": "2026-03-11",
+              "date_posted": "2026-03-11",
+              "document_id": "20261303234",
+              "document_url": "https://www.sos.state.co.us/biz/ViewImage.do?masterFileId=20201707433&fileId=20261303234",
+              "effective_at": "2026-03-11T14:29",
+              "event": "Statement of Change",
+              "periodic_report_due": null
+            },
+            {
+              "comment": "Periodic report due by: 10/31/2026",
+              "date_filed": "2026-07-23",
+              "date_posted": "2026-07-23",
+              "document_id": null,
+              "document_url": null,
+              "effective_at": "2026-07-23T01:52",
+              "event": "Periodic Report due",
+              "periodic_report_due": "2026-10-31"
+            },
+            {
+              "comment": null,
+              "date_filed": "2026-07-30",
+              "date_posted": "2026-07-30",
+              "document_id": "20261935970",
+              "document_url": "https://www.sos.state.co.us/biz/ViewImage.do?masterFileId=20201707433&fileId=20261935970",
+              "effective_at": "2026-07-30T09:14",
+              "event": "Report",
+              "periodic_report_due": null
+            }
+          ],
+          "latest_periodic_report_due": "2026-10-31",
+          "name": "Palantir Technologies Inc.",
+          "observed_at_ms": 1790037352649,
+          "page": 1,
+          "pages": 1,
+          "source_url": "https://www.sos.state.co.us/biz/BusinessEntityHistory.do?quitButtonDestination=BusinessEntityDetail&pi1=1&nameTyp=ENT&masterFileId=20201707433&entityId2=20201707433&srchTyp=ENTITY",
+          "total": 17
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "sos-state-co-us",
+        "capability": "entities/filings"
+      }
+    },
+    {
+      "id": "sos-state-co-us/entities/search",
+      "provider": "sos-state-co-us",
+      "capability": "entities/search",
+      "name": "Search",
+      "description": "Start here to find the 11-digit entity_id for `entity` and `filings`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "name",
+          "type": "string",
+          "in": "body",
+          "about": "Business name, trade name or trademark text. The site matches names starting with this text, case-insensitive. Very short or common text (e.g. `Denver`) exceeds the site's record cap and fails with invalid_input; refine it.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based results page (about 20 rows per page). Each page costs a fresh search session on the site.",
+          "default": 1,
+          "min": 1,
+          "max": 200
+        }
+      ],
+      "response": {
+        "about": "Search the Colorado Secretary of State business database by business name, trade name or trademark text (the site's basic search: starts-with, case-insensitive). Returns the results table as displayed: one row per record event (an entity can appear more than once, e.g. its formation document and a later delinquency event), with the 11-digit ID number, document number, name, event, status, form code and formation date, about 20 rows per page. An 11-digit ID or document number is a single-record lookup: pass it to `entity` instead.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "document_id",
+            "type": "string",
+            "about": "11-digit document number of the filing this row describes; null for batch events (e.g. delinquency) that have no document."
+          },
+          {
+            "name": "entity_id",
+            "type": "string",
+            "about": "11-digit ID number (masterFileId); the key for `entity` and `filings`. For trade names it is the trade name record's ID."
+          },
+          {
+            "name": "event",
+            "type": "string",
+            "about": "Event as displayed (e.g. 'Articles of Incorporation', 'Statement of Foreign Entity Authority/ Entity Name', 'Batch Event')."
+          },
+          {
+            "name": "form",
+            "type": "string",
+            "about": "Form code as displayed in the results table (DPC, DLLC, FPC, FLLC, Individual, ...); null when the cell is blank."
+          },
+          {
+            "name": "formation_date",
+            "type": "string",
+            "about": "Formation date, YYYY-MM-DD; null when blank."
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Name as displayed; the site appends status notes such as ', Dissolved December 2, 2018' or ', Delinquent May 1, 2025'."
+          },
+          {
+            "name": "record_kind",
+            "type": "string",
+            "about": "Derived from the record link: BusinessEntityDetail.do is an entity, TradeNameSummary.do a trade name, a Trademark*.do page a trademark; anything else is other."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The record's page on www.sos.state.co.us as linked from the results table."
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Status as displayed (e.g. 'Good Standing', 'Delinquent', 'Voluntarily Dissolved', 'Name Changed')."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "name": "Palantir"
+        },
+        "response": {
+          "observed_at_ms": 1790037356321,
+          "page": 1,
+          "pages": 1,
+          "query": "Palantir",
+          "results": [
+            {
+              "document_id": "19871693187",
+              "entity_id": "19871693187",
+              "event": "Articles of Incorporation",
+              "form": "DPC",
+              "formation_date": "1986-10-15",
+              "name": "PALANTIR EXPLORATION SERVICES, INC.",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=19871693187&entityId2=19871693187&fileId=19871693187&srchTyp=ENTITY",
+              "status": "Name Changed"
+            },
+            {
+              "document_id": "20181944967",
+              "entity_id": "19871693187",
+              "event": "Articles of Dissolution",
+              "form": "DPC",
+              "formation_date": "1986-10-15",
+              "name": "PALANTIR EXPLORATION SERVICES, INC., Dissolved December 2, 2018",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=19871693187&entityId2=19871693187&fileId=20181944967&srchTyp=ENTITY",
+              "status": "Voluntarily Dissolved"
+            },
+            {
+              "document_id": "20131662415",
+              "entity_id": "20131662415",
+              "event": "Articles of Organization",
+              "form": "DLLC",
+              "formation_date": "2013-11-19",
+              "name": "Palantir Investments LLC",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20131662415&entityId2=20131662415&fileId=20131662415&srchTyp=ENTITY",
+              "status": "Name Changed"
+            },
+            {
+              "document_id": "20151451498",
+              "entity_id": "20131662415",
+              "event": "Articles of Dissolution",
+              "form": "DLLC",
+              "formation_date": "2013-11-19",
+              "name": "Palantir Investments LLC, Dissolved July 13, 2015",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20131662415&entityId2=20131662415&fileId=20151451498&srchTyp=ENTITY",
+              "status": "Voluntarily Dissolved"
+            },
+            {
+              "document_id": "20151664157",
+              "entity_id": "20151664157",
+              "event": "Articles of Organization",
+              "form": "DLLC",
+              "formation_date": "2015-10-15",
+              "name": "Palantir Press LLC",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20151664157&entityId2=20151664157&fileId=20151664157&srchTyp=ENTITY",
+              "status": "Good Standing"
+            },
+            {
+              "document_id": "20208050814",
+              "entity_id": "20208050814",
+              "event": "Articles of Organization",
+              "form": "DLLC",
+              "formation_date": "2020-12-02",
+              "name": "Palantir Properties LLC",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20208050814&entityId2=20208050814&fileId=20208050814&srchTyp=ENTITY",
+              "status": "Name Changed"
+            },
+            {
+              "document_id": null,
+              "entity_id": "20208050814",
+              "event": "Batch Event",
+              "form": "DLLC",
+              "formation_date": "2020-12-02",
+              "name": "Palantir Properties LLC, Delinquent May 1, 2025",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20208050814&entityId2=20208050814&fileId=&srchTyp=ENTITY",
+              "status": "Delinquent"
+            },
+            {
+              "document_id": "20201707433",
+              "entity_id": "20201707433",
+              "event": "Statement of Foreign Entity Authority/ Entity Name",
+              "form": "FPC",
+              "formation_date": "2020-08-18",
+              "name": "Palantir Technologies Inc.",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20201707433&entityId2=20201707433&fileId=20201707433&srchTyp=ENTITY",
+              "status": "Good Standing"
+            },
+            {
+              "document_id": "20121529689",
+              "entity_id": "20121529689",
+              "event": "Statement of Foreign Entity Authority/ Entity Name",
+              "form": "FPC",
+              "formation_date": "2012-09-25",
+              "name": "Palantir USA Inc",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20121529689&entityId2=20121529689&fileId=20121529689&srchTyp=ENTITY",
+              "status": "Name Changed"
+            },
+            {
+              "document_id": null,
+              "entity_id": "20121529689",
+              "event": "Batch Event",
+              "form": "FPC",
+              "formation_date": "2012-09-25",
+              "name": "Palantir USA Inc, Delinquent February 1, 2014",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20121529689&entityId2=20121529689&fileId=&srchTyp=ENTITY",
+              "status": "Delinquent"
+            },
+            {
+              "document_id": "20241810793",
+              "entity_id": "20241810793",
+              "event": "Statement of Foreign Entity Authority/ Entity Name",
+              "form": "FPC",
+              "formation_date": "2024-07-30",
+              "name": "Palantir USG, Inc.",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20241810793&entityId2=20241810793&fileId=20241810793&srchTyp=ENTITY",
+              "status": "Good Standing"
+            },
+            {
+              "document_id": "20211145014",
+              "entity_id": "20211145014",
+              "event": "Articles of Organization",
+              "form": "DLLC",
+              "formation_date": "2021-02-12",
+              "name": "Palantir38, LLC",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20211145014&entityId2=20211145014&fileId=20211145014&srchTyp=ENTITY",
+              "status": "Name Changed"
+            },
+            {
+              "document_id": null,
+              "entity_id": "20211145014",
+              "event": "Batch Event",
+              "form": "DLLC",
+              "formation_date": "2021-02-12",
+              "name": "Palantir38, LLC, Delinquent July 1, 2022",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20211145014&entityId2=20211145014&fileId=&srchTyp=ENTITY",
+              "status": "Delinquent"
+            },
+            {
+              "document_id": "14481051002",
+              "entity_id": "14481051002",
+              "event": "Trade Name",
+              "form": "Individual",
+              "formation_date": "1998-07-01",
+              "name": "PALANTIRI COMPUTING",
+              "record_kind": "trade_name",
+              "source_url": "https://www.sos.state.co.us/biz/TradeNameSummary.do?quitButtonDestination=BusinessEntityResults&nameTyp=TRDNM&masterFileId=14481051002&entityId2=14481051002&fileId=14481051002&srchTyp=TRDNM",
+              "status": "Expired"
+            },
+            {
+              "document_id": "20268123256",
+              "entity_id": "20268123256",
+              "event": "Articles of Incorporation",
+              "form": "DPC",
+              "formation_date": "2026-09-05",
+              "name": "Palantirld Inc",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20268123256&entityId2=20268123256&fileId=20268123256&srchTyp=ENTITY",
+              "status": "Good Standing"
+            },
+            {
+              "document_id": "20181548334",
+              "entity_id": "20181548334",
+              "event": "Statement of Foreign Entity Authority/ Entity Name",
+              "form": "FPC",
+              "formation_date": "2018-07-12",
+              "name": "Palantir.net, Inc.",
+              "record_kind": "entity",
+              "source_url": "https://www.sos.state.co.us/biz/BusinessEntityDetail.do?quitButtonDestination=BusinessEntityResults&nameTyp=ENT&masterFileId=20181548334&entityId2=20181548334&fileId=20181548334&srchTyp=ENTITY",
+              "status": "Good Standing"
+            }
+          ],
+          "source_url": "https://www.sos.state.co.us/biz/BusinessEntityCriteriaExt.do",
+          "total": 16
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "sos-state-co-us",
+        "capability": "entities/search"
+      }
+    }
+  ]
+}

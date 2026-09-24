@@ -1,0 +1,1420 @@
+{
+  "id": "peerspot-com",
+  "provider": "peerspot-com",
+  "name": "PeerSpot",
+  "description": "Public PeerSpot software products, customer reviews, ratings and comparisons.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "peerspot-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "peerspot-com/software-reviews/compare",
+      "provider": "peerspot-com",
+      "capability": "software-reviews/compare",
+      "name": "Compare",
+      "description": "PeerSpot head-to-head comparison of two products: category ranking, average rating (out of 10), reviews sentiment and review count per product, category mindshare, and per-theme sentiment scores with editorial summaries and reviewer quotes (ROI, customer service, scalability, stability, room for improvement, setup cost, valuable features). Order of the two slugs does not matter.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "product_a",
+          "type": "string",
+          "in": "body",
+          "about": "PeerSpot product slug, the part between /products/ and -reviews in the product URL, e.g. slack-business-enterprise. Obtain it from search. Pattern: ^[a-z0-9-]{1,200}$.",
+          "required": true
+        },
+        {
+          "name": "product_b",
+          "type": "string",
+          "in": "body",
+          "about": "PeerSpot product slug, the part between /products/ and -reviews in the product URL, e.g. slack-business-enterprise. Obtain it from search. Pattern: ^[a-z0-9-]{1,200}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "PeerSpot head-to-head comparison of two products: category ranking, average rating (out of 10), reviews sentiment and review count per product, category mindshare, and per-theme sentiment scores with editorial summaries and reviewer quotes (ROI, customer service, scalability, stability, room for improvement, setup cost, valuable features). Order of the two slugs does not matter.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "mindshare",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "product_a",
+            "type": "string"
+          },
+          {
+            "name": "product_b",
+            "type": "string"
+          },
+          {
+            "name": "products",
+            "type": "object[]"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "themes",
+            "type": "object[]"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "product_a": "microsoft-teams",
+          "product_b": "slack-business-enterprise"
+        },
+        "response": {
+          "mindshare": {
+            "distribution": [
+              {
+                "label": "Slack Business - Enterprise",
+                "value": 10.5
+              },
+              {
+                "label": "Microsoft Teams",
+                "value": 7.2
+              },
+              {
+                "label": "Other",
+                "value": 82.3
+              }
+            ],
+            "summary": "As of September 2026, in the Enterprise Social Software category, the mindshare of Microsoft Teams is 7.2%, down from 14.4% compared to the previous year. The mindshare of Slack Business - Enterprise is 10.5%, down from 15.5% compared to the previous year. It is calculated based on PeerSpot user engagement data."
+          },
+          "observed_at_ms": 1789438415785,
+          "product_a": "microsoft-teams",
+          "product_b": "slack-business-enterprise",
+          "products": [
+            {
+              "average_rating": 8.2,
+              "name": "Microsoft Teams",
+              "other_rankings": [
+                "Virtual Meetings (3rd)"
+              ],
+              "primary_ranking": {
+                "category": "Enterprise Social Software",
+                "position": "2nd"
+              },
+              "rating_scale": 10,
+              "review_count": 180,
+              "reviews_sentiment": 6.7
+            },
+            {
+              "average_rating": 8.4,
+              "name": "Slack Business - Enterprise",
+              "other_rankings": [],
+              "primary_ranking": {
+                "category": "Enterprise Social Software",
+                "position": "1st"
+              },
+              "rating_scale": 10,
+              "review_count": 83,
+              "reviews_sentiment": 5.6
+            }
+          ],
+          "source": "peerspot.com",
+          "source_url": "https://www.peerspot.com/products/comparisons/microsoft-teams_vs_slack-business-enterprise",
+          "themes": [
+            {
+              "sides": [
+                {
+                  "product": "Microsoft Teams",
+                  "quotes": [
+                    {
+                      "author": "Amar-Kumar",
+                      "author_info": "Technical Lead at a tech services company with 501-1,000 employees",
+                      "quote": "I have seen a return on investment from using Microsoft Teams."
+                    },
+                    {
+                      "author": "ShivKumar2",
+                      "author_info": "Sr. Quality Analyst at Appinventiv",
+                      "quote": "I have seen a return on investment with Microsoft Teams, as it definitely increases productivity and saves time."
+                    },
+                    {
+                      "author": "Sameer Belagali",
+                      "author_info": "QA lead at Trelleborg",
+                      "quote": "When I switched to Microsoft Teams, it became faster for everyone in my organization, helping improve the quality of delivery, save time, and reduce costs, making my organization more competitive in the market."
+                    }
+                  ],
+                  "sentiment_scale": 10,
+                  "sentiment_score": 5.9,
+                  "summary": "Microsoft Teams enhances collaboration and reduces costs, though opinions on its productivity impact vary among users."
+                },
+                {
+                  "product": "Slack Business - Enterprise",
+                  "quotes": [],
+                  "sentiment_scale": 10,
+                  "sentiment_score": 3.7,
+                  "summary": "Slack Business boosts productivity and organization, achieving 40% ROI despite moderate satisfaction and desired pricing improvements over Gmail."
+                }
+              ],
+              "theme": "ROI"
+            },
+            {
+              "sides": [
+                {
+                  "product": "Microsoft Teams",
+                  "quotes": [
+                    {
+                      "author": "Sameer Belagali",
+                      "author_info": "QA lead at Trelleborg",
+                      "quote": "Microsoft Teams is one hundred percent stable."
+                    },
+                    {
+                      "author": "Arun Srivastav",
+                      "author_info": "CEO at Planfirma Technologies Private Limited",
+                      "quote": "Microsoft support is excellent, offering instantaneous assistance through either robo support or live personnel."
+                    },
+                    {
+                      "author": "Anna Virtsan",
+                      "author_info": "IT Project Manager at UkrSibbank",
+                      "quote": "We have cases where it took more than six months to resolve very basic issues."
+                    }
+                  ],
+                  "sentiment_scale": 10,
+                  "sentiment_score": 6.4,
+                  "summary": "Microsoft Teams support is responsive and available 24/7, though resolution time and standard support consistency need improvement."
+                },
+                {
+                  "product": "Slack Business - Enterprise",
+                  "quotes": [
+                    {
+                      "author": "reviewer2723727",
+                      "author_info": "Integration Engineer",
+                      "quote": "We tend to focus more on Workato for support, but internally we raise service requests with the infrastructure team for any issues related to Slack."
+                    },
+                    {
+                      "author": "Aleco Kapsuk",
+                      "author_info": "Da at hanasoft",
+                      "quote": "When I connected to Slack Business - Enterprise API, tutorials and documentation were available online."
+                    },
+                    {
+                      "author": "Akhil Viswam",
+                      "author_info": "Senior Consultant at a consultancy with 10,001+ employees",
+                      "quote": "If something was beyond their hands, then it would only be escalated to the external Slack team."
+                    }
+                  ],
+                  "sentiment_scale": 10,
+                  "sentiment_score": 5.8,
+                  "summary": "Slack's support is praised for efficiency and effectiveness, with positive ratings despite minimal direct user interaction needed."
+                }
+              ],
+              "theme": "Customer Service"
+            },
+            {
+              "sides": [
+                {
+                  "product": "Microsoft Teams",
+                  "quotes": [
+                    {
+                      "author": "Amar-Kumar",
+                      "author_info": "Technical Lead at a tech services company with 501-1,000 employees",
+                      "quote": "We have around thousands of employees in my project using it simultaneously and it is working smoothly."
+                    },
+                    {
+                      "author": "Rahul Thilak",
+                      "author_info": "Master in Cyber Security at Ganpat University",
+                      "quote": "Microsoft Teams is a scalable solution."
+                    },
+                    {
+                      "author": "Nikolay Bachvarov",
+                      "author_info": "Senior Software Engineer at Endava",
+                      "quote": "Microsoft Teams can be scalable for more than 1,000 people, and I have seen video conferences with 5,000 participants, so the scale is incredible."
+                    }
+                  ],
+                  "sentiment_scale": 10,
+                  "sentiment_score": 7.8,
+                  "summary": "Microsoft Teams is praised for its scalability, efficiently supporting large user groups and integrations across diverse organizations despite minor limitations."
+                },
+                {
+                  "product": "Slack Business - Enterprise",
+                  "quotes": [
+                    {
+                      "author": "DeanPark",
+                      "author_info": "Application Security Manager at Interact Intranet",
+                      "quote": "Slack is endlessly scalable."
+                    },
+                    {
+                      "author": "Aleco Kapsuk",
+                      "author_info": "Da at hanasoft",
+                      "quote": "Slack Business - Enterprise is a scalable product fitting for small businesses as well as enterprises, with no limitations on the number of users."
+                    },
+                    {
+                      "author": "Diksha Hirole",
+                      "author_info": "Data Engineer at BlazeClan Technologies",
+                      "quote": "Slack is not as comprehensive as Microsoft Teams in terms of scheduling and hosting meetings."
+                    }
+                  ],
+                  "sentiment_scale": 10,
+                  "sentiment_score": 7.2,
+                  "summary": "Slack Enterprise is highly scalable, supporting both small and large teams, though the free version has limitations."
+                }
+              ],
+              "theme": "Scalability Issues"
+            },
+            {
+              "sides": [
+                {
+                  "product": "Microsoft Teams",
+                  "quotes": [
+                    {
+                      "author": "Anna Virtsan",
+                      "author_info": "IT Project Manager at UkrSibbank",
+                      "quote": "I appreciate the ability of Microsoft Teams to control the quality of the call."
+                    },
+                    {
+                      "author": "AbderrahimTamim",
+                      "author_info": "IT Director at ATOS",
+                      "quote": "The kind of issue is that it always asks for the password, and I think for Citrix or for a shared platform, it is not really easy to manage, and it is not stable."
+                    },
+                    {
+                      "author": "Bolarinwa Opaleye",
+                      "author_info": "System Administrator at Interswitch",
+                      "quote": "In my experience, Microsoft Teams is stable."
+                    }
+                  ],
+                  "sentiment_scale": 10,
+                  "sentiment_score": 7.6,
+                  "summary": "Microsoft Teams is generally stable with high ratings, though minor issues like call drops and lags occasionally occur."
+                },
+                {
+                  "product": "Slack Business - Enterprise",
+                  "quotes": [
+                    {
+                      "author": "DeanPark",
+                      "author_info": "Application Security Manager at Interact Intranet",
+                      "quote": "It integrates with various systems, allowing us to manage site reliability, availability, and reliability."
+                    },
+                    {
+                      "author": "Awais Mehmood",
+                      "author_info": "Webflow Developer at Qureos",
+                      "quote": "Slack's stability is a perfect 10."
+                    },
+                    {
+                      "author": "Aleco Kapsuk",
+                      "author_info": "Da at hanasoft",
+                      "quote": "I do not see glitches, latency issues, or downtime."
+                    }
+                  ],
+                  "sentiment_scale": 10,
+                  "sentiment_score": 7.8,
+                  "summary": "Slack Business - Enterprise is stable and reliable, with minor issues and high user ratings for performance and communication."
+                }
+              ],
+              "theme": "Stability Issues"
+            },
+            {
+              "sides": [
+                {
+                  "product": "Microsoft Teams",
+                  "quotes": [
+                    {
+                      "author": "Arun Srivastav",
+                      "author_info": "CEO at Planfirma Technologies Private Limited",
+                      "quote": "AI capabilities should be integrated into Microsoft Teams to provide better transcript services and offer multiple language support."
+                    },
+                    {
+                      "author": "reviewer2563299",
+                      "author_info": "Microsoft Practice Lead at a tech services company with 11-50 employees",
+                      "quote": "The biggest issue with Microsoft Teams is switching identities, especially when communicating with external organizations."
+                    },
+                    {
+                      "author": "Daria Bolgar",
+                      "author_info": "Team Lead at a tech services company with 51-200 employees",
+                      "quote": "Microsoft Teams could be improved through more synchronization with other platforms like Calendly and Gmail."
+                    }
+                  ],
+                  "sentiment_scale": 10,
+                  "sentiment_score": null,
+                  "summary": "Microsoft Teams struggles with performance, stability, and usability issues, requiring improvements in interface, features, and AI integration."
+                },
+                {
+                  "product": "Slack Business - Enterprise",
+                  "quotes": [
+                    {
+                      "author": "reviewer2723727",
+                      "author_info": "Integration Engineer",
+                      "quote": "We can also improve the creation of channels, particularly in terms of privacy, security, flexibility, and the addition of members to newly created channels."
+                    },
+                    {
+                      "author": "Gaurab Patra",
+                      "author_info": "Co Founder at a tech consulting company with 11-50 employees",
+                      "quote": "There are a lot of integrations and custom integrations available, but I believe there are opportunities to make those integrations much easier and faster, particularly for business or non-technical people."
+                    },
+                    {
+                      "author": "Akhil Viswam",
+                      "author_info": "Senior Consultant at a consultancy with 10,001+ employees",
+                      "quote": "I would rate it a ten if it comes with some AI features, particularly using generative AI to produce summarization and other kinds of insights from communication in a more secure, data-secure way."
+                    }
+                  ],
+                  "sentiment_scale": 10,
+                  "sentiment_score": null,
+                  "summary": "Slack Business requires enhancements in video, integration, notifications, organization, customization, security, AI, multimedia sharing, and scheduling."
+                }
+              ],
+              "theme": "Room For Improvement"
+            },
+            {
+              "sides": [
+                {
+                  "product": "Microsoft Teams",
+                  "quotes": [
+                    {
+                      "author": "Arun Srivastav",
+                      "author_info": "CEO at Planfirma Technologies Private Limited",
+                      "quote": "Microsoft Teams is economical when purchased as part of an Office 365 bundle."
+                    },
+                    {
+                      "author": "reviewer2563299",
+                      "author_info": "Microsoft Practice Lead at a tech services company with 11-50 employees",
+                      "quote": "Microsoft Teams comes with Office 365 licenses like E3, but there are options for those who prefer not to pay for Teams by using alternative products like Slack."
+                    },
+                    {
+                      "author": "Manikumar David",
+                      "author_info": "IT Manager at R K Khanna and Associates",
+                      "quote": "Regarding the license, the Microsoft 365 license I am taking is quite expensive, and every year it goes higher."
+                    }
+                  ],
+                  "sentiment_scale": 10,
+                  "sentiment_score": null,
+                  "summary": "Microsoft Teams is often cost-effective with Microsoft 365, but stand-alone pricing varies, impacting perceived affordability."
+                },
+                {
+                  "product": "Slack Business - Enterprise",
+                  "quotes": [],
+                  "sentiment_scale": 10,
+                  "sentiment_score": null,
+                  "summary": "Slack Business provides pricing from free to $20 per user, with paid options offering advanced features for larger teams."
+                }
+              ],
+              "theme": "Setup Cost"
+            },
+            {
+              "sides": [
+                {
+                  "product": "Microsoft Teams",
+                  "quotes": [
+                    {
+                      "author": "Arun Srivastav",
+                      "author_info": "CEO at Planfirma Technologies Private Limited",
+                      "quote": "Teams offers the ability to record sessions and store them in OneDrive, which provides 1 terabyte of space."
+                    },
+                    {
+                      "author": "Daria Bolgar",
+                      "author_info": "Team Lead at a tech services company with 51-200 employees",
+                      "quote": "The platform is user-friendly and has positively impacted our communication, allowing us to communicate with people from different countries and cities in real time."
+                    },
+                    {
+                      "author": "Manikumar David",
+                      "author_info": "IT Manager at R K Khanna and Associates",
+                      "quote": "The biggest advantage of Microsoft Teams is that it is a combined package where I can do chat, video conferencing, work on spreadsheets, documents, and other things with many people sitting at my desk, which makes work easy, especially with clients who are in remote locations, so it saves a lot of time."
+                    }
+                  ],
+                  "sentiment_scale": 10,
+                  "sentiment_score": null,
+                  "summary": "Microsoft Teams boosts productivity with features like secure file sharing, Office 365 integration, and AI tools for seamless collaboration."
+                },
+                {
+                  "product": "Slack Business - Enterprise",
+                  "quotes": [
+                    {
+                      "author": "Awais Mehmood",
+                      "author_info": "Webflow Developer at Qureos",
+                      "quote": "In my experience, Slack is a stable product for communication, and I appreciate its automation features and integration of AI capabilities for enhancing specific functions."
+                    },
+                    {
+                      "author": "Aleco Kapsuk",
+                      "author_info": "Da at hanasoft",
+                      "quote": "Slack Business - Enterprise is beneficial for us primarily because the API was very beneficial, and that is the main one;"
+                    },
+                    {
+                      "author": "Akhil Viswam",
+                      "author_info": "Senior Consultant at a consultancy with 10,001+ employees",
+                      "quote": "We use the incoming webhook to push end results of automation, which makes our life easier by allowing us to easily check the status of our automation jobs through our corporate phone while in Slack itself."
+                    }
+                  ],
+                  "sentiment_scale": 10,
+                  "sentiment_score": null,
+                  "summary": "Slack Business - Enterprise excels with app integrations, customizable channels, and collaboration tools, surpassing competitors like Teams."
+                }
+              ],
+              "theme": "Valuable Features"
+            }
+          ],
+          "title": "Microsoft Teams vs Slack Business - Enterprise comparison",
+          "url": "https://www.peerspot.com/products/comparisons/microsoft-teams_vs_slack-business-enterprise"
+        },
+        "recordedAt": "2026-09-15T02:13:35.785408+00:00"
+      },
+      "execute": {
+        "provider": "peerspot-com",
+        "capability": "software-reviews/compare"
+      }
+    },
+    {
+      "id": "peerspot-com/software-reviews/product",
+      "provider": "peerspot-com",
+      "capability": "software-reviews/product",
+      "name": "Product",
+      "description": "One PeerSpot product page: average rating and review count, willingness to recommend, category ranking and mindshare, editorial review-theme summaries (valuable features, room for improvement, ROI, pricing, use cases, support, deployment, scalability, stability) with representative quotes, one-line summaries of individual reviews, reviewer company-size and industry breakdowns, and the comparison pages that link competitors.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "slug",
+          "type": "string",
+          "in": "body",
+          "about": "PeerSpot product slug, the part between /products/ and -reviews in the product URL, e.g. slack-business-enterprise. Obtain it from search. Pattern: ^[a-z0-9-]{1,200}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "https://www.peerspot.com/products/<slug>-reviews URL. Supply this or slug."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "slug",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One PeerSpot product page: average rating and review count, willingness to recommend, category ranking and mindshare, editorial review-theme summaries (valuable features, room for improvement, ROI, pricing, use cases, support, deployment, scalability, stability) with representative quotes, one-line summaries of individual reviews, reviewer company-size and industry breakdowns, and the comparison pages that link competitors.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "average_rating",
+            "type": "number"
+          },
+          {
+            "name": "categories",
+            "type": "object[]"
+          },
+          {
+            "name": "comparisons",
+            "type": "object[]"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "mindshare",
+            "type": "string"
+          },
+          {
+            "name": "mindshare_distribution",
+            "type": "object[]"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "pricing",
+            "type": "object"
+          },
+          {
+            "name": "ranking_badge",
+            "type": "string"
+          },
+          {
+            "name": "rating_scale",
+            "type": "number"
+          },
+          {
+            "name": "review_count",
+            "type": "number"
+          },
+          {
+            "name": "review_summaries",
+            "type": "object[]"
+          },
+          {
+            "name": "reviewers_by_company_size",
+            "type": "object[]"
+          },
+          {
+            "name": "sample_customers",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "themes",
+            "type": "object[]"
+          },
+          {
+            "name": "top_industries",
+            "type": "object[]"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "vendor",
+            "type": "string"
+          },
+          {
+            "name": "visitors_by_company_size",
+            "type": "object[]"
+          },
+          {
+            "name": "willing_to_recommend_pct",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "slug": "slack-business-enterprise"
+        },
+        "response": {
+          "average_rating": 4.2,
+          "categories": [
+            {
+              "name": "Enterprise Social Software",
+              "url": "https://www.peerspot.com/categories/enterprise-social-software"
+            }
+          ],
+          "comparisons": [
+            {
+              "label": "Slack Business - Enterprise vs Adobe Experience Manager",
+              "product_a": "adobe-experience-manager",
+              "product_b": "slack-business-enterprise",
+              "url": "https://www.peerspot.com/products/comparisons/adobe-experience-manager_vs_slack-business-enterprise"
+            },
+            {
+              "label": "Atlassian Confluence vs Slack Business - Enterprise",
+              "product_a": "atlassian-confluence",
+              "product_b": "slack-business-enterprise",
+              "url": "https://www.peerspot.com/products/comparisons/atlassian-confluence_vs_slack-business-enterprise"
+            },
+            {
+              "label": "Microsoft Teams vs Slack Business - Enterprise",
+              "product_a": "microsoft-teams",
+              "product_b": "slack-business-enterprise",
+              "url": "https://www.peerspot.com/products/comparisons/microsoft-teams_vs_slack-business-enterprise"
+            },
+            {
+              "label": "Bitrix24 vs Slack Business - Enterprise",
+              "product_a": "bitrix24",
+              "product_b": "slack-business-enterprise",
+              "url": "https://www.peerspot.com/products/comparisons/bitrix24_vs_slack-business-enterprise"
+            },
+            {
+              "label": "Jive vs Slack Business - Enterprise",
+              "product_a": "jive",
+              "product_b": "slack-business-enterprise",
+              "url": "https://www.peerspot.com/products/comparisons/jive_vs_slack-business-enterprise"
+            },
+            {
+              "label": "Sendbird vs Slack Business - Enterprise",
+              "product_a": "sendbird",
+              "product_b": "slack-business-enterprise",
+              "url": "https://www.peerspot.com/products/comparisons/sendbird_vs_slack-business-enterprise"
+            },
+            {
+              "label": "Yammer vs Slack Business - Enterprise",
+              "product_a": "slack-business-enterprise",
+              "product_b": "yammer",
+              "url": "https://www.peerspot.com/products/comparisons/slack-business-enterprise_vs_yammer"
+            },
+            {
+              "label": "HCL Connections vs Slack Business - Enterprise",
+              "product_a": "hcl-connections",
+              "product_b": "slack-business-enterprise",
+              "url": "https://www.peerspot.com/products/comparisons/hcl-connections_vs_slack-business-enterprise"
+            },
+            {
+              "label": "SAP Build Work Zone vs Slack Business - Enterprise",
+              "product_a": "sap-build-work-zone",
+              "product_b": "slack-business-enterprise",
+              "url": "https://www.peerspot.com/products/comparisons/sap-build-work-zone_vs_slack-business-enterprise"
+            },
+            {
+              "label": "Symphony vs Slack Business - Enterprise",
+              "product_a": "slack-business-enterprise",
+              "product_b": "symphony-30191",
+              "url": "https://www.peerspot.com/products/comparisons/slack-business-enterprise_vs_symphony-30191"
+            },
+            {
+              "label": "Oracle Beehive vs Slack Business - Enterprise",
+              "product_a": "oracle-beehive",
+              "product_b": "slack-business-enterprise",
+              "url": "https://www.peerspot.com/products/comparisons/oracle-beehive_vs_slack-business-enterprise"
+            },
+            {
+              "label": "Chatter vs Slack Business - Enterprise",
+              "product_a": "chatter",
+              "product_b": "slack-business-enterprise",
+              "url": "https://www.peerspot.com/products/comparisons/chatter_vs_slack-business-enterprise"
+            },
+            {
+              "label": "Workplace by Facebook vs Slack Business - Enterprise",
+              "product_a": "slack-business-enterprise",
+              "product_b": "workplace-by-facebook",
+              "url": "https://www.peerspot.com/products/comparisons/slack-business-enterprise_vs_workplace-by-facebook"
+            },
+            {
+              "label": "TIBCO tibbr vs Slack Business - Enterprise",
+              "product_a": "slack-business-enterprise",
+              "product_b": "tibco-tibbr",
+              "url": "https://www.peerspot.com/products/comparisons/slack-business-enterprise_vs_tibco-tibbr"
+            },
+            {
+              "label": "Avaya Spaces vs Slack Business - Enterprise",
+              "product_a": "avaya-spaces",
+              "product_b": "slack-business-enterprise",
+              "url": "https://www.peerspot.com/products/comparisons/avaya-spaces_vs_slack-business-enterprise"
+            }
+          ],
+          "description": "Slack Business - Enterprise facilitates team communication and collaboration with integration capabilities and a user-friendly interface, supporting mobile and web platforms. It enhances productivity through efficient organization, instant communication, and extensive customization options.Designed for seamless integration with apps and services, Slack Business - Enterprise provides efficient organization through channels and threads, instant communication, file sharing, and video calls. Productivity is boosted via notifications, reminders, bots, and automation. Customization enhances the user experience, promoting collaboration. However, improvement areas include video chat, meeting functions, and third-party tool integration. Users prioritize enhanced UI, security, and document collaboration, alongside better scalability, stability, and attachment browsing capabilities.What are the key features of Slack Business - Enterprise?\nSeamless Integration: Connect with a range of apps and services to streamline operations.\nEfficient Organization: Utilize channels and threads for organized communication.\nInstant Communication: Facilitate real-time messaging for immediate interaction.\nFile Sharing: Share documents and media effortlessly within the platform.\nVideo Calls: Support for video meetings with screen sharing capabilities.\nAutomation: Boost productivity with notifications, reminders, and bots.\nCustomization: Tailor UI and integrations to enhance the user experience.\nSearch Function: Easily locate past messages and information.\nWhat benefits and ROI should users consider?\nEnhanced Collaboration: Facilitates teamwork with organized channels and real-time messaging.\nImproved Productivity: Automation and integrations streamline workflow processes.\nFlexibility: Mobile and web platform support suits diverse work environments.\nCustomizability: Tailor functionalities to specific needs for better engagement.\nIntegration Capabilities: Connect with tools like Google Drive and Zoom to enhance workflows.\nSlack Business - Enterprise is widely used across various industries, serving as a communication hub within organizations. Its features support internal and external communication, project management, and workflow optimization. Industries benefit from its integration with Google Drive and Zoom, enabling efficient collaboration and streamlined operations.",
+          "id": "29323",
+          "mindshare": "As of September 2026, the mindshare of Slack Business - Enterprise in the Enterprise Social Software category stands at 10.5%, down from 15.5% compared to the previous year, according to calculations based on PeerSpot user engagement data.",
+          "mindshare_distribution": [
+            {
+              "label": "Slack Business - Enterprise",
+              "value": 10.5
+            },
+            {
+              "label": "Microsoft Teams",
+              "value": 7.2
+            },
+            {
+              "label": "Atlassian Confluence",
+              "value": 6.4
+            },
+            {
+              "label": "Other",
+              "value": 75.9
+            }
+          ],
+          "name": "Slack Business - Enterprise",
+          "observed_at_ms": 1789438414599,
+          "pricing": {
+            "quotes": [
+              "It is an affordable solution.",
+              "The tool's pricing could be cheaper.",
+              "The solution’s pricing is cheap."
+            ],
+            "summary": "Slack Business - Enterprise offers a free version with substantial features, appealing to smaller teams without extensive security or storage needs. However, larger teams with specific compliance requirements may find themselves opting for paid plans, which generally cost $15 to $20 per user monthly. While considered expensive by some, users appreciate its value compared to other solutions. Pricing varies based on features and team size, with some finding it reasonable and others seeking more flexible plans.",
+            "theme": "Pricing"
+          },
+          "ranking_badge": "Slack Business - Enterprise is first in Enterprise Social Software based on this month's crowdsourced ranking score.",
+          "rating_scale": 5,
+          "review_count": 83,
+          "review_summaries": [
+            {
+              "author_info": "Senior Consultant at a consultancy with 10,001+ employees",
+              "rating": 4,
+              "summary": "I've found Slack Business - Enterprise excellent for team communication, especially through threads and webhooks, helping us manage automation and tickets efficiently, though I’d love to see multimedia support and AI-powered summarization features added."
+            },
+            {
+              "author_info": "Co Founder at a tech consulting company with 11-50 employees",
+              "rating": 4,
+              "summary": "We've used Slack Business - Enterprise for over two years, mainly for deep integrations and external collaboration, and while it's effective, simpler integration setup for non-technical users would make it even better."
+            },
+            {
+              "author_info": "Director at Xander & Thomas",
+              "rating": 4.5,
+              "summary": "I've used Slack Business - Enterprise for internal communication and find it simpler and more stable than Teams, though screen sharing and direct calls could improve. Search works well, and once set, notifications are effective."
+            },
+            {
+              "author_info": "Senior IT Security Specialist at Citadele Banka AS",
+              "rating": 4,
+              "summary": "I primarily use Teams for messaging in web application scanning work; it's easy to use, looks better than Slack, and functions well, though I haven’t used it extensively enough to fully evaluate all features."
+            },
+            {
+              "author_info": "CEO at PeerSpot",
+              "rating": 4,
+              "summary": "I've used Slack Business - Enterprise for eight years to streamline R&D and deployment communications, especially with our external DevOps team. It’s effective, though sometimes distracting, so we limit its use company-wide."
+            },
+            {
+              "author_info": "Da at hanasoft",
+              "rating": 5,
+              "summary": "I’ve used Slack Business - Enterprise for six years and found it reliable, feature-rich, and easy to use, especially for team communication and API integration, though minor improvements like text color customization would enhance the experience."
+            },
+            {
+              "author_info": "Integration Engineer",
+              "rating": 4,
+              "summary": "In my company, we've used Slack for two years as a primary communication tool. It's user-friendly with valuable features like customizable channels and integration with tools like Jira. However, app connectivity and search functionality could be improved compared to Microsoft Teams."
+            },
+            {
+              "author_info": "Webflow Developer at Qureos",
+              "rating": 5,
+              "summary": "I've been using Slack for communication with colleagues and clients for over four years. Its automation and integration features are valuable, though pricing could be more flexible for freelancers. Despite this, I haven't noticed significant ROI."
+            },
+            {
+              "author_info": "Application Security Manager at Interact Intranet",
+              "rating": 4,
+              "summary": "We use Slack for collaborative tasks, especially software release management involving various teams. Its threaded discussions, wikis, and task-tracking features enhance workflow, though channel management could improve. Previously, we relied on multiple tools. Slack has boosted our process efficiency."
+            },
+            {
+              "author_info": "Data Engineer at BlazeClan Technologies",
+              "rating": 3.5,
+              "summary": "I use Slack for internal communication at my company, appreciating its Google Calendar integration and interactive features. However, it sometimes unexpectedly shuts down, and I wish it included a call group feature for easier meeting scheduling."
+            }
+          ],
+          "reviewers_by_company_size": [
+            {
+              "label": "Small Business",
+              "value": 46
+            },
+            {
+              "label": "Midsize Enterprise",
+              "value": 11
+            },
+            {
+              "label": "Large Enterprise",
+              "value": 19
+            }
+          ],
+          "sample_customers": "Strava, The New York Times, Spotify, Blue Bottle Coffee Company, Eventbrite, Box, Circa, Stripe",
+          "slug": "slack-business-enterprise",
+          "source": "peerspot.com",
+          "source_url": "https://www.peerspot.com/products/slack-business-enterprise-reviews",
+          "themes": [
+            {
+              "quotes": [
+                "It is good; it is one of the best ones out there, and when you're partnering with teams outside your organization, you can't really do without Slack because it becomes a necessity.",
+                "It has not crashed once in three years, so I would say it's pretty good.",
+                "It is easy to set up."
+              ],
+              "summary": "Slack Business - Enterprise offers seamless group and one-on-one chats, cross-platform integration, and strong third-party automation connections. Key features include customizable channels, file sharing, instant messaging, and integration capabilities with services like Jira and Zapier. The platform's intuitive search function, notification management, and customizable settings enhance productivity. Users appreciate the huddle feature for instant video calls and Slack's engaging interface with support for integrations and bots, making it highly adaptable for team collaboration.",
+              "theme": "Valuable Features"
+            },
+            {
+              "quotes": [
+                "Their notifications are generally not very prompt. There is a problem with their notification engine, and sometimes, I end up pressing on notifications.",
+                "Everything has room for improvement, so I think Slack could add additional features without making the solution slower or more difficult to use.",
+                "There should be better integration between Slack and Office 365."
+              ],
+              "summary": "Slack Business - Enterprise could enhance its integrations, particularly involving video conferencing and calendar features. Users express a need for better notifications, lag reduction, and improved meeting scheduling capabilities within the platform. Expanding document collaboration and increasing security measures, especially concerning large file sharing and user privacy, are also desired. Improved integration with tools like CRM and Office 365 would benefit productivity. Some users would appreciate AI-driven insights and smoother functionality for mobile and desktop versions.",
+              "theme": "Room for Improvement"
+            },
+            {
+              "quotes": [],
+              "summary": "Users experienced an approximate 40% ROI with Slack Business - Enterprise. It was deemed worth the investment due to its efficiency in organizing content and saving time compared to Gmail. It improved productivity and made coordination effortless, enhancing group work and information retrieval. There were notable enhancements in collaboration, particularly in release and cloud management. While some expressed satisfaction, citing a seven out of ten ROI, others noted no noticeable investment returns.",
+              "theme": "ROI"
+            },
+            {
+              "quotes": [
+                "It is an affordable solution.",
+                "The tool's pricing could be cheaper.",
+                "The solution’s pricing is cheap."
+              ],
+              "summary": "Slack Business - Enterprise offers a free version with substantial features, appealing to smaller teams without extensive security or storage needs. However, larger teams with specific compliance requirements may find themselves opting for paid plans, which generally cost $15 to $20 per user monthly. While considered expensive by some, users appreciate its value compared to other solutions. Pricing varies based on features and team size, with some finding it reasonable and others seeking more flexible plans.",
+              "theme": "Pricing"
+            },
+            {
+              "quotes": [],
+              "summary": "Organizations use Slack Business - Enterprise primarily for internal communication, integrating with tools, real-time collaboration, and external communications. It facilitates channels for specific topics and projects, improves document sharing, and supports remote work. The platform's robust integration supports workflows, automates notifications for issues, and assists with monitoring cloud operations. Teams rely on collaborative features for discussions and sharing relevant updates, often replacing traditional emails with dedicated channels for efficiency and organization.",
+              "theme": "Popular Use Cases"
+            },
+            {
+              "quotes": [],
+              "summary": "Many users haven't interacted with Slack Business - Enterprise customer support, relying mostly on internal teams. Those who have contacted support report it as responsive and helpful, particularly via Twitter and for API-related inquiries. Customer service is often rated highly, though some find the documentation sufficient without needing direct contact. However, documentation is noted for strong guidance. When involved, external support quickly addresses issues, showing efficiency in resolution efforts.",
+              "theme": "Service and Support"
+            },
+            {
+              "quotes": [],
+              "summary": "Users consistently find Slack Business - Enterprise's initial setup intuitive and effortless, often describing it as quick and simple. Many praise its cloud-based nature, highlighting minimal installation time and ease of use across devices. Some mention straightforward integration processes, while others appreciate the guidance provided during channel setup and user invitations. A few note that administrative oversight is beneficial to prevent unrestricted channel creation. The setup process frequently receives high ratings for its ease.",
+              "theme": "Deployment"
+            },
+            {
+              "quotes": [],
+              "summary": "Slack Business - Enterprise is recognized as highly scalable by various organizations. It accommodates from small teams to companies with thousands of users. While the free version has limitations, especially with message archiving, the enterprise edition scales effectively. Many affirm its ability to handle large teams and appreciate its capacity to adapt as user base increases. Organizations consistently rate its scalability highly, praising its suitability for diverse business needs.",
+              "theme": "Scalability"
+            },
+            {
+              "quotes": [],
+              "summary": "Slack Business - Enterprise exhibits excellent reliability, with most users praising its stability. Although occasional minor issues arise, such as lag, slow loading post-updates, or rare app crashes, many users report it as consistently stable on various platforms, including Linux and Windows. Some users experience better performance on desktop over mobile. Despite minor bugs, stability ratings often range from 6 to 10 out of 10. Businesses highlight its impressive uptime, making it a dependable communication tool.",
+              "theme": "Stability"
+            }
+          ],
+          "top_industries": [
+            {
+              "label": "Outsourcing Company",
+              "value": 17
+            },
+            {
+              "label": "Financial Services Firm",
+              "value": 12
+            },
+            {
+              "label": "Construction Company",
+              "value": 9
+            },
+            {
+              "label": "Performing Arts",
+              "value": 9
+            },
+            {
+              "label": "Manufacturing Company",
+              "value": 6
+            },
+            {
+              "label": "Comms Service Provider",
+              "value": 6
+            },
+            {
+              "label": "Marketing Services Firm",
+              "value": 5
+            },
+            {
+              "label": "Retailer",
+              "value": 4
+            },
+            {
+              "label": "Healthcare Company",
+              "value": 4
+            },
+            {
+              "label": "Computer Software Company",
+              "value": 4
+            },
+            {
+              "label": "Insurance Company",
+              "value": 4
+            },
+            {
+              "label": "Educational Organization",
+              "value": 3
+            },
+            {
+              "label": "Religious Institution",
+              "value": 2
+            },
+            {
+              "label": "Government",
+              "value": 2
+            },
+            {
+              "label": "University",
+              "value": 2
+            },
+            {
+              "label": "Energy/Utilities Company",
+              "value": 2
+            },
+            {
+              "label": "Transportation Company",
+              "value": 2
+            },
+            {
+              "label": "Pharma/Biotech Company",
+              "value": 2
+            },
+            {
+              "label": "Real Estate/Law Firm",
+              "value": 1
+            },
+            {
+              "label": "Recreational Facilities/Services Company",
+              "value": 1
+            },
+            {
+              "label": "Renewables & Environment Company",
+              "value": 1
+            },
+            {
+              "label": "Hospitality Company",
+              "value": 1
+            },
+            {
+              "label": "Recruiting/Hr Firm",
+              "value": 1
+            },
+            {
+              "label": "Museum Or Institution",
+              "value": 1
+            }
+          ],
+          "url": "https://www.peerspot.com/products/slack-business-enterprise-reviews",
+          "vendor": "Slack",
+          "visitors_by_company_size": [
+            {
+              "label": "Small Business",
+              "value": 204
+            },
+            {
+              "label": "Midsize Enterprise",
+              "value": 50
+            },
+            {
+              "label": "Large Enterprise",
+              "value": 100
+            }
+          ],
+          "willing_to_recommend_pct": 93
+        },
+        "recordedAt": "2026-09-15T02:13:34.599253+00:00"
+      },
+      "execute": {
+        "provider": "peerspot-com",
+        "capability": "software-reviews/product"
+      }
+    },
+    {
+      "id": "peerspot-com/software-reviews/reviews",
+      "provider": "peerspot-com",
+      "capability": "software-reviews/reviews",
+      "name": "Reviews",
+      "description": "One page (10 reviews) of full-text PeerSpot reviews for a product: star rating, title, date, reviewer role and labels, company size, industry, pros, cons, every interview section (use case, valuable features, room for improvement, pricing/licensing, setup, support, ROI, ...) and the review permalink. Pass next_page to continue.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page of 10 reviews, newest first.",
+          "default": 1,
+          "min": 1,
+          "max": 500
+        },
+        {
+          "name": "slug",
+          "type": "string",
+          "in": "body",
+          "about": "PeerSpot product slug, the part between /products/ and -reviews in the product URL, e.g. slack-business-enterprise. Obtain it from search. Pattern: ^[a-z0-9-]{1,200}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "https://www.peerspot.com/products/<slug>-reviews URL. Supply this or slug."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "slug",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One page (10 reviews) of full-text PeerSpot reviews for a product: star rating, title, date, reviewer role and labels, company size, industry, pros, cons, every interview section (use case, valuable features, room for improvement, pricing/licensing, setup, support, ROI, ...) and the review permalink. Pass next_page to continue.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "has_next",
+            "type": "boolean"
+          },
+          {
+            "name": "next_page",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "product",
+            "type": "object"
+          },
+          {
+            "name": "reviews",
+            "type": "object[]"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "page": 2,
+          "slug": "slack-business-enterprise"
+        },
+        "response": {
+          "count": 10,
+          "has_next": true,
+          "next_page": 3,
+          "observed_at_ms": 1789438415149,
+          "page": 2,
+          "product": {
+            "average_rating": 4.2,
+            "id": "29323",
+            "name": "Slack Business - Enterprise",
+            "review_count": 13,
+            "slug": "slack-business-enterprise",
+            "url": "https://www.peerspot.com/products/slack-business-enterprise-reviews",
+            "vendor": null
+          },
+          "reviews": [
+            {
+              "author": "Rizwan-Khan",
+              "author_job_title": "Information Technology Operations Manager at Vertilio",
+              "author_profile_url": "https://www.peerspot.com/users/rizwan-khan-844681",
+              "company_size": "C",
+              "cons": [
+                "Slack's screen sharing might also add the remote control feature, which is not there."
+              ],
+              "date_label": "Aug 9, 2024",
+              "id": "7029758",
+              "industry": "tech_services",
+              "job_level": "manager",
+              "pricing_text": null,
+              "pros": [
+                "The most valuable features of Slack are basic chatting, file sharing, and screen sharing."
+              ],
+              "published_at_ms": 1723217585000,
+              "rating": 5,
+              "rating_scale": 5,
+              "reviewer_labels": [
+                "Real User"
+              ],
+              "sections": [
+                {
+                  "heading": "What is our primary use case?",
+                  "key": "use_case",
+                  "text": "We use the solution for internal communication within the company. We also use Slack for one-to-one messages and audio and video meetings."
+                },
+                {
+                  "heading": "What is most valuable?",
+                  "key": "valuable_features",
+                  "text": "The most valuable features of Slack are basic chatting, file sharing, and screen sharing. I've also used the solution for automation."
+                },
+                {
+                  "heading": "What needs improvement?",
+                  "key": "room_for_improvement",
+                  "text": "Slack's screen sharing might also add the remote control feature, which is not there. You cannot control somebody else's screen if they're sharing it. You can only view it. That is one feature that could help."
+                },
+                {
+                  "heading": "For how long have I used the solution?",
+                  "key": "use_of_solution",
+                  "text": "I have been using Slack for eight to nine years."
+                },
+                {
+                  "heading": "What do I think about the stability of the solution?",
+                  "key": "stability_issues",
+                  "text": "The solution's stability is good enough. Sometimes, it hangs a little, but you can force reload it to make it work. I rate the solution’s stability a seven out of ten."
+                },
+                {
+                  "heading": "What do I think about the scalability of the solution?",
+                  "key": "scalability_issues",
+                  "text": "Around 800 users use the solution in our organization on a daily basis. I've used the solution with 20 to 30 people, and it has worked fine."
+                },
+                {
+                  "heading": "How was the initial setup?",
+                  "key": "initial_setup",
+                  "text": "The solution's initial setup is easy. On a scale from one to ten, where one is difficult and ten is easy, I rate the solution's initial setup an eight to nine out of ten."
+                },
+                {
+                  "heading": "What was our ROI?",
+                  "key": "ROI",
+                  "text": "The solution improves productivity and makes it very easy to coordinate with your teammates. Slack makes it easy to work in groups and easily search for information."
+                },
+                {
+                  "heading": "What other advice do I have?",
+                  "key": "other_advice",
+                  "text": "Slack has improved the way our organization functions. It spares you the trouble of emailing back and forth. You can just hop on a channel and interact with all the interested parties rather than waiting for emails to come and then responding to them. The solution really improves the organization's productivity. I was running a monitoring setup. Whenever there was a high-priority alert, I linked it through Slack's webhooks feature so that I would receive a message on a certain Slack channel that something was down. I would recommend the solution to other users. Overall, I rate the solution ten out of ten."
+                },
+                {
+                  "heading": "Which deployment model are you using for this solution?",
+                  "key": "deployment_model",
+                  "text": "On-premises"
+                }
+              ],
+              "text": "We use the solution for internal communication within the company. We also use Slack for one-to-one messages and audio and video meetings.\n\nThe most valuable features of Slack are basic chatting, file sharing, and screen sharing. I've also used the solution for automation.\n\nSlack's screen sharing might also add the remote control feature, which is not there. You cannot control somebody else's screen if they're sharing it. You can only view it. That is one feature that could help.\n\nI have been using Slack for eight to nine years.\n\nThe solution's stability is good enough. Sometimes, it hangs a little, but you can force reload it to make it work. I rate the solution’s stability a seven out of ten.\n\nAround 800 users use the solution in our organization on a daily basis. I've used the solution with 20 to 30 people, and it has worked fine.\n\nThe solution's initial setup is easy. On a scale from one to ten, where one is difficult and ten is easy, I rate the solution's initial setup an eight to nine out of ten.\n\nThe solution improves productivity and makes it very easy to coordinate with your teammates. Slack makes it easy to work in groups and easily search for information.\n\nSlack has improved the way our organization functions. It spares you the trouble of emailing back and forth. You can just hop on a channel and interact with all the interested parties rather than waiting for emails to come and then responding to them. The solution really improves the organization's productivity. I was running a monitoring setup. Whenever there was a high-priority alert, I linked it through Slack's webhooks feature so that I would receive a message on a certain Slack channel that something was down. I would recommend the solution to other users. Overall, I rate the solution ten out of ten.\n\nOn-premises",
+              "title": "Used for internal communication within the company",
+              "url": "https://www.peerspot.com/product_reviews/slack-business-enterprise-review-7029758-by-rizwan-khan",
+              "word_count": 396
+            },
+            {
+              "author": "Rajkumar-Santhanam",
+              "author_job_title": "Support Engineer at Salesforce",
+              "author_profile_url": null,
+              "company_size": "I",
+              "cons": [
+                "In Slack, there are areas for accessibility improvements."
+              ],
+              "date_label": "Nov 24, 2024",
+              "id": "7649814",
+              "industry": "tech_vendor",
+              "job_level": "staff-specialty",
+              "pricing_text": null,
+              "pros": [
+                "Slack offers the ability to make customizable applications and plugins."
+              ],
+              "published_at_ms": 1732471968000,
+              "rating": 4,
+              "rating_scale": 5,
+              "reviewer_labels": [
+                "Real User"
+              ],
+              "sections": [
+                {
+                  "heading": "What is our primary use case?",
+                  "key": "use_case",
+                  "text": "Our clients use Slack because it is highly customizable, allowing us to create applications and plugins to easily connect with various applications and receive updates."
+                },
+                {
+                  "heading": "What is most valuable?",
+                  "key": "valuable_features",
+                  "text": "Slack offers the ability to make customizable applications and plugins. It facilitates the connection of various applications to receive and send updates. It's for popular applications like the calendar and others and it is also adaptable for cloud applications, making customization straightforward."
+                },
+                {
+                  "heading": "What needs improvement?",
+                  "key": "room_for_improvement",
+                  "text": "In Slack, there are areas for accessibility improvements. For example, Canvas has options for reading documents in particular channels, however, these could be more accessible. There are some accessibility glitches where status is not accurate, unlike Microsoft Teams, which provide accurate status updates."
+                },
+                {
+                  "heading": "For how long have I used the solution?",
+                  "key": "use_of_solution",
+                  "text": "I've been using Slack from July or September to November, which accounts for one and a half years now."
+                },
+                {
+                  "heading": "What do I think about the stability of the solution?",
+                  "key": "stability_issues",
+                  "text": "The stability is rated six to seven out of ten. It can benefit from updates, as it's sometimes not easy to restart."
+                },
+                {
+                  "heading": "What do I think about the scalability of the solution?",
+                  "key": "scalability_issues",
+                  "text": "The scalability is rated as high, with a score of eight out of ten."
+                },
+                {
+                  "heading": "How are customer service and support?",
+                  "key": "customer_service",
+                  "text": "Customer service and support can be rated as an eight out of ten, with good support and the ability to report issues."
+                },
+                {
+                  "heading": "How would you rate customer service and support?",
+                  "key": "customer_service_rating",
+                  "text": "Positive"
+                },
+                {
+                  "heading": "How was the initial setup?",
+                  "key": "initial_setup",
+                  "text": "The initial setup is rated nine out of ten, indicating it is easy."
+                },
+                {
+                  "heading": "What about the implementation team?",
+                  "key": "implementation_team",
+                  "text": "We are like an implementer that acts as a partner."
+                },
+                {
+                  "heading": "What other advice do I have?",
+                  "key": "other_advice",
+                  "text": "I would recommend Slack to other people, and I would rate the overall solution as an eight out of ten."
+                }
+              ],
+              "text": "Our clients use Slack because it is highly customizable, allowing us to create applications and plugins to easily connect with various applications and receive updates.\n\nSlack offers the ability to make customizable applications and plugins. It facilitates the connection of various applications to receive and send updates. It's for popular applications like the calendar and others and it is also adaptable for cloud applications, making customization straightforward.\n\nIn Slack, there are areas for accessibility improvements. For example, Canvas has options for reading documents in particular channels, however, these could be more accessible. There are some accessibility glitches where status is not accurate, unlike Microsoft Teams, which provide accurate status updates.\n\nI've been using Slack from July or September to November, which accounts for one and a half years now.\n\nThe stability is rated six to seven out of ten. It can benefit from updates, as it's sometimes not easy to restart.\n\nThe scalability is rated as high, with a score of eight out of ten.\n\nCustomer service and support can be rated as an eight out of ten, with good support and the ability to report issues.\n\nPositive\n\nThe initial setup is rated nine out of ten, indicating it is easy.\n\nWe are like an implementer that acts as a partner.\n\nI would recommend Slack to other people, and I would rate the overall solution as an eight out of ten.",
+              "title": "Creates customizable applications while improving accessibility features",
+              "url": "https://www.peerspot.com/product_reviews/slack-business-enterprise-review-7649814-by-rajkumar-santhanam",
+              "word_count": 312
+            }
+          ],
+          "source": "peerspot.com",
+          "source_url": "https://www.peerspot.com/products/slack-business-enterprise-reviews?page=2"
+        },
+        "recordedAt": "2026-09-15T02:13:35.149153+00:00"
+      },
+      "execute": {
+        "provider": "peerspot-com",
+        "capability": "software-reviews/reviews"
+      }
+    },
+    {
+      "id": "peerspot-com/software-reviews/search",
+      "provider": "peerspot-com",
+      "capability": "software-reviews/search",
+      "name": "Search",
+      "description": "Find PeerSpot product pages for a vendor or product name. Returns up to 10 matching products with the slug needed by product, reviews and compare. PeerSpot's search is approximate (Rimini lists Gemini products), so each product carries match: exact (same words as the query), partial (every query word is a word or word prefix of the name) or fuzzy (PeerSpot's guess), and exact_match says whether any product matches exactly. A result with exact_match false and only fuzzy products means the vendor most likely has no PeerSpot page. Empty when nothing matches.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Vendor or product name, e.g. HubSpot, Microsoft Teams, Zendesk.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Find PeerSpot product pages for a vendor or product name. Returns up to 10 matching products with the slug needed by product, reviews and compare. PeerSpot's search is approximate (Rimini lists Gemini products), so each product carries match: exact (same words as the query), partial (every query word is a word or word prefix of the name) or fuzzy (PeerSpot's guess), and exact_match says whether any product matches exactly. A result with exact_match false and only fuzzy products means the vendor most likely has no PeerSpot page. Empty when nothing matches.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "exact_match",
+            "type": "boolean",
+            "about": "True when at least one product's match is exact."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "products",
+            "type": "object[]"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "hubspot"
+        },
+        "response": {
+          "count": 10,
+          "exact_match": false,
+          "observed_at_ms": 1790120603424,
+          "products": [
+            {
+              "match": "partial",
+              "name": "HubSpot CRM",
+              "slug": "hubspot-crm",
+              "url": "https://www.peerspot.com/products/hubspot-crm-reviews"
+            },
+            {
+              "match": "partial",
+              "name": "HubSpot Brands",
+              "slug": "hubspot-brands",
+              "url": "https://www.peerspot.com/products/hubspot-brands-reviews"
+            },
+            {
+              "match": "partial",
+              "name": "HubSpot Service Hub",
+              "slug": "hubspot-service-hub",
+              "url": "https://www.peerspot.com/products/hubspot-service-hub-reviews"
+            },
+            {
+              "match": "partial",
+              "name": "HubSpot CMS Hub",
+              "slug": "hubspot-cms-hub",
+              "url": "https://www.peerspot.com/products/hubspot-cms-hub-reviews"
+            },
+            {
+              "match": "partial",
+              "name": "HubSpot Sales Hub",
+              "slug": "hubspot-sales-hub",
+              "url": "https://www.peerspot.com/products/hubspot-sales-hub-reviews"
+            },
+            {
+              "match": "partial",
+              "name": "HubSpot Marketing Hub",
+              "slug": "hubspot-marketing-hub",
+              "url": "https://www.peerspot.com/products/hubspot-marketing-hub-reviews"
+            },
+            {
+              "match": "partial",
+              "name": "Hubspot Academy Agent",
+              "slug": "hubspot-academy-agent",
+              "url": "https://www.peerspot.com/products/hubspot-academy-agent-reviews"
+            },
+            {
+              "match": "partial",
+              "name": "HubSpot Marketing Hub Enterprise",
+              "slug": "hubspot-marketing-hub-enterprise",
+              "url": "https://www.peerspot.com/products/hubspot-marketing-hub-enterprise-reviews"
+            },
+            {
+              "match": "partial",
+              "name": "HubSpot Content Hub Enterprise",
+              "slug": "hubspot-content-hub-enterprise",
+              "url": "https://www.peerspot.com/products/hubspot-content-hub-enterprise-reviews"
+            },
+            {
+              "match": "partial",
+              "name": "HubSpot Marketing Hub Professional",
+              "slug": "hubspot-marketing-hub-professional",
+              "url": "https://www.peerspot.com/products/hubspot-marketing-hub-professional-reviews"
+            }
+          ],
+          "query": "hubspot",
+          "source": "peerspot.com",
+          "source_url": "https://www.peerspot.com/search?item_type=Product&search=hubspot"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "peerspot-com",
+        "capability": "software-reviews/search"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1646 @@
+{
+  "id": "usaspending-gov",
+  "provider": "usaspending-gov",
+  "name": "USAspending",
+  "description": "Federal awards, transactions, recipients and agencies from USAspending.gov.",
+  "toolCount": 7,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "usaspending-gov"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "usaspending-gov/agencies/agency",
+      "provider": "usaspending-gov",
+      "capability": "agencies/agency",
+      "name": "Agency",
+      "description": "Toptier agency overview for a fiscal year by CGAC/FREC code (097 Department of Defense, 075 Health and Human Services, 036 Veterans Affairs): name, mission, website, subtier count, DEF codes in use and the fiscal year's award obligations and transaction count.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "fiscal_year",
+          "type": "number",
+          "in": "body",
+          "about": "Omitted = the current fiscal year.",
+          "min": 2008,
+          "max": 2035
+        },
+        {
+          "name": "toptier_code",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{3,4}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Toptier agency overview for a fiscal year by CGAC/FREC code (097 Department of Defense, 075 Health and Human Services, 036 Veterans Affairs): name, mission, website, subtier count, DEF codes in use and the fiscal year's award obligations and transaction count.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response satisfied the requested operation; false when a secondary source call failed (warnings explain)."
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Opaque v1:<page>:<hash> cursor bound to the filters; null at the end."
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "USAspending database last-updated date from awards/last_updated, null when that call failed."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "units",
+            "type": "object"
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "fiscal_year": 2025,
+          "toptier_code": "097"
+        },
+        "response": {
+          "complete": true,
+          "next_cursor": null,
+          "records": [
+            {
+              "abbreviation": "DOD",
+              "about_agency_data": "For reasons of national security, Department of Defense (including Army, Navy, Air Force, and DOD itself) contract and IDV data is subject to a 90-day publication delay (i.e., DOD procurement awards cannot be published until 90 days have elapsed after the award Action Date). Other DOD data (including financial assistance and account data) are not subject to this delay. Read more about this delay on our About the Data page.",
+              "agency_id": 1173,
+              "awards_summary": {
+                "amount_unit": {
+                  "basis": "transaction-level award obligations in the fiscal year",
+                  "currency": "USD",
+                  "scale": "1"
+                },
+                "latest_action_date": "2025-09-30T00:00:00",
+                "obligations": "501619241301.34",
+                "transaction_count": 4516487
+              },
+              "congressional_justification_url": "https://www.defense.gov/cj",
+              "def_codes": [
+                {
+                  "code": "2",
+                  "disaster": null,
+                  "public_law": "Emergency P.L. 117-70",
+                  "title": "Further Extending Government Funding Act",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-117publ70/pdf/PLAW-117publ70.pdf"
+                },
+                {
+                  "code": "3",
+                  "disaster": null,
+                  "public_law": "Emergency P.L. 117-103",
+                  "title": "Consolidated Appropriations Act, 2022",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-117publ103/pdf/PLAW-117publ103.pdf"
+                },
+                {
+                  "code": "6",
+                  "disaster": null,
+                  "public_law": "Emergency P.L. 117-128",
+                  "title": "Additional Ukraine Supplemental Appropriations Act, 2022",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-117publ128/pdf/PLAW-117publ128.pdf"
+                },
+                {
+                  "code": "AAA",
+                  "disaster": null,
+                  "public_law": "Emergency P.L. 117-180",
+                  "title": "Continuing Appropriations and Ukraine Supplemental Appropriations Act, 2023",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-117publ180/pdf/PLAW-117publ180.pdf"
+                },
+                {
+                  "code": "AAB",
+                  "disaster": null,
+                  "public_law": "Emergency P.L. 117-328",
+                  "title": "Consolidated Appropriations Act, 2023",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-117publ328/pdf/PLAW-117publ328.pdf"
+                },
+                {
+                  "code": "AAJ",
+                  "disaster": null,
+                  "public_law": "Emergency P.L. 118-50",
+                  "title": "An act making emergency supplemental appropriations for the fiscal year ending September 30, 2024, and for other purposes.",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-118publ50/pdf/PLAW-118publ50.pdf"
+                },
+                {
+                  "code": "AAK",
+                  "disaster": null,
+                  "public_law": "Emergency P.L. 118-158",
+                  "title": "American Relief Act, 2025",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-118publ158/pdf/PLAW-118publ158.pdf"
+                },
+                {
+                  "code": "C",
+                  "disaster": null,
+                  "public_law": "Emergency P.L. 115-123",
+                  "title": "Bipartisan Budget Act of 2018",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-115publ123/pdf/PLAW-115publ123.pdf"
+                },
+                {
+                  "code": "E",
+                  "disaster": null,
+                  "public_law": "Emergency P.L. 116-20",
+                  "title": "Additional Supplemental Appropriations for Disaster Relief Act, 2019",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-116publ20/pdf/PLAW-116publ20.pdf"
+                },
+                {
+                  "code": "G",
+                  "disaster": null,
+                  "public_law": "Emergency P.L. 116-93",
+                  "title": "Consolidated Appropriations Act, 2020",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-116publ93/pdf/PLAW-116publ93.pdf"
+                },
+                {
+                  "code": "N",
+                  "disaster": "covid_19",
+                  "public_law": "Emergency P.L. 116-136",
+                  "title": "Coronavirus Aid, Relief, and Economic Security Act or the CARES Act",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-116publ136/pdf/PLAW-116publ136.pdf"
+                },
+                {
+                  "code": "Q",
+                  "disaster": null,
+                  "public_law": "Not Designated Nonemergency/Emergency/Disaster/Wildfire Suppression",
+                  "title": "Not Designated Nonemergency/Emergency/Disaster/Wildfire Suppression",
+                  "url": null
+                },
+                {
+                  "code": "V",
+                  "disaster": "covid_19",
+                  "public_law": "Non-emergency P.L. 117-2",
+                  "title": "American Rescue Plan Act of 2021",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-117publ2/pdf/PLAW-117publ2.pdf"
+                },
+                {
+                  "code": "W",
+                  "disaster": null,
+                  "public_law": "Emergency P.L. 117-31",
+                  "title": "Emergency Security Supplemental Appropriations Act, 2021",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-117publ31/pdf/PLAW-117publ31.pdf"
+                },
+                {
+                  "code": "X",
+                  "disaster": null,
+                  "public_law": "Emergency P.L. 117-43",
+                  "title": "Extending Government Funding and Delivering Emergency Assistance Act",
+                  "url": "http://www.govinfo.gov/content/pkg/PLAW-117publ43/pdf/PLAW-117publ43.pdf"
+                }
+              ],
+              "fiscal_year": 2025,
+              "mission": "The mission of the Department of Defense is to provide the military forces needed to deter war and to protect the security of our country.",
+              "name": "Department of Defense",
+              "observed_at_ms": 1789444592871,
+              "source_messages": [],
+              "source_url": "https://api.usaspending.gov/api/v2/agency/097/?fiscal_year=2025",
+              "source_vintage": "2026-09-14",
+              "subtier_agency_count": 36,
+              "toptier_code": "097",
+              "website": "https://www.defense.gov/"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:56:32Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": "2026-09-14",
+          "source_url": "https://api.usaspending.gov/api/v2/agency/097/?fiscal_year=2025",
+          "units": {
+            "basis": "nominal dollars as published by USAspending",
+            "currency": "USD",
+            "scale": "1"
+          },
+          "upstream_requests": 3,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:56:32.871236+00:00"
+      },
+      "execute": {
+        "provider": "usaspending-gov",
+        "capability": "agencies/agency"
+      }
+    },
+    {
+      "id": "usaspending-gov/awards/award",
+      "provider": "usaspending-gov",
+      "capability": "awards/award",
+      "name": "Award",
+      "description": "One USAspending prime award by generated_unique_award_id (CONT_AWD_…, CONT_IDV_…, ASST_NON_…, ASST_AGG_…) or numeric internal id: identifiers, type, agencies, recipient with location, obligations and outlays, options, period of performance, place of performance, NAICS/PSC or CFDA, parent IDV, subaward totals and last modified date.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "award_id",
+          "type": "string",
+          "in": "body",
+          "about": "generated_unique_award_id or internal id.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One USAspending prime award by generated_unique_award_id (CONT_AWD_…, CONT_IDV_…, ASST_NON_…, ASST_AGG_…) or numeric internal id: identifiers, type, agencies, recipient with location, obligations and outlays, options, period of performance, place of performance, NAICS/PSC or CFDA, parent IDV, subaward totals and last modified date.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response satisfied the requested operation; false when a secondary source call failed (warnings explain)."
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Opaque v1:<page>:<hash> cursor bound to the filters; null at the end."
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "USAspending database last-updated date from awards/last_updated, null when that call failed."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "units",
+            "type": "object"
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "award_id": "CONT_AWD_N0001925C0070_9700_-NONE-_-NONE-"
+        },
+        "response": {
+          "complete": true,
+          "next_cursor": null,
+          "records": [
+            {
+              "amount_unit": {
+                "basis": "nominal dollars as reported to USAspending; award-level totals sum every transaction to date",
+                "currency": "USD",
+                "scale": "1"
+              },
+              "award_type": "DEFINITIVE CONTRACT",
+              "award_type_code": "D",
+              "awarding_agency": {
+                "office": "NAVAL AIR SYSTEMS COMMAND",
+                "subtier": "Department of the Navy",
+                "subtier_code": "1700",
+                "toptier": "Department of Defense",
+                "toptier_code": "097"
+              },
+              "base_and_all_options": "4524582239.0",
+              "base_exercised_options": "4524582239.0",
+              "category": "contract",
+              "cfda": null,
+              "cfda_number": null,
+              "date_signed": "2024-11-22",
+              "def_codes": [],
+              "description": "THE PURPOSE OF THIS CONTRACT IS TO AWARD LONG LEAD FUNDING FOR F-35A, F-35B, AND F-35C AIRCRAFT FOR U.S. SERVICES, NON-DOD PARTNERS, AND FMS CUSTOMERS.",
+              "detail_level": "full",
+              "fain": null,
+              "funding_agency": {
+                "office": "NAVAL AIR SYSTEMS COMMAND",
+                "subtier": "Department of the Navy",
+                "subtier_code": "1700",
+                "toptier": "Department of Defense",
+                "toptier_code": "097"
+              },
+              "generated_unique_award_id": "CONT_AWD_N0001925C0070_9700_-NONE-_-NONE-",
+              "internal_id": "309499875",
+              "last_modified_date": "2026-06-09",
+              "loan_face_value": null,
+              "loan_subsidy_cost": null,
+              "naics": {
+                "code": "336411",
+                "description": "AIRCRAFT MANUFACTURING"
+              },
+              "observed_at_ms": 1789444592871,
+              "parent_award": null,
+              "period_of_performance": {
+                "current_end": "2031-05-30",
+                "last_date_to_order": null,
+                "potential_end": "2031-05-30 00:00:00",
+                "start": "2024-11-22"
+              },
+              "piid": "N0001925C0070",
+              "place_of_performance": {
+                "address_line1": null,
+                "address_line2": null,
+                "city_name": "FORT WORTH",
+                "congressional_code": "12",
+                "country_code": "USA",
+                "country_name": "UNITED STATES",
+                "county_code": "439",
+                "county_name": "TARRANT",
+                "foreign_postal_code": null,
+                "foreign_province": null,
+                "state_code": "TX",
+                "state_name": "TEXAS",
+                "zip4": "3619",
+                "zip5": "76108"
+              },
+              "psc": {
+                "code": "1510",
+                "description": "AIRCRAFT, FIXED WING"
+              },
+              "recipient": {
+                "business_categories": [
+                  "Category Business",
+                  "Corporate Entity Not Tax Exempt",
+                  "Manufacturer of Goods",
+                  "Not Designated a Small Business",
+                  "Special Designations",
+                  "U.S.-Owned Business"
+                ],
+                "duns": null,
+                "location": {
+                  "address_line1": "1 LOCKHEED BLVD",
+                  "address_line2": null,
+                  "city_name": "FORT WORTH",
+                  "congressional_code": "12",
+                  "country_code": "USA",
+                  "country_name": "UNITED STATES",
+                  "county_code": "439",
+                  "county_name": "TARRANT",
+                  "foreign_postal_code": null,
+                  "foreign_province": null,
+                  "state_code": "TX",
+                  "state_name": "TEXAS",
+                  "zip4": "3619",
+                  "zip5": "76108"
+                },
+                "name": "LOCKHEED MARTIN CORPORATION",
+                "parent_name": "LOCKHEED MARTIN CORP",
+                "parent_recipient_id": "b97d19b0-833c-8d8f-3a2c-157d04ea55ef-P",
+                "parent_uei": "ZFN2JJXBLZT3",
+                "recipient_id": "6cf5fb1b-4988-d087-5dc1-70939d8fc6c4-C",
+                "uei": "G4KDGE4JFFK7"
+              },
+              "source_url": "https://www.usaspending.gov/award/CONT_AWD_N0001925C0070_9700_-NONE-_-NONE-",
+              "source_vintage": "2026-09-14",
+              "subaward_count": 0,
+              "total_obligation": "4524582239.0",
+              "total_outlays": null,
+              "total_subaward_amount": null,
+              "uri": null
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:56:32Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": "2026-09-14",
+          "source_url": "https://api.usaspending.gov/api/v2/awards/CONT_AWD_N0001925C0070_9700_-NONE-_-NONE-/",
+          "units": {
+            "basis": "nominal dollars as published by USAspending",
+            "currency": "USD",
+            "scale": "1"
+          },
+          "upstream_requests": 2,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:56:32.871236+00:00"
+      },
+      "execute": {
+        "provider": "usaspending-gov",
+        "capability": "awards/award"
+      }
+    },
+    {
+      "id": "usaspending-gov/awards/award_search",
+      "provider": "usaspending-gov",
+      "capability": "awards/award_search",
+      "name": "Award search",
+      "description": "Search USAspending prime awards by keyword, awarding/funding agency, recipient name or UEI, action-date window, place of performance, NAICS, PSC and award amount within one award family (contracts, IDVs, grants, loans, direct payments or other). One page (default 20, max 100) of summary award records with an opaque cursor for the next page; add `award` for the full record.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "agencies",
+          "type": "object[]",
+          "in": "body",
+          "about": "agencies"
+        },
+        {
+          "name": "award_amounts",
+          "type": "object[]",
+          "in": "body",
+          "about": "USD ranges (OR) on the award total; at least one bound each."
+        },
+        {
+          "name": "award_type_codes",
+          "type": "string[]",
+          "in": "body",
+          "about": "Required. One family only: contracts A (BPA call), B (purchase order), C (delivery order), D (definitive contract); IDVs IDV_A..IDV_E; grants 02 block, 03 formula, 04 project, 05 cooperative agreement; direct payments 06, 10; loans 07 direct, 08 guaranteed; other 09 insurance, 11 other, -1.",
+          "required": true
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page; bound to identical filters, sort and page_size. Depth is capped at 500 pages."
+        },
+        {
+          "name": "keywords",
+          "type": "string[]",
+          "in": "body",
+          "about": "Free-text terms matched against award descriptions, recipient names and ids (OR)."
+        },
+        {
+          "name": "naics_codes",
+          "type": "string[]",
+          "in": "body",
+          "about": "Contracts/IDVs only; codes or 2-6 digit prefixes."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "place_of_performance",
+          "type": "object",
+          "in": "body",
+          "about": "place_of_performance"
+        },
+        {
+          "name": "psc_codes",
+          "type": "string[]",
+          "in": "body",
+          "about": "Contracts/IDVs only."
+        },
+        {
+          "name": "recipient_search_text",
+          "type": "string",
+          "in": "body",
+          "about": "Recipient name, UEI or DUNS text."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Result order. For loans amount_* sorts by Loan Value and start_date_* by Issued Date; end_date_* is rejected for loans.",
+          "default": "amount_desc",
+          "oneOf": [
+            "amount_desc",
+            "amount_asc",
+            "start_date_desc",
+            "start_date_asc",
+            "end_date_desc",
+            "end_date_asc",
+            "last_modified_desc",
+            "last_modified_asc",
+            "recipient_name_asc",
+            "recipient_name_desc",
+            "award_id_asc",
+            "award_id_desc"
+          ]
+        },
+        {
+          "name": "time_period",
+          "type": "object[]",
+          "in": "body",
+          "about": "Action-date windows (OR). start_date >= 2007-10-01. Omitted = 2007-10-01 to 2030-09-30. FY2025 is 2024-10-01..2025-09-30."
+        }
+      ],
+      "response": {
+        "about": "Search USAspending prime awards by keyword, awarding/funding agency, recipient name or UEI, action-date window, place of performance, NAICS, PSC and award amount within one award family (contracts, IDVs, grants, loans, direct payments or other). One page (default 20, max 100) of summary award records with an opaque cursor for the next page; add `award` for the full record.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "award_type_codes",
+            "type": "string[]"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response satisfied the requested operation; false when a secondary source call failed (warnings explain)."
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Opaque v1:<page>:<hash> cursor bound to the filters; null at the end."
+          },
+          {
+            "name": "page",
+            "type": "object",
+            "about": "Source request fields used to reproduce the official USAspending query."
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "sort",
+            "type": "string"
+          },
+          {
+            "name": "source_request",
+            "type": "object",
+            "about": "The exact spending_by_award body sent upstream."
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "USAspending database last-updated date from awards/last_updated, null when that call failed."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "units",
+            "type": "object"
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "award_type_codes": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "page_size": 2,
+          "recipient_search_text": "LOCKHEED MARTIN",
+          "time_period": [
+            {
+              "end_date": "2025-09-30",
+              "start_date": "2024-10-01"
+            }
+          ]
+        },
+        "response": {
+          "award_type_codes": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "category": "contract",
+          "complete": true,
+          "next_cursor": "v1:2:dc75022b9a379b5b",
+          "page": {
+            "max_pages": 500,
+            "number": 1,
+            "size": 2
+          },
+          "records": [
+            {
+              "amount_unit": {
+                "basis": "nominal dollars as reported to USAspending; award-level totals sum every transaction to date",
+                "currency": "USD",
+                "scale": "1"
+              },
+              "award_type": "DEFINITIVE CONTRACT",
+              "award_type_code": null,
+              "awarding_agency": {
+                "office": null,
+                "subtier": "Department of Energy",
+                "subtier_code": null,
+                "toptier": "Department of Energy",
+                "toptier_code": null
+              },
+              "base_and_all_options": null,
+              "base_exercised_options": null,
+              "category": "contract",
+              "cfda": null,
+              "cfda_number": null,
+              "date_signed": "1993-10-15",
+              "def_codes": [
+                "Q"
+              ],
+              "description": null,
+              "detail_level": "summary",
+              "fain": null,
+              "funding_agency": {
+                "office": null,
+                "subtier": "Department of Energy",
+                "subtier_code": null,
+                "toptier": "Department of Energy",
+                "toptier_code": null
+              },
+              "generated_unique_award_id": "CONT_AWD_DEAC0494AL85000_8900_-NONE-_-NONE-",
+              "internal_id": "295476065",
+              "last_modified_date": "2026-07-07 17:57:06",
+              "loan_face_value": null,
+              "loan_subsidy_cost": null,
+              "naics": {
+                "code": "561210",
+                "description": "FACILITIES SUPPORT SERVICES"
+              },
+              "observed_at_ms": 1789444592871,
+              "parent_award": null,
+              "period_of_performance": {
+                "current_end": "2017-04-30",
+                "last_date_to_order": null,
+                "potential_end": null,
+                "start": "1993-10-15"
+              },
+              "piid": "DEAC0494AL85000",
+              "place_of_performance": {
+                "city_code": null,
+                "city_name": null,
+                "congressional_code": null,
+                "country_code": "USA",
+                "county_code": null,
+                "state_code": "NM",
+                "zip5": "87185"
+              },
+              "psc": {
+                "code": "M181",
+                "description": "OPER OF GOVT R&D GOCO FACILITIES"
+              },
+              "recipient": {
+                "business_categories": null,
+                "duns": null,
+                "location": null,
+                "name": "LOCKHEED MARTIN CORP",
+                "parent_name": null,
+                "parent_recipient_id": null,
+                "parent_uei": null,
+                "recipient_id": "6e7a895c-aa57-8600-2a8a-4e237f6213f6-C",
+                "uei": "FYHNA5WC8XD7"
+              },
+              "source_url": "https://www.usaspending.gov/award/CONT_AWD_DEAC0494AL85000_8900_-NONE-_-NONE-",
+              "source_vintage": "2026-09-14",
+              "subaward_count": null,
+              "total_obligation": "48063737196.35",
+              "total_outlays": "-4166130.71",
+              "total_subaward_amount": null,
+              "uri": null
+            },
+            {
+              "amount_unit": {
+                "basis": "nominal dollars as reported to USAspending; award-level totals sum every transaction to date",
+                "currency": "USD",
+                "scale": "1"
+              },
+              "award_type": "DEFINITIVE CONTRACT",
+              "award_type_code": null,
+              "awarding_agency": {
+                "office": null,
+                "subtier": "Department of the Navy",
+                "subtier_code": null,
+                "toptier": "Department of Defense",
+                "toptier_code": null
+              },
+              "base_and_all_options": null,
+              "base_exercised_options": null,
+              "category": "contract",
+              "cfda": null,
+              "cfda_number": null,
+              "date_signed": "2017-04-28",
+              "def_codes": [
+                "N",
+                "Q"
+              ],
+              "description": "LRIP LOT 12 ADVANCE ACQUISITION CONTRACT",
+              "detail_level": "summary",
+              "fain": null,
+              "funding_agency": {
+                "office": null,
+                "subtier": "Department of the Navy",
+                "subtier_code": null,
+                "toptier": "Department of Defense",
+                "toptier_code": null
+              },
+              "generated_unique_award_id": "CONT_AWD_N0001917C0001_9700_-NONE-_-NONE-",
+              "internal_id": "309494502",
+              "last_modified_date": "2026-04-15 19:52:27",
+              "loan_face_value": null,
+              "loan_subsidy_cost": null,
+              "naics": {
+                "code": "336411",
+                "description": "AIRCRAFT MANUFACTURING"
+              },
+              "observed_at_ms": 1789444592871,
+              "parent_award": null,
+              "period_of_performance": {
+                "current_end": "2031-03-31",
+                "last_date_to_order": null,
+                "potential_end": null,
+                "start": "2017-11-17"
+              },
+              "piid": "N0001917C0001",
+              "place_of_performance": {
+                "city_code": null,
+                "city_name": null,
+                "congressional_code": null,
+                "country_code": "USA",
+                "county_code": null,
+                "state_code": "TX",
+                "zip5": "76108"
+              },
+              "psc": {
+                "code": "1510",
+                "description": "AIRCRAFT, FIXED WING"
+              },
+              "recipient": {
+                "business_categories": null,
+                "duns": null,
+                "location": null,
+                "name": "LOCKHEED MARTIN CORPORATION",
+                "parent_name": null,
+                "parent_recipient_id": null,
+                "parent_uei": null,
+                "recipient_id": "6cf5fb1b-4988-d087-5dc1-70939d8fc6c4-C",
+                "uei": "G4KDGE4JFFK7"
+              },
+              "source_url": "https://www.usaspending.gov/award/CONT_AWD_N0001917C0001_9700_-NONE-_-NONE-",
+              "source_vintage": "2026-09-14",
+              "subaward_count": null,
+              "total_obligation": "35135514910.2",
+              "total_outlays": "933036846.29",
+              "total_subaward_amount": null,
+              "uri": null
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:56:32Z",
+          "schema_version": "1.0.0",
+          "sort": "amount_desc",
+          "source_request": {
+            "fields": [
+              "Award ID",
+              "Recipient Name",
+              "Recipient UEI",
+              "Recipient DUNS Number",
+              "Start Date",
+              "End Date",
+              "Award Amount",
+              "Total Outlays",
+              "Description",
+              "Awarding Agency",
+              "Awarding Sub Agency",
+              "Funding Agency",
+              "Funding Sub Agency",
+              "Contract Award Type",
+              "Award Type",
+              "Last Date to Order",
+              "recipient_id",
+              "generated_internal_id",
+              "Last Modified Date",
+              "Base Obligation Date",
+              "Period of Performance Current End Date",
+              "Place of Performance City Code",
+              "Place of Performance State Code",
+              "Place of Performance Country Code",
+              "Place of Performance Zip5",
+              "NAICS",
+              "PSC",
+              "CFDA Number",
+              "Loan Value",
+              "Subsidy Cost",
+              "SAI Number",
+              "Issued Date",
+              "def_codes"
+            ],
+            "filters": {
+              "award_type_codes": [
+                "A",
+                "B",
+                "C",
+                "D"
+              ],
+              "recipient_search_text": [
+                "LOCKHEED MARTIN"
+              ],
+              "time_period": [
+                {
+                  "end_date": "2025-09-30",
+                  "start_date": "2024-10-01"
+                }
+              ]
+            },
+            "limit": 2,
+            "order": "desc",
+            "page": 1,
+            "sort": "Award Amount",
+            "subawards": false
+          },
+          "source_updated_at": "2026-09-14",
+          "source_url": "https://api.usaspending.gov/api/v2/search/spending_by_award/",
+          "units": {
+            "basis": "nominal dollars as published by USAspending",
+            "currency": "USD",
+            "scale": "1"
+          },
+          "upstream_requests": 2,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:56:32.871236+00:00"
+      },
+      "execute": {
+        "provider": "usaspending-gov",
+        "capability": "awards/award_search"
+      }
+    },
+    {
+      "id": "usaspending-gov/awards/idv_children",
+      "provider": "usaspending-gov",
+      "capability": "awards/idv_children",
+      "name": "Idv children",
+      "description": "Awards issued under an indefinite delivery vehicle: child awards (orders), child IDVs or grandchild awards, newest period start first, with obligated amount and period of performance. Paged with a cursor.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "award_id",
+          "type": "string",
+          "in": "body",
+          "about": "The IDV's generated_unique_award_id (CONT_IDV_…).",
+          "required": true
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "cursor"
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "relationship",
+          "type": "string",
+          "in": "body",
+          "about": "relationship",
+          "default": "child_awards",
+          "oneOf": [
+            "child_awards",
+            "child_idvs",
+            "grandchild_awards"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Awards issued under an indefinite delivery vehicle: child awards (orders), child IDVs or grandchild awards, newest period start first, with obligated amount and period of performance. Paged with a cursor.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "award_id",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response satisfied the requested operation; false when a secondary source call failed (warnings explain)."
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Opaque v1:<page>:<hash> cursor bound to the filters; null at the end."
+          },
+          {
+            "name": "page",
+            "type": "object",
+            "about": "Source request fields used to reproduce the official USAspending query."
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "relationship",
+            "type": "string"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "USAspending database last-updated date from awards/last_updated, null when that call failed."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "units",
+            "type": "object"
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "award_id": "CONT_IDV_W58RGZ23D0011_9700",
+          "page_size": 2
+        },
+        "response": {
+          "award_id": "CONT_IDV_W58RGZ23D0011_9700",
+          "complete": true,
+          "next_cursor": "v1:2:e19aa7f81d350262",
+          "page": {
+            "max_pages": 500,
+            "number": 1,
+            "size": 2
+          },
+          "records": [
+            {
+              "amount_unit": {
+                "basis": "nominal dollars obligated on the child award to date",
+                "currency": "USD",
+                "scale": "1"
+              },
+              "award_type": "DELIVERY ORDER",
+              "awarding_agency": {
+                "id": 1188,
+                "toptier": "Department of Defense"
+              },
+              "description": "MODERNIZED TARGET ACQUISITION DESIGNATION SIGHT/PILOT NIGHT VISION SENSOR (MTADS/PNVS)",
+              "funding_agency": {
+                "id": 1188,
+                "toptier": "Department of Defense"
+              },
+              "generated_unique_award_id": "CONT_AWD_W58RGZ25F0254_9700_W58RGZ23D0011_9700",
+              "internal_id": "361853053",
+              "obligated_amount": "23345638.44",
+              "observed_at_ms": 1789444592871,
+              "parent_generated_unique_award_id": "CONT_IDV_W58RGZ23D0011_9700",
+              "period_of_performance": {
+                "current_end": "2029-08-31",
+                "last_date_to_order": null,
+                "start": "2025-06-06"
+              },
+              "piid": "W58RGZ25F0254",
+              "relationship": "child_awards",
+              "source_url": "https://www.usaspending.gov/award/CONT_AWD_W58RGZ25F0254_9700_W58RGZ23D0011_9700",
+              "source_vintage": "2026-09-14"
+            },
+            {
+              "amount_unit": {
+                "basis": "nominal dollars obligated on the child award to date",
+                "currency": "USD",
+                "scale": "1"
+              },
+              "award_type": "DELIVERY ORDER",
+              "awarding_agency": {
+                "id": 1188,
+                "toptier": "Department of Defense"
+              },
+              "description": "MODERNIZED TARGET ACQUISITION DESIGNATION SIGHT/PILOT NIGHT VISION SENSOR (M-TADS/PNVS) INDEFINITE DELIVERY/INDEFINITE QUANTITY II (IDIQ2)",
+              "funding_agency": {
+                "id": 1188,
+                "toptier": "Department of Defense"
+              },
+              "generated_unique_award_id": "CONT_AWD_W58RGZ25F0182_9700_W58RGZ23D0011_9700",
+              "internal_id": "361853004",
+              "obligated_amount": "956764300.77",
+              "observed_at_ms": 1789444592871,
+              "parent_generated_unique_award_id": "CONT_IDV_W58RGZ23D0011_9700",
+              "period_of_performance": {
+                "current_end": "2031-07-31",
+                "last_date_to_order": null,
+                "start": "2025-06-06"
+              },
+              "piid": "W58RGZ25F0182",
+              "relationship": "child_awards",
+              "source_url": "https://www.usaspending.gov/award/CONT_AWD_W58RGZ25F0182_9700_W58RGZ23D0011_9700",
+              "source_vintage": "2026-09-14"
+            }
+          ],
+          "relationship": "child_awards",
+          "retrieved_at": "2026-09-15T03:56:32Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": "2026-09-14",
+          "source_url": "https://api.usaspending.gov/api/v2/idvs/awards/",
+          "units": {
+            "basis": "nominal dollars as published by USAspending",
+            "currency": "USD",
+            "scale": "1"
+          },
+          "upstream_requests": 2,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:56:32.871236+00:00"
+      },
+      "execute": {
+        "provider": "usaspending-gov",
+        "capability": "awards/idv_children"
+      }
+    },
+    {
+      "id": "usaspending-gov/awards/subawards",
+      "provider": "usaspending-gov",
+      "capability": "awards/subawards",
+      "name": "Subawards",
+      "description": "Subawards reported under one prime award (FSRS data), newest first: subaward number, sub-recipient name, amount, action date and description. Paged with a cursor; an award with no subawards answers an empty page with a warning.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "award_id",
+          "type": "string",
+          "in": "body",
+          "about": "award_id",
+          "required": true
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "cursor"
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        }
+      ],
+      "response": {
+        "about": "Subawards reported under one prime award (FSRS data), newest first: subaward number, sub-recipient name, amount, action date and description. Paged with a cursor; an award with no subawards answers an empty page with a warning.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "award_id",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response satisfied the requested operation; false when a secondary source call failed (warnings explain)."
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Opaque v1:<page>:<hash> cursor bound to the filters; null at the end."
+          },
+          {
+            "name": "page",
+            "type": "object",
+            "about": "Source request fields used to reproduce the official USAspending query."
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "USAspending database last-updated date from awards/last_updated, null when that call failed."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "units",
+            "type": "object"
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "award_id": "CONT_AWD_N0001917C0001_9700_-NONE-_-NONE-",
+          "page_size": 2
+        },
+        "response": {
+          "award_id": "CONT_AWD_N0001917C0001_9700_-NONE-_-NONE-",
+          "complete": true,
+          "next_cursor": "v1:2:4fbb1d2652467790",
+          "page": {
+            "max_pages": 500,
+            "number": 1,
+            "size": 2
+          },
+          "records": [
+            {
+              "action_date": "2025-04-28",
+              "amount": "8154.47",
+              "amount_unit": {
+                "basis": "nominal subaward dollars as reported by the prime recipient (FSRS)",
+                "currency": "USD",
+                "scale": "1"
+              },
+              "description": "2ZKH85232-0004 SN 09460",
+              "observed_at_ms": 1789444592871,
+              "prime_award_id": "CONT_AWD_N0001917C0001_9700_-NONE-_-NONE-",
+              "recipient_name": "RAYTHEON COMPANY",
+              "source_url": "https://www.usaspending.gov/award/CONT_AWD_N0001917C0001_9700_-NONE-_-NONE-",
+              "source_vintage": "2026-09-14",
+              "subaward_id": "10626973",
+              "subaward_number": "4900185266"
+            },
+            {
+              "action_date": "2025-04-28",
+              "amount": "9892.89",
+              "amount_unit": {
+                "basis": "nominal subaward dollars as reported by the prime recipient (FSRS)",
+                "currency": "USD",
+                "scale": "1"
+              },
+              "description": "2ZKH85222-0004 SN 10088",
+              "observed_at_ms": 1789444592871,
+              "prime_award_id": "CONT_AWD_N0001917C0001_9700_-NONE-_-NONE-",
+              "recipient_name": "RAYTHEON COMPANY",
+              "source_url": "https://www.usaspending.gov/award/CONT_AWD_N0001917C0001_9700_-NONE-_-NONE-",
+              "source_vintage": "2026-09-14",
+              "subaward_id": "10626971",
+              "subaward_number": "4900183998"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:56:32Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": "2026-09-14",
+          "source_url": "https://api.usaspending.gov/api/v2/subawards/",
+          "units": {
+            "basis": "nominal dollars as published by USAspending",
+            "currency": "USD",
+            "scale": "1"
+          },
+          "upstream_requests": 2,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:56:32.871236+00:00"
+      },
+      "execute": {
+        "provider": "usaspending-gov",
+        "capability": "awards/subawards"
+      }
+    },
+    {
+      "id": "usaspending-gov/awards/transactions",
+      "provider": "usaspending-gov",
+      "capability": "awards/transactions",
+      "name": "Transactions",
+      "description": "Transactions (individual actions and modifications) of one award, newest action first: obligation per action (negative for de-obligations), action type, modification number and description. Paged with a cursor.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "award_id",
+          "type": "string",
+          "in": "body",
+          "about": "award_id",
+          "required": true
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "cursor"
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        }
+      ],
+      "response": {
+        "about": "Transactions (individual actions and modifications) of one award, newest action first: obligation per action (negative for de-obligations), action type, modification number and description. Paged with a cursor.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "award_id",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response satisfied the requested operation; false when a secondary source call failed (warnings explain)."
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Opaque v1:<page>:<hash> cursor bound to the filters; null at the end."
+          },
+          {
+            "name": "page",
+            "type": "object",
+            "about": "Source request fields used to reproduce the official USAspending query."
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "USAspending database last-updated date from awards/last_updated, null when that call failed."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "units",
+            "type": "object"
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "award_id": "CONT_AWD_N0001925C0070_9700_-NONE-_-NONE-",
+          "page_size": 2
+        },
+        "response": {
+          "award_id": "CONT_AWD_N0001925C0070_9700_-NONE-_-NONE-",
+          "complete": true,
+          "next_cursor": "v1:2:283b1bd2a0880fc3",
+          "page": {
+            "max_pages": 500,
+            "number": 1,
+            "size": 2
+          },
+          "records": [
+            {
+              "action_date": "2026-06-09",
+              "action_type": "A",
+              "action_type_description": "ADDITIONAL WORK (NEW AGREEMENT, JUSTIFICATION REQUIRED)",
+              "amount_unit": {
+                "basis": "nominal dollars obligated (or de-obligated when negative) by this single action",
+                "currency": "USD",
+                "scale": "1"
+              },
+              "award_id": "CONT_AWD_N0001925C0070_9700_-NONE-_-NONE-",
+              "award_type": "DEFINITIVE CONTRACT",
+              "award_type_code": "D",
+              "description": "THIS MODIFICATION AWARDS LONG LEAD FUNDING IN SUPPORT OF LOT 21 F-35 AIRCRAFT FOR AN FMS CUSTOMER.",
+              "face_value_loan_guarantee": "0.0",
+              "federal_action_obligation": "153900000.0",
+              "modification_number": "P00009",
+              "observed_at_ms": 1789444592871,
+              "original_loan_subsidy_cost": "0.0",
+              "source_url": "https://www.usaspending.gov/award/CONT_AWD_N0001925C0070_9700_-NONE-_-NONE-",
+              "source_vintage": "2026-09-14",
+              "transaction_id": "CONT_TX_9700_-NONE-_N0001925C0070_P00009_-NONE-_0"
+            },
+            {
+              "action_date": "2026-04-29",
+              "action_type": "A",
+              "action_type_description": "ADDITIONAL WORK (NEW AGREEMENT, JUSTIFICATION REQUIRED)",
+              "amount_unit": {
+                "basis": "nominal dollars obligated (or de-obligated when negative) by this single action",
+                "currency": "USD",
+                "scale": "1"
+              },
+              "award_id": "CONT_AWD_N0001925C0070_9700_-NONE-_-NONE-",
+              "award_type": "DEFINITIVE CONTRACT",
+              "award_type_code": "D",
+              "description": "THIS MODIFICATION ADDS FUNDING AND NEW CLIN FOR THE PURCHASE OF LONG LEAD MATERIAL AND ECONOMIC ORDER QTY FUNDING FOR F-35 CUSTOMERS.",
+              "face_value_loan_guarantee": "0.0",
+              "federal_action_obligation": "226308063.0",
+              "modification_number": "P00008",
+              "observed_at_ms": 1789444592871,
+              "original_loan_subsidy_cost": "0.0",
+              "source_url": "https://www.usaspending.gov/award/CONT_AWD_N0001925C0070_9700_-NONE-_-NONE-",
+              "source_vintage": "2026-09-14",
+              "transaction_id": "CONT_TX_9700_-NONE-_N0001925C0070_P00008_-NONE-_0"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:56:32Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": "2026-09-14",
+          "source_url": "https://api.usaspending.gov/api/v2/transactions/",
+          "units": {
+            "basis": "nominal dollars as published by USAspending",
+            "currency": "USD",
+            "scale": "1"
+          },
+          "upstream_requests": 2,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:56:32.871236+00:00"
+      },
+      "execute": {
+        "provider": "usaspending-gov",
+        "capability": "awards/transactions"
+      }
+    },
+    {
+      "id": "usaspending-gov/recipients/recipient",
+      "provider": "usaspending-gov",
+      "capability": "recipients/recipient",
+      "name": "Recipient",
+      "description": "Recipient profile by USAspending recipient_id (hash with -C/-P/-R level) or 12-character UEI: names, identifiers, parent, business types, location and transaction obligations for the latest 12 months or a fiscal year, plus per-fiscal-year obligations for the years requested.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "fiscal_year",
+          "type": "number",
+          "in": "body",
+          "about": "Period for the headline totals; omitted = latest trailing 12 months.",
+          "min": 2008,
+          "max": 2035
+        },
+        {
+          "name": "fiscal_years",
+          "type": "number[]",
+          "in": "body",
+          "about": "Fiscal years to break obligations down by (one upstream request each)."
+        },
+        {
+          "name": "recipient_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9a-fA-F-]{36}-[CPRcpr]$."
+        },
+        {
+          "name": "uei",
+          "type": "string",
+          "in": "body",
+          "about": "Resolved through the recipient list endpoint (several seconds upstream); prefer recipient_id when known. Pattern: ^[A-Za-z0-9]{12}$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "recipient_id",
+          "uei"
+        ]
+      ],
+      "response": {
+        "about": "Recipient profile by USAspending recipient_id (hash with -C/-P/-R level) or 12-character UEI: names, identifiers, parent, business types, location and transaction obligations for the latest 12 months or a fiscal year, plus per-fiscal-year obligations for the years requested.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response satisfied the requested operation; false when a secondary source call failed (warnings explain)."
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Opaque v1:<page>:<hash> cursor bound to the filters; null at the end."
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "USAspending database last-updated date from awards/last_updated, null when that call failed."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "units",
+            "type": "object"
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "recipient_id": "6cf5fb1b-4988-d087-5dc1-70939d8fc6c4-C"
+        },
+        "response": {
+          "complete": true,
+          "next_cursor": null,
+          "records": [
+            {
+              "alternate_names": [
+                "GENERAL DYNAMICS CORPORATION",
+                "GENERAL DYNMICS/FORT WORTH DIV",
+                "LOCKHEED MARTIN CORPORATION (3632)"
+              ],
+              "amount_unit": {
+                "basis": "transaction-level obligations summed over the requested period (latest = trailing 12 months; a fiscal year = Oct 1 to Sep 30)",
+                "currency": "USD",
+                "scale": "1"
+              },
+              "business_types": [
+                "category_business",
+                "corporate_entity_not_tax_exempt",
+                "manufacturer_of_goods",
+                "other_than_small_business",
+                "special_designations",
+                "us_owned_business"
+              ],
+              "duns": "008016958",
+              "location": {
+                "address_line1": "1 LOCKHEED BLVD",
+                "address_line2": null,
+                "city_name": "FORT WORTH",
+                "congressional_code": "12",
+                "country_code": "USA",
+                "country_name": "UNITED STATES",
+                "county_name": null,
+                "foreign_postal_code": null,
+                "foreign_province": null,
+                "state_code": "TX",
+                "zip4": "3619",
+                "zip5": "76108"
+              },
+              "name": "LOCKHEED MARTIN CORPORATION",
+              "obligations_by_fiscal_year": [],
+              "observed_at_ms": 1789444592871,
+              "parent_duns": "834951691",
+              "parent_name": "LOCKHEED MARTIN CORPORATION",
+              "parent_recipient_id": "8e2862a3-62bd-4514-180d-47f089a24644-P",
+              "parent_uei": "JSQTW5L2SSM1",
+              "parents": [
+                {
+                  "duns": "834951691",
+                  "name": "LOCKHEED MARTIN CORPORATION",
+                  "recipient_id": "8e2862a3-62bd-4514-180d-47f089a24644-P",
+                  "uei": "JSQTW5L2SSM1"
+                },
+                {
+                  "duns": null,
+                  "name": "SIKORSKY SUPPORT SERVICES INC",
+                  "recipient_id": "738b71ca-a1fd-b59f-ab44-c884d1bc7b2b-P",
+                  "uei": "WXTSNW5E97R6"
+                },
+                {
+                  "duns": "834951691",
+                  "name": "LOCKHEED MARTIN CORP",
+                  "recipient_id": "b97d19b0-833c-8d8f-3a2c-157d04ea55ef-P",
+                  "uei": "ZFN2JJXBLZT3"
+                }
+              ],
+              "period": "latest",
+              "recipient_id": "6cf5fb1b-4988-d087-5dc1-70939d8fc6c4-C",
+              "recipient_level": "C",
+              "source_url": "https://www.usaspending.gov/recipient/6cf5fb1b-4988-d087-5dc1-70939d8fc6c4-C/latest",
+              "source_vintage": "2026-09-14",
+              "total_face_value_loan_amount": "0.0",
+              "total_face_value_loan_transactions": 0,
+              "total_transaction_amount": "28688875586.97",
+              "total_transactions": 1559,
+              "uei": "G4KDGE4JFFK7"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:56:32Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": "2026-09-14",
+          "source_url": "https://api.usaspending.gov/api/v2/recipient/6cf5fb1b-4988-d087-5dc1-70939d8fc6c4-C/?year=latest",
+          "units": {
+            "basis": "nominal dollars as published by USAspending",
+            "currency": "USD",
+            "scale": "1"
+          },
+          "upstream_requests": 2,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:56:32.871236+00:00"
+      },
+      "execute": {
+        "provider": "usaspending-gov",
+        "capability": "recipients/recipient"
+      }
+    }
+  ]
+}

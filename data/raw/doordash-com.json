@@ -1,0 +1,1414 @@
+{
+  "id": "doordash-com",
+  "provider": "doordash-com",
+  "name": "DoorDash US",
+  "description": "DoorDash US store and product search, convenience/grocery catalogs, product details and public reviews from DoorDash's own web APIs.",
+  "toolCount": 8,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "doordash-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "doordash-com/products/categories",
+      "provider": "doordash-com",
+      "capability": "products/categories",
+      "name": "Categories",
+      "description": "Top-level category list of one store. Use items for the products themselves.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "DoorDash grocery/convenience store ID. Pattern: ^[1-9][0-9]{0,19}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "List top-level categories from a DoorDash grocery/convenience store.",
+        "key": "categories",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "store_id": "22963160"
+        },
+        "response": {
+          "categories": [
+            {
+              "id": "751",
+              "image_url": "https://img.cdn4dd.com/s/managed/convenience/drinks.png",
+              "name": "Drinks",
+              "slug": "drinks-751"
+            },
+            {
+              "id": "758",
+              "image_url": "https://img.cdn4dd.com/s/managed/convenience/snacks.png",
+              "name": "Snacks",
+              "slug": "snacks-758"
+            },
+            {
+              "id": "750",
+              "image_url": "https://img.cdn4dd.com/s/managed/convenience/candy.png",
+              "name": "Candy",
+              "slug": "candy-750"
+            }
+          ],
+          "count": 17,
+          "country": "US",
+          "observed_at_ms": 1789412955544,
+          "store_id": "22963160"
+        },
+        "recordedAt": "2026-09-14"
+      },
+      "execute": {
+        "provider": "doordash-com",
+        "capability": "products/categories"
+      }
+    },
+    {
+      "id": "doordash-com/products/items",
+      "provider": "doordash-com",
+      "capability": "products/items",
+      "name": "Items",
+      "description": "Storefront item groups of one store, up to max_pages feed pages; category carousels, not full inventory. Use search_items to look up a specific product.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "max_pages",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum storefront pages within this call. 1 returns initial HTML groups without a solver; default 3 follows up to two continuation pages.",
+          "default": 3,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "DoorDash grocery/convenience store ID. Pattern: ^[1-9][0-9]{0,19}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Get grocery/convenience storefront item groups across up to max_pages pages (default 3). Uses fresh Cloudflare clearance for multiple pages; category carousels are not full store inventory.",
+        "key": "groups",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "items",
+            "type": "object[]"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "max_pages": 1,
+          "store_id": "22963160"
+        },
+        "response": {
+          "complete": false,
+          "count": 70,
+          "country": "US",
+          "coverage": "initial_page",
+          "feed_complete": false,
+          "groups": [
+            {
+              "count": 10,
+              "id": "cx.common.universal_carousel:item_carousel:l2_category_personalized_766",
+              "items": [
+                {
+                  "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/36c01851-09f0-4157-b53a-4f828e68f5b2-retina-large.jpg",
+                  "item_id": "1000016900013011",
+                  "name": "Reese's Peanut Butter Oreo (1.4 oz)",
+                  "price": {
+                    "amount": 3.39,
+                    "currency": "USD",
+                    "decimal_places": 2,
+                    "display": "$3.39",
+                    "unit_amount": 339
+                  },
+                  "purchase_type": "PURCHASE_TYPE_UNIT",
+                  "quantity_increment": {
+                    "amount": 1,
+                    "decimal_places": 2,
+                    "unit_amount": 100
+                  },
+                  "rating": {
+                    "average": null,
+                    "count_display": null,
+                    "rating_count": null,
+                    "review_count": null
+                  },
+                  "stock_level": "STOCK_LEVEL_UNSPECIFIED"
+                },
+                {
+                  "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/ee01a7e4-2dc0-47ff-b814-e33df13d9f5c-retina-large.jpg",
+                  "item_id": "1000020283729006",
+                  "name": "Kit Kat Crisp Wafers in Milk Chocolate Candy Bar (1.5 oz)",
+                  "price": {
+                    "amount": 2.99,
+                    "currency": "USD",
+                    "decimal_places": 2,
+                    "display": "$2.99",
+                    "unit_amount": 299
+                  },
+                  "purchase_type": "PURCHASE_TYPE_UNIT",
+                  "quantity_increment": {
+                    "amount": 1,
+                    "decimal_places": 2,
+                    "unit_amount": 100
+                  },
+                  "rating": {
+                    "average": null,
+                    "count_display": null,
+                    "rating_count": null,
+                    "review_count": null
+                  },
+                  "stock_level": "STOCK_LEVEL_UNSPECIFIED"
+                },
+                {
+                  "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=2688,height=1512,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/5ca7307f-e33b-4ed4-b3b1-3772da3bf294-retina-large.jpg",
+                  "item_id": "1000001096279105",
+                  "name": "Reese's Chocolate and Peanut Butter Dipped Bag (4.25 oz)",
+                  "price": {
+                    "amount": 5.39,
+                    "currency": "USD",
+                    "decimal_places": 2,
+                    "display": "$5.39",
+                    "unit_amount": 539
+                  },
+                  "purchase_type": "PURCHASE_TYPE_UNIT",
+                  "quantity_increment": {
+                    "amount": 1,
+                    "decimal_places": 2,
+                    "unit_amount": 100
+                  },
+                  "rating": {
+                    "average": null,
+                    "count_display": null,
+                    "rating_count": null,
+                    "review_count": null
+                  },
+                  "stock_level": "STOCK_LEVEL_UNSPECIFIED"
+                }
+              ],
+              "name": "Chocolate"
+            },
+            {
+              "count": 10,
+              "id": "cx.common.universal_carousel:item_carousel:l2_category_personalized_765",
+              "items": [
+                {
+                  "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/0d32a6f2-cfcd-4648-8d45-42b84fd6b781-retina-large.jpg",
+                  "item_id": "13082077495",
+                  "name": "Doritos Dinamita Rolled Chile Limon Flavored Tortilla Chips (4 oz)",
+                  "price": {
+                    "amount": 2,
+                    "currency": "USD",
+                    "decimal_places": 2,
+                    "display": "$2.00",
+                    "unit_amount": 200
+                  },
+                  "purchase_type": "PURCHASE_TYPE_UNIT",
+                  "quantity_increment": {
+                    "amount": 1,
+                    "decimal_places": 2,
+                    "unit_amount": 100
+                  },
+                  "rating": {
+                    "average": null,
+                    "count_display": null,
+                    "rating_count": null,
+                    "review_count": null
+                  },
+                  "stock_level": "STOCK_LEVEL_UNSPECIFIED"
+                },
+                {
+                  "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/d63877d7-d695-48eb-801f-c6b7304aa111-retina-large.jpg",
+                  "item_id": "13082077390",
+                  "name": "Funyuns Flamin' Hot Onion Flavored Rings (6 oz)",
+                  "price": {
+                    "amount": 4.99,
+                    "currency": "USD",
+                    "decimal_places": 2,
+                    "display": "$4.99",
+                    "unit_amount": 499
+                  },
+                  "purchase_type": "PURCHASE_TYPE_UNIT",
+                  "quantity_increment": {
+                    "amount": 1,
+                    "decimal_places": 2,
+                    "unit_amount": 100
+                  },
+                  "rating": {
+                    "average": null,
+                    "count_display": null,
+                    "rating_count": null,
+                    "review_count": null
+                  },
+                  "stock_level": "STOCK_LEVEL_UNSPECIFIED"
+                },
+                {
+                  "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/ee0ef26f-2546-4f7a-85d9-228a0ea85509-retina-large.jpg",
+                  "item_id": "13082077525",
+                  "name": "Sabritas Turbos Flamas Flavored Corn Snacks (4 oz)",
+                  "price": {
+                    "amount": 2.79,
+                    "currency": "USD",
+                    "decimal_places": 2,
+                    "display": "$2.79",
+                    "unit_amount": 279
+                  },
+                  "purchase_type": "PURCHASE_TYPE_UNIT",
+                  "quantity_increment": {
+                    "amount": 1,
+                    "decimal_places": 2,
+                    "unit_amount": 100
+                  },
+                  "rating": {
+                    "average": null,
+                    "count_display": null,
+                    "rating_count": null,
+                    "review_count": null
+                  },
+                  "stock_level": "STOCK_LEVEL_UNSPECIFIED"
+                }
+              ],
+              "name": "Chips"
+            },
+            {
+              "count": 10,
+              "id": "cx.common.universal_carousel:item_carousel:popular_deals_popular_deals",
+              "items": [
+                {
+                  "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/d911fc0e-d3a0-4e8e-9d09-28f8a004fd60-retina-large.jpg",
+                  "item_id": "1000012976531003",
+                  "name": "Large Pizza - Ultimate Pepperoni",
+                  "price": {
+                    "amount": 6.99,
+                    "currency": "USD",
+                    "decimal_places": 2,
+                    "display": "$6.99",
+                    "unit_amount": 699
+                  },
+                  "purchase_type": "PURCHASE_TYPE_UNIT",
+                  "quantity_increment": {
+                    "amount": 1,
+                    "decimal_places": 2,
+                    "unit_amount": 100
+                  },
+                  "rating": {
+                    "average": null,
+                    "count_display": null,
+                    "rating_count": null,
+                    "review_count": null
+                  },
+                  "stock_level": "STOCK_LEVEL_UNSPECIFIED"
+                },
+                {
+                  "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/9e29a8de-d9cb-4443-b7d0-e08a711839a2-retina-large",
+                  "item_id": "25311558190",
+                  "name": "Flipz White Fudge Covered Pretzels (5 oz)",
+                  "price": {
+                    "amount": 4.39,
+                    "currency": "USD",
+                    "decimal_places": 2,
+                    "display": "$4.39",
+                    "unit_amount": 439
+                  },
+                  "purchase_type": "PURCHASE_TYPE_UNIT",
+                  "quantity_increment": {
+                    "amount": 1,
+                    "decimal_places": 2,
+                    "unit_amount": 100
+                  },
+                  "rating": {
+                    "average": null,
+                    "count_display": null,
+                    "rating_count": null,
+                    "review_count": null
+                  },
+                  "stock_level": "STOCK_LEVEL_UNSPECIFIED"
+                },
+                {
+                  "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=2688,height=1512,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/8b4f9d7c-5f37-4927-8192-dee8ec8c5c14-retina-large.jpg",
+                  "item_id": "13082018620",
+                  "name": "Cheez-It Baked White Cheddar Cheese Snack Crackers Bag (3 oz)",
+                  "price": {
+                    "amount": 2,
+                    "currency": "USD",
+                    "decimal_places": 2,
+                    "display": "$2.00",
+                    "unit_amount": 200
+                  },
+                  "purchase_type": "PURCHASE_TYPE_UNIT",
+                  "quantity_increment": {
+                    "amount": 1,
+                    "decimal_places": 2,
+                    "unit_amount": 100
+                  },
+                  "rating": {
+                    "average": null,
+                    "count_display": null,
+                    "rating_count": null,
+                    "review_count": null
+                  },
+                  "stock_level": "STOCK_LEVEL_UNSPECIFIED"
+                }
+              ],
+              "name": "Popular deals"
+            }
+          ],
+          "has_more": true,
+          "observed_at_ms": 1789412960173,
+          "pages_fetched": 1,
+          "pagination_supported": true,
+          "store_id": "22963160",
+          "unique_count": 70
+        },
+        "recordedAt": "2026-09-14"
+      },
+      "execute": {
+        "provider": "doordash-com",
+        "capability": "products/items"
+      }
+    },
+    {
+      "id": "doordash-com/products/product",
+      "provider": "doordash-com",
+      "capability": "products/product",
+      "name": "Product",
+      "description": "One product by store_id + item_id (from items or search_items): name, brand, prices, photos, purchase rules, descriptive sections.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "item_id",
+          "type": "string",
+          "in": "body",
+          "about": "Store-specific item ID, returned by items. Pattern: ^[1-9][0-9]{0,19}$.",
+          "required": true
+        },
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "DoorDash grocery/convenience store ID. Pattern: ^[1-9][0-9]{0,19}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Get a store-specific product, displayed prices, photos, quantity rules, description, nutrition and specifications.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "brand",
+            "type": "string"
+          },
+          {
+            "name": "business_id",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "display_unit",
+            "type": "string"
+          },
+          {
+            "name": "item_id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "photos",
+            "type": "object[]"
+          },
+          {
+            "name": "prices",
+            "type": "object[]"
+          },
+          {
+            "name": "purchase_type",
+            "type": "string"
+          },
+          {
+            "name": "quantity_increment",
+            "type": "object"
+          },
+          {
+            "name": "sections",
+            "type": "object[]"
+          },
+          {
+            "name": "stock_level",
+            "type": "string"
+          },
+          {
+            "name": "store_id",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "item_id": "14574539829",
+          "store_id": "22963160"
+        },
+        "response": {
+          "brand": "Haagen-Dazs",
+          "business_id": "434300",
+          "country": "US",
+          "display_unit": null,
+          "item_id": "14574539829",
+          "name": "Haagen-Dazs New York Strawberry Cheesecake Ice Cream (14 fl oz)",
+          "observed_at_ms": 1789412966475,
+          "photos": [
+            {
+              "url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/5681fd1d-fb3f-4ffd-a5c6-cb48a9623e55-retina-large.jpg"
+            },
+            {
+              "url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/6c097d95-9620-49bc-94dd-7b82976b5232-retina-large.jpg"
+            },
+            {
+              "url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/757076d2-fbce-4113-b213-26801682dc81-retina-large.jpg"
+            }
+          ],
+          "prices": [
+            {
+              "additional_display": null,
+              "price": {
+                "amount": 9.19,
+                "currency": "USD",
+                "decimal_places": 2,
+                "display": "$9.19",
+                "unit_amount": 919
+              },
+              "type": "PRICE_TYPE_ATC_PRICE"
+            },
+            {
+              "additional_display": null,
+              "price": {
+                "amount": 9.19,
+                "currency": "USD",
+                "decimal_places": 2,
+                "display": "$9.19",
+                "unit_amount": 919
+              },
+              "type": "PRICE_TYPE_PRICE"
+            },
+            {
+              "additional_display": null,
+              "price": {
+                "amount": 9.19,
+                "currency": "USD",
+                "decimal_places": 2,
+                "display": "$9.19",
+                "unit_amount": 919
+              },
+              "type": "PRICE_TYPE_IN_FEED_PRICE"
+            }
+          ],
+          "purchase_type": "PURCHASE_TYPE_UNIT",
+          "quantity_increment": {
+            "amount": 1,
+            "decimal_places": 2,
+            "unit_amount": 100
+          },
+          "sections": [
+            {
+              "entries": [],
+              "nutrition": null,
+              "text": "New York strawberry cheesecake ice cream - velvety cheesecake ice cream swirled with strawberry sauce and soft graham cracker crust pieces. Made with real milk, cream, eggs, strawberry sauce, and graham cracker crust pieces - familiar ingredients, thoughtfully brought together for a cheesecake experience that feels just right. Just rich, smooth, creamy ice cream, unmistakably Häagen-Dazs. In a world that tells you to move faster, this is your moment to slow down. Take your sweet time and savor every spoonful - the strawberry swirl, the cheesecake creaminess, the graham cracker crunch, the experience of ice cream made to be savored, not rushed. Kosher, crafted with thoughtfully selected ingredients, it's indulgence without compromise. Häagen-Dazs is crafted for those who believe indulgence should be felt, not rushed. That's Dazs.",
+              "title": "Details"
+            },
+            {
+              "entries": [],
+              "nutrition": {
+                "disclaimer": "Product details and images are for convenience only and may not be current, accurate, or complete. Consult the product label on physical product packaging for the most current and accurate information, including nutrition information, ingredients, claims, allergens, and warnings. We do not represent or warrant that the nutrition, ingredient, claims, allergen, or other product information on our website or mobile application are current, accurate, or complete. For additional information, contact the manufacturer.",
+                "nutrients": [
+                  {
+                    "label": "Calories",
+                    "pct_daily_value": null,
+                    "subcategories": [],
+                    "total": "300"
+                  },
+                  {
+                    "label": "Total Fat",
+                    "pct_daily_value": "26%",
+                    "subcategories": [
+                      {
+                        "label": "Saturated Fat",
+                        "pct_daily_value": "60%",
+                        "subcategories": [],
+                        "total": "12g"
+                      },
+                      {
+                        "label": "Trans Fat",
+                        "pct_daily_value": null,
+                        "subcategories": [],
+                        "total": "0.5g"
+                      }
+                    ],
+                    "total": "20g"
+                  },
+                  {
+                    "label": "Cholesterol",
+                    "pct_daily_value": "30%",
+                    "subcategories": [],
+                    "total": "90mg"
+                  }
+                ],
+                "nutrition_annotation": "* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.",
+                "serving_size": "2/3 cup (132g)",
+                "servings_per_container": "2.5"
+              },
+              "text": "",
+              "title": "Nutritional Information"
+            },
+            {
+              "entries": [
+                {
+                  "key": "Unit Count",
+                  "value": "1"
+                },
+                {
+                  "key": "Flavor",
+                  "value": "New York Strawberry Cheesecake"
+                }
+              ],
+              "nutrition": null,
+              "text": "",
+              "title": "Specifications"
+            }
+          ],
+          "stock_level": "STOCK_LEVEL_UNSPECIFIED",
+          "store_id": "22963160"
+        },
+        "recordedAt": "2026-09-14"
+      },
+      "execute": {
+        "provider": "doordash-com",
+        "capability": "products/product"
+      }
+    },
+    {
+      "id": "doordash-com/products/review_summary",
+      "provider": "doordash-com",
+      "capability": "products/review_summary",
+      "name": "Review summary",
+      "description": "Rating and review totals with star percentages for one product.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "item_id",
+          "type": "string",
+          "in": "body",
+          "about": "Store-specific item ID, returned by items. Pattern: ^[1-9][0-9]{0,19}$.",
+          "required": true
+        },
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "DoorDash grocery/convenience store ID. Pattern: ^[1-9][0-9]{0,19}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Get product-level rating totals and star distribution; these are not store ratings.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "item_id",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "rating",
+            "type": "object"
+          },
+          {
+            "name": "rating_breakdown",
+            "type": "object"
+          },
+          {
+            "name": "store_id",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "item_id": "14574539829",
+          "store_id": "22963160"
+        },
+        "response": {
+          "country": "US",
+          "item_id": "14574539829",
+          "observed_at_ms": 1789412977958,
+          "rating": {
+            "average": 4.7777777,
+            "count_display": "(20+)",
+            "rating_count": 27,
+            "review_count": 27
+          },
+          "rating_breakdown": {
+            "five_star_percentage": 0.8518519,
+            "four_star_percentage": 0.074074075,
+            "one_star_percentage": 0,
+            "three_star_percentage": 0.074074075,
+            "two_star_percentage": 0
+          },
+          "store_id": "22963160"
+        },
+        "recordedAt": "2026-09-14"
+      },
+      "execute": {
+        "provider": "doordash-com",
+        "capability": "products/review_summary"
+      }
+    },
+    {
+      "id": "doordash-com/products/reviews",
+      "provider": "doordash-com",
+      "capability": "products/reviews",
+      "name": "Reviews",
+      "description": "Public customer reviews for one product, paged with limit/offset.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "item_id",
+          "type": "string",
+          "in": "body",
+          "about": "Store-specific item ID, returned by items. Pattern: ^[1-9][0-9]{0,19}$.",
+          "required": true
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 10,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "offset",
+          "default": 0,
+          "min": 0,
+          "max": 10000
+        },
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "DoorDash grocery/convenience store ID. Pattern: ^[1-9][0-9]{0,19}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Get one page of public product reviews. Pass pagination.next_offset as offset for the next call.",
+        "key": "reviews",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "author_name",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "helpful_vote_count",
+            "type": "number"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "images",
+            "type": "object[]"
+          },
+          {
+            "name": "is_incentivized",
+            "type": "boolean"
+          },
+          {
+            "name": "is_recommended",
+            "type": "boolean"
+          },
+          {
+            "name": "is_verified_purchase",
+            "type": "boolean"
+          },
+          {
+            "name": "not_helpful_vote_count",
+            "type": "number"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "item_id": "14574539829",
+          "limit": 10,
+          "store_id": "22963160"
+        },
+        "response": {
+          "count": 10,
+          "country": "US",
+          "item_id": "14574539829",
+          "observed_at_ms": 1789413028697,
+          "pagination": {
+            "has_next": true,
+            "limit": 10,
+            "next_offset": 10,
+            "offset": 0,
+            "total": null
+          },
+          "rating": {
+            "average": 4.7777777,
+            "count_display": "(20+)",
+            "rating_count": 27,
+            "review_count": 27
+          },
+          "rating_breakdown": {
+            "five_star_percentage": 0.8518519,
+            "four_star_percentage": 0.074074075,
+            "one_star_percentage": 0,
+            "three_star_percentage": 0.074074075,
+            "two_star_percentage": 0
+          },
+          "reviews": [
+            {
+              "author_name": "idy1965",
+              "date": "2024-05-04T21:46:05Z",
+              "helpful_vote_count": null,
+              "id": "cda81bbf-4b45-53a1-bb88-f06fb2782c82",
+              "images": [
+                {
+                  "image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/44ca6c31-7483-548f-9c2f-79c9dd68290c",
+                  "thumbnail_image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/ea1a8763-27a9-59fa-b63c-1ced96a3e30d"
+                },
+                {
+                  "image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/6c17cbe1-4769-5c37-a818-96fb605c6cb0",
+                  "thumbnail_image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/f01b06fa-abe5-5a8d-9179-b5bb3a1421c0"
+                }
+              ],
+              "is_incentivized": true,
+              "is_recommended": null,
+              "is_verified_purchase": null,
+              "not_helpful_vote_count": null,
+              "rating": 4,
+              "source": "influenster.com",
+              "text": "I recently indulged in the cheesecake-flavored ice cream from Haagen Dazs, and it was a delightfully creamy experience that truly lived up to its promise. The flavor is a perfect blend of the rich, tangy taste of traditional cheesecake paired with the cool, soothing texture of ice cream. Every spoonful was thick and luscious, with a consistency that melted smoothly in the mouth, reminiscent of the dense filling of a classic cheesecake.\n\nWhat really sets this ice cream apart is how it captures the essence of cheesecake, complete with a subtle hint of a graham cracker base. The balance between sweetness and tanginess is impeccable, making it not just refreshing, but also satisfying for any dessert lover. It's perfect for those who adore cheesecake but crave the chilled comfort of ice cream.",
+              "title": "Delicious!"
+            },
+            {
+              "author_name": "pandatiff",
+              "date": "2024-04-28T14:31:25Z",
+              "helpful_vote_count": null,
+              "id": "9a08ee68-89d1-5e4b-a128-88569f941b9f",
+              "images": [
+                {
+                  "image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/17daa17f-a63f-570c-98a3-d5e2b55b95a9",
+                  "thumbnail_image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/1d81d1b5-5544-5ad5-b855-d0ce9ef7c174"
+                },
+                {
+                  "image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/2e49957e-fab5-5ca5-86c4-961af63f3bba",
+                  "thumbnail_image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/fff1a75a-45fd-50e1-b28d-57905fb40471"
+                }
+              ],
+              "is_incentivized": true,
+              "is_recommended": null,
+              "is_verified_purchase": null,
+              "not_helpful_vote_count": null,
+              "rating": 5,
+              "source": "influenster.com",
+              "text": "I received this product for free in exchange for my honest review. This ice cream was rich and delicious! With plenty of graham cracker pieces, swirls of strawberry sauce and cheese cake flavored ice cream, this product really hit the spot. I can always count on Haagen-Dazs to have the creamiest of ice cream and the sweetest of toppings and this time did not disappoint. This flavor had everything you think of when you bite into a slice of New York cheesecake. I would recommend this to anyone who likes strawberry desserts and a rich ice cream. I’ll definitely be buying this again in the near future.",
+              "title": "Rich and creamy!"
+            },
+            {
+              "author_name": "ishitad4",
+              "date": "2024-04-30T21:23:27Z",
+              "helpful_vote_count": null,
+              "id": "e40cff80-c2bb-515b-ad04-0cd3953927b3",
+              "images": [
+                {
+                  "image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/71418b96-5b78-5e42-b38b-6c1b0c755185",
+                  "thumbnail_image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/5648b5bb-a6bd-5fd6-b2b5-bfb54c4e5ac4"
+                },
+                {
+                  "image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/6583f336-9c27-5bb1-9c93-f598b27cd1bc",
+                  "thumbnail_image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/57d49371-c3c4-5c3a-8353-6c838633f3b0"
+                },
+                {
+                  "image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/5e5149d2-0050-5835-86ac-41543fe0591c",
+                  "thumbnail_image_url": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86aWNlY3JlYW1jb20/59d268ef-3608-5074-8d12-22258ab8d9e1"
+                }
+              ],
+              "is_incentivized": true,
+              "is_recommended": null,
+              "is_verified_purchase": null,
+              "not_helpful_vote_count": null,
+              "rating": 5,
+              "source": "influenster.com",
+              "text": "I was craving a good ice cream and this tub made my day. The flavor is amazingly delicious with a perfect balance of strawberry swirl and cheesecake. There are tiny pieces of cheesecake in it which adds a nice texture. I am totally impressed by this ice cream.",
+              "title": "Very delicious"
+            }
+          ],
+          "store_id": "22963160"
+        },
+        "recordedAt": "2026-09-14"
+      },
+      "execute": {
+        "provider": "doordash-com",
+        "capability": "products/reviews"
+      }
+    },
+    {
+      "id": "doordash-com/products/search",
+      "provider": "doordash-com",
+      "capability": "products/search",
+      "name": "Search",
+      "description": "Find stores and restaurants near a latitude/longitude for a query. Use search_items to search products inside one store.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "latitude",
+          "required": true,
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "required": true,
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "max_pages",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum source pages fetched in this call. Cursors stay inside the call.",
+          "default": 1,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Search text; leading/trailing whitespace is trimmed. No control characters.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Search DoorDash US stores and restaurants near explicit latitude/longitude coordinates. Returns ranked store results with IDs, URLs, ratings and availability; optional pagination stays within the call.",
+        "key": "stores",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "delivery_fee_display",
+            "type": "string"
+          },
+          {
+            "name": "delivery_time_display",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "is_available",
+            "type": "boolean"
+          },
+          {
+            "name": "is_retail",
+            "type": "boolean"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "object"
+          },
+          {
+            "name": "store_id",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "latitude": 37.7879,
+          "longitude": -122.4075,
+          "query": "pizza"
+        },
+        "response": {
+          "count": 50,
+          "country": "US",
+          "has_more": true,
+          "location": {
+            "latitude": 37.7879,
+            "longitude": -122.4075
+          },
+          "observed_at_ms": 1789412773979,
+          "pages_fetched": 1,
+          "query": "pizza",
+          "stores": [
+            {
+              "delivery_fee_display": "Lower fees",
+              "delivery_time_display": "1.7 mi • 35 min",
+              "description": "$ • Pizza, Deep Dish Pizza",
+              "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/159c805e-839a-4b11-a97f-2feb9d14c555-retina-large.JPG",
+              "is_available": true,
+              "is_retail": false,
+              "name": "Little Caesars",
+              "rating": {
+                "average": 4.5,
+                "count_display": "(2k+)"
+              },
+              "store_id": "31162005",
+              "url": "https://www.doordash.com/store/little-caesars-san-francisco-31162005/"
+            },
+            {
+              "delivery_fee_display": "Lower fees",
+              "delivery_time_display": "0.6 mi • 28 min",
+              "description": "$$ • Sandwiches, Italian",
+              "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,format=auto/https://doordash-static.s3.amazonaws.com/media/photos/17759977-4dd0-444f-9d7d-8a30cf992c53-retina-large-jpeg",
+              "is_available": true,
+              "is_retail": false,
+              "name": "Bellissimo Pizza",
+              "rating": {
+                "average": 4.5,
+                "count_display": "(8k+)"
+              },
+              "store_id": "29439",
+              "url": "https://www.doordash.com/store/bellissimo-pizza-san-francisco-29439/"
+            },
+            {
+              "delivery_fee_display": "Lower fees",
+              "delivery_time_display": "0.8 mi • 40 min",
+              "description": "$ • Pizza, Pizzeria",
+              "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/3bf1fb37-b1a2-47ef-a7f7-ce17b28d93c0-npp-retina-large.jpg",
+              "is_available": true,
+              "is_retail": false,
+              "name": "Domino's",
+              "rating": {
+                "average": 4.400000095367432,
+                "count_display": "(1k+)"
+              },
+              "store_id": "33843533",
+              "url": "https://www.doordash.com/store/domino's-san-francisco-33843533/"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-14"
+      },
+      "execute": {
+        "provider": "doordash-com",
+        "capability": "products/search"
+      }
+    },
+    {
+      "id": "doordash-com/products/search_items",
+      "provider": "doordash-com",
+      "capability": "products/search_items",
+      "name": "Search items",
+      "description": "Products matching a query inside one store, paged by cursor up to max_pages.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Requested items per source page. DoorDash may return fewer.",
+          "default": 30,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "max_pages",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum source pages fetched in this call. Cursors stay inside the call.",
+          "default": 1,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Search text; leading/trailing whitespace is trimmed. No control characters.",
+          "required": true
+        },
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "DoorDash grocery/convenience store ID. Pattern: ^[1-9][0-9]{0,19}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Search products inside a DoorDash US grocery/convenience store using the actual retail search endpoint. Returns item IDs, prices, images, source search terms and pagination; IDs can be passed to product, photos and reviews.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "item_id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "purchase_type",
+            "type": "string"
+          },
+          {
+            "name": "quantity_increment",
+            "type": "object"
+          },
+          {
+            "name": "rating",
+            "type": "object"
+          },
+          {
+            "name": "stock_level",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 30,
+          "max_pages": 2,
+          "query": "milk",
+          "store_id": "22963160"
+        },
+        "response": {
+          "count": 60,
+          "country": "US",
+          "has_more": true,
+          "items": [
+            {
+              "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/b2f98a56-1210-4c6f-812b-a517a7260819-retina-large.jpg",
+              "item_id": "13082062601",
+              "name": "Fairlife 2% Reduced Fat Ultra-Filtered Chocolate Milk Bottle (14 fl oz)",
+              "price": {
+                "amount": 3.89,
+                "currency": "USD",
+                "decimal_places": 2,
+                "display": "$3.89",
+                "unit_amount": 389
+              },
+              "purchase_type": "PURCHASE_TYPE_UNIT",
+              "quantity_increment": {
+                "amount": 1,
+                "decimal_places": 2,
+                "unit_amount": 100
+              },
+              "rating": {
+                "average": null,
+                "count_display": null,
+                "rating_count": null,
+                "review_count": null
+              },
+              "stock_level": "STOCK_LEVEL_UNSPECIFIED"
+            },
+            {
+              "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/447f7559-20d0-4934-b39f-2adc1b66e012-retina-large.png",
+              "item_id": "13082062602",
+              "name": "Fairlife 2% Reduced Fat Ultra-Filtered Strawberry Milk Bottle (14 fl oz)",
+              "price": {
+                "amount": 3.79,
+                "currency": "USD",
+                "decimal_places": 2,
+                "display": "$3.79",
+                "unit_amount": 379
+              },
+              "purchase_type": "PURCHASE_TYPE_UNIT",
+              "quantity_increment": {
+                "amount": 1,
+                "decimal_places": 2,
+                "unit_amount": 100
+              },
+              "rating": {
+                "average": null,
+                "count_display": null,
+                "rating_count": null,
+                "review_count": null
+              },
+              "stock_level": "STOCK_LEVEL_UNSPECIFIED"
+            },
+            {
+              "image_url": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=2688,height=1512,format=auto/https://doordash-static.s3.amazonaws.com/media/photosV2/ef46b5d8-7e9d-455e-872c-46a4346a5381-retina-large.png",
+              "item_id": "18577046292",
+              "name": "Yoo-Hoo Chocolate Drink (15.5 fl oz)",
+              "price": {
+                "amount": 2.49,
+                "currency": "USD",
+                "decimal_places": 2,
+                "display": "$2.49",
+                "unit_amount": 249
+              },
+              "purchase_type": "PURCHASE_TYPE_UNIT",
+              "quantity_increment": {
+                "amount": 1,
+                "decimal_places": 2,
+                "unit_amount": 100
+              },
+              "rating": {
+                "average": null,
+                "count_display": null,
+                "rating_count": null,
+                "review_count": null
+              },
+              "stock_level": "STOCK_LEVEL_UNSPECIFIED"
+            }
+          ],
+          "observed_at_ms": 1789412776664,
+          "pages_fetched": 2,
+          "query": "milk",
+          "searched_query": "milk",
+          "store_id": "22963160",
+          "suggested_query": "milk",
+          "total_count": 500
+        },
+        "recordedAt": "2026-09-14"
+      },
+      "execute": {
+        "provider": "doordash-com",
+        "capability": "products/search_items"
+      }
+    },
+    {
+      "id": "doordash-com/products/store",
+      "provider": "doordash-com",
+      "capability": "products/store",
+      "name": "Store",
+      "description": "Store details for one grocery/convenience store id. Use search for discovery.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "DoorDash grocery/convenience store ID. Pattern: ^[1-9][0-9]{0,19}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Get public DoorDash US grocery/convenience store details, address, images and store ratings.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "business",
+            "type": "object"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "images",
+            "type": "object"
+          },
+          {
+            "name": "is_active",
+            "type": "boolean"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "price_range",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "object"
+          },
+          {
+            "name": "store_id",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "store_id": "22963160"
+        },
+        "response": {
+          "address": {
+            "city": "Daly City",
+            "display": "2195 Junipero Serra Blvd, Daly City, CA 94014, USA",
+            "street": "2195 Junipero Serra Boulevard"
+          },
+          "business": {
+            "id": "434300",
+            "name": "Speedway",
+            "verticalId": "100"
+          },
+          "country": "US",
+          "description": "",
+          "images": {
+            "cover": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/restaurant/cover/Speedway_DDProfile.jpg",
+            "header": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/store/header/a809399c-faf3-4a85-ab8b-2f9d2a508bc4.jpg",
+            "square": "https://img.cdn4dd.com/cdn-cgi/image/fit=contain,width=1200,height=672,format=auto/https://doordash-static.s3.amazonaws.com/media/restaurant/cover_square/d1461c34-d6f2-43de-baaa-7be395a004fb.png"
+          },
+          "is_active": true,
+          "name": "Speedway",
+          "observed_at_ms": 1789412949890,
+          "price_range": "$$",
+          "rating": {
+            "average": 4.6,
+            "count": 983,
+            "count_display": "(500+)"
+          },
+          "store_id": "22963160",
+          "url": "https://www.doordash.com/convenience/store/22963160"
+        },
+        "recordedAt": "2026-09-14"
+      },
+      "execute": {
+        "provider": "doordash-com",
+        "capability": "products/store"
+      }
+    }
+  ]
+}

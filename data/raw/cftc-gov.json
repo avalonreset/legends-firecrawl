@@ -1,0 +1,1691 @@
+{
+  "id": "cftc-gov",
+  "provider": "cftc-gov",
+  "name": "CFTC Commitments of Traders",
+  "description": "US Commodity Futures Trading Commission Commitments of Traders (COT) reports from the public reporting SODA API (publicreporting.cftc.gov): the seven weekly datasets (Legacy, Disaggregated and Traders in Financial Futures, each futures-only and combined, plus the Supplemental commodity index report) with filters, column projection, deterministic recent-first order and offset pagination, and a contract-market discovery function.",
+  "toolCount": 8,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "cftc-gov"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "cftc-gov/commitments-of-traders/disaggregated_combined",
+      "provider": "cftc-gov",
+      "capability": "commitments-of-traders/disaggregated_combined",
+      "name": "Disaggregated combined",
+      "description": "Positions and open interest from the CFTC Disaggregated - Combined report for one or many markets and weeks. Use `markets` first to find contract_market_code values; use `fields` to keep the payload small.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "commodity_group_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_group_name, case-insensitive: AGRICULTURE, NATURAL RESOURCES, FINANCIAL INSTRUMENTS."
+        },
+        {
+          "name": "commodity_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_name, case-insensitive (GOLD, WHEAT, NATURAL GAS, BITCOIN)."
+        },
+        {
+          "name": "commodity_subgroup_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_subgroup_name, case-insensitive (GRAINS, PRECIOUS METALS, PETROLEUM AND PRODUCTS, CURRENCIES, STOCK INDICES, ...)."
+        },
+        {
+          "name": "contract_market_code",
+          "type": "string",
+          "in": "body",
+          "about": "Exact cftc_contract_market_code, a string with leading zeros kept (088691 = GOLD - COMMODITY EXCHANGE INC., 001602 = WHEAT-SRW - CBOT). Discover codes with `markets`. Alone, a code with no rows in this dataset is not_found; combined with date or other filters an empty page is a legitimate empty result. Pattern: ^[A-Za-z0-9]{1,12}$."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page of the same query (the SODA $offset)."
+        },
+        {
+          "name": "exchange_code",
+          "type": "string",
+          "in": "body",
+          "about": "cftc_market_code without its padding: CBT, CME, CMX, NYME, ICUS, ICEU, CMXE, FREX... Matches the padded value the dataset stores ('CMX '). Pattern: ^[A-Za-z0-9]{1,4}$."
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "in": "body",
+          "about": "Projection: SODA column names to return (open_interest_all, noncomm_positions_long_all, m_money_positions_long_all, ...). The identity columns id, market_and_exchange_names, report_date_as_yyyy_mm_dd and cftc_contract_market_code are always included. An unknown column is invalid_input. Omit for every column."
+        },
+        {
+          "name": "from",
+          "type": "string",
+          "in": "body",
+          "about": "Earliest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (a legacy row is ~4.7 KB, a disaggregated row ~7 KB).",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "SODA full-text search ($q) over the text columns, e.g. `gold` or `chicago board of trade`."
+        },
+        {
+          "name": "report_date",
+          "type": "string",
+          "in": "body",
+          "about": "One weekly report date (a Tuesday), YYYY-MM-DD. Not combinable with from / to. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Order by report date then id. The upstream default order is undefined, so an order is always sent.",
+          "default": "recent_first",
+          "oneOf": [
+            "recent_first",
+            "oldest_first"
+          ]
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "in": "body",
+          "about": "Latest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "Disaggregated Commitments of Traders, futures and options combined: producer/merchant, swap dealer, managed money and other reportable positions for physical commodity markets, options converted to futures equivalents, from 2006. Dataset kh3c-gbw2 (Disaggregated - Combined) on publicreporting.cftc.gov, weekly rows (one per market and Tuesday report date), recent-first by default, all values as strings exactly as published. Filter by contract market code, exchange, commodity name/group/subgroup, report date or date range, full text; project columns with `fields`; page with page_size / cursor.",
+        "key": "rows",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "cftc_contract_market_code",
+            "type": "string"
+          },
+          {
+            "name": "cftc_market_code",
+            "type": "string",
+            "about": "Exchange code padded to 4 characters ('CMX ', 'CBT ', 'CMXE')."
+          },
+          {
+            "name": "commodity_group_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_subgroup_name",
+            "type": "string"
+          },
+          {
+            "name": "contract_market_name",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Row key: yymmdd + contract code + F (futures only) or C (combined); supplemental rows have no suffix."
+          },
+          {
+            "name": "market_and_exchange_names",
+            "type": "string"
+          },
+          {
+            "name": "open_interest_all",
+            "type": "string"
+          },
+          {
+            "name": "report_date_as_yyyy_mm_dd",
+            "type": "string",
+            "about": "Report date as a floating timestamp, e.g. 2026-09-15T00:00:00.000."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "contract_market_code": "088691",
+          "fields": [
+            "open_interest_all",
+            "cftc_market_code"
+          ],
+          "page_size": 2
+        },
+        "response": {
+          "count": 2,
+          "data_last_modified": "Fri, 18 Sep 2026 19:30:07 GMT",
+          "dataset_id": "kh3c-gbw2",
+          "futures_only": false,
+          "next_cursor": "2",
+          "observed_at_ms": 1790037939288,
+          "report": "disaggregated_combined",
+          "report_name": "Disaggregated - Combined",
+          "rows": [
+            {
+              "cftc_contract_market_code": "088691",
+              "cftc_market_code": "CMX ",
+              "id": "260915088691C",
+              "market_and_exchange_names": "GOLD - COMMODITY EXCHANGE INC.",
+              "open_interest_all": "577454",
+              "report_date_as_yyyy_mm_dd": "2026-09-15T00:00:00.000"
+            },
+            {
+              "cftc_contract_market_code": "088691",
+              "cftc_market_code": "CMX ",
+              "id": "260908088691C",
+              "market_and_exchange_names": "GOLD - COMMODITY EXCHANGE INC.",
+              "open_interest_all": "582664",
+              "report_date_as_yyyy_mm_dd": "2026-09-08T00:00:00.000"
+            }
+          ],
+          "sort": "recent_first",
+          "source_url": "https://publicreporting.cftc.gov/resource/kh3c-gbw2.json?$select=id,market_and_exchange_names,report_date_as_yyyy_mm_dd,cftc_contract_market_code,open_interest_all,cftc_market_code&$where=cftc_contract_market_code%3D%27088691%27&$order=report_date_as_yyyy_mm_dd%20DESC,id%20ASC&$limit=3&$offset=0"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "cftc-gov",
+        "capability": "commitments-of-traders/disaggregated_combined"
+      }
+    },
+    {
+      "id": "cftc-gov/commitments-of-traders/disaggregated_futures_only",
+      "provider": "cftc-gov",
+      "capability": "commitments-of-traders/disaggregated_futures_only",
+      "name": "Disaggregated futures only",
+      "description": "Positions and open interest from the CFTC Disaggregated - Futures Only report for one or many markets and weeks. Use `markets` first to find contract_market_code values; use `fields` to keep the payload small.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "commodity_group_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_group_name, case-insensitive: AGRICULTURE, NATURAL RESOURCES, FINANCIAL INSTRUMENTS."
+        },
+        {
+          "name": "commodity_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_name, case-insensitive (GOLD, WHEAT, NATURAL GAS, BITCOIN)."
+        },
+        {
+          "name": "commodity_subgroup_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_subgroup_name, case-insensitive (GRAINS, PRECIOUS METALS, PETROLEUM AND PRODUCTS, CURRENCIES, STOCK INDICES, ...)."
+        },
+        {
+          "name": "contract_market_code",
+          "type": "string",
+          "in": "body",
+          "about": "Exact cftc_contract_market_code, a string with leading zeros kept (088691 = GOLD - COMMODITY EXCHANGE INC., 001602 = WHEAT-SRW - CBOT). Discover codes with `markets`. Alone, a code with no rows in this dataset is not_found; combined with date or other filters an empty page is a legitimate empty result. Pattern: ^[A-Za-z0-9]{1,12}$."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page of the same query (the SODA $offset)."
+        },
+        {
+          "name": "exchange_code",
+          "type": "string",
+          "in": "body",
+          "about": "cftc_market_code without its padding: CBT, CME, CMX, NYME, ICUS, ICEU, CMXE, FREX... Matches the padded value the dataset stores ('CMX '). Pattern: ^[A-Za-z0-9]{1,4}$."
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "in": "body",
+          "about": "Projection: SODA column names to return (open_interest_all, noncomm_positions_long_all, m_money_positions_long_all, ...). The identity columns id, market_and_exchange_names, report_date_as_yyyy_mm_dd and cftc_contract_market_code are always included. An unknown column is invalid_input. Omit for every column."
+        },
+        {
+          "name": "from",
+          "type": "string",
+          "in": "body",
+          "about": "Earliest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (a legacy row is ~4.7 KB, a disaggregated row ~7 KB).",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "SODA full-text search ($q) over the text columns, e.g. `gold` or `chicago board of trade`."
+        },
+        {
+          "name": "report_date",
+          "type": "string",
+          "in": "body",
+          "about": "One weekly report date (a Tuesday), YYYY-MM-DD. Not combinable with from / to. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Order by report date then id. The upstream default order is undefined, so an order is always sent.",
+          "default": "recent_first",
+          "oneOf": [
+            "recent_first",
+            "oldest_first"
+          ]
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "in": "body",
+          "about": "Latest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "Disaggregated Commitments of Traders, futures only: producer/merchant/processor/user, swap dealer, managed money and other reportable positions with changes, percent of open interest, trader counts and concentration ratios for physical commodity markets (agriculture, energy, metals, softs), from 2006. Dataset 72hh-3qpy (Disaggregated - Futures Only) on publicreporting.cftc.gov, weekly rows (one per market and Tuesday report date), recent-first by default, all values as strings exactly as published. Filter by contract market code, exchange, commodity name/group/subgroup, report date or date range, full text; project columns with `fields`; page with page_size / cursor.",
+        "key": "rows",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "cftc_contract_market_code",
+            "type": "string"
+          },
+          {
+            "name": "cftc_market_code",
+            "type": "string",
+            "about": "Exchange code padded to 4 characters ('CMX ', 'CBT ', 'CMXE')."
+          },
+          {
+            "name": "commodity_group_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_subgroup_name",
+            "type": "string"
+          },
+          {
+            "name": "contract_market_name",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Row key: yymmdd + contract code + F (futures only) or C (combined); supplemental rows have no suffix."
+          },
+          {
+            "name": "market_and_exchange_names",
+            "type": "string"
+          },
+          {
+            "name": "open_interest_all",
+            "type": "string"
+          },
+          {
+            "name": "report_date_as_yyyy_mm_dd",
+            "type": "string",
+            "about": "Report date as a floating timestamp, e.g. 2026-09-15T00:00:00.000."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "contract_market_code": "088691",
+          "fields": [
+            "open_interest_all",
+            "cftc_market_code"
+          ],
+          "page_size": 2
+        },
+        "response": {
+          "count": 2,
+          "data_last_modified": "Fri, 18 Sep 2026 19:30:07 GMT",
+          "dataset_id": "72hh-3qpy",
+          "futures_only": true,
+          "next_cursor": "2",
+          "observed_at_ms": 1790037936505,
+          "report": "disaggregated_futures_only",
+          "report_name": "Disaggregated - Futures Only",
+          "rows": [
+            {
+              "cftc_contract_market_code": "088691",
+              "cftc_market_code": "CMX ",
+              "id": "260915088691F",
+              "market_and_exchange_names": "GOLD - COMMODITY EXCHANGE INC.",
+              "open_interest_all": "409899",
+              "report_date_as_yyyy_mm_dd": "2026-09-15T00:00:00.000"
+            },
+            {
+              "cftc_contract_market_code": "088691",
+              "cftc_market_code": "CMX ",
+              "id": "260908088691F",
+              "market_and_exchange_names": "GOLD - COMMODITY EXCHANGE INC.",
+              "open_interest_all": "411227",
+              "report_date_as_yyyy_mm_dd": "2026-09-08T00:00:00.000"
+            }
+          ],
+          "sort": "recent_first",
+          "source_url": "https://publicreporting.cftc.gov/resource/72hh-3qpy.json?$select=id,market_and_exchange_names,report_date_as_yyyy_mm_dd,cftc_contract_market_code,open_interest_all,cftc_market_code&$where=cftc_contract_market_code%3D%27088691%27&$order=report_date_as_yyyy_mm_dd%20DESC,id%20ASC&$limit=3&$offset=0"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "cftc-gov",
+        "capability": "commitments-of-traders/disaggregated_futures_only"
+      }
+    },
+    {
+      "id": "cftc-gov/commitments-of-traders/legacy_combined",
+      "provider": "cftc-gov",
+      "capability": "commitments-of-traders/legacy_combined",
+      "name": "Legacy combined",
+      "description": "Positions and open interest from the CFTC Legacy - Combined report for one or many markets and weeks. Use `markets` first to find contract_market_code values; use `fields` to keep the payload small.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "commodity_group_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_group_name, case-insensitive: AGRICULTURE, NATURAL RESOURCES, FINANCIAL INSTRUMENTS."
+        },
+        {
+          "name": "commodity_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_name, case-insensitive (GOLD, WHEAT, NATURAL GAS, BITCOIN)."
+        },
+        {
+          "name": "commodity_subgroup_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_subgroup_name, case-insensitive (GRAINS, PRECIOUS METALS, PETROLEUM AND PRODUCTS, CURRENCIES, STOCK INDICES, ...)."
+        },
+        {
+          "name": "contract_market_code",
+          "type": "string",
+          "in": "body",
+          "about": "Exact cftc_contract_market_code, a string with leading zeros kept (088691 = GOLD - COMMODITY EXCHANGE INC., 001602 = WHEAT-SRW - CBOT). Discover codes with `markets`. Alone, a code with no rows in this dataset is not_found; combined with date or other filters an empty page is a legitimate empty result. Pattern: ^[A-Za-z0-9]{1,12}$."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page of the same query (the SODA $offset)."
+        },
+        {
+          "name": "exchange_code",
+          "type": "string",
+          "in": "body",
+          "about": "cftc_market_code without its padding: CBT, CME, CMX, NYME, ICUS, ICEU, CMXE, FREX... Matches the padded value the dataset stores ('CMX '). Pattern: ^[A-Za-z0-9]{1,4}$."
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "in": "body",
+          "about": "Projection: SODA column names to return (open_interest_all, noncomm_positions_long_all, m_money_positions_long_all, ...). The identity columns id, market_and_exchange_names, report_date_as_yyyy_mm_dd and cftc_contract_market_code are always included. An unknown column is invalid_input. Omit for every column."
+        },
+        {
+          "name": "from",
+          "type": "string",
+          "in": "body",
+          "about": "Earliest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (a legacy row is ~4.7 KB, a disaggregated row ~7 KB).",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "SODA full-text search ($q) over the text columns, e.g. `gold` or `chicago board of trade`."
+        },
+        {
+          "name": "report_date",
+          "type": "string",
+          "in": "body",
+          "about": "One weekly report date (a Tuesday), YYYY-MM-DD. Not combinable with from / to. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Order by report date then id. The upstream default order is undefined, so an order is always sent.",
+          "default": "recent_first",
+          "oneOf": [
+            "recent_first",
+            "oldest_first"
+          ]
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "in": "body",
+          "about": "Latest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "Legacy Commitments of Traders, futures and options combined: the same commercial / non-commercial / non-reportable breakdown as legacy_futures_only with options positions converted to futures equivalents, from 1986. Dataset jun7-fc8e (Legacy - Combined) on publicreporting.cftc.gov, weekly rows (one per market and Tuesday report date), recent-first by default, all values as strings exactly as published. Filter by contract market code, exchange, commodity name/group/subgroup, report date or date range, full text; project columns with `fields`; page with page_size / cursor.",
+        "key": "rows",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "cftc_contract_market_code",
+            "type": "string"
+          },
+          {
+            "name": "cftc_market_code",
+            "type": "string",
+            "about": "Exchange code padded to 4 characters ('CMX ', 'CBT ', 'CMXE')."
+          },
+          {
+            "name": "commodity_group_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_subgroup_name",
+            "type": "string"
+          },
+          {
+            "name": "contract_market_name",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Row key: yymmdd + contract code + F (futures only) or C (combined); supplemental rows have no suffix."
+          },
+          {
+            "name": "market_and_exchange_names",
+            "type": "string"
+          },
+          {
+            "name": "open_interest_all",
+            "type": "string"
+          },
+          {
+            "name": "report_date_as_yyyy_mm_dd",
+            "type": "string",
+            "about": "Report date as a floating timestamp, e.g. 2026-09-15T00:00:00.000."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "contract_market_code": "088691",
+          "fields": [
+            "open_interest_all",
+            "cftc_market_code"
+          ],
+          "page_size": 2
+        },
+        "response": {
+          "count": 2,
+          "data_last_modified": "Fri, 18 Sep 2026 19:30:08 GMT",
+          "dataset_id": "jun7-fc8e",
+          "futures_only": false,
+          "next_cursor": "2",
+          "observed_at_ms": 1790037933682,
+          "report": "legacy_combined",
+          "report_name": "Legacy - Combined",
+          "rows": [
+            {
+              "cftc_contract_market_code": "088691",
+              "cftc_market_code": "CMX ",
+              "id": "260915088691C",
+              "market_and_exchange_names": "GOLD - COMMODITY EXCHANGE INC.",
+              "open_interest_all": "577454",
+              "report_date_as_yyyy_mm_dd": "2026-09-15T00:00:00.000"
+            },
+            {
+              "cftc_contract_market_code": "088691",
+              "cftc_market_code": "CMX ",
+              "id": "260908088691C",
+              "market_and_exchange_names": "GOLD - COMMODITY EXCHANGE INC.",
+              "open_interest_all": "582664",
+              "report_date_as_yyyy_mm_dd": "2026-09-08T00:00:00.000"
+            }
+          ],
+          "sort": "recent_first",
+          "source_url": "https://publicreporting.cftc.gov/resource/jun7-fc8e.json?$select=id,market_and_exchange_names,report_date_as_yyyy_mm_dd,cftc_contract_market_code,open_interest_all,cftc_market_code&$where=cftc_contract_market_code%3D%27088691%27&$order=report_date_as_yyyy_mm_dd%20DESC,id%20ASC&$limit=3&$offset=0"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "cftc-gov",
+        "capability": "commitments-of-traders/legacy_combined"
+      }
+    },
+    {
+      "id": "cftc-gov/commitments-of-traders/legacy_futures_only",
+      "provider": "cftc-gov",
+      "capability": "commitments-of-traders/legacy_futures_only",
+      "name": "Legacy futures only",
+      "description": "Positions and open interest from the CFTC Legacy - Futures Only report for one or many markets and weeks. Use `markets` first to find contract_market_code values; use `fields` to keep the payload small.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "commodity_group_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_group_name, case-insensitive: AGRICULTURE, NATURAL RESOURCES, FINANCIAL INSTRUMENTS."
+        },
+        {
+          "name": "commodity_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_name, case-insensitive (GOLD, WHEAT, NATURAL GAS, BITCOIN)."
+        },
+        {
+          "name": "commodity_subgroup_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_subgroup_name, case-insensitive (GRAINS, PRECIOUS METALS, PETROLEUM AND PRODUCTS, CURRENCIES, STOCK INDICES, ...)."
+        },
+        {
+          "name": "contract_market_code",
+          "type": "string",
+          "in": "body",
+          "about": "Exact cftc_contract_market_code, a string with leading zeros kept (088691 = GOLD - COMMODITY EXCHANGE INC., 001602 = WHEAT-SRW - CBOT). Discover codes with `markets`. Alone, a code with no rows in this dataset is not_found; combined with date or other filters an empty page is a legitimate empty result. Pattern: ^[A-Za-z0-9]{1,12}$."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page of the same query (the SODA $offset)."
+        },
+        {
+          "name": "exchange_code",
+          "type": "string",
+          "in": "body",
+          "about": "cftc_market_code without its padding: CBT, CME, CMX, NYME, ICUS, ICEU, CMXE, FREX... Matches the padded value the dataset stores ('CMX '). Pattern: ^[A-Za-z0-9]{1,4}$."
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "in": "body",
+          "about": "Projection: SODA column names to return (open_interest_all, noncomm_positions_long_all, m_money_positions_long_all, ...). The identity columns id, market_and_exchange_names, report_date_as_yyyy_mm_dd and cftc_contract_market_code are always included. An unknown column is invalid_input. Omit for every column."
+        },
+        {
+          "name": "from",
+          "type": "string",
+          "in": "body",
+          "about": "Earliest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (a legacy row is ~4.7 KB, a disaggregated row ~7 KB).",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "SODA full-text search ($q) over the text columns, e.g. `gold` or `chicago board of trade`."
+        },
+        {
+          "name": "report_date",
+          "type": "string",
+          "in": "body",
+          "about": "One weekly report date (a Tuesday), YYYY-MM-DD. Not combinable with from / to. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Order by report date then id. The upstream default order is undefined, so an order is always sent.",
+          "default": "recent_first",
+          "oneOf": [
+            "recent_first",
+            "oldest_first"
+          ]
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "in": "body",
+          "about": "Latest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "Legacy Commitments of Traders, futures only: open interest and positions of commercial, non-commercial and non-reportable traders (all / old / other crop years), weekly changes, percent of open interest, trader counts and concentration ratios for every futures market the CFTC reports (agriculture, energy, metals, financials, crypto), from 1986. Dataset 6dca-aqww (Legacy - Futures Only) on publicreporting.cftc.gov, weekly rows (one per market and Tuesday report date), recent-first by default, all values as strings exactly as published. Filter by contract market code, exchange, commodity name/group/subgroup, report date or date range, full text; project columns with `fields`; page with page_size / cursor.",
+        "key": "rows",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "cftc_contract_market_code",
+            "type": "string"
+          },
+          {
+            "name": "cftc_market_code",
+            "type": "string",
+            "about": "Exchange code padded to 4 characters ('CMX ', 'CBT ', 'CMXE')."
+          },
+          {
+            "name": "commodity_group_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_subgroup_name",
+            "type": "string"
+          },
+          {
+            "name": "contract_market_name",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Row key: yymmdd + contract code + F (futures only) or C (combined); supplemental rows have no suffix."
+          },
+          {
+            "name": "market_and_exchange_names",
+            "type": "string"
+          },
+          {
+            "name": "open_interest_all",
+            "type": "string"
+          },
+          {
+            "name": "report_date_as_yyyy_mm_dd",
+            "type": "string",
+            "about": "Report date as a floating timestamp, e.g. 2026-09-15T00:00:00.000."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "contract_market_code": "088691",
+          "fields": [
+            "open_interest_all",
+            "cftc_market_code"
+          ],
+          "page_size": 2
+        },
+        "response": {
+          "count": 2,
+          "data_last_modified": "Fri, 18 Sep 2026 19:30:08 GMT",
+          "dataset_id": "6dca-aqww",
+          "futures_only": true,
+          "next_cursor": "2",
+          "observed_at_ms": 1790037916717,
+          "report": "legacy_futures_only",
+          "report_name": "Legacy - Futures Only",
+          "rows": [
+            {
+              "cftc_contract_market_code": "088691",
+              "cftc_market_code": "CMX ",
+              "id": "260915088691F",
+              "market_and_exchange_names": "GOLD - COMMODITY EXCHANGE INC.",
+              "open_interest_all": "409899",
+              "report_date_as_yyyy_mm_dd": "2026-09-15T00:00:00.000"
+            },
+            {
+              "cftc_contract_market_code": "088691",
+              "cftc_market_code": "CMX ",
+              "id": "260908088691F",
+              "market_and_exchange_names": "GOLD - COMMODITY EXCHANGE INC.",
+              "open_interest_all": "411227",
+              "report_date_as_yyyy_mm_dd": "2026-09-08T00:00:00.000"
+            }
+          ],
+          "sort": "recent_first",
+          "source_url": "https://publicreporting.cftc.gov/resource/6dca-aqww.json?$select=id,market_and_exchange_names,report_date_as_yyyy_mm_dd,cftc_contract_market_code,open_interest_all,cftc_market_code&$where=cftc_contract_market_code%3D%27088691%27&$order=report_date_as_yyyy_mm_dd%20DESC,id%20ASC&$limit=3&$offset=0"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "cftc-gov",
+        "capability": "commitments-of-traders/legacy_futures_only"
+      }
+    },
+    {
+      "id": "cftc-gov/commitments-of-traders/markets",
+      "provider": "cftc-gov",
+      "capability": "commitments-of-traders/markets",
+      "name": "Markets",
+      "description": "Start here to find the contract_market_code (and exchange_code / commodity names) to pass to a report function, or to see which markets a dataset covers and how far back.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "commodity_group_name",
+          "type": "string",
+          "in": "body",
+          "about": "AGRICULTURE, NATURAL RESOURCES or FINANCIAL INSTRUMENTS (case-insensitive)."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page of the same query."
+        },
+        {
+          "name": "exchange_code",
+          "type": "string",
+          "in": "body",
+          "about": "Exchange code without padding: CBT, CME, CMX, NYME, ICUS, ICEU, CMXE, FREX... Pattern: ^[A-Za-z0-9]{1,4}$."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 100,
+          "min": 1,
+          "max": 500
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive substring of contract_market_name or commodity_name (GOLD, WHEAT, S&P, EURO FX). Pattern: ^[^%_]+$."
+        },
+        {
+          "name": "report",
+          "type": "string",
+          "in": "body",
+          "about": "Which dataset to list contract markets for.",
+          "required": true,
+          "oneOf": [
+            "legacy_futures_only",
+            "legacy_combined",
+            "disaggregated_futures_only",
+            "disaggregated_combined",
+            "tff_futures_only",
+            "tff_combined",
+            "supplemental"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Discover the contract markets of one Commitments of Traders dataset: distinct cftc_contract_market_code with contract market name, exchange code, commodity name / group / subgroup, earliest and latest report date and row count, most recently reported first. Filter by name substring, exchange or commodity group; page with page_size / cursor.",
+        "key": "markets",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "commodity_group_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_subgroup_name",
+            "type": "string"
+          },
+          {
+            "name": "contract_market_code",
+            "type": "string",
+            "about": "cftc_contract_market_code: the `contract_market_code` filter of the report functions."
+          },
+          {
+            "name": "contract_market_name",
+            "type": "string"
+          },
+          {
+            "name": "earliest_report_date",
+            "type": "string"
+          },
+          {
+            "name": "exchange_code",
+            "type": "string",
+            "about": "cftc_market_code with the padding trimmed (CMX, CBT, CMXE)."
+          },
+          {
+            "name": "latest_report_date",
+            "type": "string",
+            "about": "Most recent report date for this market in the dataset (floating timestamp)."
+          },
+          {
+            "name": "row_count",
+            "type": "number",
+            "about": "Weekly rows for this market in the dataset."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "page_size": 1,
+          "query": "gold",
+          "report": "legacy_futures_only"
+        },
+        "response": {
+          "count": 1,
+          "data_last_modified": "Fri, 18 Sep 2026 19:30:08 GMT",
+          "dataset_id": "6dca-aqww",
+          "markets": [
+            {
+              "commodity_group_name": "NATURAL RESOURCES",
+              "commodity_name": "GOLD",
+              "commodity_subgroup_name": "PRECIOUS METALS",
+              "contract_market_code": "088691",
+              "contract_market_name": "GOLD",
+              "earliest_report_date": "2022-09-13T00:00:00.000",
+              "exchange_code": "CMX",
+              "latest_report_date": "2026-09-15T00:00:00.000",
+              "row_count": 207
+            }
+          ],
+          "next_cursor": "1",
+          "observed_at_ms": 1790037950482,
+          "report": "legacy_futures_only",
+          "source_url": "https://publicreporting.cftc.gov/resource/6dca-aqww.json?$select=cftc_contract_market_code,contract_market_name,cftc_market_code,commodity_name,commodity_subgroup_name,commodity_group_name,max(report_date_as_yyyy_mm_dd)%20as%20latest_report_date,min(report_date_as_yyyy_mm_dd)%20as%20earliest_report_date,count(*)%20as%20row_count&$where=(upper(contract_market_name)%20like%20%27%25GOLD%25%27%20OR%20upper(commodity_name)%20like%20%27%25GOLD%25%27)&$group=cftc_contract_market_code,contract_market_name,cftc_market_code,commodity_name,commodity_subgroup_name,commodity_group_name&$order=latest_report_date%20DESC,cftc_contract_market_code%20ASC&$limit=2&$offset=0"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "cftc-gov",
+        "capability": "commitments-of-traders/markets"
+      }
+    },
+    {
+      "id": "cftc-gov/commitments-of-traders/supplemental",
+      "provider": "cftc-gov",
+      "capability": "commitments-of-traders/supplemental",
+      "name": "Supplemental",
+      "description": "Positions and open interest from the CFTC Supplemental Commodity Index report for one or many markets and weeks. Use `markets` first to find contract_market_code values; use `fields` to keep the payload small.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "commodity_group_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_group_name, case-insensitive: AGRICULTURE, NATURAL RESOURCES, FINANCIAL INSTRUMENTS."
+        },
+        {
+          "name": "commodity_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_name, case-insensitive (GOLD, WHEAT, NATURAL GAS, BITCOIN)."
+        },
+        {
+          "name": "commodity_subgroup_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_subgroup_name, case-insensitive (GRAINS, PRECIOUS METALS, PETROLEUM AND PRODUCTS, CURRENCIES, STOCK INDICES, ...)."
+        },
+        {
+          "name": "contract_market_code",
+          "type": "string",
+          "in": "body",
+          "about": "Exact cftc_contract_market_code, a string with leading zeros kept (088691 = GOLD - COMMODITY EXCHANGE INC., 001602 = WHEAT-SRW - CBOT). Discover codes with `markets`. Alone, a code with no rows in this dataset is not_found; combined with date or other filters an empty page is a legitimate empty result. Pattern: ^[A-Za-z0-9]{1,12}$."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page of the same query (the SODA $offset)."
+        },
+        {
+          "name": "exchange_code",
+          "type": "string",
+          "in": "body",
+          "about": "cftc_market_code without its padding: CBT, CME, CMX, NYME, ICUS, ICEU, CMXE, FREX... Matches the padded value the dataset stores ('CMX '). Pattern: ^[A-Za-z0-9]{1,4}$."
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "in": "body",
+          "about": "Projection: SODA column names to return (open_interest_all, noncomm_positions_long_all, m_money_positions_long_all, ...). The identity columns id, market_and_exchange_names, report_date_as_yyyy_mm_dd and cftc_contract_market_code are always included. An unknown column is invalid_input. Omit for every column."
+        },
+        {
+          "name": "from",
+          "type": "string",
+          "in": "body",
+          "about": "Earliest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (a legacy row is ~4.7 KB, a disaggregated row ~7 KB).",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "SODA full-text search ($q) over the text columns, e.g. `gold` or `chicago board of trade`."
+        },
+        {
+          "name": "report_date",
+          "type": "string",
+          "in": "body",
+          "about": "One weekly report date (a Tuesday), YYYY-MM-DD. Not combinable with from / to. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Order by report date then id. The upstream default order is undefined, so an order is always sent.",
+          "default": "recent_first",
+          "oneOf": [
+            "recent_first",
+            "oldest_first"
+          ]
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "in": "body",
+          "about": "Latest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "Supplemental Commitments of Traders (Commodity Index Traders, CIT): 13 agricultural markets, futures and options combined, with the index-trader category split out of the commercial and non-commercial groups (column names are MixedCase upstream and are passed through as-is), from 2006. Dataset 4zgm-a668 (Supplemental Commodity Index) on publicreporting.cftc.gov, weekly rows (one per market and Tuesday report date), recent-first by default, all values as strings exactly as published. Filter by contract market code, exchange, commodity name/group/subgroup, report date or date range, full text; project columns with `fields`; page with page_size / cursor.",
+        "key": "rows",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "cftc_contract_market_code",
+            "type": "string"
+          },
+          {
+            "name": "cftc_market_code",
+            "type": "string",
+            "about": "Exchange code padded to 4 characters ('CMX ', 'CBT ', 'CMXE')."
+          },
+          {
+            "name": "commodity_group_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_subgroup_name",
+            "type": "string"
+          },
+          {
+            "name": "contract_market_name",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Row key: yymmdd + contract code + F (futures only) or C (combined); supplemental rows have no suffix."
+          },
+          {
+            "name": "market_and_exchange_names",
+            "type": "string"
+          },
+          {
+            "name": "open_interest_all",
+            "type": "string"
+          },
+          {
+            "name": "report_date_as_yyyy_mm_dd",
+            "type": "string",
+            "about": "Report date as a floating timestamp, e.g. 2026-09-15T00:00:00.000."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "contract_market_code": "001602",
+          "page_size": 1
+        },
+        "response": {
+          "count": 1,
+          "data_last_modified": "Fri, 18 Sep 2026 19:30:05 GMT",
+          "dataset_id": "4zgm-a668",
+          "futures_only": null,
+          "next_cursor": "1",
+          "observed_at_ms": 1790037947504,
+          "report": "supplemental",
+          "report_name": "Supplemental Commodity Index",
+          "rows": [
+            {
+              "Change_NonComm_Short_All_NoCIT": "16964",
+              "Change_NonComm_Spead_All_NoCIT": "4296",
+              "Comm_Positions_Short_All_NoCIT": "169553",
+              "NComm_Postions_Long_All_NoCIT": "69138",
+              "NComm_Postions_Short_All_NoCIT": "111235",
+              "NComm_Postions_Spread_All_NoCIT": "231941",
+              "Pct_OI_NonComm_Short_All_NoCIT": "18.4",
+              "Pct_OI_NonComm_Spread_All_NoCIT": "38.5",
+              "Pct_OI_NonRept_Short_All_NoCIT": "6.0",
+              "Pct_OI_Tot_Rept_Long_All_NoCIT": "93.3",
+              "Pct_OI_Tot_Rept_Short_All_NoCIT": "94.0",
+              "Traders_NonComm_Long_All_NoCIT": "133",
+              "Traders_NonComm_Short_All_NoCIT": "109",
+              "Traders_NonComm_Spread_All_NoCIT": "142",
+              "Traders_Tot_Rept_Long_All_NoCIT": "344",
+              "Traders_Tot_Rept_Short_All_NoCIT": "335",
+              "cftc_commodity_code": "001 ",
+              "cftc_contract_market_code": "001602",
+              "cftc_market_code": "CBT ",
+              "cftc_region_code": "CHI",
+              "change_cit_long_all": "-1437",
+              "change_cit_short_all": "-15097",
+              "change_comm_long_all_nocit": "816",
+              "change_comm_short_all_nocit": "-8701",
+              "change_noncomm_long_all_nocit": "-7887",
+              "change_nonrept_long_all": "1177",
+              "change_nonrept_short_all": "-497",
+              "change_open_interest_all": "-3034",
+              "change_tot_rept_long_all": "-4212",
+              "change_tot_rept_short_all": "-2538",
+              "cit_positions_long_all": "136370",
+              "cit_positions_short_all": "54166",
+              "comm_positions_long_all_nocit": "125151",
+              "commodity": "WHEAT",
+              "commodity_group_name": "AGRICULTURE",
+              "commodity_name": "WHEAT",
+              "commodity_subgroup_name": "GRAINS",
+              "contract_market_name": "WHEAT-SRW",
+              "contract_units": "(CONTRACTS OF 5,000 BUSHELS)",
+              "id": "260915001602",
+              "market_and_exchange_names": "WHEAT-SRW - CHICAGO BOARD OF TRADE",
+              "nonrept_positions_long_all": "40465",
+              "nonrept_positions_short_all": "36171",
+              "open_interest_all": "603066",
+              "pct_oi_cit_long_all": "22.6",
+              "pct_oi_cit_short_all": "9.0",
+              "pct_oi_comm_long_all_nocit": "20.8",
+              "pct_oi_comm_short_all_nocit": "28.1",
+              "pct_oi_noncomm_long_all_nocit": "11.5",
+              "pct_oi_nonrept_long_all_nocit": "6.7",
+              "pct_open_interest_all": "100.0",
+              "report_date_as_yyyy_mm_dd": "2026-09-15T00:00:00.000",
+              "tot_rept_positions_long_all": "562601",
+              "tot_rept_positions_short": "566895",
+              "traders_cit_long_all": "42",
+              "traders_cit_short_all": "24",
+              "traders_comm_long_all_nocit": "89",
+              "traders_comm_short_all_nocit": "130",
+              "traders_tot_all": "446",
+              "yyyy_report_week_ww": "2026 Report Week 37"
+            }
+          ],
+          "sort": "recent_first",
+          "source_url": "https://publicreporting.cftc.gov/resource/4zgm-a668.json?$where=cftc_contract_market_code%3D%27001602%27&$order=report_date_as_yyyy_mm_dd%20DESC,id%20ASC&$limit=2&$offset=0"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "cftc-gov",
+        "capability": "commitments-of-traders/supplemental"
+      }
+    },
+    {
+      "id": "cftc-gov/commitments-of-traders/tff_combined",
+      "provider": "cftc-gov",
+      "capability": "commitments-of-traders/tff_combined",
+      "name": "Tff combined",
+      "description": "Positions and open interest from the CFTC Traders in Financial Futures - Combined report for one or many markets and weeks. Use `markets` first to find contract_market_code values; use `fields` to keep the payload small.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "commodity_group_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_group_name, case-insensitive: AGRICULTURE, NATURAL RESOURCES, FINANCIAL INSTRUMENTS."
+        },
+        {
+          "name": "commodity_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_name, case-insensitive (GOLD, WHEAT, NATURAL GAS, BITCOIN)."
+        },
+        {
+          "name": "commodity_subgroup_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_subgroup_name, case-insensitive (GRAINS, PRECIOUS METALS, PETROLEUM AND PRODUCTS, CURRENCIES, STOCK INDICES, ...)."
+        },
+        {
+          "name": "contract_market_code",
+          "type": "string",
+          "in": "body",
+          "about": "Exact cftc_contract_market_code, a string with leading zeros kept (088691 = GOLD - COMMODITY EXCHANGE INC., 001602 = WHEAT-SRW - CBOT). Discover codes with `markets`. Alone, a code with no rows in this dataset is not_found; combined with date or other filters an empty page is a legitimate empty result. Pattern: ^[A-Za-z0-9]{1,12}$."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page of the same query (the SODA $offset)."
+        },
+        {
+          "name": "exchange_code",
+          "type": "string",
+          "in": "body",
+          "about": "cftc_market_code without its padding: CBT, CME, CMX, NYME, ICUS, ICEU, CMXE, FREX... Matches the padded value the dataset stores ('CMX '). Pattern: ^[A-Za-z0-9]{1,4}$."
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "in": "body",
+          "about": "Projection: SODA column names to return (open_interest_all, noncomm_positions_long_all, m_money_positions_long_all, ...). The identity columns id, market_and_exchange_names, report_date_as_yyyy_mm_dd and cftc_contract_market_code are always included. An unknown column is invalid_input. Omit for every column."
+        },
+        {
+          "name": "from",
+          "type": "string",
+          "in": "body",
+          "about": "Earliest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (a legacy row is ~4.7 KB, a disaggregated row ~7 KB).",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "SODA full-text search ($q) over the text columns, e.g. `gold` or `chicago board of trade`."
+        },
+        {
+          "name": "report_date",
+          "type": "string",
+          "in": "body",
+          "about": "One weekly report date (a Tuesday), YYYY-MM-DD. Not combinable with from / to. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Order by report date then id. The upstream default order is undefined, so an order is always sent.",
+          "default": "recent_first",
+          "oneOf": [
+            "recent_first",
+            "oldest_first"
+          ]
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "in": "body",
+          "about": "Latest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "Traders in Financial Futures (TFF), futures and options combined: dealer, asset manager, leveraged funds and other reportable positions for financial futures with options converted to futures equivalents, from 2006. Dataset yw9f-hn96 (Traders in Financial Futures - Combined) on publicreporting.cftc.gov, weekly rows (one per market and Tuesday report date), recent-first by default, all values as strings exactly as published. Filter by contract market code, exchange, commodity name/group/subgroup, report date or date range, full text; project columns with `fields`; page with page_size / cursor.",
+        "key": "rows",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "cftc_contract_market_code",
+            "type": "string"
+          },
+          {
+            "name": "cftc_market_code",
+            "type": "string",
+            "about": "Exchange code padded to 4 characters ('CMX ', 'CBT ', 'CMXE')."
+          },
+          {
+            "name": "commodity_group_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_subgroup_name",
+            "type": "string"
+          },
+          {
+            "name": "contract_market_name",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Row key: yymmdd + contract code + F (futures only) or C (combined); supplemental rows have no suffix."
+          },
+          {
+            "name": "market_and_exchange_names",
+            "type": "string"
+          },
+          {
+            "name": "open_interest_all",
+            "type": "string"
+          },
+          {
+            "name": "report_date_as_yyyy_mm_dd",
+            "type": "string",
+            "about": "Report date as a floating timestamp, e.g. 2026-09-15T00:00:00.000."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "contract_market_code": "020601",
+          "page_size": 1
+        },
+        "response": {
+          "count": 1,
+          "data_last_modified": "Fri, 18 Sep 2026 19:30:05 GMT",
+          "dataset_id": "yw9f-hn96",
+          "futures_only": false,
+          "next_cursor": "1",
+          "observed_at_ms": 1790037944741,
+          "report": "tff_combined",
+          "report_name": "Traders in Financial Futures - Combined",
+          "rows": [
+            {
+              "asset_mgr_positions_long": "1095280",
+              "asset_mgr_positions_short": "650740",
+              "asset_mgr_positions_spread": "255785",
+              "cftc_commodity_code": "020 ",
+              "cftc_contract_market_code": "020601",
+              "cftc_market_code": "CBT ",
+              "cftc_region_code": "CHI",
+              "cftc_subgroup_code": "F30",
+              "change_in_asset_mgr_long": "3899",
+              "change_in_asset_mgr_short": "89334",
+              "change_in_asset_mgr_spread": "-4639",
+              "change_in_dealer_long_all": "-3366",
+              "change_in_dealer_short_all": "-15839",
+              "change_in_dealer_spread_all": "25495",
+              "change_in_lev_money_long": "61499",
+              "change_in_lev_money_short": "-12581",
+              "change_in_lev_money_spread": "35590",
+              "change_in_nonrept_long_all": "573",
+              "change_in_nonrept_short_all": "-3219",
+              "change_in_open_interest_all": "117417",
+              "change_in_other_rept_long": "-2588",
+              "change_in_other_rept_short": "2320",
+              "change_in_other_rept_spread": "955",
+              "change_in_tot_rept_long_all": "116844",
+              "change_in_tot_rept_short": "120636",
+              "commodity": "T-BONDS",
+              "commodity_group_name": "FINANCIAL INSTRUMENTS",
+              "commodity_name": "T-BONDS",
+              "commodity_subgroup_name": "Interest Rates - U.S. Treasury",
+              "conc_gross_le_4_tdr_long": "17.4",
+              "conc_gross_le_4_tdr_short": "34.1",
+              "conc_gross_le_8_tdr_long": "27.0",
+              "conc_gross_le_8_tdr_short": "43.1",
+              "conc_net_le_4_tdr_long_all": "17.0",
+              "conc_net_le_4_tdr_short_all": "29.9",
+              "conc_net_le_8_tdr_long_all": "25.9",
+              "conc_net_le_8_tdr_short_all": "38.6",
+              "contract_market_name": "UST BOND",
+              "contract_units": "(CONTRACTS OF $100,000 FACE VALUE)",
+              "dealer_positions_long_all": "23721",
+              "dealer_positions_short_all": "257159",
+              "dealer_positions_spread_all": "118110",
+              "futonly_or_combined": "Combined",
+              "id": "260915020601C",
+              "lev_money_positions_long": "187072",
+              "lev_money_positions_short": "395807",
+              "lev_money_positions_spread": "231037",
+              "market_and_exchange_names": "UST BOND - CHICAGO BOARD OF TRADE",
+              "nonrept_positions_long_all": "247021",
+              "nonrept_positions_short_all": "177845",
+              "open_interest_all": "2209967",
+              "other_rept_positions_long": "46086",
+              "other_rept_positions_short": "117629",
+              "other_rept_positions_spread": "5855",
+              "pct_of_oi_asset_mgr_long": "49.6",
+              "pct_of_oi_asset_mgr_short": "29.4",
+              "pct_of_oi_asset_mgr_spread": "11.6",
+              "pct_of_oi_dealer_long_all": "1.1",
+              "pct_of_oi_dealer_short_all": "11.6",
+              "pct_of_oi_dealer_spread_all": "5.3",
+              "pct_of_oi_lev_money_long": "8.5",
+              "pct_of_oi_lev_money_short": "17.9",
+              "pct_of_oi_lev_money_spread": "10.5",
+              "pct_of_oi_nonrept_long_all": "11.2",
+              "pct_of_oi_nonrept_short_all": "8.0",
+              "pct_of_oi_other_rept_long": "2.1",
+              "pct_of_oi_other_rept_short": "5.3",
+              "pct_of_oi_other_rept_spread": "0.3",
+              "pct_of_oi_tot_rept_long_all": "88.8",
+              "pct_of_oi_tot_rept_short": "92.0",
+              "pct_of_open_interest_all": "100.0",
+              "report_date_as_yyyy_mm_dd": "2026-09-15T00:00:00.000",
+              "tot_rept_positions_long_all": "1962946",
+              "tot_rept_positions_short": "2032122",
+              "traders_asset_mgr_long_all": "89",
+              "traders_asset_mgr_short_all": "27",
+              "traders_asset_mgr_spread": "70",
+              "traders_dealer_long_all": "13",
+              "traders_dealer_short_all": "24",
+              "traders_dealer_spread_all": "23",
+              "traders_lev_money_long_all": "37",
+              "traders_lev_money_short_all": "44",
+              "traders_lev_money_spread": "54",
+              "traders_other_rept_long_all": "12",
+              "traders_other_rept_short": "10",
+              "traders_other_rept_spread": "5",
+              "traders_tot_all": "256",
+              "traders_tot_rept_long_all": "220",
+              "traders_tot_rept_short_all": "188",
+              "yyyy_report_week_ww": "2026 Report Week 37"
+            }
+          ],
+          "sort": "recent_first",
+          "source_url": "https://publicreporting.cftc.gov/resource/yw9f-hn96.json?$where=cftc_contract_market_code%3D%27020601%27&$order=report_date_as_yyyy_mm_dd%20DESC,id%20ASC&$limit=2&$offset=0"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "cftc-gov",
+        "capability": "commitments-of-traders/tff_combined"
+      }
+    },
+    {
+      "id": "cftc-gov/commitments-of-traders/tff_futures_only",
+      "provider": "cftc-gov",
+      "capability": "commitments-of-traders/tff_futures_only",
+      "name": "Tff futures only",
+      "description": "Positions and open interest from the CFTC Traders in Financial Futures - Futures Only report for one or many markets and weeks. Use `markets` first to find contract_market_code values; use `fields` to keep the payload small.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "commodity_group_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_group_name, case-insensitive: AGRICULTURE, NATURAL RESOURCES, FINANCIAL INSTRUMENTS."
+        },
+        {
+          "name": "commodity_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_name, case-insensitive (GOLD, WHEAT, NATURAL GAS, BITCOIN)."
+        },
+        {
+          "name": "commodity_subgroup_name",
+          "type": "string",
+          "in": "body",
+          "about": "Exact commodity_subgroup_name, case-insensitive (GRAINS, PRECIOUS METALS, PETROLEUM AND PRODUCTS, CURRENCIES, STOCK INDICES, ...)."
+        },
+        {
+          "name": "contract_market_code",
+          "type": "string",
+          "in": "body",
+          "about": "Exact cftc_contract_market_code, a string with leading zeros kept (088691 = GOLD - COMMODITY EXCHANGE INC., 001602 = WHEAT-SRW - CBOT). Discover codes with `markets`. Alone, a code with no rows in this dataset is not_found; combined with date or other filters an empty page is a legitimate empty result. Pattern: ^[A-Za-z0-9]{1,12}$."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page of the same query (the SODA $offset)."
+        },
+        {
+          "name": "exchange_code",
+          "type": "string",
+          "in": "body",
+          "about": "cftc_market_code without its padding: CBT, CME, CMX, NYME, ICUS, ICEU, CMXE, FREX... Matches the padded value the dataset stores ('CMX '). Pattern: ^[A-Za-z0-9]{1,4}$."
+        },
+        {
+          "name": "fields",
+          "type": "string[]",
+          "in": "body",
+          "about": "Projection: SODA column names to return (open_interest_all, noncomm_positions_long_all, m_money_positions_long_all, ...). The identity columns id, market_and_exchange_names, report_date_as_yyyy_mm_dd and cftc_contract_market_code are always included. An unknown column is invalid_input. Omit for every column."
+        },
+        {
+          "name": "from",
+          "type": "string",
+          "in": "body",
+          "about": "Earliest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (a legacy row is ~4.7 KB, a disaggregated row ~7 KB).",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "SODA full-text search ($q) over the text columns, e.g. `gold` or `chicago board of trade`."
+        },
+        {
+          "name": "report_date",
+          "type": "string",
+          "in": "body",
+          "about": "One weekly report date (a Tuesday), YYYY-MM-DD. Not combinable with from / to. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Order by report date then id. The upstream default order is undefined, so an order is always sent.",
+          "default": "recent_first",
+          "oneOf": [
+            "recent_first",
+            "oldest_first"
+          ]
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "in": "body",
+          "about": "Latest report date to include, YYYY-MM-DD (inclusive). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "Traders in Financial Futures (TFF), futures only: dealer/intermediary, asset manager/institutional, leveraged funds and other reportable positions for financial futures (currencies, equity indices, interest rates, crypto), from 2006. Dataset gpe5-46if (Traders in Financial Futures - Futures Only) on publicreporting.cftc.gov, weekly rows (one per market and Tuesday report date), recent-first by default, all values as strings exactly as published. Filter by contract market code, exchange, commodity name/group/subgroup, report date or date range, full text; project columns with `fields`; page with page_size / cursor.",
+        "key": "rows",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "cftc_contract_market_code",
+            "type": "string"
+          },
+          {
+            "name": "cftc_market_code",
+            "type": "string",
+            "about": "Exchange code padded to 4 characters ('CMX ', 'CBT ', 'CMXE')."
+          },
+          {
+            "name": "commodity_group_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_name",
+            "type": "string"
+          },
+          {
+            "name": "commodity_subgroup_name",
+            "type": "string"
+          },
+          {
+            "name": "contract_market_name",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Row key: yymmdd + contract code + F (futures only) or C (combined); supplemental rows have no suffix."
+          },
+          {
+            "name": "market_and_exchange_names",
+            "type": "string"
+          },
+          {
+            "name": "open_interest_all",
+            "type": "string"
+          },
+          {
+            "name": "report_date_as_yyyy_mm_dd",
+            "type": "string",
+            "about": "Report date as a floating timestamp, e.g. 2026-09-15T00:00:00.000."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "contract_market_code": "020601",
+          "page_size": 1
+        },
+        "response": {
+          "count": 1,
+          "data_last_modified": "Fri, 18 Sep 2026 19:30:05 GMT",
+          "dataset_id": "gpe5-46if",
+          "futures_only": true,
+          "next_cursor": "1",
+          "observed_at_ms": 1790037942068,
+          "report": "tff_futures_only",
+          "report_name": "Traders in Financial Futures - Futures Only",
+          "rows": [
+            {
+              "asset_mgr_positions_long": "1096888",
+              "asset_mgr_positions_short": "636226",
+              "asset_mgr_positions_spread": "221118",
+              "cftc_commodity_code": "020 ",
+              "cftc_contract_market_code": "020601",
+              "cftc_market_code": "CBT ",
+              "cftc_region_code": "CHI",
+              "cftc_subgroup_code": "F30",
+              "change_in_asset_mgr_long": "4253",
+              "change_in_asset_mgr_short": "76258",
+              "change_in_asset_mgr_spread": "-4103",
+              "change_in_dealer_long_all": "3664",
+              "change_in_dealer_short_all": "-6546",
+              "change_in_dealer_spread_all": "106",
+              "change_in_lev_money_long": "70652",
+              "change_in_lev_money_short": "5422",
+              "change_in_lev_money_spread": "-6735",
+              "change_in_nonrept_long_all": "-1879",
+              "change_in_nonrept_short_all": "-1268",
+              "change_in_open_interest_all": "65134",
+              "change_in_other_rept_long": "-2350",
+              "change_in_other_rept_short": "474",
+              "change_in_other_rept_spread": "1526",
+              "change_in_tot_rept_long_all": "67013",
+              "change_in_tot_rept_short": "66402",
+              "commodity": "T-BONDS",
+              "commodity_group_name": "FINANCIAL INSTRUMENTS",
+              "commodity_name": "T-BONDS",
+              "commodity_subgroup_name": "Interest Rates - U.S. Treasury",
+              "conc_gross_le_4_tdr_long": "20.6",
+              "conc_gross_le_4_tdr_short": "37.4",
+              "conc_gross_le_8_tdr_long": "31.6",
+              "conc_gross_le_8_tdr_short": "48.0",
+              "conc_net_le_4_tdr_long_all": "20.0",
+              "conc_net_le_4_tdr_short_all": "35.1",
+              "conc_net_le_8_tdr_long_all": "30.6",
+              "conc_net_le_8_tdr_short_all": "45.6",
+              "contract_market_name": "UST BOND",
+              "contract_units": "(CONTRACTS OF $100,000 FACE VALUE)",
+              "dealer_positions_long_all": "30239",
+              "dealer_positions_short_all": "271909",
+              "dealer_positions_spread_all": "13227",
+              "futonly_or_combined": "FutOnly",
+              "id": "260915020601F",
+              "lev_money_positions_long": "203681",
+              "lev_money_positions_short": "415416",
+              "lev_money_positions_spread": "27397",
+              "market_and_exchange_names": "UST BOND - CHICAGO BOARD OF TRADE",
+              "nonrept_positions_long_all": "226619",
+              "nonrept_positions_short_all": "164625",
+              "open_interest_all": "1867442",
+              "other_rept_positions_long": "46747",
+              "other_rept_positions_short": "115998",
+              "other_rept_positions_spread": "1526",
+              "pct_of_oi_asset_mgr_long": "58.7",
+              "pct_of_oi_asset_mgr_short": "34.1",
+              "pct_of_oi_asset_mgr_spread": "11.8",
+              "pct_of_oi_dealer_long_all": "1.6",
+              "pct_of_oi_dealer_short_all": "14.6",
+              "pct_of_oi_dealer_spread_all": "0.7",
+              "pct_of_oi_lev_money_long": "10.9",
+              "pct_of_oi_lev_money_short": "22.2",
+              "pct_of_oi_lev_money_spread": "1.5",
+              "pct_of_oi_nonrept_long_all": "12.1",
+              "pct_of_oi_nonrept_short_all": "8.8",
+              "pct_of_oi_other_rept_long": "2.5",
+              "pct_of_oi_other_rept_short": "6.2",
+              "pct_of_oi_other_rept_spread": "0.1",
+              "pct_of_oi_tot_rept_long_all": "87.9",
+              "pct_of_oi_tot_rept_short": "91.2",
+              "pct_of_open_interest_all": "100.0",
+              "report_date_as_yyyy_mm_dd": "2026-09-15T00:00:00.000",
+              "tot_rept_positions_long_all": "1640823",
+              "tot_rept_positions_short": "1702817",
+              "traders_asset_mgr_long_all": "88",
+              "traders_asset_mgr_short_all": "28",
+              "traders_asset_mgr_spread": "67",
+              "traders_dealer_long_all": "10",
+              "traders_dealer_short_all": "25",
+              "traders_dealer_spread_all": "5",
+              "traders_lev_money_long_all": "38",
+              "traders_lev_money_short_all": "43",
+              "traders_lev_money_spread": "19",
+              "traders_other_rept_long_all": "11",
+              "traders_other_rept_short": "8",
+              "traders_tot_all": "251",
+              "traders_tot_rept_long_all": "180",
+              "traders_tot_rept_short_all": "163",
+              "yyyy_report_week_ww": "2026 Report Week 37"
+            }
+          ],
+          "sort": "recent_first",
+          "source_url": "https://publicreporting.cftc.gov/resource/gpe5-46if.json?$where=cftc_contract_market_code%3D%27020601%27&$order=report_date_as_yyyy_mm_dd%20DESC,id%20ASC&$limit=2&$offset=0"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "cftc-gov",
+        "capability": "commitments-of-traders/tff_futures_only"
+      }
+    }
+  ]
+}

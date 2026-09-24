@@ -1,0 +1,1402 @@
+{
+  "id": "bestbuy-com",
+  "provider": "bestbuy-com",
+  "name": "Best Buy US",
+  "description": "Public Best Buy US catalog, product details, prices, review totals and location-specific availability.",
+  "toolCount": 8,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "bestbuy-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "bestbuy-com/products/availability",
+      "provider": "bestbuy-com",
+      "capability": "products/availability",
+      "name": "Availability",
+      "description": "Get shipping, delivery and pickup promises for a SKU, ZIP code and store. Quantities are upstream indicators, not verified stock counts.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "sku",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{6,8}$.",
+          "required": true
+        },
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{1,6}$.",
+          "required": true
+        },
+        {
+          "name": "zip_code",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{5}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Get shipping, delivery and pickup promises for a SKU, ZIP code and store. Quantities are upstream indicators, not verified stock counts.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "buttons",
+            "type": "object[]"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "delivery",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "pickup",
+            "type": "object[]"
+          },
+          {
+            "name": "shipping",
+            "type": "object[]"
+          },
+          {
+            "name": "sku",
+            "type": "string"
+          },
+          {
+            "name": "store_id",
+            "type": "string"
+          },
+          {
+            "name": "zip_code",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "sku": "6507524",
+          "store_id": "7",
+          "zip_code": "55423"
+        },
+        "response": {
+          "buttons": [
+            {
+              "buttonState": "SEE_DETAILS",
+              "condition": "NEW",
+              "displayText": "See Details",
+              "fulfillmentOption": null,
+              "hyperlinkUrl": null,
+              "planButtonState": null,
+              "planDisplayText": null,
+              "secondaryButtonState": null,
+              "secondaryDisplayText": null,
+              "skuId": "6507524"
+            }
+          ],
+          "country": "US",
+          "delivery": [
+            {
+              "deliveryAvailability": [
+                {
+                  "backordered": null,
+                  "condition": "NEW",
+                  "deliverable": null,
+                  "deliveryEligible": false,
+                  "deliveryServices": null,
+                  "deliverySlots": null,
+                  "forceSkipScheduling": null,
+                  "forceSkipSchedulingReasonCode": null,
+                  "homeDeliveryDisplayDateType": null,
+                  "inStoreOnly": false,
+                  "installationEligible": false,
+                  "installationSlots": null,
+                  "productAppointmentType": null,
+                  "restrictions": null,
+                  "salLocationId": null
+                }
+              ],
+              "destinationZipCode": "55423",
+              "sku": "6507524"
+            }
+          ],
+          "observed_at_ms": 1788825600000,
+          "pickup": [
+            {
+              "installationEligible": null,
+              "ispuAvailability": [
+                {
+                  "backordered": null,
+                  "condition": "NEW",
+                  "displayDateType": "IN_HAND",
+                  "downloadEligible": null,
+                  "emailEligible": null,
+                  "fulfillDate": null,
+                  "fulfillmentType": "PICKUP",
+                  "inStoreOnly": false,
+                  "inStoreServices": null,
+                  "instoreInventoryAvailable": true,
+                  "maxDate": "2026-09-08",
+                  "minDate": "2026-09-08",
+                  "minPickupInHours": null,
+                  "pickupEligible": true,
+                  "preorderable": null,
+                  "promiseByStreetDate": null,
+                  "quantity": "9999",
+                  "restrictions": null,
+                  "whenAvailableFlag": null
+                }
+              ],
+              "maximumDistanceChecked": 218.6,
+              "nearbyLocation": null,
+              "nearbyLocations": null,
+              "numberOfStoresChecked": 25,
+              "sku": "6507524",
+              "store": {
+                "city": "Roseville",
+                "name": "Roseville",
+                "storeId": "7",
+                "zip": "55113"
+              }
+            }
+          ],
+          "shipping": [
+            {
+              "abTestMetadata": {
+                "excludeFromAnalytics": false,
+                "excludeFromAnalyticsReason": null,
+                "experimentName": "exp0635",
+                "experimentVariation": "A"
+              },
+              "destinationZipCode": "55423",
+              "shippingAvailability": [
+                {
+                  "backordered": null,
+                  "condition": "NEW",
+                  "customerLOSGroup": [
+                    {
+                      "customerLosGroupId": 1,
+                      "displayDateType": "IN_HAND",
+                      "maxLineItemMaxDate": "2026-09-09",
+                      "minLineItemMaxDate": "2026-09-09",
+                      "name": "One Day",
+                      "price": 0
+                    },
+                    {
+                      "customerLosGroupId": 2,
+                      "displayDateType": "IN_HAND",
+                      "maxLineItemMaxDate": "2026-09-15",
+                      "minLineItemMaxDate": "2026-09-15",
+                      "name": "One Day",
+                      "price": 9.99
+                    }
+                  ],
+                  "defaultCustomerLosGroupId": 1,
+                  "directToBoxEligible": false,
+                  "downloadEligible": false,
+                  "emailEligible": false,
+                  "fulfillByVendor": false,
+                  "inStoreOnly": false,
+                  "installationEligible": false,
+                  "levelOfServices": [
+                    {
+                      "code": "Third Party Next Day",
+                      "customerLosGroupId": 1,
+                      "cutOffTime": "2026-09-08T19:00 CDT",
+                      "id": 32,
+                      "isLessThanTruckload": false,
+                      "isScheduleParcelDelivery": false
+                    },
+                    {
+                      "code": "Gig Scheduled Parcel Delivery",
+                      "customerLosGroupId": 2,
+                      "cutOffTime": "2026-09-08T19:00 CDT",
+                      "id": 35,
+                      "isLessThanTruckload": false,
+                      "isScheduleParcelDelivery": true
+                    }
+                  ],
+                  "preorderable": null,
+                  "promiseByStreetDate": null,
+                  "restrictions": null,
+                  "shippingEligible": true,
+                  "whenAvailableFlag": null
+                }
+              ],
+              "sku": "6507524"
+            }
+          ],
+          "sku": "6507524",
+          "store_id": "7",
+          "zip_code": "55423"
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "bestbuy-com",
+        "capability": "products/availability"
+      }
+    },
+    {
+      "id": "bestbuy-com/products/pricing",
+      "provider": "bestbuy-com",
+      "capability": "products/pricing",
+      "name": "Pricing",
+      "description": "Get displayed US pricing, condition and mobile-contract terms.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "sku",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{6,8}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Get displayed US pricing, condition and mobile-contract terms.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "condition",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "seller",
+            "type": "object"
+          },
+          {
+            "name": "sku",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "sku": "6507524"
+        },
+        "response": {
+          "condition": "new",
+          "country": "US",
+          "observed_at_ms": 1788825600000,
+          "price": {
+            "currency": "USD",
+            "current": 539.99,
+            "mobile_contracts": [
+              {
+                "carrierCode": "VEZ",
+                "customerPrice": 539.99,
+                "isDefaultContract": true,
+                "numberOfPayments": 1,
+                "purchaseType": "FULL_SRP",
+                "regularPrice": 599.99
+              },
+              {
+                "carrierCode": "ATT",
+                "customerPrice": 539.99,
+                "isDefaultContract": false,
+                "numberOfPayments": 1,
+                "purchaseType": "FULL_SRP",
+                "regularPrice": 599.99
+              },
+              {
+                "carrierCode": "ATT",
+                "customerPrice": 539.99,
+                "isDefaultContract": false,
+                "numberOfPayments": 1,
+                "purchaseType": "FULL_SRP",
+                "regularPrice": 599.99
+              },
+              {
+                "carrierCode": "VEZ",
+                "customerPrice": 539.99,
+                "isDefaultContract": false,
+                "numberOfPayments": 1,
+                "purchaseType": "FULL_SRP",
+                "regularPrice": 599.99
+              }
+            ],
+            "regular": 599.99,
+            "restricted_message": null,
+            "savings": 60,
+            "savings_percent": 10
+          },
+          "seller": {
+            "classification": "1P",
+            "id": "bby"
+          },
+          "sku": "6507524"
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "bestbuy-com",
+        "capability": "products/pricing"
+      }
+    },
+    {
+      "id": "bestbuy-com/products/product",
+      "provider": "bestbuy-com",
+      "capability": "products/product",
+      "name": "Product",
+      "description": "Get public Bestbuy product details, displayed price, images, variants and review totals.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "sku",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{6,8}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Get public Bestbuy product details, displayed price, images, variants and review totals.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "brand",
+            "type": "string"
+          },
+          {
+            "name": "bsin",
+            "type": "string"
+          },
+          {
+            "name": "condition",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "model_number",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "photos",
+            "type": "object[]"
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "review_summary",
+            "type": "object"
+          },
+          {
+            "name": "seller",
+            "type": "object"
+          },
+          {
+            "name": "sku",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "variations",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "sku": "6507524"
+        },
+        "response": {
+          "brand": "Apple",
+          "bsin": "JJGCQG2GTF",
+          "condition": "new",
+          "country": "US",
+          "model_number": "MD0W4LL/A",
+          "observed_at_ms": 1788825600000,
+          "photos": [
+            {
+              "alt": "Front. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Front_Zoom",
+              "url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/20da9f11-6aaa-4740-9f6c-32c8c6c4b5f8.jpg"
+            },
+            {
+              "alt": "Front. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Front_Standard",
+              "url": "https://pisces.bbystatic.com/prescaled/500/500/image2/BestBuy_US/images/products/20da9f11-6aaa-4740-9f6c-32c8c6c4b5f8.jpg"
+            },
+            {
+              "alt": "Front. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Front_Detail",
+              "url": "https://pisces.bbystatic.com/prescaled/105/210/image2/BestBuy_US/images/products/20da9f11-6aaa-4740-9f6c-32c8c6c4b5f8.jpg"
+            },
+            {
+              "alt": "Front. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Front_Large",
+              "url": "https://pisces.bbystatic.com/prescaled/160/220/image2/BestBuy_US/images/products/20da9f11-6aaa-4740-9f6c-32c8c6c4b5f8.jpg"
+            },
+            {
+              "alt": "Front. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Front_Medium",
+              "url": "https://pisces.bbystatic.com/prescaled/140/70/image2/BestBuy_US/images/products/20da9f11-6aaa-4740-9f6c-32c8c6c4b5f8.jpg"
+            },
+            {
+              "alt": "Front. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Front_Thumbnail",
+              "url": "https://pisces.bbystatic.com/prescaled/108/54/image2/BestBuy_US/images/products/20da9f11-6aaa-4740-9f6c-32c8c6c4b5f8.jpg"
+            },
+            {
+              "alt": "Angle. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Angle_Zoom",
+              "url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/7fd9bf55-6348-42bc-8d6a-55ba20cd1e9c.jpg"
+            },
+            {
+              "alt": "Angle. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Angle_Standard",
+              "url": "https://pisces.bbystatic.com/prescaled/500/500/image2/BestBuy_US/images/products/7fd9bf55-6348-42bc-8d6a-55ba20cd1e9c.jpg"
+            },
+            {
+              "alt": "Left. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Left_Zoom",
+              "url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/c98b5816-30b7-4ed9-bc14-300b9a0a9ae5.jpg"
+            },
+            {
+              "alt": "Left. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Left_Standard",
+              "url": "https://pisces.bbystatic.com/prescaled/500/500/image2/BestBuy_US/images/products/c98b5816-30b7-4ed9-bc14-300b9a0a9ae5.jpg"
+            },
+            {
+              "alt": "Back. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Back_Zoom",
+              "url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/8415b7d0-1146-4d07-8389-ca359ca10f2b.jpg"
+            },
+            {
+              "alt": "Back. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Back_Standard",
+              "url": "https://pisces.bbystatic.com/prescaled/500/500/image2/BestBuy_US/images/products/8415b7d0-1146-4d07-8389-ca359ca10f2b.jpg"
+            },
+            {
+              "alt": "Alt View 1. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Alt_View_Zoom_1",
+              "url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/50f2a7a4-75b8-4991-a5db-861032979754.jpg"
+            },
+            {
+              "alt": "Alt View 1. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Alt_View_Standard_1",
+              "url": "https://pisces.bbystatic.com/prescaled/500/500/image2/BestBuy_US/images/products/50f2a7a4-75b8-4991-a5db-861032979754.jpg"
+            },
+            {
+              "alt": "Built for Apple Intelligence.\n\nTuesday, April 1  \n9:41",
+              "rel": "Alt_View_Zoom_2",
+              "url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6df8af14-0a1f-4017-ad21-8f6473e719f4.jpg"
+            },
+            {
+              "alt": "Built for Apple Intelligence.\n\nTuesday, April 1  \n9:41",
+              "rel": "Alt_View_Standard_2",
+              "url": "https://pisces.bbystatic.com/prescaled/500/500/image2/BestBuy_US/images/products/6df8af14-0a1f-4017-ad21-8f6473e719f4.jpg"
+            },
+            {
+              "alt": "Built for Apple Intelligence.\n\nTuesday, April 1  \n9:41\n\n48MP Fusion camera.  \nAll you need. For all you shoot.\n\nBeautiful, durable design.  \nBuilt to last.\n\nSupersized battery life.\n\nA18 chip.  \nSuperfast. Supersmart.",
+              "rel": "Alt_View_Zoom_3",
+              "url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/0786a8ab-ac62-4097-89a5-3139102a8ebb.jpg"
+            },
+            {
+              "alt": "Built for Apple Intelligence.\n\nTuesday, April 1  \n9:41\n\n48MP Fusion camera.  \nAll you need. For all you shoot.\n\nBeautiful, durable design.  \nBuilt to last.\n\nSupersized battery life.\n\nA18 chip.  \nSuperfast. Supersmart.",
+              "rel": "Alt_View_Standard_3",
+              "url": "https://pisces.bbystatic.com/prescaled/500/500/image2/BestBuy_US/images/products/0786a8ab-ac62-4097-89a5-3139102a8ebb.jpg"
+            },
+            {
+              "alt": "Alt View 4. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Alt_View_Zoom_4",
+              "url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/afe2dcf2-e8cb-4f8b-a0dd-79683da3e0e8.jpg"
+            },
+            {
+              "alt": "Alt View 4. Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White.",
+              "rel": "Alt_View_Standard_4",
+              "url": "https://pisces.bbystatic.com/prescaled/500/500/image2/BestBuy_US/images/products/afe2dcf2-e8cb-4f8b-a0dd-79683da3e0e8.jpg"
+            },
+            {
+              "alt": "What's in the Box\n\niPhone 16e\n\nUSB-C Charge Cable",
+              "rel": "Alt_View_Zoom_5",
+              "url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/ad1e283c-e8e2-4007-9ade-138e4004c096.jpg"
+            },
+            {
+              "alt": "What's in the Box\n\niPhone 16e\n\nUSB-C Charge Cable",
+              "rel": "Alt_View_Standard_5",
+              "url": "https://pisces.bbystatic.com/prescaled/500/500/image2/BestBuy_US/images/products/ad1e283c-e8e2-4007-9ade-138e4004c096.jpg"
+            }
+          ],
+          "price": {
+            "currency": "USD",
+            "current": 539.99,
+            "mobile_contracts": [
+              {
+                "carrierCode": "VEZ",
+                "customerPrice": 539.99,
+                "isDefaultContract": true,
+                "numberOfPayments": 1,
+                "purchaseType": "FULL_SRP",
+                "regularPrice": 599.99
+              },
+              {
+                "carrierCode": "ATT",
+                "customerPrice": 539.99,
+                "isDefaultContract": false,
+                "numberOfPayments": 1,
+                "purchaseType": "FULL_SRP",
+                "regularPrice": 599.99
+              },
+              {
+                "carrierCode": "ATT",
+                "customerPrice": 539.99,
+                "isDefaultContract": false,
+                "numberOfPayments": 1,
+                "purchaseType": "FULL_SRP",
+                "regularPrice": 599.99
+              },
+              {
+                "carrierCode": "VEZ",
+                "customerPrice": 539.99,
+                "isDefaultContract": false,
+                "numberOfPayments": 1,
+                "purchaseType": "FULL_SRP",
+                "regularPrice": 599.99
+              }
+            ],
+            "regular": 599.99,
+            "restricted_message": null,
+            "savings": 60,
+            "savings_percent": 10
+          },
+          "review_summary": {
+            "rating": 4.7,
+            "review_count": 598,
+            "syndicated": []
+          },
+          "seller": {
+            "classification": "1P",
+            "id": "bby"
+          },
+          "sku": "6507524",
+          "title": "Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White",
+          "url": "https://www.bestbuy.com/product/apple-iphone-16e-128gb-apple-intelligence-unlocked-white/JJGCQG2GTF",
+          "variations": {
+            "dimensions": [
+              {
+                "key": "Communications:Color",
+                "label": "Color"
+              }
+            ],
+            "variants": [
+              {
+                "attributes": [
+                  {
+                    "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/8415b7d0-1146-4d07-8389-ca359ca10f2b.jpg",
+                    "key": "Communications:Color",
+                    "value": "White"
+                  }
+                ],
+                "bsin": "JJGCQG2GTF",
+                "sku": "6507524"
+              },
+              {
+                "attributes": [
+                  {
+                    "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/8415b7d0-1146-4d07-8389-ca359ca10f2b.jpg",
+                    "key": "Communications:Color",
+                    "value": "White"
+                  }
+                ],
+                "bsin": "JX87LRS5YP",
+                "sku": "6650147"
+              },
+              {
+                "attributes": [
+                  {
+                    "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/b13d78ea-d64e-4067-ac1b-730a650fa378.jpg",
+                    "key": "Communications:Color",
+                    "value": "Black"
+                  }
+                ],
+                "bsin": "JX87LRS4RL",
+                "sku": "6647941"
+              },
+              {
+                "attributes": [
+                  {
+                    "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/e4d95fde-534f-4b0c-ae05-1b7418f32b30.jpg",
+                    "key": "Communications:Color",
+                    "value": "White"
+                  }
+                ],
+                "bsin": "JC7GSTSKWR",
+                "sku": "12474082"
+              },
+              {
+                "attributes": [
+                  {
+                    "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/389d850f-6178-4485-9ae4-1d4bb931660b.jpg",
+                    "key": "Communications:Color",
+                    "value": "Black"
+                  }
+                ],
+                "bsin": "JC7GST98Q5",
+                "sku": "12809538"
+              }
+            ]
+          }
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "bestbuy-com",
+        "capability": "products/product"
+      }
+    },
+    {
+      "id": "bestbuy-com/products/review_summary",
+      "provider": "bestbuy-com",
+      "capability": "products/review_summary",
+      "name": "Review summary",
+      "description": "Get the displayed rating and count; individual review text is not included.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "sku",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{6,8}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Get the displayed rating and count; individual review text is not included.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "sku",
+            "type": "string"
+          },
+          {
+            "name": "summary",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "sku": "6507524"
+        },
+        "response": {
+          "country": "US",
+          "observed_at_ms": 1788825600000,
+          "sku": "6507524",
+          "summary": {
+            "rating": 4.7,
+            "review_count": 598,
+            "syndicated": []
+          }
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "bestbuy-com",
+        "capability": "products/review_summary"
+      }
+    },
+    {
+      "id": "bestbuy-com/products/search",
+      "provider": "bestbuy-com",
+      "capability": "products/search",
+      "name": "Search",
+      "description": "Fetch one search page. Next-page input is returned; blocked pages raise an error.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Fetch one search page. Next-page input is returned; blocked pages raise an error.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "has_more",
+            "type": "boolean"
+          },
+          {
+            "name": "next_page",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "results",
+            "type": "object[]"
+          },
+          {
+            "name": "unavailable_skus",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "page": 1,
+          "query": "iphone 16"
+        },
+        "response": {
+          "count": 8,
+          "country": "US",
+          "has_more": true,
+          "next_page": 2,
+          "observed_at_ms": 1788825600000,
+          "page": 1,
+          "query": "iphone 16",
+          "results": [
+            {
+              "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/98d25850-46ea-43d2-993a-36367a197821.jpg",
+              "price": {
+                "currency": "USD",
+                "current": 729.99,
+                "regular": 729.99,
+                "restricted_message": null
+              },
+              "rating": 4.6,
+              "review_count": 72,
+              "sku": "6418077",
+              "title": "Apple - iPhone 16 128GB - Apple Intelligence - Black (Verizon)",
+              "url": "https://www.bestbuy.com/product/apple-iphone-16-128gb-apple-intelligence-black-verizon/JCQ6HRGR8C"
+            },
+            {
+              "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/20da9f11-6aaa-4740-9f6c-32c8c6c4b5f8.jpg",
+              "price": {
+                "currency": "USD",
+                "current": 539.99,
+                "regular": 599.99,
+                "restricted_message": null
+              },
+              "rating": 4.7,
+              "review_count": 598,
+              "sku": "6507524",
+              "title": "Apple - iPhone 16e 128GB - Apple Intelligence (Unlocked) - White",
+              "url": "https://www.bestbuy.com/product/apple-iphone-16e-128gb-apple-intelligence-unlocked-white/JJGCQG2GTF"
+            },
+            {
+              "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/9f14622e-8828-4e29-bf51-2471be737b38.jpg",
+              "price": {
+                "currency": "USD",
+                "current": 729.99,
+                "regular": 729.99,
+                "restricted_message": null
+              },
+              "rating": 4.6,
+              "review_count": 72,
+              "sku": "6418081",
+              "title": "Apple - iPhone 16 128GB - Apple Intelligence - Pink (Verizon)",
+              "url": "https://www.bestbuy.com/product/apple-iphone-16-128gb-apple-intelligence-pink-verizon/JCQ6HRGRGR"
+            },
+            {
+              "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/66f34b89-1891-4632-9309-bedb1b78a20e.jpg",
+              "price": {
+                "currency": "USD",
+                "current": 599.99,
+                "regular": 599.99,
+                "restricted_message": null
+              },
+              "rating": 4.7,
+              "review_count": 37,
+              "sku": "6443386",
+              "title": "Apple - iPhone 16e 128GB - Apple Intelligence - Black (Verizon)",
+              "url": "https://www.bestbuy.com/product/apple-iphone-16e-128gb-apple-intelligence-black-verizon/JCQ6HRFKXH"
+            },
+            {
+              "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/66f34b89-1891-4632-9309-bedb1b78a20e.jpg",
+              "price": {
+                "currency": "USD",
+                "current": 599.99,
+                "regular": 599.99,
+                "restricted_message": null
+              },
+              "rating": 4.2,
+              "review_count": 58,
+              "sku": "6443495",
+              "title": "Apple - iPhone 16e 128GB - Apple Intelligence - Black (AT&T)",
+              "url": "https://www.bestbuy.com/product/apple-iphone-16e-128gb-apple-intelligence-black-at-t/JCQ6HRFZF3"
+            },
+            {
+              "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/8775bf1f-75e0-4af8-a281-af4904dec0df.jpg",
+              "price": {
+                "currency": "USD",
+                "current": 829.99,
+                "regular": 829.99,
+                "restricted_message": null
+              },
+              "rating": 4.5,
+              "review_count": 33,
+              "sku": "6525508",
+              "title": "Apple - iPhone 16 Plus 128GB - Apple Intelligence - Black (Verizon)",
+              "url": "https://www.bestbuy.com/product/apple-iphone-16-plus-128gb-apple-intelligence-black-verizon/JCQ6HTJL2P"
+            },
+            {
+              "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/8775bf1f-75e0-4af8-a281-af4904dec0df.jpg",
+              "price": {
+                "currency": "USD",
+                "current": 829.99,
+                "regular": 829.99,
+                "restricted_message": null
+              },
+              "rating": 4.7,
+              "review_count": 43,
+              "sku": "6525440",
+              "title": "Apple - iPhone 16 Plus 128GB - Apple Intelligence - Black (AT&T)",
+              "url": "https://www.bestbuy.com/product/apple-iphone-16-plus-128gb-apple-intelligence-black-at-t/JCQ6HTJGJL"
+            },
+            {
+              "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/20da9f11-6aaa-4740-9f6c-32c8c6c4b5f8.jpg",
+              "price": {
+                "currency": "USD",
+                "current": 899.99,
+                "regular": 899.99,
+                "restricted_message": null
+              },
+              "rating": 2.8,
+              "review_count": 6,
+              "sku": "6536847",
+              "title": "Apple - iPhone 16e 512GB - Apple Intelligence - White (AT&T)",
+              "url": "https://www.bestbuy.com/product/apple-iphone-16e-512gb-apple-intelligence-white-at-t/JCQ6HTLR64"
+            }
+          ],
+          "unavailable_skus": [
+            "6536863",
+            "6418001",
+            "6443367",
+            "6418089",
+            "6418007",
+            "6443477",
+            "6525447",
+            "6525516",
+            "6525505",
+            "6525436",
+            "6536845"
+          ]
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "bestbuy-com",
+        "capability": "products/search"
+      }
+    },
+    {
+      "id": "bestbuy-com/products/stores",
+      "provider": "bestbuy-com",
+      "capability": "products/stores",
+      "name": "Stores",
+      "description": "Find nearby open Best Buy stores by US ZIP code; use store_id for availability.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "zip_code",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{5}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Find nearby open Best Buy stores by US ZIP code; use store_id for availability.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "stores",
+            "type": "object[]"
+          },
+          {
+            "name": "zip_code",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "zip_code": "55423"
+        },
+        "response": {
+          "count": 10,
+          "country": "US",
+          "observed_at_ms": 1788825600000,
+          "stores": [
+            {
+              "distance": 0.971072,
+              "has_pickup": true,
+              "latitude": 44.86321,
+              "longitude": -93.29274,
+              "state": "MN",
+              "store_id": "281",
+              "time_zone": "America/Chicago"
+            },
+            {
+              "distance": 6.84723,
+              "has_pickup": true,
+              "latitude": 44.83303,
+              "longitude": -93.15589,
+              "state": "MN",
+              "store_id": "1055",
+              "time_zone": "America/Chicago"
+            },
+            {
+              "distance": 7.039522,
+              "has_pickup": true,
+              "latitude": 44.86091,
+              "longitude": -93.42473,
+              "state": "MN",
+              "store_id": "611",
+              "time_zone": "America/Chicago"
+            },
+            {
+              "distance": 8.809455,
+              "has_pickup": true,
+              "latitude": 44.74829,
+              "longitude": -93.29966,
+              "state": "MN",
+              "store_id": "8",
+              "time_zone": "America/Chicago"
+            },
+            {
+              "distance": 10.479941,
+              "has_pickup": true,
+              "latitude": 44.97006,
+              "longitude": -93.44955,
+              "state": "MN",
+              "store_id": "4",
+              "time_zone": "America/Chicago"
+            },
+            {
+              "distance": 11.250413,
+              "has_pickup": true,
+              "latitude": 45.01642,
+              "longitude": -93.16787,
+              "state": "MN",
+              "store_id": "7",
+              "time_zone": "America/Chicago"
+            },
+            {
+              "distance": 16.758626,
+              "has_pickup": true,
+              "latitude": 45.03632,
+              "longitude": -93.02619,
+              "state": "MN",
+              "store_id": "10",
+              "time_zone": "America/Chicago"
+            },
+            {
+              "distance": 17.080064,
+              "has_pickup": true,
+              "latitude": 45.09408,
+              "longitude": -93.44484,
+              "state": "MN",
+              "store_id": "329",
+              "time_zone": "America/Chicago"
+            },
+            {
+              "distance": 17.652401,
+              "has_pickup": true,
+              "latitude": 44.9492,
+              "longitude": -92.9371,
+              "state": "MN",
+              "store_id": "15",
+              "time_zone": "America/Chicago"
+            },
+            {
+              "distance": 22.746821,
+              "has_pickup": true,
+              "latitude": 45.20112,
+              "longitude": -93.34819,
+              "state": "MN",
+              "store_id": "540",
+              "time_zone": "America/Chicago"
+            }
+          ],
+          "zip_code": "55423"
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "bestbuy-com",
+        "capability": "products/stores"
+      }
+    },
+    {
+      "id": "bestbuy-com/products/suggestions",
+      "provider": "bestbuy-com",
+      "capability": "products/suggestions",
+      "name": "Suggestions",
+      "description": "Get autocomplete suggestions for a search prefix.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "count",
+          "type": "number",
+          "in": "body",
+          "about": "count",
+          "default": 10,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Get autocomplete suggestions for a search prefix.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "corrected_query",
+            "type": "string"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "suggestions",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "count": 5,
+          "query": "iphone"
+        },
+        "response": {
+          "corrected_query": null,
+          "count": 5,
+          "country": "US",
+          "observed_at_ms": 1788825600000,
+          "query": "iphone",
+          "suggestions": [
+            {
+              "skus": [
+                "11978553",
+                "6487349",
+                "6443133",
+                "6487350",
+                "6443134",
+                "6487351",
+                "6473225",
+                "6472867",
+                "6472869"
+              ],
+              "text": "iphone 17"
+            },
+            {
+              "skus": [
+                "6513657",
+                "6473225",
+                "6473226",
+                "6473228",
+                "12911480",
+                "6513660",
+                "6513662",
+                "6513658",
+                "6513663"
+              ],
+              "text": "iphone air"
+            },
+            {
+              "skus": [
+                "6443141",
+                "6443164",
+                "6443142",
+                "11978553",
+                "6683890",
+                "12327965",
+                "6683891",
+                "12246186",
+                "6418061"
+              ],
+              "text": "iphone 17 pro"
+            },
+            {
+              "skus": [
+                "12327965",
+                "11978553",
+                "6472867",
+                "6472869",
+                "6472868",
+                "6473024",
+                "6473026",
+                "6473025",
+                "12256359"
+              ],
+              "text": "iphone 17 pro max"
+            },
+            {
+              "skus": [
+                "6668418",
+                "6641188",
+                "13035201",
+                "13035180",
+                "6665480",
+                "13035239",
+                "6665477",
+                "6641250",
+                "6646220"
+              ],
+              "text": "iphone 17 accessories"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "bestbuy-com",
+        "capability": "products/suggestions"
+      }
+    },
+    {
+      "id": "bestbuy-com/products/variations",
+      "provider": "bestbuy-com",
+      "capability": "products/variations",
+      "name": "Variations",
+      "description": "List product variants and their attributes. Availability and prices require a separate lookup.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "sku",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{6,8}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "List product variants and their attributes. Availability and prices require a separate lookup.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "dimensions",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "sku",
+            "type": "string"
+          },
+          {
+            "name": "variants",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "sku": "6507524"
+        },
+        "response": {
+          "country": "US",
+          "dimensions": [
+            {
+              "key": "Communications:Color",
+              "label": "Color"
+            }
+          ],
+          "observed_at_ms": 1788825600000,
+          "sku": "6507524",
+          "variants": [
+            {
+              "attributes": [
+                {
+                  "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/8415b7d0-1146-4d07-8389-ca359ca10f2b.jpg",
+                  "key": "Communications:Color",
+                  "value": "White"
+                }
+              ],
+              "bsin": "JJGCQG2GTF",
+              "sku": "6507524"
+            },
+            {
+              "attributes": [
+                {
+                  "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/8415b7d0-1146-4d07-8389-ca359ca10f2b.jpg",
+                  "key": "Communications:Color",
+                  "value": "White"
+                }
+              ],
+              "bsin": "JX87LRS5YP",
+              "sku": "6650147"
+            },
+            {
+              "attributes": [
+                {
+                  "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/b13d78ea-d64e-4067-ac1b-730a650fa378.jpg",
+                  "key": "Communications:Color",
+                  "value": "Black"
+                }
+              ],
+              "bsin": "JX87LRS4RL",
+              "sku": "6647941"
+            },
+            {
+              "attributes": [
+                {
+                  "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/e4d95fde-534f-4b0c-ae05-1b7418f32b30.jpg",
+                  "key": "Communications:Color",
+                  "value": "White"
+                }
+              ],
+              "bsin": "JC7GSTSKWR",
+              "sku": "12474082"
+            },
+            {
+              "attributes": [
+                {
+                  "image_url": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/389d850f-6178-4485-9ae4-1d4bb931660b.jpg",
+                  "key": "Communications:Color",
+                  "value": "Black"
+                }
+              ],
+              "bsin": "JC7GST98Q5",
+              "sku": "12809538"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-08T00:00:00Z"
+      },
+      "execute": {
+        "provider": "bestbuy-com",
+        "capability": "products/variations"
+      }
+    }
+  ]
+}

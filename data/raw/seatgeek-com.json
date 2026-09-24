@@ -1,0 +1,1540 @@
+{
+  "id": "seatgeek-com",
+  "provider": "seatgeek-com",
+  "name": "SeatGeek",
+  "description": "SeatGeek event discovery: search events by team, artist, venue, place, date and category; event, performer and venue detail; search-box suggestions; event-level ticket availability snapshots (listing and ticket counts, price range). Reads the anonymous SeatGeek Platform API (api.seatgeek.com/2) with the web app's public client id. Per-listing offers are behind DataDome and not covered.",
+  "toolCount": 7,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "seatgeek-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "seatgeek-com/events/event",
+      "provider": "seatgeek-com",
+      "capability": "events/event",
+      "name": "Event",
+      "description": "Detail for an event id from search_events, suggest or a pasted seatgeek.com event URL.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "event_id",
+          "type": "number",
+          "in": "body",
+          "about": "Numeric SeatGeek event id. Exactly one of event_id or url.",
+          "min": 1
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A seatgeek.com event URL (https://seatgeek.com/{slug}-tickets/{type}/{date}/{id}); the trailing number is the event id."
+        }
+      ],
+      "response": {
+        "about": "One SeatGeek event by id or public URL (api.seatgeek.com /2/events/{id}): the search_events record plus description, provider ids at other ticketing sites, seating map configuration and sales end. Availability is the API's event-level stats snapshot (listing and ticket counts, price range across listings); per-listing offers with section, row and quantity live behind DataDome (/2/event_listings_v2) and are not available. Unknown ids fail with not_found.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "all_in_price_on_event_page",
+            "type": "boolean",
+            "about": "Whether the site shows all-in (fee-inclusive) prices on this event's page."
+          },
+          {
+            "name": "announce_date",
+            "type": "string"
+          },
+          {
+            "name": "availability",
+            "type": "object",
+            "about": "Event-level availability snapshot from the API's stats object: counts and price range across all marketplace listings (primary and resale are not distinguished at this level). A snapshot, not a reservation. Null when the API sends no stats. Per-listing offers (section, row, quantity) are behind DataDome and not available from this program."
+          },
+          {
+            "name": "date_tbd",
+            "type": "boolean",
+            "about": "Date not yet announced."
+          },
+          {
+            "name": "datetime_local",
+            "type": "string",
+            "about": "Local start time at the venue, ISO 8601 without offset (see timezone). May be a placeholder when time_tbd/date_tbd is true."
+          },
+          {
+            "name": "datetime_tbd",
+            "type": "boolean",
+            "about": "Date and time not yet announced."
+          },
+          {
+            "name": "datetime_utc",
+            "type": "string",
+            "about": "Start time in UTC, ISO 8601 without the Z suffix as the API sends it."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "enddatetime_utc",
+            "type": "string"
+          },
+          {
+            "name": "external_ids",
+            "type": "object[]",
+            "about": "Ids of the same event at other ticketing providers (event.links[] with link_type ID plus event.ticketmaster)."
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "SeatGeek event id; stable identifier, last path segment of the public event URL."
+          },
+          {
+            "name": "is_open",
+            "type": "boolean",
+            "about": "Whether the API marks the event as open."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds when this snapshot was taken by the program."
+          },
+          {
+            "name": "performers",
+            "type": "object[]"
+          },
+          {
+            "name": "sales_end_datetime_utc",
+            "type": "string"
+          },
+          {
+            "name": "schedule_status",
+            "type": "string",
+            "about": "Scheduling status as the API states it; observed: as_originally_scheduled, rescheduled."
+          },
+          {
+            "name": "seating_map",
+            "type": "object",
+            "about": "Seating map configuration from event.venue_config; null when absent."
+          },
+          {
+            "name": "short_title",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The API request the record came from (api.seatgeek.com)."
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Event status as the API states it; observed: normal. Cancelled or postponed values were not observed during reconnaissance."
+          },
+          {
+            "name": "taxonomies",
+            "type": "object[]"
+          },
+          {
+            "name": "time_tbd",
+            "type": "boolean",
+            "about": "Time not yet announced."
+          },
+          {
+            "name": "timezone",
+            "type": "string",
+            "about": "IANA timezone of datetime_local, from the venue."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string",
+            "about": "Event type as the API states it (mlb, concert, entertainment, ...)."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public event page on seatgeek.com (source URL)."
+          },
+          {
+            "name": "venue",
+            "type": "object",
+            "about": "The venue the event is at; null when the API has none (TBA events)."
+          },
+          {
+            "name": "visible_until_utc",
+            "type": "string",
+            "about": "When the event stops being listed, UTC."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "event_id": 18271342
+        },
+        "response": {
+          "all_in_price_on_event_page": true,
+          "announce_date": "2026-05-28T00:00:00",
+          "availability": {
+            "average_price": 554,
+            "highest_price": 1090,
+            "listing_count": 87,
+            "lowest_price": 206,
+            "lowest_sg_base_price": 172,
+            "median_price": 381,
+            "ticket_count": 480
+          },
+          "date_tbd": false,
+          "datetime_local": "2027-04-01T14:00:00",
+          "datetime_tbd": false,
+          "datetime_utc": "2027-04-01T18:00:00",
+          "description": "",
+          "enddatetime_utc": "2027-04-01T18:00:00",
+          "external_ids": [
+            {
+              "id": "Z1r9uZruZqGZ1AvZFk6",
+              "provider": "ticketmaster"
+            }
+          ],
+          "id": 18271342,
+          "is_open": false,
+          "observed_at_ms": 1790018844045,
+          "performers": [
+            {
+              "id": 7300,
+              "name": "Evita",
+              "primary": true,
+              "slug": "evita",
+              "type": "theater_broadway_national_tours",
+              "url": "https://seatgeek.com/evita-tickets"
+            }
+          ],
+          "sales_end_datetime_utc": null,
+          "schedule_status": "as_originally_scheduled",
+          "seating_map": {
+            "is_ga": false,
+            "is_mapped": true,
+            "map_config_key": "v2940-1690-14",
+            "static_map_url": "https://static-maps.seatgeekimages.com/map/venue/1690/78e7658d9493c5bdde32a5b5f5e84acb.png?width=512&height=512"
+          },
+          "short_title": "Evita - New York",
+          "source_url": "https://api.seatgeek.com/2/events/18271342?client_id=MTY2MnwxMzgzMzIwMTU4",
+          "status": "normal",
+          "taxonomies": [
+            {
+              "id": 3000000,
+              "name": "theater",
+              "parent_id": null
+            },
+            {
+              "id": 3030000,
+              "name": "broadway",
+              "parent_id": 3000000
+            }
+          ],
+          "time_tbd": false,
+          "timezone": "America/New_York",
+          "title": "Evita - New York",
+          "type": "broadway",
+          "url": "https://seatgeek.com/evita-tickets/broadway/2027-04-01-2-pm/18271342",
+          "venue": {
+            "address": "1634 Broadway",
+            "city": "New York",
+            "country": "US",
+            "display_location": "New York, NY",
+            "id": 2940,
+            "latitude": 40.7617,
+            "longitude": -73.9837,
+            "name": "Winter Garden Theatre",
+            "postal_code": "10019",
+            "slug": "winter-garden-theatre",
+            "state": "NY",
+            "timezone": "America/New_York",
+            "url": "https://seatgeek.com/venues/winter-garden-theatre/tickets"
+          },
+          "visible_until_utc": "2027-04-01T18:00:00"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "seatgeek-com",
+        "capability": "events/event"
+      }
+    },
+    {
+      "id": "seatgeek-com/events/performer",
+      "provider": "seatgeek-com",
+      "capability": "events/performer",
+      "name": "Performer",
+      "description": "Detail for a performer id or slug from search_performers, search_events or suggest.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "performer_id",
+          "type": "number",
+          "in": "body",
+          "about": "Numeric SeatGeek performer id. Exactly one of performer_id or slug.",
+          "min": 1
+        },
+        {
+          "name": "slug",
+          "type": "string",
+          "in": "body",
+          "about": "Performer URL slug, e.g. new-york-yankees. Pattern: ^[a-z0-9]+(-[a-z0-9]+)*$."
+        }
+      ],
+      "response": {
+        "about": "One SeatGeek performer by numeric id (api.seatgeek.com /2/performers/{id}) or by URL slug (/2/performers?slug=). Unknown ids and slugs fail with not_found.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "divisions",
+            "type": "object[]",
+            "about": "League/division memberships for teams; empty for other performers."
+          },
+          {
+            "name": "has_upcoming_events",
+            "type": "boolean"
+          },
+          {
+            "name": "home_venue_id",
+            "type": "number",
+            "about": "Home venue id for teams; pass to venue."
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "SeatGeek performer id."
+          },
+          {
+            "name": "image",
+            "type": "string",
+            "about": "Landscape image URL."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "num_upcoming_events",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds when this snapshot was taken by the program."
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string",
+            "about": "URL slug; pass to search_events.performer_slug."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The API request the record came from."
+          },
+          {
+            "name": "taxonomies",
+            "type": "object[]"
+          },
+          {
+            "name": "type",
+            "type": "string",
+            "about": "Performer type as the API states it (mlb, band, ...)."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public performer page on seatgeek.com."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "performer_id": 8
+        },
+        "response": {
+          "divisions": [
+            {
+              "display_name": "American League",
+              "display_type": "League",
+              "short_name": "AL East",
+              "slug": "american-league-east",
+              "taxonomy_id": 1010100
+            },
+            {
+              "display_name": "American League East",
+              "display_type": "Division",
+              "short_name": "AL East",
+              "slug": "american-league-east",
+              "taxonomy_id": 1010100
+            }
+          ],
+          "has_upcoming_events": true,
+          "home_venue_id": 8,
+          "id": 8,
+          "image": "https://seatgeekimages.com/performers-landscape/new-york-yankees-c669dc/8/huge.jpg",
+          "name": "New York Yankees",
+          "num_upcoming_events": 214,
+          "observed_at_ms": 1790018852043,
+          "short_name": "Yankees",
+          "slug": "new-york-yankees",
+          "source_url": "https://api.seatgeek.com/2/performers/8?client_id=MTY2MnwxMzgzMzIwMTU4",
+          "taxonomies": [
+            {
+              "id": 1000000,
+              "name": "sports",
+              "parent_id": null
+            },
+            {
+              "id": 1010000,
+              "name": "baseball",
+              "parent_id": 1000000
+            },
+            {
+              "id": 1010100,
+              "name": "mlb",
+              "parent_id": 1010000
+            }
+          ],
+          "type": "mlb",
+          "url": "https://seatgeek.com/new-york-yankees-tickets"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "seatgeek-com",
+        "capability": "events/performer"
+      }
+    },
+    {
+      "id": "seatgeek-com/events/search_events",
+      "provider": "seatgeek-com",
+      "capability": "events/search_events",
+      "name": "Search events",
+      "description": "Discovery: find events for a team, artist, venue, place or date range, then pass an event id to event.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "end_date",
+          "type": "string",
+          "in": "body",
+          "about": "Latest local event date, YYYY-MM-DD inclusive (datetime_local.lte). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "event_ids",
+          "type": "number[]",
+          "in": "body",
+          "about": "Explicit event ids to look up in bulk (1-50)."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "Centre of a radius search; requires longitude.",
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page; use next_page from the previous call.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page; the API caps at 100.",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "performer_id",
+          "type": "number",
+          "in": "body",
+          "about": "Numeric SeatGeek performer id.",
+          "min": 1
+        },
+        {
+          "name": "performer_slug",
+          "type": "string",
+          "in": "body",
+          "about": "Performer URL slug, e.g. new-york-yankees (from performer or search_performers). Pattern: ^[a-z0-9]+(-[a-z0-9]+)*$."
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text search (team, artist, show, venue)."
+        },
+        {
+          "name": "range_miles",
+          "type": "number",
+          "in": "body",
+          "about": "Radius in miles around latitude/longitude (default 30 when a centre is given).",
+          "min": 1,
+          "max": 500
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Result order. Default is the API's relevance order.",
+          "oneOf": [
+            "datetime_utc.asc",
+            "datetime_utc.desc",
+            "score.desc",
+            "score.asc"
+          ]
+        },
+        {
+          "name": "start_date",
+          "type": "string",
+          "in": "body",
+          "about": "Earliest local event date, YYYY-MM-DD (datetime_local.gte). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "taxonomy",
+          "type": "string",
+          "in": "body",
+          "about": "Taxonomy name as the API uses it, e.g. concert, mlb, theater, comedy (taxonomies.name). Pattern: ^[a-z0-9_]+$."
+        },
+        {
+          "name": "venue_id",
+          "type": "number",
+          "in": "body",
+          "about": "Numeric SeatGeek venue id.",
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "Search SeatGeek events (api.seatgeek.com /2/events) by free text, performer slug or id, venue id, explicit event ids, a lat/lon radius, a local date window and/or a taxonomy name, sorted and paged (per_page up to 100). At least one filter is required. Each event carries its stable id, public URL, local and UTC start, venue with timezone, performers, taxonomies, status/schedule_status and an event-level availability snapshot (listing and ticket counts, price range). Coverage is the SeatGeek marketplace (US and Canada); prices carry no currency in the API (the US site displays USD) and fee inclusion is unknown.",
+        "key": "events",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "all_in_price_on_event_page",
+            "type": "boolean",
+            "about": "Whether the site shows all-in (fee-inclusive) prices on this event's page."
+          },
+          {
+            "name": "announce_date",
+            "type": "string"
+          },
+          {
+            "name": "availability",
+            "type": "object",
+            "about": "Event-level availability snapshot from the API's stats object: counts and price range across all marketplace listings (primary and resale are not distinguished at this level). A snapshot, not a reservation. Null when the API sends no stats. Per-listing offers (section, row, quantity) are behind DataDome and not available from this program."
+          },
+          {
+            "name": "date_tbd",
+            "type": "boolean",
+            "about": "Date not yet announced."
+          },
+          {
+            "name": "datetime_local",
+            "type": "string",
+            "about": "Local start time at the venue, ISO 8601 without offset (see timezone). May be a placeholder when time_tbd/date_tbd is true."
+          },
+          {
+            "name": "datetime_tbd",
+            "type": "boolean",
+            "about": "Date and time not yet announced."
+          },
+          {
+            "name": "datetime_utc",
+            "type": "string",
+            "about": "Start time in UTC, ISO 8601 without the Z suffix as the API sends it."
+          },
+          {
+            "name": "enddatetime_utc",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "SeatGeek event id; stable identifier, last path segment of the public event URL."
+          },
+          {
+            "name": "is_open",
+            "type": "boolean",
+            "about": "Whether the API marks the event as open."
+          },
+          {
+            "name": "performers",
+            "type": "object[]"
+          },
+          {
+            "name": "schedule_status",
+            "type": "string",
+            "about": "Scheduling status as the API states it; observed: as_originally_scheduled, rescheduled."
+          },
+          {
+            "name": "short_title",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Event status as the API states it; observed: normal. Cancelled or postponed values were not observed during reconnaissance."
+          },
+          {
+            "name": "taxonomies",
+            "type": "object[]"
+          },
+          {
+            "name": "time_tbd",
+            "type": "boolean",
+            "about": "Time not yet announced."
+          },
+          {
+            "name": "timezone",
+            "type": "string",
+            "about": "IANA timezone of datetime_local, from the venue."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string",
+            "about": "Event type as the API states it (mlb, concert, entertainment, ...)."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public event page on seatgeek.com (source URL)."
+          },
+          {
+            "name": "venue",
+            "type": "object",
+            "about": "The venue the event is at; null when the API has none (TBA events)."
+          },
+          {
+            "name": "visible_until_utc",
+            "type": "string",
+            "about": "When the event stops being listed, UTC."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "latitude": 40.7128,
+          "longitude": -74.006,
+          "per_page": 3,
+          "range_miles": 25,
+          "sort": "datetime_utc.asc",
+          "taxonomy": "concert"
+        },
+        "response": {
+          "events": [
+            {
+              "all_in_price_on_event_page": true,
+              "announce_date": "2026-07-08T00:00:00",
+              "availability": {
+                "average_price": 632,
+                "highest_price": 2209,
+                "listing_count": 7,
+                "lowest_price": 22,
+                "lowest_sg_base_price": 16,
+                "median_price": 49,
+                "ticket_count": 37
+              },
+              "date_tbd": false,
+              "datetime_local": "2026-09-21T18:00:00",
+              "datetime_tbd": false,
+              "datetime_utc": "2026-09-21T22:00:00",
+              "enddatetime_utc": "2026-09-21T23:30:00",
+              "id": 18356084,
+              "is_open": false,
+              "performers": [
+                {
+                  "id": 1971728,
+                  "name": "Ryman",
+                  "primary": true,
+                  "slug": "ryman",
+                  "type": "band",
+                  "url": "https://seatgeek.com/ryman-tickets"
+                },
+                {
+                  "id": 387311,
+                  "name": "Darryl Rahn",
+                  "primary": null,
+                  "slug": "darryl-rahn",
+                  "type": "band",
+                  "url": "https://seatgeek.com/darryl-rahn-tickets"
+                }
+              ],
+              "schedule_status": "as_originally_scheduled",
+              "short_title": "Ryman with Darryl Rahn",
+              "status": "normal",
+              "taxonomies": [
+                {
+                  "id": 2000000,
+                  "name": "concert",
+                  "parent_id": null
+                }
+              ],
+              "time_tbd": false,
+              "timezone": "America/New_York",
+              "title": "Ryman with Darryl Rahn",
+              "type": "concert",
+              "url": "https://seatgeek.com/ryman-tickets/new-york-new-york-mercury-lounge-new-york-2026-09-21-6-pm/concert/18356084",
+              "venue": {
+                "address": "217 East Houston Street",
+                "city": "New York",
+                "country": "US",
+                "display_location": "New York, NY",
+                "id": 327,
+                "latitude": 40.72211,
+                "longitude": -73.986786,
+                "name": "Mercury Lounge - New York",
+                "postal_code": "10002",
+                "slug": "mercury-lounge-new-york",
+                "state": "NY",
+                "timezone": "America/New_York",
+                "url": "https://seatgeek.com/venues/mercury-lounge-new-york/tickets"
+              },
+              "visible_until_utc": "2026-09-21T23:30:00"
+            },
+            {
+              "all_in_price_on_event_page": true,
+              "announce_date": "2026-09-15T00:00:00",
+              "availability": {
+                "average_price": 527,
+                "highest_price": 2209,
+                "listing_count": 9,
+                "lowest_price": 31,
+                "lowest_sg_base_price": 24,
+                "median_price": 88,
+                "ticket_count": 37
+              },
+              "date_tbd": false,
+              "datetime_local": "2026-09-21T19:00:00",
+              "datetime_tbd": false,
+              "datetime_utc": "2026-09-21T23:00:00",
+              "enddatetime_utc": "2026-09-22T00:30:00",
+              "id": 18590872,
+              "is_open": false,
+              "performers": [
+                {
+                  "id": 1964235,
+                  "name": "Culture Wars",
+                  "primary": true,
+                  "slug": "culture-wars",
+                  "type": "band",
+                  "url": "https://seatgeek.com/culture-wars-tickets"
+                }
+              ],
+              "schedule_status": "as_originally_scheduled",
+              "short_title": "Culture Wars",
+              "status": "normal",
+              "taxonomies": [
+                {
+                  "id": 2000000,
+                  "name": "concert",
+                  "parent_id": null
+                }
+              ],
+              "time_tbd": false,
+              "timezone": "America/New_York",
+              "title": "Culture Wars",
+              "type": "concert",
+              "url": "https://seatgeek.com/culture-wars-tickets/new-york-new-york-irving-plaza-2026-09-21-7-pm/concert/18590872",
+              "venue": {
+                "address": "17 Irving Place",
+                "city": "New York",
+                "country": "US",
+                "display_location": "New York, NY",
+                "id": 519,
+                "latitude": 40.734905,
+                "longitude": -73.98838,
+                "name": "Irving Plaza",
+                "postal_code": "10003",
+                "slug": "irving-plaza",
+                "state": "NY",
+                "timezone": "America/New_York",
+                "url": "https://seatgeek.com/venues/irving-plaza/tickets"
+              },
+              "visible_until_utc": "2026-09-22T00:30:00"
+            },
+            {
+              "all_in_price_on_event_page": true,
+              "announce_date": "2026-02-04T00:00:00",
+              "availability": {
+                "average_price": 657,
+                "highest_price": 2209,
+                "listing_count": 8,
+                "lowest_price": 59,
+                "lowest_sg_base_price": 49,
+                "median_price": 209,
+                "ticket_count": 49
+              },
+              "date_tbd": false,
+              "datetime_local": "2026-09-21T19:00:00",
+              "datetime_tbd": false,
+              "datetime_utc": "2026-09-21T23:00:00",
+              "enddatetime_utc": "2026-09-22T00:30:00",
+              "id": 18051359,
+              "is_open": false,
+              "performers": [
+                {
+                  "id": 246296,
+                  "name": "Ben Harper & the Innocent Criminals",
+                  "primary": true,
+                  "slug": "ben-harper-and-the-innocent-criminals",
+                  "type": "band",
+                  "url": "https://seatgeek.com/ben-harper-tickets"
+                },
+                {
+                  "id": 275,
+                  "name": "Ben Harper",
+                  "primary": null,
+                  "slug": "ben-harper",
+                  "type": "band",
+                  "url": "https://seatgeek.com/ben-harper-tickets"
+                }
+              ],
+              "schedule_status": "as_originally_scheduled",
+              "short_title": "Ben Harper & the Innocent Criminals",
+              "status": "normal",
+              "taxonomies": [
+                {
+                  "id": 2000000,
+                  "name": "concert",
+                  "parent_id": null
+                }
+              ],
+              "time_tbd": false,
+              "timezone": "America/New_York",
+              "title": "Ben Harper & the Innocent Criminals",
+              "type": "concert",
+              "url": "https://seatgeek.com/ben-harper-and-the-innocent-criminals-tickets/new-york-new-york-bowery-ballroom-2026-09-21-7-pm/concert/18051359",
+              "venue": {
+                "address": "6 Delancey Street",
+                "city": "New York",
+                "country": "US",
+                "display_location": "New York, NY",
+                "id": 719,
+                "latitude": 40.7204,
+                "longitude": -73.9934,
+                "name": "Bowery Ballroom",
+                "postal_code": "10002",
+                "slug": "bowery-ballroom",
+                "state": "NY",
+                "timezone": "America/New_York",
+                "url": "https://seatgeek.com/venues/bowery-ballroom/tickets"
+              },
+              "visible_until_utc": "2026-09-22T00:30:00"
+            }
+          ],
+          "filters": {
+            "end_date": null,
+            "event_ids": null,
+            "latitude": 40.7128,
+            "longitude": -74.006,
+            "performer_id": null,
+            "performer_slug": null,
+            "query": null,
+            "range_miles": 25,
+            "sort": "datetime_utc.asc",
+            "start_date": null,
+            "taxonomy": "concert",
+            "venue_id": null
+          },
+          "geolocation": {
+            "city": "New York",
+            "country": "US",
+            "display_name": "New York, NY",
+            "latitude": 40.7143,
+            "longitude": -74.006,
+            "range": "25mi",
+            "state": "NY"
+          },
+          "next_page": 2,
+          "observed_at_ms": 1790018839970,
+          "page": 1,
+          "per_page": 3,
+          "returned": 3,
+          "source_url": "https://api.seatgeek.com/2/events?client_id=MTY2MnwxMzgzMzIwMTU4&lat=40.7128&lon=-74.006&range=25mi&taxonomies.name=concert&sort=datetime_utc.asc&per_page=3&page=1",
+          "total": 1946
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "seatgeek-com",
+        "capability": "events/search_events"
+      }
+    },
+    {
+      "id": "seatgeek-com/events/search_performers",
+      "provider": "seatgeek-com",
+      "capability": "events/search_performers",
+      "name": "Search performers",
+      "description": "Resolve a team, artist or show name to a SeatGeek performer id/slug before listing its events.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page; use next_page from the previous call.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page; the API caps at 100.",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text performer name.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Search SeatGeek performers (teams, artists, shows; api.seatgeek.com /2/performers?q=) by free text, paged. Returns ids and slugs for search_events and performer, upcoming event counts and taxonomies.",
+        "key": "performers",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "divisions",
+            "type": "object[]",
+            "about": "League/division memberships for teams; empty for other performers."
+          },
+          {
+            "name": "has_upcoming_events",
+            "type": "boolean"
+          },
+          {
+            "name": "home_venue_id",
+            "type": "number",
+            "about": "Home venue id for teams; pass to venue."
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "SeatGeek performer id."
+          },
+          {
+            "name": "image",
+            "type": "string",
+            "about": "Landscape image URL."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "num_upcoming_events",
+            "type": "number"
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string",
+            "about": "URL slug; pass to search_events.performer_slug."
+          },
+          {
+            "name": "taxonomies",
+            "type": "object[]"
+          },
+          {
+            "name": "type",
+            "type": "string",
+            "about": "Performer type as the API states it (mlb, band, ...)."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public performer page on seatgeek.com."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "per_page": 3,
+          "query": "new york yankees"
+        },
+        "response": {
+          "next_page": null,
+          "observed_at_ms": 1790018848059,
+          "page": 1,
+          "per_page": 3,
+          "performers": [
+            {
+              "divisions": [
+                {
+                  "display_name": "American League",
+                  "display_type": "League",
+                  "short_name": "AL East",
+                  "slug": "american-league-east",
+                  "taxonomy_id": 1010100
+                },
+                {
+                  "display_name": "American League East",
+                  "display_type": "Division",
+                  "short_name": "AL East",
+                  "slug": "american-league-east",
+                  "taxonomy_id": 1010100
+                }
+              ],
+              "has_upcoming_events": true,
+              "home_venue_id": 8,
+              "id": 8,
+              "image": "https://seatgeekimages.com/performers-landscape/new-york-yankees-c669dc/8/huge.jpg",
+              "name": "New York Yankees",
+              "num_upcoming_events": 214,
+              "short_name": "Yankees",
+              "slug": "new-york-yankees",
+              "taxonomies": [
+                {
+                  "id": 1000000,
+                  "name": "sports",
+                  "parent_id": null
+                },
+                {
+                  "id": 1010000,
+                  "name": "baseball",
+                  "parent_id": 1000000
+                },
+                {
+                  "id": 1010100,
+                  "name": "mlb",
+                  "parent_id": 1010000
+                }
+              ],
+              "type": "mlb",
+              "url": "https://seatgeek.com/new-york-yankees-tickets"
+            }
+          ],
+          "query": "new york yankees",
+          "returned": 1,
+          "source_url": "https://api.seatgeek.com/2/performers?client_id=MTY2MnwxMzgzMzIwMTU4&q=new+york+yankees&per_page=3&page=1",
+          "total": 1
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "seatgeek-com",
+        "capability": "events/search_performers"
+      }
+    },
+    {
+      "id": "seatgeek-com/events/search_venues",
+      "provider": "seatgeek-com",
+      "capability": "events/search_venues",
+      "name": "Search venues",
+      "description": "Find a venue id by name or list venues in a city before listing events at a venue.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "city",
+          "type": "string",
+          "in": "body",
+          "about": "City name, e.g. chicago."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page; use next_page from the previous call.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page; the API caps at 100.",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text venue name."
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "in": "body",
+          "about": "Two-letter state/province code, e.g. IL; only meaningful with city. Pattern: ^[A-Za-z]{2}$."
+        }
+      ],
+      "response": {
+        "about": "Search SeatGeek venues (api.seatgeek.com /2/venues) by free text and/or city and state, paged. Returns venue ids for search_events.venue_id and venue, with address, timezone, capacity and upcoming event counts.",
+        "key": "venues",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "capacity",
+            "type": "number",
+            "about": "Capacity as the API states it; 0 means unknown to the site."
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "display_location",
+            "type": "string"
+          },
+          {
+            "name": "extended_address",
+            "type": "string"
+          },
+          {
+            "name": "has_upcoming_events",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "SeatGeek venue id."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "num_upcoming_events",
+            "type": "number"
+          },
+          {
+            "name": "postal_code",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "timezone",
+            "type": "string",
+            "about": "IANA timezone."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public venue page on seatgeek.com."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "per_page": 3,
+          "query": "wrigley field"
+        },
+        "response": {
+          "filters": {
+            "city": null,
+            "query": "wrigley field",
+            "state": null
+          },
+          "next_page": null,
+          "observed_at_ms": 1790018893118,
+          "page": 1,
+          "per_page": 3,
+          "returned": 2,
+          "source_url": "https://api.seatgeek.com/2/venues?client_id=MTY2MnwxMzgzMzIwMTU4&q=wrigley+field&per_page=3&page=1",
+          "total": 2,
+          "venues": [
+            {
+              "address": "1060 West Addison Street",
+              "capacity": 41363,
+              "city": "Chicago",
+              "country": "US",
+              "display_location": "Chicago, IL",
+              "extended_address": "Chicago, IL 60613",
+              "has_upcoming_events": true,
+              "id": 11,
+              "latitude": 41.9475,
+              "longitude": -87.6562,
+              "name": "Wrigley Field",
+              "num_upcoming_events": 98,
+              "postal_code": "60613",
+              "slug": "wrigley-field",
+              "state": "IL",
+              "timezone": "America/Chicago",
+              "url": "https://seatgeek.com/venues/wrigley-field/tickets"
+            },
+            {
+              "address": "6527 East State Boulevard",
+              "capacity": 0,
+              "city": "Fort Wayne",
+              "country": "US",
+              "display_location": "Fort Wayne, IN",
+              "extended_address": "Fort Wayne, IN 46815",
+              "has_upcoming_events": false,
+              "id": 79023,
+              "latitude": 41.1028,
+              "longitude": -85.0578,
+              "name": "Wrigley Field Bar & Grill",
+              "num_upcoming_events": 0,
+              "postal_code": "46815",
+              "slug": "wrigley-field-bar-grill",
+              "state": "IN",
+              "timezone": "America/New_York",
+              "url": "https://seatgeek.com/venues/wrigley-field-bar-grill/tickets"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "seatgeek-com",
+        "capability": "events/search_venues"
+      }
+    },
+    {
+      "id": "seatgeek-com/events/suggest",
+      "provider": "seatgeek-com",
+      "capability": "events/suggest",
+      "name": "Suggest",
+      "description": "Quickly resolve a partial name to SeatGeek ids across events, performers and venues in one call.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum suggestions per type.",
+          "default": 5,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Partial or full name.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "SeatGeek search-box suggestions (api.seatgeek.com /2/autosuggest) for a partial query: mixed top results plus separate event, performer and venue lists with ids for event, performer and venue. Rate limited upstream to 25 requests per 10 seconds.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "events",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds when this snapshot was taken by the program."
+          },
+          {
+            "name": "performers",
+            "type": "object[]"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The API request the record came from."
+          },
+          {
+            "name": "top_results",
+            "type": "object[]"
+          },
+          {
+            "name": "venues",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 3,
+          "query": "yankees"
+        },
+        "response": {
+          "events": [
+            {
+              "datetime_local": "2026-09-26T19:15:00",
+              "datetime_utc": "2026-09-26T23:15:00",
+              "id": 17691599,
+              "title": "Baltimore Orioles at New York Yankees",
+              "type": "mlb",
+              "url": "https://seatgeek.com/new-york-yankees-tickets/9-26-2026-bronx-new-york-yankee-stadium/mlb/17691599",
+              "venue_location": "Bronx, NY",
+              "venue_name": "Yankee Stadium"
+            },
+            {
+              "datetime_local": "2026-09-25T19:05:00",
+              "datetime_utc": "2026-09-25T23:05:00",
+              "id": 17691598,
+              "title": "Baltimore Orioles at New York Yankees",
+              "type": "mlb",
+              "url": "https://seatgeek.com/new-york-yankees-tickets/9-25-2026-bronx-new-york-yankee-stadium/mlb/17691598",
+              "venue_location": "Bronx, NY",
+              "venue_name": "Yankee Stadium"
+            },
+            {
+              "datetime_local": "2026-09-27T15:20:00",
+              "datetime_utc": "2026-09-27T19:20:00",
+              "id": 17691600,
+              "title": "Baltimore Orioles at New York Yankees",
+              "type": "mlb",
+              "url": "https://seatgeek.com/new-york-yankees-tickets/9-27-2026-bronx-new-york-yankee-stadium/mlb/17691600",
+              "venue_location": "Bronx, NY",
+              "venue_name": "Yankee Stadium"
+            }
+          ],
+          "observed_at_ms": 1790018921011,
+          "performers": [
+            {
+              "id": 8,
+              "name": "New York Yankees",
+              "type": "mlb",
+              "url": "https://seatgeek.com/new-york-yankees-tickets"
+            }
+          ],
+          "query": "yankees",
+          "source_url": "https://api.seatgeek.com/2/autosuggest?client_id=MTY2MnwxMzgzMzIwMTU4&q=yankees&limit=3&types=event&types=performer&types=venue",
+          "top_results": [
+            {
+              "id": 8,
+              "name": "New York Yankees",
+              "type": "performer",
+              "url": "https://seatgeek.com/new-york-yankees-tickets"
+            },
+            {
+              "id": 17691599,
+              "name": "Baltimore Orioles at New York Yankees",
+              "type": "event",
+              "url": "https://seatgeek.com/new-york-yankees-tickets/9-26-2026-bronx-new-york-yankee-stadium/mlb/17691599"
+            },
+            {
+              "id": 17691598,
+              "name": "Baltimore Orioles at New York Yankees",
+              "type": "event",
+              "url": "https://seatgeek.com/new-york-yankees-tickets/9-25-2026-bronx-new-york-yankee-stadium/mlb/17691598"
+            }
+          ],
+          "venues": []
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "seatgeek-com",
+        "capability": "events/suggest"
+      }
+    },
+    {
+      "id": "seatgeek-com/events/venue",
+      "provider": "seatgeek-com",
+      "capability": "events/venue",
+      "name": "Venue",
+      "description": "Detail for a venue id from search_venues, search_events or suggest.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "venue_id",
+          "type": "number",
+          "in": "body",
+          "about": "Numeric SeatGeek venue id.",
+          "required": true,
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "One SeatGeek venue by numeric id (api.seatgeek.com /2/venues/{id}): address, timezone, coordinates, capacity and upcoming event count. Unknown ids fail with not_found.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "capacity",
+            "type": "number",
+            "about": "Capacity as the API states it; 0 means unknown to the site."
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "display_location",
+            "type": "string"
+          },
+          {
+            "name": "extended_address",
+            "type": "string"
+          },
+          {
+            "name": "has_upcoming_events",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "SeatGeek venue id."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "num_upcoming_events",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds when this snapshot was taken by the program."
+          },
+          {
+            "name": "postal_code",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The API request the record came from."
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "timezone",
+            "type": "string",
+            "about": "IANA timezone."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public venue page on seatgeek.com."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "venue_id": 11
+        },
+        "response": {
+          "address": "1060 West Addison Street",
+          "capacity": 41363,
+          "city": "Chicago",
+          "country": "US",
+          "display_location": "Chicago, IL",
+          "extended_address": "Chicago, IL 60613",
+          "has_upcoming_events": true,
+          "id": 11,
+          "latitude": 41.9475,
+          "longitude": -87.6562,
+          "name": "Wrigley Field",
+          "num_upcoming_events": 98,
+          "observed_at_ms": 1790018911411,
+          "postal_code": "60613",
+          "slug": "wrigley-field",
+          "source_url": "https://api.seatgeek.com/2/venues/11?client_id=MTY2MnwxMzgzMzIwMTU4",
+          "state": "IL",
+          "timezone": "America/Chicago",
+          "url": "https://seatgeek.com/venues/wrigley-field/tickets"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "seatgeek-com",
+        "capability": "events/venue"
+      }
+    }
+  ]
+}

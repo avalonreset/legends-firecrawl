@@ -1,0 +1,1980 @@
+{
+  "id": "classpass-com",
+  "provider": "classpass-com",
+  "name": "ClassPass",
+  "description": "ClassPass class discovery and availability: find studios and class occurrences near a point for a date, read studio details and class types, a studio's schedule for a day, a single class occurrence with its availability status and displayed credit price, resolve locations and list markets. Anonymous same-origin JSON API of classpass.com; read-only, no reservations. Prices are ClassPass credits as displayed to anonymous visitors; member pricing is login-only and not returned.",
+  "toolCount": 7,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "classpass-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "classpass-com/fitness-classes/location",
+      "provider": "classpass-com",
+      "capability": "fitness-classes/location",
+      "name": "Location",
+      "description": "Turn a city or address into latitude/longitude for search_schedules / search_venues.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "place_id",
+          "type": "string",
+          "in": "body",
+          "about": "A `place_id` from a previous `query` answer. Pattern: ^[A-Za-z0-9_-]+$."
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Free text place name; mutually exclusive with `place_id`."
+        }
+      ],
+      "response": {
+        "about": "Resolve a place: with `query`, the site's location autocomplete (place names with Google place ids); with `place_id`, the place's coordinates, timezone and the search radius the site uses for it.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "mode",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "place",
+            "type": "object",
+            "about": "Resolved place (null in `suggest` mode)."
+          },
+          {
+            "name": "predictions",
+            "type": "object[]",
+            "about": "Autocomplete matches (null in `details` mode). May be empty for an unknown query."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "Chicago"
+        },
+        "response": {
+          "mode": "suggest",
+          "observed_at_ms": 1790021920837,
+          "place": null,
+          "predictions": [
+            {
+              "description": "Chicago, IL, USA",
+              "name": "Chicago",
+              "place_id": "ChIJ7cv00DwsDogRAMDACa2m4K8",
+              "secondary_text": "IL, USA",
+              "types": [
+                "political",
+                "locality",
+                "geocode"
+              ]
+            },
+            {
+              "description": "Chicago Heights, IL, USA",
+              "name": "Chicago Heights",
+              "place_id": "ChIJceJ3ZEIZDogR0ITN2vcHCQs",
+              "secondary_text": "IL, USA",
+              "types": [
+                "political",
+                "geocode",
+                "locality"
+              ]
+            },
+            {
+              "description": "Chicago Midway International Airport (MDW), South Cicero Avenue, Chicago, IL, USA",
+              "name": "Chicago Midway International Airport (MDW)",
+              "place_id": "ChIJhUOqAQYxDogRpVApj9dgipY",
+              "secondary_text": "South Cicero Avenue, Chicago, IL, USA",
+              "types": [
+                "airport",
+                "point_of_interest",
+                "establishment",
+                "transportation_service",
+                "international_airport"
+              ]
+            },
+            {
+              "description": "Pizza Twist, Ashburn Road, Ashburn, VA, USA",
+              "name": "Pizza Twist",
+              "place_id": "ChIJudVyc7w-tokR5LZ35xouqeU",
+              "secondary_text": "Ashburn Road, Ashburn, VA, USA",
+              "types": [
+                "halal_restaurant",
+                "meal_delivery",
+                "establishment",
+                "food",
+                "pizza_restaurant",
+                "pizza_delivery",
+                "food_delivery",
+                "point_of_interest",
+                "vegetarian_restaurant",
+                "restaurant",
+                "meal_takeaway"
+              ]
+            },
+            {
+              "description": "Chicago O'Hare International Airport (ORD), West O'Hare Avenue, Chicago, IL, USA",
+              "name": "Chicago O'Hare International Airport (ORD)",
+              "place_id": "ChIJ82J3aie0D4gRS61ZAgdHF1E",
+              "secondary_text": "West O'Hare Avenue, Chicago, IL, USA",
+              "types": [
+                "establishment",
+                "point_of_interest",
+                "airport",
+                "international_airport",
+                "transportation_service"
+              ]
+            }
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "classpass-com",
+        "capability": "fitness-classes/location"
+      }
+    },
+    {
+      "id": "classpass-com/fitness-classes/markets",
+      "provider": "classpass-com",
+      "capability": "fitness-classes/markets",
+      "name": "Markets",
+      "description": "Coverage check and a starting coordinate for search_schedules / search_venues without a geocoder.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "country_code",
+          "type": "string",
+          "in": "body",
+          "about": "ISO 3166-1 alpha-2 filter (e.g. `GB`). Pattern: ^[A-Za-z]{2}$."
+        }
+      ],
+      "response": {
+        "about": "The ClassPass markets (metropolitan areas): id, alias, name, country, currency, timezone and the default map centre the site uses for each, optionally filtered by country.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "markets",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "returned",
+            "type": "number"
+          },
+          {
+            "name": "total",
+            "type": "number",
+            "about": "Markets the site listed before the country filter."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "country_code": "GB"
+        },
+        "response": {
+          "markets": [
+            {
+              "alias": "london",
+              "city": "London",
+              "country_code": "GB",
+              "country_name": "United Kingdom",
+              "currency_code": "gbp",
+              "id": "35",
+              "latitude": 51.53126907348633,
+              "longitude": -0.15696939826011658,
+              "monthly_price": 55,
+              "name": "London Metro",
+              "timezone": "Europe/London"
+            },
+            {
+              "alias": "manchester",
+              "city": "Manchester",
+              "country_code": "GB",
+              "country_name": "United Kingdom",
+              "currency_code": "gbp",
+              "id": "51",
+              "latitude": 53.48239517211914,
+              "longitude": -2.2426788806915283,
+              "monthly_price": 75,
+              "name": "Manchester Metro",
+              "timezone": "Europe/London"
+            },
+            {
+              "alias": "bristol",
+              "city": "Bristol",
+              "country_code": "GB",
+              "country_name": "United Kingdom",
+              "currency_code": "gbp",
+              "id": "52",
+              "latitude": 51.45771408081055,
+              "longitude": -2.589116334915161,
+              "monthly_price": 75,
+              "name": "Bristol Metro",
+              "timezone": "Europe/London"
+            },
+            {
+              "alias": "united-kingdom",
+              "city": "United Kingdom",
+              "country_code": "GB",
+              "country_name": "United Kingdom",
+              "currency_code": "gbp",
+              "id": "61",
+              "latitude": 51.53126907348633,
+              "longitude": -0.15696939826011658,
+              "monthly_price": null,
+              "name": "United Kingdom",
+              "timezone": "Europe/London"
+            }
+          ],
+          "observed_at_ms": 1790021876223,
+          "returned": 4,
+          "total": 81
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "classpass-com",
+        "capability": "fitness-classes/markets"
+      }
+    },
+    {
+      "id": "classpass-com/fitness-classes/schedule",
+      "provider": "classpass-com",
+      "capability": "fitness-classes/schedule",
+      "name": "Schedule",
+      "description": "Detail for an `id` from search_schedules or venue_schedule.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "schedule_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{1,14}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted https://classpass.com/classes/{venue}/{class}/{schedule_id} URL; alternative to `schedule_id`."
+        }
+      ],
+      "response": {
+        "about": "One class occurrence by schedule id (or its pasted /classes/ URL): class type, venue, start/end, instructor, availability status snapshot and displayed credit price.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "pricing",
+            "type": "object",
+            "about": "How to read the `credits` values: ClassPass shows anonymous visitors a retail price in ClassPass credits, not money. Fees/taxes are not stated. Member-specific prices come from a login-only quote endpoint and are not returned."
+          },
+          {
+            "name": "schedule",
+            "type": "object",
+            "about": "One class occurrence (the site calls it a schedule)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "schedule_id": "9162413094"
+        },
+        "response": {
+          "observed_at_ms": 1790021815378,
+          "pricing": {
+            "fees_included": "unknown",
+            "scope": "anonymous_display",
+            "unit": "credits"
+          },
+          "schedule": {
+            "availability_status": "available",
+            "cancellation_policy": "MARIANATEK",
+            "class": {
+              "activities": "Running, Strength Training",
+              "alias": "run-x-lift-full-bodylower-focus-50-min-19955d7a79e",
+              "description": "It's leg day--with benefits. We're focusing on glutes, quads, hamstrings, and mixing in full body moves to challenge your strength and endurance.",
+              "entity_type": "CLASS",
+              "id": "5063194",
+              "level": "Open Level",
+              "name": "RUN x LIFT: Full Body-Lower Focus (50 min)",
+              "rating": {
+                "display_total": "1000+",
+                "mean": 4.916312,
+                "total": 1410
+              },
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e"
+            },
+            "credits": 19,
+            "demand_signals": [
+              "2+ ClassPassers are attending"
+            ],
+            "display_start_time": null,
+            "duration_minutes": 50,
+            "ends_at_unix": 1790074800,
+            "id": "9162413094",
+            "is_livestream": false,
+            "late_cancellation": "early",
+            "starts_at_unix": 1790071800,
+            "tag_ids": [
+              "activity-589",
+              "activity",
+              "16470",
+              "1252",
+              "142",
+              "activity-95"
+            ],
+            "teacher": {
+              "id": "30576869",
+              "name": "Oscar A."
+            },
+            "timezone": "America/New_York",
+            "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e/9162413094",
+            "venue": {
+              "address": {
+                "city": "Brooklyn",
+                "line1": "200 Montague Street",
+                "line2": null,
+                "postal_code": "11201",
+                "state": "NY"
+              },
+              "alias": "barrys-brooklyn-heights",
+              "id": "224217",
+              "latitude": 40.6937508,
+              "longitude": -73.9912272,
+              "name": "Barry's",
+              "rating": {
+                "display_total": "25,000+",
+                "mean": 4.9302845,
+                "total": 25059
+              },
+              "subtitle": "Brooklyn Heights",
+              "timezone": "America/New_York",
+              "url": "https://classpass.com/studios/barrys-brooklyn-heights"
+            }
+          }
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "classpass-com",
+        "capability": "fitness-classes/schedule"
+      }
+    },
+    {
+      "id": "classpass-com/fitness-classes/search_schedules",
+      "provider": "classpass-com",
+      "capability": "fitness-classes/search_schedules",
+      "name": "Search schedules",
+      "description": "Discovery of classes near a location on a date. Get coordinates from `location` or `markets`; pass a result's `id` to `schedule`, its `venue.id` to `venue` / `venue_schedule`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "`next_cursor` from a previous page; when given the other filters are taken from the cursor and must be omitted."
+        },
+        {
+          "name": "date",
+          "type": "string",
+          "in": "body",
+          "about": "Calendar date in the venues' local zone: YYYY-MM-DD, or `today` / `tomorrow` (resolved in UTC). Required unless `cursor` is given. Pattern: ^([0-9]{4}-[0-9]{2}-[0-9]{2}|today|tomorrow)$."
+        },
+        {
+          "name": "end_time",
+          "type": "string",
+          "in": "body",
+          "about": "Latest start, venue-local HH:MM. Pattern: ^([01][0-9]|2[0-3]):[0-5][0-9]$."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "Search centre. Required unless `cursor` is given.",
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "max_results",
+          "type": "number",
+          "in": "body",
+          "about": "Trim the page to this many results (the site pages by 50).",
+          "default": 50,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "radius_km",
+          "type": "number",
+          "in": "body",
+          "about": "Search radius in kilometres (the site's unit).",
+          "default": 3,
+          "min": 0.5,
+          "max": 50
+        },
+        {
+          "name": "start_time",
+          "type": "string",
+          "in": "body",
+          "about": "Earliest start, venue-local HH:MM. Pattern: ^([01][0-9]|2[0-3]):[0-5][0-9]$."
+        },
+        {
+          "name": "tag_ids",
+          "type": "string[]",
+          "in": "body",
+          "about": "Site tag ids to filter by (e.g. `activity-95` Strength Training); the `tags` of a venue list them."
+        },
+        {
+          "name": "vertical",
+          "type": "string",
+          "in": "body",
+          "about": "vertical",
+          "default": "fitness",
+          "oneOf": [
+            "fitness",
+            "wellness",
+            "beauty"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Find class occurrences (schedules) around a point for one date, optionally within a venue-local time window and activity tags, 50 per page with a cursor. Each result carries the venue, class type, start/end (unix seconds + venue timezone), availability status snapshot and the credit price the site displays anonymously (null when it shows none).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "date",
+            "type": "string",
+            "about": "The resolved date searched (YYYY-MM-DD); null on cursor pages, where the site carries it inside the cursor."
+          },
+          {
+            "name": "location_name",
+            "type": "string",
+            "about": "How the site names the area it resolved the coordinates to."
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Opaque cursor for the next page; null when the site sent none (last page or empty result)."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "pricing",
+            "type": "object",
+            "about": "How to read the `credits` values: ClassPass shows anonymous visitors a retail price in ClassPass credits, not money. Fees/taxes are not stated. Member-specific prices come from a login-only quote endpoint and are not returned."
+          },
+          {
+            "name": "radius_used_km",
+            "type": "number"
+          },
+          {
+            "name": "returned",
+            "type": "number"
+          },
+          {
+            "name": "schedules",
+            "type": "object[]"
+          },
+          {
+            "name": "search_id",
+            "type": "string"
+          },
+          {
+            "name": "search_url",
+            "type": "string",
+            "about": "The site's canonical search page for these filters."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "date": "tomorrow",
+          "latitude": 40.6937508,
+          "longitude": -73.9912272,
+          "max_results": 3,
+          "radius_km": 1
+        },
+        "response": {
+          "date": "2026-09-22",
+          "location_name": "New York, NY, USA",
+          "next_cursor": "eyJmaWx0ZXJzIjp7ImRhdGUiOiIyMDI2LTA5LTIyIiwiZXhjbHVkZV9wYXN0X2Jvb2tpbmciOnRydWUsImxhdCI6NDAuNjkzNzUyLCJsZWdhY3lfbXNhX2ZpbHRlciI6ZmFsc2UsImxvbiI6LTczLjk5MTIzLCJyYWRpdXMiOjEuMCwicmVzcG9uc2Vfb3B0aW9ucyI6e30sInRhZyI6WyJhY3Rpdml0eSJdLCJpc0Z1bGxUZXh0U2VhcmNoIjpmYWxzZX0sIm9mZnNldCI6NjksInBhZ2Vfc2l6ZSI6NTAsInNlYXJjaF9pZCI6MjI0NDk4ODI2MTUzMjcyODJ9",
+          "observed_at_ms": 1790021972259,
+          "pricing": {
+            "fees_included": "unknown",
+            "scope": "anonymous_display",
+            "unit": "credits"
+          },
+          "radius_used_km": 1,
+          "returned": 3,
+          "schedules": [
+            {
+              "availability_status": "available",
+              "cancellation_policy": "MARIANATEK",
+              "class": {
+                "activities": "Pilates",
+                "alias": "slt-all-levels-192d672adb3",
+                "description": "Fifty minutes of heart pumping, muscle quivering, total body strengthening, lengthening and toning in a small group setting. This is your all in one workout, combining cardio, strength training, and the most challenging elements of Pilates. Are you ready for the results you’ve always wanted?",
+                "entity_type": null,
+                "id": "4192079",
+                "level": "Open Level",
+                "name": "SLT - All Levels",
+                "rating": {
+                  "display_total": "2,500+",
+                  "mean": 4.864274,
+                  "total": 4207
+                },
+                "url": "https://classpass.com/classes/slt-brooklyn-heights/slt-all-levels-192d672adb3"
+              },
+              "credits": 19,
+              "demand_signals": [],
+              "display_start_time": "5:30 am",
+              "duration_minutes": 50,
+              "ends_at_unix": 1790072400,
+              "id": "9163976419",
+              "is_livestream": false,
+              "late_cancellation": "early",
+              "starts_at_unix": 1790069400,
+              "tag_ids": [
+                "16470",
+                "activity",
+                "activity-90",
+                "1252"
+              ],
+              "teacher": {
+                "id": "34423203",
+                "name": "Mary Gillis"
+              },
+              "timezone": "America/New_York",
+              "url": "https://classpass.com/classes/slt-brooklyn-heights/slt-all-levels-192d672adb3/9163976419",
+              "venue": {
+                "address": {
+                  "city": "Brooklyn",
+                  "line1": "200 Montague Street",
+                  "line2": null,
+                  "postal_code": "11201",
+                  "state": "NY"
+                },
+                "alias": "slt-brooklyn-heights",
+                "id": "239528",
+                "latitude": 40.693752,
+                "longitude": -73.99123,
+                "name": "SLT",
+                "rating": {
+                  "display_total": "2,500+",
+                  "mean": 4.8629575,
+                  "total": 4619
+                },
+                "subtitle": "Brooklyn Heights",
+                "timezone": "America/New_York",
+                "url": "https://classpass.com/studios/slt-brooklyn-heights"
+              }
+            },
+            {
+              "availability_status": "available",
+              "cancellation_policy": "MINDBODYAPI",
+              "class": {
+                "activities": "Strength Training",
+                "alias": "phoenix-19998dabeec",
+                "description": "Phoenix is a renewing full-body strength session-designed to help you rise with power, stability, and confidence. Whether you’re rebuilding your foundation or expanding your base, this workout targets every major muscle group with intent. Expect structured sets, smart progressions, and strength that lasts well beyond the session",
+                "entity_type": null,
+                "id": "5120811",
+                "level": "Open Level",
+                "name": "Phoenix",
+                "rating": {
+                  "display_total": "100+",
+                  "mean": 4.9800663,
+                  "total": 301
+                },
+                "url": "https://classpass.com/classes/f45-training--boerum-hill-brooklyn/phoenix-19998dabeec"
+              },
+              "credits": 20,
+              "demand_signals": [],
+              "display_start_time": "5:30 am",
+              "duration_minutes": 45,
+              "ends_at_unix": 1790072100,
+              "id": "9146701364",
+              "is_livestream": false,
+              "late_cancellation": "early",
+              "starts_at_unix": 1790069400,
+              "tag_ids": [
+                "16470",
+                "activity",
+                "activity-95",
+                "1252",
+                "470",
+                "142"
+              ],
+              "teacher": {
+                "id": "35311101",
+                "name": "Wallace & Elijah"
+              },
+              "timezone": "America/New_York",
+              "url": "https://classpass.com/classes/f45-training--boerum-hill-brooklyn/phoenix-19998dabeec/9146701364",
+              "venue": {
+                "address": {
+                  "city": "Brooklyn",
+                  "line1": "69 Smith Street",
+                  "line2": null,
+                  "postal_code": "11201",
+                  "state": "NY"
+                },
+                "alias": "f45-training--boerum-hill-brooklyn",
+                "id": "214203",
+                "latitude": 40.689384,
+                "longitude": -73.988396,
+                "name": "F45 Training",
+                "rating": {
+                  "display_total": "22,500+",
+                  "mean": 4.956875,
+                  "total": 23513
+                },
+                "subtitle": "Boerum Hill",
+                "timezone": "America/New_York",
+                "url": "https://classpass.com/studios/f45-training--boerum-hill-brooklyn"
+              }
+            },
+            {
+              "availability_status": "available",
+              "cancellation_policy": "MINDBODYAPI",
+              "class": {
+                "activities": "Low-impact Training",
+                "alias": "sculpt-19867a6ebc0",
+                "description": "This breath to movement class combines free weights with yoga and cardio to increase stamina and strength. Sculpt is a total body workout designed to sculpt and define every major muscle group. This class is high energy with upbeat music.",
+                "entity_type": null,
+                "id": "4931002",
+                "level": "Open Level",
+                "name": "Yoga Sculpt",
+                "rating": {
+                  "display_total": "1,000+",
+                  "mean": 4.8116345,
+                  "total": 2166
+                },
+                "url": "https://classpass.com/classes/hot-8-yoga-brooklyn-heights/sculpt-19867a6ebc0"
+              },
+              "credits": 18,
+              "demand_signals": [],
+              "display_start_time": "6:00 am",
+              "duration_minutes": 60,
+              "ends_at_unix": 1790074800,
+              "id": "9146535415",
+              "is_livestream": false,
+              "late_cancellation": "early",
+              "starts_at_unix": 1790071200,
+              "tag_ids": [
+                "17652",
+                "16470",
+                "activity",
+                "17649",
+                "1252"
+              ],
+              "teacher": {
+                "id": "34962388",
+                "name": "Maurene P."
+              },
+              "timezone": "America/New_York",
+              "url": "https://classpass.com/classes/hot-8-yoga-brooklyn-heights/sculpt-19867a6ebc0/9146535415",
+              "venue": {
+                "address": {
+                  "city": "Brooklyn",
+                  "line1": "57 Court Street",
+                  "line2": null,
+                  "postal_code": "11201",
+                  "state": "NY"
+                },
+                "alias": "hot-8-yoga-brooklyn-heights",
+                "id": "259468",
+                "latitude": 40.692043,
+                "longitude": -73.990944,
+                "name": "Hot 8 Yoga",
+                "rating": {
+                  "display_total": "2,500+",
+                  "mean": 4.8197565,
+                  "total": 4849
+                },
+                "subtitle": "Brooklyn Heights",
+                "timezone": "America/New_York",
+                "url": "https://classpass.com/studios/hot-8-yoga-brooklyn-heights"
+              }
+            }
+          ],
+          "search_id": "22449882615327282",
+          "search_url": "https://classpass.com/search/new-york-ny-usa/fitness-classes/4BsQ73hxr4P"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "classpass-com",
+        "capability": "fitness-classes/search_schedules"
+      }
+    },
+    {
+      "id": "classpass-com/fitness-classes/search_venues",
+      "provider": "classpass-com",
+      "capability": "fitness-classes/search_venues",
+      "name": "Search venues",
+      "description": "Discovery of studios near a location. Pass a result's `id` to `venue` or `venue_schedule`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "date",
+          "type": "string",
+          "in": "body",
+          "about": "Date the site ranks for: YYYY-MM-DD, or `today` / `tomorrow` (resolved in UTC). Defaults to today. Pattern: ^([0-9]{4}-[0-9]{2}-[0-9]{2}|today|tomorrow)$."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "latitude",
+          "required": true,
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "required": true,
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "max_results",
+          "type": "number",
+          "in": "body",
+          "about": "Trim the list to this many venues, in the site's order.",
+          "default": 50,
+          "min": 1,
+          "max": 200
+        },
+        {
+          "name": "radius_km",
+          "type": "number",
+          "in": "body",
+          "about": "radius_km",
+          "default": 3,
+          "min": 0.5,
+          "max": 50
+        },
+        {
+          "name": "tag_ids",
+          "type": "string[]",
+          "in": "body",
+          "about": "tag_ids"
+        },
+        {
+          "name": "vertical",
+          "type": "string",
+          "in": "body",
+          "about": "vertical",
+          "default": "fitness",
+          "oneOf": [
+            "fitness",
+            "wellness",
+            "beauty"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Find venues (studios, gyms, salons) around a point, optionally filtered by vertical and activity tags. One response carries every venue in the radius (the site does not page venue results); `total_hits` is the site's count.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "location_name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "radius_used_km",
+            "type": "number"
+          },
+          {
+            "name": "returned",
+            "type": "number"
+          },
+          {
+            "name": "search_url",
+            "type": "string"
+          },
+          {
+            "name": "total_hits",
+            "type": "number",
+            "about": "The site's total for the radius; null when the site sends no results block (no venues in range)."
+          },
+          {
+            "name": "venues",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "latitude": 40.6937508,
+          "longitude": -73.9912272,
+          "max_results": 5,
+          "radius_km": 1
+        },
+        "response": {
+          "location_name": "New York, NY, USA",
+          "observed_at_ms": 1790021981589,
+          "radius_used_km": 1,
+          "returned": 5,
+          "search_url": "https://classpass.com/search/new-york-ny-usa/fitness-classes/4dtWghJAx7q",
+          "total_hits": 31,
+          "venues": [
+            {
+              "activities": "Running, Strength Training",
+              "address": {
+                "city": "Brooklyn",
+                "line1": "200 Montague Street",
+                "line2": null,
+                "postal_code": "11201",
+                "state": "NY"
+              },
+              "alias": "barrys-brooklyn-heights",
+              "description": "Barry’s is an hour-long cardio and strength-building workout designed to help your body burn up to 1,000 calories thanks to their carefully crafted program that is as effective as it is fun. Their clients spend 25-30 minutes running on the treadmill and 25-30 minutes doing strength training, broken into rounds.",
+              "distance_km": 0,
+              "id": "224217",
+              "latitude": 40.693752,
+              "longitude": -73.99123,
+              "name": "Barry's",
+              "rating_average": 4.93,
+              "rating_total_display": "25000+",
+              "url": "https://classpass.com/studios/barrys-brooklyn-heights"
+            },
+            {
+              "activities": "Outdoors, Strength Training",
+              "address": {
+                "city": "Brooklyn",
+                "line1": "69 Smith Street",
+                "line2": null,
+                "postal_code": "11201",
+                "state": "NY"
+              },
+              "alias": "f45-training--boerum-hill-brooklyn",
+              "description": "F45 Training is a revolutionary fitness program that combines cutting-edge technology with high-intensity group workouts to deliver maximum results in just 45 minutes. Our daily workouts  are designed for you to be able to attend multiple sessions per week. \n\nMondays and Wednesdays: These cardio workouts use plyometric movements, timing and tempo to get your heart rate up and burn calories. Get ready to challenge yourself and build stamina!\n\nTuesdays, Thursdays and Sundays: We focus on building strength through resistance training. These workouts utilize your own body weight and weight-based equipment to help build and strengthen your muscles leading to increased muscle mass, improved bone density, and higher metabolism.\n\nFridays and Saturdays: These hybrid sessions combine cardio, resistance, agility, and core movements for an intense full-body workout that improves strength, endurance, and metabolism.\n\nWhat to expect from your F45 experience: \n\nExpert guidance, motivation, and support from experienced coaches throughout each session\nAn effective way to achieve your fitness goals, with every class estimated to burn 400-800 calories, depending on the class. \nInnovative use of technology, including a video demonstration of the workout and an interval timer, to guide members seamlessly through their training session\nA community of like-minded individuals who share a passion for health and fitness, creating a supportive and inclusive environment that motivates and inspires you to achieve your goals\n\nShould I already be exercising regularly to attend? \nF45 is suitable for a wide range of individuals, regardless of fitness level or experience. Whether you're just starting on your fitness journey or you're a seasoned athlete, F45 workouts are designed to be able to work at your own pace. Our experienced coaches provide modifications and progressions for each exercise, ensuring that everyone in the class gets a challenging and effective workout.\n",
+              "distance_km": 0.5409625947509897,
+              "id": "214203",
+              "latitude": 40.689384,
+              "longitude": -73.988396,
+              "name": "F45 Training",
+              "rating_average": 4.96,
+              "rating_total_display": "22500+",
+              "url": "https://classpass.com/studios/f45-training--boerum-hill-brooklyn"
+            },
+            {
+              "activities": "Pilates",
+              "address": {
+                "city": "Brooklyn",
+                "line1": "397 Bridge Street",
+                "line2": null,
+                "postal_code": "11201",
+                "state": "NY"
+              },
+              "alias": "bodyrok-downtown-brooklyn",
+              "description": "BODYROK is a Pilates-inspired, 45-min, full body, strength training group class on the custom BODYROK reformer. Their hybrid Pilates sequences will have you plank, lunge, squeeze, pike, jump and push your body - the BODYROK experience is designed to create more energy and increase your metabolism, working for you even after you leave. Come ROK with them!",
+              "distance_km": 0.5840928956702586,
+              "id": "245982",
+              "latitude": 40.691334,
+              "longitude": -73.98508,
+              "name": "BODYROK",
+              "rating_average": 4.84,
+              "rating_total_display": "22500+",
+              "url": "https://classpass.com/studios/bodyrok-downtown-brooklyn"
+            },
+            {
+              "activities": "Pilates, Stretching",
+              "address": {
+                "city": "Brooklyn",
+                "line1": "150 Montague Street Floor 2",
+                "line2": null,
+                "postal_code": "11201",
+                "state": "NY"
+              },
+              "alias": "kin-kollective-brooklyn-heights",
+              "description": "Reformer & Tower Classes at KIN Kollective\n\nEvery movement tells a story and at KIN, we help you navigate it with intention. Our Reformer and Tower classes are designed to deepen your understanding of your body through Kinetic Intelligent Navigation: a method that emphasizes precision, mindful progression, and the seamless connection between strength and awareness.\n\nOn the Reformer, smooth-gliding carriages and finely tuned resistance systems create an environment where alignment and flow meet challenge. These classes build strength from the inside out, enhancing mobility, control, and grace with every sequence.\n\nThe Tower offers a uniquely upright experience, blending classical foundations with intelligent resistance work. Springs and bars provide multidirectional feedback, awakening stabilizers and refining posture as you explore dynamic movement pathways.\n\nEach class is thoughtfully guided by KIN Navigators, expert instructors who lead with clarity, warmth, and an unwavering commitment to helping you move smarter. The result is a practice that’s grounded, elevated, and entirely your own.",
+              "distance_km": 0.1876267145535438,
+              "id": "263847",
+              "latitude": 40.694305,
+              "longitude": -73.99333,
+              "name": "KIN Kollective Brooklyn Heights",
+              "rating_average": 4.92,
+              "rating_total_display": "5000+",
+              "url": "https://classpass.com/studios/kin-kollective-brooklyn-heights"
+            },
+            {
+              "activities": "Yoga, Prenatal, Pilates",
+              "address": {
+                "city": "Brooklyn",
+                "line1": "225 Schermerhorn St",
+                "line2": null,
+                "postal_code": "11201",
+                "state": "NY"
+              },
+              "alias": "tangerine-yoga-brooklyn",
+              "description": "Tangerine Yoga is a kickass community in Brooklyn where people can wind down, connect with others and enjoy a playful yoga practice that’s powered by the teachers.\n\nWe empower our teachers to lead a practice that is unique and true to their own style, providing experiences for every student - whether novice, intermediate or experienced. Coming from a variety of disciplines and backgrounds, our teachers are the heart and soul of Tangerine Yoga.\n\nMost of our classes, including tangerine flow, are heated to 90 degrees - check class descriptions for temperatures. \n\nWe provide mats & towels free of charge with every class. \n\nMake sure you arrive on time - late entry is not permitted 5 minutes after the class start time.",
+              "distance_km": 0.752355460663887,
+              "id": "28536",
+              "latitude": 40.688824,
+              "longitude": -73.98511,
+              "name": "Tangerine Yoga",
+              "rating_average": 4.84,
+              "rating_total_display": "30000+",
+              "url": "https://classpass.com/studios/tangerine-yoga-brooklyn"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "classpass-com",
+        "capability": "fitness-classes/search_venues"
+      }
+    },
+    {
+      "id": "classpass-com/fitness-classes/venue",
+      "provider": "classpass-com",
+      "capability": "fitness-classes/venue",
+      "name": "Venue",
+      "description": "Details for a `venue.id` / `id` from search_schedules or search_venues.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "include_classes",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also list the venue's class types (one extra request)."
+        },
+        {
+          "name": "venue_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One venue (studio) by id: name, alias and public URL, address and coordinates, timezone, market and currency, rating, amenities, policies, tags, images, and (by default) the class types it offers.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "alias",
+            "type": "string"
+          },
+          {
+            "name": "amenities",
+            "type": "object"
+          },
+          {
+            "name": "booking_window",
+            "type": "string"
+          },
+          {
+            "name": "cancellation_policy",
+            "type": "string"
+          },
+          {
+            "name": "classes",
+            "type": "object[]",
+            "about": "Class types offered (null when `include_classes` is false)."
+          },
+          {
+            "name": "demand_signals",
+            "type": "string[]"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "enabled",
+            "type": "boolean"
+          },
+          {
+            "name": "facebook_page_url",
+            "type": "string"
+          },
+          {
+            "name": "how_to_get_there",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "images",
+            "type": "string[]",
+            "about": "Full-size image URLs (hero, logo, additional media) in the site's order."
+          },
+          {
+            "name": "instagram_handle",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "market",
+            "type": "object",
+            "about": "The ClassPass market (MSA) the venue belongs to; null when the site sends none."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "rating",
+            "type": "object",
+            "about": "Star rating summary. Null when the site sends no ratings block."
+          },
+          {
+            "name": "service_types",
+            "type": "string[]"
+          },
+          {
+            "name": "spots",
+            "type": "number",
+            "about": "The site's `spots` field on the venue record, as stated; its meaning is not documented."
+          },
+          {
+            "name": "subtitle",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "object[]",
+            "about": "The site's tag tree flattened: every tag and subtag with its id, name and parent id."
+          },
+          {
+            "name": "timezone",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "name": "what_to_bring",
+            "type": "string"
+          },
+          {
+            "name": "when_to_arrive",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "venue_id": "224217"
+        },
+        "response": {
+          "address": {
+            "city": "Brooklyn",
+            "country_code": "US",
+            "formatted": "200 Montague St, Brooklyn, NY 11201, USA",
+            "line1": "200 Montague Street",
+            "line2": null,
+            "postal_code": "11201",
+            "state": "NY"
+          },
+          "alias": "barrys-brooklyn-heights",
+          "amenities": {
+            "lockers": true,
+            "mats": false,
+            "parking": false,
+            "showers": true,
+            "towels": true
+          },
+          "booking_window": "Opens 7 Days in Advance",
+          "cancellation_policy": null,
+          "classes": [
+            {
+              "activities": null,
+              "alias": "run-x-lift-abs-ass-50-min-1996023215a",
+              "description": "Core stability meets glute power for a low-impact day designed to make you stronger, faster, and more resilient.",
+              "entity_type": null,
+              "id": "5069428",
+              "level": null,
+              "name": "RUN x LIFT: Abs & Ass (50 min)",
+              "rating": {
+                "display_total": "1,000+",
+                "mean": 4.945578,
+                "total": 1617
+              },
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-abs-ass-50-min-1996023215a"
+            },
+            {
+              "activities": null,
+              "alias": "run-x-lift-total-body-50-min-199654e3dd7",
+              "description": "Total (Barry's) Body. Leave no muscle group behind, let's HIIT it all.",
+              "entity_type": null,
+              "id": "5071845",
+              "level": null,
+              "name": "RUN x LIFT: Total Body (50 min)",
+              "rating": {
+                "display_total": "1,000+",
+                "mean": 4.931424,
+                "total": 2479
+              },
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-total-body-50-min-199654e3dd7"
+            },
+            {
+              "activities": null,
+              "alias": "run-x-lift-arms-abs-50-mins-18e80e10552",
+              "description": "Start your week strong. We're HIITing biceps, triceps, and shoulders--then shifting gears to carve out your core.",
+              "entity_type": null,
+              "id": "3678145",
+              "level": null,
+              "name": "RUN x LIFT: Arms & Abs (50 min)",
+              "rating": {
+                "display_total": "1,000+",
+                "mean": 4.936943,
+                "total": 1459
+              },
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-arms-abs-50-mins-18e80e10552"
+            },
+            {
+              "activities": null,
+              "alias": "run-x-lift-chest-back-abs-50-min-199590b348e",
+              "description": "Push, Pull, Plank, Repeat. We’re powering up your chest, back, and core to boost strength and posture-so you stand taller, push harder, and own every move.",
+              "entity_type": null,
+              "id": "5065025",
+              "level": null,
+              "name": "RUN x LIFT: Chest, Back, & Abs (50 min)",
+              "rating": {
+                "display_total": "1,000+",
+                "mean": 4.9249578,
+                "total": 1186
+              },
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-chest-back-abs-50-min-199590b348e"
+            },
+            {
+              "activities": null,
+              "alias": "run-x-lift-full-bodyupper-focus-50-min-1996a770f5f",
+              "description": "HIIT every major upper body muscle from shoulders to back to arms. Push your limits, lift heavier, and leave feeling unstoppable.",
+              "entity_type": null,
+              "id": "5073009",
+              "level": null,
+              "name": "RUN x LIFT: Full Body-Upper Focus (50 min)",
+              "rating": {
+                "display_total": "1,000+",
+                "mean": 4.9246454,
+                "total": 1128
+              },
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodyupper-focus-50-min-1996a770f5f"
+            }
+          ],
+          "demand_signals": [
+            "250+ bookings this week"
+          ],
+          "description": "Barry’s is an hour-long cardio and strength-building workout designed to help your body burn up to 1,000 calories thanks to their carefully crafted program that is as effective as it is fun. Their clients spend 25-30 minutes running on the treadmill and 25-30 minutes doing strength training, broken into rounds.",
+          "enabled": true,
+          "facebook_page_url": "https://www.facebook.com/BarrysBootcamp/",
+          "how_to_get_there": "You must be physically present 5 minutes prior to the start of class or your spot will be given away to waitlisted clients and you will be charged for the class.",
+          "id": "224217",
+          "images": [
+            "https://classpass-res.cloudinary.com/image/upload/f_auto/q_auto/xhnxrgh4xkdolifx69lx.jpg",
+            "https://classpass-res.cloudinary.com/image/upload/f_auto/w_960,c_fill,q_auto/l76o8vwyf0ztizxxeu3g.jpg",
+            "https://classpass-res.cloudinary.com/image/upload/f_auto/q_auto,w_1125/media_venue/oofwupyvxwkfewu3b55w.jpg",
+            "https://classpass-res.cloudinary.com/image/upload/f_auto/q_auto,w_1125/media_venue/xoht1kqlq5v7igfrowpy.jpg",
+            "https://classpass-res.cloudinary.com/image/upload/f_auto/q_auto,w_1125/media_venue/pwuuev55qxhrckdbq8eb.jpg",
+            "https://classpass-res.cloudinary.com/image/upload/f_auto/q_auto,w_1125/media_venue/nrnlb6tkrdx9q55qcd61.jpg"
+          ],
+          "instagram_handle": "barrys",
+          "latitude": 40.6937508,
+          "longitude": -73.9912272,
+          "market": {
+            "alias": "new-york",
+            "country_code": "US",
+            "currency_code": "usd",
+            "id": "1",
+            "name": "New York Metro"
+          },
+          "name": "Barry's",
+          "observed_at_ms": 1790021851690,
+          "rating": {
+            "display_total": "25,000+",
+            "mean": 4.9302845,
+            "total": 25059
+          },
+          "service_types": [
+            "CLASS"
+          ],
+          "spots": 1,
+          "subtitle": "Brooklyn Heights",
+          "tags": [
+            {
+              "id": "1161",
+              "name": "Beauty",
+              "parent_id": null
+            },
+            {
+              "id": "1143",
+              "name": "Experiences",
+              "parent_id": null
+            },
+            {
+              "id": "16585",
+              "name": "Food and Drink",
+              "parent_id": null
+            },
+            {
+              "id": "activity",
+              "name": "Activities",
+              "parent_id": null
+            },
+            {
+              "id": "activity-95",
+              "name": "Strength Training",
+              "parent_id": "activity"
+            },
+            {
+              "id": "140",
+              "name": "Bootcamp",
+              "parent_id": "activity-95"
+            },
+            {
+              "id": "activity-589",
+              "name": "Running",
+              "parent_id": "activity"
+            }
+          ],
+          "timezone": "America/New_York",
+          "url": "https://classpass.com/studios/barrys-brooklyn-heights",
+          "website": null,
+          "what_to_bring": "Please note that Barry's sometimes has to change their instructors. In order to remain updated, please make sure you subscribe to the Barry's newsletter in your Barry's Bootcamp account. \n\nIf this is your first time taking a class at Barry's Bootcamp, create an account at barrys.com. If you don't get a chance to do so you will have to create one in person. We look forward to having you in the Red Room!",
+          "when_to_arrive": "15 minutes before"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "classpass-com",
+        "capability": "fitness-classes/venue"
+      }
+    },
+    {
+      "id": "classpass-com/fitness-classes/venue_schedule",
+      "provider": "classpass-com",
+      "capability": "fitness-classes/venue_schedule",
+      "name": "Venue schedule",
+      "description": "The day's timetable of a known studio (`venue_id` from search_venues / search_schedules / venue).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "class_id",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict to one class type (`classes[].id` from venue). Pattern: ^[0-9]{1,12}$."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "`next_cursor` from a previous page of the same venue and date."
+        },
+        {
+          "name": "date",
+          "type": "string",
+          "in": "body",
+          "about": "Venue-local calendar date: YYYY-MM-DD, or `today` / `tomorrow` (resolved in UTC). Pattern: ^([0-9]{4}-[0-9]{2}-[0-9]{2}|today|tomorrow)$.",
+          "required": true
+        },
+        {
+          "name": "venue_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "A venue's class occurrences for one venue-local date, optionally one class type only: start/end, instructor, availability status snapshot and the displayed credit price. Includes the venue's identity and the credit range the site reports for the day.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "class_id",
+            "type": "string"
+          },
+          {
+            "name": "credit_range",
+            "type": "object",
+            "about": "Min/max displayed credit price across the day's occurrences, as the site reports it; null when absent."
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "pricing",
+            "type": "object",
+            "about": "How to read the `credits` values: ClassPass shows anonymous visitors a retail price in ClassPass credits, not money. Fees/taxes are not stated. Member-specific prices come from a login-only quote endpoint and are not returned."
+          },
+          {
+            "name": "returned",
+            "type": "number"
+          },
+          {
+            "name": "schedules",
+            "type": "object[]"
+          },
+          {
+            "name": "venue",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "date": "tomorrow",
+          "venue_id": "224217"
+        },
+        "response": {
+          "class_id": null,
+          "credit_range": {
+            "max": 20,
+            "min": 0
+          },
+          "date": "2026-09-22",
+          "next_cursor": null,
+          "observed_at_ms": 1790021978600,
+          "pricing": {
+            "fees_included": "unknown",
+            "scope": "anonymous_display",
+            "unit": "credits"
+          },
+          "returned": 8,
+          "schedules": [
+            {
+              "availability_status": "available",
+              "cancellation_policy": "MARIANATEK",
+              "class": {
+                "activities": "Strength Training, Running",
+                "alias": "run-x-lift-full-bodylower-focus-50-min-19955d7a79e",
+                "description": "It's leg day--with benefits. We're focusing on glutes, quads, hamstrings, and mixing in full body moves to challenge your strength and endurance.",
+                "entity_type": "CLASS",
+                "id": "5063194",
+                "level": "Open Level",
+                "name": "RUN x LIFT: Full Body-Lower Focus (50 min)",
+                "rating": {
+                  "display_total": "1,000+",
+                  "mean": 4.916312,
+                  "total": 1410
+                },
+                "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e"
+              },
+              "credits": 19,
+              "demand_signals": [
+                "2+ ClassPassers are attending"
+              ],
+              "display_start_time": null,
+              "duration_minutes": 50,
+              "ends_at_unix": 1790074800,
+              "id": "9162413094",
+              "is_livestream": false,
+              "late_cancellation": "early",
+              "starts_at_unix": 1790071800,
+              "tag_ids": [
+                "16470",
+                "activity",
+                "activity-95",
+                "1252",
+                "activity-589",
+                "142"
+              ],
+              "teacher": {
+                "id": "30576869",
+                "name": "Oscar A."
+              },
+              "timezone": "America/New_York",
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e/9162413094",
+              "venue": {
+                "address": {
+                  "city": "Brooklyn",
+                  "line1": "200 Montague Street",
+                  "line2": null,
+                  "postal_code": "11201",
+                  "state": "NY"
+                },
+                "alias": "barrys-brooklyn-heights",
+                "id": "224217",
+                "latitude": 40.6937508,
+                "longitude": -73.9912272,
+                "name": "Barry's",
+                "rating": {
+                  "display_total": "25,000+",
+                  "mean": 4.9302845,
+                  "total": 25059
+                },
+                "subtitle": "Brooklyn Heights",
+                "timezone": "America/New_York",
+                "url": "https://classpass.com/studios/barrys-brooklyn-heights"
+              }
+            },
+            {
+              "availability_status": "unavailable",
+              "cancellation_policy": "MARIANATEK",
+              "class": {
+                "activities": "Strength Training, Running",
+                "alias": "run-x-lift-full-bodylower-focus-50-min-19955d7a79e",
+                "description": "It's leg day--with benefits. We're focusing on glutes, quads, hamstrings, and mixing in full body moves to challenge your strength and endurance.",
+                "entity_type": "CLASS",
+                "id": "5063194",
+                "level": "Open Level",
+                "name": "RUN x LIFT: Full Body-Lower Focus (50 min)",
+                "rating": {
+                  "display_total": "1,000+",
+                  "mean": 4.916312,
+                  "total": 1410
+                },
+                "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e"
+              },
+              "credits": 19,
+              "demand_signals": [
+                "5+ ClassPassers are attending"
+              ],
+              "display_start_time": null,
+              "duration_minutes": 50,
+              "ends_at_unix": 1790079000,
+              "id": "9157443052",
+              "is_livestream": false,
+              "late_cancellation": "early",
+              "starts_at_unix": 1790076000,
+              "tag_ids": [
+                "16470",
+                "activity",
+                "activity-95",
+                "1252",
+                "activity-589",
+                "142"
+              ],
+              "teacher": {
+                "id": "30576869",
+                "name": "Oscar A."
+              },
+              "timezone": "America/New_York",
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e/9157443052",
+              "venue": {
+                "address": {
+                  "city": "Brooklyn",
+                  "line1": "200 Montague Street",
+                  "line2": null,
+                  "postal_code": "11201",
+                  "state": "NY"
+                },
+                "alias": "barrys-brooklyn-heights",
+                "id": "224217",
+                "latitude": 40.6937508,
+                "longitude": -73.9912272,
+                "name": "Barry's",
+                "rating": {
+                  "display_total": "25,000+",
+                  "mean": 4.9302845,
+                  "total": 25059
+                },
+                "subtitle": "Brooklyn Heights",
+                "timezone": "America/New_York",
+                "url": "https://classpass.com/studios/barrys-brooklyn-heights"
+              }
+            },
+            {
+              "availability_status": "available",
+              "cancellation_policy": "MARIANATEK",
+              "class": {
+                "activities": "Strength Training, Running",
+                "alias": "run-x-lift-full-bodylower-focus-50-min-19955d7a79e",
+                "description": "It's leg day--with benefits. We're focusing on glutes, quads, hamstrings, and mixing in full body moves to challenge your strength and endurance.",
+                "entity_type": "CLASS",
+                "id": "5063194",
+                "level": "Open Level",
+                "name": "RUN x LIFT: Full Body-Lower Focus (50 min)",
+                "rating": {
+                  "display_total": "1,000+",
+                  "mean": 4.916312,
+                  "total": 1410
+                },
+                "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e"
+              },
+              "credits": 19,
+              "demand_signals": [
+                "2+ ClassPassers are attending"
+              ],
+              "display_start_time": null,
+              "duration_minutes": 50,
+              "ends_at_unix": 1790083200,
+              "id": "9162412750",
+              "is_livestream": false,
+              "late_cancellation": "early",
+              "starts_at_unix": 1790080200,
+              "tag_ids": [
+                "16470",
+                "activity",
+                "activity-95",
+                "1252",
+                "activity-589",
+                "142"
+              ],
+              "teacher": {
+                "id": "34723380",
+                "name": "Jill G."
+              },
+              "timezone": "America/New_York",
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e/9162412750",
+              "venue": {
+                "address": {
+                  "city": "Brooklyn",
+                  "line1": "200 Montague Street",
+                  "line2": null,
+                  "postal_code": "11201",
+                  "state": "NY"
+                },
+                "alias": "barrys-brooklyn-heights",
+                "id": "224217",
+                "latitude": 40.6937508,
+                "longitude": -73.9912272,
+                "name": "Barry's",
+                "rating": {
+                  "display_total": "25,000+",
+                  "mean": 4.9302845,
+                  "total": 25059
+                },
+                "subtitle": "Brooklyn Heights",
+                "timezone": "America/New_York",
+                "url": "https://classpass.com/studios/barrys-brooklyn-heights"
+              }
+            },
+            {
+              "availability_status": "available",
+              "cancellation_policy": "MARIANATEK",
+              "class": {
+                "activities": "Strength Training, Running",
+                "alias": "run-x-lift-full-bodylower-focus-50-min-19955d7a79e",
+                "description": "It's leg day--with benefits. We're focusing on glutes, quads, hamstrings, and mixing in full body moves to challenge your strength and endurance.",
+                "entity_type": "CLASS",
+                "id": "5063194",
+                "level": "Open Level",
+                "name": "RUN x LIFT: Full Body-Lower Focus (50 min)",
+                "rating": {
+                  "display_total": "1,000+",
+                  "mean": 4.916312,
+                  "total": 1410
+                },
+                "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e"
+              },
+              "credits": 19,
+              "demand_signals": [],
+              "display_start_time": null,
+              "duration_minutes": 50,
+              "ends_at_unix": 1790087400,
+              "id": "9162412983",
+              "is_livestream": false,
+              "late_cancellation": "early",
+              "starts_at_unix": 1790084400,
+              "tag_ids": [
+                "16470",
+                "activity",
+                "activity-95",
+                "1252",
+                "activity-589",
+                "142"
+              ],
+              "teacher": {
+                "id": "34723380",
+                "name": "Jill G."
+              },
+              "timezone": "America/New_York",
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e/9162412983",
+              "venue": {
+                "address": {
+                  "city": "Brooklyn",
+                  "line1": "200 Montague Street",
+                  "line2": null,
+                  "postal_code": "11201",
+                  "state": "NY"
+                },
+                "alias": "barrys-brooklyn-heights",
+                "id": "224217",
+                "latitude": 40.6937508,
+                "longitude": -73.9912272,
+                "name": "Barry's",
+                "rating": {
+                  "display_total": "25,000+",
+                  "mean": 4.9302845,
+                  "total": 25059
+                },
+                "subtitle": "Brooklyn Heights",
+                "timezone": "America/New_York",
+                "url": "https://classpass.com/studios/barrys-brooklyn-heights"
+              }
+            },
+            {
+              "availability_status": "available",
+              "cancellation_policy": "MARIANATEK",
+              "class": {
+                "activities": "Strength Training, Running",
+                "alias": "run-x-lift-full-bodylower-focus-50-min-19955d7a79e",
+                "description": "It's leg day--with benefits. We're focusing on glutes, quads, hamstrings, and mixing in full body moves to challenge your strength and endurance.",
+                "entity_type": "CLASS",
+                "id": "5063194",
+                "level": "Open Level",
+                "name": "RUN x LIFT: Full Body-Lower Focus (50 min)",
+                "rating": {
+                  "display_total": "1,000+",
+                  "mean": 4.916312,
+                  "total": 1410
+                },
+                "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e"
+              },
+              "credits": 19,
+              "demand_signals": [
+                "2+ ClassPassers are attending"
+              ],
+              "display_start_time": null,
+              "duration_minutes": 50,
+              "ends_at_unix": 1790096700,
+              "id": "9162412894",
+              "is_livestream": false,
+              "late_cancellation": "early",
+              "starts_at_unix": 1790093700,
+              "tag_ids": [
+                "16470",
+                "activity",
+                "activity-95",
+                "1252",
+                "activity-589",
+                "142"
+              ],
+              "teacher": {
+                "id": "34541189",
+                "name": "Corinne M."
+              },
+              "timezone": "America/New_York",
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e/9162412894",
+              "venue": {
+                "address": {
+                  "city": "Brooklyn",
+                  "line1": "200 Montague Street",
+                  "line2": null,
+                  "postal_code": "11201",
+                  "state": "NY"
+                },
+                "alias": "barrys-brooklyn-heights",
+                "id": "224217",
+                "latitude": 40.6937508,
+                "longitude": -73.9912272,
+                "name": "Barry's",
+                "rating": {
+                  "display_total": "25,000+",
+                  "mean": 4.9302845,
+                  "total": 25059
+                },
+                "subtitle": "Brooklyn Heights",
+                "timezone": "America/New_York",
+                "url": "https://classpass.com/studios/barrys-brooklyn-heights"
+              }
+            },
+            {
+              "availability_status": "available",
+              "cancellation_policy": "MARIANATEK",
+              "class": {
+                "activities": "Strength Training, Running",
+                "alias": "run-x-lift-full-bodylower-focus-50-min-19955d7a79e",
+                "description": "It's leg day--with benefits. We're focusing on glutes, quads, hamstrings, and mixing in full body moves to challenge your strength and endurance.",
+                "entity_type": "CLASS",
+                "id": "5063194",
+                "level": "Open Level",
+                "name": "RUN x LIFT: Full Body-Lower Focus (50 min)",
+                "rating": {
+                  "display_total": "1,000+",
+                  "mean": 4.916312,
+                  "total": 1410
+                },
+                "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e"
+              },
+              "credits": 19,
+              "demand_signals": [
+                "2+ ClassPassers are attending"
+              ],
+              "display_start_time": null,
+              "duration_minutes": 50,
+              "ends_at_unix": 1790111400,
+              "id": "9162412690",
+              "is_livestream": false,
+              "late_cancellation": "early",
+              "starts_at_unix": 1790108400,
+              "tag_ids": [
+                "16470",
+                "activity",
+                "activity-95",
+                "1252",
+                "activity-589",
+                "142"
+              ],
+              "teacher": {
+                "id": "29050600",
+                "name": "Ian M."
+              },
+              "timezone": "America/New_York",
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e/9162412690",
+              "venue": {
+                "address": {
+                  "city": "Brooklyn",
+                  "line1": "200 Montague Street",
+                  "line2": null,
+                  "postal_code": "11201",
+                  "state": "NY"
+                },
+                "alias": "barrys-brooklyn-heights",
+                "id": "224217",
+                "latitude": 40.6937508,
+                "longitude": -73.9912272,
+                "name": "Barry's",
+                "rating": {
+                  "display_total": "25,000+",
+                  "mean": 4.9302845,
+                  "total": 25059
+                },
+                "subtitle": "Brooklyn Heights",
+                "timezone": "America/New_York",
+                "url": "https://classpass.com/studios/barrys-brooklyn-heights"
+              }
+            },
+            {
+              "availability_status": "available",
+              "cancellation_policy": "MARIANATEK",
+              "class": {
+                "activities": "Strength Training, Running",
+                "alias": "run-x-lift-full-bodylower-focus-50-min-19955d7a79e",
+                "description": "It's leg day--with benefits. We're focusing on glutes, quads, hamstrings, and mixing in full body moves to challenge your strength and endurance.",
+                "entity_type": "CLASS",
+                "id": "5063194",
+                "level": "Open Level",
+                "name": "RUN x LIFT: Full Body-Lower Focus (50 min)",
+                "rating": {
+                  "display_total": "1,000+",
+                  "mean": 4.916312,
+                  "total": 1410
+                },
+                "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e"
+              },
+              "credits": 19,
+              "demand_signals": [
+                "5+ ClassPassers are attending"
+              ],
+              "display_start_time": null,
+              "duration_minutes": 50,
+              "ends_at_unix": 1790115600,
+              "id": "9162413039",
+              "is_livestream": false,
+              "late_cancellation": "early",
+              "starts_at_unix": 1790112600,
+              "tag_ids": [
+                "16470",
+                "activity",
+                "activity-95",
+                "1252",
+                "activity-589",
+                "142"
+              ],
+              "teacher": {
+                "id": "32077623",
+                "name": "Aminah A."
+              },
+              "timezone": "America/New_York",
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e/9162413039",
+              "venue": {
+                "address": {
+                  "city": "Brooklyn",
+                  "line1": "200 Montague Street",
+                  "line2": null,
+                  "postal_code": "11201",
+                  "state": "NY"
+                },
+                "alias": "barrys-brooklyn-heights",
+                "id": "224217",
+                "latitude": 40.6937508,
+                "longitude": -73.9912272,
+                "name": "Barry's",
+                "rating": {
+                  "display_total": "25,000+",
+                  "mean": 4.9302845,
+                  "total": 25059
+                },
+                "subtitle": "Brooklyn Heights",
+                "timezone": "America/New_York",
+                "url": "https://classpass.com/studios/barrys-brooklyn-heights"
+              }
+            },
+            {
+              "availability_status": "available",
+              "cancellation_policy": "MARIANATEK",
+              "class": {
+                "activities": "Strength Training, Running",
+                "alias": "run-x-lift-full-bodylower-focus-50-min-19955d7a79e",
+                "description": "It's leg day--with benefits. We're focusing on glutes, quads, hamstrings, and mixing in full body moves to challenge your strength and endurance.",
+                "entity_type": "CLASS",
+                "id": "5063194",
+                "level": "Open Level",
+                "name": "RUN x LIFT: Full Body-Lower Focus (50 min)",
+                "rating": {
+                  "display_total": "1,000+",
+                  "mean": 4.916312,
+                  "total": 1410
+                },
+                "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e"
+              },
+              "credits": 19,
+              "demand_signals": [
+                "2+ ClassPassers are attending"
+              ],
+              "display_start_time": null,
+              "duration_minutes": 50,
+              "ends_at_unix": 1790119800,
+              "id": "9162412820",
+              "is_livestream": false,
+              "late_cancellation": "early",
+              "starts_at_unix": 1790116800,
+              "tag_ids": [
+                "16470",
+                "activity",
+                "activity-95",
+                "1252",
+                "activity-589",
+                "142"
+              ],
+              "teacher": {
+                "id": "32077623",
+                "name": "Aminah A."
+              },
+              "timezone": "America/New_York",
+              "url": "https://classpass.com/classes/barrys-brooklyn-heights/run-x-lift-full-bodylower-focus-50-min-19955d7a79e/9162412820",
+              "venue": {
+                "address": {
+                  "city": "Brooklyn",
+                  "line1": "200 Montague Street",
+                  "line2": null,
+                  "postal_code": "11201",
+                  "state": "NY"
+                },
+                "alias": "barrys-brooklyn-heights",
+                "id": "224217",
+                "latitude": 40.6937508,
+                "longitude": -73.9912272,
+                "name": "Barry's",
+                "rating": {
+                  "display_total": "25,000+",
+                  "mean": 4.9302845,
+                  "total": 25059
+                },
+                "subtitle": "Brooklyn Heights",
+                "timezone": "America/New_York",
+                "url": "https://classpass.com/studios/barrys-brooklyn-heights"
+              }
+            }
+          ],
+          "venue": {
+            "address": {
+              "city": "Brooklyn",
+              "line1": "200 Montague Street",
+              "line2": null,
+              "postal_code": "11201",
+              "state": "NY"
+            },
+            "alias": "barrys-brooklyn-heights",
+            "id": "224217",
+            "latitude": 40.6937508,
+            "longitude": -73.9912272,
+            "name": "Barry's",
+            "rating": {
+              "display_total": "25,000+",
+              "mean": 4.9302845,
+              "total": 25059
+            },
+            "subtitle": "Brooklyn Heights",
+            "timezone": "America/New_York",
+            "url": "https://classpass.com/studios/barrys-brooklyn-heights"
+          }
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "classpass-com",
+        "capability": "fitness-classes/venue_schedule"
+      }
+    }
+  ]
+}

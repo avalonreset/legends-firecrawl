@@ -1,0 +1,723 @@
+{
+  "id": "eia-gov",
+  "provider": "eia-gov",
+  "name": "US Energy Information Administration",
+  "description": "Discover EIA energy data routes, enumerate facet values and retrieve energy observations with source units and labels.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "eia-gov"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "eia-gov/energy-data/data",
+      "provider": "eia-gov",
+      "capability": "energy-data/data",
+      "name": "Data",
+      "description": "One page of observations from an EIA route (`<route>/data`) at a frequency, filtered by facet codes and a period range, sorted, with offset pagination up to 5000 rows per page. Each record carries the period, every facet as {code, name}, requested values as source strings, units copied from the source, extra source flags, and the series id when the route has one. Period formats follow the frequency (YYYY, YYYY-Qn, YYYY-MM, YYYY-MM-DD, YYYY-MM-DDTHH).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "api_key",
+          "type": "string",
+          "in": "body",
+          "about": "Registered EIA API key. Omitted, the public data-browser key is discovered live (see `routes`). Pattern: ^[A-Za-z0-9_]+$."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "`next_cursor` from the previous page (a row offset). Omit for the first page. Pattern: ^[0-9]{1,12}$."
+        },
+        {
+          "name": "data_columns",
+          "type": "string[]",
+          "in": "body",
+          "about": "Data columns to return, from the route's `data_columns`. Defaults to [\"value\"]."
+        },
+        {
+          "name": "end",
+          "type": "string",
+          "in": "body",
+          "about": "Inclusive last period in the frequency's format."
+        },
+        {
+          "name": "facets",
+          "type": "object",
+          "in": "body",
+          "about": "Facet filters: facet id to list of codes, e.g. {\"series\": [\"RWTC\"]} or {\"stateid\": [\"CA\"], \"sectorid\": [\"RES\"]}."
+        },
+        {
+          "name": "frequency",
+          "type": "string",
+          "in": "body",
+          "about": "Frequency id from the route metadata: annual, quarterly, monthly, weekly, daily, hourly or local-hourly. Pattern: ^[a-z-]+$.",
+          "required": true
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page; the API caps a page at 5000 rows.",
+          "default": 20,
+          "min": 1,
+          "max": 5000
+        },
+        {
+          "name": "route",
+          "type": "string",
+          "in": "body",
+          "about": "Route path with data, such as `petroleum/pri/spt` (do not append `/data`). Pattern: ^/?[a-z0-9_-]+(/[a-z0-9_-]+)*/?$.",
+          "required": true
+        },
+        {
+          "name": "sort",
+          "type": "object[]",
+          "in": "body",
+          "about": "Sort keys applied by the API. Defaults to newest period first."
+        },
+        {
+          "name": "start",
+          "type": "string",
+          "in": "body",
+          "about": "Inclusive first period in the frequency's format."
+        }
+      ],
+      "response": {
+        "about": "One page of observations from an EIA route (`<route>/data`) at a frequency, filtered by facet codes and a period range, sorted, with offset pagination up to 5000 rows per page. Each record carries the period, every facet as {code, name}, requested values as source strings, units copied from the source, extra source flags, and the series id when the route has one. Period formats follow the frequency (YYYY, YYYY-Qn, YYYY-MM, YYYY-MM-DD, YYYY-MM-DDTHH).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "api_version",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "data_columns",
+            "type": "object[]"
+          },
+          {
+            "name": "date_format",
+            "type": "string"
+          },
+          {
+            "name": "frequency",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "offset",
+            "type": "number"
+          },
+          {
+            "name": "page_size",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "route",
+            "type": "string"
+          },
+          {
+            "name": "route_period_range",
+            "type": "object"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "facets": {
+            "series": [
+              "RWTC"
+            ]
+          },
+          "frequency": "daily",
+          "page_size": 3,
+          "route": "petroleum/pri/spt"
+        },
+        "response": {
+          "api_version": "2.1.13",
+          "complete": true,
+          "count": 3,
+          "data_columns": [
+            {
+              "aggregation_method": null,
+              "alias": "value",
+              "id": "value",
+              "units": null
+            }
+          ],
+          "date_format": "YYYY-MM-DD",
+          "frequency": "daily",
+          "next_cursor": "3",
+          "observed_at_ms": 1789110000000,
+          "offset": 0,
+          "page_size": 3,
+          "records": [
+            {
+              "attributes": {},
+              "facets": {
+                "duoarea": {
+                  "code": "YCUOK",
+                  "name": "NA"
+                },
+                "process": {
+                  "code": "PF4",
+                  "name": "Spot Price FOB"
+                },
+                "product": {
+                  "code": "EPCWTI",
+                  "name": "WTI Crude Oil"
+                },
+                "series": {
+                  "code": "RWTC",
+                  "name": "Cushing, OK WTI Spot Price FOB (Dollars per Barrel)"
+                }
+              },
+              "frequency": "daily",
+              "id": "2026-09-09|YCUOK|EPCWTI|PF4|RWTC",
+              "period": "2026-09-09",
+              "route": "petroleum/pri/spt",
+              "series_id": "RWTC",
+              "source_url": "https://api.eia.gov/v2/petroleum/pri/spt/data/?frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RWTC&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&offset=0&length=3",
+              "units": {
+                "value": "$/BBL"
+              },
+              "values": {
+                "value": "97.26"
+              }
+            },
+            {
+              "attributes": {},
+              "facets": {
+                "duoarea": {
+                  "code": "YCUOK",
+                  "name": "NA"
+                },
+                "process": {
+                  "code": "PF4",
+                  "name": "Spot Price FOB"
+                },
+                "product": {
+                  "code": "EPCWTI",
+                  "name": "WTI Crude Oil"
+                },
+                "series": {
+                  "code": "RWTC",
+                  "name": "Cushing, OK WTI Spot Price FOB (Dollars per Barrel)"
+                }
+              },
+              "frequency": "daily",
+              "id": "2026-09-08|YCUOK|EPCWTI|PF4|RWTC",
+              "period": "2026-09-08",
+              "route": "petroleum/pri/spt",
+              "series_id": "RWTC",
+              "source_url": "https://api.eia.gov/v2/petroleum/pri/spt/data/?frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RWTC&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&offset=0&length=3",
+              "units": {
+                "value": "$/BBL"
+              },
+              "values": {
+                "value": "94.21"
+              }
+            },
+            {
+              "attributes": {},
+              "facets": {
+                "duoarea": {
+                  "code": "YCUOK",
+                  "name": "NA"
+                },
+                "process": {
+                  "code": "PF4",
+                  "name": "Spot Price FOB"
+                },
+                "product": {
+                  "code": "EPCWTI",
+                  "name": "WTI Crude Oil"
+                },
+                "series": {
+                  "code": "RWTC",
+                  "name": "Cushing, OK WTI Spot Price FOB (Dollars per Barrel)"
+                }
+              },
+              "frequency": "daily",
+              "id": "2026-09-04|YCUOK|EPCWTI|PF4|RWTC",
+              "period": "2026-09-04",
+              "route": "petroleum/pri/spt",
+              "series_id": "RWTC",
+              "source_url": "https://api.eia.gov/v2/petroleum/pri/spt/data/?frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RWTC&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&offset=0&length=3",
+              "units": {
+                "value": "$/BBL"
+              },
+              "values": {
+                "value": "92.69"
+              }
+            }
+          ],
+          "retrieved_at": "2026-09-11T07:00:00Z",
+          "route": "petroleum/pri/spt",
+          "route_period_range": {
+            "end": "2026-09-04",
+            "start": "1986-01-03"
+          },
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://api.eia.gov/v2/petroleum/pri/spt/data/?frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RWTC&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&offset=0&length=3",
+          "total": 10245,
+          "warnings": [
+            "incomplete return: The API can only return 5000 rows in JSON format.  Please consider constraining your request with facet, start, or end, or using offset to paginate results."
+          ]
+        },
+        "recordedAt": "2026-09-11T07:00:00Z"
+      },
+      "execute": {
+        "provider": "eia-gov",
+        "capability": "energy-data/data"
+      }
+    },
+    {
+      "id": "eia-gov/energy-data/facet_values",
+      "provider": "eia-gov",
+      "capability": "energy-data/facet_values",
+      "name": "Facet values",
+      "description": "List every value of one facet on a route (for example `sectorid` on `electricity/retail-sales`, or `series` on `petroleum/pri/spt`) with its code, readable name and alias, so `data` can be filtered by code.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "api_key",
+          "type": "string",
+          "in": "body",
+          "about": "Registered EIA API key. Omitted, the public data-browser key is discovered live (see `routes`). Pattern: ^[A-Za-z0-9_]+$."
+        },
+        {
+          "name": "facet_id",
+          "type": "string",
+          "in": "body",
+          "about": "Facet id from the route's metadata, such as `stateid` or `series`. Pattern: ^[A-Za-z0-9_-]+$.",
+          "required": true
+        },
+        {
+          "name": "route",
+          "type": "string",
+          "in": "body",
+          "about": "Route path with data, such as `electricity/retail-sales`. Pattern: ^/?[a-z0-9_-]+(/[a-z0-9_-]+)*/?$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "List every value of one facet on a route (for example `sectorid` on `electricity/retail-sales`, or `series` on `petroleum/pri/spt`) with its code, readable name and alias, so `data` can be filtered by code.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "facet_id",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "route",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "facet_id": "sectorid",
+          "route": "electricity/retail-sales"
+        },
+        "response": {
+          "complete": true,
+          "count": 6,
+          "facet_id": "sectorid",
+          "next_cursor": null,
+          "observed_at_ms": 1789110000000,
+          "records": [
+            {
+              "alias": "(OTH) other",
+              "facet_id": "sectorid",
+              "id": "OTH",
+              "name": "other",
+              "route": "electricity/retail-sales",
+              "source_url": "https://api.eia.gov/v2/electricity/retail-sales/facet/sectorid"
+            },
+            {
+              "alias": "(COM) commercial",
+              "facet_id": "sectorid",
+              "id": "COM",
+              "name": "commercial",
+              "route": "electricity/retail-sales",
+              "source_url": "https://api.eia.gov/v2/electricity/retail-sales/facet/sectorid"
+            },
+            {
+              "alias": "(RES) residential",
+              "facet_id": "sectorid",
+              "id": "RES",
+              "name": "residential",
+              "route": "electricity/retail-sales",
+              "source_url": "https://api.eia.gov/v2/electricity/retail-sales/facet/sectorid"
+            },
+            {
+              "alias": "(TRA) transportation",
+              "facet_id": "sectorid",
+              "id": "TRA",
+              "name": "transportation",
+              "route": "electricity/retail-sales",
+              "source_url": "https://api.eia.gov/v2/electricity/retail-sales/facet/sectorid"
+            },
+            {
+              "alias": "(IND) industrial",
+              "facet_id": "sectorid",
+              "id": "IND",
+              "name": "industrial",
+              "route": "electricity/retail-sales",
+              "source_url": "https://api.eia.gov/v2/electricity/retail-sales/facet/sectorid"
+            },
+            {
+              "alias": "(ALL) all sectors",
+              "facet_id": "sectorid",
+              "id": "ALL",
+              "name": "all sectors",
+              "route": "electricity/retail-sales",
+              "source_url": "https://api.eia.gov/v2/electricity/retail-sales/facet/sectorid"
+            }
+          ],
+          "retrieved_at": "2026-09-11T07:00:00Z",
+          "route": "electricity/retail-sales",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://api.eia.gov/v2/electricity/retail-sales/facet/sectorid",
+          "total": 6,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-11T07:00:00Z"
+      },
+      "execute": {
+        "provider": "eia-gov",
+        "capability": "energy-data/facet_values"
+      }
+    },
+    {
+      "id": "eia-gov/energy-data/routes",
+      "provider": "eia-gov",
+      "capability": "energy-data/routes",
+      "name": "Routes",
+      "description": "Navigate the EIA API v2 route hierarchy. Given a route path (or none for the root) returns that route's metadata: child routes, frequencies with period formats, facet ids and data columns with units. Use it to find the route, frequency, facets and columns that `data` needs.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "api_key",
+          "type": "string",
+          "in": "body",
+          "about": "Registered EIA API key (free at https://www.eia.gov/opendata/register.php). Omitted, the workflow discovers live the public client key EIA serves inside its own data browser (two extra requests, shared quota) and falls back to api.data.gov's DEMO_KEY (10 requests/hour/IP) with a warning. Pattern: ^[A-Za-z0-9_]+$."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "`next_cursor` from a previous page of child routes. Pattern: ^[0-9]{1,12}$."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Child routes per page (the API returns all children at once; pages are cut here).",
+          "default": 500,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "in": "body",
+          "about": "Route path such as `electricity/retail-sales`. Omit or null for the top-level route list. Pattern: ^/?[a-z0-9_-]+(/[a-z0-9_-]+)*/?$|^/?$."
+        }
+      ],
+      "response": {
+        "about": "Navigate the EIA API v2 route hierarchy. Given a route path (or none for the root) returns that route's metadata: child routes, frequencies with period formats, facet ids and data columns with units. Use it to find the route, frequency, facets and columns that `data` needs.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "child_route_count",
+            "type": "number"
+          },
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "has_data",
+            "type": "boolean"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "route",
+            "type": "object"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "child_route_count": 14,
+          "complete": true,
+          "has_data": false,
+          "next_cursor": null,
+          "observed_at_ms": 1789110000000,
+          "records": [
+            {
+              "description": "EIA coal energy data",
+              "id": "coal",
+              "name": "Coal",
+              "route": "coal",
+              "source_url": "https://api.eia.gov/v2/coal"
+            },
+            {
+              "description": "Crude oil imports by country to destination, \r\n        includes type, grade, quantity.  Source: EIA-814  Interactive data \r\n        product:  www.eia.gov/petroleum/imports/companylevel/",
+              "id": "crude-oil-imports",
+              "name": "Crude Oil Imports",
+              "route": "crude-oil-imports",
+              "source_url": "https://api.eia.gov/v2/crude-oil-imports"
+            },
+            {
+              "description": "EIA electricity survey data",
+              "id": "electricity",
+              "name": "Electricity",
+              "route": "electricity",
+              "source_url": "https://api.eia.gov/v2/electricity"
+            },
+            {
+              "description": "Country level production, consumption, imports, exports by energy source (petroleum, natural gas, electricity, renewable, etc.)  \r\n        Interactive product:  https://www.eia.gov/international/data/world",
+              "id": "international",
+              "name": "International",
+              "route": "international",
+              "source_url": "https://api.eia.gov/v2/international"
+            },
+            {
+              "description": "EIA natural gas survey data",
+              "id": "natural-gas",
+              "name": "Natural Gas",
+              "route": "natural-gas",
+              "source_url": "https://api.eia.gov/v2/natural-gas"
+            },
+            {
+              "description": "EIA nuclear outages survey data",
+              "id": "nuclear-outages",
+              "name": "Nuclear Outages",
+              "route": "nuclear-outages",
+              "source_url": "https://api.eia.gov/v2/nuclear-outages"
+            },
+            {
+              "description": "EIA petroleum gas survey data",
+              "id": "petroleum",
+              "name": "Petroleum",
+              "route": "petroleum",
+              "source_url": "https://api.eia.gov/v2/petroleum"
+            },
+            {
+              "description": "Estimated production, consumption, price, and expenditure data for all energy sources by state and sector.  \r\n        Source:  https://www.eia.gov/state/seds/seds-technical-notes-complete.php  \r\n        Product:  SEDS (https://www.eia.gov/state/seds/)",
+              "id": "seds",
+              "name": "State Energy Data System (SEDS)",
+              "route": "seds",
+              "source_url": "https://api.eia.gov/v2/seds"
+            },
+            {
+              "description": "Monthly short term (18 month) projections using STEO model.  \r\n        Report and interactive projection data browser:  STEO (www.eia.gov/steo/)",
+              "id": "steo",
+              "name": "Short Term Energy Outlook",
+              "route": "steo",
+              "source_url": "https://api.eia.gov/v2/steo"
+            },
+            {
+              "description": "EIA densified biomass data",
+              "id": "densified-biomass",
+              "name": "Densified Biomass",
+              "route": "densified-biomass",
+              "source_url": "https://api.eia.gov/v2/densified-biomass"
+            },
+            {
+              "description": "These data represent the most recent comprehensive energy statistics integrated across all energy sources.  The data includes total energy production, consumption, stocks, and trade; energy prices; overviews of petroleum, natural gas, coal, electricity, nuclear energy, renewable energy, and carbon dioxide emissions; and data unit conversions values.  Source: https://www.eia.gov/totalenergy/data/monthly/pdf/mer_a_doc.pdf  Report:  MER (https://www.eia.gov/totalenergy/data/monthly/)",
+              "id": "total-energy",
+              "name": "Total Energy",
+              "route": "total-energy",
+              "source_url": "https://api.eia.gov/v2/total-energy"
+            },
+            {
+              "description": "Annual U.S. projections using National Energy Modelling System (NEMS) for release year.  Report, documentation, and interactive projection data browser:  AEO (www.eia.gov/aeo/)",
+              "id": "aeo",
+              "name": "Annual Energy Outlook",
+              "route": "aeo",
+              "source_url": "https://api.eia.gov/v2/aeo"
+            },
+            {
+              "description": "Annual international projections using the World Energy Projection System (WEPS) model for release year.  Report and interactive projection data browser:  IEO (www.eia.gov/ieo/)",
+              "id": "ieo",
+              "name": "International Energy Outlook",
+              "route": "ieo",
+              "source_url": "https://api.eia.gov/v2/ieo"
+            },
+            {
+              "description": "EIA CO2 Emissions data. \"This route is deprecated and no longer receiving fresh data. \n    For state-level CO2 emissions data, please use the /v2/seds/ API route.",
+              "id": "co2-emissions",
+              "name": "State CO2 Emissions- deprecated: see SEDS",
+              "route": "co2-emissions",
+              "source_url": "https://api.eia.gov/v2/co2-emissions"
+            }
+          ],
+          "retrieved_at": "2026-09-11T07:00:00Z",
+          "route": {
+            "api_version": "2.1.13",
+            "data_columns": [],
+            "default_date_format": null,
+            "default_frequency": null,
+            "description": null,
+            "end_period": null,
+            "facets": [],
+            "frequencies": [],
+            "name": "EIA Open Data API v2",
+            "route": "",
+            "source_id": null,
+            "source_url": "https://api.eia.gov/v2/",
+            "start_period": null
+          },
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://api.eia.gov/v2/",
+          "warnings": []
+        },
+        "recordedAt": "2026-09-11T07:00:00Z"
+      },
+      "execute": {
+        "provider": "eia-gov",
+        "capability": "energy-data/routes"
+      }
+    }
+  ]
+}

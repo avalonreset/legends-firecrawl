@@ -1,0 +1,879 @@
+{
+  "id": "iea-org",
+  "provider": "iea-org",
+  "name": "IEA",
+  "description": "Public energy highlights, country metadata and observations; paid and account-gated non-CC datasets are refused.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "iea-org"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "iea-org/energy/countries",
+      "provider": "iea-org",
+      "capability": "energy/countries",
+      "name": "Countries",
+      "description": "IEA country name to ISO3 crosswalk (from api.iea.org/countries) with aggregates flagged: World, OECD Total/Europe/Americas/Asia Oceania, IEA Total, EU27, Africa, Asia, China including Hong Kong, Eurasia. Each entry lists the stats code, the Monthly Electricity Statistics display name and the prices code it maps to, plus every alias `data` accepts.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "cursor"
+        },
+        {
+          "name": "dataset_id",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict to countries covered by this dataset (MES and prices have narrower coverage). Pattern: ^[a-z0-9-]+$."
+        },
+        {
+          "name": "include_aggregates",
+          "type": "boolean",
+          "in": "body",
+          "about": "include_aggregates"
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 20,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive substring over aliases (names, ISO codes, stats codes)."
+        }
+      ],
+      "response": {
+        "about": "IEA country name to ISO3 crosswalk (from api.iea.org/countries) with aggregates flagged: World, OECD Total/Europe/Americas/Asia Oceania, IEA Total, EU27, Africa, Asia, China including Hong Kong, Eurasia. Each entry lists the stats code, the Monthly Electricity Statistics display name and the prices code it maps to, plus every alias `data` accepts.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "vintage",
+            "type": "string"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "France"
+        },
+        "response": {
+          "complete": true,
+          "count": 1,
+          "next_cursor": null,
+          "observed_at_ms": 1789442654254,
+          "records": [
+            {
+              "aliases": [
+                "FR",
+                "FRA",
+                "FRANCE",
+                "France"
+              ],
+              "full_name": "France",
+              "iea_name": "France",
+              "is_aggregate": false,
+              "is_iea_member": true,
+              "is_oecd": true,
+              "iso2": "FR",
+              "iso3": "FRA",
+              "mes_name": "France",
+              "prices_code": "FRANCE",
+              "regions": [
+                "WEOEUR",
+                "OECDEUR",
+                "EU28",
+                "EU27_2020",
+                "G20",
+                "WORLD",
+                "OECDTOT",
+                "IEATOT",
+                "IEAFAMILY"
+              ],
+              "source_url": "https://api.iea.org/countries",
+              "stats_code": "FRANCE"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:24:14Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://api.iea.org/countries",
+          "vintage": null,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:21:20.787359+00:00"
+      },
+      "execute": {
+        "provider": "iea-org",
+        "capability": "energy/countries"
+      }
+    },
+    {
+      "id": "iea-org/energy/data",
+      "provider": "iea-org",
+      "capability": "energy/data",
+      "name": "Data",
+      "description": "Observations from one free IEA dataset for the given countries (ISO3 or IEA names, required, up to 50), optionally filtered by products, flows (balance flows or price sectors), indicators (data-browser indicators such as TFCbySource, ElecGenByFuel, CO2BySector) and year range; paged with an opaque cursor over a deterministic ordering. Values are decimal strings with the source unit; null values stay null. Paid and non-CC dataset ids fail with license_restricted and the product/purchase page.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "countries",
+          "type": "string[]",
+          "in": "body",
+          "about": "Required in practice: ISO3 codes (FRA), ISO2, IEA names (France, People's Republic of China) or stats codes (FRANCE, WORLD, OECDTOT, CHINAREG).",
+          "required": true
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page of the same query; maximum offset 200000."
+        },
+        {
+          "name": "dataset_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[a-z0-9-]+$.",
+          "required": true
+        },
+        {
+          "name": "flows",
+          "type": "string[]",
+          "in": "body",
+          "about": "Stats flow codes (TES, TFC, INDPROD, IMPORTS, EXPORTS, TOTIND, TOTTRANS, RESIDENT, ...; CO2: CO2FUEL, ELECHEAT, TOTTRANS, TOTIND, RESIDENT, ...) or price sectors (RESID, IND, TRANS, COMM, ELGEN). Not for MES."
+        },
+        {
+          "name": "frequency",
+          "type": "string",
+          "in": "body",
+          "about": "Must match the dataset (annual highlights: A; monthly electricity statistics and monthly oil prices: M).",
+          "oneOf": [
+            "A",
+            "M"
+          ]
+        },
+        {
+          "name": "indicators",
+          "type": "string[]",
+          "in": "body",
+          "about": "Data-browser indicators per dataset (see `dataset`.indicators): TESbySource, TFCbySource, TFCbySector, ElecGenByFuel, ElecConsBySector, CO2BySector, CO2Intensity; prices: PRICE, PRICE CONVERTED, HEATHOUSE, COOKING, SHOWER, CARS, PRICEMONTHLY. Cannot be combined with products/flows for stats datasets."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 20,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "products",
+          "type": "string[]",
+          "in": "body",
+          "about": "Stats product codes (TOTAL, COAL, NATGAS, ELECTR, MTOTOIL, COMRENEW, GEOTHERM, HEAT, TOTPRODS; CO2: COAL, OIL, GAS, OTHER, TOTAL), MES product names (Wind, Solar, Nuclear, Hydro, Coal, Natural gas, Net electricity production, ...) or price product codes (ELECTR, NATGAS, GASOLINE, DIESEL, LPG, KEROSENE, RESFUEL, COAL)."
+        },
+        {
+          "name": "year_from",
+          "type": "number",
+          "in": "body",
+          "about": "year_from",
+          "min": 1960,
+          "max": 2100
+        },
+        {
+          "name": "year_to",
+          "type": "number",
+          "in": "body",
+          "about": "year_to",
+          "min": 1960,
+          "max": 2100
+        }
+      ],
+      "response": {
+        "about": "Observations from one free IEA dataset for the given countries (ISO3 or IEA names, required, up to 50), optionally filtered by products, flows (balance flows or price sectors), indicators (data-browser indicators such as TFCbySource, ElecGenByFuel, CO2BySector) and year range; paged with an opaque cursor over a deterministic ordering. Values are decimal strings with the source unit; null values stay null. Paid and non-CC dataset ids fail with license_restricted and the product/purchase page.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "dataset_id",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "object",
+            "about": "Normalized query: resolved stats codes, canonical products/flows/indicators, years, frequency, page_size."
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string[]",
+            "about": "The exact api.iea.org URLs fetched."
+          },
+          {
+            "name": "total_records",
+            "type": "number",
+            "about": "Records matching the whole query before paging."
+          },
+          {
+            "name": "vintage",
+            "type": "string"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "countries": [
+            "FRA"
+          ],
+          "dataset_id": "world-energy-balances-highlights",
+          "flows": [
+            "TFC"
+          ],
+          "products": [
+            "TOTAL"
+          ],
+          "year_from": 2023,
+          "year_to": 2023
+        },
+        "response": {
+          "complete": true,
+          "count": 1,
+          "dataset_id": "world-energy-balances-highlights",
+          "next_cursor": null,
+          "observed_at_ms": 1789442654244,
+          "query": {
+            "countries": [
+              "FRANCE"
+            ],
+            "dataset_id": "world-energy-balances-highlights",
+            "flows": [
+              "TFC"
+            ],
+            "frequency": "A",
+            "indicators": null,
+            "page_size": 20,
+            "products": [
+              "TOTAL"
+            ],
+            "year_from": 2023,
+            "year_to": 2023
+          },
+          "records": [
+            {
+              "country": {
+                "iea_name": "France",
+                "is_aggregate": false,
+                "iso3": "FRA",
+                "stats_code": "FRANCE"
+              },
+              "dataset_id": "world-energy-balances-highlights",
+              "flag": null,
+              "flow": "TFC",
+              "flow_label": "Total final consumption",
+              "frequency": "A",
+              "indicator": null,
+              "indicator_label": null,
+              "observed_at_ms": 1789442481218,
+              "period": "2023",
+              "product": "TOTAL",
+              "product_label": "Total",
+              "record_id": "world-energy-balances-highlights|FRANCE|TFC|TOTAL||2023",
+              "scale": null,
+              "source_codes": {
+                "country": "FRA",
+                "flow": "TFC",
+                "flowLabel": "Total final consumption",
+                "flowOrder": 20,
+                "product": "TOTAL",
+                "productLabel": "Total",
+                "productOrder": 11,
+                "short": "FRANCE",
+                "units": "TJ",
+                "value": 5700875,
+                "year": "2023"
+              },
+              "source_updated_at": null,
+              "source_url": "https://www.iea.org/data-and-statistics/data-product/world-energy-balances-highlights",
+              "unit": "TJ",
+              "unit_source": "api.iea.org row field `units`",
+              "value": "5700875",
+              "vintage": null
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:24:14Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": [
+            "https://api.iea.org/stats?series=BALANCES&countries=FRANCE&year=2023&products=TOTAL&flows=TFC"
+          ],
+          "total_records": 1,
+          "vintage": null,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:21:20.787359+00:00"
+      },
+      "execute": {
+        "provider": "iea-org",
+        "capability": "energy/data"
+      }
+    },
+    {
+      "id": "iea-org/energy/dataset",
+      "provider": "iea-org",
+      "capability": "energy/dataset",
+      "name": "Dataset",
+      "description": "One dataset's metadata with a live probe of api.iea.org: year_min/year_max actually served, last_updated (MES latest published month or prices updated_at), coverage count, license, endpoint and cadence. Refused datasets are described but flagged.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "dataset_id",
+          "type": "string",
+          "in": "body",
+          "about": "dataset_id from `datasets`. Pattern: ^[a-z0-9-]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One dataset's metadata with a live probe of api.iea.org: year_min/year_max actually served, last_updated (MES latest published month or prices updated_at), coverage count, license, endpoint and cadence. Refused datasets are described but flagged.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "next_cursor",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "vintage",
+            "type": "string"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "dataset_id": "world-energy-balances-highlights"
+        },
+        "response": {
+          "complete": true,
+          "count": 1,
+          "next_cursor": null,
+          "observed_at_ms": 1789442654244,
+          "records": [
+            {
+              "access": "api",
+              "api_endpoint": "https://api.iea.org/stats?series=BALANCES",
+              "attribution": "IEA (2026), <dataset title>, IEA, Paris, <source_url>, Licence: CC BY 4.0",
+              "cadence": "Annual; highlights refreshed once a year around the World Energy Balances release (July/August) with a preliminary latest year.",
+              "coverage": {
+                "countries": 165,
+                "year_max": 2023,
+                "year_min": 1990
+              },
+              "dataset_id": "world-energy-balances-highlights",
+              "description": "Free highlights of the IEA World Energy Balances: indigenous production, imports, exports, total energy supply, transformation and total final consumption by sector and product for over 185 countries and regions, in TJ. Served by the Energy Statistics Data Browser API.",
+              "download_url": "https://www.iea.org/data-and-statistics/data-product/world-energy-balances-highlights",
+              "frequency": "A",
+              "indicators": [
+                "TESbySource",
+                "TFCbySource",
+                "TFCbySector"
+              ],
+              "last_updated": null,
+              "license": {
+                "spdx": "CC-BY-4.0",
+                "url": "https://www.iea.org/terms/creative-commons-cc-licenses"
+              },
+              "source_updated_at": null,
+              "source_url": "https://www.iea.org/data-and-statistics/data-product/world-energy-balances-highlights",
+              "title": "World Energy Balances Highlights",
+              "unit": "TJ"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:24:14Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://api.iea.org/stats?series=BALANCES&countries=WORLD&flows=TFC&products=TOTAL",
+          "vintage": null,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:21:20.787359+00:00"
+      },
+      "execute": {
+        "provider": "iea-org",
+        "capability": "energy/dataset"
+      }
+    },
+    {
+      "id": "iea-org/energy/datasets",
+      "provider": "iea-org",
+      "capability": "energy/datasets",
+      "name": "Datasets",
+      "description": "Catalog of IEA datasets: every free CC BY 4.0 dataset served by api.iea.org (energy balances, electricity and heat, oil, gas, CO2 from fuel combustion, monthly electricity statistics, energy prices, monthly oil prices) plus the paid and account-gated products that `data` refuses, each with its license. No network call; `last_updated` is null here and probed live by `dataset`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page; null or omitted for the first page."
+        },
+        {
+          "name": "license",
+          "type": "string",
+          "in": "body",
+          "about": "cc_by: retrievable CC BY 4.0 datasets; paid: commercial and non-CC account-gated products (refused by `data`); any: both.",
+          "default": "any",
+          "oneOf": [
+            "cc_by",
+            "paid",
+            "any"
+          ]
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 20,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive substring over dataset_id, title and description."
+        }
+      ],
+      "response": {
+        "about": "Catalog of IEA datasets: every free CC BY 4.0 dataset served by api.iea.org (energy balances, electricity and heat, oil, gas, CO2 from fuel combustion, monthly electricity statistics, energy prices, monthly oil prices) plus the paid and account-gated products that `data` refuses, each with its license. No network call; `last_updated` is null here and probed live by `dataset`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "vintage",
+            "type": "string"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "license": "cc_by",
+          "page_size": 100
+        },
+        "response": {
+          "complete": true,
+          "count": 8,
+          "next_cursor": null,
+          "observed_at_ms": 1789442654248,
+          "records": [
+            {
+              "access": "api",
+              "api_endpoint": "https://api.iea.org/stats?series=BALANCES",
+              "attribution": "IEA (2026), <dataset title>, IEA, Paris, <source_url>, Licence: CC BY 4.0",
+              "cadence": "Annual; highlights refreshed once a year around the World Energy Balances release (July/August) with a preliminary latest year.",
+              "coverage": {
+                "countries": 165,
+                "year_max": null,
+                "year_min": null
+              },
+              "dataset_id": "world-energy-balances-highlights",
+              "description": "Free highlights of the IEA World Energy Balances: indigenous production, imports, exports, total energy supply, transformation and total final consumption by sector and product for over 185 countries and regions, in TJ. Served by the Energy Statistics Data Browser API.",
+              "download_url": "https://www.iea.org/data-and-statistics/data-product/world-energy-balances-highlights",
+              "frequency": "A",
+              "indicators": [
+                "TESbySource",
+                "TFCbySource",
+                "TFCbySector"
+              ],
+              "last_updated": null,
+              "license": {
+                "spdx": "CC-BY-4.0",
+                "url": "https://www.iea.org/terms/creative-commons-cc-licenses"
+              },
+              "source_updated_at": null,
+              "source_url": "https://www.iea.org/data-and-statistics/data-product/world-energy-balances-highlights",
+              "title": "World Energy Balances Highlights",
+              "unit": "TJ"
+            },
+            {
+              "access": "api",
+              "api_endpoint": "https://api.iea.org/stats?series=ELECTRICITYANDHEAT",
+              "attribution": "IEA (2026), <dataset title>, IEA, Paris, <source_url>, Licence: CC BY 4.0",
+              "cadence": "Annual, with the World Energy Balances highlights.",
+              "coverage": {
+                "countries": 165,
+                "year_max": null,
+                "year_min": null
+              },
+              "dataset_id": "electricity-and-heat-highlights",
+              "description": "Electricity and heat generation by fuel (GWh / TJ) and electricity final consumption by sector from the free World Energy Balances highlights.",
+              "download_url": "https://www.iea.org/data-and-statistics/data-product/world-energy-balances-highlights",
+              "frequency": "A",
+              "indicators": [
+                "ElecGenByFuel",
+                "ElecConsBySector"
+              ],
+              "last_updated": null,
+              "license": {
+                "spdx": "CC-BY-4.0",
+                "url": "https://www.iea.org/terms/creative-commons-cc-licenses"
+              },
+              "source_updated_at": null,
+              "source_url": "https://www.iea.org/data-and-statistics/data-product/world-energy-balances-highlights",
+              "title": "World Energy Balances Highlights: electricity and heat",
+              "unit": "GWh"
+            },
+            {
+              "access": "api",
+              "api_endpoint": "https://api.iea.org/stats?series=OIL",
+              "attribution": "IEA (2026), <dataset title>, IEA, Paris, <source_url>, Licence: CC BY 4.0",
+              "cadence": "Annual, with the World Energy Balances highlights.",
+              "coverage": {
+                "countries": 165,
+                "year_max": null,
+                "year_min": null
+              },
+              "dataset_id": "oil-highlights",
+              "description": "Annual oil supply and demand balance (production, imports, exports, refinery intake, final consumption by sector) by oil product, in TJ.",
+              "download_url": "https://www.iea.org/data-and-statistics/data-product/world-energy-balances-highlights",
+              "frequency": "A",
+              "indicators": [],
+              "last_updated": null,
+              "license": {
+                "spdx": "CC-BY-4.0",
+                "url": "https://www.iea.org/terms/creative-commons-cc-licenses"
+              },
+              "source_updated_at": null,
+              "source_url": "https://www.iea.org/data-and-statistics/data-product/world-energy-balances-highlights",
+              "title": "World Energy Balances Highlights: oil",
+              "unit": "TJ"
+            },
+            {
+              "access": "api",
+              "api_endpoint": "https://api.iea.org/stats?series=GAS",
+              "attribution": "IEA (2026), <dataset title>, IEA, Paris, <source_url>, Licence: CC BY 4.0",
+              "cadence": "Annual, with the World Energy Balances highlights.",
+              "coverage": {
+                "countries": 165,
+                "year_max": null,
+                "year_min": null
+              },
+              "dataset_id": "natural-gas-highlights",
+              "description": "Annual natural gas balance (production, imports, exports, transformation, final consumption by sector), in TJ gross.",
+              "download_url": "https://www.iea.org/data-and-statistics/data-product/world-energy-balances-highlights",
+              "frequency": "A",
+              "indicators": [],
+              "last_updated": null,
+              "license": {
+                "spdx": "CC-BY-4.0",
+                "url": "https://www.iea.org/terms/creative-commons-cc-licenses"
+              },
+              "source_updated_at": null,
+              "source_url": "https://www.iea.org/data-and-statistics/data-product/world-energy-balances-highlights",
+              "title": "World Energy Balances Highlights: natural gas",
+              "unit": "TJ gross"
+            },
+            {
+              "access": "api",
+              "api_endpoint": "https://api.iea.org/stats?series=CO2",
+              "attribution": "IEA (2026), <dataset title>, IEA, Paris, <source_url>, Licence: CC BY 4.0",
+              "cadence": "Annual, once a year with the Greenhouse Gas Emissions from Energy release.",
+              "coverage": {
+                "countries": 165,
+                "year_max": null,
+                "year_min": null
+              },
+              "dataset_id": "co2-emissions-from-fuel-combustion-highlights",
+              "description": "Free highlights of CO2 emissions from fuel combustion by sector (electricity and heat, other energy industries, industry, transport, residential, services, agriculture, fishing) and by fuel (coal, oil, natural gas, other), in Mt CO2, since 1990.",
+              "download_url": "https://www.iea.org/data-and-statistics/data-product/greenhouse-gas-emissions-from-energy-highlights",
+              "frequency": "A",
+              "indicators": [
+                "CO2BySector",
+                "CO2Intensity"
+              ],
+              "last_updated": null,
+              "license": {
+                "spdx": "CC-BY-4.0",
+                "url": "https://www.iea.org/terms/creative-commons-cc-licenses"
+              },
+              "source_updated_at": null,
+              "source_url": "https://www.iea.org/data-and-statistics/data-product/greenhouse-gas-emissions-from-energy-highlights",
+              "title": "Greenhouse Gas Emissions from Energy Highlights (CO2 emissions from fuel combustion)",
+              "unit": "MtCO2"
+            },
+            {
+              "access": "api",
+              "api_endpoint": "https://api.iea.org/mes",
+              "attribution": "IEA (2026), <dataset title>, IEA, Paris, <source_url>, Licence: CC BY 4.0",
+              "cadence": "Monthly, published mid-month with a two to three month lag (latest month is checked live via /mes/list/date/latest).",
+              "coverage": {
+                "countries": 54,
+                "year_max": null,
+                "year_min": null
+              },
+              "dataset_id": "monthly-electricity-statistics",
+              "description": "Monthly net electricity production by source (coal, oil, natural gas, nuclear, hydro, wind, solar, geothermal, combustible renewables and aggregates), imports, exports, supply, pumped storage, distribution losses and final consumption for 47 OECD and selected countries plus OECD/IEA aggregates, in GWh, from January 2010.",
+              "download_url": "https://www.iea.org/data-and-statistics/data-product/monthly-electricity-statistics",
+              "frequency": "M",
+              "indicators": null,
+              "last_updated": null,
+              "license": {
+                "spdx": "CC-BY-4.0",
+                "url": "https://www.iea.org/terms/creative-commons-cc-licenses"
+              },
+              "source_updated_at": null,
+              "source_url": "https://www.iea.org/data-and-statistics/data-product/monthly-electricity-statistics",
+              "title": "Monthly Electricity Statistics",
+              "unit": "GWh"
+            },
+            {
+              "access": "api",
+              "api_endpoint": "https://api.iea.org/prices",
+              "attribution": "IEA (2026), <dataset title>, IEA, Paris, <source_url>, Licence: CC BY 4.0",
+              "cadence": "Annual highlights refreshed with the Energy Prices release; records carry the source updated_at timestamp.",
+              "coverage": {
+                "countries": 146,
+                "year_max": null,
+                "year_min": null
+              },
+              "dataset_id": "energy-prices-highlights",
+              "description": "Annual end-use energy prices for electricity, natural gas, gasoline, diesel, LPG, light fuel oil, fuel oil and steam coal by sector (residential, industry, transport, electricity generation) in national currency, USD and 2020 USD PPP, plus taxes and ex-tax prices, and household energy cost indicators (heating, cooking, shower, cars).",
+              "download_url": "https://www.iea.org/data-and-statistics/data-tools/energy-prices-data-explorer",
+              "frequency": "A",
+              "indicators": [
+                "PRICE",
+                "PRICE CONVERTED",
+                "HEATHOUSE",
+                "COOKING",
+                "SHOWER",
+                "CARS"
+              ],
+              "last_updated": null,
+              "license": {
+                "spdx": "CC-BY-4.0",
+                "url": "https://www.iea.org/terms/creative-commons-cc-licenses"
+              },
+              "source_updated_at": null,
+              "source_url": "https://www.iea.org/data-and-statistics/data-product/energy-prices",
+              "title": "Energy Prices Highlights (End-use prices, annual excerpt)",
+              "unit": "national currency, USD or 2020 USD PPP per MWh / litre / tonne / GJ (per record)"
+            },
+            {
+              "access": "api",
+              "api_endpoint": "https://api.iea.org/prices",
+              "attribution": "IEA (2026), <dataset title>, IEA, Paris, <source_url>, Licence: CC BY 4.0",
+              "cadence": "Monthly, published around the second week of the following month; records carry the source updated_at timestamp.",
+              "coverage": {
+                "countries": 146,
+                "year_max": null,
+                "year_min": null
+              },
+              "dataset_id": "monthly-oil-price-statistics",
+              "description": "Monthly retail prices for gasoline, automotive diesel, light fuel oil (transport and residential) in national currency and USD per litre for IEA and selected countries since 2015.",
+              "download_url": "https://www.iea.org/data-and-statistics/data-product/monthly-oil-price-statistics-2",
+              "frequency": "M",
+              "indicators": [
+                "PRICEMONTHLY"
+              ],
+              "last_updated": null,
+              "license": {
+                "spdx": "CC-BY-4.0",
+                "url": "https://www.iea.org/terms/creative-commons-cc-licenses"
+              },
+              "source_updated_at": null,
+              "source_url": "https://www.iea.org/data-and-statistics/data-product/monthly-oil-price-statistics-2",
+              "title": "Monthly Oil Price Statistics (End-use prices, monthly excerpt)",
+              "unit": "USD/l or national currency/l (per record)"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:24:14Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://www.iea.org/data-and-statistics/data-sets?filter=free",
+          "vintage": null,
+          "warnings": [
+            "`last_updated` is null in the static catalog; call `dataset` for a live probe."
+          ]
+        },
+        "recordedAt": "2026-09-15T03:21:20.787359+00:00"
+      },
+      "execute": {
+        "provider": "iea-org",
+        "capability": "energy/datasets"
+      }
+    }
+  ]
+}

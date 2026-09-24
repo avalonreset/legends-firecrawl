@@ -1,0 +1,800 @@
+{
+  "id": "npiregistry-cms-hhs-gov",
+  "provider": "npiregistry-cms-hhs-gov",
+  "name": "NPI Registry",
+  "description": "Public CMS healthcare provider business identities, taxonomy and practice locations.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "npiregistry-cms-hhs-gov"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "npiregistry-cms-hhs-gov/providers/locations",
+      "provider": "npiregistry-cms-hhs-gov",
+      "capability": "providers/locations",
+      "name": "Locations",
+      "description": "Practice locations for one 10-digit NPI: the primary practice location plus every secondary practice location NPPES lists, with phone/fax, and the mailing address separately. Same source record as provider, shaped for where-does-this-provider-practise questions.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "npi",
+          "type": "string",
+          "in": "body",
+          "about": "10-digit National Provider Identifier (string or integer). Must pass the NPI Luhn check digit.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Practice locations for one 10-digit NPI: the primary practice location plus every secondary practice location NPPES lists, with phone/fax, and the mailing address separately. Same source record as provider, shaped for where-does-this-provider-practise questions.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "entity_type",
+            "type": "string"
+          },
+          {
+            "name": "locations",
+            "type": "object[]",
+            "about": "Primary practice location first, then secondary practice locations."
+          },
+          {
+            "name": "mailing_address",
+            "type": "object"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "npi",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the workflow answered. Every call is live."
+          },
+          {
+            "name": "primary_taxonomy",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The exact NPPES API request that answered."
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]",
+            "about": "Non-fatal notes, e.g. a proxy fallback."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "npi": "1902858152"
+        },
+        "response": {
+          "count": 2,
+          "entity_type": "organization",
+          "locations": [
+            {
+              "address_1": "6780 MAYFIELD RD",
+              "address_2": null,
+              "city": "MAYFIELD HTS",
+              "country_code": "US",
+              "country_name": "United States",
+              "fax": null,
+              "kind": "primary_practice",
+              "postal_code": "441242203",
+              "purpose": "LOCATION",
+              "state": "OH",
+              "telephone": "440-312-4500",
+              "type": "DOM"
+            },
+            {
+              "address_1": "8300 NORTON PKWY",
+              "address_2": null,
+              "city": "MENTOR",
+              "country_code": "US",
+              "country_name": "United States",
+              "fax": null,
+              "kind": "secondary_practice",
+              "postal_code": "440606601",
+              "purpose": "LOCATION",
+              "state": "OH",
+              "telephone": "440-312-4500",
+              "type": "DOM"
+            }
+          ],
+          "mailing_address": {
+            "address_1": "6801 BRECKSVILLE RD",
+            "address_2": "STE 20 ATTN: DPC RK2-7",
+            "city": "INDEPENDENCE",
+            "country_code": "US",
+            "country_name": "United States",
+            "fax": null,
+            "postal_code": "441315032",
+            "purpose": "MAILING",
+            "state": "OH",
+            "telephone": null,
+            "type": "DOM"
+          },
+          "name": "CLEVELAND CLINIC HEALTH SYSTEM - EAST REGION",
+          "npi": "1902858152",
+          "observed_at_ms": 1789443720000,
+          "primary_taxonomy": {
+            "code": "282N00000X",
+            "description": "General Acute Care Hospital",
+            "license": "1019",
+            "primary": true,
+            "state": "OH",
+            "taxonomy_group": null
+          },
+          "source_url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&number=1902858152",
+          "status": "active",
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:42:00Z"
+      },
+      "execute": {
+        "provider": "npiregistry-cms-hhs-gov",
+        "capability": "providers/locations"
+      }
+    },
+    {
+      "id": "npiregistry-cms-hhs-gov/providers/provider",
+      "provider": "npiregistry-cms-hhs-gov",
+      "capability": "providers/provider",
+      "name": "Provider",
+      "description": "Full NPPES record for one 10-digit NPI: entity type, name, credential, status, enumeration and update dates, all taxonomies (specialties) with the primary flagged, mailing and practice addresses, secondary practice locations, other/DBA names, Medicaid and payer identifiers, and health-information-exchange endpoints. An unknown NPI is a not_found error.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "npi",
+          "type": "string",
+          "in": "body",
+          "about": "10-digit National Provider Identifier (string or integer). Must pass the NPI Luhn check digit.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Full NPPES record for one 10-digit NPI: entity type, name, credential, status, enumeration and update dates, all taxonomies (specialties) with the primary flagged, mailing and practice addresses, secondary practice locations, other/DBA names, Medicaid and payer identifiers, and health-information-exchange endpoints. An unknown NPI is a not_found error.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "npi",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the workflow answered. Every call is live."
+          },
+          {
+            "name": "provider",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The exact NPPES API request that answered."
+          },
+          {
+            "name": "warnings",
+            "type": "string[]",
+            "about": "Non-fatal notes, e.g. a proxy fallback."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "npi": "1538568928"
+        },
+        "response": {
+          "npi": "1538568928",
+          "observed_at_ms": 1789443720000,
+          "provider": {
+            "addresses": [
+              {
+                "address_1": "200 1ST ST SW",
+                "address_2": null,
+                "city": "ROCHESTER",
+                "country_code": "US",
+                "country_name": "United States",
+                "fax": null,
+                "postal_code": "559050001",
+                "purpose": "LOCATION",
+                "state": "MN",
+                "telephone": "507-284-2511",
+                "type": "DOM"
+              },
+              {
+                "address_1": "200 1ST ST SW",
+                "address_2": null,
+                "city": "ROCHESTER",
+                "country_code": "US",
+                "country_name": "United States",
+                "fax": null,
+                "postal_code": "559050001",
+                "purpose": "MAILING",
+                "state": "MN",
+                "telephone": "507-284-2511",
+                "type": "DOM"
+              }
+            ],
+            "authorized_official": {
+              "credential": null,
+              "first_name": "DENNIS",
+              "last_name": "DAHLEN",
+              "middle_name": null,
+              "name_prefix": null,
+              "name_suffix": null,
+              "telephone": "5075383389",
+              "title": "Chief Financial Officer"
+            },
+            "certification_date": "2025-08-15",
+            "created_at_ms": 1408642788000,
+            "credential": null,
+            "deactivation_date": null,
+            "deactivation_reason_code": null,
+            "endpoints": [
+              {
+                "address": {
+                  "address_1": "64 S Price Rd SteB",
+                  "address_2": null,
+                  "city": "Brownsville",
+                  "country_code": "US",
+                  "country_name": "United States",
+                  "postal_code": "785212459",
+                  "state": "TX",
+                  "type": "DOM"
+                },
+                "affiliation": true,
+                "affiliation_name": "Ability Network",
+                "content_other_description": null,
+                "content_type": "CSV",
+                "content_type_description": "CSV",
+                "description": "2.16.840.1.113883.3.667.2",
+                "endpoint": "https://esmd.abilitynetwork.com:8291/Gateway/DocumentSubmission/2_0/NhinService/XDRRequest_Service",
+                "type": "CONNECT",
+                "type_description": "CONNECT URL",
+                "use": "OTHER",
+                "use_description": "Other",
+                "use_other_description": "CMS esMD eMDR"
+              }
+            ],
+            "entity_type": "organization",
+            "enumeration_date": "2014-08-21",
+            "enumeration_type": "NPI-2",
+            "first_name": null,
+            "identifiers": [],
+            "last_name": null,
+            "last_updated": "2025-08-15",
+            "last_updated_at_ms": 1755275618000,
+            "middle_name": null,
+            "name": "MAYO CLINIC",
+            "name_prefix": null,
+            "name_suffix": null,
+            "npi": "1538568928",
+            "organization_name": "MAYO CLINIC",
+            "organizational_subpart": false,
+            "other_names": [],
+            "parent_organization_ein": null,
+            "parent_organization_legal_business_name": null,
+            "practice_locations": [],
+            "primary_taxonomy": {
+              "code": "261QM1300X",
+              "description": "Clinic/Center, Multi-Specialty",
+              "license": null,
+              "primary": true,
+              "state": null,
+              "taxonomy_group": null
+            },
+            "reactivation_date": null,
+            "sex": null,
+            "sole_proprietor": null,
+            "source_status": "A",
+            "source_url": "https://npiregistry.cms.hhs.gov/provider-view/1538568928",
+            "status": "active",
+            "taxonomies": [
+              {
+                "code": "261QM1300X",
+                "description": "Clinic/Center, Multi-Specialty",
+                "license": null,
+                "primary": true,
+                "state": null,
+                "taxonomy_group": null
+              }
+            ]
+          },
+          "source_url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&number=1538568928",
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:42:00Z"
+      },
+      "execute": {
+        "provider": "npiregistry-cms-hhs-gov",
+        "capability": "providers/provider"
+      }
+    },
+    {
+      "id": "npiregistry-cms-hhs-gov/providers/search",
+      "provider": "npiregistry-cms-hhs-gov",
+      "capability": "providers/search",
+      "name": "Search",
+      "description": "Search the CMS NPPES NPI Registry for healthcare providers (individuals or organizations) by name, organization, taxonomy/specialty, city, state, postal code or country. Returns one page (limit 1-200, skip up to 1200) of full provider records: NPI, taxonomies with licenses, mailing and practice addresses, other names, payer identifiers and endpoints. Requires at least one of first_name, last_name, organization_name, taxonomy_description or postal_code.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "address_purpose",
+          "type": "string",
+          "in": "body",
+          "about": "Which address the city/state/postal_code filters apply to. Default: any.",
+          "oneOf": [
+            "location",
+            "mailing",
+            "primary",
+            "secondary"
+          ]
+        },
+        {
+          "name": "city",
+          "type": "string",
+          "in": "body",
+          "about": "City of the mailing or practice address. Up to 100 ASCII characters (NPPES rejects accented letters; O'Brien, Smith-Jones and St. John are fine); one trailing `*` wildcard is allowed after at least two characters."
+        },
+        {
+          "name": "country_code",
+          "type": "string",
+          "in": "body",
+          "about": "Two-letter country code; US is the default in NPPES. Pattern: ^[A-Za-z]{2}$."
+        },
+        {
+          "name": "enumeration_type",
+          "type": "string",
+          "in": "body",
+          "about": "individual (NPI-1) or organization (NPI-2). Omit for both.",
+          "oneOf": [
+            "individual",
+            "organization"
+          ]
+        },
+        {
+          "name": "first_name",
+          "type": "string",
+          "in": "body",
+          "about": "Individual provider first name (NPI-1 only). Up to 100 ASCII characters (NPPES rejects accented letters; O'Brien, Smith-Jones and St. John are fine); one trailing `*` wildcard is allowed after at least two characters."
+        },
+        {
+          "name": "last_name",
+          "type": "string",
+          "in": "body",
+          "about": "Individual provider last name (NPI-1 only). Up to 100 ASCII characters (NPPES rejects accented letters; O'Brien, Smith-Jones and St. John are fine); one trailing `*` wildcard is allowed after at least two characters."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Records per page.",
+          "default": 10,
+          "min": 1,
+          "max": 200
+        },
+        {
+          "name": "organization_name",
+          "type": "string",
+          "in": "body",
+          "about": "Organization legal name or other name (NPI-2 only); also matches Doing Business As names. Up to 100 ASCII characters (NPPES rejects accented letters; O'Brien, Smith-Jones and St. John are fine); one trailing `*` wildcard is allowed after at least two characters."
+        },
+        {
+          "name": "postal_code",
+          "type": "string",
+          "in": "body",
+          "about": "5- or 9-digit ZIP, or a prefix followed by `*` (e.g. 941*)."
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "Records to skip; pass next_skip from the previous page. NPPES allows at most 1200.",
+          "default": 0,
+          "min": 0,
+          "max": 1200
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "in": "body",
+          "about": "Two-letter US state/territory code. Needs another criterion. Pattern: ^[A-Za-z]{2}$."
+        },
+        {
+          "name": "taxonomy_description",
+          "type": "string",
+          "in": "body",
+          "about": "Specialty / taxonomy description such as Cardiology, Dermatology, Family Medicine, Hospice Care, Community Based, or a taxonomy code like 208800000X. Up to 100 ASCII characters (NPPES rejects accented letters; O'Brien, Smith-Jones and St. John are fine); one trailing `*` wildcard is allowed after at least two characters."
+        },
+        {
+          "name": "use_first_name_alias",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also match common first-name aliases (Bob for Robert). Requires first_name. NPPES default is true."
+        }
+      ],
+      "response": {
+        "about": "Search the CMS NPPES NPI Registry for healthcare providers (individuals or organizations) by name, organization, taxonomy/specialty, city, state, postal code or country. Returns one page (limit 1-200, skip up to 1200) of full provider records: NPI, taxonomies with licenses, mailing and practice addresses, other names, payer identifiers and endpoints. Requires at least one of first_name, last_name, organization_name, taxonomy_description or postal_code.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "has_more",
+            "type": "boolean",
+            "about": "True when the page was full; NPPES publishes no total count."
+          },
+          {
+            "name": "limit",
+            "type": "number"
+          },
+          {
+            "name": "next_skip",
+            "type": "number",
+            "about": "skip for the next page, or null at the end or past NPPES's 1200-record depth."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the workflow answered. Every call is live."
+          },
+          {
+            "name": "query",
+            "type": "object",
+            "about": "The filters as sent, in NPPES vocabulary (enumeration_type NPI-1/NPI-2, upper-case address_purpose), plus limit and skip."
+          },
+          {
+            "name": "results",
+            "type": "object[]"
+          },
+          {
+            "name": "skip",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The exact NPPES API request that answered."
+          },
+          {
+            "name": "warnings",
+            "type": "string[]",
+            "about": "Non-fatal notes, e.g. a proxy fallback."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "city": "New York",
+          "limit": 3,
+          "state": "NY",
+          "taxonomy_description": "Dermatology"
+        },
+        "response": {
+          "count": 3,
+          "has_more": true,
+          "limit": 3,
+          "next_skip": 3,
+          "observed_at_ms": 1789443720000,
+          "query": {
+            "city": "New York",
+            "limit": 3,
+            "skip": 0,
+            "state": "NY",
+            "taxonomy_description": "Dermatology"
+          },
+          "results": [
+            {
+              "addresses": [
+                {
+                  "address_1": "133 E 58TH ST",
+                  "address_2": "SUITE 502",
+                  "city": "NEW YORK",
+                  "country_code": "US",
+                  "country_name": "United States",
+                  "fax": "212-644-4447",
+                  "postal_code": "100221236",
+                  "purpose": "LOCATION",
+                  "state": "NY",
+                  "telephone": "212-644-4440",
+                  "type": "DOM"
+                },
+                {
+                  "address_1": "133 E 58TH ST",
+                  "address_2": "SUITE 502",
+                  "city": "NEW YORK",
+                  "country_code": "US",
+                  "country_name": "United States",
+                  "fax": "212-644-4447",
+                  "postal_code": "100221236",
+                  "purpose": "MAILING",
+                  "state": "NY",
+                  "telephone": "212-644-4440",
+                  "type": "DOM"
+                }
+              ],
+              "authorized_official": {
+                "credential": null,
+                "first_name": "JESSICA",
+                "last_name": "DIAZ",
+                "middle_name": null,
+                "name_prefix": "Ms.",
+                "name_suffix": null,
+                "telephone": "6465765688",
+                "title": "Billing Manager"
+              },
+              "certification_date": null,
+              "created_at_ms": 1233328174000,
+              "credential": null,
+              "deactivation_date": null,
+              "deactivation_reason_code": null,
+              "endpoints": [],
+              "entity_type": "organization",
+              "enumeration_date": "2009-01-30",
+              "enumeration_type": "NPI-2",
+              "first_name": null,
+              "identifiers": [],
+              "last_name": null,
+              "last_updated": "2009-01-30",
+              "last_updated_at_ms": 1233328174000,
+              "middle_name": null,
+              "name": "21ST CENTURY DERMATOLOGY, P.L.L.C.",
+              "name_prefix": null,
+              "name_suffix": null,
+              "npi": "1558509448",
+              "organization_name": "21ST CENTURY DERMATOLOGY, P.L.L.C.",
+              "organizational_subpart": false,
+              "other_names": [],
+              "parent_organization_ein": null,
+              "parent_organization_legal_business_name": null,
+              "practice_locations": [],
+              "primary_taxonomy": {
+                "code": "207N00000X",
+                "description": "Dermatology",
+                "license": "231240",
+                "primary": true,
+                "state": "NY",
+                "taxonomy_group": "193400000X - Single Specialty Group"
+              },
+              "reactivation_date": null,
+              "sex": null,
+              "sole_proprietor": null,
+              "source_status": "A",
+              "source_url": "https://npiregistry.cms.hhs.gov/provider-view/1558509448",
+              "status": "active",
+              "taxonomies": [
+                {
+                  "code": "207N00000X",
+                  "description": "Dermatology",
+                  "license": "231240",
+                  "primary": true,
+                  "state": "NY",
+                  "taxonomy_group": "193400000X - Single Specialty Group"
+                }
+              ]
+            },
+            {
+              "addresses": [
+                {
+                  "address_1": "501 W 145TH ST",
+                  "address_2": "SUITE 3",
+                  "city": "NEW YORK",
+                  "country_code": "US",
+                  "country_name": "United States",
+                  "fax": null,
+                  "postal_code": "100315132",
+                  "purpose": "MAILING",
+                  "state": "NY",
+                  "telephone": "646-526-3641",
+                  "type": "DOM"
+                },
+                {
+                  "address_1": "501 W 145TH ST",
+                  "address_2": "SUITE 3",
+                  "city": "NEW YORK",
+                  "country_code": "US",
+                  "country_name": "United States",
+                  "fax": null,
+                  "postal_code": "100315132",
+                  "purpose": "LOCATION",
+                  "state": "NY",
+                  "telephone": "646-526-3641",
+                  "type": "DOM"
+                }
+              ],
+              "authorized_official": {
+                "credential": "M.D.",
+                "first_name": "KIM",
+                "last_name": "NICHOLS",
+                "middle_name": "MYRUTH",
+                "name_prefix": "Dr.",
+                "name_suffix": null,
+                "telephone": "6465263641",
+                "title": "Managing Director"
+              },
+              "certification_date": null,
+              "created_at_ms": 1148825234000,
+              "credential": null,
+              "deactivation_date": null,
+              "deactivation_reason_code": null,
+              "endpoints": [],
+              "entity_type": "organization",
+              "enumeration_date": "2006-05-28",
+              "enumeration_type": "NPI-2",
+              "first_name": null,
+              "identifiers": [],
+              "last_name": null,
+              "last_updated": "2008-01-09",
+              "last_updated_at_ms": 1199909973000,
+              "middle_name": null,
+              "name": "501 WEST MEDICAL, P.C.",
+              "name_prefix": null,
+              "name_suffix": null,
+              "npi": "1730136342",
+              "organization_name": "501 WEST MEDICAL, P.C.",
+              "organizational_subpart": false,
+              "other_names": [],
+              "parent_organization_ein": null,
+              "parent_organization_legal_business_name": null,
+              "practice_locations": [],
+              "primary_taxonomy": {
+                "code": "207N00000X",
+                "description": "Dermatology",
+                "license": "60-239556",
+                "primary": true,
+                "state": "NY",
+                "taxonomy_group": "193400000X - Single Specialty Group"
+              },
+              "reactivation_date": null,
+              "sex": null,
+              "sole_proprietor": null,
+              "source_status": "A",
+              "source_url": "https://npiregistry.cms.hhs.gov/provider-view/1730136342",
+              "status": "active",
+              "taxonomies": [
+                {
+                  "code": "207N00000X",
+                  "description": "Dermatology",
+                  "license": "60-239556",
+                  "primary": true,
+                  "state": "NY",
+                  "taxonomy_group": "193400000X - Single Specialty Group"
+                }
+              ]
+            },
+            {
+              "addresses": [
+                {
+                  "address_1": "57 W 57TH ST",
+                  "address_2": "SUITE 1109",
+                  "city": "NEW YORK",
+                  "country_code": "US",
+                  "country_name": "United States",
+                  "fax": null,
+                  "postal_code": "100192802",
+                  "purpose": "MAILING",
+                  "state": "NY",
+                  "telephone": "516-297-2691",
+                  "type": "DOM"
+                },
+                {
+                  "address_1": "57 W 57TH ST",
+                  "address_2": "SUITE 1109",
+                  "city": "NEW YORK",
+                  "country_code": "US",
+                  "country_name": "United States",
+                  "fax": null,
+                  "postal_code": "100192802",
+                  "purpose": "LOCATION",
+                  "state": "NY",
+                  "telephone": "516-297-2691",
+                  "type": "DOM"
+                }
+              ],
+              "authorized_official": {
+                "credential": "M.D.",
+                "first_name": "ALAN",
+                "last_name": "GLASS",
+                "middle_name": "TODD",
+                "name_prefix": null,
+                "name_suffix": null,
+                "telephone": "5162972691",
+                "title": "OWNER"
+              },
+              "certification_date": null,
+              "created_at_ms": 1431553913000,
+              "credential": null,
+              "deactivation_date": null,
+              "deactivation_reason_code": null,
+              "endpoints": [],
+              "entity_type": "organization",
+              "enumeration_date": "2015-05-13",
+              "enumeration_type": "NPI-2",
+              "first_name": null,
+              "identifiers": [],
+              "last_name": null,
+              "last_updated": "2015-05-13",
+              "last_updated_at_ms": 1431553913000,
+              "middle_name": null,
+              "name": "57 WEST DERMATOLOGY LLC",
+              "name_prefix": null,
+              "name_suffix": null,
+              "npi": "1306224001",
+              "organization_name": "57 WEST DERMATOLOGY LLC",
+              "organizational_subpart": false,
+              "other_names": [],
+              "parent_organization_ein": null,
+              "parent_organization_legal_business_name": null,
+              "practice_locations": [],
+              "primary_taxonomy": {
+                "code": "207N00000X",
+                "description": "Dermatology",
+                "license": "196509",
+                "primary": true,
+                "state": "NY",
+                "taxonomy_group": "193400000X - Single Specialty Group"
+              },
+              "reactivation_date": null,
+              "sex": null,
+              "sole_proprietor": null,
+              "source_status": "A",
+              "source_url": "https://npiregistry.cms.hhs.gov/provider-view/1306224001",
+              "status": "active",
+              "taxonomies": [
+                {
+                  "code": "207N00000X",
+                  "description": "Dermatology",
+                  "license": "196509",
+                  "primary": true,
+                  "state": "NY",
+                  "taxonomy_group": "193400000X - Single Specialty Group"
+                }
+              ]
+            }
+          ],
+          "skip": 0,
+          "source_url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Dermatology&city=New+York&state=NY&limit=3&skip=0",
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:42:00Z"
+      },
+      "execute": {
+        "provider": "npiregistry-cms-hhs-gov",
+        "capability": "providers/search"
+      }
+    }
+  ]
+}

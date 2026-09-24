@@ -1,0 +1,1273 @@
+{
+  "id": "maps-google-com",
+  "provider": "maps-google-com",
+  "name": "Google Maps",
+  "description": "Google Maps business search, public reviews and sampled rating trends, plus directions for driving, walking, bicycling and public transport. Directions return route alternatives, distance, duration and ordered steps; transit includes lines, stops, transfers and times. English results. Business search/reviews use the US locale and retain their existing pagination limits.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "maps-google-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "maps-google-com/businesses/directions",
+      "provider": "maps-google-com",
+      "capability": "businesses/directions",
+      "name": "Directions",
+      "description": "Routes between two addresses, place names, or coordinate pairs. Modes: driving (default), walking, bicycling, transit. Returns Google route alternatives with distances, estimated durations and ordered instructions. Transit includes walking connections, line and stop details, transfers, service alerts, scheduled times and estimates when supplied. Uses the current departure time; no date/time selection, intermediate waypoints, fares, or live navigation. Availability depends on Google coverage. An explicit no-route response returns routes: [].",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "destination",
+          "type": "string",
+          "in": "body",
+          "about": "Destination address, place name, or latitude,longitude. Pattern: ^[^!\\x00-\\x1f\\x7f-\\x9f]+$.",
+          "required": true
+        },
+        {
+          "name": "mode",
+          "type": "string",
+          "in": "body",
+          "about": "mode",
+          "default": "driving",
+          "oneOf": [
+            "driving",
+            "walking",
+            "bicycling",
+            "transit"
+          ]
+        },
+        {
+          "name": "origin",
+          "type": "string",
+          "in": "body",
+          "about": "Address, place name, or latitude,longitude. Include city/country to disambiguate. Pattern: ^[^!\\x00-\\x1f\\x7f-\\x9f]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Routes between two addresses, place names, or coordinate pairs. Modes: driving (default), walking, bicycling, transit. Returns Google route alternatives with distances, estimated durations and ordered instructions. Transit includes walking connections, line and stop details, transfers, service alerts, scheduled times and estimates when supplied. Uses the current departure time; no date/time selection, intermediate waypoints, fares, or live navigation. Availability depends on Google coverage. An explicit no-route response returns routes: [].",
+        "key": "routes",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "distance_meters",
+            "type": "number"
+          },
+          {
+            "name": "distance_text",
+            "type": "string"
+          },
+          {
+            "name": "duration_seconds",
+            "type": "number"
+          },
+          {
+            "name": "duration_text",
+            "type": "string"
+          },
+          {
+            "name": "estimated_arrival",
+            "type": "object"
+          },
+          {
+            "name": "estimated_departure",
+            "type": "object"
+          },
+          {
+            "name": "scheduled_arrival",
+            "type": "object"
+          },
+          {
+            "name": "scheduled_departure",
+            "type": "object"
+          },
+          {
+            "name": "steps",
+            "type": "object[]"
+          },
+          {
+            "name": "summary",
+            "type": "string"
+          },
+          {
+            "name": "transfers",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "destination": "Golden Gate Bridge San Francisco",
+          "mode": "driving",
+          "origin": "Ferry Building San Francisco"
+        },
+        "response": {
+          "count": 1,
+          "destination": "Golden Gate Bridge San Francisco",
+          "mode": "driving",
+          "observed_at_ms": 1789844227814,
+          "origin": "Ferry Building San Francisco",
+          "resolved_destination": {
+            "feature_id": "0x808586deffffffc3:0xcded139783705509",
+            "latitude": 37.819910899999996,
+            "longitude": -122.4785598,
+            "name": "Golden Gate Bridge, Golden Gate Brg, San Francisco, CA",
+            "place_id": "ChIJw____96GhYARCVVwg5cT7c0"
+          },
+          "resolved_origin": {
+            "feature_id": "0x808580668e8f3159:0x6cf7a313d6a53ec7",
+            "latitude": 37.7954425,
+            "longitude": -122.3936136,
+            "name": "Ferry Building, 1 Ferry Building, San Francisco, CA 94105",
+            "place_id": "ChIJWTGPjmaAhYARxz6l1hOj92w"
+          },
+          "routes": [
+            {
+              "distance_meters": 8652,
+              "distance_text": "5.4 miles",
+              "duration_seconds": 1192,
+              "duration_text": "20 min",
+              "estimated_arrival": null,
+              "estimated_departure": null,
+              "scheduled_arrival": null,
+              "scheduled_departure": null,
+              "steps": [
+                {
+                  "distance_meters": 1649,
+                  "distance_text": "1.0 mi",
+                  "duration_seconds": 281,
+                  "duration_text": "5 min",
+                  "instruction": "Head northwest on The Embarcadero S",
+                  "mode": "driving",
+                  "notes": [
+                    "Parts of this road may be closed at certain times or days"
+                  ],
+                  "transit": null
+                },
+                {
+                  "distance_meters": 2029,
+                  "distance_text": "1.3 mi",
+                  "duration_seconds": 411,
+                  "duration_text": "7 min",
+                  "instruction": "Use the left 2 lanes to turn left onto Bay St",
+                  "mode": "driving",
+                  "notes": [
+                    "Parts of this road may be closed at certain times or days",
+                    "Pass by Starbucks Coffee Company (on the left in 0.5 mi)"
+                  ],
+                  "transit": null
+                },
+                {
+                  "distance_meters": 315,
+                  "distance_text": "0.2 mi",
+                  "duration_seconds": 69,
+                  "duration_text": "1 min",
+                  "instruction": "Turn left onto Gough St",
+                  "mode": "driving",
+                  "notes": [],
+                  "transit": null
+                },
+                {
+                  "distance_meters": 1499,
+                  "distance_text": "0.9 mi",
+                  "duration_seconds": 230,
+                  "duration_text": "4 min",
+                  "instruction": "Turn right onto Lombard St",
+                  "mode": "driving",
+                  "notes": [],
+                  "transit": null
+                },
+                {
+                  "distance_meters": 528,
+                  "distance_text": "0.3 mi",
+                  "duration_seconds": 63,
+                  "duration_text": "1 min",
+                  "instruction": "Continue onto Richardson Ave",
+                  "mode": "driving",
+                  "notes": [],
+                  "transit": null
+                },
+                {
+                  "distance_meters": 2632,
+                  "distance_text": "1.6 mi",
+                  "duration_seconds": 139,
+                  "duration_text": "2 min",
+                  "instruction": "Continue onto US-101/Presidio Pkwy",
+                  "mode": "driving",
+                  "notes": [
+                    "Continue to follow US-101"
+                  ],
+                  "transit": null
+                }
+              ],
+              "summary": "US-101",
+              "transfers": 0
+            }
+          ],
+          "source_url": "https://www.google.com/maps/dir/?api=1&origin=Ferry%20Building%20San%20Francisco&destination=Golden%20Gate%20Bridge%20San%20Francisco&travelmode=driving"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "maps-google-com",
+        "capability": "businesses/directions"
+      }
+    },
+    {
+      "id": "maps-google-com/businesses/rating_trend",
+      "provider": "maps-google-com",
+      "capability": "businesses/rating_trend",
+      "name": "Rating trend",
+      "description": "Monthly rating trend for one business from its newest 60 Google reviews (one request): per calendar month the review count, average rating and owner responses, plus the same summary as reviews. Months are UTC; the sample never goes beyond 60 reviews.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "feature_id",
+          "type": "string",
+          "in": "body",
+          "about": "Google Maps feature id from search or a Maps place URL. Pattern: ^0x[0-9a-fA-F]{1,16}:0x[0-9a-fA-F]{1,16}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Monthly rating trend for one business from its newest 60 Google reviews (one request): per calendar month the review count, average rating and owner responses, plus the same summary as reviews. Months are UTC; the sample never goes beyond 60 reviews.",
+        "key": "months",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "average_rating",
+            "type": "number"
+          },
+          {
+            "name": "month",
+            "type": "string"
+          },
+          {
+            "name": "owner_responses",
+            "type": "number"
+          },
+          {
+            "name": "review_count",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "feature_id": "0x8085817d587624ef:0x311117103b5ecadf"
+        },
+        "response": {
+          "feature_id": "0x8085817d587624ef:0x311117103b5ecadf",
+          "months": [
+            {
+              "average_rating": 4.230769230769231,
+              "month": "2026-09",
+              "owner_responses": 2,
+              "review_count": 13
+            },
+            {
+              "average_rating": 4.378378378378378,
+              "month": "2026-08",
+              "owner_responses": 2,
+              "review_count": 37
+            }
+          ],
+          "observed_at_ms": 1789012800000,
+          "sample_oldest_published_at_ms": 1786650077649,
+          "sample_size": 50,
+          "source_url": "https://www.google.com/maps/place/data=!4m5!3m4!1s0x8085817d587624ef:0x311117103b5ecadf!8m2!3d0!4d0?hl=en&gl=us",
+          "summary": {
+            "owner_response_rate": 0.08,
+            "owner_responses": 4,
+            "sample_average_rating": 4.34,
+            "sample_histogram": {
+              "1": 4,
+              "2": 2,
+              "3": 2,
+              "4": 7,
+              "5": 35
+            },
+            "sample_size": 50,
+            "with_text": 33
+          }
+        },
+        "recordedAt": "2026-09-10"
+      },
+      "execute": {
+        "provider": "maps-google-com",
+        "capability": "businesses/rating_trend"
+      }
+    },
+    {
+      "id": "maps-google-com/businesses/reviews",
+      "provider": "maps-google-com",
+      "capability": "businesses/reviews",
+      "name": "Reviews",
+      "description": "Public Google reviews for one business identified by its Google Maps feature_id (0x..:0x.., from search or a Maps URL). One request returns 1 to 60 reviews in the chosen order with rating, timestamp, text, images and the owner's response, plus a summary with the owner response rate over the returned sample.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "count",
+          "type": "number",
+          "in": "body",
+          "about": "Reviews to return in this single request; the endpoint caps at 60.",
+          "default": 10,
+          "min": 1,
+          "max": 60
+        },
+        {
+          "name": "feature_id",
+          "type": "string",
+          "in": "body",
+          "about": "Google Maps feature id, e.g. 0x808580f112dc711d:0xbfb3fcde3487fb40 (the !1s… segment of a Maps place URL). Pattern: ^0x[0-9a-fA-F]{1,16}:0x[0-9a-fA-F]{1,16}$.",
+          "required": true
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "sort",
+          "default": "newest",
+          "oneOf": [
+            "relevance",
+            "newest",
+            "highest",
+            "lowest"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Public Google reviews for one business identified by its Google Maps feature_id (0x..:0x.., from search or a Maps URL). One request returns 1 to 60 reviews in the chosen order with rating, timestamp, text, images and the owner's response, plus a summary with the owner response rate over the returned sample.",
+        "key": "reviews",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "author_name",
+            "type": "string"
+          },
+          {
+            "name": "author_photo",
+            "type": "string"
+          },
+          {
+            "name": "author_url",
+            "type": "string"
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "language",
+            "type": "string"
+          },
+          {
+            "name": "original_text",
+            "type": "string",
+            "about": "Untranslated text when it differs from text."
+          },
+          {
+            "name": "owner_response",
+            "type": "object"
+          },
+          {
+            "name": "published_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "relative_time",
+            "type": "string"
+          },
+          {
+            "name": "review_id",
+            "type": "string"
+          },
+          {
+            "name": "review_url",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "type": "string",
+            "about": "Review text as displayed in English (Google translation when the review is in another language)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "feature_id": "0x8085817d587624ef:0x311117103b5ecadf"
+        },
+        "response": {
+          "count": 10,
+          "feature_id": "0x8085817d587624ef:0x311117103b5ecadf",
+          "has_more": true,
+          "observed_at_ms": 1789012800000,
+          "reviews": [
+            {
+              "author_name": "Gaetano Barreca",
+              "author_photo": "https://lh3.googleusercontent.com/a-/ALV-UjWT9zitpMM3h5vWbXKyPYsQIJZdzZXoa60rEWDAVSLf56PRWbbqsA=s64-c-rp-mo-ba12-br100",
+              "author_url": "https://www.google.com/maps/contrib/103582982226799663129/reviews?hl=en-US",
+              "images": [],
+              "language": null,
+              "original_text": null,
+              "owner_response": null,
+              "published_at_ms": 1788977393116,
+              "rating": 5,
+              "relative_time": "8 hours ago",
+              "review_id": "Ci9DQUlRQUNvZENodHljRjlvT2psTmRtUlZaVk5XV1UxMVpqSTBUWEF6YzB0MU9YYxAB",
+              "review_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2psTmRtUlZaVk5XV1UxMVpqSTBUWEF6YzB0MU9YYxAB!2m1!1s0x0:0x311117103b5ecadf!3m1!1s2@1:CAIQACodChtycF9oOjlNdmRVZVNWWU11ZjI0TXAzc0t1OXc%7C%7C?hl=en-US",
+              "text": null
+            },
+            {
+              "author_name": "Sujan Khatri",
+              "author_photo": "https://lh3.googleusercontent.com/a/ACg8ocJ51zlnCYLRLnuytInhDshAfF-vRVbFHw0Yy4rJXS_gHL5Epw=s64-c-rp-mo-br100",
+              "author_url": "https://www.google.com/maps/contrib/101860715953169770760/reviews?hl=en-US",
+              "images": [],
+              "language": null,
+              "original_text": null,
+              "owner_response": null,
+              "published_at_ms": 1788924586103,
+              "rating": 1,
+              "relative_time": "22 hours ago",
+              "review_id": "Ci9DQUlRQUNvZENodHljRjlvT25wM1NGcEpTR05tVFRGV2IxTkNhVEZ6U1dSMFFtYxAB",
+              "review_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT25wM1NGcEpTR05tVFRGV2IxTkNhVEZ6U1dSMFFtYxAB!2m1!1s0x0:0x311117103b5ecadf!3m1!1s2@1:CAIQACodChtycF9oOnp3SFpJSGNmTTFWb1NCaTFzSWR0Qmc%7C%7C?hl=en-US",
+              "text": null
+            },
+            {
+              "author_name": "K L",
+              "author_photo": "https://lh3.googleusercontent.com/a-/ALV-UjWytg-1Zg_EfOKhUjlABgpxPe6Y1PhkaAK1d3j1hI3fuK_EIFNKGw=s64-c-rp-mo-ba12-br100",
+              "author_url": "https://www.google.com/maps/contrib/106896493479665965355/reviews?hl=en-US",
+              "images": [],
+              "language": "en",
+              "original_text": null,
+              "owner_response": null,
+              "published_at_ms": 1788911381502,
+              "rating": 4,
+              "relative_time": "a day ago",
+              "review_id": "Ci9DQUlRQUNvZENodHljRjlvT2xWNk4wRjZkbVp5UW1GVk0zZHRkVkZsUkZORkxWRRAB",
+              "review_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xWNk4wRjZkbVp5UW1GVk0zZHRkVkZsUkZORkxWRRAB!2m1!1s0x0:0x311117103b5ecadf!3m1!1s2@1:CAIQACodChtycF9oOlV6N0F6dmZyQmFVM3dtdVFlRFNFLVE%7C%7C?hl=en-US",
+              "text": "Devious freshly made to order pizza."
+            },
+            {
+              "author_name": "Johnsenia Brooks",
+              "author_photo": "https://lh3.googleusercontent.com/a-/ALV-UjU_HJ5jsDi6M2AUOvDNje2JmQw0YQ5EXdTccDy0nMOdqkyXJk2l=s64-c-rp-mo-br100",
+              "author_url": "https://www.google.com/maps/contrib/104485979627501242527/reviews?hl=en-US",
+              "images": [],
+              "language": null,
+              "original_text": null,
+              "owner_response": null,
+              "published_at_ms": 1788900407642,
+              "rating": 5,
+              "relative_time": "a day ago",
+              "review_id": "Ci9DQUlRQUNvZENodHljRjlvT2xneGFuTmZSVGxqVVVSR1kyRk9WbmxKVnpOVVIwRRAB",
+              "review_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xneGFuTmZSVGxqVVVSR1kyRk9WbmxKVnpOVVIwRRAB!2m1!1s0x0:0x311117103b5ecadf!3m1!1s2@1:CAIQACodChtycF9oOlgxanNfRTljUURGY2FOVnlJVzNUR0E%7C%7C?hl=en-US",
+              "text": null
+            },
+            {
+              "author_name": "Ricky P.",
+              "author_photo": "https://lh3.googleusercontent.com/a/ACg8ocIdeJgehxCYBD2GBh9KY4zalLYisCsi1iN-kQRDJE-QF7_e_w=s64-c-rp-mo-br100",
+              "author_url": "https://www.google.com/maps/contrib/106899705651329529996/reviews?hl=en-US",
+              "images": [],
+              "language": "en",
+              "original_text": null,
+              "owner_response": {
+                "relative_time": "a day ago",
+                "text": "Thank you for taking the time to share your experience, and especially for having supported Sforno since we opened. We are sorry that today’s visit left you and your family frustrated.<br><br>We did review the order. It was placed through Uber Eats at approximately 12:20 PM, and the pickup time transmitted to our system by Uber Eats was approximately 1:25 PM. Unfortunately, Uber Eats does not always display the same estimated time to the customer, driver, and restaurant. We have reported this issue to Uber Eats multiple times, as we have also had drivers arrive showing us pickup times different from those appearing on our system.<br><br>At Sforno, every pizza is stretched, topped, and baked to order. We do not precook pizzas or leave them sitting in boxes waiting for pickup because we want them to leave the oven as fresh as possible. Today was an exceptionally busy service, and when we realized there was confusion regarding your pickup time, our team moved your order ahead in the queue to try to help. Unfortunately, during a very busy service, there is a limit to how quickly we can produce additional pizzas without compromising their quality.<br><br>That said, regardless of the Uber Eats timing issue, we are sorry that our communication with you was not better. You should have received a clearer explanation and a more gracious response while you were waiting, and we will address that with our team.<br><br>We also encourage you to report the discrepancy in pickup times directly to Uber Eats. We have brought this issue to their attention multiple times, and customer reports may help them better understand and correct the problem.<br><br>We appreciate the many times you and your family have supported us, and we are genuinely disappointed that this experience did not reflect the hospitality we want our guests to receive."
+              },
+              "published_at_ms": 1788821473529,
+              "rating": 1,
+              "relative_time": "2 days ago",
+              "review_id": "Ci9DQUlRQUNvZENodHljRjlvT21scFZVUTFaVlZ2VFhkU2FVVjFjMlU1U2tKaGFWRRAB",
+              "review_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21scFZVUTFaVlZ2VFhkU2FVVjFjMlU1U2tKaGFWRRAB!2m1!1s0x0:0x311117103b5ecadf!3m1!1s2@1:CAIQACodChtycF9oOmlpVUQ1ZVVvTXdSaUV1c2U5SkJhaVE%7C%7C?hl=en-US",
+              "text": "My wife and I have been coming since they opened. We’ve only had good experiences until today. Our family had an extremely unpleasant experience today. My wife placed an order for 3 pizzas on Uber Eats a little after 12pm. It stated it should be ready around 12:40. No problem, we walk around the neighborhood and come back a little after the pick up time.<br><br>When I arrived, I asked the young lady if our order is ready. She said “ooo” and just walks away with a tag. I’m standing there not knowing what happen so I assumed it’s not ready and wait outside. 1pm rolls around so I walk back into the restaurant but this time I asked the young gentleman if our order is ready. He said no but he will put our order in the front of the line.<br><br>I went back outside and wait again. 1:15 rolls around, I get a notification from Uber Eats that my food is ready. Great, I walk to the young gentleman again and show him my screen but he says it’s still not ready. He points to the young lady and she says, “Oo your order says it was supposed to be for 1:30 so it’s not ready.” Not sure how that is possible considering the app doesn’t have a delay pick up option and it notified me that my order was ready at 1:15.<br><br>I’m still patiently waiting outside at this point but now I start noticing that people who ordered in person after I showed up to pick up my order is getting their orders before me. There was a family that ordered their food after I arrived and even they commented “you’re still here?!?” after they ate and were leaving.<br><br>I go back to the young gentleman at 1:30pm and he says it’s still not ready… at this point my whole family is starving and I just want to leave. I finally pick up my food around 1:45 and in a nice way I told the gentleman that they should fix the Uber Eats communications and he says, “you should tell the owner, she is right here” and walks away.<br><br>I didn’t get a “sorry your order took so long”, just mean looks like why are you bothering me. Unfortunately we love supporting local restaurants but the service has gone way down. The pizza is decent but it doesn’t warrant close to a 2 hour wait and terrible service.<br><br>We will not be returning anytime soon and I will not be recommending this restaurant to anybody."
+            },
+            {
+              "author_name": "Mighty Mai",
+              "author_photo": "https://lh3.googleusercontent.com/a/ACg8ocLGKbILwOpcv46Q8K17-2uND6Es0kUEV9Z_gEoVlQ66x-ONDQ=s64-c-rp-mo-ba12-br100",
+              "author_url": "https://www.google.com/maps/contrib/104762165075053854773/reviews?hl=en-US",
+              "images": [],
+              "language": "en",
+              "original_text": null,
+              "owner_response": null,
+              "published_at_ms": 1788682587230,
+              "rating": 5,
+              "relative_time": "3 days ago",
+              "review_id": "Ci9DQUlRQUNvZENodHljRjlvT2pKUFdUbHlVRFJDTlZkVGJXOXNTSFJ1Yldkd01WRRAB",
+              "review_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2pKUFdUbHlVRFJDTlZkVGJXOXNTSFJ1Yldkd01WRRAB!2m1!1s0x0:0x311117103b5ecadf!3m1!1s2@1:CAIQACodChtycF9oOjJPWTlyUDRCNVdTbW9sSHRubWdwMVE%7C%7C?hl=en-US",
+              "text": "The pizza was delicious, freshly made and baked!"
+            },
+            {
+              "author_name": "peiying lin",
+              "author_photo": "https://lh3.googleusercontent.com/a/ACg8ocJwcIBffOh16YD_GFoPdWjEPtEwvxPE6HmSM5O1g_2qjbRiZg=s64-c-rp-mo-br100",
+              "author_url": "https://www.google.com/maps/contrib/112895673731706060533/reviews?hl=en-US",
+              "images": [
+                "https://lh3.googleusercontent.com/grass-cs/ACvplmONTvIKUHmzC_eMqLZ3D0p_as1Ydk852VIgXMwzh1f6qAq_-QlDi5BFHd7n-LZYJqg2afWuk6tpy5NwYVKQZWXe6XzIiLHai7kAYDl9GIBbW92cIoD3SAD2j2bhmj3V4NKzOZIlkDa3pODw=k-no",
+                "https://lh3.googleusercontent.com/grass-cs/ACvplmPUrVZrur2JAHRGuXVkRrsZMw18Hz680Cb1Rag-PJZbU8ws40PTWXd6YP8HrIUL4mZkCujmdKOKDtIanl58PhOlshjhJ7IdHnfo-Fb-arC7brIu5gQqL7vSNifYEN7mE4QBhnWgOVIC3Ow=k-no",
+                "https://lh3.googleusercontent.com/grass-cs/ACvplmNCLNjaVAza1LTQ3TQrBEDmiZztyPGV3aWTHo-_mIuwjauZGTPzfNe7kwsue92XAEJ_69vOsBGJ7lh8gYxBzwJ8Oon3iap3qVPlJN-6BuwyIlSPPCIil_v4JJHpGWGnnv_qt9FHAJXgibmc=k-no",
+                "https://lh3.googleusercontent.com/grass-cs/ACvplmPWTCLBIOO5IHaPXT3ItKRGg3NXe0a4Y5XGKIjtW5BrDEQv09u_hmW0du6did4c13CVIctjl_Bc6e5M3Jfv0MSJfSlyFBDuD2n8lImMjk83JoDPlRuhOwuwswQA8D4tjJxKmuRwmKzKori3=k-no",
+                "https://lh3.googleusercontent.com/grass-cs/ACvplmOqEYd_yAf0p4sLt4Ihp5R5nWLGqOdrni53cx5b1GfDJmQOmXIlnIRfuAv-cT8msenPbj8r1e2_WuaVnDy_pV_kVaPCAmoOivWoCfr07a66GVyXLom0OZX4PGV9vONKJuugJtpkL-xg9Eg8=k-no"
+              ],
+              "language": "zh-Hans",
+              "original_text": "好吃好吃，下次再试试甜品",
+              "owner_response": null,
+              "published_at_ms": 1788648921076,
+              "rating": 5,
+              "relative_time": "4 days ago",
+              "review_id": "Ci9DQUlRQUNvZENodHljRjlvT25Ga1psWnFXREZRYm1OSVJtdGxNREZ0VG5wV1RrRRAB",
+              "review_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT25Ga1psWnFXREZRYm1OSVJtdGxNREZ0VG5wV1RrRRAB!2m1!1s0x0:0x311117103b5ecadf!3m1!1s2@1:CAIQACodChtycF9oOnFkZlZqWDFQbmNIRmtlMDFtTnpWTkE%7C%7C?hl=en-US",
+              "text": "Delicious! I'll try the desserts next time."
+            },
+            {
+              "author_name": "JollyJokerJoking",
+              "author_photo": "https://lh3.googleusercontent.com/a-/ALV-UjXjYmPtXhShYYDVRYaiEtOohB7he1vhxKBVLvLi-VMfj1DKrYs=s64-c-rp-mo-ba12-br100",
+              "author_url": "https://www.google.com/maps/contrib/100503622467715209459/reviews?hl=en-US",
+              "images": [
+                "https://lh3.googleusercontent.com/grass-cs/ACvplmOV6tp8MJ2lOlLDRiYRmabcloc8l3-UThLZsJD1xkfUo0sQxMHJJf9r7zLprNCjCqLhgkP2f_4tqr_5xFThcCITuVYoQ_DRY0kX5jMZfB27kX13hCDNAn0FA01sDoT3HBiNfgGTN02EmXTY=k-no",
+                "https://lh3.googleusercontent.com/grass-cs/ACvplmOo5ZFbvQvjiXdkpB1LvFFRPk9Pwm6j1du3nfj0Px75PbYjFXyoLpW4VBjUlNpuhwRNuXkEgJn9-JBa6ZTThFDVLdGvVGT9XlaFcPLf7ookC_HTu5PHU7m87wk1VE05AzEe_nzbJB8_ANI=k-no",
+                "https://lh3.googleusercontent.com/grass-cs/ACvplmPXcwHMjHHlkl2Ftxq0h9hfn7JA3Wl8aqReG4ibIu3Blc298v0WFgCuNDN_uTybaZ_3J9oju2bR0xKao_QDt3Obitir8ldO6mKtch3PcEMwh5nszuwKi-rqvhcTIVR80E4q7g24c7v-IJFP=k-no"
+              ],
+              "language": "en",
+              "original_text": null,
+              "owner_response": {
+                "relative_time": "3 days ago",
+                "text": "Thank you so much for coming in and for taking the time to share your experience. We’re really happy to hear that you found the space cozy, enjoyed the quality of the pizza, and felt well taken care of by our team.<br><br>We completely understand that parking in Hayes Valley can sometimes be a challenge, and we’re sorry that it made your visit less convenient. We wish we could do something. <br><br>Our pizza is made in the traditional old way Neapolitan style, with a very thin, soft center and the characteristics you would find in Naples. We have a lot of respect for the great pizzerias there, including L’Antica Pizzeria da Michele, and we’re proud to be part of that same Neapolitan tradition in our own way.<br><br>Thank you again for giving us a try and for sharing your feedback with us."
+              },
+              "published_at_ms": 1788554040365,
+              "rating": 4,
+              "relative_time": "5 days ago",
+              "review_id": "Ci9DQUlRQUNvZENodHljRjlvT21oeExWVjZZbG8wVmtKR1JGOHdhemgzU1hKd2RHYxAB",
+              "review_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21oeExWVjZZbG8wVmtKR1JGOHdhemgzU1hKd2RHYxAB!2m1!1s0x0:0x311117103b5ecadf!3m1!1s2@1:CAIQACodChtycF9oOmhxLVV6Ylo0VkJGRF8wazh3SXJwdGc%7C%7C?hl=en-US",
+              "text": "Saw this place pop up on IG and being the pizza lover that I am, I had to try it. First off the parking is terrible, had to roll around for 15 min to find parking. The place was cozy and the staff was really kind. For 2 pies it came out to $45 (4 slices big enough for a hungry kid) 🥺. The next couple ordered 2 pies and 2 drinks was almost $60 🤯. The quality was there if you like really really thin pizza, would be better if they added a little more sauce. I ate at L'Antica Pizzeria da Michele in Naples Italy and that is what this place seems to be trying to copy, I think. I put it in the air fryer the next day and the dough crisped up a bit more to my liking. Over all a good experience, but not worth the price or the time to drive and find parking. B-"
+            },
+            {
+              "author_name": "Steve Sun",
+              "author_photo": "https://lh3.googleusercontent.com/a-/ALV-UjVZd_OPNXihmSJ642JZkG3GwimbfJ6awRweZbvBOSDvNznzIZRT=s64-c-rp-mo-br100",
+              "author_url": "https://www.google.com/maps/contrib/104217190031503804308/reviews?hl=en-US",
+              "images": [],
+              "language": null,
+              "original_text": null,
+              "owner_response": null,
+              "published_at_ms": 1788553354799,
+              "rating": 5,
+              "relative_time": "5 days ago",
+              "review_id": "Ci9DQUlRQUNvZENodHljRjlvT2xWdVlrRTBaMUZ3UzFsNWQxZHlMVkZ6TTFkRFFsRRAB",
+              "review_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xWdVlrRTBaMUZ3UzFsNWQxZHlMVkZ6TTFkRFFsRRAB!2m1!1s0x0:0x311117103b5ecadf!3m1!1s2@1:CAIQACodChtycF9oOlVuYkE0Z1FwS1l5d1dyLVFzM1dDQlE%7C%7C?hl=en-US",
+              "text": null
+            },
+            {
+              "author_name": "Nauras Abo",
+              "author_photo": "https://lh3.googleusercontent.com/a-/ALV-UjXE6pv9pUFGKh0jYVGehj2dnGT6BCLjYVPzv6ZtxvBSHqwS8slpVw=s64-c-rp-mo-ba12-br100",
+              "author_url": "https://www.google.com/maps/contrib/111118657229316184718/reviews?hl=en-US",
+              "images": [
+                "https://lh3.googleusercontent.com/grass-cs/ACvplmPUToEnoxLUI7cffRkAYHrlpzEG4ZatH9aD8e7w-NYY_ldpltllBvSLEAjkMuqdZdRfWSe61exwwmK5VuOHVCHi_ZCUERgPP6tpzaC7J72M2Rg4x7aN1kMcP2hw4LGYE6liQsK09ukHjh8=k-no",
+                "https://lh3.googleusercontent.com/grass-cs/ACvplmOIQNC3FntiI6NSNClev8VHVgrNzLQfeH74Z9HrGUCdnhPHHuwII7FFetul3qiQbSjWFlTJsWfUAJCPoneuDrjBkUmKsQqln6hbPpxnqDfSUPBS8FxQr_F-GO7wc5H8BMlqAFjyhePjl-fY=k-no"
+              ],
+              "language": "en",
+              "original_text": null,
+              "owner_response": null,
+              "published_at_ms": 1788458444220,
+              "rating": 5,
+              "relative_time": "6 days ago",
+              "review_id": "Ci9DQUlRQUNvZENodHljRjlvT21kMFgycDFlR1pXTms1WE9VeE9kMWhSUzB0YVdWRRAB",
+              "review_url": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21kMFgycDFlR1pXTms1WE9VeE9kMWhSUzB0YVdWRRAB!2m1!1s0x0:0x311117103b5ecadf!3m1!1s2@1:CAIQACodChtycF9oOmd0X2p1eGZWNk5XOUxOd1hRS0taWVE%7C%7C?hl=en-US",
+              "text": "I ordered the spicy trouble pizza and the Fresca takeout. It was a bit pricey, but that’s typical for San Francisco. Honestly, I’d pay the full price again because it was one of the best pizzas I’ve ever had. I also got the lemon cake, which was delicious, and it tasted just like an olive oil cake. I saved a couple of slices for later, and even cold, they’re still delicious! I’m definitely going back."
+            }
+          ],
+          "sort": "newest",
+          "source_url": "https://www.google.com/maps/place/data=!4m5!3m4!1s0x8085817d587624ef:0x311117103b5ecadf!8m2!3d0!4d0?hl=en&gl=us",
+          "summary": {
+            "owner_response_rate": 0.2,
+            "owner_responses": 2,
+            "sample_average_rating": 4,
+            "sample_histogram": {
+              "1": 2,
+              "2": 0,
+              "3": 0,
+              "4": 2,
+              "5": 6
+            },
+            "sample_size": 10,
+            "with_text": 6
+          }
+        },
+        "recordedAt": "2026-09-10"
+      },
+      "execute": {
+        "provider": "maps-google-com",
+        "capability": "businesses/reviews"
+      }
+    },
+    {
+      "id": "maps-google-com/businesses/search",
+      "provider": "maps-google-com",
+      "capability": "businesses/search",
+      "name": "Search",
+      "description": "Find businesses on Google Maps by free-text query (name and/or 'category in city'). Returns up to 20 places with Google feature_id (input for reviews/rating_trend), place_id, categories, address, coordinates, aggregate rating, review count, phone and website.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "Optional viewport centre; provide with longitude. Defaults to the contiguous US centroid; the query text carries the location.",
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Business name and/or category with a location, e.g. 'Tony's Pizza Napoletana San Francisco' or 'dentist Austin TX'.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Find businesses on Google Maps by free-text query (name and/or 'category in city'). Returns up to 20 places with Google feature_id (input for reviews/rating_trend), place_id, categories, address, coordinates, aggregate rating, review count, phone and website.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "address_lines",
+            "type": "string[]"
+          },
+          {
+            "name": "categories",
+            "type": "string[]"
+          },
+          {
+            "name": "editorial_summary",
+            "type": "string"
+          },
+          {
+            "name": "feature_id",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "maps_url",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "phone_e164",
+            "type": "string"
+          },
+          {
+            "name": "place_id",
+            "type": "string"
+          },
+          {
+            "name": "price_level",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "review_count",
+            "type": "number"
+          },
+          {
+            "name": "timezone",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "latitude": 37.7749,
+          "longitude": -122.4194,
+          "query": "pizza San Francisco"
+        },
+        "response": {
+          "count": 20,
+          "observed_at_ms": 1789012800000,
+          "query": "pizza San Francisco",
+          "results": [
+            {
+              "address": "514 Octavia St, San Francisco, CA 94102",
+              "address_lines": [
+                "514 Octavia St",
+                "San Francisco, CA 94102"
+              ],
+              "categories": [
+                "Pizza restaurant",
+                "Neapolitan restaurant",
+                "Italian restaurant",
+                "Pizza Takeout"
+              ],
+              "editorial_summary": null,
+              "feature_id": "0x8085817d587624ef:0x311117103b5ecadf",
+              "latitude": 37.776958799999996,
+              "longitude": -122.424522,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJ7yR2WH2BhYAR38peOxAXETE",
+              "name": "Sforno Pizzeria Napoletana",
+              "phone": "(415) 347-5881",
+              "phone_e164": "+14153475881",
+              "place_id": "ChIJ7yR2WH2BhYAR38peOxAXETE",
+              "price_level": null,
+              "rating": 4.6,
+              "review_count": 314,
+              "timezone": "America/Los_Angeles",
+              "website": "https://www.sfornosf.com/"
+            },
+            {
+              "address": "237 Fillmore St, San Francisco, CA 94117",
+              "address_lines": [
+                "237 Fillmore St",
+                "San Francisco, CA 94117"
+              ],
+              "categories": [
+                "Pizza restaurant"
+              ],
+              "editorial_summary": null,
+              "feature_id": "0x808581006e78e8ef:0x96a1e702dd033405",
+              "latitude": 37.7717704,
+              "longitude": -122.4305996,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJ7-h4bgCBhYARBTQD3QLnoZY",
+              "name": "Jules",
+              "phone": null,
+              "phone_e164": null,
+              "place_id": "ChIJ7-h4bgCBhYARBTQD3QLnoZY",
+              "price_level": null,
+              "rating": 4.3,
+              "review_count": 257,
+              "timezone": "America/Los_Angeles",
+              "website": "http://julespizza.co/"
+            },
+            {
+              "address": "846 Divisadero St, San Francisco, CA 94117",
+              "address_lines": [
+                "846 Divisadero St",
+                "San Francisco, CA 94117"
+              ],
+              "categories": [
+                "Pizza restaurant"
+              ],
+              "editorial_summary": null,
+              "feature_id": "0x808581002a7d4997:0xdee0e9acd2fb3acc",
+              "latitude": 37.777545499999995,
+              "longitude": -122.4380262,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJl0l9KgCBhYARzDr70qzp4N4",
+              "name": "Little Brother's Pizza",
+              "phone": null,
+              "phone_e164": null,
+              "place_id": "ChIJl0l9KgCBhYARzDr70qzp4N4",
+              "price_level": null,
+              "rating": 4.7,
+              "review_count": 20,
+              "timezone": "America/Los_Angeles",
+              "website": null
+            },
+            {
+              "address": "456 Haight St, San Francisco, CA 94117",
+              "address_lines": [
+                "456 Haight St",
+                "San Francisco, CA 94117"
+              ],
+              "categories": [
+                "Pizza restaurant",
+                "Delivery Restaurant"
+              ],
+              "editorial_summary": "Compact counter-serve eatery selling pizza by the pie or slice, plus wings, burgers & pasta dishes.",
+              "feature_id": "0x808580afca14e95b:0x82a30eb1a57eb0dc",
+              "latitude": 37.772355999999995,
+              "longitude": -122.4297711,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJW-kUyq-AhYAR3LB-pbEOo4I",
+              "name": "Seniore's Pizza",
+              "phone": "(415) 400-5222",
+              "phone_e164": "+14154005222",
+              "place_id": "ChIJW-kUyq-AhYAR3LB-pbEOo4I",
+              "price_level": null,
+              "rating": 4.4,
+              "review_count": 529,
+              "timezone": "America/Los_Angeles",
+              "website": "https://www.seniorespizzasanfrancisco.com/?utm_source=gbp"
+            },
+            {
+              "address": "422 Larkin St, San Francisco, CA 94102",
+              "address_lines": [
+                "422 Larkin St",
+                "San Francisco, CA 94102"
+              ],
+              "categories": [
+                "Pizza restaurant"
+              ],
+              "editorial_summary": null,
+              "feature_id": "0x808581ae499d608b:0xe0f081137f64ac3f",
+              "latitude": 37.7818216,
+              "longitude": -122.4171258,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJi2CdSa6BhYARP6xkfxOB8OA",
+              "name": "Outta Sight Pizza",
+              "phone": "(415) 829-3108",
+              "phone_e164": "+14158293108",
+              "place_id": "ChIJi2CdSa6BhYARP6xkfxOB8OA",
+              "price_level": null,
+              "rating": 4.6,
+              "review_count": 750,
+              "timezone": "America/Los_Angeles",
+              "website": "https://www.thatsouttasight.com/"
+            },
+            {
+              "address": "579 Hayes St, San Francisco, CA 94102",
+              "address_lines": [
+                "579 Hayes St",
+                "San Francisco, CA 94102"
+              ],
+              "categories": [
+                "Pizza restaurant"
+              ],
+              "editorial_summary": null,
+              "feature_id": "0x8085818743a4ca0d:0xb199247306c93eab",
+              "latitude": 37.7764094,
+              "longitude": -122.42584579999999,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJDcqkQ4eBhYARqz7JBnMkmbE",
+              "name": "Gioia Pizzeria",
+              "phone": "(415) 872-9427",
+              "phone_e164": "+14158729427",
+              "place_id": "ChIJDcqkQ4eBhYARqz7JBnMkmbE",
+              "price_level": null,
+              "rating": 4.3,
+              "review_count": 464,
+              "timezone": "America/Los_Angeles",
+              "website": "https://www.gioiapizzeria.com/"
+            },
+            {
+              "address": "551 Haight St, San Francisco, CA 94117",
+              "address_lines": [
+                "551 Haight St",
+                "San Francisco, CA 94117"
+              ],
+              "categories": [
+                "Pizza restaurant"
+              ],
+              "editorial_summary": "Convenient spot to grab a quick bite, from classic & deep-dish slices to hot wings & sandwiches.",
+              "feature_id": "0x808580a6eb2c02bd:0xf444e9032bda0c48",
+              "latitude": 37.7718979,
+              "longitude": -122.43134069999999,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJvQIs66aAhYARSAzaKwPpRPQ",
+              "name": "Mythic Pizza",
+              "phone": "(415) 864-1999",
+              "phone_e164": "+14158641999",
+              "place_id": "ChIJvQIs66aAhYARSAzaKwPpRPQ",
+              "price_level": null,
+              "rating": 4,
+              "review_count": 256,
+              "timezone": "America/Los_Angeles",
+              "website": null
+            },
+            {
+              "address": "395 Hayes St, San Francisco, CA 94102",
+              "address_lines": [
+                "395 Hayes St",
+                "San Francisco, CA 94102"
+              ],
+              "categories": [
+                "Pizza restaurant",
+                "Bar",
+                "Brunch restaurant",
+                "Caterer",
+                "Family restaurant",
+                "Gluten-free restaurant",
+                "Pasta shop",
+                "Southern Italian restaurant",
+                "Vegan restaurant",
+                "Vegetarian restaurant"
+              ],
+              "editorial_summary": null,
+              "feature_id": "0x80858098bf18d5b5:0xa54cb5627c85e368",
+              "latitude": 37.7768142,
+              "longitude": -122.4228158,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJtdUYv5iAhYARaOOFfGK1TKU",
+              "name": "Doppio Zero San Francisco",
+              "phone": "(415) 624-3634",
+              "phone_e164": "+14156243634",
+              "place_id": "ChIJtdUYv5iAhYARaOOFfGK1TKU",
+              "price_level": null,
+              "rating": 4.3,
+              "review_count": 1106,
+              "timezone": "America/Los_Angeles",
+              "website": "https://doppiozerogroup.com/san-francisco?utm_source=google"
+            },
+            {
+              "address": "511 Hayes St, San Francisco, CA 94102",
+              "address_lines": [
+                "511 Hayes St",
+                "San Francisco, CA 94102"
+              ],
+              "categories": [
+                "Pizza restaurant",
+                "Restaurant"
+              ],
+              "editorial_summary": "Pizzeria chain serving creative deep-dish & thin-crust pies in a stylish, contemporary setting.",
+              "feature_id": "0x808580a26da7c965:0x5cd5ff90503b0f97",
+              "latitude": 37.7765207,
+              "longitude": -122.42489789999999,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJZcmnbaKAhYARlw87UJD_1Vw",
+              "name": "Patxi's Pizza",
+              "phone": "(415) 558-9991",
+              "phone_e164": "+14155589991",
+              "place_id": "ChIJZcmnbaKAhYARlw87UJD_1Vw",
+              "price_level": null,
+              "rating": 4,
+              "review_count": 1137,
+              "timezone": "America/Los_Angeles",
+              "website": "https://www.patxispizza.com/Location/HayesValley"
+            },
+            {
+              "address": "1064 Divisadero St, San Francisco, CA 94115",
+              "address_lines": [
+                "1064 Divisadero St",
+                "San Francisco, CA 94115"
+              ],
+              "categories": [
+                "Pizza restaurant",
+                "Chicken restaurant",
+                "Family restaurant",
+                "Italian restaurant",
+                "Delivery Restaurant",
+                "Takeout Restaurant",
+                "Restaurant",
+                "Sandwich shop"
+              ],
+              "editorial_summary": null,
+              "feature_id": "0x808580b1214fd029:0x109b63763e348e79",
+              "latitude": 37.7795851,
+              "longitude": -122.4385882,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJKdBPIbGAhYAReY40PnZjmxA",
+              "name": "Primo Pizza",
+              "phone": "(415) 359-9300",
+              "phone_e164": "+14153599300",
+              "place_id": "ChIJKdBPIbGAhYAReY40PnZjmxA",
+              "price_level": null,
+              "rating": 3.9,
+              "review_count": 367,
+              "timezone": "America/Los_Angeles",
+              "website": "http://www.primopizzasf.com/"
+            },
+            {
+              "address": "799 O'Farrell St, San Francisco, CA 94109",
+              "address_lines": [
+                "799 O'Farrell St",
+                "San Francisco, CA 94109"
+              ],
+              "categories": [
+                "Pizza restaurant"
+              ],
+              "editorial_summary": "Basic pizzeria that delivers lots of pies but also serves slices until the wee hours.",
+              "feature_id": "0x8085809131b52875:0x21c81f5801e1448c",
+              "latitude": 37.785094799999996,
+              "longitude": -122.41777529999999,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJdSi1MZGAhYARjEThAVgfyCE",
+              "name": "Piccolo Italia",
+              "phone": "(415) 409-3300",
+              "phone_e164": "+14154093300",
+              "place_id": "ChIJdSi1MZGAhYARjEThAVgfyCE",
+              "price_level": null,
+              "rating": 4.5,
+              "review_count": 1085,
+              "timezone": "America/Los_Angeles",
+              "website": "https://www.piccoloitaliasf.com/"
+            },
+            {
+              "address": "3228 16th St, San Francisco, CA 94103",
+              "address_lines": [
+                "3228 16th St",
+                "San Francisco, CA 94103"
+              ],
+              "categories": [
+                "Pizza restaurant"
+              ],
+              "editorial_summary": null,
+              "feature_id": "0x808f7fc4ac2ef671:0x5b0b6d1d61ad6803",
+              "latitude": 37.764953999999996,
+              "longitude": -122.424804,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJcfYurMR_j4ARA2itYR1tC1s",
+              "name": "Angie’s Pizza",
+              "phone": "(415) 829-2040",
+              "phone_e164": "+14158292040",
+              "place_id": "ChIJcfYurMR_j4ARA2itYR1tC1s",
+              "price_level": null,
+              "rating": 4.7,
+              "review_count": 240,
+              "timezone": "America/Los_Angeles",
+              "website": "http://www.angiespizzasf.com/"
+            },
+            {
+              "address": "2101 Fillmore St, San Francisco, CA 94115",
+              "address_lines": [
+                "2101 Fillmore St",
+                "San Francisco, CA 94115"
+              ],
+              "categories": [
+                "Pizza restaurant",
+                "Restaurant"
+              ],
+              "editorial_summary": null,
+              "feature_id": "0x8085811395dedd47:0x306c0364cd729a8e",
+              "latitude": 37.7890592,
+              "longitude": -122.434068,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJR93elROBhYARjppyzWQDbDA",
+              "name": "Pinsa Rossa",
+              "phone": "(415) 340-7718",
+              "phone_e164": "+14153407718",
+              "place_id": "ChIJR93elROBhYARjppyzWQDbDA",
+              "price_level": null,
+              "rating": 4.7,
+              "review_count": 441,
+              "timezone": "America/Los_Angeles",
+              "website": "http://pinsarossa.com/"
+            },
+            {
+              "address": "2406 California St, San Francisco, CA 94115",
+              "address_lines": [
+                "2406 California St",
+                "San Francisco, CA 94115"
+              ],
+              "categories": [
+                "Pizza restaurant",
+                "Italian restaurant"
+              ],
+              "editorial_summary": "Neapolitan-style pizzas plus seasonal antipasti, salads & Italian wines in modern digs.",
+              "feature_id": "0x808580c6335939e3:0xcb5db4f96aa23a45",
+              "latitude": 37.788972099999995,
+              "longitude": -122.4343201,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJ4zlZM8aAhYARRTqiavm0Xcs",
+              "name": "Pizzeria Delfina",
+              "phone": "(415) 440-1189",
+              "phone_e164": "+14154401189",
+              "place_id": "ChIJ4zlZM8aAhYARRTqiavm0Xcs",
+              "price_level": null,
+              "rating": 4.4,
+              "review_count": 966,
+              "timezone": "America/Los_Angeles",
+              "website": "https://www.pizzeriadelfina.com/location/pacific-heights/"
+            },
+            {
+              "address": "1570 Stockton St, San Francisco, CA 94133",
+              "address_lines": [
+                "1570 Stockton St",
+                "San Francisco, CA 94133"
+              ],
+              "categories": [
+                "Pizza restaurant",
+                "Italian restaurant"
+              ],
+              "editorial_summary": "Bustling Italian eatery with varied pizza options from coal-fired to Roman-style, plus beer on tap.",
+              "feature_id": "0x808580f112dc711d:0xbfb3fcde3487fb40",
+              "latitude": 37.8003815,
+              "longitude": -122.4090457,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJHXHcEvGAhYARQPuHNN78s78",
+              "name": "Tony's Pizza Napoletana",
+              "phone": "(415) 835-9888",
+              "phone_e164": "+14158359888",
+              "place_id": "ChIJHXHcEvGAhYARQPuHNN78s78",
+              "price_level": null,
+              "rating": 4.5,
+              "review_count": 10633,
+              "timezone": "America/Los_Angeles",
+              "website": "http://tonyspizzanapoletana.com/"
+            },
+            {
+              "address": "798 Eddy St, San Francisco, CA 94109",
+              "address_lines": [
+                "798 Eddy St",
+                "San Francisco, CA 94109"
+              ],
+              "categories": [
+                "Pizza restaurant",
+                "Caterer",
+                "Family restaurant",
+                "Halal restaurant",
+                "Italian restaurant",
+                "Pasta shop",
+                "Pizza delivery",
+                "Pizza Takeout",
+                "Sandwich shop",
+                "Vegetarian restaurant"
+              ],
+              "editorial_summary": "Slices topped with homemade sauce & fresh basil, plus hot sandwiches & pastas.",
+              "feature_id": "0x808580971061ad55:0x85f732bd7f9f89c9",
+              "latitude": 37.7830898,
+              "longitude": -122.42042389999999,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJVa1hEJeAhYARyYmff70y94U",
+              "name": "Pronto Pizzeria",
+              "phone": "(415) 921-1999",
+              "phone_e164": "+14159211999",
+              "place_id": "ChIJVa1hEJeAhYARyYmff70y94U",
+              "price_level": null,
+              "rating": 4.6,
+              "review_count": 989,
+              "timezone": "America/Los_Angeles",
+              "website": "https://prontopizzeriasf.com/?utm_source=google"
+            },
+            {
+              "address": "1243 Van Ness Ave #5534, San Francisco, CA 94109",
+              "address_lines": [
+                "1243 Van Ness Ave #5534",
+                "San Francisco, CA 94109"
+              ],
+              "categories": [
+                "Pizza restaurant",
+                "Caterer",
+                "Chicken wings restaurant",
+                "Gyro restaurant",
+                "Hamburger restaurant",
+                "Italian restaurant",
+                "Pasta shop",
+                "Salad shop",
+                "Sandwich shop",
+                "Soup shop"
+              ],
+              "editorial_summary": "Old-school pizzeria specializing in thin-crust pies packed with East Coast flavor.",
+              "feature_id": "0x80858095baa18791:0x1f0eab3a55ce390d",
+              "latitude": 37.7873016,
+              "longitude": -122.4219579,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJkYehupWAhYARDTnOVTqrDh8",
+              "name": "Village Pizzeria",
+              "phone": "(415) 673-7771",
+              "phone_e164": "+14156737771",
+              "place_id": "ChIJkYehupWAhYARDTnOVTqrDh8",
+              "price_level": null,
+              "rating": 4.2,
+              "review_count": 300,
+              "timezone": "America/Los_Angeles",
+              "website": "https://villagepizzeriaonline.com/?utm_campaign=website"
+            },
+            {
+              "address": "510 Stevenson St, San Francisco, CA 94103",
+              "address_lines": [
+                "510 Stevenson St",
+                "San Francisco, CA 94103"
+              ],
+              "categories": [
+                "Pizza restaurant",
+                "Italian restaurant",
+                "Pizza delivery",
+                "Pizza Takeout",
+                "Roman restaurant",
+                "Wine bar"
+              ],
+              "editorial_summary": "Industrial-chic enoteca for Roman-style pizza (called \"pinsa\") from a brick oven, plus wine & beer.",
+              "feature_id": "0x80858084f9babd2f:0xa0a7291deb809760",
+              "latitude": 37.7815509,
+              "longitude": -122.4101336,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJL726-YSAhYARYJeA6x0pp6A",
+              "name": "Montesacro SoMa",
+              "phone": "(415) 795-3040",
+              "phone_e164": "+14157953040",
+              "place_id": "ChIJL726-YSAhYARYJeA6x0pp6A",
+              "price_level": null,
+              "rating": 4.5,
+              "review_count": 1660,
+              "timezone": "America/Los_Angeles",
+              "website": "https://www.montesacro.com/"
+            },
+            {
+              "address": "460 Castro St, San Francisco, CA 94114",
+              "address_lines": [
+                "460 Castro St",
+                "San Francisco, CA 94114"
+              ],
+              "categories": [
+                "Pizza restaurant"
+              ],
+              "editorial_summary": null,
+              "feature_id": "0x808f7f7ccabca34d:0xb26e8568faf58efe",
+              "latitude": 37.7615267,
+              "longitude": -122.4352861,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJTaO8ynx_j4AR_o71-miFbrI",
+              "name": "Fratelli pizza",
+              "phone": "(415) 374-7915",
+              "phone_e164": "+14153747915",
+              "place_id": "ChIJTaO8ynx_j4AR_o71-miFbrI",
+              "price_level": null,
+              "rating": 4.3,
+              "review_count": 108,
+              "timezone": "America/Los_Angeles",
+              "website": "https://app.heyeats.shop/store/fratelli-pizza?preview=44d57c49-d5db-4ec1-b676-db1572e35444"
+            },
+            {
+              "address": "937 Geary St, San Francisco, CA 94109",
+              "address_lines": [
+                "937 Geary St",
+                "San Francisco, CA 94109"
+              ],
+              "categories": [
+                "Pizza restaurant"
+              ],
+              "editorial_summary": null,
+              "feature_id": "0x80858141ad6608ed:0x7b1f104bcf64c572",
+              "latitude": 37.7859031,
+              "longitude": -122.4187855,
+              "maps_url": "https://www.google.com/maps/place/?q=place_id:ChIJ7QhmrUGBhYARcsVkz0sQH3s",
+              "name": "Lumena Pizza and Pide",
+              "phone": "(415) 635-5492",
+              "phone_e164": "+14156355492",
+              "place_id": "ChIJ7QhmrUGBhYARcsVkz0sQH3s",
+              "price_level": null,
+              "rating": 4.9,
+              "review_count": 109,
+              "timezone": "America/Los_Angeles",
+              "website": "http://lumenapizzaandpide.com/"
+            }
+          ],
+          "source_url": "https://www.google.com/maps/search/pizza%20San%20Francisco?hl=en&gl=us"
+        },
+        "recordedAt": "2026-09-10"
+      },
+      "execute": {
+        "provider": "maps-google-com",
+        "capability": "businesses/search"
+      }
+    }
+  ]
+}

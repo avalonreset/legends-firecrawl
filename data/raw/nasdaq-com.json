@@ -1,0 +1,2719 @@
+{
+  "id": "nasdaq-com",
+  "provider": "nasdaq-com",
+  "name": "Nasdaq.com news feeds and articles",
+  "description": "Nasdaq.com's public news surfaces: ticker news, press releases, market-wide and topic feeds (JSON), the RSS feeds that carry publish times, and the full text and exact publish instant of a Nasdaq article or press release page.",
+  "toolCount": 6,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "nasdaq-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "nasdaq-com/news/article",
+      "provider": "nasdaq-com",
+      "capability": "news/article",
+      "name": "Article",
+      "description": "Full text and the exact publish time of a story listed by any feed function. Costs one ~180 KB page fetch.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "https://www.nasdaq.com/articles/{slug} or https://www.nasdaq.com/press-release/{slug}, as returned in `items[].url`.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One Nasdaq.com story page (`/articles/{slug}` or `/press-release/{slug}`): title, publisher and author from the page's JSON-LD, the exact publish instant as RFC 3339 UTC (JSON-LD datePublished on articles; the `Published` stamp with its EDT/EST zone on press releases), the topic and quote symbols from Nasdaq's CMS meta tags, and the body paragraphs from the Mercury text block. Only nasdaq.com URLs are accepted; third-party publisher pages are out of scope. A slug Nasdaq does not know is `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "author",
+            "type": "string",
+            "about": "JSON-LD author name (for syndicated stories Nasdaq puts the publisher here)."
+          },
+          {
+            "name": "body_text",
+            "type": "string",
+            "about": "`paragraphs` joined by blank lines."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "final_url",
+            "type": "string",
+            "about": "The URL that answered after redirects."
+          },
+          {
+            "name": "kind",
+            "type": "string"
+          },
+          {
+            "name": "modified_at",
+            "type": "string",
+            "about": "JSON-LD dateModified as UTC; null when absent."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "paragraphs",
+            "type": "string[]",
+            "about": "Body text blocks in page order (paragraphs, headings, list items)."
+          },
+          {
+            "name": "published_at",
+            "type": "string",
+            "about": "RFC 3339 UTC. Articles: JSON-LD datePublished (`Mon, 09/21/2026 - 18:35`, a UTC wall clock; verified against the RSS epoch). Press releases: the page's `Published` stamp (`Sep 9, 2026 2:15pm EDT`) converted from its stated zone. Null only when the page states neither."
+          },
+          {
+            "name": "published_at_source",
+            "type": "string"
+          },
+          {
+            "name": "published_label",
+            "type": "string",
+            "about": "The human-readable stamp as the page shows it, e.g. `September 21, 2026 - 02:35 pm EDT`."
+          },
+          {
+            "name": "publisher",
+            "type": "string",
+            "about": "Syndication source from the page's digitalData (`The Motley Fool`); null when the page names none (press releases)."
+          },
+          {
+            "name": "quote_symbols",
+            "type": "string[]",
+            "about": "Symbols from the CMS quoteSymbol meta tags, upper-cased, de-duplicated."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "topic",
+            "type": "string",
+            "about": "Nasdaq CMS topic tag (`markets`); null when absent."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "The URL as requested."
+          },
+          {
+            "name": "word_count",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.nasdaq.com/articles/warren-buffetts-35-billion-bet-tim-cooks-apple-grew-185-billion-pretax-heres-what-stake"
+        },
+        "response": {
+          "author": "The Motley Fool",
+          "body_text": "Key Points\n\nIt's been 10 years since Berkshire Hathaway first invested in Apple stock.\n\nIt has been the company's largest holding since 2017.\n\nThe Apple position encompasses many of Buffett's investing tenets.\n\n10 stocks we like better than Apple ›(function(){ var m=document.getElementById(\"pit-c897e6a6-2dcd-4f50-aa4f-aee0c6c63ef8\"); if(!m||!window.IntersectionObserver)return; var c=m;while(c&&!c.dataset.pitchPlacement)c=c.parentElement; if(!c)return; var fired=false; new IntersectionObserver(function(es,obs){ if(fired||!es[0].isIntersecting)return; fired=true;obs.disconnect(); new Image().src=\"https://api.fool.com/infotron/infotrack/seen/?impression=c897e6a6-2dcd-4f50-aa4f-aee0c6c63ef8&pitch_id=17995&placement=keypoints_pitch_feed_partner\"; },{threshold:0.5}).observe(c); })();\n\nOf all the great investments that former Berkshire Hathaway (NYSE: BRKA) (NYSE: BRKB) CEO Warren Buffett made over the years, Apple (NASDAQ: AAPL) might have been his best.\n\nUp until his first investment in Apple in 2016, or perhaps with a position he opened in International Business Machines (NYSE: IBM) in 2011, Buffett had been reluctant to invest in technology stocks because he said he didn't fully understand them.\n\nMissed AI’s \"Act 1\"? Act 2 Could Be 15x Bigger. Most investors think they missed the AI boat because they didn't buy Nvidia in 2005. But according to our analysts, we’re only at the end of \"Act 1\"-the R&D phase. \"Act 2\" is the global rollout. Continue »\n\nBut he soon understood Apple enough to make it his largest holding and best investment. Over the years, Berkshire has made more than $100 billion on Apple stock, Buffett told CNBC back in July of this year.\n\nFormer Berkshire Hathaway CEO Warren Buffett. Image source: The Motley Fool.\n\nBest business in the world\n\nBack in 2020 on CNBC, Buffett called Apple \"probably the best business I know in the world,\" adding that he doesn't think of Apple as a stock. \"I think of it as our third business.\" That would be a third business along with insurance and railroads.\n\nThat first investment in Apple stock was 9.8 million shares in the first quarter of 2016, when the stock traded at about $25 per share. It was just the beginning of Berkshire Hathaway's commitment to Apple, which Buffett himself discussed at the 2026 Berkshire Hathaway shareholder meeting back in May.\n\n\"About 10 years ago, we made a commitment to essentially move 10% of the total resources of Berkshire Hathaway. We turned it over to another person who was not that well known at the time, and we did that by spending roughly $35 billion buying stock in Apple Corp,\" Buffett said. \"I would like to report that 10 years later, several things have happened. One is that the $35 billion -- counting dividends, realized appreciation, and unrealized appreciation -- has turned into $185 billion pretax.\"\n\nApple became Berkshire's largest holding by the end of 2017, representing about 15% of the total portfolio. Six years later, by the end of 2023, Berkshire had amassed a $174 billion investment in Apple, which made up a staggering 50% of its $347 billion portfolio.\n\nAfter that, Buffett began paring back Berkshire Hathaway's Apple position. Part of it was surely profit-taking, but he also said in a recent interview that he was wary about having one stock take up 50% of the portfolio. Apple is still Berkshire's largest position, but it's \"only\" a $66 billion investment, making up 22% of the total portfolio.\n\nThe perfect Buffett investment\n\nThere are key takeaways from Berkshire's long-term commitment to Apple that illuminate some of Buffett's investing tenets. One is to buy great businesses at fair prices. In early 2016, Apple stock had slumped and was trading at a deep discount, at just 10 times earnings, its lowest valuation in 10 years.\n\nIt also represents Buffett's belief in investing in companies with strong leadership and management -- in this case, former Apple CEO Tim Cook. \"When we made our investment and turned over 10% of Berkshire's resources, we were turning it over to Tim. As I say, he has turned that into $185 billion pretax,\" Buffett said at the shareholder meeting. \"I think it's appropriate if Tim Cook would take a bow and our shareholders would say thanks to him.\"\n\nFurther, Apple had, and has, the kind of industry leadership and competitive moat that sets it up for long-term success. And of course, the 10-plus year investment in Apple shows the value of holding on to a great investment for the long term, even though Buffett himself recently admitted that he might have sold too soon on Apple.\n\nBut overall, Berkshire's investment in Apple isn't just a great example of the benefits of long-term investing. It also represents, perhaps, the perfect Buffett investment -- the culmination of everything he looks for in a stock.\n\nShould you buy stock in Apple right now?\n\nBefore you buy stock in Apple, consider this:\n\nThe Motley Fool Stock Advisor analyst team just identified what they believe are the 10 best stocks for investors to buy now… and Apple wasn’t one of them. The 10 stocks that made the cut could produce monster returns in the coming years.\n\nConsider when Netflix made this list on December 17, 2004... if you invested $1,000 at the time of our recommendation, you’d have $387,158!* Or when Nvidia made this list on April 15, 2005... if you invested $1,000 at the time of our recommendation, you’d have $1,365,749!*\n\nNow, it’s worth noting Stock Advisor’s total average return is 932% - a market-crushing outperformance compared to 211% for the S&P 500. Don't miss the latest top 10 list, available with Stock Advisor, and join an investing community built by individual investors for individual investors.\n\nSee the 10 stocks »\n\n*Stock Advisor returns as of September 21, 2026.\n\nDave Kovaleski has no position in any of the stocks mentioned. The Motley Fool has positions in and recommends Apple, Berkshire Hathaway, and International Business Machines. The Motley Fool has a disclosure policy.",
+          "description": "Key PointsIt's been 10 years since Berkshire Hathaway first invested in Apple stock.",
+          "final_url": "https://www.nasdaq.com/articles/warren-buffetts-35-billion-bet-tim-cooks-apple-grew-185-billion-pretax-heres-what-stake",
+          "kind": "article",
+          "modified_at": "2026-09-21T18:40:00Z",
+          "observed_at_ms": 1790037238583,
+          "paragraphs": [
+            "Key Points",
+            "It's been 10 years since Berkshire Hathaway first invested in Apple stock.",
+            "It has been the company's largest holding since 2017.",
+            "The Apple position encompasses many of Buffett's investing tenets.",
+            "10 stocks we like better than Apple ›(function(){ var m=document.getElementById(\"pit-c897e6a6-2dcd-4f50-aa4f-aee0c6c63ef8\"); if(!m||!window.IntersectionObserver)return; var c=m;while(c&&!c.dataset.pitchPlacement)c=c.parentElement; if(!c)return; var fired=false; new IntersectionObserver(function(es,obs){ if(fired||!es[0].isIntersecting)return; fired=true;obs.disconnect(); new Image().src=\"https://api.fool.com/infotron/infotrack/seen/?impression=c897e6a6-2dcd-4f50-aa4f-aee0c6c63ef8&pitch_id=17995&placement=keypoints_pitch_feed_partner\"; },{threshold:0.5}).observe(c); })();",
+            "Of all the great investments that former Berkshire Hathaway (NYSE: BRKA) (NYSE: BRKB) CEO Warren Buffett made over the years, Apple (NASDAQ: AAPL) might have been his best.",
+            "Up until his first investment in Apple in 2016, or perhaps with a position he opened in International Business Machines (NYSE: IBM) in 2011, Buffett had been reluctant to invest in technology stocks because he said he didn't fully understand them.",
+            "Missed AI’s \"Act 1\"? Act 2 Could Be 15x Bigger. Most investors think they missed the AI boat because they didn't buy Nvidia in 2005. But according to our analysts, we’re only at the end of \"Act 1\"-the R&D phase. \"Act 2\" is the global rollout. Continue »",
+            "But he soon understood Apple enough to make it his largest holding and best investment. Over the years, Berkshire has made more than $100 billion on Apple stock, Buffett told CNBC back in July of this year.",
+            "Former Berkshire Hathaway CEO Warren Buffett. Image source: The Motley Fool.",
+            "Best business in the world",
+            "Back in 2020 on CNBC, Buffett called Apple \"probably the best business I know in the world,\" adding that he doesn't think of Apple as a stock. \"I think of it as our third business.\" That would be a third business along with insurance and railroads.",
+            "That first investment in Apple stock was 9.8 million shares in the first quarter of 2016, when the stock traded at about $25 per share. It was just the beginning of Berkshire Hathaway's commitment to Apple, which Buffett himself discussed at the 2026 Berkshire Hathaway shareholder meeting back in May.",
+            "\"About 10 years ago, we made a commitment to essentially move 10% of the total resources of Berkshire Hathaway. We turned it over to another person who was not that well known at the time, and we did that by spending roughly $35 billion buying stock in Apple Corp,\" Buffett said. \"I would like to report that 10 years later, several things have happened. One is that the $35 billion -- counting dividends, realized appreciation, and unrealized appreciation -- has turned into $185 billion pretax.\"",
+            "Apple became Berkshire's largest holding by the end of 2017, representing about 15% of the total portfolio. Six years later, by the end of 2023, Berkshire had amassed a $174 billion investment in Apple, which made up a staggering 50% of its $347 billion portfolio.",
+            "After that, Buffett began paring back Berkshire Hathaway's Apple position. Part of it was surely profit-taking, but he also said in a recent interview that he was wary about having one stock take up 50% of the portfolio. Apple is still Berkshire's largest position, but it's \"only\" a $66 billion investment, making up 22% of the total portfolio.",
+            "The perfect Buffett investment",
+            "There are key takeaways from Berkshire's long-term commitment to Apple that illuminate some of Buffett's investing tenets. One is to buy great businesses at fair prices. In early 2016, Apple stock had slumped and was trading at a deep discount, at just 10 times earnings, its lowest valuation in 10 years.",
+            "It also represents Buffett's belief in investing in companies with strong leadership and management -- in this case, former Apple CEO Tim Cook. \"When we made our investment and turned over 10% of Berkshire's resources, we were turning it over to Tim. As I say, he has turned that into $185 billion pretax,\" Buffett said at the shareholder meeting. \"I think it's appropriate if Tim Cook would take a bow and our shareholders would say thanks to him.\"",
+            "Further, Apple had, and has, the kind of industry leadership and competitive moat that sets it up for long-term success. And of course, the 10-plus year investment in Apple shows the value of holding on to a great investment for the long term, even though Buffett himself recently admitted that he might have sold too soon on Apple.",
+            "But overall, Berkshire's investment in Apple isn't just a great example of the benefits of long-term investing. It also represents, perhaps, the perfect Buffett investment -- the culmination of everything he looks for in a stock.",
+            "Should you buy stock in Apple right now?",
+            "Before you buy stock in Apple, consider this:",
+            "The Motley Fool Stock Advisor analyst team just identified what they believe are the 10 best stocks for investors to buy now… and Apple wasn’t one of them. The 10 stocks that made the cut could produce monster returns in the coming years.",
+            "Consider when Netflix made this list on December 17, 2004... if you invested $1,000 at the time of our recommendation, you’d have $387,158!* Or when Nvidia made this list on April 15, 2005... if you invested $1,000 at the time of our recommendation, you’d have $1,365,749!*",
+            "Now, it’s worth noting Stock Advisor’s total average return is 932% - a market-crushing outperformance compared to 211% for the S&P 500. Don't miss the latest top 10 list, available with Stock Advisor, and join an investing community built by individual investors for individual investors.",
+            "See the 10 stocks »",
+            "*Stock Advisor returns as of September 21, 2026.",
+            "Dave Kovaleski has no position in any of the stocks mentioned. The Motley Fool has positions in and recommends Apple, Berkshire Hathaway, and International Business Machines. The Motley Fool has a disclosure policy."
+          ],
+          "published_at": "2026-09-21T18:35:00Z",
+          "published_at_source": "json_ld",
+          "published_label": "September 21, 2026 - 02:35 pm EDT",
+          "publisher": "The Motley Fool",
+          "quote_symbols": [
+            "AAPL"
+          ],
+          "title": "Warren Buffett's $35 Billion Bet on Tim Cook's Apple Grew to $185 Billion Pretax. Here's What That Stake Says About Long-Term Investing.",
+          "topic": "markets",
+          "url": "https://www.nasdaq.com/articles/warren-buffetts-35-billion-bet-tim-cooks-apple-grew-185-billion-pretax-heres-what-stake",
+          "word_count": 933
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "nasdaq-com",
+        "capability": "news/article"
+      }
+    },
+    {
+      "id": "nasdaq-com/news/feed",
+      "provider": "nasdaq-com",
+      "capability": "news/feed",
+      "name": "Feed",
+      "description": "Publish times for the newest stories on a ticker or topic in one request. For older stories or more than 15 rows use `ticker_news` / `topic_news` and `article`.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "category",
+          "type": "string",
+          "in": "body",
+          "about": "Nasdaq topic name as shown in `primary_topic` (Markets, Stocks, Technology, Investing). Case-sensitive as Nasdaq spells it. Pattern: ^[A-Za-z0-9][A-Za-z0-9 &'\\-]*$."
+        },
+        {
+          "name": "symbol",
+          "type": "string",
+          "in": "body",
+          "about": "Exchange ticker as Nasdaq spells it (AAPL, BRK.B, SPY). Case-insensitive. Pattern: ^[A-Za-z][A-Za-z0-9.\\-]{0,9}$."
+        }
+      ],
+      "response": {
+        "about": "Nasdaq's RSS feed (`/feed/rssoutbound`) for one ticker, one topic category, or the whole site: the 15 newest articles, each with its exact publish instant (`published_at`, RFC 3339 UTC from pubDate, cross-checked against the guid epoch), publisher, topic, tagged tickers and teaser. This is the only Nasdaq list surface that carries a time of day. It lists articles only, never press releases. An unknown ticker or category is `not_found` (Nasdaq would silently answer the site-wide feed; that fallback is detected).",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": "string"
+          },
+          {
+            "name": "published_at",
+            "type": "string",
+            "about": "pubDate, RFC 3339 UTC."
+          },
+          {
+            "name": "published_at_epoch",
+            "type": "number",
+            "about": "Unix seconds from the guid `?time=` parameter; equals `published_at`."
+          },
+          {
+            "name": "publisher",
+            "type": "string",
+            "about": "dc:creator; null when absent."
+          },
+          {
+            "name": "tickers",
+            "type": "string[]",
+            "about": "nasdaq:tickers, upper-cased, de-duplicated, Nasdaq's order."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "topic",
+            "type": "string",
+            "about": "RSS category; null when absent."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "symbol": "AAPL"
+        },
+        "response": {
+          "category": null,
+          "count": 15,
+          "feed_title": "AAPL Feed",
+          "feed_url": "https://www.nasdaq.com/feed/rssoutbound?symbol=AAPL",
+          "items": [
+            {
+              "description": "The S&P 500 Index ($SPX ) (SPY ) closed up by +1.49% on Monday, the Dow Jones Industrial Average ($DOWI ) (DIA ) closed up by +0.71%, and the Nasdaq 100 Index ($IUXX ) (QQQ ) closed up +2.83%. December E-mini S&P futures (ESZ26 ) rose +1.50%, and December E-mini...",
+              "kind": "article",
+              "published_at": "2026-09-22T00:06:52Z",
+              "published_at_epoch": 1790035612,
+              "publisher": "Barchart",
+              "tickers": [
+                "MSTR",
+                "ALK",
+                "GOOGL",
+                "MPC",
+                "AAPL",
+                "GLXY",
+                "COIN",
+                "CIEN",
+                "OXY",
+                "TSLA",
+                "FANG",
+                "AMD",
+                "SPY",
+                "META",
+                "AAL",
+                "QQQ",
+                "IREN",
+                "PSX",
+                "FTNT",
+                "XOM",
+                "ZS",
+                "RCL",
+                "ARM",
+                "HOOD",
+                "MRVL",
+                "AMAT",
+                "UAL",
+                "CVX",
+                "HPQ",
+                "MSFT",
+                "BMNR",
+                "S",
+                "QCOM",
+                "NCLH",
+                "LRCX",
+                "VLO",
+                "WBD",
+                "DIA",
+                "PANW",
+                "KLAC",
+                "NVDA",
+                "CRWD",
+                "COP",
+                "OKTA",
+                "LUV",
+                "CCL",
+                "DAL",
+                "APA",
+                "INTC",
+                "CADL",
+                "SOXX",
+                "RIOT",
+                "NET",
+                "DVN",
+                "AMZN"
+              ],
+              "title": "Stocks Settle Sharply Higher as Crude Prices Plunge and Chipmakers Soar",
+              "topic": "Stocks",
+              "url": "https://www.nasdaq.com/articles/stocks-settle-sharply-higher-crude-prices-plunge-and-chipmakers-soar"
+            },
+            {
+              "description": "Key PointsIt's been 10 years since Berkshire Hathaway first invested in Apple stock.",
+              "kind": "article",
+              "published_at": "2026-09-21T18:35:00Z",
+              "published_at_epoch": 1790015700,
+              "publisher": "The Motley Fool",
+              "tickers": [
+                "AAPL"
+              ],
+              "title": "Warren Buffett's $35 Billion Bet on Tim Cook's Apple Grew to $185 Billion Pretax. Here's What That Stake Says About Long-Term Investing.",
+              "topic": "Markets",
+              "url": "https://www.nasdaq.com/articles/warren-buffetts-35-billion-bet-tim-cooks-apple-grew-185-billion-pretax-heres-what-stake"
+            },
+            {
+              "description": "Key PointsHe's one of the greatest investors of all time and leaves behind some great investment lessons.",
+              "kind": "article",
+              "published_at": "2026-09-21T17:50:00Z",
+              "published_at_epoch": 1790013000,
+              "publisher": "The Motley Fool",
+              "tickers": [
+                "VOO",
+                "AAPL",
+                "GOOGL",
+                "KO",
+                "GOOG"
+              ],
+              "title": "End of an Era: 3 Investment Lessons from Warren Buffett That Every Investor Should Follow",
+              "topic": "Markets",
+              "url": "https://www.nasdaq.com/articles/end-era-3-investment-lessons-warren-buffett-every-investor-should-follow"
+            },
+            {
+              "description": "Key PointsThe Nasdaq Composite rose 1.8%, the S&amp;P 500 1.2%, and the Dow 0.5% by midday Monday.",
+              "kind": "article",
+              "published_at": "2026-09-21T17:11:45Z",
+              "published_at_epoch": 1790010705,
+              "publisher": "The Motley Fool",
+              "tickers": [
+                "INTC",
+                "META",
+                "AAPL",
+                "AMD",
+                "BTC"
+              ],
+              "title": "Market Indexes Rally as Oil Retreats and Chip Stocks Surge",
+              "topic": "Markets",
+              "url": "https://www.nasdaq.com/articles/market-indexes-rally-oil-retreats-and-chip-stocks-surge"
+            },
+            {
+              "description": "By powering the data center CPUs and local edge processing required for agentic workflows, Arm Holdings and AMD are positioned to capture immense value.",
+              "kind": "article",
+              "published_at": "2026-09-21T16:32:00Z",
+              "published_at_epoch": 1790008320,
+              "publisher": "Zacks",
+              "tickers": [
+                "AAPL",
+                "AMD",
+                "NVDA",
+                "ARM",
+                "META"
+              ],
+              "title": "Meta's Muse Era: Why Arm and AMD Will Soar",
+              "topic": "Investing,How to Invest,Stocks",
+              "url": "https://www.nasdaq.com/articles/metas-muse-era-why-arm-and-amd-will-soar"
+            },
+            {
+              "description": "Key PointsMeta's Muse is the top free app in Apple's App Store, indicating the popularity of AI agents.",
+              "kind": "article",
+              "published_at": "2026-09-21T15:23:00Z",
+              "published_at_epoch": 1790004180,
+              "publisher": "The Motley Fool",
+              "tickers": [
+                "AMD",
+                "META",
+                "AAPL"
+              ],
+              "title": "Why AMD Stock Is Rising Fast Today",
+              "topic": "Markets",
+              "url": "https://www.nasdaq.com/articles/why-amd-stock-rising-fast-today"
+            },
+            {
+              "description": "Energy Fuels and MP are expanding U.S. rare-earth supply chains, but differing strategies, costs and earnings trends shape the investment case.",
+              "kind": "article",
+              "published_at": "2026-09-21T15:14:00Z",
+              "published_at_epoch": 1790003640,
+              "publisher": "Zacks",
+              "tickers": [
+                "MP",
+                "UUUU",
+                "AAPL",
+                "GM"
+              ],
+              "title": "UUUU vs. MP: Which Rare Earth Stock is a Better Pick Now?",
+              "topic": "Stocks",
+              "url": "https://www.nasdaq.com/articles/uuuu-vs-mp-which-rare-earth-stock-better-pick-now"
+            },
+            {
+              "description": "Intel and SK Hynix heat up as a potential U.S. memory partnership draws attention, while AI demand and valuation widen the contrast.",
+              "kind": "article",
+              "published_at": "2026-09-21T13:02:00Z",
+              "published_at_epoch": 1789995720,
+              "publisher": "Zacks",
+              "tickers": [
+                "INTC",
+                "AAPL",
+                "MSFT",
+                "NVDA"
+              ],
+              "title": "Zacks Investment Ideas feature highlights: Intel, SK Hynix, Nvidia, Microsoft and Apple",
+              "topic": "Technology",
+              "url": "https://www.nasdaq.com/articles/zacks-investment-ideas-feature-highlights-intel-sk-hynix-nvidia-microsoft-and-apple"
+            },
+            {
+              "description": "Microsoft and NVIDIA combine strong cloud and AI growth with attractive valuations, while Apple offers a less AI-sensitive option within the Magnificent Seven.",
+              "kind": "article",
+              "published_at": "2026-09-21T13:01:00Z",
+              "published_at_epoch": 1789995660,
+              "publisher": "Zacks",
+              "tickers": [
+                "AAPL",
+                "MSFT",
+                "NVDA"
+              ],
+              "title": "Zacks Investment Ideas feature highlights: Microsoft, NVIDIA and Apple",
+              "topic": "Technology",
+              "url": "https://www.nasdaq.com/articles/zacks-investment-ideas-feature-highlights-microsoft-nvidia-and-apple"
+            },
+            {
+              "description": "Apple (AAPL) has received quite a bit of attention from Zacks.com users lately. Therefore, it is wise to be aware of the facts that can impact the stock's prospects.",
+              "kind": "article",
+              "published_at": "2026-09-21T13:00:02Z",
+              "published_at_epoch": 1789995602,
+              "publisher": "Zacks",
+              "tickers": [
+                "AAPL"
+              ],
+              "title": "Investors Heavily Search Apple Inc. (AAPL): Here is What You Need to Know",
+              "topic": "Technology",
+              "url": "https://www.nasdaq.com/articles/investors-heavily-search-apple-inc-aapl-here-what-you-need-know"
+            },
+            {
+              "description": "COCO, GRMN and HLF tap health and fitness demand through functional beverages, connected fitness tools and personalized nutrition.",
+              "kind": "article",
+              "published_at": "2026-09-21T11:59:00Z",
+              "published_at_epoch": 1789991940,
+              "publisher": "Zacks",
+              "tickers": [
+                "GRMN",
+                "COCO",
+                "HLF",
+                "AMZN",
+                "AAPL"
+              ],
+              "title": "Best Health & Fitness Stocks to Buy as Wellness Demand Grows",
+              "topic": "Technology",
+              "url": "https://www.nasdaq.com/articles/best-health-fitness-stocks-buy-wellness-demand-grows"
+            },
+            {
+              "description": "Key PointsThe Vanguard Morningstar Growth ETF mimics the Morningstar U.S. Large Cap Growth index, which holds around 147 of America's most valuable growth stocks.",
+              "kind": "article",
+              "published_at": "2026-09-21T10:43:00Z",
+              "published_at_epoch": 1789987380,
+              "publisher": "The Motley Fool",
+              "tickers": [
+                "VUG",
+                "AAPL",
+                "MSFT",
+                "NVDA"
+              ],
+              "title": "A Monthly Investment of Just $250 in This Vanguard ETF Could Turn Into a Mind-Boggling Sum in 30 Years",
+              "topic": "Markets",
+              "url": "https://www.nasdaq.com/articles/monthly-investment-just-250-vanguard-etf-could-turn-mind-boggling-sum-30-years"
+            },
+            {
+              "description": "Key PointsApple has a great compounding business, and the new iPhone Duo should be a growth driver.",
+              "kind": "article",
+              "published_at": "2026-09-21T10:05:00Z",
+              "published_at_epoch": 1789985100,
+              "publisher": "The Motley Fool",
+              "tickers": [
+                "AAPL",
+                "AMZN"
+              ],
+              "title": "2 Unstoppable Growth Stocks to Buy and Hold for the Next Decade",
+              "topic": "Markets",
+              "url": "https://www.nasdaq.com/articles/2-unstoppable-growth-stocks-buy-and-hold-next-decade"
+            },
+            {
+              "description": "Key PointsETFs are increasing their holdings in Space Exploration Technologies as more shares become available for trading on the Nasdaq.",
+              "kind": "article",
+              "published_at": "2026-09-20T23:05:00Z",
+              "published_at_epoch": 1789945500,
+              "publisher": "The Motley Fool",
+              "tickers": [
+                "VOX",
+                "WMT",
+                "META",
+                "COST",
+                "GOOGL",
+                "AAPL",
+                "TSLA",
+                "AMZN",
+                "LLY",
+                "JPM",
+                "CVX",
+                "XOM",
+                "GE",
+                "CAT",
+                "JNJ",
+                "NVDA",
+                "SO",
+                "NDAQ",
+                "NEE",
+                "LIN",
+                "NEM",
+                "VTI",
+                "VOO",
+                "WELL",
+                "VNQ",
+                "GOOG",
+                "VHT",
+                "VDE",
+                "VFH",
+                "VUG",
+                "VT",
+                "VGT",
+                "VPU",
+                "VCR",
+                "VAW",
+                "VDC",
+                "VIS",
+                "VRTPX"
+              ],
+              "title": "Meet the Vanguard ETF That Increased Its SpaceX Holding by 39% in 1 Month and Shows No Signs of Slowing Down",
+              "topic": "Markets",
+              "url": "https://www.nasdaq.com/articles/meet-vanguard-etf-increased-its-spacex-holding-39-1-month-and-shows-no-signs-slowing-down"
+            },
+            {
+              "description": "In this episode of Motley Fool Rule Breaker Investing, Motley Fool co-founder David Gardner selected stocks to beat the market in the coming year. Their common denominator? Each ranked among the lowest-risk companies in Gardner's investing universe.",
+              "kind": "article",
+              "published_at": "2026-09-20T21:01:23Z",
+              "published_at_epoch": 1789938083,
+              "publisher": "The Motley Fool",
+              "tickers": [
+                "AAPL"
+              ],
+              "title": "10 Years Later: 5 Low-Risk Stocks for the Next Year",
+              "topic": "Markets",
+              "url": "https://www.nasdaq.com/articles/10-years-later-5-low-risk-stocks-next-year"
+            }
+          ],
+          "observed_at_ms": 1790037233779,
+          "scope": "symbol",
+          "symbol": "AAPL"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "nasdaq-com",
+        "capability": "news/feed"
+      }
+    },
+    {
+      "id": "nasdaq-com/news/latest_headlines",
+      "provider": "nasdaq-com",
+      "capability": "news/latest_headlines",
+      "name": "Latest headlines",
+      "description": "What is being published right now across the market, with no ticker or topic filter.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (1-200).",
+          "default": 20,
+          "min": 1,
+          "max": 200
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "Rows to skip. Nasdaq serves at most 500 rows per feed and its edge denies deeper offsets, so 490 is the last usable offset; `next_offset` from the previous page is the safe value.",
+          "min": 0,
+          "max": 490
+        },
+        {
+          "name": "with_publish_times",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also fetch the matching RSS feed (one extra request) and copy its pubDate into `published_at` for the stories it lists (the 15 newest). Set false to save the request."
+        }
+      ],
+      "response": {
+        "about": "Nasdaq.com's market-wide latest-news feed (`latestnews`), newest first across every syndicated publisher, up to 500 rows deep. Rows carry Nasdaq's calendar day and `ago` label plus `published_at` (RFC 3339 UTC) for the stories the default RSS feed lists (its 15 newest).",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "ago",
+            "type": "string",
+            "about": "Nasdaq's relative label (`55 minutes ago`, `7 days ago`, or a date for older items) computed on Nasdaq's server at fetch time. It is a different clock from `published_date` and is not a publish time; see `observed_at_ms` for when it was read."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Teaser text; null when empty."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Nasdaq CMS node id; stable per story."
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": "string",
+            "about": "From the URL family: /articles/, /press-release/, /videos/."
+          },
+          {
+            "name": "primary_symbol",
+            "type": "string",
+            "about": "Nasdaq's `primarysymbol`, upper-cased. Nasdaq fills it only for stories it files under one company; empty for most syndicated market wraps."
+          },
+          {
+            "name": "primary_topic",
+            "type": "string",
+            "about": "Topic name from `primarytopic` (Markets, Stocks, Technology...)."
+          },
+          {
+            "name": "primary_topic_id",
+            "type": "string",
+            "about": "Topic term id from `primarytopic`; input for `topic_news`."
+          },
+          {
+            "name": "published_at",
+            "type": "string",
+            "about": "Publish instant, RFC 3339 UTC, taken from the matching Nasdaq RSS feed item (pubDate) when this story is among that feed's 15 newest items. Null otherwise; `article` returns the instant for any story."
+          },
+          {
+            "name": "published_at_source",
+            "type": "string",
+            "about": "`rss` when `published_at` came from the RSS feed; null when `published_at` is null."
+          },
+          {
+            "name": "published_date",
+            "type": "string",
+            "about": "Calendar day from Nasdaq's `created` field (US-Eastern day; the feed carries no time of day). Null when Nasdaq sends none."
+          },
+          {
+            "name": "published_label",
+            "type": "string",
+            "about": "Nasdaq's `created` text verbatim, e.g. `Sep 21, 2026`."
+          },
+          {
+            "name": "publisher",
+            "type": "string",
+            "about": "Syndication source as Nasdaq labels it (Zacks, The Motley Fool, Barchart, RTTNews...). Null when Nasdaq sends an empty string (most press releases)."
+          },
+          {
+            "name": "related_symbols",
+            "type": "object[]",
+            "about": "Every symbol Nasdaq tagged on the story, upper-cased, in Nasdaq's order."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute www.nasdaq.com URL of the story; pass it to `article` for the full text and the exact publish time."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 10
+        },
+        "response": {
+          "count": 10,
+          "has_more": true,
+          "items": [
+            {
+              "ago": "8 minutes ago",
+              "description": "Key PointsAdditionally, an analyst published a bullish report on tokenized stocks.",
+              "id": "28404896",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": "HOOD",
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "HOOD"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "COIN"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "BLSH"
+                }
+              ],
+              "title": "Why Robinhood Markets Crushed it on Monday",
+              "url": "https://www.nasdaq.com/articles/why-robinhood-markets-crushed-it-monday"
+            },
+            {
+              "ago": "9 minutes ago",
+              "description": "Soybeans rallied back on Monday, with longs putting the risk right back on and closing 15 to 24 cents higher on the session. The cmdtyView national average Cash Bean price was up 24 1/2 cents at $12.69 3/4. Soymeal futures rallied $5.60 to $12 across the front months, with Soy...",
+              "id": "28404831",
+              "image_url": "https://www.nasdaq.com/sites/acquia.prod/files/barchart/Rows%2520of%2520soybeans%2520in%2520a%2520field%2520by%2520Jana%2520Milin%2520via%2520iStock.jpg",
+              "kind": "article",
+              "primary_symbol": null,
+              "primary_topic": "Stocks",
+              "primary_topic_id": "4301",
+              "published_at": "2026-09-22T00:24:24Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Barchart",
+              "related_symbols": [],
+              "title": "Soybeans Rally on Monday Ahead of US/China Meeting This Week",
+              "url": "https://www.nasdaq.com/articles/soybeans-rally-monday-ahead-us-china-meeting-week"
+            },
+            {
+              "ago": "9 minutes ago",
+              "description": "Cotton futures saw gains of 110 to 247 points across the board on Monday, led by the front months.  Crude oil was down $4.81 per barrel on the session, with the US dollar index back up $0.255.  Weekly Crop Progress data showed 65% of the US cotton crop with bolls...",
+              "id": "28404841",
+              "image_url": "https://www.nasdaq.com/sites/acquia.prod/files/barchart/Harvesting%2520cotton%2520field%2520by%2520Leila%2520Melhado%2520via%2520iStock.jpg",
+              "kind": "article",
+              "primary_symbol": null,
+              "primary_topic": "Stocks",
+              "primary_topic_id": "4301",
+              "published_at": "2026-09-22T00:24:23Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Barchart",
+              "related_symbols": [],
+              "title": "Cotton Rallies on Monday Ahead of Trump/Xi Meeting",
+              "url": "https://www.nasdaq.com/articles/cotton-rallies-monday-ahead-trump-xi-meeting"
+            },
+            {
+              "ago": "9 minutes ago",
+              "description": "The wheat complex is in rally mode on Monday, with all three exchanges higher as tensions in the Black Sea filed to cool off over the weekend. Chicago SRW is 13 to 14 cents higher. KC HRW futures are up 11 to 12 cents. MPLS spring wheat is showing gains...",
+              "id": "28403326",
+              "image_url": "https://www.nasdaq.com/sites/acquia.prod/files/barchart/Golden%2520wheat%2520field%2520on%2520a%2520sunny%2520day%2520by%2520IakovKalinin%2520via%2520iStock.jpg",
+              "kind": "article",
+              "primary_symbol": null,
+              "primary_topic": "Stocks",
+              "primary_topic_id": "4301",
+              "published_at": "2026-09-22T00:24:23Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Barchart",
+              "related_symbols": [],
+              "title": "Wheat Bulls Joining with Gains on Monday",
+              "url": "https://www.nasdaq.com/articles/wheat-bulls-joining-gains-monday"
+            },
+            {
+              "ago": "14 minutes ago",
+              "description": "Key PointsAlibaba continues to dominate the Chinese e-commerce market while expanding its footprint in global cloud services and artificial intelligence.",
+              "id": "28404891",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": "BABA",
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-22T00:19:36Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "BABA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MELI"
+                }
+              ],
+              "title": "Alibaba vs. MercadoLibre: Which Consumer Stock Is a Better Buy in 2026?",
+              "url": "https://www.nasdaq.com/articles/alibaba-vs-mercadolibre-which-consumer-stock-better-buy-2026"
+            },
+            {
+              "ago": "23 minutes ago",
+              "description": "December arabica coffee (KCZ26 ) closed down -4.10 (-1.46%) on Monday, and November ICE robusta coffee (RMX26 ) closed down -59 (-1.74%). Coffee prices retreated on Monday and dropped to 3-month lows.   Coffee prices have been under pressure over the past three weeks on the outlook for abundant global supplies....",
+              "id": "28403581",
+              "image_url": "https://www.nasdaq.com/sites/acquia.prod/files/barchart/Cup%2520of%2520roasted%2520coffee%2520beans%2520on%2520pile%2520by%2520Negative-Space%2520via%2520Pixabay.jpg",
+              "kind": "article",
+              "primary_symbol": null,
+              "primary_topic": "Stocks",
+              "primary_topic_id": "4301",
+              "published_at": "2026-09-22T00:10:34Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Barchart",
+              "related_symbols": [],
+              "title": "Coffee Prices Retreat as Global Supply Situation Improves",
+              "url": "https://www.nasdaq.com/articles/coffee-prices-retreat-global-supply-situation-improves"
+            },
+            {
+              "ago": "27 minutes ago",
+              "description": "The S&P 500 Index ($SPX ) (SPY ) closed up by +1.49% on Monday, the Dow Jones Industrial Average ($DOWI ) (DIA ) closed up by +0.71%, and the Nasdaq 100 Index ($IUXX ) (QQQ ) closed up +2.83%.  December E-mini S&P futures (ESZ26 ) rose +1.50%, and December E-mini...",
+              "id": "28404356",
+              "image_url": "https://www.nasdaq.com/sites/acquia.prod/files/barchart/NASDAQ%2520sign%2520at%2520times%2520square%2520at%2520night%2520by%2520Lucky-photographer%2520via%2520iStock.jpg",
+              "kind": "article",
+              "primary_symbol": null,
+              "primary_topic": "Stocks",
+              "primary_topic_id": "4301",
+              "published_at": "2026-09-22T00:06:52Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Barchart",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MSTR"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "ALK"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "GOOGL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MPC"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "GLXY"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "COIN"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "CIEN"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "OXY"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "TSLA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "FANG"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AMD"
+                },
+                {
+                  "asset_class": "etf",
+                  "symbol": "SPY"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "META"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAL"
+                },
+                {
+                  "asset_class": "etf",
+                  "symbol": "QQQ"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "IREN"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "PSX"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "FTNT"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "XOM"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "ZS"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "RCL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "ARM"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "HOOD"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MRVL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AMAT"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "UAL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "CVX"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "HPQ"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MSFT"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "BMNR"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "S"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "QCOM"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "NCLH"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "LRCX"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "VLO"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "WBD"
+                },
+                {
+                  "asset_class": "etf",
+                  "symbol": "DIA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "PANW"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "KLAC"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "NVDA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "CRWD"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "COP"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "OKTA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "LUV"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "CCL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "DAL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "APA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "INTC"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "CADL"
+                },
+                {
+                  "asset_class": "etf",
+                  "symbol": "SOXX"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "RIOT"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "NET"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "DVN"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AMZN"
+                }
+              ],
+              "title": "Stocks Settle Sharply Higher as Crude Prices Plunge and Chipmakers Soar",
+              "url": "https://www.nasdaq.com/articles/stocks-settle-sharply-higher-crude-prices-plunge-and-chipmakers-soar"
+            },
+            {
+              "ago": "38 minutes ago",
+              "description": "Key PointsIt's expanding its partnership with Bolt, and in a meaningful way.",
+              "id": "28404871",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": "LCID",
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T23:55:41Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "LCID"
+                }
+              ],
+              "title": "Why Lucid Group Stock Motored Over 5% Higher Today",
+              "url": "https://www.nasdaq.com/articles/why-lucid-group-stock-motored-over-5-higher-today"
+            },
+            {
+              "ago": "58 minutes ago",
+              "description": "Live cattle futures closed the Monday session with contracts $3.87 to $5.95 higher. Cash trade has started out on the quieter side this week, with feedlots compiling showlists. Feeder cattle futures rallied on the day. Contracts didn’t quite get to the $10.75 daily limit, but posted gains of $6.75 to...",
+              "id": "28404851",
+              "image_url": "https://www.nasdaq.com/sites/acquia.prod/files/barchart/Man%2520feeding%2520cows%2520on%2520farm%2520in%2520cowshed%2520by%2520JackF%2520via%2520iStock.jpg",
+              "kind": "article",
+              "primary_symbol": null,
+              "primary_topic": "Stocks",
+              "primary_topic_id": "4301",
+              "published_at": "2026-09-21T23:36:13Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Barchart",
+              "related_symbols": [],
+              "title": "Cattle Rally on Monday Following Bullish USDA Cattle on Feed Data",
+              "url": "https://www.nasdaq.com/articles/cattle-rally-monday-following-bullish-usda-cattle-feed-data"
+            },
+            {
+              "ago": "58 minutes ago",
+              "description": "Corn futures saw money flow flock back in on Monday, with bulls adding back some risk ahead of the US/China meeting this week. Contracts were up 3 ¼ to 15 ½ cents at the close, led by the front months. The CmdtyView national average Cash Corn price was up 15...",
+              "id": "28404846",
+              "image_url": "https://www.nasdaq.com/sites/acquia.prod/files/barchart/Market%2520corn%2520on%2520the%2520cob%2520via%2520Storyblocks.jpg",
+              "kind": "article",
+              "primary_symbol": null,
+              "primary_topic": "Stocks",
+              "primary_topic_id": "4301",
+              "published_at": "2026-09-21T23:36:13Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Barchart",
+              "related_symbols": [],
+              "title": "Corn Bulls Flock Back in on Monday as Export Shipments Remain Strong",
+              "url": "https://www.nasdaq.com/articles/corn-bulls-flock-back-monday-export-shipments-remain-strong"
+            }
+          ],
+          "limit": 10,
+          "next_offset": 10,
+          "observed_at_ms": 1790037224444,
+          "offset": 0,
+          "published_at_count": 9,
+          "rss_url": "https://www.nasdaq.com/feed/rssoutbound",
+          "source_url": "https://www.nasdaq.com/api/news/topic/latestnews?offset=0&limit=10",
+          "total_records": 500
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "nasdaq-com",
+        "capability": "news/latest_headlines"
+      }
+    },
+    {
+      "id": "nasdaq-com/news/press_releases",
+      "provider": "nasdaq-com",
+      "capability": "news/press_releases",
+      "name": "Press releases",
+      "description": "Company announcements for one ticker (earnings dates, product launches, filings) rather than third-party coverage.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "asset_class",
+          "type": "string",
+          "in": "body",
+          "about": "Nasdaq asset class of the ticker. `etf` for exchange-traded funds (SPY, QQQ); everything else is `stocks`.",
+          "default": "stocks",
+          "oneOf": [
+            "stocks",
+            "etf"
+          ]
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (1-100).",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "Rows to skip. Nasdaq serves at most 500 rows per feed and its edge denies deeper offsets, so 490 is the last usable offset; `next_offset` from the previous page is the safe value.",
+          "min": 0,
+          "max": 490
+        },
+        {
+          "name": "ticker",
+          "type": "string",
+          "in": "body",
+          "about": "Exchange ticker as Nasdaq spells it (AAPL, BRK.B, SPY). Case-insensitive. Pattern: ^[A-Za-z][A-Za-z0-9.\\-]{0,9}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Press releases Nasdaq lists for one ticker (its `press_release` feed: Business Wire, PR Newswire, GlobeNewswire, Accesswire distributions), newest first; `total_records` is the real count here. Rows carry Nasdaq's calendar day and `ago` label; the feed has no time of day and the ticker RSS feed lists no releases, so `published_at` is null on every row: pass the `url` to `article`, which reads the release page's `Published` stamp. A ticker with no releases returns zero rows; an unknown ticker is `not_found`.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "ago",
+            "type": "string",
+            "about": "Nasdaq's relative label (`55 minutes ago`, `7 days ago`, or a date for older items) computed on Nasdaq's server at fetch time. It is a different clock from `published_date` and is not a publish time; see `observed_at_ms` for when it was read."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Teaser text; null when empty."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Nasdaq CMS node id; stable per story."
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": "string",
+            "about": "From the URL family: /articles/, /press-release/, /videos/."
+          },
+          {
+            "name": "mentions_ticker",
+            "type": "boolean",
+            "about": "True when the requested ticker is among `related_symbols` or equals `primary_symbol`. Rows where this is false came from Nasdaq's market-wide fallback, not from the ticker's coverage."
+          },
+          {
+            "name": "primary_symbol",
+            "type": "string",
+            "about": "Nasdaq's `primarysymbol`, upper-cased. Nasdaq fills it only for stories it files under one company; empty for most syndicated market wraps."
+          },
+          {
+            "name": "primary_symbol_is_ticker",
+            "type": "boolean",
+            "about": "True when Nasdaq filed the story under the requested ticker (`primary_symbol` equals it). Most ticker-feed rows are syndicated stories that mention the ticker without being primarily about it."
+          },
+          {
+            "name": "primary_topic",
+            "type": "string",
+            "about": "Topic name from `primarytopic` (Markets, Stocks, Technology...)."
+          },
+          {
+            "name": "primary_topic_id",
+            "type": "string",
+            "about": "Topic term id from `primarytopic`; input for `topic_news`."
+          },
+          {
+            "name": "published_at",
+            "type": "string",
+            "about": "Publish instant, RFC 3339 UTC, taken from the matching Nasdaq RSS feed item (pubDate) when this story is among that feed's 15 newest items. Null otherwise; `article` returns the instant for any story."
+          },
+          {
+            "name": "published_at_source",
+            "type": "string",
+            "about": "`rss` when `published_at` came from the RSS feed; null when `published_at` is null."
+          },
+          {
+            "name": "published_date",
+            "type": "string",
+            "about": "Calendar day from Nasdaq's `created` field (US-Eastern day; the feed carries no time of day). Null when Nasdaq sends none."
+          },
+          {
+            "name": "published_label",
+            "type": "string",
+            "about": "Nasdaq's `created` text verbatim, e.g. `Sep 21, 2026`."
+          },
+          {
+            "name": "publisher",
+            "type": "string",
+            "about": "Syndication source as Nasdaq labels it (Zacks, The Motley Fool, Barchart, RTTNews...). Null when Nasdaq sends an empty string (most press releases)."
+          },
+          {
+            "name": "related_symbols",
+            "type": "object[]",
+            "about": "Every symbol Nasdaq tagged on the story, upper-cased, in Nasdaq's order."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute www.nasdaq.com URL of the story; pass it to `article` for the full text and the exact publish time."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 10,
+          "ticker": "AAPL"
+        },
+        "response": {
+          "asset_class": "stocks",
+          "count": 10,
+          "has_more": true,
+          "items": [
+            {
+              "ago": "7 days ago",
+              "description": null,
+              "id": "28365081",
+              "image_url": null,
+              "kind": "press_release",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": null,
+              "primary_topic_id": null,
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-09-15",
+              "published_label": "Sep 15, 2026",
+              "publisher": null,
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Apple’s Outstanding Comedy Widow’s Bay triumphs as the most decorated freshman comedy in Emmy history and Apple TV leads as the most awarded network at the 78th Primetime Emmy Awards",
+              "url": "https://www.nasdaq.com/press-release/apples-outstanding-comedy-widows-bay-triumphs-most-decorated-freshman-comedy-emmy"
+            },
+            {
+              "ago": "Sep 9, 2026",
+              "description": null,
+              "id": "28337116",
+              "image_url": null,
+              "kind": "press_release",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": null,
+              "primary_topic_id": null,
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-09-09",
+              "published_label": "Sep 9, 2026",
+              "publisher": null,
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Apple unveils iPhone Duo",
+              "url": "https://www.nasdaq.com/press-release/apple-unveils-iphone-duo-2026-09-09"
+            },
+            {
+              "ago": "Sep 9, 2026",
+              "description": null,
+              "id": "28337041",
+              "image_url": null,
+              "kind": "press_release",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": null,
+              "primary_topic_id": null,
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-09-09",
+              "published_label": "Sep 9, 2026",
+              "publisher": null,
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Apple unveils Apple Watch Ultra 4",
+              "url": "https://www.nasdaq.com/press-release/apple-unveils-apple-watch-ultra-4-2026-09-09"
+            },
+            {
+              "ago": "Sep 9, 2026",
+              "description": null,
+              "id": "28337036",
+              "image_url": null,
+              "kind": "press_release",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": null,
+              "primary_topic_id": null,
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-09-09",
+              "published_label": "Sep 9, 2026",
+              "publisher": null,
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Introducing Apple Watch Series 12, with the all-new Health Sensing System",
+              "url": "https://www.nasdaq.com/press-release/introducing-apple-watch-series-12-all-new-health-sensing-system-2026-09-09"
+            },
+            {
+              "ago": "Sep 9, 2026",
+              "description": null,
+              "id": "28337031",
+              "image_url": null,
+              "kind": "press_release",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": null,
+              "primary_topic_id": null,
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-09-09",
+              "published_label": "Sep 9, 2026",
+              "publisher": null,
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Apple advances health and fitness capabilities using Apple Intelligence and the most accurate heart rate sensing in a wearable",
+              "url": "https://www.nasdaq.com/press-release/apple-advances-health-and-fitness-capabilities-using-apple-intelligence-and-most"
+            },
+            {
+              "ago": "Sep 9, 2026",
+              "description": null,
+              "id": "28336941",
+              "image_url": null,
+              "kind": "press_release",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": null,
+              "primary_topic_id": null,
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-09-09",
+              "published_label": "Sep 9, 2026",
+              "publisher": null,
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Apple introduces AirPods 5, featuring best-in-class open-ear Active Noise Cancellation",
+              "url": "https://www.nasdaq.com/press-release/apple-introduces-airpods-5-featuring-best-class-open-ear-active-noise-cancellation"
+            },
+            {
+              "ago": "Sep 9, 2026",
+              "description": null,
+              "id": "28336886",
+              "image_url": null,
+              "kind": "press_release",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": null,
+              "primary_topic_id": null,
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-09-09",
+              "published_label": "Sep 9, 2026",
+              "publisher": null,
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Apple debuts iPhone 18 Pro and iPhone 18 Pro Max",
+              "url": "https://www.nasdaq.com/press-release/apple-debuts-iphone-18-pro-and-iphone-18-pro-max-2026-09-09"
+            },
+            {
+              "ago": "Aug 25, 2026",
+              "description": null,
+              "id": "28248116",
+              "image_url": null,
+              "kind": "press_release",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": null,
+              "primary_topic_id": null,
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-08-25",
+              "published_label": "Aug 25, 2026",
+              "publisher": null,
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Apple’s new Mac mini, featuring M6 and M5 Pro, delivers a massive leap in AI performance, supercharging the leading desktop for always-on agentic computing",
+              "url": "https://www.nasdaq.com/press-release/apples-new-mac-mini-featuring-m6-and-m5-pro-delivers-massive-leap-ai-performance"
+            },
+            {
+              "ago": "Aug 25, 2026",
+              "description": null,
+              "id": "28248101",
+              "image_url": null,
+              "kind": "press_release",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": null,
+              "primary_topic_id": null,
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-08-25",
+              "published_label": "Aug 25, 2026",
+              "publisher": null,
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Apple introduces new Mac Studio with M5 Max and M5 Ultra - the ultimate desktop for on-device AI and the most extreme pro workflows",
+              "url": "https://www.nasdaq.com/press-release/apple-introduces-new-mac-studio-m5-max-and-m5-ultra-ultimate-desktop-device-ai-and"
+            },
+            {
+              "ago": "Aug 25, 2026",
+              "description": null,
+              "id": "28248091",
+              "image_url": null,
+              "kind": "press_release",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": null,
+              "primary_topic_id": null,
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-08-25",
+              "published_label": "Aug 25, 2026",
+              "publisher": null,
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Apple introduces M6 and M5 Ultra for a big leap in performance and AI compute",
+              "url": "https://www.nasdaq.com/press-release/apple-introduces-m6-and-m5-ultra-big-leap-performance-and-ai-compute-2026-08-25"
+            }
+          ],
+          "limit": 10,
+          "next_offset": 10,
+          "observed_at_ms": 1790037219477,
+          "offset": 0,
+          "published_at_count": 0,
+          "rss_url": null,
+          "source_url": "https://www.nasdaq.com/api/news/topic/press_release?q=symbol:AAPL%7Cassetclass:stocks&limit=10&offset=0",
+          "ticker": "AAPL",
+          "total_records": 97
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "nasdaq-com",
+        "capability": "news/press_releases"
+      }
+    },
+    {
+      "id": "nasdaq-com/news/ticker_news",
+      "provider": "nasdaq-com",
+      "capability": "news/ticker_news",
+      "name": "Ticker news",
+      "description": "Latest third-party coverage of one stock or ETF. Official company announcements (deals, partnerships, earnings, launches) are press releases, which this feed omits: pass `include_press_releases: true` or call `press_releases`. For the exact publish time of any row pass its `url` to `article`; for only the 15 newest with times in one request use `feed`.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "asset_class",
+          "type": "string",
+          "in": "body",
+          "about": "Nasdaq asset class of the ticker. `etf` for exchange-traded funds (SPY, QQQ); everything else is `stocks`.",
+          "default": "stocks",
+          "oneOf": [
+            "stocks",
+            "etf"
+          ]
+        },
+        {
+          "name": "include_press_releases",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also fetch the ticker's `press_release` feed (one extra request) and merge its newest `limit` releases into the first page (`offset` 0) as `kind: press_release` rows, ordered newest first with the news by `published_date`; `count` may then exceed `limit`. Deeper pages are news only; `has_more` and `next_offset` follow the news feed. Releases carry no `published_at` (pass their `url` to `article` for it). For every release use `press_releases`."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (1-100).",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "Rows to skip. Nasdaq serves at most 500 rows per feed and its edge denies deeper offsets, so 490 is the last usable offset; `next_offset` from the previous page is the safe value.",
+          "min": 0,
+          "max": 490
+        },
+        {
+          "name": "ticker",
+          "type": "string",
+          "in": "body",
+          "about": "Exchange ticker as Nasdaq spells it (AAPL, BRK.B, SPY). Case-insensitive. Pattern: ^[A-Za-z][A-Za-z0-9.\\-]{0,9}$.",
+          "required": true
+        },
+        {
+          "name": "with_publish_times",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also fetch the matching RSS feed (one extra request) and copy its pubDate into `published_at` for the stories it lists (the 15 newest). Set false to save the request."
+        }
+      ],
+      "response": {
+        "about": "News stories Nasdaq lists for one ticker (its `articlebysymbol` feed): syndicated articles from Zacks, The Motley Fool, Barchart, RTTNews, Reuters and others, newest first, up to 500 rows deep. Each row carries Nasdaq's calendar day (`published_date`), its server-relative `ago` label, and `published_at` (RFC 3339 UTC) when the story is among the ticker RSS feed's 15 newest. `mentions_ticker` and `primary_symbol_is_ticker` flag how the story relates to the ticker: Nasdaq lists every story that tags the ticker (market wraps and most-active lists naming a dozen symbols included) and files only some under it as primary; keep rows with `primary_symbol_is_ticker` true or a short `related_symbols` for stories about the ticker itself. Company press releases are not in this feed: `include_press_releases: true` merges the ticker's newest releases into the first page (as `kind: press_release`), and `press_releases` pages through all of them. An unknown ticker is `not_found` (Nasdaq itself would answer market-wide news; that fallback is detected and rejected).",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "ago",
+            "type": "string",
+            "about": "Nasdaq's relative label (`55 minutes ago`, `7 days ago`, or a date for older items) computed on Nasdaq's server at fetch time. It is a different clock from `published_date` and is not a publish time; see `observed_at_ms` for when it was read."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Teaser text; null when empty."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Nasdaq CMS node id; stable per story."
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": "string",
+            "about": "From the URL family: /articles/, /press-release/, /videos/."
+          },
+          {
+            "name": "mentions_ticker",
+            "type": "boolean",
+            "about": "True when the requested ticker is among `related_symbols` or equals `primary_symbol`. Rows where this is false came from Nasdaq's market-wide fallback, not from the ticker's coverage."
+          },
+          {
+            "name": "primary_symbol",
+            "type": "string",
+            "about": "Nasdaq's `primarysymbol`, upper-cased. Nasdaq fills it only for stories it files under one company; empty for most syndicated market wraps."
+          },
+          {
+            "name": "primary_symbol_is_ticker",
+            "type": "boolean",
+            "about": "True when Nasdaq filed the story under the requested ticker (`primary_symbol` equals it). Most ticker-feed rows are syndicated stories that mention the ticker without being primarily about it."
+          },
+          {
+            "name": "primary_topic",
+            "type": "string",
+            "about": "Topic name from `primarytopic` (Markets, Stocks, Technology...)."
+          },
+          {
+            "name": "primary_topic_id",
+            "type": "string",
+            "about": "Topic term id from `primarytopic`; input for `topic_news`."
+          },
+          {
+            "name": "published_at",
+            "type": "string",
+            "about": "Publish instant, RFC 3339 UTC, taken from the matching Nasdaq RSS feed item (pubDate) when this story is among that feed's 15 newest items. Null otherwise; `article` returns the instant for any story."
+          },
+          {
+            "name": "published_at_source",
+            "type": "string",
+            "about": "`rss` when `published_at` came from the RSS feed; null when `published_at` is null."
+          },
+          {
+            "name": "published_date",
+            "type": "string",
+            "about": "Calendar day from Nasdaq's `created` field (US-Eastern day; the feed carries no time of day). Null when Nasdaq sends none."
+          },
+          {
+            "name": "published_label",
+            "type": "string",
+            "about": "Nasdaq's `created` text verbatim, e.g. `Sep 21, 2026`."
+          },
+          {
+            "name": "publisher",
+            "type": "string",
+            "about": "Syndication source as Nasdaq labels it (Zacks, The Motley Fool, Barchart, RTTNews...). Null when Nasdaq sends an empty string (most press releases)."
+          },
+          {
+            "name": "related_symbols",
+            "type": "object[]",
+            "about": "Every symbol Nasdaq tagged on the story, upper-cased, in Nasdaq's order."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute www.nasdaq.com URL of the story; pass it to `article` for the full text and the exact publish time."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 10,
+          "ticker": "AAPL"
+        },
+        "response": {
+          "asset_class": "stocks",
+          "count": 10,
+          "has_more": true,
+          "items": [
+            {
+              "ago": "27 minutes ago",
+              "description": "The S&P 500 Index ($SPX ) (SPY ) closed up by +1.49% on Monday, the Dow Jones Industrial Average ($DOWI ) (DIA ) closed up by +0.71%, and the Nasdaq 100 Index ($IUXX ) (QQQ ) closed up +2.83%.  December E-mini S&P futures (ESZ26 ) rose +1.50%, and December E-mini...",
+              "id": "28404356",
+              "image_url": "https://www.nasdaq.com/sites/acquia.prod/files/barchart/NASDAQ%2520sign%2520at%2520times%2520square%2520at%2520night%2520by%2520Lucky-photographer%2520via%2520iStock.jpg",
+              "kind": "article",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": "Stocks",
+              "primary_topic_id": "4301",
+              "published_at": "2026-09-22T00:06:52Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Barchart",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MSTR"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "ALK"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "GOOGL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MPC"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "GLXY"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "COIN"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "CIEN"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "OXY"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "TSLA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "FANG"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AMD"
+                },
+                {
+                  "asset_class": "etf",
+                  "symbol": "SPY"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "META"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAL"
+                },
+                {
+                  "asset_class": "etf",
+                  "symbol": "QQQ"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "IREN"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "PSX"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "FTNT"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "XOM"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "ZS"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "RCL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "ARM"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "HOOD"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MRVL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AMAT"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "UAL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "CVX"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "HPQ"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MSFT"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "BMNR"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "S"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "QCOM"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "NCLH"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "LRCX"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "VLO"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "WBD"
+                },
+                {
+                  "asset_class": "etf",
+                  "symbol": "DIA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "PANW"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "KLAC"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "NVDA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "CRWD"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "COP"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "OKTA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "LUV"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "CCL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "DAL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "APA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "INTC"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "CADL"
+                },
+                {
+                  "asset_class": "etf",
+                  "symbol": "SOXX"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "RIOT"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "NET"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "DVN"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AMZN"
+                }
+              ],
+              "title": "Stocks Settle Sharply Higher as Crude Prices Plunge and Chipmakers Soar",
+              "url": "https://www.nasdaq.com/articles/stocks-settle-sharply-higher-crude-prices-plunge-and-chipmakers-soar"
+            },
+            {
+              "ago": "5 hours ago",
+              "description": "Key PointsIt's been 10 years since Berkshire Hathaway first invested in Apple stock.",
+              "id": "28403296",
+              "image_url": null,
+              "kind": "article",
+              "mentions_ticker": true,
+              "primary_symbol": "AAPL",
+              "primary_symbol_is_ticker": true,
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T18:35:00Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Warren Buffett's $35 Billion Bet on Tim Cook's Apple Grew to $185 Billion Pretax. Here's What That Stake Says About Long-Term Investing.",
+              "url": "https://www.nasdaq.com/articles/warren-buffetts-35-billion-bet-tim-cooks-apple-grew-185-billion-pretax-heres-what-stake"
+            },
+            {
+              "ago": "6 hours ago",
+              "description": "Key PointsHe's one of the greatest investors of all time and leaves behind some great investment lessons.",
+              "id": "28403106",
+              "image_url": null,
+              "kind": "article",
+              "mentions_ticker": true,
+              "primary_symbol": "VOO",
+              "primary_symbol_is_ticker": false,
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T17:50:00Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "etf",
+                  "symbol": "VOO"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "GOOGL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "KO"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "GOOG"
+                }
+              ],
+              "title": "End of an Era: 3 Investment Lessons from Warren Buffett That Every Investor Should Follow",
+              "url": "https://www.nasdaq.com/articles/end-era-3-investment-lessons-warren-buffett-every-investor-should-follow"
+            },
+            {
+              "ago": "7 hours ago",
+              "description": "Key PointsThe Nasdaq Composite rose 1.8%, the S&P 500 1.2%, and the Dow 0.5% by midday Monday.",
+              "id": "28402781",
+              "image_url": null,
+              "kind": "article",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T17:11:45Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "INTC"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "META"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AMD"
+                },
+                {
+                  "asset_class": "crypto",
+                  "symbol": "BTC"
+                }
+              ],
+              "title": "Market Indexes Rally as Oil Retreats and Chip Stocks Surge",
+              "url": "https://www.nasdaq.com/articles/market-indexes-rally-oil-retreats-and-chip-stocks-surge"
+            },
+            {
+              "ago": "8 hours ago",
+              "description": "By powering the data center CPUs and local edge processing required for agentic workflows, Arm Holdings and AMD are positioned to capture immense value.",
+              "id": "28403046",
+              "image_url": null,
+              "kind": "article",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": "Investing",
+              "primary_topic_id": "4056",
+              "published_at": "2026-09-21T16:32:00Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Zacks",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AMD"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "NVDA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "ARM"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "META"
+                }
+              ],
+              "title": "Meta's Muse Era: Why Arm and AMD Will Soar",
+              "url": "https://www.nasdaq.com/articles/metas-muse-era-why-arm-and-amd-will-soar"
+            },
+            {
+              "ago": "9 hours ago",
+              "description": "Key PointsMeta's Muse is the top free app in Apple's App Store, indicating the popularity of AI agents.",
+              "id": "28402046",
+              "image_url": null,
+              "kind": "article",
+              "mentions_ticker": true,
+              "primary_symbol": "AMD",
+              "primary_symbol_is_ticker": false,
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T15:23:00Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AMD"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "META"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Why AMD Stock Is Rising Fast Today",
+              "url": "https://www.nasdaq.com/articles/why-amd-stock-rising-fast-today"
+            },
+            {
+              "ago": "9 hours ago",
+              "description": "Energy Fuels and MP are expanding U.S. rare-earth supply chains, but differing strategies, costs and earnings trends shape the investment case.",
+              "id": "28402456",
+              "image_url": null,
+              "kind": "article",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": "Stocks",
+              "primary_topic_id": "4301",
+              "published_at": "2026-09-21T15:14:00Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Zacks",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MP"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "UUUU"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "GM"
+                }
+              ],
+              "title": "UUUU vs. MP: Which Rare Earth Stock is a Better Pick Now?",
+              "url": "https://www.nasdaq.com/articles/uuuu-vs-mp-which-rare-earth-stock-better-pick-now"
+            },
+            {
+              "ago": "11 hours ago",
+              "description": "Intel and SK Hynix heat up as a potential U.S. memory partnership draws attention, while AI demand and valuation widen the contrast.",
+              "id": "28401071",
+              "image_url": null,
+              "kind": "article",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": "Technology",
+              "primary_topic_id": "4001",
+              "published_at": "2026-09-21T13:02:00Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Zacks",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "INTC"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MSFT"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "NVDA"
+                }
+              ],
+              "title": "Zacks Investment Ideas feature highlights: Intel, SK Hynix, Nvidia, Microsoft and Apple",
+              "url": "https://www.nasdaq.com/articles/zacks-investment-ideas-feature-highlights-intel-sk-hynix-nvidia-microsoft-and-apple"
+            },
+            {
+              "ago": "11 hours ago",
+              "description": "Microsoft and NVIDIA combine strong cloud and AI growth with attractive valuations, while Apple offers a less AI-sensitive option within the Magnificent Seven.",
+              "id": "28401036",
+              "image_url": null,
+              "kind": "article",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": "Technology",
+              "primary_topic_id": "4001",
+              "published_at": "2026-09-21T13:01:00Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Zacks",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MSFT"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "NVDA"
+                }
+              ],
+              "title": "Zacks Investment Ideas feature highlights: Microsoft, NVIDIA and Apple",
+              "url": "https://www.nasdaq.com/articles/zacks-investment-ideas-feature-highlights-microsoft-nvidia-and-apple"
+            },
+            {
+              "ago": "11 hours ago",
+              "description": "Apple (AAPL) has received quite a bit of attention from Zacks.com users lately. Therefore, it is wise to be aware of the facts that can impact the stock's prospects.",
+              "id": "28400966",
+              "image_url": null,
+              "kind": "article",
+              "mentions_ticker": true,
+              "primary_symbol": null,
+              "primary_symbol_is_ticker": false,
+              "primary_topic": "Technology",
+              "primary_topic_id": "4001",
+              "published_at": "2026-09-21T13:00:02Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "Zacks",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "AAPL"
+                }
+              ],
+              "title": "Investors Heavily Search Apple Inc. (AAPL): Here is What You Need to Know",
+              "url": "https://www.nasdaq.com/articles/investors-heavily-search-apple-inc-aapl-here-what-you-need-know"
+            }
+          ],
+          "limit": 10,
+          "next_offset": 10,
+          "observed_at_ms": 1790037213839,
+          "offset": 0,
+          "published_at_count": 10,
+          "rss_url": "https://www.nasdaq.com/feed/rssoutbound?symbol=AAPL",
+          "source_url": "https://www.nasdaq.com/api/news/topic/articlebysymbol?q=AAPL%7Cstocks&offset=0&limit=10&fallback=false",
+          "ticker": "AAPL",
+          "total_records": 500
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "nasdaq-com",
+        "capability": "news/ticker_news"
+      }
+    },
+    {
+      "id": "nasdaq-com/news/topic_news",
+      "provider": "nasdaq-com",
+      "capability": "news/topic_news",
+      "name": "Topic news",
+      "description": "Coverage of a theme (Markets, Stocks, Technology, Investing) rather than a ticker.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (1-100).",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "Rows to skip. Nasdaq serves at most 500 rows per feed and its edge denies deeper offsets, so 490 is the last usable offset; `next_offset` from the previous page is the safe value.",
+          "min": 0,
+          "max": 490
+        },
+        {
+          "name": "topic_id",
+          "type": "string",
+          "in": "body",
+          "about": "Nasdaq topic term id, e.g. `4006` for Markets; read it from `primary_topic_id` on a feed row. Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        },
+        {
+          "name": "with_publish_times",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also fetch the matching RSS feed (one extra request) and copy its pubDate into `published_at` for the stories it lists (the 15 newest). Set false to save the request."
+        }
+      ],
+      "response": {
+        "about": "News stories under one Nasdaq topic (its `article?q=field_primary_topic:{id}` feed), newest first, up to 500 rows deep. Topic ids come from `primary_topic_id` on any feed row: 4006 Markets, 4301 Stocks, 4001 Technology, 4056 Investing. Rows carry `published_at` (RFC 3339 UTC) for the stories the topic's RSS feed lists (its 15 newest). An id Nasdaq has no rows for is `not_found`.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "ago",
+            "type": "string",
+            "about": "Nasdaq's relative label (`55 minutes ago`, `7 days ago`, or a date for older items) computed on Nasdaq's server at fetch time. It is a different clock from `published_date` and is not a publish time; see `observed_at_ms` for when it was read."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Teaser text; null when empty."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Nasdaq CMS node id; stable per story."
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": "string",
+            "about": "From the URL family: /articles/, /press-release/, /videos/."
+          },
+          {
+            "name": "primary_symbol",
+            "type": "string",
+            "about": "Nasdaq's `primarysymbol`, upper-cased. Nasdaq fills it only for stories it files under one company; empty for most syndicated market wraps."
+          },
+          {
+            "name": "primary_topic",
+            "type": "string",
+            "about": "Topic name from `primarytopic` (Markets, Stocks, Technology...)."
+          },
+          {
+            "name": "primary_topic_id",
+            "type": "string",
+            "about": "Topic term id from `primarytopic`; input for `topic_news`."
+          },
+          {
+            "name": "published_at",
+            "type": "string",
+            "about": "Publish instant, RFC 3339 UTC, taken from the matching Nasdaq RSS feed item (pubDate) when this story is among that feed's 15 newest items. Null otherwise; `article` returns the instant for any story."
+          },
+          {
+            "name": "published_at_source",
+            "type": "string",
+            "about": "`rss` when `published_at` came from the RSS feed; null when `published_at` is null."
+          },
+          {
+            "name": "published_date",
+            "type": "string",
+            "about": "Calendar day from Nasdaq's `created` field (US-Eastern day; the feed carries no time of day). Null when Nasdaq sends none."
+          },
+          {
+            "name": "published_label",
+            "type": "string",
+            "about": "Nasdaq's `created` text verbatim, e.g. `Sep 21, 2026`."
+          },
+          {
+            "name": "publisher",
+            "type": "string",
+            "about": "Syndication source as Nasdaq labels it (Zacks, The Motley Fool, Barchart, RTTNews...). Null when Nasdaq sends an empty string (most press releases)."
+          },
+          {
+            "name": "related_symbols",
+            "type": "object[]",
+            "about": "Every symbol Nasdaq tagged on the story, upper-cased, in Nasdaq's order."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Absolute www.nasdaq.com URL of the story; pass it to `article` for the full text and the exact publish time."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 10,
+          "topic_id": "4006"
+        },
+        "response": {
+          "count": 10,
+          "has_more": true,
+          "items": [
+            {
+              "ago": "6 minutes ago",
+              "description": "Key PointsAdditionally, an analyst published a bullish report on tokenized stocks.",
+              "id": "28404896",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": "HOOD",
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "HOOD"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "COIN"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "BLSH"
+                }
+              ],
+              "title": "Why Robinhood Markets Crushed it on Monday",
+              "url": "https://www.nasdaq.com/articles/why-robinhood-markets-crushed-it-monday"
+            },
+            {
+              "ago": "12 minutes ago",
+              "description": "Key PointsAlibaba continues to dominate the Chinese e-commerce market while expanding its footprint in global cloud services and artificial intelligence.",
+              "id": "28404891",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": "BABA",
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": null,
+              "published_at_source": null,
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "BABA"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MELI"
+                }
+              ],
+              "title": "Alibaba vs. MercadoLibre: Which Consumer Stock Is a Better Buy in 2026?",
+              "url": "https://www.nasdaq.com/articles/alibaba-vs-mercadolibre-which-consumer-stock-better-buy-2026"
+            },
+            {
+              "ago": "36 minutes ago",
+              "description": "Key PointsIt's expanding its partnership with Bolt, and in a meaningful way.",
+              "id": "28404871",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": "LCID",
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T23:55:41Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "LCID"
+                }
+              ],
+              "title": "Why Lucid Group Stock Motored Over 5% Higher Today",
+              "url": "https://www.nasdaq.com/articles/why-lucid-group-stock-motored-over-5-higher-today"
+            },
+            {
+              "ago": "57 minutes ago",
+              "description": "Key PointsJohnson & Johnson announced plans to spin off its orthopedics business in late 2025.",
+              "id": "28404861",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": "JNJ",
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T23:35:00Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "JNJ"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "KMB"
+                },
+                {
+                  "asset_class": "stocks",
+                  "symbol": "KVUE"
+                }
+              ],
+              "title": "Johnson & Johnson May Offload Its Orthopedics Unit for $20 Billion -- and Investors Shouldn't Miss What That Could Signal",
+              "url": "https://www.nasdaq.com/articles/johnson-johnson-may-offload-its-orthopedics-unit-20-billion-and-investors-shouldnt-miss"
+            },
+            {
+              "ago": "59 minutes ago",
+              "description": "(RTTNews) - The Malaysia stock market on Monday snapped the three-day losing streak in which it had slumped more than 35 points or 2.4 percent. The Kuala Lumpur Composite Index now sits just above the 1,665-point plateau and it may add to its winnings on Tuesday.",
+              "id": "28404856",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": null,
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T23:32:11Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "RTTNews",
+              "related_symbols": [],
+              "title": "Malaysia Stock Market Tipped To Open In The Green",
+              "url": "https://www.nasdaq.com/articles/malaysia-stock-market-tipped-open-green"
+            },
+            {
+              "ago": "1 hour ago",
+              "description": "Key PointsThat lift was substantial, at 23%.",
+              "id": "28404866",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": "NOW",
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T23:31:40Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "NOW"
+                }
+              ],
+              "title": "Why ServiceNow Stock Inched Higher on Monday",
+              "url": "https://www.nasdaq.com/articles/why-servicenow-stock-inched-higher-monday"
+            },
+            {
+              "ago": "1 hour ago",
+              "description": "Key PointsStrategy is adding to its already massive crypto holdings.",
+              "id": "28404811",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": "MSTR",
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T23:23:42Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "MSTR"
+                },
+                {
+                  "asset_class": "crypto",
+                  "symbol": "BTC"
+                }
+              ],
+              "title": "Why Strategy Stock Surged Today",
+              "url": "https://www.nasdaq.com/articles/why-strategy-stock-surged-today"
+            },
+            {
+              "ago": "1 hour ago",
+              "description": "Explore the exciting world of Alphabet (NASDAQ: GOOG) with our contributing expert analysts in this Motley Fool Scoreboard episode. Check out the video below to gain valuable insights into market trends and potential investment opportunities!*Stock prices used were the prices of",
+              "id": "28404821",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": "GOOG",
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T23:20:00Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "GOOG"
+                }
+              ],
+              "title": "Alphabet: Can AI, Cloud, and Moonshots Keep the Growth Engine Running?",
+              "url": "https://www.nasdaq.com/articles/alphabet-can-ai-cloud-and-moonshots-keep-growth-engine-running"
+            },
+            {
+              "ago": "1 hour ago",
+              "description": "Key PointsCostco reports Q3 earnings after the market closes on Thursday, Sept. 24.",
+              "id": "28404816",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": "COST",
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T23:17:59Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "COST"
+                }
+              ],
+              "title": "Should You Buy Costco Stock Before Sept. 24? History Has a Clear Answer.",
+              "url": "https://www.nasdaq.com/articles/should-you-buy-costco-stock-sept-24-history-has-clear-answer"
+            },
+            {
+              "ago": "1 hour ago",
+              "description": "Key PointsBuying $500 of Nvidia stock on the first trading day of every month since December 2022 has turned $23,000 into about $79,000.",
+              "id": "28404696",
+              "image_url": null,
+              "kind": "article",
+              "primary_symbol": "NVDA",
+              "primary_topic": "Markets",
+              "primary_topic_id": "4006",
+              "published_at": "2026-09-21T23:07:01Z",
+              "published_at_source": "rss",
+              "published_date": "2026-09-21",
+              "published_label": "Sep 21, 2026",
+              "publisher": "The Motley Fool",
+              "related_symbols": [
+                {
+                  "asset_class": "stocks",
+                  "symbol": "NVDA"
+                }
+              ],
+              "title": "$500 a Month in Nvidia Stock Since ChatGPT Launched Is Now Worth About $79,000",
+              "url": "https://www.nasdaq.com/articles/500-month-nvidia-stock-chatgpt-launched-now-worth-about-79000"
+            }
+          ],
+          "limit": 10,
+          "next_offset": 10,
+          "observed_at_ms": 1790037229108,
+          "offset": 0,
+          "published_at_count": 8,
+          "rss_url": "https://www.nasdaq.com/feed/rssoutbound?category=Markets",
+          "source_url": "https://www.nasdaq.com/api/news/topic/article?q=field_primary_topic:4006&limit=10&offset=0",
+          "topic": "Markets",
+          "topic_id": "4006",
+          "total_records": 500
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "nasdaq-com",
+        "capability": "news/topic_news"
+      }
+    }
+  ]
+}

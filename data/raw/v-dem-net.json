@@ -1,0 +1,1725 @@
+{
+  "id": "v-dem-net",
+  "provider": "v-dem-net",
+  "name": "V-Dem",
+  "description": "Official V-Dem democracy indices, codebook metadata, country crosswalk and regime transformation episodes.",
+  "toolCount": 6,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "v-dem-net"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "v-dem-net/democracy/countries",
+      "provider": "v-dem-net",
+      "capability": "democracy/countries",
+      "name": "Countries",
+      "description": "V-Dem country crosswalk (183 countries served by the graphing API): country_id, country_text_id, name, ISO3 or null with historical/non-ISO entities flagged, coded year span and V-Dem region; optional name/code/region filter. Embedded snapshot; no live request.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "include_historical",
+          "type": "boolean",
+          "in": "body",
+          "about": "include_historical"
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query"
+        }
+      ],
+      "response": {
+        "about": "V-Dem country crosswalk (183 countries served by the graphing API): country_id, country_text_id, name, ISO3 or null with historical/non-ISO entities flagged, coded year span and V-Dem region; optional name/code/region filter. Embedded snapshot; no live request.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "citation",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "function",
+            "type": "string"
+          },
+          {
+            "name": "license",
+            "type": "string"
+          },
+          {
+            "name": "license_url",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "offset",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time of retrieval."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "snapshot_date",
+            "type": "string"
+          },
+          {
+            "name": "source_release_date",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "object",
+            "about": "V-Dem publishes a release month only; never copied from retrieval time."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "source_version",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "SWE"
+        },
+        "response": {
+          "citation": "Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Fabio Angiolillo, Michael Bernhard, Agnes Cornell, M. Steven Fish, Linnea Fox, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Ana Good God, Allen Hicken, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Anja Neundorf, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Johannes von Römer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundström, Marcus Tannenberg, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2026. \"V-Dem [Country-Year/Country-Date] Dataset v16\" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds26.",
+          "complete": true,
+          "count": 1,
+          "function": "countries",
+          "license": "CC BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "next_cursor": null,
+          "observed_at_ms": 1789444695000,
+          "offset": 0,
+          "query": "SWE",
+          "records": [
+            {
+              "country_id": 5,
+              "country_name": "Sweden",
+              "country_text_id": "SWE",
+              "first_year": 1900,
+              "historical_or_non_iso": false,
+              "id": "country:5",
+              "iso3": "SWE",
+              "last_year": 2025,
+              "region_path": [
+                "Europe",
+                "Nordic countries"
+              ],
+              "source_url": "https://raw.githubusercontent.com/vdeminstitute/ERT/master/inst/ert.csv"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:58:15.000Z",
+          "schema_version": "1.0.0",
+          "snapshot_date": "2026-09-12",
+          "source_release_date": "2026-03",
+          "source_updated_at": null,
+          "source_url": "https://raw.githubusercontent.com/vdeminstitute/ERT/master/inst/ert.csv",
+          "source_version": "v16",
+          "total": 1,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:58:15.000Z"
+      },
+      "execute": {
+        "provider": "v-dem-net",
+        "capability": "democracy/countries"
+      }
+    },
+    {
+      "id": "v-dem-net/democracy/data",
+      "provider": "v-dem-net",
+      "capability": "democracy/data",
+      "name": "Data",
+      "description": "Country-year observations for up to 5 variables and 50 countries (ISO3 or V-Dem country_text_id) from v-dem.net's official graphing API for the pinned release (v16, 1789-2025), optionally year-bounded, with codelow/codehigh bounds. Sorted by variable, country_id, year; paginated with next_cursor.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "countries",
+          "type": "string[]",
+          "in": "body",
+          "about": "ISO3 codes or V-Dem country_text_id values (ZZB, PSG, SML, XKX, DDR, VDR, YMD, PSB are V-Dem-only).",
+          "required": true
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Opaque cursor from a previous page's next_cursor (format o<offset>). null or omitted starts at the first page."
+        },
+        {
+          "name": "include_uncertainty",
+          "type": "boolean",
+          "in": "body",
+          "about": "include_uncertainty"
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 100,
+          "min": 1,
+          "max": 2000
+        },
+        {
+          "name": "variables",
+          "type": "string[]",
+          "in": "body",
+          "about": "Variable tags, e.g. v2x_polyarchy.",
+          "required": true
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "in": "body",
+          "about": "Dataset release to pin, e.g. v16. Live observations are served for the current release only (v16, March 2026); variable metadata can be filtered for any release via the codebook's data-release line. Pattern: ^v?[0-9]{1,2}$.",
+          "default": "v16"
+        },
+        {
+          "name": "year_from",
+          "type": "number",
+          "in": "body",
+          "about": "year_from",
+          "min": 1789,
+          "max": 2100
+        },
+        {
+          "name": "year_to",
+          "type": "number",
+          "in": "body",
+          "about": "year_to",
+          "min": 1789,
+          "max": 2100
+        }
+      ],
+      "response": {
+        "about": "Country-year observations for up to 5 variables and 50 countries (ISO3 or V-Dem country_text_id) from v-dem.net's official graphing API for the pinned release (v16, 1789-2025), optionally year-bounded, with codelow/codehigh bounds. Sorted by variable, country_id, year; paginated with next_cursor.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "citation",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "countries",
+            "type": "string[]"
+          },
+          {
+            "name": "function",
+            "type": "string"
+          },
+          {
+            "name": "include_uncertainty",
+            "type": "boolean"
+          },
+          {
+            "name": "license",
+            "type": "string"
+          },
+          {
+            "name": "license_url",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "offset",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time of retrieval."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_release_date",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "object",
+            "about": "V-Dem publishes a release month only; never copied from retrieval time."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "source_urls",
+            "type": "string[]"
+          },
+          {
+            "name": "source_version",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "variables",
+            "type": "string[]"
+          },
+          {
+            "name": "version",
+            "type": "string"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          },
+          {
+            "name": "year_from",
+            "type": "number"
+          },
+          {
+            "name": "year_to",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "countries": [
+            "SWE"
+          ],
+          "page_size": 5,
+          "variables": [
+            "v2x_polyarchy"
+          ],
+          "year_from": 2020
+        },
+        "response": {
+          "citation": "Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Fabio Angiolillo, Michael Bernhard, Agnes Cornell, M. Steven Fish, Linnea Fox, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Ana Good God, Allen Hicken, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Anja Neundorf, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Johannes von Römer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundström, Marcus Tannenberg, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2026. \"V-Dem [Country-Year/Country-Date] Dataset v16\" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds26.",
+          "complete": true,
+          "count": 5,
+          "countries": [
+            "SWE"
+          ],
+          "function": "data",
+          "include_uncertainty": true,
+          "license": "CC BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "next_cursor": "o5",
+          "observed_at_ms": 1789444695000,
+          "offset": 0,
+          "records": [
+            {
+              "codehigh": "0.94",
+              "codelow": "0.869",
+              "coder_count": null,
+              "country_id": 5,
+              "country_name": "Sweden",
+              "country_text_id": "SWE",
+              "historical_date": null,
+              "historical_or_non_iso": false,
+              "id": "v16:v2x_polyarchy:SWE:2020",
+              "iso3": "SWE",
+              "ordinal": null,
+              "question_id": 730,
+              "release_date": "2026-03",
+              "scale": "Interval, from low to high (0-1).",
+              "sd": null,
+              "source_url": "https://v-dem.net/data_analysis/GetGraphData/?country_id=5&question_id=730&scale=Original&graph_type=Variable",
+              "unit": "Interval, from low to high (0-1).",
+              "value": "0.901",
+              "value_num": 0.901,
+              "variable": "v2x_polyarchy",
+              "version": "v16",
+              "year": 2020
+            },
+            {
+              "codehigh": "0.938",
+              "codelow": "0.871",
+              "coder_count": null,
+              "country_id": 5,
+              "country_name": "Sweden",
+              "country_text_id": "SWE",
+              "historical_date": null,
+              "historical_or_non_iso": false,
+              "id": "v16:v2x_polyarchy:SWE:2021",
+              "iso3": "SWE",
+              "ordinal": null,
+              "question_id": 730,
+              "release_date": "2026-03",
+              "scale": "Interval, from low to high (0-1).",
+              "sd": null,
+              "source_url": "https://v-dem.net/data_analysis/GetGraphData/?country_id=5&question_id=730&scale=Original&graph_type=Variable",
+              "unit": "Interval, from low to high (0-1).",
+              "value": "0.9",
+              "value_num": 0.9,
+              "variable": "v2x_polyarchy",
+              "version": "v16",
+              "year": 2021
+            },
+            {
+              "codehigh": "0.935",
+              "codelow": "0.864",
+              "coder_count": null,
+              "country_id": 5,
+              "country_name": "Sweden",
+              "country_text_id": "SWE",
+              "historical_date": null,
+              "historical_or_non_iso": false,
+              "id": "v16:v2x_polyarchy:SWE:2022",
+              "iso3": "SWE",
+              "ordinal": null,
+              "question_id": 730,
+              "release_date": "2026-03",
+              "scale": "Interval, from low to high (0-1).",
+              "sd": null,
+              "source_url": "https://v-dem.net/data_analysis/GetGraphData/?country_id=5&question_id=730&scale=Original&graph_type=Variable",
+              "unit": "Interval, from low to high (0-1).",
+              "value": "0.892",
+              "value_num": 0.892,
+              "variable": "v2x_polyarchy",
+              "version": "v16",
+              "year": 2022
+            },
+            {
+              "codehigh": "0.926",
+              "codelow": "0.85",
+              "coder_count": null,
+              "country_id": 5,
+              "country_name": "Sweden",
+              "country_text_id": "SWE",
+              "historical_date": null,
+              "historical_or_non_iso": false,
+              "id": "v16:v2x_polyarchy:SWE:2023",
+              "iso3": "SWE",
+              "ordinal": null,
+              "question_id": 730,
+              "release_date": "2026-03",
+              "scale": "Interval, from low to high (0-1).",
+              "sd": null,
+              "source_url": "https://v-dem.net/data_analysis/GetGraphData/?country_id=5&question_id=730&scale=Original&graph_type=Variable",
+              "unit": "Interval, from low to high (0-1).",
+              "value": "0.883",
+              "value_num": 0.883,
+              "variable": "v2x_polyarchy",
+              "version": "v16",
+              "year": 2023
+            },
+            {
+              "codehigh": "0.92",
+              "codelow": "0.843",
+              "coder_count": null,
+              "country_id": 5,
+              "country_name": "Sweden",
+              "country_text_id": "SWE",
+              "historical_date": null,
+              "historical_or_non_iso": false,
+              "id": "v16:v2x_polyarchy:SWE:2024",
+              "iso3": "SWE",
+              "ordinal": null,
+              "question_id": 730,
+              "release_date": "2026-03",
+              "scale": "Interval, from low to high (0-1).",
+              "sd": null,
+              "source_url": "https://v-dem.net/data_analysis/GetGraphData/?country_id=5&question_id=730&scale=Original&graph_type=Variable",
+              "unit": "Interval, from low to high (0-1).",
+              "value": "0.881",
+              "value_num": 0.881,
+              "variable": "v2x_polyarchy",
+              "version": "v16",
+              "year": 2024
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:58:15.000Z",
+          "schema_version": "1.0.0",
+          "source_release_date": "2026-03",
+          "source_updated_at": null,
+          "source_url": "https://v-dem.net/data_analysis/VariableGraph/",
+          "source_urls": [
+            "https://v-dem.net/data_analysis/GetGraphData/?country_id=5&question_id=730&scale=Original&graph_type=Variable"
+          ],
+          "source_version": "v16",
+          "total": 6,
+          "variables": [
+            "v2x_polyarchy"
+          ],
+          "version": "v16",
+          "warnings": [],
+          "year_from": 2020,
+          "year_to": null
+        },
+        "recordedAt": "2026-09-15T03:58:15.000Z"
+      },
+      "execute": {
+        "provider": "v-dem-net",
+        "capability": "democracy/data"
+      }
+    },
+    {
+      "id": "v-dem-net/democracy/datasets",
+      "provider": "v-dem-net",
+      "capability": "democracy/datasets",
+      "name": "Datasets",
+      "description": "Current V-Dem dataset releases read live from v-dem.net (Country-Year Core, Country-Year Full+Others, Country-Date, Coder-Level: version, published month, download landing page) plus the ERT and V-Party companion datasets, each with codebook URL, citation, CC BY-SA 4.0 license and terms URL.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [],
+      "response": {
+        "about": "Current V-Dem dataset releases read live from v-dem.net (Country-Year Core, Country-Year Full+Others, Country-Date, Coder-Level: version, published month, download landing page) plus the ERT and V-Party companion datasets, each with codebook URL, citation, CC BY-SA 4.0 license and terms URL.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "citation",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "function",
+            "type": "string"
+          },
+          {
+            "name": "license",
+            "type": "string"
+          },
+          {
+            "name": "license_url",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "offset",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "release_cadence",
+            "type": "string"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time of retrieval."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_release_date",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "object",
+            "about": "V-Dem publishes a release month only; never copied from retrieval time."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "source_version",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "citation": "Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Fabio Angiolillo, Michael Bernhard, Agnes Cornell, M. Steven Fish, Linnea Fox, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Ana Good God, Allen Hicken, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Anja Neundorf, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Johannes von Römer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundström, Marcus Tannenberg, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2026. \"V-Dem [Country-Year/Country-Date] Dataset v16\" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds26.",
+          "complete": true,
+          "count": 6,
+          "function": "datasets",
+          "license": "CC BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "next_cursor": null,
+          "observed_at_ms": 1789444695000,
+          "offset": 0,
+          "records": [
+            {
+              "citation": "Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Fabio Angiolillo, Michael Bernhard, Agnes Cornell, M. Steven Fish, Linnea Fox, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Ana Good God, Allen Hicken, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Anja Neundorf, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Johannes von Römer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundström, Marcus Tannenberg, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2026. \"V-Dem [Country-Year/Country-Date] Dataset v16\" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds26.",
+              "codebook_url": "https://v-dem.net/documents/70/codebook_v16.pdf",
+              "download_url": "https://v-dem.net/data/the-v-dem-dataset/country-year-v-dem-fullothers-v16/",
+              "id": "country_year_full_others:v16",
+              "kind": "country_year_full_others",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "metadata_source": "live",
+              "name": "Country-Year: V-Dem Full+Others",
+              "release_date": "2026-03",
+              "release_date_precision": "month",
+              "source_url": "https://v-dem.net/data/the-v-dem-dataset/",
+              "terms_url": "https://v-dem.net/data/the-v-dem-dataset/",
+              "version": "v16"
+            },
+            {
+              "citation": "Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Fabio Angiolillo, Michael Bernhard, Agnes Cornell, M. Steven Fish, Linnea Fox, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Ana Good God, Allen Hicken, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Anja Neundorf, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Johannes von Römer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundström, Marcus Tannenberg, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2026. \"V-Dem [Country-Year/Country-Date] Dataset v16\" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds26.",
+              "codebook_url": "https://v-dem.net/documents/70/codebook_v16.pdf",
+              "download_url": "https://v-dem.net/data/the-v-dem-dataset/country-year-v-dem-core-v16/",
+              "id": "country_year_core:v16",
+              "kind": "country_year_core",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "metadata_source": "live",
+              "name": "Country-Year: V-Dem Core",
+              "release_date": "2026-03",
+              "release_date_precision": "month",
+              "source_url": "https://v-dem.net/data/the-v-dem-dataset/",
+              "terms_url": "https://v-dem.net/data/the-v-dem-dataset/",
+              "version": "v16"
+            },
+            {
+              "citation": "Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Fabio Angiolillo, Michael Bernhard, Agnes Cornell, M. Steven Fish, Linnea Fox, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Ana Good God, Allen Hicken, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Anja Neundorf, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Johannes von Römer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundström, Marcus Tannenberg, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2026. \"V-Dem [Country-Year/Country-Date] Dataset v16\" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds26.",
+              "codebook_url": "https://v-dem.net/documents/70/codebook_v16.pdf",
+              "download_url": "https://v-dem.net/data/the-v-dem-dataset/country-date-v-dem-v16/",
+              "id": "country_date:v16",
+              "kind": "country_date",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "metadata_source": "live",
+              "name": "Country-Date: V-Dem",
+              "release_date": "2026-03",
+              "release_date_precision": "month",
+              "source_url": "https://v-dem.net/data/the-v-dem-dataset/",
+              "terms_url": "https://v-dem.net/data/the-v-dem-dataset/",
+              "version": "v16"
+            },
+            {
+              "citation": "Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Fabio Angiolillo, Michael Bernhard, Agnes Cornell, M. Steven Fish, Linnea Fox, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Ana Good God, Allen Hicken, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Anja Neundorf, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Johannes von Römer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundström, Marcus Tannenberg, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2026. \"V-Dem [Country-Year/Country-Date] Dataset v16\" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds26.",
+              "codebook_url": "https://v-dem.net/documents/70/codebook_v16.pdf",
+              "download_url": "https://v-dem.net/data/the-v-dem-dataset/coder-level-v-dem-v16/",
+              "id": "coder_level:v16",
+              "kind": "coder_level",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "metadata_source": "live",
+              "name": "Coder-Level: V-Dem",
+              "release_date": "2026-03",
+              "release_date_precision": "month",
+              "source_url": "https://v-dem.net/data/the-v-dem-dataset/",
+              "terms_url": "https://v-dem.net/data/the-v-dem-dataset/",
+              "version": "v16"
+            },
+            {
+              "citation": "Maerz, Seraphine F., Amanda B. Edgell, Matthew C. Wilson, Sebastian Hellmeier, and Staffan I. Lindberg. 2023. \"Episodes of Regime Transformation.\" Journal of Peace Research. https://doi.org/10.1177/00223433231168192; ERT dataset v16 (V-Dem Institute, https://github.com/vdeminstitute/ERT).",
+              "codebook_url": "https://v-dem.net/documents/9/ert_codebook.pdf",
+              "download_url": "https://raw.githubusercontent.com/vdeminstitute/ERT/master/inst/ert.csv",
+              "id": "ert:v16",
+              "kind": "episodes_of_regime_transformation",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "metadata_source": "embedded_snapshot",
+              "name": "Episodes of Regime Transformation (ERT)",
+              "release_date": "2026-03",
+              "release_date_precision": "month",
+              "source_url": "https://v-dem.net/data/ert-dataset/",
+              "terms_url": "https://v-dem.net/data/ert-dataset/",
+              "version": "v16"
+            },
+            {
+              "citation": "Lindberg, Staffan I., Nils Düpont, Masaaki Higashijima, Yaman Berker Kavasoglu, Kyle L. Marquardt, Michael Bernhard, Holger Döring, Allen Hicken, Melis Laebens, Juraj Medzihorsky, Anja Neundorf, Ora John Reuter, Saskia Ruth-Lovell, Keith R. Weghorst, Nina Wiesehomeier, Joseph Wright, Nazifa Alizada, Paul Bederke, Lisa Gastaldi, Sandra Grahn, Garry Hindle, Nina Ilchenko, Johannes von Römer, Steven Wilson, Daniel Pemstein and Brigitte Seim. 2022. Varieties of Party Identity and Organization (V-Party) Dataset V2. Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vpartydsv2",
+              "codebook_url": "https://v-dem.net/documents/6/vparty_codebook_v2.pdf",
+              "download_url": "https://v-dem.net/data/v-party-dataset/country-party-date-v2/",
+              "id": "vparty:v2",
+              "kind": "v_party",
+              "license": "CC BY-SA 4.0",
+              "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+              "metadata_source": "embedded_snapshot",
+              "name": "V-Party: Country-Party-Date",
+              "release_date": null,
+              "release_date_precision": "month",
+              "source_url": "https://v-dem.net/data/v-party-dataset/",
+              "terms_url": "https://v-dem.net/data/v-party-dataset/",
+              "version": "v2"
+            }
+          ],
+          "release_cadence": "One V-Dem release per year, published in March; ERT follows the V-Dem release; V-Party is irregular (v2: 2022).",
+          "retrieved_at": "2026-09-15T03:58:15.000Z",
+          "schema_version": "1.0.0",
+          "source_release_date": "2026-03",
+          "source_updated_at": null,
+          "source_url": "https://v-dem.net/data/the-v-dem-dataset/",
+          "source_version": "v16",
+          "total": 6,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:58:15.000Z"
+      },
+      "execute": {
+        "provider": "v-dem-net",
+        "capability": "democracy/datasets"
+      }
+    },
+    {
+      "id": "v-dem-net/democracy/ert",
+      "provider": "v-dem-net",
+      "capability": "democracy/ert",
+      "name": "Ert",
+      "description": "Episodes of Regime Transformation (ERT v16) country-year records for up to 20 countries from the V-Dem Institute's official GitHub csv: regime (v2x_regime), polyarchy with bounds, democratization/autocratization episode ids, start/end years and outcomes. Default returns episode years only; rows=all returns every country-year.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "countries",
+          "type": "string[]",
+          "in": "body",
+          "about": "countries",
+          "required": true
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Opaque cursor from a previous page's next_cursor (format o<offset>). null or omitted starts at the first page."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 200,
+          "min": 1,
+          "max": 2000
+        },
+        {
+          "name": "rows",
+          "type": "string",
+          "in": "body",
+          "about": "rows",
+          "default": "episodes",
+          "oneOf": [
+            "episodes",
+            "all"
+          ]
+        },
+        {
+          "name": "year_from",
+          "type": "number",
+          "in": "body",
+          "about": "year_from",
+          "min": 1789,
+          "max": 2100
+        },
+        {
+          "name": "year_to",
+          "type": "number",
+          "in": "body",
+          "about": "year_to",
+          "min": 1789,
+          "max": 2100
+        }
+      ],
+      "response": {
+        "about": "Episodes of Regime Transformation (ERT v16) country-year records for up to 20 countries from the V-Dem Institute's official GitHub csv: regime (v2x_regime), polyarchy with bounds, democratization/autocratization episode ids, start/end years and outcomes. Default returns episode years only; rows=all returns every country-year.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "citation",
+            "type": "string"
+          },
+          {
+            "name": "codebook_url",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "countries",
+            "type": "string[]"
+          },
+          {
+            "name": "function",
+            "type": "string"
+          },
+          {
+            "name": "license",
+            "type": "string"
+          },
+          {
+            "name": "license_url",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "offset",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time of retrieval."
+          },
+          {
+            "name": "rows",
+            "type": "string"
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_release_date",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "object",
+            "about": "V-Dem publishes a release month only; never copied from retrieval time."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "source_version",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          },
+          {
+            "name": "year_from",
+            "type": "number"
+          },
+          {
+            "name": "year_to",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "countries": [
+            "SWE"
+          ],
+          "page_size": 5,
+          "rows": "all",
+          "year_from": 2020
+        },
+        "response": {
+          "citation": "Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Fabio Angiolillo, Michael Bernhard, Agnes Cornell, M. Steven Fish, Linnea Fox, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Ana Good God, Allen Hicken, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Anja Neundorf, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Johannes von Römer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundström, Marcus Tannenberg, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2026. \"V-Dem [Country-Year/Country-Date] Dataset v16\" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds26.",
+          "codebook_url": "https://v-dem.net/documents/9/ert_codebook.pdf",
+          "complete": true,
+          "count": 5,
+          "countries": [
+            "SWE"
+          ],
+          "function": "ert",
+          "license": "CC BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "next_cursor": "o5",
+          "observed_at_ms": 1789444695000,
+          "offset": 0,
+          "records": [
+            {
+              "aut_ep": "0",
+              "aut_ep_id": null,
+              "country_id": 5,
+              "country_name": "Sweden",
+              "country_text_id": "SWE",
+              "dem_ep": "0",
+              "dem_ep_id": null,
+              "fields": {
+                "aut_ep": "0",
+                "aut_ep_censored": "0",
+                "aut_ep_end_year": null,
+                "aut_ep_id": null,
+                "aut_ep_outcome": "0",
+                "aut_ep_outcome_agg": "0",
+                "aut_ep_pbr": null,
+                "aut_ep_prch": null,
+                "aut_ep_start_year": null,
+                "aut_ep_subreg": null,
+                "aut_ep_termination": null,
+                "aut_founding_elec": null,
+                "aut_pre_ep_year": "0",
+                "country_id": "5",
+                "country_name": "Sweden",
+                "country_text_id": "SWE",
+                "dem_ep": "0",
+                "dem_ep_censored": "0",
+                "dem_ep_end_year": null,
+                "dem_ep_id": null,
+                "dem_ep_outcome": "0",
+                "dem_ep_outcome_agg": "0",
+                "dem_ep_prch": null,
+                "dem_ep_ptr": null,
+                "dem_ep_start_year": null,
+                "dem_ep_subdep": null,
+                "dem_ep_termination": null,
+                "dem_founding_elec": "1924",
+                "dem_pre_ep_year": "0",
+                "reg_end_year": "2025",
+                "reg_id": "SWE_1922_2025",
+                "reg_start_year": "1922",
+                "reg_trans": "0",
+                "reg_type": "1",
+                "row_regch_censored": null,
+                "row_regch_event": "0",
+                "v2x_polyarchy": "0.901",
+                "v2x_polyarchy_codehigh": "0.94",
+                "v2x_polyarchy_codelow": "0.869",
+                "v2x_regime": "3",
+                "year": "2020"
+              },
+              "id": "ert:SWE:2020",
+              "iso3": "SWE",
+              "reg_id": "SWE_1922_2025",
+              "release_date": "2026-03",
+              "source_url": "https://raw.githubusercontent.com/vdeminstitute/ERT/master/inst/ert.csv",
+              "v2x_polyarchy": "0.901",
+              "v2x_polyarchy_codehigh": "0.94",
+              "v2x_polyarchy_codelow": "0.869",
+              "v2x_regime": "3",
+              "version": "v16",
+              "year": 2020
+            },
+            {
+              "aut_ep": "0",
+              "aut_ep_id": null,
+              "country_id": 5,
+              "country_name": "Sweden",
+              "country_text_id": "SWE",
+              "dem_ep": "0",
+              "dem_ep_id": null,
+              "fields": {
+                "aut_ep": "0",
+                "aut_ep_censored": "0",
+                "aut_ep_end_year": null,
+                "aut_ep_id": null,
+                "aut_ep_outcome": "0",
+                "aut_ep_outcome_agg": "0",
+                "aut_ep_pbr": null,
+                "aut_ep_prch": null,
+                "aut_ep_start_year": null,
+                "aut_ep_subreg": null,
+                "aut_ep_termination": null,
+                "aut_founding_elec": null,
+                "aut_pre_ep_year": "0",
+                "country_id": "5",
+                "country_name": "Sweden",
+                "country_text_id": "SWE",
+                "dem_ep": "0",
+                "dem_ep_censored": "0",
+                "dem_ep_end_year": null,
+                "dem_ep_id": null,
+                "dem_ep_outcome": "0",
+                "dem_ep_outcome_agg": "0",
+                "dem_ep_prch": null,
+                "dem_ep_ptr": null,
+                "dem_ep_start_year": null,
+                "dem_ep_subdep": null,
+                "dem_ep_termination": null,
+                "dem_founding_elec": "1924",
+                "dem_pre_ep_year": "0",
+                "reg_end_year": "2025",
+                "reg_id": "SWE_1922_2025",
+                "reg_start_year": "1922",
+                "reg_trans": "0",
+                "reg_type": "1",
+                "row_regch_censored": null,
+                "row_regch_event": "0",
+                "v2x_polyarchy": "0.9",
+                "v2x_polyarchy_codehigh": "0.938",
+                "v2x_polyarchy_codelow": "0.871",
+                "v2x_regime": "3",
+                "year": "2021"
+              },
+              "id": "ert:SWE:2021",
+              "iso3": "SWE",
+              "reg_id": "SWE_1922_2025",
+              "release_date": "2026-03",
+              "source_url": "https://raw.githubusercontent.com/vdeminstitute/ERT/master/inst/ert.csv",
+              "v2x_polyarchy": "0.9",
+              "v2x_polyarchy_codehigh": "0.938",
+              "v2x_polyarchy_codelow": "0.871",
+              "v2x_regime": "3",
+              "version": "v16",
+              "year": 2021
+            },
+            {
+              "aut_ep": "0",
+              "aut_ep_id": null,
+              "country_id": 5,
+              "country_name": "Sweden",
+              "country_text_id": "SWE",
+              "dem_ep": "0",
+              "dem_ep_id": null,
+              "fields": {
+                "aut_ep": "0",
+                "aut_ep_censored": "0",
+                "aut_ep_end_year": null,
+                "aut_ep_id": null,
+                "aut_ep_outcome": "0",
+                "aut_ep_outcome_agg": "0",
+                "aut_ep_pbr": null,
+                "aut_ep_prch": null,
+                "aut_ep_start_year": null,
+                "aut_ep_subreg": null,
+                "aut_ep_termination": null,
+                "aut_founding_elec": null,
+                "aut_pre_ep_year": "0",
+                "country_id": "5",
+                "country_name": "Sweden",
+                "country_text_id": "SWE",
+                "dem_ep": "0",
+                "dem_ep_censored": "0",
+                "dem_ep_end_year": null,
+                "dem_ep_id": null,
+                "dem_ep_outcome": "0",
+                "dem_ep_outcome_agg": "0",
+                "dem_ep_prch": null,
+                "dem_ep_ptr": null,
+                "dem_ep_start_year": null,
+                "dem_ep_subdep": null,
+                "dem_ep_termination": null,
+                "dem_founding_elec": "1924",
+                "dem_pre_ep_year": "0",
+                "reg_end_year": "2025",
+                "reg_id": "SWE_1922_2025",
+                "reg_start_year": "1922",
+                "reg_trans": "0",
+                "reg_type": "1",
+                "row_regch_censored": null,
+                "row_regch_event": "0",
+                "v2x_polyarchy": "0.892",
+                "v2x_polyarchy_codehigh": "0.935",
+                "v2x_polyarchy_codelow": "0.864",
+                "v2x_regime": "3",
+                "year": "2022"
+              },
+              "id": "ert:SWE:2022",
+              "iso3": "SWE",
+              "reg_id": "SWE_1922_2025",
+              "release_date": "2026-03",
+              "source_url": "https://raw.githubusercontent.com/vdeminstitute/ERT/master/inst/ert.csv",
+              "v2x_polyarchy": "0.892",
+              "v2x_polyarchy_codehigh": "0.935",
+              "v2x_polyarchy_codelow": "0.864",
+              "v2x_regime": "3",
+              "version": "v16",
+              "year": 2022
+            },
+            {
+              "aut_ep": "0",
+              "aut_ep_id": null,
+              "country_id": 5,
+              "country_name": "Sweden",
+              "country_text_id": "SWE",
+              "dem_ep": "0",
+              "dem_ep_id": null,
+              "fields": {
+                "aut_ep": "0",
+                "aut_ep_censored": "0",
+                "aut_ep_end_year": null,
+                "aut_ep_id": null,
+                "aut_ep_outcome": "0",
+                "aut_ep_outcome_agg": "0",
+                "aut_ep_pbr": null,
+                "aut_ep_prch": null,
+                "aut_ep_start_year": null,
+                "aut_ep_subreg": null,
+                "aut_ep_termination": null,
+                "aut_founding_elec": null,
+                "aut_pre_ep_year": "0",
+                "country_id": "5",
+                "country_name": "Sweden",
+                "country_text_id": "SWE",
+                "dem_ep": "0",
+                "dem_ep_censored": "0",
+                "dem_ep_end_year": null,
+                "dem_ep_id": null,
+                "dem_ep_outcome": "0",
+                "dem_ep_outcome_agg": "0",
+                "dem_ep_prch": null,
+                "dem_ep_ptr": null,
+                "dem_ep_start_year": null,
+                "dem_ep_subdep": null,
+                "dem_ep_termination": null,
+                "dem_founding_elec": "1924",
+                "dem_pre_ep_year": "0",
+                "reg_end_year": "2025",
+                "reg_id": "SWE_1922_2025",
+                "reg_start_year": "1922",
+                "reg_trans": "0",
+                "reg_type": "1",
+                "row_regch_censored": null,
+                "row_regch_event": "0",
+                "v2x_polyarchy": "0.883",
+                "v2x_polyarchy_codehigh": "0.926",
+                "v2x_polyarchy_codelow": "0.85",
+                "v2x_regime": "3",
+                "year": "2023"
+              },
+              "id": "ert:SWE:2023",
+              "iso3": "SWE",
+              "reg_id": "SWE_1922_2025",
+              "release_date": "2026-03",
+              "source_url": "https://raw.githubusercontent.com/vdeminstitute/ERT/master/inst/ert.csv",
+              "v2x_polyarchy": "0.883",
+              "v2x_polyarchy_codehigh": "0.926",
+              "v2x_polyarchy_codelow": "0.85",
+              "v2x_regime": "3",
+              "version": "v16",
+              "year": 2023
+            },
+            {
+              "aut_ep": "0",
+              "aut_ep_id": null,
+              "country_id": 5,
+              "country_name": "Sweden",
+              "country_text_id": "SWE",
+              "dem_ep": "0",
+              "dem_ep_id": null,
+              "fields": {
+                "aut_ep": "0",
+                "aut_ep_censored": "0",
+                "aut_ep_end_year": null,
+                "aut_ep_id": null,
+                "aut_ep_outcome": "0",
+                "aut_ep_outcome_agg": "0",
+                "aut_ep_pbr": null,
+                "aut_ep_prch": null,
+                "aut_ep_start_year": null,
+                "aut_ep_subreg": null,
+                "aut_ep_termination": null,
+                "aut_founding_elec": null,
+                "aut_pre_ep_year": "0",
+                "country_id": "5",
+                "country_name": "Sweden",
+                "country_text_id": "SWE",
+                "dem_ep": "0",
+                "dem_ep_censored": "0",
+                "dem_ep_end_year": null,
+                "dem_ep_id": null,
+                "dem_ep_outcome": "0",
+                "dem_ep_outcome_agg": "0",
+                "dem_ep_prch": null,
+                "dem_ep_ptr": null,
+                "dem_ep_start_year": null,
+                "dem_ep_subdep": null,
+                "dem_ep_termination": null,
+                "dem_founding_elec": "1924",
+                "dem_pre_ep_year": "0",
+                "reg_end_year": "2025",
+                "reg_id": "SWE_1922_2025",
+                "reg_start_year": "1922",
+                "reg_trans": "0",
+                "reg_type": "1",
+                "row_regch_censored": null,
+                "row_regch_event": "0",
+                "v2x_polyarchy": "0.881",
+                "v2x_polyarchy_codehigh": "0.92",
+                "v2x_polyarchy_codelow": "0.843",
+                "v2x_regime": "3",
+                "year": "2024"
+              },
+              "id": "ert:SWE:2024",
+              "iso3": "SWE",
+              "reg_id": "SWE_1922_2025",
+              "release_date": "2026-03",
+              "source_url": "https://raw.githubusercontent.com/vdeminstitute/ERT/master/inst/ert.csv",
+              "v2x_polyarchy": "0.881",
+              "v2x_polyarchy_codehigh": "0.92",
+              "v2x_polyarchy_codelow": "0.843",
+              "v2x_regime": "3",
+              "version": "v16",
+              "year": 2024
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:58:15.000Z",
+          "rows": "all",
+          "schema_version": "1.0.0",
+          "source_release_date": "2026-03",
+          "source_updated_at": null,
+          "source_url": "https://raw.githubusercontent.com/vdeminstitute/ERT/master/inst/ert.csv",
+          "source_version": "v16",
+          "total": 6,
+          "warnings": [],
+          "year_from": 2020,
+          "year_to": null
+        },
+        "recordedAt": "2026-09-15T03:58:15.000Z"
+      },
+      "execute": {
+        "provider": "v-dem-net",
+        "capability": "democracy/ert"
+      }
+    },
+    {
+      "id": "v-dem-net/democracy/variable",
+      "provider": "v-dem-net",
+      "capability": "democracy/variable",
+      "name": "Variable",
+      "description": "Live codebook entry for one V-Dem variable tag (question, clarification, scale, aggregation, source variables, data-release line) from v-dem.net, checked against the pinned release; a tag absent from that release is an input error naming the release that introduced or dropped it.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "tag",
+          "type": "string",
+          "in": "body",
+          "about": "Variable tag, e.g. v2x_polyarchy. Pattern: ^[A-Za-z0-9_]{2,64}$.",
+          "required": true
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "in": "body",
+          "about": "Dataset release to pin, e.g. v16. Live observations are served for the current release only (v16, March 2026); variable metadata can be filtered for any release via the codebook's data-release line. Pattern: ^v?[0-9]{1,2}$.",
+          "default": "v16"
+        }
+      ],
+      "response": {
+        "about": "Live codebook entry for one V-Dem variable tag (question, clarification, scale, aggregation, source variables, data-release line) from v-dem.net, checked against the pinned release; a tag absent from that release is an input error naming the release that introduced or dropped it.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "citation",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "function",
+            "type": "string"
+          },
+          {
+            "name": "license",
+            "type": "string"
+          },
+          {
+            "name": "license_url",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "offset",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time of retrieval."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_release_date",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "object",
+            "about": "V-Dem publishes a release month only; never copied from retrieval time."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "source_version",
+            "type": "string"
+          },
+          {
+            "name": "tag",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "tag": "v2x_polyarchy"
+        },
+        "response": {
+          "citation": "Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Fabio Angiolillo, Michael Bernhard, Agnes Cornell, M. Steven Fish, Linnea Fox, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Ana Good God, Allen Hicken, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Anja Neundorf, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Johannes von Römer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundström, Marcus Tannenberg, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2026. \"V-Dem [Country-Year/Country-Date] Dataset v16\" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds26.",
+          "complete": true,
+          "count": 1,
+          "function": "variable",
+          "license": "CC BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "next_cursor": null,
+          "observed_at_ms": 1789444695000,
+          "offset": 0,
+          "records": [
+            {
+              "aggregation": "The index is formed by taking the average of, on the one hand, the weighted average of the indices measuring freedom of association thick (v2x_frassoc_thick), clean elections (v2xel_frefair), freedom of expression (v2x_freexp_altinf), elected officials (v2x_elecoff), and suffrage (v2x_suffr) and, on the other, the five-way multiplicative interaction between those indices. This is half way between a straight average and strict multiplication, meaning the average of the two. It is thus a compromise between the two most well known aggregation formulas in the literature, both allowing partial \"compensation\" in one sub-component for lack of polyarchy in the others, but also punishing countries not strong in one sub-component according to the \"weakest link\" argument. The aggregation is done at the level of Dahl's sub-components with the one exception of the non-electoral component. The index is aggregated using this formula: begin{equation* begin{aligned v2x_polyarchy = { & .5 * MPI + .5 * API & = .5 * (v2x_elecoff * v2xel_frefair * v2x_frassoc_thick * & v2x_suffr * v2x_freexp_altinf) & + .5 * ((1/8) * v2x_elecoff + (1/4) * v2xel_frefair & + (1/4) * v2x_frassoc_thick + (1/8) * v2x_suffr & + (1/4) * v2x_freexp_altinf) end{aligned end{equation*",
+              "clarification": "The electoral principle of democracy seeks to embody the core value of making rulers responsive to citizens, achieved through electoral competition for the electorate's approval under circumstances when suffrage is extensive; political and civil society organizations can operate freely; elections are clean and not marred by fraud or systematic irregularities; and elections affect the composition of the chief executive of the country. In between elections, there is freedom of expression and an independent media capable of presenting alternative views on matters of political relevance. In the V-Dem conceptual scheme, electoral democracy is understood as an essential element of any other conception of representative democracy --- liberal, participatory, deliberative, egalitarian, or some other.",
+              "codebook_url": "https://v-dem.net/documents/70/codebook_v16.pdf",
+              "cross_coder_aggregation": null,
+              "data_release": "1-16. Release 1-5 used a different, preliminary aggregation formula.",
+              "first_release": "v1",
+              "id": "v16:v2x_polyarchy",
+              "index_level": "high",
+              "index_root": "Deliberative Democracy Index",
+              "last_release": "v16",
+              "metadata_source": "live",
+              "name": "Electoral democracy index",
+              "notes": null,
+              "parent_tags": [
+                "v2x_delibdem"
+              ],
+              "project_managers": "Jan Teorell",
+              "question": "To what extent is the ideal of electoral democracy in its fullest sense achieved?",
+              "question_id": 730,
+              "release_ranges": [
+                [
+                  1,
+                  16
+                ]
+              ],
+              "responses": null,
+              "scale": "Interval, from low to high (0-1).",
+              "section": "Deliberative Democracy Index",
+              "snapshot_date": "2026-09-12",
+              "source_url": "https://v-dem.net/data_analysis/GetCodebookEntry/?question_id=730",
+              "source_variables": [
+                "v2x_freexp_altinf",
+                "v2x_frassoc_thick",
+                "v2x_suffr",
+                "v2xel_frefair",
+                "v2x_elecoff"
+              ],
+              "tag": "v2x_polyarchy",
+              "version": "v16",
+              "years": "1789-2025"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:58:15.000Z",
+          "schema_version": "1.0.0",
+          "source_release_date": "2026-03",
+          "source_updated_at": null,
+          "source_url": "https://v-dem.net/data_analysis/GetCodebookEntry/?question_id=730",
+          "source_version": "v16",
+          "tag": "v2x_polyarchy",
+          "total": 1,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:58:15.000Z"
+      },
+      "execute": {
+        "provider": "v-dem-net",
+        "capability": "democracy/variable"
+      }
+    },
+    {
+      "id": "v-dem-net/democracy/variables",
+      "provider": "v-dem-net",
+      "capability": "democracy/variables",
+      "name": "Variables",
+      "description": "Search the V-Dem codebook (404 variables served by v-dem.net's graphing API) by tag, name or question text, filtered by thematic section, index level (high, mid, indicator, other) and the release a variable belongs to. Returns codebook metadata from a dated embedded snapshot of the official codebook entries; no live request.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Opaque cursor from a previous page's next_cursor (format o<offset>). null or omitted starts at the first page."
+        },
+        {
+          "name": "index_level",
+          "type": "string",
+          "in": "body",
+          "about": "index_level",
+          "oneOf": [
+            "high",
+            "mid",
+            "indicator",
+            "other",
+            "null"
+          ]
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 50,
+          "min": 1,
+          "max": 2000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive match on tag, name or question text. Omit to list."
+        },
+        {
+          "name": "section",
+          "type": "string",
+          "in": "body",
+          "about": "Thematic section substring, e.g. Elections, Civil Liberties, Judiciary, Liberal Democracy Index."
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "in": "body",
+          "about": "Dataset release to pin, e.g. v16. Live observations are served for the current release only (v16, March 2026); variable metadata can be filtered for any release via the codebook's data-release line. Pattern: ^v?[0-9]{1,2}$.",
+          "default": "v16"
+        }
+      ],
+      "response": {
+        "about": "Search the V-Dem codebook (404 variables served by v-dem.net's graphing API) by tag, name or question text, filtered by thematic section, index level (high, mid, indicator, other) and the release a variable belongs to. Returns codebook metadata from a dated embedded snapshot of the official codebook entries; no live request.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "citation",
+            "type": "string"
+          },
+          {
+            "name": "complete",
+            "type": "boolean"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "function",
+            "type": "string"
+          },
+          {
+            "name": "index_level",
+            "type": "string"
+          },
+          {
+            "name": "license",
+            "type": "string"
+          },
+          {
+            "name": "license_url",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "offset",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time of retrieval."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "section",
+            "type": "string"
+          },
+          {
+            "name": "source_release_date",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "object",
+            "about": "V-Dem publishes a release month only; never copied from retrieval time."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "source_version",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "version",
+            "type": "string"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "page_size": 5,
+          "query": "v2x_polyarchy"
+        },
+        "response": {
+          "citation": "Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Fabio Angiolillo, Michael Bernhard, Agnes Cornell, M. Steven Fish, Linnea Fox, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Ana Good God, Allen Hicken, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Anja Neundorf, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Johannes von Römer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundström, Marcus Tannenberg, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2026. \"V-Dem [Country-Year/Country-Date] Dataset v16\" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds26.",
+          "complete": true,
+          "count": 2,
+          "function": "variables",
+          "index_level": null,
+          "license": "CC BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "next_cursor": null,
+          "observed_at_ms": 1789444695000,
+          "offset": 0,
+          "query": "v2x_polyarchy",
+          "records": [
+            {
+              "aggregation": "The index is formed by taking the average of, on the one hand, the weighted average of the indices measuring freedom of association thick (v2x_frassoc_thick), clean elections (v2xel_frefair), freedom of expression (v2x_freexp_altinf), elected officials (v2x_elecoff), and suffrage (v2x_suffr) and, on the other, the five-way multiplicative interaction between those indices. This is half way between a straight average and strict multiplication, meaning the average of the two. It is thus a compromise between the two most well known aggregation formulas in the literature, both allowing partial \"compensation\" in one sub-component for lack of polyarchy in the others, but also punishing countries not strong in one sub-component according to the \"weakest link\" argument. The aggregation is done at the level of Dahl's sub-components with the one exception of the non-electoral component. The index is aggregated using this formula: begin{equation*\nbegin{aligned\nv2x_polyarchy = { & .5 * MPI + .5 * API \n& = .5 * (v2x_elecoff * v2xel_frefair *  v2x_frassoc_thick * \n& v2x_suffr *  v2x_freexp_altinf) \n& + .5 * ((1/8) * v2x_elecoff + (1/4) *  v2xel_frefair \n&  + (1/4) * v2x_frassoc_thick + (1/8) * v2x_suffr \n& + (1/4) * v2x_freexp_altinf)\nend{aligned\nend{equation*",
+              "clarification": "The electoral principle of democracy seeks to embody the core value of making rulers responsive to citizens, achieved through electoral competition for the electorate's approval under circumstances when suffrage is extensive; political and civil society organizations can operate freely; elections are clean and not marred by fraud or systematic irregularities; and elections affect the composition of the chief executive of the country. In between elections, there is freedom of expression and an independent media capable of presenting alternative views on matters of political relevance. In the V-Dem conceptual scheme, electoral democracy is understood as an essential element of any other conception of representative democracy --- liberal, participatory, deliberative, egalitarian, or some other.",
+              "codebook_url": "https://v-dem.net/documents/70/codebook_v16.pdf",
+              "cross_coder_aggregation": null,
+              "data_release": "1-16. Release 1-5 used a different, preliminary aggregation formula.",
+              "first_release": "v1",
+              "id": "v16:v2x_polyarchy",
+              "index_level": "high",
+              "index_root": "Deliberative Democracy Index",
+              "last_release": "v16",
+              "metadata_source": "embedded_snapshot",
+              "name": "Electoral democracy index",
+              "notes": null,
+              "parent_tags": [
+                "v2x_delibdem"
+              ],
+              "project_managers": "Jan Teorell",
+              "question": "To what extent is the ideal of electoral democracy in its fullest sense achieved?",
+              "question_id": 730,
+              "release_ranges": [
+                [
+                  1,
+                  16
+                ]
+              ],
+              "responses": null,
+              "scale": "Interval, from low to high (0-1).",
+              "section": "Deliberative Democracy Index",
+              "snapshot_date": "2026-09-12",
+              "source_url": "https://v-dem.net/data_analysis/GetCodebookEntry/?question_id=730",
+              "source_variables": [
+                "v2x_freexp_altinf",
+                "v2x_frassoc_thick",
+                "v2x_suffr",
+                "v2xel_frefair",
+                "v2x_elecoff"
+              ],
+              "tag": "v2x_polyarchy",
+              "version": "v16",
+              "years": "1789-2025"
+            },
+            {
+              "aggregation": "This index is formed by taking the sum of all past values on the Electoral Democracy Index using a 1% annual depreciation rate and then rescaling into a 0-1 interval. We assume that cases enter the sample with no accumulated stock. For each subsequent year, we calculate stock as the previous year’s depreciated stock plus the prior year’s level of electoral democracy (v2x polyarchy). To improve interpretability and cross-country comparability, we rescale stock variable to fall within the 0-1 interval. The stock index is calculated using the following formula: The procedure for filling gaps is as follows:   [v2x_polyarchy_stock = (0.01) sum_{s=0^{t-1 0.99^{,t-1-s, v2x_polyarchy_{i, s ] (1) Historical recoding (e.g., based on colonial or occupying regimes) is applied where appropriate, following V-Dem Country Coding Units guidance. These decisions aim to balance historical continuity with transparency. (2) Missing values are filled forward up to five years if there is sufficient prior information (at least five years of data before the gap). (3) If no prior data exist or the gap exceeds five years, stock is left missing. Full documentation of missing value handling is available in the demstock package and in citet{EdgellB.",
+              "clarification": "A country’s accumulated stock of electoral democracy accounts for the cumulative sum of all past values on the Electoral Democracy Index, with a one-percent annual depreciation rate. This measure reflects the extent to which a country has accumulated experience over time with electoral democracy, compared to a hypothetical country that has always attained the ideal of electoral democracy to the fullest extent. A higher value indicates longer or more consistent electoral democracy, even if recent levels have fluctuated.",
+              "codebook_url": "https://v-dem.net/documents/70/codebook_v16.pdf",
+              "cross_coder_aggregation": null,
+              "data_release": "16.",
+              "first_release": "v16",
+              "id": "v16:v2x_polyarchy_stock",
+              "index_level": "other",
+              "index_root": null,
+              "last_release": "v16",
+              "metadata_source": "embedded_snapshot",
+              "name": "Electoral Democracy Stock",
+              "notes": null,
+              "parent_tags": [],
+              "project_managers": "Vanessa Boese-Schlosser, Amanda B. Edgell, Matthew C. Wilson",
+              "question": "What is the country’s accumulated stock of electoral democracy?",
+              "question_id": 4819,
+              "release_ranges": [
+                [
+                  16,
+                  16
+                ]
+              ],
+              "responses": null,
+              "scale": "Interval, from low to high (0-1).",
+              "section": "Other",
+              "snapshot_date": "2026-09-12",
+              "source_url": "https://v-dem.net/data_analysis/GetCodebookEntry/?question_id=4819",
+              "source_variables": [
+                "v2x_polyarchy"
+              ],
+              "tag": "v2x_polyarchy_stock",
+              "version": "v16",
+              "years": "1790-2025"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:58:15.000Z",
+          "schema_version": "1.0.0",
+          "section": null,
+          "source_release_date": "2026-03",
+          "source_updated_at": null,
+          "source_url": "https://v-dem.net/data_analysis/VariableGraph/",
+          "source_version": "v16",
+          "total": 2,
+          "version": "v16",
+          "warnings": [
+            "codebook metadata is an embedded snapshot of https://v-dem.net/data_analysis/GetCodebookEntry/ taken 2026-09-12; call `variable` for a live entry"
+          ]
+        },
+        "recordedAt": "2026-09-15T03:58:15.000Z"
+      },
+      "execute": {
+        "provider": "v-dem-net",
+        "capability": "democracy/variables"
+      }
+    }
+  ]
+}

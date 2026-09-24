@@ -1,0 +1,558 @@
+{
+  "id": "ihme-gbd-results",
+  "provider": "ihme-gbd-results",
+  "name": "IHME GBD Results",
+  "description": "IHME Global Burden of Disease Results tool metadata: release versions and the full cause, location, age, sex, measure, metric and risk-factor (REI) hierarchies for GBD 2021 and GBD 2023.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "ihme-gbd-results"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "ihme-gbd-results/gbd/children",
+      "provider": "ihme-gbd-results",
+      "capability": "gbd/children",
+      "name": "Hierarchy children",
+      "description": "Traverse one level down a hierarchy: the direct children of a cause, location or rei node (e.g. GBD region Western Europe to its 24 countries), plus the parent node and its ancestors.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "type",
+          "in": "body",
+          "type": "string",
+          "about": "Hierarchical entity type.",
+          "required": true,
+          "oneOf": [
+            "cause",
+            "location",
+            "rei"
+          ]
+        },
+        {
+          "name": "id",
+          "in": "body",
+          "type": "number",
+          "about": "Parent node id, e.g. location 73 (Western Europe), cause 294 (All causes), rei 169 (All risk factors).",
+          "required": true
+        },
+        {
+          "name": "gbd_round",
+          "in": "body",
+          "type": "number",
+          "about": "GBD round served by the Results tool: 2021 (gbd2021.healthdata.org) or 2023 (vizhub.healthdata.org, current release). Pinned on every record.",
+          "required": true,
+          "oneOf": [
+            "2021",
+            "2023"
+          ]
+        },
+        {
+          "name": "proxy",
+          "in": "body",
+          "type": "object",
+          "about": "Optional runner proxy override {kind: datacenter|residential|mobile, country?, sticky?}. Staging leases datacenter only."
+        }
+      ],
+      "response": {
+        "about": "Traverse one level down a hierarchy: the direct children of a cause, location or rei node (e.g. GBD region Western Europe to its 24 countries), plus the parent node and its ancestors.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "type",
+            "type": "string",
+            "about": "cause | location | age | sex | measure | metric | rei."
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "Stable GBD entity id, shared across rounds."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "parent_id",
+            "type": "number",
+            "about": "Parent in the hierarchy; null for roots, flat types and entities outside the tree."
+          },
+          {
+            "name": "level",
+            "type": "number",
+            "about": "Depth in its tree, 0 = root."
+          },
+          {
+            "name": "iso3",
+            "type": "string",
+            "about": "Always null: the tool publishes no ISO3 codes."
+          },
+          {
+            "name": "gbd_round",
+            "type": "number"
+          },
+          {
+            "name": "version_id",
+            "type": "number"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Version release stamp in UTC, or null."
+          },
+          {
+            "name": "tree",
+            "type": "string",
+            "about": "gbd (official hierarchy), custom (IHME custom region groups) or null."
+          },
+          {
+            "name": "rei_type",
+            "type": "string",
+            "about": "risk | etiology | impairment | injury n-codes for rei records; null otherwise."
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "most_detailed",
+            "type": "boolean",
+            "about": "Source most_detailed flag, or null when absent."
+          },
+          {
+            "name": "sort_order",
+            "type": "number",
+            "about": "Source sort order, or null."
+          },
+          {
+            "name": "children_count",
+            "type": "number"
+          },
+          {
+            "name": "child_ids",
+            "type": "number[]"
+          },
+          {
+            "name": "source",
+            "type": "object",
+            "about": "Raw php/metadata/ entry preserved verbatim (codes such as cause \"B.2.2\", sex flags, populations)."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "ihme-gbd-results",
+        "capability": "gbd/children"
+      }
+    },
+    {
+      "id": "ihme-gbd-results/gbd/lookup",
+      "provider": "ihme-gbd-results",
+      "capability": "gbd/lookup",
+      "name": "Entity lookup",
+      "description": "Resolve one entity (cause, location, age, sex, measure, metric or rei) by GBD id in a GBD round: its hierarchy_node record plus ancestors (root first) and direct children.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "type",
+          "in": "body",
+          "type": "string",
+          "about": "Entity type.",
+          "required": true,
+          "oneOf": [
+            "cause",
+            "location",
+            "age",
+            "sex",
+            "measure",
+            "metric",
+            "rei"
+          ]
+        },
+        {
+          "name": "id",
+          "in": "body",
+          "type": "number",
+          "about": "GBD entity id, e.g. cause 493 (ischemic heart disease), location 102 (USA), age 27 (age-standardized), rei 99 (smoking).",
+          "required": true
+        },
+        {
+          "name": "gbd_round",
+          "in": "body",
+          "type": "number",
+          "about": "GBD round served by the Results tool: 2021 (gbd2021.healthdata.org) or 2023 (vizhub.healthdata.org, current release). Pinned on every record.",
+          "required": true,
+          "oneOf": [
+            "2021",
+            "2023"
+          ]
+        },
+        {
+          "name": "proxy",
+          "in": "body",
+          "type": "object",
+          "about": "Optional runner proxy override {kind: datacenter|residential|mobile, country?, sticky?}. Staging leases datacenter only."
+        }
+      ],
+      "response": {
+        "about": "Resolve one entity (cause, location, age, sex, measure, metric or rei) by GBD id in a GBD round: its hierarchy_node record plus ancestors (root first) and direct children.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "type",
+            "type": "string",
+            "about": "cause | location | age | sex | measure | metric | rei."
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "Stable GBD entity id, shared across rounds."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "parent_id",
+            "type": "number",
+            "about": "Parent in the hierarchy; null for roots, flat types and entities outside the tree."
+          },
+          {
+            "name": "level",
+            "type": "number",
+            "about": "Depth in its tree, 0 = root."
+          },
+          {
+            "name": "iso3",
+            "type": "string",
+            "about": "Always null: the tool publishes no ISO3 codes."
+          },
+          {
+            "name": "gbd_round",
+            "type": "number"
+          },
+          {
+            "name": "version_id",
+            "type": "number"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Version release stamp in UTC, or null."
+          },
+          {
+            "name": "tree",
+            "type": "string",
+            "about": "gbd (official hierarchy), custom (IHME custom region groups) or null."
+          },
+          {
+            "name": "rei_type",
+            "type": "string",
+            "about": "risk | etiology | impairment | injury n-codes for rei records; null otherwise."
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "most_detailed",
+            "type": "boolean",
+            "about": "Source most_detailed flag, or null when absent."
+          },
+          {
+            "name": "sort_order",
+            "type": "number",
+            "about": "Source sort order, or null."
+          },
+          {
+            "name": "children_count",
+            "type": "number"
+          },
+          {
+            "name": "child_ids",
+            "type": "number[]"
+          },
+          {
+            "name": "source",
+            "type": "object",
+            "about": "Raw php/metadata/ entry preserved verbatim (codes such as cause \"B.2.2\", sex flags, populations)."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "ihme-gbd-results",
+        "capability": "gbd/lookup"
+      }
+    },
+    {
+      "id": "ihme-gbd-results/gbd/metadata",
+      "provider": "ihme-gbd-results",
+      "capability": "gbd/metadata",
+      "name": "Hierarchy page",
+      "description": "One page of hierarchy_node records for an entity type (cause, location, age, sex, measure, metric, rei) in a GBD round: id, name, parent_id, level, tree placement and the raw source entry. Tree types come in depth-first hierarchy order; page with cursor until next_cursor is null.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "type",
+          "in": "body",
+          "type": "string",
+          "about": "Entity type to list.",
+          "required": true,
+          "oneOf": [
+            "cause",
+            "location",
+            "age",
+            "sex",
+            "measure",
+            "metric",
+            "rei"
+          ]
+        },
+        {
+          "name": "gbd_round",
+          "in": "body",
+          "type": "number",
+          "about": "GBD round served by the Results tool: 2021 (gbd2021.healthdata.org) or 2023 (vizhub.healthdata.org, current release). Pinned on every record.",
+          "required": true,
+          "oneOf": [
+            "2021",
+            "2023"
+          ]
+        },
+        {
+          "name": "page_size",
+          "in": "body",
+          "type": "number",
+          "about": "Records per page.",
+          "min": 1,
+          "max": 1000,
+          "default": 200
+        },
+        {
+          "name": "cursor",
+          "in": "body",
+          "type": "string",
+          "about": "next_cursor from the previous page of the same type and gbd_round."
+        },
+        {
+          "name": "proxy",
+          "in": "body",
+          "type": "object",
+          "about": "Optional runner proxy override {kind: datacenter|residential|mobile, country?, sticky?}. Staging leases datacenter only."
+        }
+      ],
+      "response": {
+        "about": "One page of hierarchy_node records for an entity type (cause, location, age, sex, measure, metric, rei) in a GBD round: id, name, parent_id, level, tree placement and the raw source entry. Tree types come in depth-first hierarchy order; page with cursor until next_cursor is null.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "type",
+            "type": "string",
+            "about": "cause | location | age | sex | measure | metric | rei."
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "Stable GBD entity id, shared across rounds."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "parent_id",
+            "type": "number",
+            "about": "Parent in the hierarchy; null for roots, flat types and entities outside the tree."
+          },
+          {
+            "name": "level",
+            "type": "number",
+            "about": "Depth in its tree, 0 = root."
+          },
+          {
+            "name": "iso3",
+            "type": "string",
+            "about": "Always null: the tool publishes no ISO3 codes."
+          },
+          {
+            "name": "gbd_round",
+            "type": "number"
+          },
+          {
+            "name": "version_id",
+            "type": "number"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Version release stamp in UTC, or null."
+          },
+          {
+            "name": "tree",
+            "type": "string",
+            "about": "gbd (official hierarchy), custom (IHME custom region groups) or null."
+          },
+          {
+            "name": "rei_type",
+            "type": "string",
+            "about": "risk | etiology | impairment | injury n-codes for rei records; null otherwise."
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "most_detailed",
+            "type": "boolean",
+            "about": "Source most_detailed flag, or null when absent."
+          },
+          {
+            "name": "sort_order",
+            "type": "number",
+            "about": "Source sort order, or null."
+          },
+          {
+            "name": "children_count",
+            "type": "number"
+          },
+          {
+            "name": "child_ids",
+            "type": "number[]"
+          },
+          {
+            "name": "source",
+            "type": "object",
+            "about": "Raw php/metadata/ entry preserved verbatim (codes such as cause \"B.2.2\", sex flags, populations)."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "ihme-gbd-results",
+        "capability": "gbd/metadata"
+      }
+    },
+    {
+      "id": "ihme-gbd-results/gbd/versions",
+      "provider": "ihme-gbd-results",
+      "capability": "gbd/versions",
+      "name": "Release versions",
+      "description": "List the GBD Results tool release versions (version id, GBD round, release stamp, model description, exposed measure ids) for one or both supported rounds. Use it to pin gbd_round/version_id and read the tool's stated release date.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "gbd_round",
+          "in": "body",
+          "type": "number",
+          "about": "Restrict to one round (2021 or 2023); omit for both.",
+          "oneOf": [
+            "2021",
+            "2023"
+          ]
+        },
+        {
+          "name": "proxy",
+          "in": "body",
+          "type": "object",
+          "about": "Optional runner proxy override {kind: datacenter|residential|mobile, country?, sticky?}. Staging leases datacenter only."
+        }
+      ],
+      "response": {
+        "about": "List the GBD Results tool release versions (version id, GBD round, release stamp, model description, exposed measure ids) for one or both supported rounds. Use it to pin gbd_round/version_id and read the tool's stated release date.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "gbd_round",
+            "type": "number"
+          },
+          {
+            "name": "version_id",
+            "type": "number"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "IHME model version list as published."
+          },
+          {
+            "name": "release_stamp_raw",
+            "type": "string",
+            "about": "The tool's own MM/DD/YYYY HH:MM stamp (zone unstated)."
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "release_stamp_raw as Seattle local time, in UTC."
+          },
+          {
+            "name": "status",
+            "type": "number"
+          },
+          {
+            "name": "measure_ids",
+            "type": "number[]",
+            "about": "Measure ids this version exposes (source field `metrics`)."
+          },
+          {
+            "name": "population_ids",
+            "type": "number[]"
+          },
+          {
+            "name": "tool_url",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "ihme-gbd-results",
+        "capability": "gbd/versions"
+      }
+    }
+  ]
+}

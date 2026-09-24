@@ -1,0 +1,1275 @@
+{
+  "id": "stackexchange-com",
+  "provider": "stackexchange-com",
+  "name": "Stack Exchange",
+  "description": "Stack Exchange public questions, answers and accepted answers with source attribution. Quora is not covered.",
+  "toolCount": 6,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "stackexchange-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "stackexchange-com/questions/accepted_answers",
+      "provider": "stackexchange-com",
+      "capability": "questions/accepted_answers",
+      "name": "Accepted answers",
+      "description": "Accepted answers by topic: the top questions on one site carrying every tag in `tagged` (optionally narrowed by `q`), each paired with its accepted answer. One search call plus one batched answers call; `has_more` + `page` paginate.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "include_body",
+          "type": "boolean",
+          "in": "body",
+          "about": "include_body"
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "in": "body",
+          "about": "Optional Stack Exchange application key. Raises the per-IP quota from 300 to 10,000 requests per day. Keys are public identifiers, not secrets."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "pagesize",
+          "type": "number",
+          "in": "body",
+          "about": "pagesize",
+          "default": 10,
+          "min": 1,
+          "max": 30
+        },
+        {
+          "name": "q",
+          "type": "string",
+          "in": "body",
+          "about": "q"
+        },
+        {
+          "name": "site",
+          "type": "string",
+          "in": "body",
+          "about": "Stack Exchange site API parameter, e.g. stackoverflow, superuser, math, askubuntu, english, physics. Use `sites` to list them. Pattern: ^[a-z0-9]+(\\.[a-z0-9]+)*$.",
+          "default": "stackoverflow"
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "sort",
+          "default": "votes",
+          "oneOf": [
+            "votes",
+            "activity",
+            "creation",
+            "relevance"
+          ]
+        },
+        {
+          "name": "tagged",
+          "type": "string[]",
+          "in": "body",
+          "about": "tagged",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Accepted answers by topic: the top questions on one site carrying every tag in `tagged` (optionally narrowed by `q`), each paired with its accepted answer. One search call plus one batched answers call; `has_more` + `page` paginate.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "has_more",
+            "type": "boolean"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "name": "quota",
+            "type": "object"
+          },
+          {
+            "name": "results",
+            "type": "object[]"
+          },
+          {
+            "name": "site",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "tagged",
+            "type": "string[]"
+          },
+          {
+            "name": "total",
+            "type": "number",
+            "about": "Total questions with an accepted answer matching the filter."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "pagesize": 1,
+          "sort": "votes",
+          "tagged": [
+            "python"
+          ]
+        },
+        "response": {
+          "count": 1,
+          "has_more": true,
+          "observed_at_ms": 1789448650776,
+          "page": 1,
+          "q": null,
+          "quota": {
+            "backoff_seconds": null,
+            "max": 300,
+            "remaining": 293
+          },
+          "results": [
+            {
+              "accepted_answer": {
+                "answer_id": 231855,
+                "body_html": "<p>To understand what <a href=\"https://docs.python.org/3/reference/simple_stmts.html#yield\" rel=\"noreferrer\"><code>yield</code></a> does, you must understand what <em><a href=\"https://docs.python.org/3/glossary.html#term-generator\" rel=\"noreferrer\">generators</a></em> are. And before you can understand generators, you must understand <em><a href=\"https://docs.python.org/3/glossary.html#term-iterable\" rel=\"noreferrer\">iterables</a></em>.</p>\n<h2>Iterables</h2>\n<p>When you create a list, you can read its items one by one. Reading its items one by one is called iteration:</p>\n<pre><code>&gt;&gt;&gt; mylist = [1, 2, 3]\n&gt;&gt;&gt; for i in mylist:\n...    print(i)\n1\n2\n3\n</code></pre>\n<p><code>mylist</code> is an <em>iterable</em>. When you use a list comprehension, you create a list, and so an iterable:</p>\n<pre><code>&gt;&gt;&gt; mylist = [x*x for x in range(3)]\n&gt;&gt;&gt; for i in mylist:\n...    print(i)\n0\n1\n4\n</code></pre>\n<p>Everything you can use &quot;<code>for... in...</code>&quot; on is an iterable; <code>lists</code>, <code>strings</code>, files...</p>\n<p>These iterables are handy because you can read them as much as you wish, but you store all the values in memory and this is not always what you want when you have a lot of values.</p>\n<h2>Generators</h2>\n<p>Generators are <em><a href=\"https://docs.python.org/3/glossary.html#term-iterator\" rel=\"noreferrer\">iterators</a></em>, a kind of iterable <strong>you can only iterate over once</strong>. Generators do not store all the values in memory, <strong>they generate the values on the fly</strong>:</p>\n<pre><code>&gt;&gt;&gt; mygenerator = (x*x for x in range(3))\n&gt;&gt;&gt; for i in mygenerator:\n...    print(i)\n0\n1\n4\n</code></pre>\n<p>It is just the same except you used <code>()</code> instead of <code>[]</code>. BUT, you <strong>cannot</strong> perform <code>for i in mygenerator</code> a second time since generators can only be used once: they calculate 0, then forget about it and calculate 1, and end after calculating 4, one by one.</p>\n<h2>Yield</h2>\n<p><code>yield</code> is a keyword that is used like <code>return</code>, except the function will return a generator.</p>\n<pre><code>&gt;&gt;&gt; def create_generator():\n...    mylist = range(3)\n...    for i in mylist:\n...        yield i*i\n...\n&gt;&gt;&gt; mygenerator = create_generator() # create a generator\n&gt;&gt;&gt; print(mygenerator) # mygenerator is an object!\n&lt;generator object create_generator at 0xb7555c34&gt;\n&gt;&gt;&gt; for i in mygenerator:\n...     print(i)\n0\n1\n4\n</code></pre>\n<p>Here it's a useless example, but it's handy when you know your function will return a huge set of values that you will only need to read once.</p>\n<p>To master <code>yield</code>, you must understand that <strong>when you call the function, the code you have written in the function body does not run.</strong> The function only returns the generator object, this is a bit tricky.</p>\n<p>Then, your code will continue from where it left off each time <code>for</code> uses the generator.</p>\n<p>Now the hard part:</p>\n<p>The first time the <code>for</code> calls the generator object created from your function, it will run the code in your function from the beginning until it hits <code>yield</code>, then it'll return the first value of the loop. Then, each subsequent call will run another iteration of the loop you have written in the function and return the next value. This will continue until the generator is considered empty, which happens when the function runs without hitting <code>yield</code>. That can be because the loop has come to an end, or because you no longer satisfy an <code>&quot;if/else&quot;</code>.</p>\n<hr />\n<h2>Your code explained</h2>\n<p><em>Generator:</em></p>\n<pre><code># Here you create the method of the node object that will return the generator\ndef _get_child_candidates(self, distance, min_dist, max_dist):\n\n    # Here is the code that will be called each time you use the generator object:\n\n    # If there is still a child of the node object on its left\n    # AND if the distance is ok, return the next child\n    if self._leftchild and distance - max_dist &lt; self._median:\n        yield self._leftchild\n\n    # If there is still a child of the node object on its right\n    # AND if the distance is ok, return the next child\n    if self._rightchild and distance + max_dist &gt;= self._median:\n        yield self._rightchild\n\n    # If the function arrives here, the generator will be considered empty\n    # There are no more than two values: the left and the right children\n</code></pre>\n<p><em>Caller:</em></p>\n<pre><code># Create an empty list and a list with the current object reference\nresult, candidates = list(), [self]\n\n# Loop on candidates (they contain only one element at the beginning)\nwhile candidates:\n\n    # Get the last candidate and remove it from the list\n    node = candidates.pop()\n\n    # Get the distance between obj and the candidate\n    distance = node._get_dist(obj)\n\n    # If the distance is ok, then you can fill in the result\n    if distance &lt;= max_dist and distance &gt;= min_dist:\n        result.extend(node._values)\n\n    # Add the children of the candidate to the candidate's list\n    # so the loop will keep running until it has looked\n    # at all the children of the children of the children, etc. of the candidate\n    candidates.extend(node._get_child_candidates(distance, min_dist, max_dist))\n\nreturn result\n</code></pre>\n<p>This code contains several smart parts:</p>\n<ul>\n<li><p>The loop iterates on a list, but the list expands while the loop is being iterated. It's a concise way to go through all these nested data even if it's a bit dangerous since you can end up with an infinite loop. In this case, <code>candidates.extend(node._get_child_candidates(distance, min_dist, max_dist))</code> exhausts all the values of the generator, but <code>while</code> keeps creating new generator objects which will produce different values from the previous ones since it's not applied on the same node.</p>\n</li>\n<li><p>The <code>extend()</code> method is a list object method that expects an iterable and adds its values to the list.</p>\n</li>\n</ul>\n<p>Usually, we pass a list to it:</p>\n<pre><code>&gt;&gt;&gt; a = [1, 2]\n&gt;&gt;&gt; b = [3, 4]\n&gt;&gt;&gt; a.extend(b)\n&gt;&gt;&gt; print(a)\n[1, 2, 3, 4]\n</code></pre>\n<p>But in your code, it gets a generator, which is good because:</p>\n<ol>\n<li>You don't need to read the values twice.</li>\n<li>You may have a lot of children and you don't want them all stored in memory.</li>\n</ol>\n<p>And it works because Python does not care if the argument of a method is a list or not. Python expects iterables so it will work with strings, lists, tuples, and generators! This is called duck typing and is one of the reasons why Python is so cool. But this is another story, for another question...</p>\n<p>You can stop here, or read a little bit to see an advanced use of a generator:</p>\n<h2>Controlling a generator exhaustion</h2>\n<pre><code>&gt;&gt;&gt; class Bank(): # Let's create a bank, building ATMs\n...    crisis = False\n...    def create_atm(self):\n...        while not self.crisis:\n...            yield &quot;$100&quot;\n&gt;&gt;&gt; hsbc = Bank() # When everything's ok the ATM gives you as much as you want\n&gt;&gt;&gt; corner_street_atm = hsbc.create_atm()\n&gt;&gt;&gt; print(corner_street_atm.next())\n$100\n&gt;&gt;&gt; print(corner_street_atm.next())\n$100\n&gt;&gt;&gt; print([corner_street_atm.next() for cash in range(5)])\n['$100', '$100', '$100', '$100', '$100']\n&gt;&gt;&gt; hsbc.crisis = True # Crisis is coming, no more money!\n&gt;&gt;&gt; print(corner_street_atm.next())\n&lt;type 'exceptions.StopIteration'&gt;\n&gt;&gt;&gt; wall_street_atm = hsbc.create_atm() # It's even true for new ATMs\n&gt;&gt;&gt; print(wall_street_atm.next())\n&lt;type 'exceptions.StopIteration'&gt;\n&gt;&gt;&gt; hsbc.crisis = False # The trouble is, even post-crisis the ATM remains empty\n&gt;&gt;&gt; print(corner_street_atm.next())\n&lt;type 'exceptions.StopIteration'&gt;\n&gt;&gt;&gt; brand_new_atm = hsbc.create_atm() # Build a new one to get back in business\n&gt;&gt;&gt; for cash in brand_new_atm:\n...    print cash\n$100\n$100\n$100\n$100\n$100\n$100\n$100\n$100\n$100\n...\n</code></pre>\n<p><strong>Note:</strong> For Python 3, use<code>print(corner_street_atm.__next__())</code> or <code>print(next(corner_street_atm))</code></p>\n<p>It can be useful for various things like controlling access to a resource.</p>\n<h2>Itertools, your best friend</h2>\n<p>The <code>itertools</code> module contains special functions to manipulate iterables. Ever wish to duplicate a generator?\nChain two generators? Group values in a nested list with a one-liner? <code>Map / Zip</code> without creating another list?</p>\n<p>Then just <code>import itertools</code>.</p>\n<p>An example? Let's see the possible orders of arrival for a four-horse race:</p>\n<pre><code>&gt;&gt;&gt; horses = [1, 2, 3, 4]\n&gt;&gt;&gt; races = itertools.permutations(horses)\n&gt;&gt;&gt; print(races)\n&lt;itertools.permutations object at 0xb754f1dc&gt;\n&gt;&gt;&gt; print(list(itertools.permutations(horses)))\n[(1, 2, 3, 4),\n (1, 2, 4, 3),\n (1, 3, 2, 4),\n (1, 3, 4, 2),\n (1, 4, 2, 3),\n (1, 4, 3, 2),\n (2, 1, 3, 4),\n (2, 1, 4, 3),\n (2, 3, 1, 4),\n (2, 3, 4, 1),\n (2, 4, 1, 3),\n (2, 4, 3, 1),\n (3, 1, 2, 4),\n (3, 1, 4, 2),\n (3, 2, 1, 4),\n (3, 2, 4, 1),\n (3, 4, 1, 2),\n (3, 4, 2, 1),\n (4, 1, 2, 3),\n (4, 1, 3, 2),\n (4, 2, 1, 3),\n (4, 2, 3, 1),\n (4, 3, 1, 2),\n (4, 3, 2, 1)]\n</code></pre>\n<h2>Understanding the inner mechanisms of iteration</h2>\n<p>Iteration is a process implying iterables (implementing the <code>__iter__()</code> method) and iterators (implementing the <code>__next__()</code> method).\nIterables are any objects you can get an iterator from. Iterators are objects that let you iterate on iterables.</p>\n<p>There is more about it in this article about <a href=\"https://web.archive.org/web/20201109034340/http://effbot.org/zone/python-for-statement.htm\" rel=\"noreferrer\">how <code>for</code> loops work</a>.</p>\n",
+                "body_markdown": "To understand what [`yield`] does, you must understand what *[generators]* are. And before you can understand generators, you must understand *[iterables]*.\r\n\r\nIterables\r\n---------\r\n\r\nWhen you create a list, you can read its items one by one. Reading its items one by one is called iteration:\r\n\r\n    >>> mylist = [1, 2, 3]\r\n    >>> for i in mylist:\r\n    ...    print(i)\r\n    1\r\n    2\r\n    3\r\n\r\n`mylist` is an *iterable*. When you use a list comprehension, you create a list, and so an iterable:\r\n\r\n    >>> mylist = [x*x for x in range(3)]\r\n    >>> for i in mylist:\r\n    ...    print(i)\r\n    0\r\n    1\r\n    4\r\n\r\nEverything you can use \"`for... in...`\" on is an iterable; `lists`, `strings`, files...\r\n\r\nThese iterables are handy because you can read them as much as you wish, but you store all the values in memory and this is not always what you want when you have a lot of values.\r\n\r\nGenerators\r\n----------\r\n\r\nGenerators are *[iterators]*, a kind of iterable **you can only iterate over once**. Generators do not store all the values in memory, **they generate the values on the fly**:\r\n\r\n    >>> mygenerator = (x*x for x in range(3))\r\n    >>> for i in mygenerator:\r\n    ...    print(i)\r\n    0\r\n    1\r\n    4\r\n\r\nIt is just the same except you used `()` instead of `[]`. BUT, you **cannot** perform `for i in mygenerator` a second time since generators can only be used once: they calculate 0, then forget about it and calculate 1, and end after calculating 4, one by one.\r\n\r\nYield\r\n-----\r\n\r\n`yield` is a keyword that is used like `return`, except the function will return a generator.\r\n\r\n    >>> def create_generator():\r\n    ...    mylist = range(3)\r\n    ...    for i in mylist:\r\n    ...        yield i*i\r\n    ...\r\n    >>> mygenerator = create_generator() # create a generator\r\n    >>> print(mygenerator) # mygenerator is an object!\r\n    <generator object create_generator at 0xb7555c34>\r\n    >>> for i in mygenerator:\r\n    ...     print(i)\r\n    0\r\n    1\r\n    4\r\n\r\nHere it's a useless example, but it's handy when you know your function will return a huge set of values that you will only need to read once.\r\n\r\nTo master `yield`, you must understand that **when you call the function, the code you have written in the function body does not run.** The function only returns the generator object, this is a bit tricky.\r\n\r\nThen, your code will continue from where it left off each time `for` uses the generator.\r\n\r\nNow the hard part:\r\n\r\nThe first time the `for` calls the generator object created from your function, it will run the code in your function from the beginning until it hits `yield`, then it'll return the first value of the loop. Then, each subsequent call will run another iteration of the loop you have written in the function and return the next value. This will continue until the generator is considered empty, which happens when the function runs without hitting `yield`. That can be because the loop has come to an end, or because you no longer satisfy an `\"if/else\"`.\r\n\r\n---\r\n\r\nYour code explained\r\n-------------------\r\n\r\n*Generator:*\r\n\r\n    # Here you create the method of the node object that will return the generator\r\n    def _get_child_candidates(self, distance, min_dist, max_dist):\r\n\r\n        # Here is the code that will be called each time you use the generator object:\r\n\r\n        # If there is still a child of the node object on its left\r\n        # AND if the distance is ok, return the next child\r\n        if self._leftchild and distance - max_dist < self._median:\r\n            yield self._leftchild\r\n\r\n        # If there is still a child of the node object on its right\r\n        # AND if the distance is ok, return the next child\r\n        if self._rightchild and distance + max_dist >= self._median:\r\n            yield self._rightchild\r\n\r\n        # If the function arrives here, the generator will be considered empty\r\n        # There are no more than two values: the left and the right children\r\n\r\n*Caller:*\r\n\r\n    # Create an empty list and a list with the current object reference\r\n    result, candidates = list(), [self]\r\n\r\n    # Loop on candidates (they contain only one element at the beginning)\r\n    while candidates:\r\n\r\n        # Get the last candidate and remove it from the list\r\n        node = candidates.pop()\r\n\r\n        # Get the distance between obj and the candidate\r\n        distance = node._get_dist(obj)\r\n\r\n        # If the distance is ok, then you can fill in the result\r\n        if distance <= max_dist and distance >= min_dist:\r\n            result.extend(node._values)\r\n\r\n        # Add the children of the candidate to the candidate's list\r\n        # so the loop will keep running until it has looked\r\n        # at all the children of the children of the children, etc. of the candidate\r\n        candidates.extend(node._get_child_candidates(distance, min_dist, max_dist))\r\n\r\n    return result\r\n\r\nThis code contains several smart parts:\r\n\r\n- The loop iterates on a list, but the list expands while the loop is being iterated. It's a concise way to go through all these nested data even if it's a bit dangerous since you can end up with an infinite loop. In this case, `candidates.extend(node._get_child_candidates(distance, min_dist, max_dist))` exhausts all the values of the generator, but `while` keeps creating new generator objects which will produce different values from the previous ones since it's not applied on the same node.\r\n\r\n- The `extend()` method is a list object method that expects an iterable and adds its values to the list.\r\n\r\nUsually, we pass a list to it:\r\n\r\n    >>> a = [1, 2]\r\n    >>> b = [3, 4]\r\n    >>> a.extend(b)\r\n    >>> print(a)\r\n    [1, 2, 3, 4]\r\n\r\nBut in your code, it gets a generator, which is good because:\r\n\r\n1. You don't need to read the values twice.\r\n2. You may have a lot of children and you don't want them all stored in memory.\r\n\r\nAnd it works because Python does not care if the argument of a method is a list or not. Python expects iterables so it will work with strings, lists, tuples, and generators! This is called duck typing and is one of the reasons why Python is so cool. But this is another story, for another question...\r\n\r\nYou can stop here, or read a little bit to see an advanced use of a generator:\r\n\r\nControlling a generator exhaustion\r\n------\r\n\r\n    >>> class Bank(): # Let's create a bank, building ATMs\r\n    ...    crisis = False\r\n    ...    def create_atm(self):\r\n    ...        while not self.crisis:\r\n    ...            yield \"$100\"\r\n    >>> hsbc = Bank() # When everything's ok the ATM gives you as much as you want\r\n    >>> corner_street_atm = hsbc.create_atm()\r\n    >>> print(corner_street_atm.next())\r\n    $100\r\n    >>> print(corner_street_atm.next())\r\n    $100\r\n    >>> print([corner_street_atm.next() for cash in range(5)])\r\n    ['$100', '$100', '$100', '$100', '$100']\r\n    >>> hsbc.crisis = True # Crisis is coming, no more money!\r\n    >>> print(corner_street_atm.next())\r\n    <type 'exceptions.StopIteration'>\r\n    >>> wall_street_atm = hsbc.create_atm() # It's even true for new ATMs\r\n    >>> print(wall_street_atm.next())\r\n    <type 'exceptions.StopIteration'>\r\n    >>> hsbc.crisis = False # The trouble is, even post-crisis the ATM remains empty\r\n    >>> print(corner_street_atm.next())\r\n    <type 'exceptions.StopIteration'>\r\n    >>> brand_new_atm = hsbc.create_atm() # Build a new one to get back in business\r\n    >>> for cash in brand_new_atm:\r\n    ...    print cash\r\n    $100\r\n    $100\r\n    $100\r\n    $100\r\n    $100\r\n    $100\r\n    $100\r\n    $100\r\n    $100\r\n    ...\r\n\r\n**Note:** For Python 3, use`print(corner_street_atm.__next__())` or `print(next(corner_street_atm))`\r\n\r\nIt can be useful for various things like controlling access to a resource.\r\n\r\nItertools, your best friend\r\n-----\r\n\r\nThe `itertools` module contains special functions to manipulate iterables. Ever wish to duplicate a generator?\r\nChain two generators? Group values in a nested list with a one-liner? `Map / Zip` without creating another list?\r\n\r\nThen just `import itertools`.\r\n\r\nAn example? Let's see the possible orders of arrival for a four-horse race:\r\n\r\n    >>> horses = [1, 2, 3, 4]\r\n    >>> races = itertools.permutations(horses)\r\n    >>> print(races)\r\n    <itertools.permutations object at 0xb754f1dc>\r\n    >>> print(list(itertools.permutations(horses)))\r\n    [(1, 2, 3, 4),\r\n     (1, 2, 4, 3),\r\n     (1, 3, 2, 4),\r\n     (1, 3, 4, 2),\r\n     (1, 4, 2, 3),\r\n     (1, 4, 3, 2),\r\n     (2, 1, 3, 4),\r\n     (2, 1, 4, 3),\r\n     (2, 3, 1, 4),\r\n     (2, 3, 4, 1),\r\n     (2, 4, 1, 3),\r\n     (2, 4, 3, 1),\r\n     (3, 1, 2, 4),\r\n     (3, 1, 4, 2),\r\n     (3, 2, 1, 4),\r\n     (3, 2, 4, 1),\r\n     (3, 4, 1, 2),\r\n     (3, 4, 2, 1),\r\n     (4, 1, 2, 3),\r\n     (4, 1, 3, 2),\r\n     (4, 2, 1, 3),\r\n     (4, 2, 3, 1),\r\n     (4, 3, 1, 2),\r\n     (4, 3, 2, 1)]\r\n\r\n\r\nUnderstanding the inner mechanisms of iteration\r\n------\r\n\r\nIteration is a process implying iterables (implementing the `__iter__()` method) and iterators (implementing the `__next__()` method).\r\nIterables are any objects you can get an iterator from. Iterators are objects that let you iterate on iterables.\r\n\r\nThere is more about it in this article about [how `for` loops work][1].\r\n\r\n  [1]: https://web.archive.org/web/20201109034340/http://effbot.org/zone/python-for-statement.htm\r\n\r\n  [`yield`]: https://docs.python.org/3/reference/simple_stmts.html#yield\r\n  [generators]: https://docs.python.org/3/glossary.html#term-generator\r\n  [iterables]: https://docs.python.org/3/glossary.html#term-iterable\r\n  [iterators]: https://docs.python.org/3/glossary.html#term-iterator",
+                "comment_count": 13,
+                "content_license": "CC BY-SA 4.0",
+                "created_at_ms": 1224802124000,
+                "is_accepted": true,
+                "last_activity_at_ms": 1711253853000,
+                "last_edit_at_ms": 1711253853000,
+                "owner": {
+                  "display_name": "Bite code",
+                  "link": "https://stackoverflow.com/users/9951/bite-code",
+                  "reputation": 601941,
+                  "user_id": 9951,
+                  "user_type": "registered"
+                },
+                "question_id": 231767,
+                "question_title": "What does the \"yield\" keyword do in Python?",
+                "score": 18317,
+                "site": "stackoverflow",
+                "source_url": "https://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do-in-python/231855#231855"
+              },
+              "question": {
+                "accepted_answer_id": 231855,
+                "answer_count": 51,
+                "body_html": "<p>What functionality does the <a href=\"https://docs.python.org/3/reference/simple_stmts.html#yield\" rel=\"noreferrer\"><code>yield</code></a> keyword in Python provide?</p>\n<p>For example, I'm trying to understand this code<sup><strong>1</strong></sup>:</p>\n<pre><code>def _get_child_candidates(self, distance, min_dist, max_dist):\n    if self._leftchild and distance - max_dist &lt; self._median:\n        yield self._leftchild\n    if self._rightchild and distance + max_dist &gt;= self._median:\n        yield self._rightchild  \n</code></pre>\n<p>And this is the caller:</p>\n<pre><code>result, candidates = [], [self]\nwhile candidates:\n    node = candidates.pop()\n    distance = node._get_dist(obj)\n    if distance &lt;= max_dist and distance &gt;= min_dist:\n        result.extend(node._values)\n    candidates.extend(node._get_child_candidates(distance, min_dist, max_dist))\nreturn result\n</code></pre>\n<p>What happens when the method <code>_get_child_candidates</code> is called?\nIs a list returned? A single element? Is it called again? When will subsequent calls stop?</p>\n\n<hr />\n<sub>\n1. This piece of code was written by Jochen Schulz (jrschulz), who made a great Python library for metric spaces. This is the link to the complete source: <a href=\"https://well-adjusted.de/~jrspieker/mspace/\" rel=\"noreferrer\">Module mspace</a>.</sub> \n",
+                "body_markdown": "What functionality does the [`yield`] keyword in Python provide?\r\n\r\nFor example, I'm trying to understand this code<sup>**1**</sup>:\r\n\r\n    def _get_child_candidates(self, distance, min_dist, max_dist):\r\n        if self._leftchild and distance - max_dist < self._median:\r\n            yield self._leftchild\r\n        if self._rightchild and distance + max_dist >= self._median:\r\n            yield self._rightchild\t\r\n\r\nAnd this is the caller:\r\n\r\n    result, candidates = [], [self]\r\n    while candidates:\r\n        node = candidates.pop()\r\n        distance = node._get_dist(obj)\r\n        if distance <= max_dist and distance >= min_dist:\r\n            result.extend(node._values)\r\n        candidates.extend(node._get_child_candidates(distance, min_dist, max_dist))\r\n    return result\r\n\r\nWhat happens when the method `_get_child_candidates` is called?\r\nIs a list returned? A single element? Is it called again? When will subsequent calls stop?\r\n\r\n\r\n[`yield`]: https://docs.python.org/3/reference/simple_stmts.html#yield\r\n\r\n<!-- https://docs.python.org/3/reference/expressions.html#yieldexpr -->\r\n\r\n\r\n----------\r\n\r\n\r\n<sub>\r\n1. This piece of code was written by Jochen Schulz (jrschulz), who made a great Python library for metric spaces. This is the link to the complete source: <a href=\"https://well-adjusted.de/~jrspieker/mspace/\">Module mspace</a>.</sub> ",
+                "closed_at_ms": null,
+                "closed_reason": null,
+                "comment_count": 6,
+                "content_license": null,
+                "created_at_ms": 1224800471000,
+                "is_answered": true,
+                "last_activity_at_ms": 1777574627000,
+                "last_edit_at_ms": 1711253482000,
+                "owner": {
+                  "display_name": "Alex. S.",
+                  "link": "https://stackoverflow.com/users/18300/alex-s",
+                  "reputation": 148444,
+                  "user_id": 18300,
+                  "user_type": "registered"
+                },
+                "question_id": 231767,
+                "score": 13135,
+                "site": "stackoverflow",
+                "source_url": "https://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do-in-python",
+                "tags": [
+                  "python",
+                  "iterator",
+                  "generator",
+                  "yield"
+                ],
+                "title": "What does the \"yield\" keyword do in Python?",
+                "view_count": 3499052
+              }
+            }
+          ],
+          "site": "stackoverflow",
+          "source_url": "https://api.stackexchange.com/2.3/search/advanced?site=stackoverflow&tagged=python&accepted=true&pagesize=1&sort=votes&filter=%217ry9ouLWcQWrdWSzrv7eT0TX0kxJ.zt0R1",
+          "tagged": [
+            "python"
+          ],
+          "total": 1144387
+        },
+        "recordedAt": "2026-09-15T05:04:10.776785+00:00"
+      },
+      "execute": {
+        "provider": "stackexchange-com",
+        "capability": "questions/accepted_answers"
+      }
+    },
+    {
+      "id": "stackexchange-com/questions/answer",
+      "provider": "stackexchange-com",
+      "capability": "questions/answer",
+      "name": "Answer",
+      "description": "One answer by `answer_id`, or up to 100 answers by `answer_ids`, on one site. Returns the full answer records (bodies, score, is_accepted, owner). Ids that do not exist are simply absent from the result.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "answer_id",
+          "type": "number",
+          "in": "body",
+          "about": "answer_id"
+        },
+        {
+          "name": "answer_ids",
+          "type": "number[]",
+          "in": "body",
+          "about": "answer_ids"
+        },
+        {
+          "name": "include_body",
+          "type": "boolean",
+          "in": "body",
+          "about": "include_body"
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "in": "body",
+          "about": "Optional Stack Exchange application key. Raises the per-IP quota from 300 to 10,000 requests per day. Keys are public identifiers, not secrets."
+        },
+        {
+          "name": "site",
+          "type": "string",
+          "in": "body",
+          "about": "Stack Exchange site API parameter, e.g. stackoverflow, superuser, math, askubuntu, english, physics. Use `sites` to list them. Pattern: ^[a-z0-9]+(\\.[a-z0-9]+)*$.",
+          "default": "stackoverflow"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "answer_id",
+          "answer_ids"
+        ]
+      ],
+      "response": {
+        "about": "One answer by `answer_id`, or up to 100 answers by `answer_ids`, on one site. Returns the full answer records (bodies, score, is_accepted, owner). Ids that do not exist are simply absent from the result.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "answers",
+            "type": "object[]"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "quota",
+            "type": "object"
+          },
+          {
+            "name": "requested",
+            "type": "number[]"
+          },
+          {
+            "name": "site",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "answer_id": 3940144
+        },
+        "response": {
+          "answers": [
+            {
+              "answer_id": 3940144,
+              "body_html": "<p>To get a <em>new</em> reversed list, apply the <a href=\"https://docs.python.org/3/library/functions.html#reversed\" rel=\"noreferrer\"><code>reversed</code></a> function and collect the items into a <a href=\"https://docs.python.org/3/library/stdtypes.html#list\" rel=\"noreferrer\"><code>list</code></a>:</p>\n<pre><code>&gt;&gt;&gt; xs = [0, 10, 20, 40]\n&gt;&gt;&gt; list(reversed(xs))\n[40, 20, 10, 0]\n</code></pre>\n<p>To iterate backwards through a list:</p>\n<pre><code>&gt;&gt;&gt; xs = [0, 10, 20, 40]\n&gt;&gt;&gt; for x in reversed(xs):\n...     print(x)\n40\n20\n10\n0\n</code></pre>\n",
+              "body_markdown": "To get a *new* reversed list, apply the [`reversed`][1] function and collect the items into a [`list`][list]:\r\n\r\n```\r\n>>> xs = [0, 10, 20, 40]\r\n>>> list(reversed(xs))\r\n[40, 20, 10, 0]\r\n```\r\n\r\nTo iterate backwards through a list:\r\n\r\n```\r\n>>> xs = [0, 10, 20, 40]\r\n>>> for x in reversed(xs):\r\n...     print(x)\r\n40\r\n20\r\n10\r\n0\r\n```\r\n\r\n  [1]: https://docs.python.org/3/library/functions.html#reversed\r\n  [pep0322]: https://www.python.org/dev/peps/pep-0322/\r\n  [list]: https://docs.python.org/3/library/stdtypes.html#list",
+              "comment_count": 8,
+              "content_license": "CC BY-SA 4.0",
+              "created_at_ms": 1287126140000,
+              "is_accepted": true,
+              "last_activity_at_ms": 1660588390000,
+              "last_edit_at_ms": 1660588390000,
+              "owner": {
+                "display_name": "codaddict",
+                "link": "https://stackoverflow.com/users/227665/codaddict",
+                "reputation": 457906,
+                "user_id": 227665,
+                "user_type": "registered"
+              },
+              "question_id": 3940128,
+              "question_title": "How do I reverse a list or loop over it backwards?",
+              "score": 1738,
+              "site": "stackoverflow",
+              "source_url": "https://stackoverflow.com/questions/3940128/how-do-i-reverse-a-list-or-loop-over-it-backwards/3940144#3940144"
+            }
+          ],
+          "count": 1,
+          "observed_at_ms": 1789448650658,
+          "quota": {
+            "backoff_seconds": null,
+            "max": 300,
+            "remaining": 299
+          },
+          "requested": [
+            3940144
+          ],
+          "site": "stackoverflow",
+          "source_url": "https://api.stackexchange.com/2.3/answers/3940144?site=stackoverflow&filter=%217ry9ouLWcQWrdWSzrv7eT0TX0kxJ.zt0R1"
+        },
+        "recordedAt": "2026-09-15T05:04:10.658326+00:00"
+      },
+      "execute": {
+        "provider": "stackexchange-com",
+        "capability": "questions/answer"
+      }
+    },
+    {
+      "id": "stackexchange-com/questions/answers",
+      "provider": "stackexchange-com",
+      "capability": "questions/answers",
+      "name": "Answers",
+      "description": "Answers to one question (by `question_id` + `site` or URL), one page per call, sorted by votes, activity or creation. Each answer carries is_accepted, score, bodies, owner and its canonical URL.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "include_body",
+          "type": "boolean",
+          "in": "body",
+          "about": "include_body"
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "in": "body",
+          "about": "Optional Stack Exchange application key. Raises the per-IP quota from 300 to 10,000 requests per day. Keys are public identifiers, not secrets."
+        },
+        {
+          "name": "order",
+          "type": "string",
+          "in": "body",
+          "about": "order",
+          "default": "desc",
+          "oneOf": [
+            "desc",
+            "asc"
+          ]
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "pagesize",
+          "type": "number",
+          "in": "body",
+          "about": "pagesize",
+          "default": 30,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "question_id",
+          "type": "number",
+          "in": "body",
+          "about": "question_id"
+        },
+        {
+          "name": "site",
+          "type": "string",
+          "in": "body",
+          "about": "Stack Exchange site API parameter, e.g. stackoverflow, superuser, math, askubuntu, english, physics. Use `sites` to list them. Pattern: ^[a-z0-9]+(\\.[a-z0-9]+)*$.",
+          "default": "stackoverflow"
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "sort",
+          "default": "votes",
+          "oneOf": [
+            "votes",
+            "activity",
+            "creation"
+          ]
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS question URL on any Stack Exchange site, e.g. https://stackoverflow.com/questions/3940128/... or https://math.stackexchange.com/q/11. The site is derived from the host."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "question_id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Answers to one question (by `question_id` + `site` or URL), one page per call, sorted by votes, activity or creation. Each answer carries is_accepted, score, bodies, owner and its canonical URL.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "answers",
+            "type": "object[]"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "has_more",
+            "type": "boolean"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "question_id",
+            "type": "number"
+          },
+          {
+            "name": "quota",
+            "type": "object"
+          },
+          {
+            "name": "site",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "pagesize": 2,
+          "question_id": 3940128
+        },
+        "response": {
+          "answers": [
+            {
+              "answer_id": 3940144,
+              "body_html": "<p>To get a <em>new</em> reversed list, apply the <a href=\"https://docs.python.org/3/library/functions.html#reversed\" rel=\"noreferrer\"><code>reversed</code></a> function and collect the items into a <a href=\"https://docs.python.org/3/library/stdtypes.html#list\" rel=\"noreferrer\"><code>list</code></a>:</p>\n<pre><code>&gt;&gt;&gt; xs = [0, 10, 20, 40]\n&gt;&gt;&gt; list(reversed(xs))\n[40, 20, 10, 0]\n</code></pre>\n<p>To iterate backwards through a list:</p>\n<pre><code>&gt;&gt;&gt; xs = [0, 10, 20, 40]\n&gt;&gt;&gt; for x in reversed(xs):\n...     print(x)\n40\n20\n10\n0\n</code></pre>\n",
+              "body_markdown": "To get a *new* reversed list, apply the [`reversed`][1] function and collect the items into a [`list`][list]:\r\n\r\n```\r\n>>> xs = [0, 10, 20, 40]\r\n>>> list(reversed(xs))\r\n[40, 20, 10, 0]\r\n```\r\n\r\nTo iterate backwards through a list:\r\n\r\n```\r\n>>> xs = [0, 10, 20, 40]\r\n>>> for x in reversed(xs):\r\n...     print(x)\r\n40\r\n20\r\n10\r\n0\r\n```\r\n\r\n  [1]: https://docs.python.org/3/library/functions.html#reversed\r\n  [pep0322]: https://www.python.org/dev/peps/pep-0322/\r\n  [list]: https://docs.python.org/3/library/stdtypes.html#list",
+              "comment_count": 8,
+              "content_license": "CC BY-SA 4.0",
+              "created_at_ms": 1287126140000,
+              "is_accepted": true,
+              "last_activity_at_ms": 1660588390000,
+              "last_edit_at_ms": 1660588390000,
+              "owner": {
+                "display_name": "codaddict",
+                "link": "https://stackoverflow.com/users/227665/codaddict",
+                "reputation": 457906,
+                "user_id": 227665,
+                "user_type": "registered"
+              },
+              "question_id": 3940128,
+              "question_title": "How do I reverse a list or loop over it backwards?",
+              "score": 1738,
+              "site": "stackoverflow",
+              "source_url": "https://stackoverflow.com/questions/3940128/how-do-i-reverse-a-list-or-loop-over-it-backwards/3940144#3940144"
+            },
+            {
+              "answer_id": 3940137,
+              "body_html": "<pre><code>&gt;&gt;&gt; xs = [0, 10, 20, 40]\n&gt;&gt;&gt; xs[::-1]\n[40, 20, 10, 0]\n</code></pre>\n<p>Extended slice syntax is explained <a href=\"http://docs.python.org/release/2.3.5/whatsnew/section-slices.html\" rel=\"noreferrer\">here</a>. See also, <a href=\"http://docs.python.org/library/functions.html#slice\" rel=\"noreferrer\">documentation</a>.</p>\n",
+              "body_markdown": "```\r\n>>> xs = [0, 10, 20, 40]\r\n>>> xs[::-1]\r\n[40, 20, 10, 0]\r\n```\r\n\r\nExtended slice syntax is explained [here][1]. See also, [documentation][2].\r\n\r\n\r\n  [1]: http://docs.python.org/release/2.3.5/whatsnew/section-slices.html\r\n  [2]: http://docs.python.org/library/functions.html#slice",
+              "comment_count": 9,
+              "content_license": "CC BY-SA 4.0",
+              "created_at_ms": 1287126072000,
+              "is_accepted": false,
+              "last_activity_at_ms": 1649496982000,
+              "last_edit_at_ms": 1649496982000,
+              "owner": {
+                "display_name": "mechanical_meat",
+                "link": "https://stackoverflow.com/users/42346/mechanical-meat",
+                "reputation": 170962,
+                "user_id": 42346,
+                "user_type": "registered"
+              },
+              "question_id": 3940128,
+              "question_title": "How do I reverse a list or loop over it backwards?",
+              "score": 1542,
+              "site": "stackoverflow",
+              "source_url": "https://stackoverflow.com/questions/3940128/how-do-i-reverse-a-list-or-loop-over-it-backwards/3940137#3940137"
+            }
+          ],
+          "count": 2,
+          "has_more": true,
+          "observed_at_ms": 1789448650474,
+          "page": 1,
+          "question_id": 3940128,
+          "quota": {
+            "backoff_seconds": null,
+            "max": 300,
+            "remaining": 299
+          },
+          "site": "stackoverflow",
+          "source_url": "https://api.stackexchange.com/2.3/questions/3940128/answers?site=stackoverflow&pagesize=2&sort=votes&filter=%217ry9ouLWcQWrdWSzrv7eT0TX0kxJ.zt0R1",
+          "total": 18
+        },
+        "recordedAt": "2026-09-15T05:04:10.474303+00:00"
+      },
+      "execute": {
+        "provider": "stackexchange-com",
+        "capability": "questions/answers"
+      }
+    },
+    {
+      "id": "stackexchange-com/questions/question",
+      "provider": "stackexchange-com",
+      "capability": "questions/question",
+      "name": "Question",
+      "description": "One question identified by `question_id` + `site` or by its URL, with its answers (default: by votes) and the accepted answer surfaced separately. Two API calls. Unknown or deleted questions are an error.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "answers_page",
+          "type": "number",
+          "in": "body",
+          "about": "answers_page",
+          "default": 1,
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "answers_pagesize",
+          "type": "number",
+          "in": "body",
+          "about": "0 returns the question only.",
+          "default": 30,
+          "min": 0,
+          "max": 100
+        },
+        {
+          "name": "answers_sort",
+          "type": "string",
+          "in": "body",
+          "about": "answers_sort",
+          "default": "votes",
+          "oneOf": [
+            "votes",
+            "activity",
+            "creation"
+          ]
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "in": "body",
+          "about": "Optional Stack Exchange application key. Raises the per-IP quota from 300 to 10,000 requests per day. Keys are public identifiers, not secrets."
+        },
+        {
+          "name": "question_id",
+          "type": "number",
+          "in": "body",
+          "about": "question_id"
+        },
+        {
+          "name": "site",
+          "type": "string",
+          "in": "body",
+          "about": "Stack Exchange site API parameter, e.g. stackoverflow, superuser, math, askubuntu, english, physics. Use `sites` to list them. Pattern: ^[a-z0-9]+(\\.[a-z0-9]+)*$.",
+          "default": "stackoverflow"
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS question URL on any Stack Exchange site, e.g. https://stackoverflow.com/questions/3940128/... or https://math.stackexchange.com/q/11. The site is derived from the host."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "question_id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One question identified by `question_id` + `site` or by its URL, with its answers (default: by votes) and the accepted answer surfaced separately. Two API calls. Unknown or deleted questions are an error.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "accepted_answer",
+            "type": "object"
+          },
+          {
+            "name": "answers",
+            "type": "object[]"
+          },
+          {
+            "name": "answers_count",
+            "type": "number"
+          },
+          {
+            "name": "answers_page",
+            "type": "number"
+          },
+          {
+            "name": "has_more_answers",
+            "type": "boolean"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "question",
+            "type": "object"
+          },
+          {
+            "name": "question_id",
+            "type": "number"
+          },
+          {
+            "name": "quota",
+            "type": "object"
+          },
+          {
+            "name": "site",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "answers_pagesize": 2,
+          "question_id": 3940128
+        },
+        "response": {
+          "accepted_answer": {
+            "answer_id": 3940144,
+            "body_html": "<p>To get a <em>new</em> reversed list, apply the <a href=\"https://docs.python.org/3/library/functions.html#reversed\" rel=\"noreferrer\"><code>reversed</code></a> function and collect the items into a <a href=\"https://docs.python.org/3/library/stdtypes.html#list\" rel=\"noreferrer\"><code>list</code></a>:</p>\n<pre><code>&gt;&gt;&gt; xs = [0, 10, 20, 40]\n&gt;&gt;&gt; list(reversed(xs))\n[40, 20, 10, 0]\n</code></pre>\n<p>To iterate backwards through a list:</p>\n<pre><code>&gt;&gt;&gt; xs = [0, 10, 20, 40]\n&gt;&gt;&gt; for x in reversed(xs):\n...     print(x)\n40\n20\n10\n0\n</code></pre>\n",
+            "body_markdown": "To get a *new* reversed list, apply the [`reversed`][1] function and collect the items into a [`list`][list]:\r\n\r\n```\r\n>>> xs = [0, 10, 20, 40]\r\n>>> list(reversed(xs))\r\n[40, 20, 10, 0]\r\n```\r\n\r\nTo iterate backwards through a list:\r\n\r\n```\r\n>>> xs = [0, 10, 20, 40]\r\n>>> for x in reversed(xs):\r\n...     print(x)\r\n40\r\n20\r\n10\r\n0\r\n```\r\n\r\n  [1]: https://docs.python.org/3/library/functions.html#reversed\r\n  [pep0322]: https://www.python.org/dev/peps/pep-0322/\r\n  [list]: https://docs.python.org/3/library/stdtypes.html#list",
+            "comment_count": 8,
+            "content_license": "CC BY-SA 4.0",
+            "created_at_ms": 1287126140000,
+            "is_accepted": true,
+            "last_activity_at_ms": 1660588390000,
+            "last_edit_at_ms": 1660588390000,
+            "owner": {
+              "display_name": "codaddict",
+              "link": "https://stackoverflow.com/users/227665/codaddict",
+              "reputation": 457906,
+              "user_id": 227665,
+              "user_type": "registered"
+            },
+            "question_id": 3940128,
+            "question_title": "How do I reverse a list or loop over it backwards?",
+            "score": 1738,
+            "site": "stackoverflow",
+            "source_url": "https://stackoverflow.com/questions/3940128/how-do-i-reverse-a-list-or-loop-over-it-backwards/3940144#3940144"
+          },
+          "answers": [
+            {
+              "answer_id": 3940144,
+              "body_html": "<p>To get a <em>new</em> reversed list, apply the <a href=\"https://docs.python.org/3/library/functions.html#reversed\" rel=\"noreferrer\"><code>reversed</code></a> function and collect the items into a <a href=\"https://docs.python.org/3/library/stdtypes.html#list\" rel=\"noreferrer\"><code>list</code></a>:</p>\n<pre><code>&gt;&gt;&gt; xs = [0, 10, 20, 40]\n&gt;&gt;&gt; list(reversed(xs))\n[40, 20, 10, 0]\n</code></pre>\n<p>To iterate backwards through a list:</p>\n<pre><code>&gt;&gt;&gt; xs = [0, 10, 20, 40]\n&gt;&gt;&gt; for x in reversed(xs):\n...     print(x)\n40\n20\n10\n0\n</code></pre>\n",
+              "body_markdown": "To get a *new* reversed list, apply the [`reversed`][1] function and collect the items into a [`list`][list]:\r\n\r\n```\r\n>>> xs = [0, 10, 20, 40]\r\n>>> list(reversed(xs))\r\n[40, 20, 10, 0]\r\n```\r\n\r\nTo iterate backwards through a list:\r\n\r\n```\r\n>>> xs = [0, 10, 20, 40]\r\n>>> for x in reversed(xs):\r\n...     print(x)\r\n40\r\n20\r\n10\r\n0\r\n```\r\n\r\n  [1]: https://docs.python.org/3/library/functions.html#reversed\r\n  [pep0322]: https://www.python.org/dev/peps/pep-0322/\r\n  [list]: https://docs.python.org/3/library/stdtypes.html#list",
+              "comment_count": 8,
+              "content_license": "CC BY-SA 4.0",
+              "created_at_ms": 1287126140000,
+              "is_accepted": true,
+              "last_activity_at_ms": 1660588390000,
+              "last_edit_at_ms": 1660588390000,
+              "owner": {
+                "display_name": "codaddict",
+                "link": "https://stackoverflow.com/users/227665/codaddict",
+                "reputation": 457906,
+                "user_id": 227665,
+                "user_type": "registered"
+              },
+              "question_id": 3940128,
+              "question_title": "How do I reverse a list or loop over it backwards?",
+              "score": 1738,
+              "site": "stackoverflow",
+              "source_url": "https://stackoverflow.com/questions/3940128/how-do-i-reverse-a-list-or-loop-over-it-backwards/3940144#3940144"
+            },
+            {
+              "answer_id": 3940137,
+              "body_html": "<pre><code>&gt;&gt;&gt; xs = [0, 10, 20, 40]\n&gt;&gt;&gt; xs[::-1]\n[40, 20, 10, 0]\n</code></pre>\n<p>Extended slice syntax is explained <a href=\"http://docs.python.org/release/2.3.5/whatsnew/section-slices.html\" rel=\"noreferrer\">here</a>. See also, <a href=\"http://docs.python.org/library/functions.html#slice\" rel=\"noreferrer\">documentation</a>.</p>\n",
+              "body_markdown": "```\r\n>>> xs = [0, 10, 20, 40]\r\n>>> xs[::-1]\r\n[40, 20, 10, 0]\r\n```\r\n\r\nExtended slice syntax is explained [here][1]. See also, [documentation][2].\r\n\r\n\r\n  [1]: http://docs.python.org/release/2.3.5/whatsnew/section-slices.html\r\n  [2]: http://docs.python.org/library/functions.html#slice",
+              "comment_count": 9,
+              "content_license": "CC BY-SA 4.0",
+              "created_at_ms": 1287126072000,
+              "is_accepted": false,
+              "last_activity_at_ms": 1649496982000,
+              "last_edit_at_ms": 1649496982000,
+              "owner": {
+                "display_name": "mechanical_meat",
+                "link": "https://stackoverflow.com/users/42346/mechanical-meat",
+                "reputation": 170962,
+                "user_id": 42346,
+                "user_type": "registered"
+              },
+              "question_id": 3940128,
+              "question_title": "How do I reverse a list or loop over it backwards?",
+              "score": 1542,
+              "site": "stackoverflow",
+              "source_url": "https://stackoverflow.com/questions/3940128/how-do-i-reverse-a-list-or-loop-over-it-backwards/3940137#3940137"
+            }
+          ],
+          "answers_count": 2,
+          "answers_page": 1,
+          "has_more_answers": true,
+          "observed_at_ms": 1789448650290,
+          "question": {
+            "accepted_answer_id": 3940144,
+            "answer_count": 18,
+            "body_html": "<p>How do I iterate over a list in reverse in Python?</p>\n<hr />\n<p><sub>See also: <a href=\"https://stackoverflow.com/questions/4280691/\">How can I get a reversed copy of a list (avoid a separate statement when chaining a method after .reverse)?</a></sub></p>\n",
+            "body_markdown": "How do I iterate over a list in reverse in Python?\r\n\r\n----\r\n\r\n<sub>See also: https://stackoverflow.com/questions/4280691/</sub>",
+            "closed_at_ms": null,
+            "closed_reason": null,
+            "comment_count": 2,
+            "content_license": null,
+            "created_at_ms": 1287125979000,
+            "is_answered": true,
+            "last_activity_at_ms": 1740798772000,
+            "last_edit_at_ms": 1740798772000,
+            "owner": {
+              "display_name": "Leo.peis",
+              "link": "https://stackoverflow.com/users/476595/leo-peis",
+              "reputation": 14531,
+              "user_id": 476595,
+              "user_type": "registered"
+            },
+            "question_id": 3940128,
+            "score": 1412,
+            "site": "stackoverflow",
+            "source_url": "https://stackoverflow.com/questions/3940128/how-do-i-reverse-a-list-or-loop-over-it-backwards",
+            "tags": [
+              "python",
+              "list",
+              "reverse"
+            ],
+            "title": "How do I reverse a list or loop over it backwards?",
+            "view_count": 2148447
+          },
+          "question_id": 3940128,
+          "quota": {
+            "backoff_seconds": null,
+            "max": 300,
+            "remaining": 299
+          },
+          "site": "stackoverflow",
+          "source_url": "https://api.stackexchange.com/2.3/questions/3940128?site=stackoverflow&filter=%217ry9ouLWcQWrdWSzrv7eT0TX0kxJ.zt0R1"
+        },
+        "recordedAt": "2026-09-15T05:04:10.290104+00:00"
+      },
+      "execute": {
+        "provider": "stackexchange-com",
+        "capability": "questions/question"
+      }
+    },
+    {
+      "id": "stackexchange-com/questions/search",
+      "provider": "stackexchange-com",
+      "capability": "questions/search",
+      "name": "Search",
+      "description": "Questions on one Stack Exchange site matching free text (`q`: one term or up to 5 searched together), tags, or title/body text, optionally inside a creation-date window (`fromdate`/`todate`) and score/date bounds (`min`/`max`); `accepted: true` keeps only questions with an accepted answer. Returns question records (bodies only with `include_body: true`) plus per-term counts, total, has_more and quota; `question_id` and `accepted_answer_id` feed `question` and `answer`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "accepted",
+          "type": "boolean",
+          "in": "body",
+          "about": "true: only questions with an accepted answer; false: only without."
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "in": "body",
+          "about": "Text that must appear in the body."
+        },
+        {
+          "name": "closed",
+          "type": "boolean",
+          "in": "body",
+          "about": "closed"
+        },
+        {
+          "name": "fromdate",
+          "type": "number",
+          "in": "body",
+          "about": "Lower bound on the question's creation time, inclusive: Unix seconds, `YYYY-MM-DD` or an RFC 3339 date-time (UTC)."
+        },
+        {
+          "name": "include_body",
+          "type": "boolean",
+          "in": "body",
+          "about": "true adds body_html/body_markdown to every question; off by default because bodies dominate the response size."
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "in": "body",
+          "about": "Optional Stack Exchange application key. Raises the per-IP quota from 300 to 10,000 requests per day. Keys are public identifiers, not secrets."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "in": "body",
+          "about": "Upper bound on the sort field: score for `sort: votes`, Unix seconds for `activity` or `creation`. Not accepted with `relevance`."
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "in": "body",
+          "about": "Lower bound on the sort field: score for `sort: votes`, Unix seconds for `activity` or `creation`. Not accepted with `relevance`."
+        },
+        {
+          "name": "min_answers",
+          "type": "number",
+          "in": "body",
+          "about": "min_answers",
+          "min": 0,
+          "max": 1000
+        },
+        {
+          "name": "nottagged",
+          "type": "string[]",
+          "in": "body",
+          "about": "None of these tags may be present."
+        },
+        {
+          "name": "order",
+          "type": "string",
+          "in": "body",
+          "about": "order",
+          "default": "desc",
+          "oneOf": [
+            "desc",
+            "asc"
+          ]
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "pagesize",
+          "type": "number",
+          "in": "body",
+          "about": "pagesize",
+          "default": 10,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "q",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text query matched against title and body, or up to 5 such terms searched in one call (one upstream request per term; `questions` is the merged, de-duplicated union and `terms` reports each term's own count and total). The site's search syntax applies: `[tag]` matches a tag, quotes match an exact phrase."
+        },
+        {
+          "name": "site",
+          "type": "string",
+          "in": "body",
+          "about": "Stack Exchange site API parameter, e.g. stackoverflow, superuser, math, askubuntu, english, physics. Use `sites` to list them. Pattern: ^[a-z0-9]+(\\.[a-z0-9]+)*$.",
+          "default": "stackoverflow"
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Defaults to `relevance`, or to `creation` when `fromdate` or `todate` is given so a date window reads as a timeline.",
+          "oneOf": [
+            "relevance",
+            "votes",
+            "activity",
+            "creation"
+          ]
+        },
+        {
+          "name": "tagged",
+          "type": "string[]",
+          "in": "body",
+          "about": "Every tag must be present on the question."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "in": "body",
+          "about": "Text that must appear in the title."
+        },
+        {
+          "name": "todate",
+          "type": "number",
+          "in": "body",
+          "about": "Upper bound on the question's creation time, inclusive: Unix seconds, `YYYY-MM-DD` or an RFC 3339 date-time (UTC). A date-only value covers that whole day."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "q",
+          "tagged",
+          "title",
+          "body"
+        ]
+      ],
+      "response": {
+        "about": "Questions on one Stack Exchange site matching free text (`q`: one term or up to 5 searched together), tags, or title/body text, optionally inside a creation-date window (`fromdate`/`todate`) and score/date bounds (`min`/`max`); `accepted: true` keeps only questions with an accepted answer. Returns question records (bodies only with `include_body: true`) plus per-term counts, total, has_more and quota; `question_id` and `accepted_answer_id` feed `question` and `answer`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "has_more",
+            "type": "boolean"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "object"
+          },
+          {
+            "name": "questions",
+            "type": "object[]"
+          },
+          {
+            "name": "quota",
+            "type": "object"
+          },
+          {
+            "name": "site",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "source_urls",
+            "type": "string[]",
+            "about": "One API request URL per searched term, in `terms` order; `source_url` is the first."
+          },
+          {
+            "name": "terms",
+            "type": "object[]",
+            "about": "One entry per searched term (a single entry with `q: null` when the search had no free-text term), in input order."
+          },
+          {
+            "name": "total",
+            "type": "number",
+            "about": "Questions matching across all pages; null when several terms were searched (see `terms`)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "include_body": false,
+          "pagesize": 2,
+          "q": "reverse list",
+          "sort": "activity"
+        },
+        "response": {
+          "count": 2,
+          "has_more": true,
+          "observed_at_ms": 1789840389358,
+          "page": 1,
+          "query": {
+            "accepted": null,
+            "body": null,
+            "closed": null,
+            "fromdate": null,
+            "max": null,
+            "min": null,
+            "min_answers": null,
+            "nottagged": null,
+            "order": "desc",
+            "pagesize": 2,
+            "q": "reverse list",
+            "sort": "activity",
+            "tagged": null,
+            "title": null,
+            "todate": null
+          },
+          "questions": [
+            {
+              "accepted_answer_id": 80004021,
+              "answer_count": 1,
+              "body_html": null,
+              "body_markdown": null,
+              "closed_at_ms": null,
+              "closed_reason": null,
+              "comment_count": 2,
+              "content_license": null,
+              "created_at_ms": 1789720220000,
+              "is_answered": true,
+              "last_activity_at_ms": 1789735907000,
+              "last_edit_at_ms": null,
+              "owner": {
+                "display_name": "Matteo",
+                "link": "https://stackoverflow.com/users/17040989/matteo",
+                "reputation": 803,
+                "user_id": 17040989,
+                "user_type": "registered"
+              },
+              "question_id": 80003992,
+              "score": 0,
+              "site": "stackoverflow",
+              "source_url": "https://stackoverflow.com/questions/80003992/gt-rowname-col-show-only-one-entry-vertically-centered",
+              "tags": [
+                "r",
+                "gt",
+                "r-rownames"
+              ],
+              "title": "gt rowname_col show only one entry vertically centered",
+              "view_count": 87
+            },
+            {
+              "accepted_answer_id": 64402911,
+              "answer_count": 2,
+              "body_html": null,
+              "body_markdown": null,
+              "closed_at_ms": null,
+              "closed_reason": null,
+              "comment_count": 1,
+              "content_license": null,
+              "created_at_ms": 1602887875000,
+              "is_answered": true,
+              "last_activity_at_ms": 1789679494000,
+              "last_edit_at_ms": 1789679494000,
+              "owner": {
+                "display_name": "iDev",
+                "link": "https://stackoverflow.com/users/1030542/idev",
+                "reputation": 2493,
+                "user_id": 1030542,
+                "user_type": "registered"
+              },
+              "question_id": 64397278,
+              "score": 13,
+              "site": "stackoverflow",
+              "source_url": "https://stackoverflow.com/questions/64397278/understanding-git-rev-list",
+              "tags": [
+                "git",
+                "git-rev-list"
+              ],
+              "title": "Understanding git rev-list",
+              "view_count": 32586
+            }
+          ],
+          "quota": {
+            "backoff_seconds": null,
+            "max": 300,
+            "remaining": 299
+          },
+          "site": "stackoverflow",
+          "source_url": "https://api.stackexchange.com/2.3/search/advanced?site=stackoverflow&sort=activity&order=desc&page=1&pagesize=2&q=reverse+list&filter=%217ry9ouLWcQWrdWSzrv7eT0TX0kxJ.zt0R1",
+          "source_urls": [
+            "https://api.stackexchange.com/2.3/search/advanced?site=stackoverflow&sort=activity&order=desc&page=1&pagesize=2&q=reverse+list&filter=%217ry9ouLWcQWrdWSzrv7eT0TX0kxJ.zt0R1"
+          ],
+          "terms": [
+            {
+              "count": 2,
+              "has_more": true,
+              "q": "reverse list",
+              "total": 17747
+            }
+          ],
+          "total": 17747
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "stackexchange-com",
+        "capability": "questions/search"
+      }
+    },
+    {
+      "id": "stackexchange-com/questions/sites",
+      "provider": "stackexchange-com",
+      "capability": "questions/sites",
+      "name": "Sites",
+      "description": "Sites in the Stack Exchange network with the `site` parameter every other function takes. Input: page and page size. Returns site name, URL, audience and API parameter.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "key",
+          "type": "string",
+          "in": "body",
+          "about": "Optional Stack Exchange application key. Raises the per-IP quota from 300 to 10,000 requests per day. Keys are public identifiers, not secrets."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "pagesize",
+          "type": "number",
+          "in": "body",
+          "about": "pagesize",
+          "default": 100,
+          "min": 1,
+          "max": 100
+        }
+      ],
+      "response": {
+        "about": "Sites in the Stack Exchange network with the `site` parameter every other function takes. Input: page and page size. Returns site name, URL, audience and API parameter.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "has_more",
+            "type": "boolean"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "quota",
+            "type": "object"
+          },
+          {
+            "name": "sites",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "pagesize": 2
+        },
+        "response": {
+          "count": 2,
+          "has_more": true,
+          "observed_at_ms": 1789448649931,
+          "page": 1,
+          "quota": {
+            "backoff_seconds": null,
+            "max": 300,
+            "remaining": 299
+          },
+          "sites": [
+            {
+              "api_site_parameter": "stackoverflow",
+              "audience": "professional and enthusiast programmers",
+              "launch_date_ms": 1221436800000,
+              "name": "Stack Overflow",
+              "site_state": "normal",
+              "site_type": "main_site",
+              "site_url": "https://stackoverflow.com"
+            },
+            {
+              "api_site_parameter": "serverfault",
+              "audience": "system and network administrators",
+              "launch_date_ms": 1243296000000,
+              "name": "Server Fault",
+              "site_state": "normal",
+              "site_type": "main_site",
+              "site_url": "https://serverfault.com"
+            }
+          ],
+          "source_url": "https://api.stackexchange.com/2.3/sites?pagesize=2&filter=%217ry9ouLWcQWrdWSzrv7eT0TX0kxJ.zt0R1"
+        },
+        "recordedAt": "2026-09-15T05:04:09.931047+00:00"
+      },
+      "execute": {
+        "provider": "stackexchange-com",
+        "capability": "questions/sites"
+      }
+    }
+  ]
+}

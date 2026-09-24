@@ -1,0 +1,705 @@
+{
+  "id": "substack-com",
+  "provider": "substack-com",
+  "name": "Substack",
+  "description": "Public Substack archives, search and free posts or paid previews.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "substack-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "substack-com/newsletters/archive",
+      "provider": "substack-com",
+      "capability": "newsletters/archive",
+      "name": "Archive",
+      "description": "One page of a Substack publication's archive, newest, top or pinned first. Each entry carries title, subtitle, URL, publish time, audience (free or paid), word count, engagement counts, section, tags and bylines. Page with offset and limit.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 12,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "offset",
+          "default": 0,
+          "min": 0,
+          "max": 10000
+        },
+        {
+          "name": "publication",
+          "type": "string",
+          "in": "body",
+          "about": "Substack slug or a declared custom publication host (www.astralcodexten.com, www.lennysnewsletter.com, www.noahpinion.blog). Other custom domains are not supported by this program.",
+          "required": true
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "new = newest first, top = most popular, pinned = editor pins.",
+          "default": "new",
+          "oneOf": [
+            "new",
+            "top",
+            "pinned"
+          ]
+        }
+      ],
+      "response": {
+        "about": "One page of a Substack publication's archive, newest, top or pinned first. Each entry carries title, subtitle, URL, publish time, audience (free or paid), word count, engagement counts, section, tags and bylines. Page with offset and limit. Custom domains are limited to the declared publications; paid text remains the anonymous preview.",
+        "key": "posts",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "audience",
+            "type": "string"
+          },
+          {
+            "name": "authors",
+            "type": "object[]"
+          },
+          {
+            "name": "comments",
+            "type": "number"
+          },
+          {
+            "name": "cover_image",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "free_preview_sent",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "paywalled",
+            "type": "boolean"
+          },
+          {
+            "name": "podcast_duration_seconds",
+            "type": "number"
+          },
+          {
+            "name": "podcast_url",
+            "type": "string"
+          },
+          {
+            "name": "preview_text",
+            "type": "string"
+          },
+          {
+            "name": "publication_id",
+            "type": "string"
+          },
+          {
+            "name": "published_at",
+            "type": "string"
+          },
+          {
+            "name": "reactions",
+            "type": "number"
+          },
+          {
+            "name": "restacks",
+            "type": "number"
+          },
+          {
+            "name": "section",
+            "type": "object"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "subtitle",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "object[]"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "wordcount",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 1,
+          "publication": "www.astralcodexten.com"
+        },
+        "response": {
+          "count": 1,
+          "has_more": true,
+          "limit": 1,
+          "next_offset": 1,
+          "observed_at_ms": 1789435777564,
+          "offset": 0,
+          "paywalled_count": 0,
+          "posts": [
+            {
+              "audience": "everyone",
+              "authors": [
+                {
+                  "bio": null,
+                  "handle": "astralcodexten",
+                  "id": "12009663",
+                  "name": "Scott Alexander",
+                  "photo_url": "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F7b500d22-1176-42ad-afaa-5d72bc36a809_44x44.png"
+                }
+              ],
+              "comments": 35,
+              "cover_image": "https://substack-post-media.s3.amazonaws.com/public/images/017c9c94-ad3d-490e-90b4-1306c0e97122_575x339.png",
+              "description": "...",
+              "free_preview_sent": false,
+              "id": "214878061",
+              "paywalled": false,
+              "podcast_duration_seconds": null,
+              "podcast_url": null,
+              "preview_text": null,
+              "publication_id": "89120",
+              "published_at": "2026-09-14T23:56:40.626Z",
+              "reactions": 94,
+              "restacks": 2,
+              "section": null,
+              "slug": "king-ludd",
+              "subtitle": "...",
+              "tags": [],
+              "title": "King Ludd",
+              "type": "newsletter",
+              "url": "https://www.astralcodexten.com/p/king-ludd",
+              "wordcount": 2755
+            }
+          ],
+          "publication": {
+            "host": "www.astralcodexten.com",
+            "url": "https://www.astralcodexten.com"
+          },
+          "query": null,
+          "sort": "new",
+          "source": "https://www.astralcodexten.com/api/v1/archive?sort=new&search=&offset=0&limit=1"
+        },
+        "recordedAt": "2026-09-15T01:29:37.564090+00:00"
+      },
+      "execute": {
+        "provider": "substack-com",
+        "capability": "newsletters/archive"
+      }
+    },
+    {
+      "id": "substack-com/newsletters/post",
+      "provider": "substack-com",
+      "capability": "newsletters/post",
+      "name": "Post",
+      "description": "One Substack post by URL, or by publication and slug: metadata plus body_html and body_text. Free posts (audience everyone) are complete; paid posts return the publicly served preview with paywalled true, full_text_available false and text_coverage showing how much of the author's word count is visible.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "publication",
+          "type": "string",
+          "in": "body",
+          "about": "Substack slug or a declared custom publication host (www.astralcodexten.com, www.lennysnewsletter.com, www.noahpinion.blog). Other custom domains are not supported by this program."
+        },
+        {
+          "name": "slug",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9._-]+$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "https://<publication host>/p/<slug> or https://open.substack.com/pub/<slug>/p/<slug>. Provide url, or publication and slug. Pattern: ^https?://."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "url",
+          "publication",
+          "slug"
+        ]
+      ],
+      "response": {
+        "about": "One Substack post by URL, or by publication and slug: metadata plus body_html and body_text. Free posts (audience everyone) are complete; paid posts return the publicly served preview with paywalled true, full_text_available false and text_coverage showing how much of the author's word count is visible. Custom domains are limited to the declared publications; paid text remains the anonymous preview.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "access_note",
+            "type": "string"
+          },
+          {
+            "name": "audience",
+            "type": "string"
+          },
+          {
+            "name": "authors",
+            "type": "object[]"
+          },
+          {
+            "name": "body_html",
+            "type": "string"
+          },
+          {
+            "name": "body_text",
+            "type": "string"
+          },
+          {
+            "name": "comments",
+            "type": "number"
+          },
+          {
+            "name": "cover_image",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "free_preview_sent",
+            "type": "boolean"
+          },
+          {
+            "name": "full_text_available",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "type": "string"
+          },
+          {
+            "name": "next_post_slug",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "paywalled",
+            "type": "boolean"
+          },
+          {
+            "name": "podcast_duration_seconds",
+            "type": "number"
+          },
+          {
+            "name": "podcast_url",
+            "type": "string"
+          },
+          {
+            "name": "preview_text",
+            "type": "string"
+          },
+          {
+            "name": "previous_post_slug",
+            "type": "string"
+          },
+          {
+            "name": "publication",
+            "type": "object"
+          },
+          {
+            "name": "publication_id",
+            "type": "string"
+          },
+          {
+            "name": "published_at",
+            "type": "string"
+          },
+          {
+            "name": "reactions",
+            "type": "number"
+          },
+          {
+            "name": "restacks",
+            "type": "number"
+          },
+          {
+            "name": "search_engine_description",
+            "type": "string"
+          },
+          {
+            "name": "search_engine_title",
+            "type": "string"
+          },
+          {
+            "name": "section",
+            "type": "object"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "subtitle",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "object[]"
+          },
+          {
+            "name": "text_coverage",
+            "type": "number",
+            "about": "visible_wordcount / wordcount, rounded to 3 decimals. About 1 for free posts, below 1 for paid posts."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "visible_wordcount",
+            "type": "number",
+            "about": "Words in body_text as served to an anonymous reader."
+          },
+          {
+            "name": "wordcount",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.astralcodexten.com/p/metaculus-monday-2821"
+        },
+        "response": {
+          "access_note": "Free post: body_text is the complete public article.",
+          "audience": "everyone",
+          "authors": [
+            {
+              "bio": null,
+              "handle": "astralcodexten",
+              "id": "12009663",
+              "name": "Scott Alexander",
+              "photo_url": "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F7b500d22-1176-42ad-afaa-5d72bc36a809_44x44.png"
+            }
+          ],
+          "body_html": "<p>Thanks to everyone who commented last week with prediction markets I missed. Two of them seemed to be especially interesting.</p><p><strong><a href=\"https://polymarket.com/\">Polymarket</a></strong> is another cryptocurrency-based prediction market. It's got about two dozen contracts open, and some of them are pretty big - $5 million plus! With that kind of money, we ought to be seeing some really good predicting! We're...not. Either there's a 6% chance that Donald Trump will be president again by March 31, or something's gone wrong. </p><p>Probably it's the second one. I tried to bet against Trump, but getting money into the market was pretty hard. You need USDCoins, a stablecoin related to Ethereum. Polymarket tries to let you buy them directly, but their app wanted me to give them a security code which never showed up, so I gave up on this. Instead I bought some USDC at Coinbase and tried to send them over. But along with the usual Ethereum gas fees, they have something called a relayer, which is supposed to collect my money and put it in my account. And it's apparently heavily backed up, and after two days my money is nowhere to be seen (though I believe them <a href=\"https://polymarket.medium.com/polymarket-relayer-community-announcement-31ac3b64c09d\">when they say</a> that they're trying their hardest and it will probably percolate through the Ethereum network someday). Maybe everyone's having these kinds of issues and this is why the Trump contract hasn't adjusted? I'm not sure. I will keep you updated if my money ever materializes.</p><p><strong><a href=\"https://kalshi.com/\">Kalshi </a></strong>is \"the first regulated futures exchange dedicated to trading on event outcomes\". As far as I can tell they actually did it. They got the government to agree to let them run a prediction market, regulated as investing rather than gambling. There will be a $25,000 max on contracts, so it might not be enough for the real whales, but that's still thirty times higher than existing prediction markets and enough to probably be a sea change. I talked to a representative who said they'll be \"focused on creating markets in a few key categories such as climate, economics, geopolitics, energy, education, government, space, COVID, and technology\", but that they remain open to potentially expanding to all sorts of other areas (<a href=\"https://en.wikipedia.org/wiki/Onion_Futures_Act\">except onions,</a> which apparently have a very specific carve-out as something which it is illegal to have futures markets about, somebody please write a cyberpunk novel revolving around this). So far they're still setting things up, but they describe themselves as \"ramping quickly towards launch\". I am super psyched about this and will keep you all updated.</p><p>Getting back to <strong><a href=\"https://www.metaculus.com/questions/\">Metaculus</a></strong>, let’s look at what they’ve got on AI:</p><div class=\"captioned-image-container\"><figure><a class=\"image-link image2\" target=\"_blank\" href=\"https://substackcdn.com/image/fetch/$s_!ZlWn!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F29d3cefe-10fa-400d-accb-e8a417313844_1043x214.png\" data-component-name=\"Image2ToDOM\"><div class=\"image2-inset\"><picture><source type=\"image/webp\" srcset=\"https://substackcdn.com/image/fetch/$s_!ZlWn!,w_424,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F29d3cefe-10fa-400d-accb-e8a417313844_1043x214.png 424w, https://substackcdn.com/image/fetch/$s_!ZlWn!,w_848,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F29d3cefe-10fa-400d-accb-e8a417313844_1043x214.png 848w, https://substackcdn.com/image/fetch/$s_!ZlWn!,w_1272,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3",
+          "body_text": "Thanks to everyone who commented last week with prediction markets I missed. Two of them seemed to be especially interesting.\nPolymarket is another cryptocurrency-based prediction market. It's got about two dozen contracts open, and some of them are pretty big - $5 million plus! With that kind of money, we ought to be seeing some really good predicting! We're...not. Either there's a 6% chance that Donald Trump will be president again by March 31, or something's gone wrong.\nProbably it's the second one. I tried to bet against Trump, but getting money into the market was pretty hard. You need USDCoins, a stablecoin related to Ethereum. Polymarket tries to let you buy them directly, but their app wanted me to give them a security code which never showed up, so I gave up on this. Instead I bought some USDC at Coinbase and tried to send them over. But along with the usual Ethereum gas fees, they have something called a relayer, which is supposed to collect my money and put it in my account. And it's apparently heavily backed up, and after two days my money is nowhere to be seen (though I believe them when they say that they're trying their hardest and it will probably percolate through the Ethereum network someday). Maybe everyone's having these kinds of issues and this is why the Trump contract hasn't adjusted? I'm not sure. I will keep you updated if my money ever materializes.\nKalshi is \"the first regulated futures exchange dedicated to trading on event outcomes\". As far as I can tell they actually did it. They got the government to agree to let them run a prediction market, regulated as investing rather than gambling. There will be a $25,000 max on contracts, so it might not be enough for the real whales, but that's still thirty times higher than existing prediction markets and enough to probably be a sea change. I talked to a representative who said they'll be \"focused on creating markets in a few key categories such as climate, economics, geopolitics, energy, education, government, space, COVID, and technology\", but that they remain open to potentially expanding to all sorts of other areas (except onions, which apparently have a very specific carve-out as something which it is illegal to have futures markets about, somebody please write a cyberpunk novel revolving around this). So far they're still setting things up, but they describe themselves as \"ramping quickly towards launch\". I am super psyched about this and will keep you all updated.\nGetting back to Metaculus, let’s look at what they’ve got on AI:\nFirst, some history. In 2016, DeepMind’s AlphaGo beat first Fan Hui, a medium-level professional Go player, and then Lee Sedol, a top professional Go player. This was one of the more unexpected events in AI history; everyone thought it would be a few more years before Go AIs were ready for prime time. We can see this on Metaculus; their prediction that a Go program would beat a professional went from 30% before the Fan Hui match to 90% afterwards (there was some debate on whether the Fan Hui match was official enough to count, so it wasn’t 100, but everyone agreed that beating Fan Hui meant the program could probably beat other people in more official settings.\n\nAfter that people thought it was moderately likely AlphaGo could beat Lee Sedol too, and they were right.\nPrediction markets clearly aren’t magic; they didn’t expect AlphaGo’s victory over Hui any more than anyone else did (maybe a little more than some other people? they did give it 30%). But it’s interesting being able to quantify the exact degree to which people thought it was unlikely at the time, and when exactly that changed.\nImagine how great this sort of thing will one day be for historians. With enough skill, you can sort of wring prediction markets out of history - the price of Confederate bonds in early 1863 implied that investors thought the South had a 42% chance of winning the Civil War. But future historians will be spoiled; the numbers will be right t",
+          "comments": 104,
+          "cover_image": "https://bucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com/public/images/64c0705b-004a-4b01-861b-a00c1513fb5e_248x248.png",
+          "description": "Two more prediction markets, plus AI",
+          "free_preview_sent": false,
+          "full_text_available": true,
+          "id": "32257019",
+          "language": "en",
+          "next_post_slug": "book-review-why-were-polarized",
+          "observed_at_ms": 1789435777564,
+          "paywalled": false,
+          "podcast_duration_seconds": null,
+          "podcast_url": null,
+          "preview_text": null,
+          "previous_post_slug": "open-thread-159",
+          "publication": {
+            "host": "www.astralcodexten.com",
+            "url": "https://www.astralcodexten.com"
+          },
+          "publication_id": "89120",
+          "published_at": "2021-02-08T20:46:22.180Z",
+          "reactions": 63,
+          "restacks": 0,
+          "search_engine_description": null,
+          "search_engine_title": null,
+          "section": null,
+          "slug": "metaculus-monday-2821",
+          "source": "https://www.astralcodexten.com/api/v1/posts/metaculus-monday-2821",
+          "subtitle": "Two more prediction markets, plus AI",
+          "tags": [],
+          "text_coverage": 0.992,
+          "title": "Metaculus Monday 2/8/21",
+          "type": "newsletter",
+          "updated_at": "2023-02-08T08:49:29.855Z",
+          "url": "https://www.astralcodexten.com/p/metaculus-monday-2821",
+          "visible_wordcount": 1636,
+          "wordcount": 1650
+        },
+        "recordedAt": "2026-09-15T01:29:38.194472+00:00"
+      },
+      "execute": {
+        "provider": "substack-com",
+        "capability": "newsletters/post"
+      }
+    },
+    {
+      "id": "substack-com/newsletters/search",
+      "provider": "substack-com",
+      "capability": "newsletters/search",
+      "name": "Search",
+      "description": "Search a Substack publication's archive for posts matching a query, using Substack's own archive search. Returns the same post entries as archive, with the query echoed.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 12,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "offset",
+          "default": 0,
+          "min": 0,
+          "max": 10000
+        },
+        {
+          "name": "publication",
+          "type": "string",
+          "in": "body",
+          "about": "Substack slug or a declared custom publication host (www.astralcodexten.com, www.lennysnewsletter.com, www.noahpinion.blog). Other custom domains are not supported by this program.",
+          "required": true
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "new = newest first, top = most popular, pinned = editor pins.",
+          "default": "new",
+          "oneOf": [
+            "new",
+            "top",
+            "pinned"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Search a Substack publication's archive for posts matching a query, using Substack's own archive search. Returns the same post entries as archive, with the query echoed. Custom domains are limited to the declared publications; paid text remains the anonymous preview.",
+        "key": "posts",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "audience",
+            "type": "string"
+          },
+          {
+            "name": "authors",
+            "type": "object[]"
+          },
+          {
+            "name": "comments",
+            "type": "number"
+          },
+          {
+            "name": "cover_image",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "free_preview_sent",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "paywalled",
+            "type": "boolean"
+          },
+          {
+            "name": "podcast_duration_seconds",
+            "type": "number"
+          },
+          {
+            "name": "podcast_url",
+            "type": "string"
+          },
+          {
+            "name": "preview_text",
+            "type": "string"
+          },
+          {
+            "name": "publication_id",
+            "type": "string"
+          },
+          {
+            "name": "published_at",
+            "type": "string"
+          },
+          {
+            "name": "reactions",
+            "type": "number"
+          },
+          {
+            "name": "restacks",
+            "type": "number"
+          },
+          {
+            "name": "section",
+            "type": "object"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "subtitle",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "object[]"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "wordcount",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 1,
+          "publication": "www.astralcodexten.com",
+          "query": "prediction"
+        },
+        "response": {
+          "count": 1,
+          "has_more": true,
+          "limit": 1,
+          "next_offset": 1,
+          "observed_at_ms": 1789435777564,
+          "offset": 0,
+          "paywalled_count": 0,
+          "posts": [
+            {
+              "audience": "everyone",
+              "authors": [
+                {
+                  "bio": null,
+                  "handle": "astralcodexten",
+                  "id": "12009663",
+                  "name": "Scott Alexander",
+                  "photo_url": "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F7b500d22-1176-42ad-afaa-5d72bc36a809_44x44.png"
+                }
+              ],
+              "comments": 104,
+              "cover_image": "https://bucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com/public/images/64c0705b-004a-4b01-861b-a00c1513fb5e_248x248.png",
+              "description": "Two more prediction markets, plus AI",
+              "free_preview_sent": false,
+              "id": "32257019",
+              "paywalled": false,
+              "podcast_duration_seconds": null,
+              "podcast_url": null,
+              "preview_text": null,
+              "publication_id": "89120",
+              "published_at": "2021-02-08T20:46:22.180Z",
+              "reactions": 63,
+              "restacks": 0,
+              "section": null,
+              "slug": "metaculus-monday-2821",
+              "subtitle": "Two more prediction markets, plus AI",
+              "tags": [],
+              "title": "Metaculus Monday 2/8/21",
+              "type": "newsletter",
+              "url": "https://www.astralcodexten.com/p/metaculus-monday-2821",
+              "wordcount": 1650
+            }
+          ],
+          "publication": {
+            "host": "www.astralcodexten.com",
+            "url": "https://www.astralcodexten.com"
+          },
+          "query": "prediction",
+          "sort": "new",
+          "source": "https://www.astralcodexten.com/api/v1/archive?sort=new&search=prediction&offset=0&limit=1"
+        },
+        "recordedAt": "2026-09-15T01:29:37.949100+00:00"
+      },
+      "execute": {
+        "provider": "substack-com",
+        "capability": "newsletters/search"
+      }
+    }
+  ]
+}

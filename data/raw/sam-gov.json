@@ -1,0 +1,884 @@
+{
+  "id": "sam-gov",
+  "provider": "sam-gov",
+  "name": "SAM.gov",
+  "description": "US federal procurement notice search and detail, including agency, deadlines, attachments and amendment history.",
+  "toolCount": 2,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "sam-gov"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "sam-gov/opportunities/detail",
+      "provider": "sam-gov",
+      "capability": "opportunities/detail",
+      "name": "Detail",
+      "description": "Fetch one SAM.gov contract opportunity by its 32-character notice id (the id in https://sam.gov/opp/{id}/view): full description, deadlines, NAICS, set-aside, place of performance, points of contact, award data, attachments (titles and download URLs only) and optionally the amendment history.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "fresh",
+          "type": "boolean",
+          "in": "body",
+          "about": "Always true in practice: every call goes to SAM.gov live with a cache-busting parameter; the workflow keeps no cache."
+        },
+        {
+          "name": "include_attachments",
+          "type": "boolean",
+          "in": "body",
+          "about": "List attachments (title, download URL, size, type). Contents are never fetched."
+        },
+        {
+          "name": "include_history",
+          "type": "boolean",
+          "in": "body",
+          "about": "Include the version history (original notice and every amendment) as record.history."
+        },
+        {
+          "name": "opportunity_id",
+          "type": "string",
+          "in": "body",
+          "about": "SAM.gov notice id. Each published version (original or amendment) has its own id; is_latest/latest_opportunity_id in the record point at the current version. Pattern: ^[0-9a-fA-F]{32}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Fetch one SAM.gov contract opportunity by its 32-character notice id (the id in https://sam.gov/opp/{id}/view): full description, deadlines, NAICS, set-aside, place of performance, points of contact, award data, attachments (titles and download URLs only) and optionally the amendment history.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "agency",
+            "type": "object",
+            "about": "Top-level department (hierarchy level 1)."
+          },
+          {
+            "name": "archive",
+            "type": "object",
+            "about": "When SAM.gov will/did archive the notice (auto15 = 15 days after the deadline, autocustom = the given date, manual)."
+          },
+          {
+            "name": "attachments",
+            "type": "object[]"
+          },
+          {
+            "name": "attachments_retrieved",
+            "type": "boolean",
+            "about": "false means the attachment list was not requested; an empty list with true means the notice has none."
+          },
+          {
+            "name": "award",
+            "type": "object"
+          },
+          {
+            "name": "classification_code",
+            "type": "string",
+            "about": "Product/service code (PSC)."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Plain text (HTML stripped). An excerpt on summary records."
+          },
+          {
+            "name": "description_is_excerpt",
+            "type": "boolean"
+          },
+          {
+            "name": "detail_level",
+            "type": "string"
+          },
+          {
+            "name": "history",
+            "type": "object[]",
+            "about": "Only with detail include_history=true; newest version first."
+          },
+          {
+            "name": "is_active",
+            "type": "boolean"
+          },
+          {
+            "name": "is_amendment",
+            "type": "boolean"
+          },
+          {
+            "name": "is_archived",
+            "type": "boolean",
+            "about": "null on summary records (the search index does not expose it)."
+          },
+          {
+            "name": "is_cancelled",
+            "type": "boolean"
+          },
+          {
+            "name": "is_latest",
+            "type": "boolean",
+            "about": "false when a newer amendment supersedes this version; see latest_opportunity_id."
+          },
+          {
+            "name": "latest_opportunity_id",
+            "type": "string"
+          },
+          {
+            "name": "modification_count",
+            "type": "number"
+          },
+          {
+            "name": "naics_codes",
+            "type": "string[]",
+            "about": "Empty on summary records (see detail_level) or when the notice lists none."
+          },
+          {
+            "name": "notice_type",
+            "type": "string"
+          },
+          {
+            "name": "notice_type_code",
+            "type": "string",
+            "about": "SAM.gov single-letter code (p,o,k,a,r,s,i,g,u,f,l)."
+          },
+          {
+            "name": "notice_type_label",
+            "type": "string"
+          },
+          {
+            "name": "office",
+            "type": "object",
+            "about": "Deepest contracting office in the hierarchy."
+          },
+          {
+            "name": "opportunity_id",
+            "type": "string",
+            "about": "SAM.gov notice id; stable for this published version. Amendments publish a new id whose parent_opportunity_id is the original."
+          },
+          {
+            "name": "organization_hierarchy",
+            "type": "object[]"
+          },
+          {
+            "name": "parent_opportunity_id",
+            "type": "string",
+            "about": "Original notice id when this record is an amendment."
+          },
+          {
+            "name": "place_of_performance",
+            "type": "object"
+          },
+          {
+            "name": "points_of_contact",
+            "type": "object[]"
+          },
+          {
+            "name": "previous_opportunity_id",
+            "type": "string"
+          },
+          {
+            "name": "published_at",
+            "type": "string",
+            "about": "When this version was published (UTC)."
+          },
+          {
+            "name": "response_deadline",
+            "type": "string",
+            "about": "Response due date-time in UTC. null when the notice has none (awards, many special notices) - not a zero or an empty string."
+          },
+          {
+            "name": "response_deadline_date",
+            "type": "string",
+            "about": "Calendar date of the deadline in the notice's own timezone (the date shown on the SAM.gov page)."
+          },
+          {
+            "name": "response_deadline_local",
+            "type": "string",
+            "about": "The deadline exactly as SAM.gov stores it, with its own offset."
+          },
+          {
+            "name": "response_timezone",
+            "type": "string"
+          },
+          {
+            "name": "set_aside",
+            "type": "string",
+            "about": "SAM.gov set-aside code, null when none."
+          },
+          {
+            "name": "set_aside_label",
+            "type": "string"
+          },
+          {
+            "name": "solicitation_number",
+            "type": "string"
+          },
+          {
+            "name": "source_status",
+            "type": "string",
+            "about": "Raw source state: search index gives active|inactive[,canceled]; the notice API gives its status code (published) plus ,archived / ,cancelled flags."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Normalized: cancelled if the notice was cancelled; open while SAM.gov lists it active/not archived (even past the deadline until the archive date); closed once inactive/archived."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "include_attachments": false,
+          "opportunity_id": "a9da8c51e84a4b72a9897a6f483845e3"
+        },
+        "response": {
+          "complete": true,
+          "fresh": true,
+          "next_cursor": null,
+          "records": [
+            {
+              "agency": {
+                "id": "500020367",
+                "name": "500020367"
+              },
+              "archive": {
+                "date": "2026-09-30",
+                "type": "auto15"
+              },
+              "attachments": [],
+              "attachments_retrieved": false,
+              "award": null,
+              "classification_code": "J041",
+              "description": "Combined Synopsis/Solicitation\n\nAFLCMC/PZI Installation Contracting Support\n\nWright Patterson AFB, OH 45433\n\nDate: 2 SEP 2026\n\nTitle: AFIT HVAC CLEANING\n\nRequest for Quote (RFQ) / Solicitation Number: FA8601-26-Q-0141\n\nQuotes Due: 15 SEP 2026 at 12:00 PM EST\n\nContact Point(s): TSgt Adam Holden, Contract Specialist; contact@example.gov\n\nContact Point(s): Jessica Stamper, Contracting Officer; contact@example.gov\n\nDescription: This is a combined synopsis/solicitation for commercial products or commercial services prepared in accordance with RFO Part 12. This announcement constitutes the only solicitation. Offers are being requested and a separate written solicitation will not be issued.\n\nSolicitation number FA8601-26-Q-0141 is issued as a Request for Quotation (RFQ) for AFIT HVAC CLEANING at Wright Patterson Air Force Base as described under the requirements section of this combined synopsis/solicitation and accompanying requirements attachment.\n\nThis acquisition is set-aside for small business concerns under NAICS code 561790 - Other Services to Buildings and Dwellings with a small business size of $9.0M. This solicitation incorporates provisions and clauses by reference. The full text of provisions and clauses may be accessed electronically at www.acquisition.gov.\n\nThe Government reserves the right to conduct interchanges with some, none, or all offerors, or make no award at all depending upon: An award, if any, will be made LPTA. Ie, to the lowest priced Offeror who submits a proposal that:\n\nConforms to the requirements of the combined synopsis/solicitation.\n\nReceives a rating of “Acceptable” on the Technical Capability evaluation factor.\n\nContains the lowest evaluated price (TEP), provided that the TEP is not unbalanced and is fair and reasonable.\n\n***NOTE: The Government is recommending that all bidding vendors attend a site visit for Wednesday September 9, 2026 10:00EST at the following address:\n\n4185 Logistics Ave,\n\nBldg 286 Area A,\n\nWright Patterson Air Force Base\n\nTo obtain access to the installation vendors will need to acquire a visitor’s pass. Attendees must register in advance by emailing Joel Wilson at contact@example.gov and Mark Rauch at contact@example.gov, no later than 10:00AM. EST on Tuesday Sep 8, 2026, with the following information:\n\n​​​​\n\nVisitor’s full name and cell phone number\n\nPreferred email address\n\nDriver’s license number and state of issuance\n\nThe vendor will be required to pick-up their visitor’s pass at Pass and Registration located in Area A, Bldg 286, 4185 Logistics Ave, Dayton, OH 45433. Once base access has been granted, please wait in the lobby for Joel Wilson to escort you to the site visit location.\n\nThe Government also reserves the right to cancel this solicitation, either before or after the closing date.\n\n1. Requirement:\n\nThis requirement is for AFIT HVAC CLEANING at Wright Patterson Air Force Base in accordance with the Performance Work Statement (PWS).\n\n2. Period of Performance:\n\nNo later than 90 Days after contract award. This is inclusive of in person post award site visit, material finish selection, furniture lead time and installation.\n\n3. Provisions and Clauses:\n\nSee solicitation attachment for applicable provisions and clauses that apply to this acquisition. Offerors shall complete and include in quotations all representations and certifications, as well as all fill-in provisions and clauses, contained within this solicitation. Additionally, quotations that contain pricing only with no description/detail of the equipment that will be provided will not be accepted or considered for award. NOTE: In accordance with deviation R-DFARS 252.204-7998(g), the offeror's quote submission legally binds and certifies that its SAM registration is current, complete, accurate, and has been updated within the preceding 12 months as of the offer's date.\n\nMandatory Cybersecurity Maturity Model Certification (CMMC) Level 1 Assessment:\n\nIn accordance with DFARS 252.204-7021 and DFARS 252.204-7025, a CMMC Level 1 assessment is a mandatory requirement for all offerors. To be eligible for contract award, offerors must demonstrate full compliance with the 15 basic safeguarding requirements outlined in FAR 52.240.93.\n\n4. Request for Information (RFIs):\n\nThe Government will accept questions concerning this solicitation until 14 Sep 2026 at 12:00 PM EST. Email your questions on a .pdf, .doc, .docx, .xls or .xlsx document to contact@example.gov and contact@example.gov. Any questions received after this date and time may not be considered.\n\n5. Quotes Due Date:\n\nQuotes must be submitted electronically to the Contract Specialist via e-mail at contact@example.gov and Contracting Officer at contact@example.gov. Quotes must include all applicable shipping costs to include insurance. Quotes must conform to the requirements of this solicitation and be received no later than 15 SEP 2026 at 12:00 PM EST. It is the responsibility of the offeror to ensure that the quote and its attachments are received. Any correspondence sent via e-mail must contain the subject line “FA8601-26-Q-0141 - AFIT HVAC CLEANING” The entire quotation must be contained in a single e-mail that does not exceed 5 megabytes including attachments, if any. E-mails with compressed files are not permitted. Note that e-mail filters at Wright-Patterson Air Force Base are designed to filter e-mails without subject lines or with suspicious subject lines or contents (i.e., .exe or .zip files). Therefore, if the specified subject line is not included, the e-mail may not get through the e-mail filters. Also be advised that .zip or .exe files are not allowable attachments and may be deleted by the email filters at Wright-Patterson. If sending attachments with email, ensure only .pdf, .doc, .docx, .xls or .xlsx documents are sent. The email filter may delete any other form of attachments. If a DoDSafe drop off is needed, please notify the contract specialist or contracting officer at least 48 hours before quotes are due. Any quotes received after designated closing date and time need not be considered. Quotes must include aggregate total of base plus all option year CLINS, if requested (IAW RFO 52.217-5 Evaluation of Options). All quotes shall be in whole dollars and conform to the Contract Line-Item Number (CLIN) structure of attached solicitation.\n\n6. Notice to Vendor(s):\n\nAll vendors must fully complete and return the 'Required Information Sheet' (attached to the solicitation) and return with their quotation. Additionally, quotations that contain pricing only with no description/detail of the supply/service that will be provided will not be accepted or considered for award.\n\n7. Period of Acceptance of Quotes:\n\nOfferor agrees to hold prices in its quote firm for 60 calendar days from the date specified for receipt of offers.\n\n8. SAM Registration:\n\nFirms submitting a quote for the solicitation described herein, MUST be registered in the System for Award Management (SAM) database, or risk the quote as being non-responsive, regardless of the package being considered complete, timely or any other salient consideration. Information to register on SAM can be found at the web site, SAM.gov.\n\nThe contractor is responsible for entering the assessment results into the Procurement Integrated Enterprise Environment (PIEE), specifically within the Supplier Performance Risk System (SPRS) module. Contract award cannot be made to any offeror that is not fully compliant and whose assessment results are not properly recorded in the system of record.\n\nList of Attachments:\n\nPerformance Work Statement\n\nSolicitation\n\nRequired Information Sheet\n\nWage Determination",
+              "description_is_excerpt": false,
+              "detail_level": "full",
+              "history": null,
+              "is_active": true,
+              "is_amendment": false,
+              "is_archived": false,
+              "is_cancelled": false,
+              "is_latest": false,
+              "latest_opportunity_id": "e4b01867044a4f0b9b56d506297ba84b",
+              "modification_count": null,
+              "naics_codes": [
+                "561790"
+              ],
+              "notice_type": "combined_synopsis_solicitation",
+              "notice_type_code": "k",
+              "notice_type_label": "Combined Synopsis/Solicitation",
+              "office": null,
+              "opportunity_id": "a9da8c51e84a4b72a9897a6f483845e3",
+              "organization_hierarchy": [],
+              "parent_opportunity_id": null,
+              "place_of_performance": {
+                "city": {
+                  "code": "OH-05",
+                  "name": "Wright Patterson AFB"
+                },
+                "country": {
+                  "code": "USA",
+                  "name": "UNITED STATES"
+                },
+                "state": {
+                  "code": "OH",
+                  "name": "Ohio"
+                },
+                "street_address": null,
+                "zip": "45433"
+              },
+              "points_of_contact": [
+                {
+                  "email": "contact@example.gov",
+                  "name": "Adam Holden",
+                  "phone": null,
+                  "title": null,
+                  "type": "primary"
+                },
+                {
+                  "email": "contact@example.gov",
+                  "name": "Jessica Stamper",
+                  "phone": null,
+                  "title": null,
+                  "type": "secondary"
+                }
+              ],
+              "previous_opportunity_id": null,
+              "published_at": "2026-09-02T16:47:56Z",
+              "response_deadline": "2026-09-15T16:00:00Z",
+              "response_deadline_date": "2026-09-15",
+              "response_deadline_local": "2026-09-15T12:00:00-04:00",
+              "response_timezone": "America/New_York",
+              "set_aside": "SBA",
+              "set_aside_label": "Total Small Business Set-Aside (FAR 19.5)",
+              "solicitation_number": "FA860126Q0141",
+              "source_status": "published",
+              "source_url": "https://sam.gov/opp/a9da8c51e84a4b72a9897a6f483845e3/view",
+              "status": "open",
+              "title": "HVAC CLEANING",
+              "updated_at": "2026-09-03T14:54:09Z",
+              "version": "2"
+            }
+          ],
+          "retrieved_at": "2026-09-09T00:00:00Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": "2026-09-03T14:54:09Z",
+          "upstream_requests": 1,
+          "warnings": [
+            "notice a9da8c51e84a4b72a9897a6f483845e3: organization lookup unavailable; agency name falls back to the organization id"
+          ]
+        },
+        "recordedAt": "2026-09-09"
+      },
+      "execute": {
+        "provider": "sam-gov",
+        "capability": "opportunities/detail"
+      }
+    },
+    {
+      "id": "sam-gov/opportunities/search",
+      "provider": "sam-gov",
+      "capability": "opportunities/search",
+      "name": "Search",
+      "description": "Search SAM.gov contract opportunities by keyword, agency, notice status, publication date, NAICS, set-aside, notice type and response deadline. Returns one page (default 20, max 100) with an opaque cursor for the next page. By default each hit is enriched with its full notice detail (NAICS, set-aside, place of performance, full description).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "agency_ids",
+          "type": "string[]",
+          "in": "body",
+          "about": "SAM.gov federal organization ids at any hierarchy level (100000000 = Dept of Defense, 300000188 = Dept of the Navy, 100006688 = Dept of Veterans Affairs). Matched as OR."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Opaque cursor from a previous response's next_cursor. Bound to the same filters and page_size; valid for 24 hours; then cursor_expired."
+        },
+        {
+          "name": "include_attachments",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also list each notice's attachments (one more upstream request per record). Requires include_details and page_size <= 50."
+        },
+        {
+          "name": "include_details",
+          "type": "boolean",
+          "in": "body",
+          "about": "Fetch each hit's notice detail (one extra upstream request per record) so naics_codes, set_aside, place_of_performance and the full description are populated. false returns summary records with detail_level=summary."
+        },
+        {
+          "name": "naics_codes",
+          "type": "string[]",
+          "in": "body",
+          "about": "NAICS codes or prefixes (2 to 6 digits). Matched as OR."
+        },
+        {
+          "name": "notice_types",
+          "type": "string[]",
+          "in": "body",
+          "about": "Notice types (SAM.gov codes p,o,k,a,r,s,i,g,u,f,l). Empty = all."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Records per page. At most 50 when include_attachments is true.",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "published_from",
+          "type": "string",
+          "in": "body",
+          "about": "Inclusive lower bound (YYYY-MM-DD, US Eastern calendar day) on the notice's latest publication/modification date. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "published_to",
+          "type": "string",
+          "in": "body",
+          "about": "Inclusive upper bound (YYYY-MM-DD). Must not be before published_from. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Keyword query matched against title, solicitation number and description. Multi-word queries combine per query_mode (default: every word must match). Empty matches everything.",
+          "default": ""
+        },
+        {
+          "name": "query_mode",
+          "type": "string",
+          "in": "body",
+          "about": "How the words of query must match, as SAM.gov's own keyword search offers them (upstream qMode): all = every word (SAM.gov's default), any = at least one word, exact = the phrase as written.",
+          "default": "all",
+          "oneOf": [
+            "all",
+            "any",
+            "exact"
+          ]
+        },
+        {
+          "name": "response_deadline_from",
+          "type": "string",
+          "in": "body",
+          "about": "Inclusive lower bound (YYYY-MM-DD) on the response deadline."
+        },
+        {
+          "name": "response_deadline_to",
+          "type": "string",
+          "in": "body",
+          "about": "Inclusive upper bound (YYYY-MM-DD) on the response deadline."
+        },
+        {
+          "name": "set_asides",
+          "type": "string[]",
+          "in": "body",
+          "about": "SAM.gov set-aside codes (SBA = total small business, 8A, HZC = HUBZone, SDVOSBC, WOSB, EDWOSB, ...). Matched as OR."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "sort",
+          "default": "updated_desc",
+          "oneOf": [
+            "updated_desc",
+            "updated_asc",
+            "relevance",
+            "deadline_asc",
+            "deadline_desc"
+          ]
+        },
+        {
+          "name": "statuses",
+          "type": "string[]",
+          "in": "body",
+          "about": "Notice status as SAM.gov indexes it. active = accepting responses / not yet archived; inactive = archived. Both = no status filter."
+        }
+      ],
+      "response": {
+        "about": "Search SAM.gov contract opportunities by keyword, agency, notice status, publication date, NAICS, set-aside, notice type and response deadline. Returns one page (default 20, max 100) with an opaque cursor for the next page. By default each hit is enriched with its full notice detail (NAICS, set-aside, place of performance, full description).",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "agency",
+            "type": "object",
+            "about": "Top-level department (hierarchy level 1)."
+          },
+          {
+            "name": "archive",
+            "type": "object",
+            "about": "When SAM.gov will/did archive the notice (auto15 = 15 days after the deadline, autocustom = the given date, manual)."
+          },
+          {
+            "name": "attachments",
+            "type": "object[]"
+          },
+          {
+            "name": "attachments_retrieved",
+            "type": "boolean",
+            "about": "false means the attachment list was not requested; an empty list with true means the notice has none."
+          },
+          {
+            "name": "award",
+            "type": "object"
+          },
+          {
+            "name": "classification_code",
+            "type": "string",
+            "about": "Product/service code (PSC)."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Plain text (HTML stripped). An excerpt on summary records."
+          },
+          {
+            "name": "description_is_excerpt",
+            "type": "boolean"
+          },
+          {
+            "name": "detail_level",
+            "type": "string"
+          },
+          {
+            "name": "history",
+            "type": "object[]",
+            "about": "Only with detail include_history=true; newest version first."
+          },
+          {
+            "name": "is_active",
+            "type": "boolean"
+          },
+          {
+            "name": "is_amendment",
+            "type": "boolean"
+          },
+          {
+            "name": "is_archived",
+            "type": "boolean",
+            "about": "null on summary records (the search index does not expose it)."
+          },
+          {
+            "name": "is_cancelled",
+            "type": "boolean"
+          },
+          {
+            "name": "is_latest",
+            "type": "boolean",
+            "about": "false when a newer amendment supersedes this version; see latest_opportunity_id."
+          },
+          {
+            "name": "latest_opportunity_id",
+            "type": "string"
+          },
+          {
+            "name": "modification_count",
+            "type": "number"
+          },
+          {
+            "name": "naics_codes",
+            "type": "string[]",
+            "about": "Empty on summary records (see detail_level) or when the notice lists none."
+          },
+          {
+            "name": "notice_type",
+            "type": "string"
+          },
+          {
+            "name": "notice_type_code",
+            "type": "string",
+            "about": "SAM.gov single-letter code (p,o,k,a,r,s,i,g,u,f,l)."
+          },
+          {
+            "name": "notice_type_label",
+            "type": "string"
+          },
+          {
+            "name": "office",
+            "type": "object",
+            "about": "Deepest contracting office in the hierarchy."
+          },
+          {
+            "name": "opportunity_id",
+            "type": "string",
+            "about": "SAM.gov notice id; stable for this published version. Amendments publish a new id whose parent_opportunity_id is the original."
+          },
+          {
+            "name": "organization_hierarchy",
+            "type": "object[]"
+          },
+          {
+            "name": "parent_opportunity_id",
+            "type": "string",
+            "about": "Original notice id when this record is an amendment."
+          },
+          {
+            "name": "place_of_performance",
+            "type": "object"
+          },
+          {
+            "name": "points_of_contact",
+            "type": "object[]"
+          },
+          {
+            "name": "previous_opportunity_id",
+            "type": "string"
+          },
+          {
+            "name": "published_at",
+            "type": "string",
+            "about": "When this version was published (UTC)."
+          },
+          {
+            "name": "response_deadline",
+            "type": "string",
+            "about": "Response due date-time in UTC. null when the notice has none (awards, many special notices) - not a zero or an empty string."
+          },
+          {
+            "name": "response_deadline_date",
+            "type": "string",
+            "about": "Calendar date of the deadline in the notice's own timezone (the date shown on the SAM.gov page)."
+          },
+          {
+            "name": "response_deadline_local",
+            "type": "string",
+            "about": "The deadline exactly as SAM.gov stores it, with its own offset."
+          },
+          {
+            "name": "response_timezone",
+            "type": "string"
+          },
+          {
+            "name": "set_aside",
+            "type": "string",
+            "about": "SAM.gov set-aside code, null when none."
+          },
+          {
+            "name": "set_aside_label",
+            "type": "string"
+          },
+          {
+            "name": "solicitation_number",
+            "type": "string"
+          },
+          {
+            "name": "source_status",
+            "type": "string",
+            "about": "Raw source state: search index gives active|inactive[,canceled]; the notice API gives its status code (published) plus ,archived / ,cancelled flags."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Normalized: cancelled if the notice was cancelled; open while SAM.gov lists it active/not archived (even past the deadline until the archive date); closed once inactive/archived."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "include_details": false,
+          "page_size": 2,
+          "query": "cybersecurity"
+        },
+        "response": {
+          "complete": true,
+          "next_cursor": "s1:1:2:c88f395baad286d7:1788986400",
+          "page": {
+            "max_records": 10000,
+            "number": 0,
+            "size": 2,
+            "total_pages": 458
+          },
+          "records": [
+            {
+              "agency": {
+                "id": "100000000",
+                "name": "DEPT OF DEFENSE"
+              },
+              "archive": null,
+              "attachments": [],
+              "attachments_retrieved": false,
+              "award": null,
+              "classification_code": null,
+              "description": "The Naval Air Warfare Center Aircraft Division (NAWC-AD) is officially releasing a Request for Quote (RFQ) for a Firm Fixed Price (FFP) contract on a competitive basis for the procurement of one (1) Cart Adapter, P/N 70700-77200-041, in supp",
+              "description_is_excerpt": true,
+              "detail_level": "summary",
+              "history": null,
+              "is_active": true,
+              "is_amendment": false,
+              "is_archived": null,
+              "is_cancelled": false,
+              "is_latest": null,
+              "latest_opportunity_id": null,
+              "modification_count": 0,
+              "naics_codes": [],
+              "notice_type": "solicitation",
+              "notice_type_code": "o",
+              "notice_type_label": "Solicitation",
+              "office": {
+                "id": "100255266",
+                "name": "NAVAIR WARFARE CTR AIRCRAFT DIV"
+              },
+              "opportunity_id": "d4b105e622e348b8ad8af095acaa7648",
+              "organization_hierarchy": [
+                {
+                  "code": "9700",
+                  "id": "100000000",
+                  "level": 1,
+                  "name": "DEPT OF DEFENSE",
+                  "type": "DEPARTMENT"
+                },
+                {
+                  "code": "1700",
+                  "id": "300000188",
+                  "level": 2,
+                  "name": "DEPT OF THE NAVY",
+                  "type": "AGENCY"
+                },
+                {
+                  "code": "NAVAIR",
+                  "id": "100005067",
+                  "level": 3,
+                  "name": "NAVAIR",
+                  "type": "MAJOR COMMAND"
+                },
+                {
+                  "code": "NAVAIR NAWC AD",
+                  "id": "100005150",
+                  "level": 4,
+                  "name": "NAVAIR NAWC AD",
+                  "type": "SUB COMMAND"
+                },
+                {
+                  "code": "N68335",
+                  "id": "100255266",
+                  "level": 5,
+                  "name": "NAVAIR WARFARE CTR AIRCRAFT DIV",
+                  "type": "OFFICE"
+                }
+              ],
+              "parent_opportunity_id": null,
+              "place_of_performance": null,
+              "points_of_contact": [],
+              "previous_opportunity_id": null,
+              "published_at": "2026-09-09T19:14:30Z",
+              "response_deadline": "2026-10-01T19:00:00Z",
+              "response_deadline_date": "2026-10-01",
+              "response_deadline_local": "2026-10-01T15:00:00-04:00",
+              "response_timezone": "America/New_York",
+              "set_aside": null,
+              "set_aside_label": null,
+              "solicitation_number": "N6833526Q1069",
+              "source_status": "active",
+              "source_url": "https://sam.gov/opp/d4b105e622e348b8ad8af095acaa7648/view",
+              "status": "open",
+              "title": "Cart Adapter",
+              "updated_at": "2026-09-09T19:14:30Z",
+              "version": null
+            },
+            {
+              "agency": {
+                "id": "100000000",
+                "name": "DEPT OF DEFENSE"
+              },
+              "archive": null,
+              "attachments": [],
+              "attachments_retrieved": false,
+              "award": null,
+              "classification_code": null,
+              "description": "**Amendment 0002**\n\nThis amendment is answer questions received by contactors (see Q&A attachment) and to revise the PWS (changes are in red on attachment) and are as follows:\n\nThe Contractor shall provi",
+              "description_is_excerpt": true,
+              "detail_level": "summary",
+              "history": null,
+              "is_active": true,
+              "is_amendment": true,
+              "is_archived": null,
+              "is_cancelled": false,
+              "is_latest": null,
+              "latest_opportunity_id": null,
+              "modification_count": 2,
+              "naics_codes": [],
+              "notice_type": "combined_synopsis_solicitation",
+              "notice_type_code": "k",
+              "notice_type_label": "Combined Synopsis/Solicitation",
+              "office": {
+                "id": "500020367",
+                "name": "FA8601  AFLCMC PZIO"
+              },
+              "opportunity_id": "e4b01867044a4f0b9b56d506297ba84b",
+              "organization_hierarchy": [
+                {
+                  "code": "9700",
+                  "id": "100000000",
+                  "level": 1,
+                  "name": "DEPT OF DEFENSE",
+                  "type": "DEPARTMENT"
+                },
+                {
+                  "code": "5700",
+                  "id": "300000251",
+                  "level": 2,
+                  "name": "DEPT OF THE AIR FORCE",
+                  "type": "AGENCY"
+                },
+                {
+                  "code": "AFMC",
+                  "id": "100000570",
+                  "level": 3,
+                  "name": "AIR FORCE MATERIEL COMMAND",
+                  "type": "MAJOR COMMAND"
+                },
+                {
+                  "code": "AFLCMC",
+                  "id": "100000997",
+                  "level": 4,
+                  "name": "AIR FORCE LIFE CYCLE MANAGEMENT CENTER",
+                  "type": "SUB COMMAND"
+                },
+                {
+                  "code": "FA8601",
+                  "id": "500020367",
+                  "level": 5,
+                  "name": "FA8601  AFLCMC PZIO",
+                  "type": "OFFICE"
+                }
+              ],
+              "parent_opportunity_id": "a9da8c51e84a4b72a9897a6f483845e3",
+              "place_of_performance": null,
+              "points_of_contact": [],
+              "previous_opportunity_id": null,
+              "published_at": "2026-09-09T19:05:08Z",
+              "response_deadline": "2026-09-15T16:00:00Z",
+              "response_deadline_date": "2026-09-15",
+              "response_deadline_local": "2026-09-15T12:00:00-04:00",
+              "response_timezone": "America/New_York",
+              "set_aside": null,
+              "set_aside_label": null,
+              "solicitation_number": "FA860126Q0141",
+              "source_status": "active",
+              "source_url": "https://sam.gov/opp/e4b01867044a4f0b9b56d506297ba84b/view",
+              "status": "open",
+              "title": "HVAC CLEANING",
+              "updated_at": "2026-09-09T19:05:08Z",
+              "version": null
+            }
+          ],
+          "retrieved_at": "2026-09-09T00:00:00Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://sam.gov/api/prod/sgs/v1/search/?index=opp&mode=search&q=cybersecurity&page=0&size=2&sort=-modifiedDate&is_active=true",
+          "total_count": 916,
+          "upstream_requests": 1,
+          "warnings": [
+            "include_details=false: naics_codes, set_aside, place_of_performance and attachments are not populated on summary records"
+          ]
+        },
+        "recordedAt": "2026-09-09"
+      },
+      "execute": {
+        "provider": "sam-gov",
+        "capability": "opportunities/search"
+      }
+    }
+  ]
+}

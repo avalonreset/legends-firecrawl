@@ -1,0 +1,428 @@
+{
+  "id": "trip-com",
+  "provider": "trip-com",
+  "name": "Trip.com",
+  "description": "Public hotel destination directories and hotel profiles, room types, amenities and policies. No date-specific availability or offers.",
+  "toolCount": 6,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "trip-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "trip-com/hotels/amenities",
+      "provider": "trip-com",
+      "capability": "hotels/amenities",
+      "name": "Amenities",
+      "description": "Read published popular hotel amenities with source charge labels. Partial amenity coverage; no unlisted amenity is inferred absent.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.trip\\.com/hotels/[a-z0-9-]+-hotel-detail-[0-9]+/[a-z0-9-]+/?$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read published popular hotel amenities with source charge labels. Partial amenity coverage; no unlisted amenity is inferred absent.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name_and_charge",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.trip.com/hotels/london-hotel-detail-2985758/royal-national-hotel-london/"
+        },
+        "response": {
+          "complete": false,
+          "observed_at_ms": 1789502400000,
+          "records": [
+            {
+              "name_and_charge": "Public parking Additional charge"
+            }
+          ],
+          "source_url": "https://www.trip.com/hotels/london-hotel-detail-2985758/royal-national-hotel-london/",
+          "warnings": [
+            "Published directory/profile content only. No date-specific availability, offers, tax-inclusive totals or booking. Room types do not establish vacancy. Source marketing prices are omitted."
+          ]
+        },
+        "recordedAt": "2026-09-15T20:40:00Z"
+      },
+      "execute": {
+        "provider": "trip-com",
+        "capability": "hotels/amenities"
+      }
+    },
+    {
+      "id": "trip-com/hotels/destinations",
+      "provider": "trip-com",
+      "capability": "hotels/destinations",
+      "name": "Destinations",
+      "description": "List linked hotel city directories from the public hotels landing page. Not a complete destination catalog.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.trip\\.com/hotels/?$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "List linked hotel city directories from the public hotels landing page. Not a complete destination catalog.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.trip.com/hotels/"
+        },
+        "response": {
+          "complete": false,
+          "observed_at_ms": 1789502400000,
+          "records": [
+            {
+              "name": "Tokyo Hotels",
+              "url": "https://www.trip.com/hotels/tokyo-hotels-list-228/"
+            }
+          ],
+          "source_url": "https://www.trip.com/hotels/",
+          "warnings": [
+            "Published directory/profile content only. No date-specific availability, offers, tax-inclusive totals or booking. Room types do not establish vacancy. Source marketing prices are omitted."
+          ]
+        },
+        "recordedAt": "2026-09-15T20:40:00Z"
+      },
+      "execute": {
+        "provider": "trip-com",
+        "capability": "hotels/destinations"
+      }
+    },
+    {
+      "id": "trip-com/hotels/hotel",
+      "provider": "trip-com",
+      "capability": "hotels/hotel",
+      "name": "Hotel",
+      "description": "Read hotel identity, street address, description and published property facts. Does not quote a stay.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.trip\\.com/hotels/[a-z0-9-]+-hotel-detail-[0-9]+/[a-z0-9-]+/?$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read hotel identity, street address, description and published property facts. Does not quote a stay.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "availability",
+            "type": "object"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "facts",
+            "type": "string[]"
+          },
+          {
+            "name": "hotel_id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.trip.com/hotels/london-hotel-detail-2985758/royal-national-hotel-london/"
+        },
+        "response": {
+          "complete": false,
+          "observed_at_ms": 1789502400000,
+          "records": [
+            {
+              "address": "38-51 Bedford Way, Camden, London, Greater London, WC1H 0DG, United Kingdom",
+              "availability": null,
+              "description": "With a stay at Royal National Hotel, you'll be centrally located in London, within a 5-minute drive of The British Museum and Leicester Square. This hotel is 1.5 mi (2.4 km) from Trafalgar Square and 1.6 mi (2.5 km) from Oxford Street. The Royal National Hotel in London officially opened in 1998 Make use of convenient amenities such as complimentary wireless Internet access, concierge services, and a vending machine. Enjoy a meal at Blooms Cafe or snacks in the hotel's coffee shop/cafe. English breakfasts are available daily from 6:30 AM to 10:30 AM for a fee. Featured amenities include dry cleaning/laundry services, a 24-hour front desk, and multilingual staff. This hotel has 5 meeting rooms available for events. Self parking (subject to charges) is available onsite. Make yourself at home in one of the 1358 guestrooms. Complimentary wireless Internet access keeps you connected, and satellite programming is available for your entertainment. Bathrooms with bathtubs or showers are provided. Conveniences include phones and coffee/tea makers, and housekeeping is provided on request.",
+              "facts": [
+                "Opened: 1998",
+                "Number of Rooms: 1379"
+              ],
+              "hotel_id": "2985758",
+              "name": "Royal National Hotel"
+            }
+          ],
+          "source_url": "https://www.trip.com/hotels/london-hotel-detail-2985758/royal-national-hotel-london/",
+          "warnings": [
+            "Published directory/profile content only. No date-specific availability, offers, tax-inclusive totals or booking. Room types do not establish vacancy. Source marketing prices are omitted."
+          ]
+        },
+        "recordedAt": "2026-09-15T20:40:00Z"
+      },
+      "execute": {
+        "provider": "trip-com",
+        "capability": "hotels/hotel"
+      }
+    },
+    {
+      "id": "trip-com/hotels/hotels",
+      "provider": "trip-com",
+      "capability": "hotels/hotels",
+      "name": "Hotels",
+      "description": "List featured hotel profiles from a known city directory. Curated directory content, not dated availability search; marketing prices are omitted.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.trip\\.com/hotels/[a-z0-9-]+-hotels-list-[0-9]+/?$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "List featured hotel profiles from a known city directory. Curated directory content, not dated availability search; marketing prices are omitted.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "availability",
+            "type": "object"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "rating_text",
+            "type": "string"
+          },
+          {
+            "name": "review_count_text",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.trip.com/hotels/london-hotels-list-338/"
+        },
+        "response": {
+          "complete": false,
+          "observed_at_ms": 1789502400000,
+          "records": [
+            {
+              "availability": null,
+              "description": "Situated in Bloomsbury, this massive budget-friendly property offers simple rooms, handy on-site amenities, and a convenient base for exploring central sights.",
+              "location": "📍 38-51 Bedford Way, Camden, London",
+              "name": "Royal National Hotel ★★★",
+              "rating_text": "8.2",
+              "review_count_text": "(3,093 reviews)",
+              "url": "https://www.trip.com/hotels/london-hotel-detail-2985758/royal-national-hotel-london/"
+            }
+          ],
+          "source_url": "https://www.trip.com/hotels/london-hotels-list-338/",
+          "warnings": [
+            "Published directory/profile content only. No date-specific availability, offers, tax-inclusive totals or booking. Room types do not establish vacancy. Source marketing prices are omitted."
+          ]
+        },
+        "recordedAt": "2026-09-15T20:40:00Z"
+      },
+      "execute": {
+        "provider": "trip-com",
+        "capability": "hotels/hotels"
+      }
+    },
+    {
+      "id": "trip-com/hotels/policies",
+      "provider": "trip-com",
+      "capability": "hotels/policies",
+      "name": "Policies",
+      "description": "Read published property policy sections including check-in/out, children, pets and fees when present. Policies may vary by room and do not represent a booking contract.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.trip\\.com/hotels/[a-z0-9-]+-hotel-detail-[0-9]+/[a-z0-9-]+/?$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read published property policy sections including check-in/out, children, pets and fees when present. Policies may vary by room and do not represent a booking contract.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "text",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.trip.com/hotels/london-hotel-detail-2985758/royal-national-hotel-london/"
+        },
+        "response": {
+          "complete": false,
+          "observed_at_ms": 1789502400000,
+          "records": [
+            {
+              "text": "Check-in and Check-out Times Check-in: 14:00-24:00 Check-out: Before 11:00 Front desk hours: 24/7"
+            }
+          ],
+          "source_url": "https://www.trip.com/hotels/london-hotel-detail-2985758/royal-national-hotel-london/",
+          "warnings": [
+            "Published directory/profile content only. No date-specific availability, offers, tax-inclusive totals or booking. Room types do not establish vacancy. Source marketing prices are omitted."
+          ]
+        },
+        "recordedAt": "2026-09-15T20:40:00Z"
+      },
+      "execute": {
+        "provider": "trip-com",
+        "capability": "hotels/policies"
+      }
+    },
+    {
+      "id": "trip-com/hotels/rooms",
+      "provider": "trip-com",
+      "capability": "hotels/rooms",
+      "name": "Rooms",
+      "description": "Read published room types, bed descriptions and room features. Room types do not establish availability; price and availability are unknown.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^https://www\\.trip\\.com/hotels/[a-z0-9-]+-hotel-detail-[0-9]+/[a-z0-9-]+/?$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read published room types, bed descriptions and room features. Room types do not establish availability; price and availability are unknown.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "availability",
+            "type": "object"
+          },
+          {
+            "name": "beds",
+            "type": "string"
+          },
+          {
+            "name": "features",
+            "type": "string[]"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "room_id",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.trip.com/hotels/london-hotel-detail-2985758/royal-national-hotel-london/"
+        },
+        "response": {
+          "complete": false,
+          "observed_at_ms": 1789502400000,
+          "records": [
+            {
+              "availability": null,
+              "beds": "1 Single bed and 1 Double bed",
+              "features": [
+                "Has window",
+                "Non-smoking",
+                "Private bathroom",
+                "Private toilet",
+                "Shampoo",
+                "Wardrobe"
+              ],
+              "name": "Standard Plus Family Room",
+              "price": null,
+              "room_id": "507559297"
+            }
+          ],
+          "source_url": "https://www.trip.com/hotels/london-hotel-detail-2985758/royal-national-hotel-london/",
+          "warnings": [
+            "Published directory/profile content only. No date-specific availability, offers, tax-inclusive totals or booking. Room types do not establish vacancy. Source marketing prices are omitted."
+          ]
+        },
+        "recordedAt": "2026-09-15T20:40:00Z"
+      },
+      "execute": {
+        "provider": "trip-com",
+        "capability": "hotels/rooms"
+      }
+    }
+  ]
+}

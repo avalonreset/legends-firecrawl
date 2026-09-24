@@ -1,0 +1,826 @@
+{
+  "id": "etsy-com",
+  "provider": "etsy-com",
+  "name": "Etsy",
+  "description": "Etsy marketplace listings: listing details and prices, per-variation pricing, similar listings, shop sections and search query suggestions from Etsy's public ajax JSON API. Keyword search, shop listing enumeration and reviews are DataDome-gated and not available.",
+  "toolCount": 5,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "etsy-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "etsy-com/listings/listing",
+      "provider": "etsy-com",
+      "capability": "listings/listing",
+      "name": "Listing",
+      "description": "You have a listing id or an etsy.com/listing/{id}/ URL. Use similar_listings for discovery, listing_variations for option prices, shop_sections for the seller's sections.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "currency",
+          "type": "string",
+          "in": "body",
+          "about": "Currency the listing price is returned in (Etsy's x-detected-locale). price_usd is always returned as well.",
+          "default": "USD",
+          "oneOf": [
+            "USD",
+            "GBP",
+            "EUR"
+          ]
+        },
+        {
+          "name": "listing_id",
+          "type": "number",
+          "in": "body",
+          "about": "Numeric Etsy listing id (the number after /listing/ in a listing URL).",
+          "min": 1
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "An etsy.com listing URL: https://www.etsy.com/listing/{id}/..., a regional /uk/listing/{id}/ form or a {shop}.etsy.com/listing/{id} storefront URL."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "listing_id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One Etsy listing by id or listing URL: title, description, state and availability, price in the requested currency (USD, GBP or EUR) plus the USD price, quantity, tags, materials, images, category (taxonomy node), shop identity and ships-from country.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "category",
+            "type": "object"
+          },
+          {
+            "name": "created_at",
+            "type": "number",
+            "about": "Unix seconds."
+          },
+          {
+            "name": "currency",
+            "type": "string",
+            "about": "The currency requested."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "favorites",
+            "type": "number"
+          },
+          {
+            "name": "has_variation_pricing",
+            "type": "boolean"
+          },
+          {
+            "name": "image_count",
+            "type": "number"
+          },
+          {
+            "name": "images",
+            "type": "object[]"
+          },
+          {
+            "name": "is_available",
+            "type": "boolean"
+          },
+          {
+            "name": "is_bestseller",
+            "type": "boolean"
+          },
+          {
+            "name": "is_customizable",
+            "type": "boolean"
+          },
+          {
+            "name": "is_digital",
+            "type": "boolean"
+          },
+          {
+            "name": "is_made_to_order",
+            "type": "boolean"
+          },
+          {
+            "name": "is_on_vacation",
+            "type": "boolean"
+          },
+          {
+            "name": "is_sold_out",
+            "type": "boolean"
+          },
+          {
+            "name": "language",
+            "type": "string",
+            "about": "Language of title and description as served, e.g. en-US."
+          },
+          {
+            "name": "listing_id",
+            "type": "number"
+          },
+          {
+            "name": "materials",
+            "type": "string[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "price",
+            "type": "object",
+            "about": "Price in the requested currency; null when Etsy states no price (sold-out listings)."
+          },
+          {
+            "name": "price_usd_minor",
+            "type": "number"
+          },
+          {
+            "name": "quantity",
+            "type": "number"
+          },
+          {
+            "name": "ships_from_country",
+            "type": "string",
+            "about": "ISO 3166-1 alpha-2 country the seller ships from."
+          },
+          {
+            "name": "shop",
+            "type": "object"
+          },
+          {
+            "name": "shop_subdomain_url",
+            "type": "string",
+            "about": "The listing on the shop's {shop}.etsy.com storefront."
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "number",
+            "about": "Unix seconds."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Canonical listing page URL on www.etsy.com."
+          },
+          {
+            "name": "views",
+            "type": "number"
+          },
+          {
+            "name": "when_made",
+            "type": "string",
+            "about": "Etsy's when_made code, e.g. made_to_order, 2020_2025, 0,2002 (vintage)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "listing_id": 1442569696
+        },
+        "response": {
+          "category": {
+            "full_path_taxonomy_ids": [
+              891,
+              1031,
+              1054,
+              1862
+            ],
+            "level": 3,
+            "name": "Drinkware",
+            "path": "home_and_living.kitchen_and_dining.drink_and_barware.drinkware",
+            "taxonomy_id": 1862
+          },
+          "created_at": 1782096093,
+          "currency": "USD",
+          "description": "Perfect glass for iced coffees, iced teas, sodas or any beverage.  \n20 oz Beer Can Glass",
+          "favorites": 0,
+          "has_variation_pricing": false,
+          "image_count": 1,
+          "images": [
+            {
+              "height": 3000,
+              "image_id": 4798486416,
+              "url": "https://i.etsystatic.com/38814377/r/il/4ec0bd/4798486416/il_fullxfull.4798486416_gd73.jpg",
+              "width": 2250
+            }
+          ],
+          "is_available": true,
+          "is_bestseller": false,
+          "is_customizable": false,
+          "is_digital": false,
+          "is_made_to_order": false,
+          "is_on_vacation": false,
+          "is_sold_out": false,
+          "language": "en-US",
+          "listing_id": 1442569696,
+          "materials": [
+            "Glass"
+          ],
+          "observed_at_ms": 1789767406278,
+          "price": {
+            "amount": "15.00",
+            "amount_minor": 1500,
+            "currency": "USD",
+            "formatted": "$15.00"
+          },
+          "price_usd_minor": 1500,
+          "quantity": 1,
+          "ships_from_country": "US",
+          "shop": {
+            "avatar_url": "https://i.etsystatic.com/iusa/664aed/96706734/iusa_75x75.96706734_oe94.jpg?version=0",
+            "section_id": null,
+            "section_name": null,
+            "shop_id": 38814377,
+            "shop_name": "AMGDesignsNC",
+            "user_id": 703590372
+          },
+          "shop_subdomain_url": "https://amgdesignsnc.etsy.com/listing/1442569696",
+          "state": "active",
+          "tags": [
+            "Bride To Be",
+            "Beer Can Glass",
+            "Iced Coffee Glass"
+          ],
+          "title": "Bride To Be, Iced Coffee Glass, Beer Can Glass, Coffee Glass,",
+          "updated_at": 1782096093,
+          "url": "https://www.etsy.com/listing/1442569696/bride-to-be-iced-coffee-glass-beer-can",
+          "views": 0,
+          "when_made": "2020,2023"
+        },
+        "recordedAt": "2026-09-18"
+      },
+      "execute": {
+        "provider": "etsy-com",
+        "capability": "listings/listing"
+      }
+    },
+    {
+      "id": "etsy-com/listings/listing_variations",
+      "provider": "etsy-com",
+      "capability": "listings/listing_variations",
+      "name": "Listing variations",
+      "description": "A listing shows has_variation_pricing or you need the option values a buyer can pick. Needs a listing id from listing or similar_listings.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "currency",
+          "type": "string",
+          "in": "body",
+          "about": "currency",
+          "default": "USD",
+          "oneOf": [
+            "USD",
+            "GBP",
+            "EUR"
+          ]
+        },
+        {
+          "name": "listing_id",
+          "type": "number",
+          "in": "body",
+          "about": "listing_id",
+          "required": true,
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "Variation properties of a listing (for example size or finish) with each value's availability and its price and price difference in the requested currency. An empty properties list means the listing has no variations.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "listing_id",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "properties",
+            "type": "object[]"
+          },
+          {
+            "name": "property_count",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "The listing page URL this data belongs to."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "listing_id": 1582028184
+        },
+        "response": {
+          "currency": "USD",
+          "listing_id": 1582028184,
+          "observed_at_ms": 1789767410794,
+          "properties": [
+            {
+              "name": "Lid type finish",
+              "property_id": 513,
+              "type": "ListingMetadata_Variation_Custom1",
+              "values": [
+                {
+                  "image_id": null,
+                  "is_available": true,
+                  "listing_variation_id": 3986098762,
+                  "price": {
+                    "amount": "27.00",
+                    "amount_minor": 2700,
+                    "currency": "USD",
+                    "formatted": "$27.00"
+                  },
+                  "price_diff": {
+                    "amount": "4.00",
+                    "amount_minor": 400,
+                    "currency": "USD",
+                    "formatted": "$4.00"
+                  },
+                  "value": "W/rhinestones",
+                  "value_id": 117815404815
+                },
+                {
+                  "image_id": null,
+                  "is_available": true,
+                  "listing_variation_id": 4004887627,
+                  "price": {
+                    "amount": "23.00",
+                    "amount_minor": 2300,
+                    "currency": "USD",
+                    "formatted": "$23.00"
+                  },
+                  "price_diff": {
+                    "amount": "0.00",
+                    "amount_minor": 0,
+                    "currency": "USD",
+                    "formatted": "$0.00"
+                  },
+                  "value": "no rhinestones",
+                  "value_id": 109757542838
+                }
+              ]
+            }
+          ],
+          "property_count": 1,
+          "url": "https://www.etsy.com/listing/1582028184/"
+        },
+        "recordedAt": "2026-09-18"
+      },
+      "execute": {
+        "provider": "etsy-com",
+        "capability": "listings/listing_variations"
+      }
+    },
+    {
+      "id": "etsy-com/listings/search_suggestions",
+      "provider": "etsy-com",
+      "capability": "listings/search_suggestions",
+      "name": "Search suggestions",
+      "description": "Expand or normalize a shopping query before looking for listings elsewhere. Keyword search itself is not available from this program.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Search text; must contain a non-whitespace character.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Etsy's search-box query completions for a text prefix or phrase, with the simplified query terms Etsy derived. Returns query strings, not listings.",
+        "key": "suggestions",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "categories",
+            "type": "string[]"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "search_url",
+            "type": "string",
+            "about": "The etsy.com search page URL for this suggestion (DataDome-fronted; for reference)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "ceramic mug"
+        },
+        "response": {
+          "count": 11,
+          "observed_at_ms": 1789767421762,
+          "query": "ceramic mug",
+          "simplified_queries": [
+            "ceramic",
+            "mug"
+          ],
+          "suggestions": [
+            {
+              "categories": [],
+              "query": "ceramic mug",
+              "search_url": "https://www.etsy.com/search?q=ceramic+mug"
+            },
+            {
+              "categories": [],
+              "query": "ceramic mug handmade",
+              "search_url": "https://www.etsy.com/search?q=ceramic+mug+handmade"
+            },
+            {
+              "categories": [],
+              "query": "ceramic mug with lid",
+              "search_url": "https://www.etsy.com/search?q=ceramic+mug+with+lid"
+            },
+            {
+              "categories": [],
+              "query": "ceramic mug set",
+              "search_url": "https://www.etsy.com/search?q=ceramic+mug+set"
+            },
+            {
+              "categories": [],
+              "query": "ceramic mug with sip hole",
+              "search_url": "https://www.etsy.com/search?q=ceramic+mug+with+sip+hole"
+            },
+            {
+              "categories": [],
+              "query": "ceramic mug template",
+              "search_url": "https://www.etsy.com/search?q=ceramic+mug+template"
+            },
+            {
+              "categories": [],
+              "query": "ceramic mug travel",
+              "search_url": "https://www.etsy.com/search?q=ceramic+mug+travel"
+            },
+            {
+              "categories": [],
+              "query": "ceramic mug cat",
+              "search_url": "https://www.etsy.com/search?q=ceramic+mug+cat"
+            },
+            {
+              "categories": [],
+              "query": "ceramic mug face",
+              "search_url": "https://www.etsy.com/search?q=ceramic+mug+face"
+            },
+            {
+              "categories": [],
+              "query": "ceramic mug floral",
+              "search_url": "https://www.etsy.com/search?q=ceramic+mug+floral"
+            },
+            {
+              "categories": [],
+              "query": "ceramic mugs personalized",
+              "search_url": "https://www.etsy.com/search?q=ceramic+mugs+personalized"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-18"
+      },
+      "execute": {
+        "provider": "etsy-com",
+        "capability": "listings/search_suggestions"
+      }
+    },
+    {
+      "id": "etsy-com/listings/shop_sections",
+      "provider": "etsy-com",
+      "capability": "listings/shop_sections",
+      "name": "Shop sections",
+      "description": "You have a shop_id from a listing and want the shop's catalog structure and active listing counts.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "shop_id",
+          "type": "number",
+          "in": "body",
+          "about": "Numeric Etsy shop id (listing.shop.shop_id).",
+          "required": true,
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "The sections (custom categories) of an Etsy shop with each section's active listing count and display rank. An empty list means the shop has no sections. Listing enumeration per section is DataDome-gated and not available.",
+        "key": "sections",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "active_listing_count",
+            "type": "number"
+          },
+          {
+            "name": "rank",
+            "type": "number"
+          },
+          {
+            "name": "section_id",
+            "type": "number"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "shop_id": 24992764
+        },
+        "response": {
+          "active_listing_total": 69,
+          "count": 4,
+          "observed_at_ms": 1789767418287,
+          "sections": [
+            {
+              "active_listing_count": 38,
+              "rank": 2,
+              "section_id": 39995785,
+              "title": "Earrings"
+            },
+            {
+              "active_listing_count": 19,
+              "rank": 3,
+              "section_id": 38145371,
+              "title": "Libbey Glasses"
+            },
+            {
+              "active_listing_count": 10,
+              "rank": 4,
+              "section_id": 38232547,
+              "title": "20 oz Tumblers"
+            },
+            {
+              "active_listing_count": 2,
+              "rank": 5,
+              "section_id": 38180679,
+              "title": "Mental Health T-Shirts"
+            }
+          ],
+          "shop_id": 24992764
+        },
+        "recordedAt": "2026-09-18"
+      },
+      "execute": {
+        "provider": "etsy-com",
+        "capability": "listings/shop_sections"
+      }
+    },
+    {
+      "id": "etsy-com/listings/similar_listings",
+      "provider": "etsy-com",
+      "capability": "listings/similar_listings",
+      "name": "Similar listings",
+      "description": "Fan out from one known listing to related listings. Etsy keyword search is DataDome-gated and not available; use search_suggestions for query completions.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "currency",
+          "type": "string",
+          "in": "body",
+          "about": "currency",
+          "default": "USD",
+          "oneOf": [
+            "USD",
+            "GBP",
+            "EUR"
+          ]
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum number of listings to return.",
+          "default": 12,
+          "min": 1,
+          "max": 48
+        },
+        {
+          "name": "listing_id",
+          "type": "number",
+          "in": "body",
+          "about": "Seed listing id.",
+          "required": true,
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "Listings Etsy recommends as similar to a seed listing: up to `limit` listing cards with title, URL, price, state, shop and primary image. The only discovery surface reachable without a browser session; results are recommendation-driven and vary between calls. No pagination (the API ignores offsets).",
+        "key": "listings",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "category_path",
+            "type": "string",
+            "about": "Etsy taxonomy path, e.g. home_and_living.kitchen_and_dining.drink_and_barware.drinkware."
+          },
+          {
+            "name": "favorites",
+            "type": "number"
+          },
+          {
+            "name": "has_variation_pricing",
+            "type": "boolean",
+            "about": "When true the price is the base price and variations carry their own prices (listing_variations)."
+          },
+          {
+            "name": "image_url",
+            "type": "string",
+            "about": "Primary listing image (full size)."
+          },
+          {
+            "name": "is_available",
+            "type": "boolean"
+          },
+          {
+            "name": "is_bestseller",
+            "type": "boolean"
+          },
+          {
+            "name": "is_digital",
+            "type": "boolean"
+          },
+          {
+            "name": "is_on_vacation",
+            "type": "boolean"
+          },
+          {
+            "name": "is_sold_out",
+            "type": "boolean"
+          },
+          {
+            "name": "listing_id",
+            "type": "number"
+          },
+          {
+            "name": "price",
+            "type": "object",
+            "about": "Price in the requested currency; null when Etsy states no price (sold-out listings)."
+          },
+          {
+            "name": "price_usd_minor",
+            "type": "number",
+            "about": "Etsy's USD price in cents, independent of the requested currency."
+          },
+          {
+            "name": "shop",
+            "type": "object"
+          },
+          {
+            "name": "state",
+            "type": "string",
+            "about": "Etsy listing state as stated: active, sold_out, vacation, ..."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 3,
+          "listing_id": 1442569696
+        },
+        "response": {
+          "count": 3,
+          "currency": "USD",
+          "listings": [
+            {
+              "category_path": "home_and_living.kitchen_and_dining.drink_and_barware.drinkware",
+              "favorites": 0,
+              "has_variation_pricing": false,
+              "image_url": "https://i.etsystatic.com/38814377/r/il/4d7354/4846729565/il_fullxfull.4846729565_4mbl.jpg",
+              "is_available": true,
+              "is_bestseller": false,
+              "is_digital": false,
+              "is_on_vacation": false,
+              "is_sold_out": false,
+              "listing_id": 1442564560,
+              "price": {
+                "amount": "15.00",
+                "amount_minor": 1500,
+                "currency": "USD",
+                "formatted": "$15.00"
+              },
+              "price_usd_minor": 1500,
+              "shop": {
+                "shop_id": 38814377,
+                "shop_name": "AMGDesignsNC"
+              },
+              "state": "active",
+              "title": "Coffee Glass, Iced Coffee Glass, Beer Can Glass, Coffee Coffee Coffee, Coffee Glass Can",
+              "url": "https://www.etsy.com/listing/1442564560/coffee-glass-iced-coffee-glass-beer-can"
+            },
+            {
+              "category_path": "home_and_living.kitchen_and_dining.drink_and_barware.drinkware.tumblers_and_water_glasses",
+              "favorites": 1,
+              "has_variation_pricing": false,
+              "image_url": "https://i.etsystatic.com/38814377/r/il/98b9b6/4846706763/il_fullxfull.4846706763_jodc.jpg",
+              "is_available": true,
+              "is_bestseller": false,
+              "is_digital": false,
+              "is_on_vacation": false,
+              "is_sold_out": false,
+              "listing_id": 1456762025,
+              "price": {
+                "amount": "15.00",
+                "amount_minor": 1500,
+                "currency": "USD",
+                "formatted": "$15.00"
+              },
+              "price_usd_minor": 1500,
+              "shop": {
+                "shop_id": 38814377,
+                "shop_name": "AMGDesignsNC"
+              },
+              "state": "active",
+              "title": "Howdy Glass, Iced Coffee Glass, Beer Can Glass, Coffee Cup,",
+              "url": "https://www.etsy.com/listing/1456762025/howdy-glass-iced-coffee-glass-beer-can"
+            },
+            {
+              "category_path": "home_and_living.kitchen_and_dining.drink_and_barware.drinkware.tumblers_and_water_glasses",
+              "favorites": 1,
+              "has_variation_pricing": false,
+              "image_url": "https://i.etsystatic.com/38814377/r/il/27a63c/4798460454/il_fullxfull.4798460454_qon7.jpg",
+              "is_available": true,
+              "is_bestseller": false,
+              "is_digital": false,
+              "is_on_vacation": false,
+              "is_sold_out": false,
+              "listing_id": 1442562716,
+              "price": {
+                "amount": "15.00",
+                "amount_minor": 1500,
+                "currency": "USD",
+                "formatted": "$15.00"
+              },
+              "price_usd_minor": 1500,
+              "shop": {
+                "shop_id": 38814377,
+                "shop_name": "AMGDesignsNC"
+              },
+              "state": "active",
+              "title": "Heart Coffee Cup, Iced Coffee Glass, Beer Can Glass, Coffee Cup",
+              "url": "https://www.etsy.com/listing/1442562716/heart-coffee-cup-iced-coffee-glass-beer"
+            }
+          ],
+          "observed_at_ms": 1789767414592,
+          "seed_listing_id": 1442569696
+        },
+        "recordedAt": "2026-09-18"
+      },
+      "execute": {
+        "provider": "etsy-com",
+        "capability": "listings/similar_listings"
+      }
+    }
+  ]
+}

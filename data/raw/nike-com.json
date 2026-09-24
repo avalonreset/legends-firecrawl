@@ -1,0 +1,1306 @@
+{
+  "id": "nike-com",
+  "provider": "nike-com",
+  "name": "Nike US",
+  "description": "Nike US products, prices, sizes, availability and public customer reviews from Nike's own web APIs.",
+  "toolCount": 6,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "nike-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "nike-com/products/availability",
+      "provider": "nike-com",
+      "capability": "products/availability",
+      "name": "Availability",
+      "description": "Stock bands per size for one style/color or a product family; no exact inventory counts.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "country",
+          "type": "string",
+          "in": "body",
+          "about": "country",
+          "default": "US",
+          "oneOf": [
+            "US"
+          ]
+        },
+        {
+          "name": "group_key",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9]{1,64}$."
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "in": "body",
+          "about": "language",
+          "default": "en",
+          "oneOf": [
+            "en"
+          ]
+        },
+        {
+          "name": "style_color",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z0-9]{6,12}-[0-9]{3}$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "style_color",
+          "group_key"
+        ]
+      ],
+      "response": {
+        "about": "Labeled sizes and shipping stock bands for one style/color or a product family. No exact inventory quantities.",
+        "key": "sizes",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "available",
+            "type": "boolean"
+          },
+          {
+            "name": "group_label",
+            "type": "string"
+          },
+          {
+            "name": "gtin",
+            "type": "string"
+          },
+          {
+            "name": "label",
+            "type": "string"
+          },
+          {
+            "name": "localized_label",
+            "type": "string"
+          },
+          {
+            "name": "sku_id",
+            "type": "string"
+          },
+          {
+            "name": "stock_level",
+            "type": "string"
+          },
+          {
+            "name": "style_color",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "style_color": "IV6045-451"
+        },
+        "response": {
+          "available_count": 18,
+          "count": 24,
+          "country": "US",
+          "group_key": "w9HO9jOz",
+          "language": "en",
+          "observed_at_ms": 1757300000000,
+          "sizes": [
+            {
+              "available": false,
+              "group_label": "Adults",
+              "gtin": "00198963076740",
+              "label": "4",
+              "localized_label": "M 4 / W 5.5",
+              "sku_id": "38dfcbab-c9c8-54df-89a0-5083dafc5a13",
+              "stock_level": "OOS",
+              "style_color": "IV6045-451"
+            },
+            {
+              "available": false,
+              "group_label": "Adults",
+              "gtin": "00198963077259",
+              "label": "4.5",
+              "localized_label": "M 4.5 / W 6",
+              "sku_id": "2beba956-5a36-53cc-b152-34d6425c4584",
+              "stock_level": "OOS",
+              "style_color": "IV6045-451"
+            },
+            {
+              "available": true,
+              "group_label": "Adults",
+              "gtin": "00198963079277",
+              "label": "5",
+              "localized_label": "M 5 / W 6.5",
+              "sku_id": "e53055e2-98b9-555d-9dac-bed5ad70e44c",
+              "stock_level": "LOW",
+              "style_color": "IV6045-451"
+            }
+          ],
+          "style_color": "IV6045-451",
+          "unknown_count": 0
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "nike-com",
+        "capability": "products/availability"
+      }
+    },
+    {
+      "id": "nike-com/products/product",
+      "provider": "nike-com",
+      "capability": "products/product",
+      "name": "Product",
+      "description": "One known style/color or a nike.com/t/ product URL. Use search for discovery, availability for stock only.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "country",
+          "type": "string",
+          "in": "body",
+          "about": "country",
+          "default": "US",
+          "oneOf": [
+            "US"
+          ]
+        },
+        {
+          "name": "include_family",
+          "type": "boolean",
+          "in": "body",
+          "about": "include_family"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "in": "body",
+          "about": "language",
+          "default": "en",
+          "oneOf": [
+            "en"
+          ]
+        },
+        {
+          "name": "style_color",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z0-9]{6,12}-[0-9]{3}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "url"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "style_color",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Product details, prices, labeled sizes and stock by style/color or Nike URL; optionally include family variants.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "available",
+            "type": "boolean"
+          },
+          {
+            "name": "brand",
+            "type": "string"
+          },
+          {
+            "name": "color",
+            "type": "string"
+          },
+          {
+            "name": "colors",
+            "type": "object[]"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "description_html",
+            "type": "string"
+          },
+          {
+            "name": "family",
+            "type": "object"
+          },
+          {
+            "name": "genders",
+            "type": "string[]"
+          },
+          {
+            "name": "global_pid",
+            "type": "string"
+          },
+          {
+            "name": "group_key",
+            "type": "string"
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "language",
+            "type": "string"
+          },
+          {
+            "name": "merch_product_id",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "product_type",
+            "type": "string"
+          },
+          {
+            "name": "purchase_limit",
+            "type": "number"
+          },
+          {
+            "name": "size_chart_url",
+            "type": "string"
+          },
+          {
+            "name": "sizes",
+            "type": "object[]"
+          },
+          {
+            "name": "specifications",
+            "type": "string"
+          },
+          {
+            "name": "style_code",
+            "type": "string"
+          },
+          {
+            "name": "style_color",
+            "type": "string"
+          },
+          {
+            "name": "subtitle",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "style_color": "IV6045-451"
+        },
+        "response": {
+          "available": true,
+          "brand": "Jordan",
+          "color": "Obsidian/Grey Fog/Pink Foam/Obsidian",
+          "colors": [
+            {
+              "hex": "1F4090",
+              "name": "Blue",
+              "type": "SIMPLE"
+            },
+            {
+              "hex": "28303E",
+              "name": "Obsidian",
+              "type": "PRIMARY"
+            },
+            {
+              "hex": "B5BABA",
+              "name": "Grey Fog",
+              "type": "SECONDARY"
+            }
+          ],
+          "country": "US",
+          "description_html": "<div class=\"pi-tier3\"><div class=\"pi-pdpmainbody\"><p><b>&nbsp;</b></p><br><p>Inspired by the original that debuted in 1985, the Air Jordan 1 Low offers a clean, classic look that's familiar yet always fresh. With an iconic design that pairs perfectly with any 'fit, these kicks ensure you'll always be on point.</p><br><p><b>Benefits</b></p><ul><li>Nike Air technology absorbs impact for cushioning with every step.</li><li>Perforations on the sides add breathability.</li></ul><br><p><b>Product Details</b></p><ul><li>Leather and synthetic leather upper</li><li>Foam midsole</li><li>Rubber outsole</li><li>Low-cut collar</li><li>Classic laces</li></ul></div></div>",
+          "family": {
+            "colorway_images": [
+              {
+                "alt": "Jordan 1 Low Alt Baby/Toddler Shoes",
+                "portrait": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/09d89ff9-a8ff-466f-8d8d-7514cc630859/JORDAN+1+LOW+ALT+%28TD%29.png",
+                "square": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/8c78a3ae-49fc-4d2e-a7e8-055880ede200/JORDAN+1+LOW+ALT+%28TD%29.png",
+                "style_color": "DR9747-404"
+              },
+              {
+                "alt": "Jordan 1 Low Alt Baby/Toddler Shoes",
+                "portrait": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/54f255a3-b021-4a5d-9764-a182f5469306/JORDAN+1+LOW+ALT+%28TD%29.png",
+                "square": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/57115c99-42d7-4d1b-8011-aa412f9a8879/JORDAN+1+LOW+ALT+%28TD%29.png",
+                "style_color": "DR9747-025"
+              },
+              {
+                "alt": "Jordan 1 Low Alt Baby/Toddler Shoes",
+                "portrait": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/11f80612-7694-4481-997d-48096e1c85d5/JORDAN+1+LOW+ALT+%28TD%29.png",
+                "square": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/a3c07a91-8cc2-4887-9731-c3ffb27d1ed9/JORDAN+1+LOW+ALT+%28TD%29.png",
+                "style_color": "DR9747-027"
+              }
+            ],
+            "group_key": "w9HO9jOz",
+            "groups": [
+              {
+                "label": "Baby/Toddler",
+                "variants": [
+                  {
+                    "color": "Black/White/Pink Gaze",
+                    "group_key": "w9HO9jOz",
+                    "price": {
+                      "currency": "USD",
+                      "current": 40.97,
+                      "full": 60
+                    },
+                    "style_color": "DR9747-025",
+                    "subtitle": "Baby/Toddler Shoes",
+                    "title": "Jordan 1 Low Alt",
+                    "url": "https://www.nike.com/t/jordan-1-low-alt-baby-toddler-shoes-w9HO9jOz/DR9747-025"
+                  },
+                  {
+                    "color": "Phantom/Off Noir/Sail/University Red",
+                    "group_key": "w9HO9jOz",
+                    "price": {
+                      "currency": "USD",
+                      "current": 46.97,
+                      "full": 60
+                    },
+                    "style_color": "DR9747-027",
+                    "subtitle": "Baby/Toddler Shoes",
+                    "title": "Jordan 1 Low Alt",
+                    "url": "https://www.nike.com/t/jordan-1-low-alt-baby-toddler-shoes-w9HO9jOz/DR9747-027"
+                  },
+                  {
+                    "color": "Midnight Navy/White/University Blue",
+                    "group_key": "w9HO9jOz",
+                    "price": {
+                      "currency": "USD",
+                      "current": 60,
+                      "full": 60
+                    },
+                    "style_color": "DR9747-404",
+                    "subtitle": "Baby/Toddler Shoes",
+                    "title": "Jordan 1 Low Alt",
+                    "url": "https://www.nike.com/t/jordan-1-low-alt-baby-toddler-shoes-w9HO9jOz/DR9747-404"
+                  }
+                ]
+              },
+              {
+                "label": "Little Kids",
+                "variants": [
+                  {
+                    "color": "Black/White/Pink Gaze",
+                    "group_key": "w9HO9jOz",
+                    "price": {
+                      "currency": "USD",
+                      "current": 59.97,
+                      "full": 70
+                    },
+                    "style_color": "DR9748-025",
+                    "subtitle": "Little Kids' Shoes",
+                    "title": "Jordan 1 Low Alt",
+                    "url": "https://www.nike.com/t/jordan-1-low-alt-little-kids-shoes-w9HO9jOz/DR9748-025"
+                  }
+                ]
+              },
+              {
+                "label": "Big Kids",
+                "variants": [
+                  {
+                    "color": "Black/White/Pink Gaze",
+                    "group_key": "w9HO9jOz",
+                    "price": {
+                      "currency": "USD",
+                      "current": 67.97,
+                      "full": 90
+                    },
+                    "style_color": "553560-025",
+                    "subtitle": "Big Kids' Shoes",
+                    "title": "Air Jordan 1 Low",
+                    "url": "https://www.nike.com/t/air-jordan-1-low-big-kids-shoes-w9HO9jOz/553560-025"
+                  },
+                  {
+                    "color": "Black/Summit White/Infrared 23/Black",
+                    "group_key": "w9HO9jOz",
+                    "price": {
+                      "currency": "USD",
+                      "current": 72.97,
+                      "full": 90
+                    },
+                    "style_color": "553560-045",
+                    "subtitle": "Big Kids' Shoes",
+                    "title": "Air Jordan 1 Low",
+                    "url": "https://www.nike.com/t/air-jordan-1-low-big-kids-shoes-w9HO9jOz/553560-045"
+                  },
+                  {
+                    "color": "Black/True Blue/Varsity Red/Summit White",
+                    "group_key": "w9HO9jOz",
+                    "price": {
+                      "currency": "USD",
+                      "current": 90,
+                      "full": 90
+                    },
+                    "style_color": "553560-049",
+                    "subtitle": "Big Kids' Shoes",
+                    "title": "Air Jordan 1 Low",
+                    "url": "https://www.nike.com/t/air-jordan-1-low-big-kids-shoes-w9HO9jOz/553560-049"
+                  }
+                ]
+              }
+            ]
+          },
+          "genders": [
+            "MEN"
+          ],
+          "global_pid": "1015957780",
+          "group_key": "w9HO9jOz",
+          "images": [
+            "https://secure-images.nike.com/is/image/DotCom/IV6045_451",
+            "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/ad26f45a-0ab0-40fd-a542-2137ea6d2820/image.png",
+            "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/2439fb75-6600-4c05-9933-44ea8ad5996a/air-jordan-1-low-mens-shoes-w9HO9jOz.png"
+          ],
+          "language": "en",
+          "merch_product_id": "d2599a51-096f-5cf7-b207-5be9cdf2165b",
+          "observed_at_ms": 1757300000000,
+          "price": {
+            "currency": "USD",
+            "current": 120,
+            "discounted": false,
+            "full": 120
+          },
+          "product_type": "FOOTWEAR",
+          "purchase_limit": 10,
+          "size_chart_url": "https://www.nike.com/size-fit/mens-footwear",
+          "sizes": [
+            {
+              "available": false,
+              "group_label": null,
+              "gtin": "00198963076740",
+              "label": "4",
+              "localized_label": "M 4 / W 5.5",
+              "sku_id": "38dfcbab-c9c8-54df-89a0-5083dafc5a13",
+              "stock_level": "OOS",
+              "style_color": "IV6045-451"
+            },
+            {
+              "available": false,
+              "group_label": null,
+              "gtin": "00198963077259",
+              "label": "4.5",
+              "localized_label": "M 4.5 / W 6",
+              "sku_id": "2beba956-5a36-53cc-b152-34d6425c4584",
+              "stock_level": "OOS",
+              "style_color": "IV6045-451"
+            },
+            {
+              "available": true,
+              "group_label": null,
+              "gtin": "00198963079277",
+              "label": "5",
+              "localized_label": "M 5 / W 6.5",
+              "sku_id": "e53055e2-98b9-555d-9dac-bed5ad70e44c",
+              "stock_level": "LOW",
+              "style_color": "IV6045-451"
+            }
+          ],
+          "specifications": "",
+          "style_code": "IV6045",
+          "style_color": "IV6045-451",
+          "subtitle": "Men's Shoes",
+          "title": "Air Jordan 1 Low",
+          "url": "https://www.nike.com/t/air-jordan-1-low-mens-shoes-w9HO9jOz/IV6045-451"
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "nike-com",
+        "capability": "products/product"
+      }
+    },
+    {
+      "id": "nike-com/products/review_summary",
+      "provider": "nike-com",
+      "capability": "products/review_summary",
+      "name": "Review summary",
+      "description": "Rating histogram and fit/comfort summary for a style; cheaper than paging reviews.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "country",
+          "type": "string",
+          "in": "body",
+          "about": "country",
+          "default": "US",
+          "oneOf": [
+            "US"
+          ]
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "in": "body",
+          "about": "language",
+          "default": "en",
+          "oneOf": [
+            "en"
+          ]
+        },
+        {
+          "name": "style_code",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z0-9]{6,12}$."
+        },
+        {
+          "name": "style_color",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z0-9]{6,12}-[0-9]{3}$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "style_code",
+          "style_color"
+        ]
+      ],
+      "response": {
+        "about": "Rating histogram and fit/comfort summaries, with direct and related review counts kept separate.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "average_rating",
+            "type": "number"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "dimensions",
+            "type": "object[]"
+          },
+          {
+            "name": "direct_reviews",
+            "type": "number"
+          },
+          {
+            "name": "language",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "ratings",
+            "type": "object[]"
+          },
+          {
+            "name": "related_reviews",
+            "type": "number"
+          },
+          {
+            "name": "style_code",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "total_reviews",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "style_code": "IV6045"
+        },
+        "response": {
+          "average_rating": 4.8,
+          "country": "US",
+          "dimensions": [
+            {
+              "average": 1,
+              "label": "How did this product fit?",
+              "values": [
+                {
+                  "count": 22,
+                  "label": "Runs Small"
+                },
+                {
+                  "count": 564,
+                  "label": "True to Size"
+                },
+                {
+                  "count": 22,
+                  "label": "Runs Big"
+                }
+              ]
+            },
+            {
+              "average": 1.61,
+              "label": "How comfortable was this product?",
+              "values": [
+                {
+                  "count": 15,
+                  "label": "Uncomfortable"
+                },
+                {
+                  "count": 209,
+                  "label": "Average"
+                },
+                {
+                  "count": 388,
+                  "label": "Very Comfortable"
+                }
+              ]
+            },
+            {
+              "average": null,
+              "label": "Would you recommend this product?",
+              "values": [
+                {
+                  "count": 371,
+                  "label": "Yes"
+                },
+                {
+                  "count": 23,
+                  "label": "No"
+                }
+              ]
+            }
+          ],
+          "direct_reviews": 3,
+          "language": "en",
+          "observed_at_ms": 1757300000000,
+          "ratings": [
+            {
+              "count": 21,
+              "rating": 1
+            },
+            {
+              "count": 18,
+              "rating": 2
+            },
+            {
+              "count": 38,
+              "rating": 3
+            }
+          ],
+          "related_reviews": 2451,
+          "style_code": "IV6045",
+          "title": "Air Jordan 1 Low Men's Shoes",
+          "total_reviews": 2454
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "nike-com",
+        "capability": "products/review_summary"
+      }
+    },
+    {
+      "id": "nike-com/products/reviews",
+      "provider": "nike-com",
+      "capability": "products/reviews",
+      "name": "Reviews",
+      "description": "One page of recent public reviews; use review_summary for the histogram, review_photos for images.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "count",
+          "type": "number",
+          "in": "body",
+          "about": "count",
+          "default": 10,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "in": "body",
+          "about": "country",
+          "default": "US",
+          "oneOf": [
+            "US"
+          ]
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "in": "body",
+          "about": "language",
+          "default": "en",
+          "oneOf": [
+            "en"
+          ]
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "offset",
+          "default": 0,
+          "min": 0,
+          "max": 1000000
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "sort",
+          "default": "RECENT",
+          "oneOf": [
+            "RECENT"
+          ]
+        },
+        {
+          "name": "style_code",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z0-9]{6,12}$."
+        },
+        {
+          "name": "style_color",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Z0-9]{6,12}-[0-9]{3}$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "style_code",
+          "style_color"
+        ]
+      ],
+      "response": {
+        "about": "One page of recent public reviews, including related styles, fit/comfort feedback and media.",
+        "key": "reviews",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "created_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "dimensions",
+            "type": "object[]"
+          },
+          {
+            "name": "down_votes",
+            "type": "number"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "incentivized",
+            "type": "boolean"
+          },
+          {
+            "name": "locale",
+            "type": "string"
+          },
+          {
+            "name": "media",
+            "type": "object[]"
+          },
+          {
+            "name": "product_style_code",
+            "type": "string"
+          },
+          {
+            "name": "product_url",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "up_votes",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "style_code": "IV6045"
+        },
+        "response": {
+          "count": 2,
+          "country": "US",
+          "includes_related": true,
+          "language": "en",
+          "next_offset": 2,
+          "observed_at_ms": 1757300000000,
+          "offset": 0,
+          "reviews": [
+            {
+              "created_at_ms": 1788462292000,
+              "dimensions": [
+                {
+                  "label": "How did this product fit?",
+                  "labels": [
+                    "Runs Small",
+                    "True to Size",
+                    "Runs Big"
+                  ],
+                  "value": 1
+                },
+                {
+                  "label": "How comfortable was this product?",
+                  "labels": [
+                    "Uncomfortable",
+                    "Average",
+                    "Very Comfortable"
+                  ],
+                  "value": 2
+                },
+                {
+                  "label": "Would you recommend this product?",
+                  "labels": [
+                    "Yes"
+                  ],
+                  "value": 13
+                }
+              ],
+              "down_votes": 0,
+              "id": "1732285",
+              "incentivized": false,
+              "locale": "en_US",
+              "media": [],
+              "product_style_code": "553558",
+              "product_url": "https://www.nike.com/t/air-jordan-1-low-mens-shoes-w9HO9jOz/553558-039?nikemt=true",
+              "rating": 5,
+              "text": "Review text omitted in fixture.",
+              "title": "Example review",
+              "up_votes": 0
+            },
+            {
+              "created_at_ms": 1788210523000,
+              "dimensions": [
+                {
+                  "label": "How did this product fit?",
+                  "labels": [
+                    "Runs Small",
+                    "True to Size",
+                    "Runs Big"
+                  ],
+                  "value": 1
+                },
+                {
+                  "label": "How comfortable was this product?",
+                  "labels": [
+                    "Uncomfortable",
+                    "Average",
+                    "Very Comfortable"
+                  ],
+                  "value": 2
+                },
+                {
+                  "label": "Would you recommend this product?",
+                  "labels": [
+                    "Yes"
+                  ],
+                  "value": 13
+                }
+              ],
+              "down_votes": 0,
+              "id": "1731263",
+              "incentivized": false,
+              "locale": "en_US",
+              "media": [],
+              "product_style_code": "IV6045",
+              "product_url": "https://www.nike.com/t/air-jordan-1-low-mens-shoes-w9HO9jOz/IV6045-451?nikemt=true",
+              "rating": 5,
+              "text": "Review text omitted in fixture.",
+              "title": "Example review",
+              "up_votes": 0
+            }
+          ],
+          "sort": "RECENT",
+          "style_code": "IV6045",
+          "total": 2454
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "nike-com",
+        "capability": "products/reviews"
+      }
+    },
+    {
+      "id": "nike-com/products/search",
+      "provider": "nike-com",
+      "capability": "products/search",
+      "name": "Search",
+      "description": "Search Nike US products with query or browse path. For the first page, provide query or path and optionally count (24, 50 or 100; default 24). For the next page, send next_cursor as cursor without query, path or count. Use product for one known style.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "count",
+          "type": "number",
+          "in": "body",
+          "about": "First-page size: 24, 50 or 100. Defaults to 24. Omit when using cursor.",
+          "default": 24,
+          "oneOf": [
+            "24",
+            "50",
+            "100"
+          ]
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "in": "body",
+          "about": "country",
+          "default": "US",
+          "oneOf": [
+            "US"
+          ]
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Opaque next_cursor from a previous search. Send without query, path or count."
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "in": "body",
+          "about": "language",
+          "default": "en",
+          "oneOf": [
+            "en"
+          ]
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "in": "body",
+          "about": "Nike /w browse path for the first page. Omit when using cursor. Pattern: ^/w(?:/[A-Za-z0-9-]+)*$."
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Search text for the first page, for example jordans. Omit when using cursor."
+        }
+      ],
+      "response": {
+        "about": "Search or browse Nike US products, preserving color groups, facets, and one page of results.",
+        "key": "groups",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "card_type",
+            "type": "string"
+          },
+          {
+            "name": "variants",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "jordans"
+        },
+        "response": {
+          "canonical_url": "https://www.nike.com/w",
+          "country": "US",
+          "facets": [
+            {
+              "id": "6de391eb-ab3d-4625-a5e7-d537e87f2bfa",
+              "label": "Sports",
+              "options": [
+                {
+                  "id": "193af413-39b0-4d7e-ae34-558821381d3f",
+                  "label": "Lifestyle",
+                  "path": "/w/lifestyle-13jrm",
+                  "result_count": 1473,
+                  "selected": false
+                },
+                {
+                  "id": "49db2f3e-c999-48c2-b5b4-9296635ae75e",
+                  "label": "Running",
+                  "path": "/w/running-37v7j",
+                  "result_count": 2,
+                  "selected": false
+                }
+              ]
+            }
+          ],
+          "group_count": 2,
+          "groups": [
+            {
+              "card_type": "default",
+              "variants": [
+                {
+                  "attributes": [
+                    "PROMOS_EXCLUDED",
+                    "JUST_IN"
+                  ],
+                  "badge": "Just In",
+                  "color": "Black/Light Graphite/White",
+                  "global_product_id": "73968531-13c5-476d-93a2-b531475220d3",
+                  "group_key": "w8gbGIiw",
+                  "images": {
+                    "portrait": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/8376dc9b-9370-4624-858d-017bf9a2d8ea/AIR+JORDAN+8+RETRO.png",
+                    "square": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/12304076-43a9-40e3-b65c-7b15e324e1bd/AIR+JORDAN+8+RETRO.png"
+                  },
+                  "merch_product_id": "b146f846-19f0-5f5b-b34e-10e7f58f7470",
+                  "price": {
+                    "currency": "USD",
+                    "current": 215,
+                    "discount_percent": 0,
+                    "full": 215
+                  },
+                  "product_type": "FOOTWEAR",
+                  "style_color": "305381-007",
+                  "subtitle": "Men's Shoes",
+                  "title": "Air Jordan 8 Retro \"Chrome\"",
+                  "url": "https://www.nike.com/t/air-jordan-8-retro-chrome-mens-shoes-w8gbGIiw/305381-007"
+                }
+              ]
+            },
+            {
+              "card_type": "default",
+              "variants": [
+                {
+                  "attributes": [
+                    "BEST_SELLER"
+                  ],
+                  "badge": "Best Seller",
+                  "color": "Obsidian/Grey Fog/Pink Foam/Obsidian",
+                  "global_product_id": "52ae9026-dc92-4e23-acab-d5a4d505076c",
+                  "group_key": "w9HO9jOz",
+                  "images": {
+                    "portrait": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/ad26f45a-0ab0-40fd-a542-2137ea6d2820/AIR+JORDAN+1+LOW.png",
+                    "square": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/2439fb75-6600-4c05-9933-44ea8ad5996a/AIR+JORDAN+1+LOW.png"
+                  },
+                  "merch_product_id": "d2599a51-096f-5cf7-b207-5be9cdf2165b",
+                  "price": {
+                    "currency": "USD",
+                    "current": 120,
+                    "discount_percent": 0,
+                    "full": 120
+                  },
+                  "product_type": "FOOTWEAR",
+                  "style_color": "IV6045-451",
+                  "subtitle": "Men's Shoes",
+                  "title": "Air Jordan 1 Low",
+                  "url": "https://www.nike.com/t/air-jordan-1-low-mens-shoes-w9HO9jOz/IV6045-451"
+                },
+                {
+                  "attributes": null,
+                  "badge": null,
+                  "color": "Olive Grey/Summit White/Pale Ivory/Enigma Stone",
+                  "global_product_id": "c1dfb061-f401-4dce-a0e6-0dad356b79d7",
+                  "group_key": "w9HO9jOz",
+                  "images": {
+                    "portrait": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/48a6e3f2-f3de-44ae-966c-f9ac2ff17d56/AIR+JORDAN+1+LOW.png",
+                    "square": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/f7b47121-11f6-4a32-bc5f-e0161d61dfad/AIR+JORDAN+1+LOW.png"
+                  },
+                  "merch_product_id": "b8e31dbe-8996-5974-abb4-d424729a6c50",
+                  "price": {
+                    "currency": "USD",
+                    "current": 120,
+                    "discount_percent": 0,
+                    "full": 120
+                  },
+                  "product_type": "FOOTWEAR",
+                  "style_color": "553558-046",
+                  "subtitle": "Men's Shoes",
+                  "title": "Air Jordan 1 Low",
+                  "url": "https://www.nike.com/t/air-jordan-1-low-mens-shoes-w9HO9jOz/553558-046"
+                },
+                {
+                  "attributes": null,
+                  "badge": null,
+                  "color": "Palomino/Phantom/Sail/Black",
+                  "global_product_id": "4e23290f-1207-40ca-8c69-cb816604e1f4",
+                  "group_key": "w9HO9jOz",
+                  "images": {
+                    "portrait": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/ee40c439-e6c0-46d3-932d-c8c3d5501cb1/AIR+JORDAN+1+LOW.png",
+                    "square": "https://static.nike.com/a/images/t_default/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/07c27cf9-cf7c-4158-8620-652d6bea8d90/AIR+JORDAN+1+LOW.png"
+                  },
+                  "merch_product_id": "e20e216b-dae6-54c8-8da3-1f3e04fd451b",
+                  "price": {
+                    "currency": "USD",
+                    "current": 120,
+                    "discount_percent": 0,
+                    "full": 120
+                  },
+                  "product_type": "FOOTWEAR",
+                  "style_color": "553558-200",
+                  "subtitle": "Men's Shoes",
+                  "title": "Air Jordan 1 Low",
+                  "url": "https://www.nike.com/t/air-jordan-1-low-mens-shoes-w9HO9jOz/553558-200"
+                }
+              ]
+            }
+          ],
+          "language": "en",
+          "next_cursor": "/discover/product_wall/v1/marketplace/US/language/en/consumerChannelId/d9a5bc42-4b9c-4976-858a-f159cf99c647?path=/w&searchTerms=jordans&queryType=PRODUCTS&anchor=24&count=24",
+          "observed_at_ms": 1757300000000,
+          "query": "jordans",
+          "title": null,
+          "total_pages": 78,
+          "total_resources": 1862,
+          "variant_count": 7
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "nike-com",
+        "capability": "products/search"
+      }
+    },
+    {
+      "id": "nike-com/products/suggestions",
+      "provider": "nike-com",
+      "capability": "products/suggestions",
+      "name": "Suggestions",
+      "description": "Autocomplete or popular searches; call before search when the query is uncertain.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "count",
+          "type": "number",
+          "in": "body",
+          "about": "count",
+          "default": 8,
+          "min": 1,
+          "max": 8
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "in": "body",
+          "about": "country",
+          "default": "US",
+          "oneOf": [
+            "US"
+          ]
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "in": "body",
+          "about": "language",
+          "default": "en",
+          "oneOf": [
+            "en"
+          ]
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "in": "body",
+          "about": "text"
+        }
+      ],
+      "response": {
+        "about": "Popular Nike US searches, or autocomplete suggestions for the supplied text.",
+        "key": "suggestions",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "display_text",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "search_text",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "text": "jord"
+        },
+        "response": {
+          "count": 8,
+          "country": "US",
+          "language": "en",
+          "observed_at_ms": 1757300000000,
+          "suggestions": [
+            {
+              "display_text": "volleyball",
+              "id": "1",
+              "search_text": "volleyball"
+            },
+            {
+              "display_text": "kids' shoes",
+              "id": "2",
+              "search_text": "kids' shoes"
+            },
+            {
+              "display_text": "shoes",
+              "id": "bf475949-43cd-3e7a-840a-7d4888acb0f0",
+              "search_text": "shoes"
+            }
+          ],
+          "text": "jord"
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "nike-com",
+        "capability": "products/suggestions"
+      }
+    }
+  ]
+}

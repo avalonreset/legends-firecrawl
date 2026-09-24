@@ -1,0 +1,781 @@
+{
+  "id": "trademarks-ipo-gov-uk",
+  "provider": "trademarks-ipo-gov-uk",
+  "name": "UK IPO trade mark register",
+  "description": "UK Intellectual Property Office trade mark register: search owners by name or UK postcode, list the UK national marks an owner holds, and read a trade mark's case detail (status, dates, goods and services, owners, representatives, publications) and case history (status, event and goods history).",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "trademarks-ipo-gov-uk"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "trademarks-ipo-gov-uk/trade-marks/get_trade_mark",
+      "provider": "trademarks-ipo-gov-uk",
+      "capability": "trade-marks/get_trade_mark",
+      "name": "Get trade mark",
+      "description": "When you have a trade mark number (UK000..., or UK009... for a comparable mark derived from an EU trade mark, domain 23). An unknown number is a not_found failure.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "domain",
+          "type": "string",
+          "in": "body",
+          "about": "Register domain as the site encodes it: 1 national UK mark (default), 23 comparable UK mark derived from an EU trade mark (UK009 numbers), 4 UK mark registered at WIPO, 2 international registration designating the UK.",
+          "default": "1",
+          "oneOf": [
+            "1",
+            "23",
+            "4",
+            "2"
+          ]
+        },
+        {
+          "name": "number",
+          "type": "string",
+          "in": "body",
+          "about": "Trade mark number (UK00003500001; a bare digit string is zero-padded to the UK000 form; A/B series suffixes are kept) or a pasted case detail URL.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read the case detail of one trade mark on the UK register: status, mark text or image, filing, registration and renewal dates, priority claim, goods and services by class, owners (with IPO client id), representatives and publications.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "dates",
+            "type": "object[]",
+            "about": "Every entry of the Dates section with the site's own label."
+          },
+          {
+            "name": "domain",
+            "type": "string"
+          },
+          {
+            "name": "filing_date",
+            "type": "string"
+          },
+          {
+            "name": "goods_services",
+            "type": "object[]"
+          },
+          {
+            "name": "history_url",
+            "type": "string",
+            "about": "The site's 'View historic details' page; get_trade_mark_history reads it."
+          },
+          {
+            "name": "mark_text",
+            "type": "string",
+            "about": "First textual representation of the mark; null for purely figurative marks."
+          },
+          {
+            "name": "number",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "owners",
+            "type": "object[]"
+          },
+          {
+            "name": "priority",
+            "type": "object",
+            "about": "Priority details section; null when the mark claims no priority."
+          },
+          {
+            "name": "publications",
+            "type": "object[]"
+          },
+          {
+            "name": "registration_date",
+            "type": "string",
+            "about": "The site's 'Date of entry in register'; null while an application is pending or was refused/withdrawn."
+          },
+          {
+            "name": "renewal_date",
+            "type": "string",
+            "about": "Next renewal due date; null when the mark is not registered."
+          },
+          {
+            "name": "representations",
+            "type": "object[]",
+            "about": "Every slide of the mark carousel: series marks have several."
+          },
+          {
+            "name": "representatives",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Register status as printed: Registered, Withdrawn, Refused, Dead, Application published, ..."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "number": "UK00003500001"
+        },
+        "response": {
+          "dates": [
+            {
+              "date": "2020-06-12",
+              "label": "Filing date"
+            },
+            {
+              "date": "2020-10-09",
+              "label": "Date of entry in register"
+            },
+            {
+              "date": "2030-06-12",
+              "label": "Renewal date"
+            }
+          ],
+          "domain": "1",
+          "filing_date": "2020-06-12",
+          "goods_services": [
+            {
+              "class": "5",
+              "terms": "Pharmaceutical products; Nutritional supplements; Food supplements for medical use; Creams, sprays, serums, balms and lotions for medical use to prevent or release body pain."
+            },
+            {
+              "class": "10",
+              "terms": "Medical devices, apparatus and instruments, bandages, patches, namely, Transdermal patches, pads, wraps; Light or infra-red activated releasing bandages, patches, pads, wraps for therapeutic purposes; Mineral or biomineral containing bandages, wraps, pads, patches reflecting energy to a painful area; Medical & well-being coaching devices in the pain area; Computer controlled training apparatus for pain relief and for therapeutic purposes; electronical stimulation apparatus for pain relief and physiotherapy purposes; physiotherapy and rehabilitation equipment; training apparatus for medical rehabilitation purposes; gymnastic apparatus for therapeutic purposes."
+            }
+          ],
+          "history_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/History/1/UK00003500001",
+          "mark_text": "NEOACTIV",
+          "number": "UK00003500001",
+          "observed_at_ms": 1790105159261,
+          "owners": [
+            {
+              "address": "157 Avenue Charles de Gaulle, Neuilly-Sur-Seine, 92200, France",
+              "client_id": "1935286",
+              "country_of_incorporation": "France",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=1935286&domain=1&app=0&mark=UK00003500001",
+              "name": "Opella Healthcare Group SAS"
+            }
+          ],
+          "priority": {
+            "claim": "Whole",
+            "claimed_from": "194606767",
+            "country": "France",
+            "date": "2019-12-12"
+          },
+          "publications": [
+            {
+              "heading": "First advert",
+              "journal": "2020/031",
+              "publication_date": "2020-07-31"
+            }
+          ],
+          "registration_date": "2020-10-09",
+          "renewal_date": "2030-06-12",
+          "representations": [
+            {
+              "image_url": null,
+              "text": "NEOACTIV"
+            }
+          ],
+          "representatives": [
+            {
+              "address": "Africa House, 70 Kingsway, London, WC2B 6AH, United Kingdom",
+              "name": "Mishcon De Reya LLP"
+            }
+          ],
+          "source_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00003500001",
+          "status": "Registered"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "trademarks-ipo-gov-uk",
+        "capability": "trade-marks/get_trade_mark"
+      }
+    },
+    {
+      "id": "trademarks-ipo-gov-uk/trade-marks/get_trade_mark_history",
+      "provider": "trademarks-ipo-gov-uk",
+      "capability": "trade-marks/get_trade_mark_history",
+      "name": "Get trade mark history",
+      "description": "For assignment, ownership-change and status timelines of a known trade mark number.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "domain",
+          "type": "string",
+          "in": "body",
+          "about": "Register domain as the site encodes it (see get_trade_mark).",
+          "default": "1",
+          "oneOf": [
+            "1",
+            "23",
+            "4",
+            "2"
+          ]
+        },
+        {
+          "name": "number",
+          "type": "string",
+          "in": "body",
+          "about": "Trade mark number (UK00003000001) or a pasted case detail / history URL.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read the historic details of one trade mark: status history, event history (including owner and representative changes) and goods history. Loads the case detail first to establish the site's session, then the history page.",
+        "key": "events",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "number": "UK00003000001"
+        },
+        "response": {
+          "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00003000001",
+          "domain": "1",
+          "events": [
+            {
+              "date": "2013-11-26",
+              "text": "Name and address details were amended.",
+              "type": "Edit owner or representative"
+            },
+            {
+              "date": "2013-11-26",
+              "text": "Name and address details were amended.",
+              "type": "Edit owner or representative"
+            },
+            {
+              "date": "2013-04-17",
+              "text": "Name and address details were amended.",
+              "type": "Edit owner or representative"
+            },
+            {
+              "date": "2013-04-17",
+              "text": "Name and address details were amended.",
+              "type": "Edit owner or representative"
+            },
+            {
+              "date": "2013-04-10",
+              "text": "The Mark Section has been updated by (BJENK) on (2013/04/10:12:28:59). The fields that have been updated are: Type of Mark, Representations of Mark.",
+              "type": "Changes to application details"
+            },
+            {
+              "date": "2013-04-04",
+              "text": "Name and address details were amended.",
+              "type": "Edit owner or representative"
+            }
+          ],
+          "goods_history": [
+            {
+              "date_amended": "2013-04-10",
+              "goods_services": [
+                {
+                  "class": "45",
+                  "terms": "Political consultancy services, including election campaign consultancy services; research and information services relating to political affairs; advisory services relating to political risk management and assessment; provision of political infomation; political analysis and advisory services; political lobbying services; political campaigning services; electoral campaigning services; collecting information from the fields of politics and economics in computer databases, promoting public awareness campaigns; on-line social networking services."
+                }
+              ]
+            }
+          ],
+          "number": "UK00003000001",
+          "observed_at_ms": 1790105163038,
+          "source_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/History/1/UK00003000001",
+          "status_history": [
+            {
+              "date": "2013-09-23",
+              "status": "Withdrawn"
+            },
+            {
+              "date": "2013-04-10",
+              "status": "Examination"
+            },
+            {
+              "date": "2013-04-09",
+              "status": "Application Received"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "trademarks-ipo-gov-uk",
+        "capability": "trade-marks/get_trade_mark_history"
+      }
+    },
+    {
+      "id": "trademarks-ipo-gov-uk/trade-marks/list_owner_marks",
+      "provider": "trademarks-ipo-gov-uk",
+      "capability": "trade-marks/list_owner_marks",
+      "name": "List owner marks",
+      "description": "After search_owners returned a client_id, or from the owner link on a case detail. Follow up with get_trade_mark for the full record.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "client_id",
+          "type": "string",
+          "in": "body",
+          "about": "IPO owner client id from search_owners or a case detail's owner link. Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page; 20 marks per page.",
+          "default": 1,
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "List one page (20 marks) of the UK national trade marks held by an IPO owner client id, with number, status, mark type, mark text, filing date, classes and image link.",
+        "key": "marks",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "classes",
+            "type": "string[]",
+            "about": "Nice classes as listed, e.g. [\"7\", \"11\"]."
+          },
+          {
+            "name": "detail_url",
+            "type": "string"
+          },
+          {
+            "name": "filing_date",
+            "type": "string",
+            "about": "ISO date parsed from the site's 'File date'."
+          },
+          {
+            "name": "image_url",
+            "type": "string",
+            "about": "Mark image on www.ipo.gov.uk for figurative marks."
+          },
+          {
+            "name": "mark_text",
+            "type": "string"
+          },
+          {
+            "name": "mark_type",
+            "type": "string",
+            "about": "Word, Figurative, ... when the site shows a 'Mark type' row."
+          },
+          {
+            "name": "number",
+            "type": "string",
+            "about": "Trade mark number, e.g. UK00002195417 or UK0002201095B; input to get_trade_mark."
+          },
+          {
+            "name": "status",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "client_id": "83860"
+        },
+        "response": {
+          "client_id": "83860",
+          "marks": [
+            {
+              "classes": [
+                "7",
+                "11"
+              ],
+              "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00002195417",
+              "filing_date": "1999-04-23",
+              "image_url": null,
+              "mark_text": "MEMA",
+              "mark_type": "Word",
+              "number": "UK00002195417",
+              "status": "Dead"
+            },
+            {
+              "classes": [
+                "7",
+                "8",
+                "11"
+              ],
+              "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00002251203",
+              "filing_date": "2000-11-02",
+              "image_url": null,
+              "mark_text": "ROLLERJACK",
+              "mark_type": "Word",
+              "number": "UK00002251203",
+              "status": "Dead"
+            },
+            {
+              "classes": [
+                "7",
+                "11"
+              ],
+              "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00002255085",
+              "filing_date": "2000-12-07",
+              "image_url": null,
+              "mark_text": "CR01",
+              "mark_type": "Word",
+              "number": "UK00002255085",
+              "status": "Dead"
+            },
+            {
+              "classes": [
+                "21"
+              ],
+              "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00002264999",
+              "filing_date": "2001-03-21",
+              "image_url": null,
+              "mark_text": "ROOT-UTE",
+              "mark_type": "Word",
+              "number": "UK00002264999",
+              "status": "Dead"
+            },
+            {
+              "classes": [
+                "7"
+              ],
+              "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00002269004",
+              "filing_date": "2001-05-02",
+              "image_url": null,
+              "mark_text": "RADIX CYCLONE",
+              "mark_type": "Word",
+              "number": "UK00002269004",
+              "status": "Dead"
+            },
+            {
+              "classes": [
+                "7"
+              ],
+              "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00002269024",
+              "filing_date": "2001-05-02",
+              "image_url": null,
+              "mark_text": "RADIX",
+              "mark_type": "Word",
+              "number": "UK00002269024",
+              "status": "Dead"
+            },
+            {
+              "classes": [
+                "3",
+                "7",
+                "11"
+              ],
+              "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00002274988",
+              "filing_date": "2001-07-11",
+              "image_url": "https://www.ipo.gov.uk/trademark/image/GB50110000002274988.jpg",
+              "mark_text": "DYSON CONTRAROTATOR",
+              "mark_type": "Figurative",
+              "number": "UK00002274988",
+              "status": "Dead"
+            },
+            {
+              "classes": [
+                "7"
+              ],
+              "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00002292082",
+              "filing_date": "2002-02-07",
+              "image_url": null,
+              "mark_text": "LIQUID STEEL",
+              "mark_type": "Word",
+              "number": "UK00002292082",
+              "status": "Dead"
+            },
+            {
+              "classes": [
+                "7"
+              ],
+              "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00002306689",
+              "filing_date": "2002-07-31",
+              "image_url": null,
+              "mark_text": "LIQUISTEEL",
+              "mark_type": "Word",
+              "number": "UK00002306689",
+              "status": "Dead"
+            },
+            {
+              "classes": [
+                "35",
+                "42"
+              ],
+              "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK0002201095A",
+              "filing_date": "1999-06-24",
+              "image_url": null,
+              "mark_text": "DYSON RESEARCH",
+              "mark_type": "Word",
+              "number": "UK0002201095A",
+              "status": "Dead"
+            },
+            {
+              "classes": [
+                "35",
+                "42"
+              ],
+              "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK0002201095B",
+              "filing_date": "1999-06-24",
+              "image_url": "https://www.ipo.gov.uk/trademark/image/GB5000000002201095B.jpg",
+              "mark_text": "dyson research",
+              "mark_type": "Figurative",
+              "number": "UK0002201095B",
+              "status": "Dead"
+            },
+            {
+              "classes": [
+                "11"
+              ],
+              "detail_url": "https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK0002255085A",
+              "filing_date": "2000-12-07",
+              "image_url": null,
+              "mark_text": "CR01",
+              "mark_type": "Word",
+              "number": "UK0002255085A",
+              "status": "Dead"
+            }
+          ],
+          "next_page": null,
+          "observed_at_ms": 1790105155747,
+          "owner_name": "Dyson Limited",
+          "page": 1,
+          "source_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=83860&domain=1&page=1",
+          "total_marks": 12,
+          "total_pages": 1
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "trademarks-ipo-gov-uk",
+        "capability": "trade-marks/list_owner_marks"
+      }
+    },
+    {
+      "id": "trademarks-ipo-gov-uk/trade-marks/search_owners",
+      "provider": "trademarks-ipo-gov-uk",
+      "capability": "trade-marks/search_owners",
+      "name": "Search owners",
+      "description": "Start here when you know a company or person name but not a trade mark number. An owner name that matches nothing returns zero owners, not an error.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "name",
+          "type": "string",
+          "in": "body",
+          "about": "Owner name or part of it, as the register spells it (case-insensitive substring match on the site). At least one of name or postcode is required."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based result page; the site serves 20 owners per page.",
+          "default": 1,
+          "min": 1
+        },
+        {
+          "name": "postcode",
+          "type": "string",
+          "in": "body",
+          "about": "UK postcode in standard format, e.g. SN16 0RP."
+        }
+      ],
+      "response": {
+        "about": "Search the UK IPO owner index by owner name and/or UK postcode. Returns one page of matching owners (20 per page) with their IPO client id, which list_owner_marks takes. Covers owners of UK national marks only.",
+        "key": "owners",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "client_id",
+            "type": "string",
+            "about": "IPO client id; input to list_owner_marks."
+          },
+          {
+            "name": "marks_url",
+            "type": "string",
+            "about": "The site's page listing this owner's marks."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "name": "Unilever"
+        },
+        "response": {
+          "name": "Unilever",
+          "next_page": 2,
+          "observed_at_ms": 1790105151849,
+          "owners": [
+            {
+              "address": "Unilever House 100 Victoria Embankment London EC4Y 0DY, United Kingdom",
+              "client_id": "1435600",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=1435600&domain=1",
+              "name": "Unilever Plc"
+            },
+            {
+              "address": "Port Sunlight, Wirral,, Merseyside, CH62 4ZD, United Kingdom",
+              "client_id": "683389",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=683389&domain=1",
+              "name": "UNILEVER PLC"
+            },
+            {
+              "address": "Port Sunlight Wirral Merseyside, CH62 4ZD, United Kingdom",
+              "client_id": "444769",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=444769&domain=1",
+              "name": "Unilever Plc"
+            },
+            {
+              "address": "Port Sunlight Wirral Merseyside, CH62 4ZD, United Kingdom",
+              "client_id": "140141",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=140141&domain=1",
+              "name": "Unilever Plc"
+            },
+            {
+              "address": "Weena 455, Rotterdam 3013 AL, Netherlands",
+              "client_id": "54699",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=54699&domain=1",
+              "name": "Unilever N.V."
+            },
+            {
+              "address": "Weena 455, 3013 AL Rotterdam, The, Netherlands",
+              "client_id": "128847",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=128847&domain=1",
+              "name": "Unilever N.V."
+            },
+            {
+              "address": "Weena 455, Rotterdam, 3013 AL, Netherlands",
+              "client_id": "641718",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=641718&domain=1",
+              "name": "Unilever N.V."
+            },
+            {
+              "address": "Weena 455, Rotterdam, 3013 AL, Netherlands",
+              "client_id": "690706",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=690706&domain=1",
+              "name": "Unilever N.V."
+            },
+            {
+              "address": "20 Riverwalk, National Digital Park, Citywest, Business Campus, Ireland",
+              "client_id": "323871",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=323871&domain=1",
+              "name": "Unilever Ireland Holdings Limited"
+            },
+            {
+              "address": "100 Victoria Embankment, London, EC4Y 0DY, United Kingdom",
+              "client_id": "437510",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=437510&domain=1",
+              "name": "Unilever BCS Ltd."
+            },
+            {
+              "address": "100 Victoria Embankment, London, EC4Y 0DY, United Kingdom",
+              "client_id": "464884",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=464884&domain=1",
+              "name": "Unilever BCS Limited"
+            },
+            {
+              "address": "52 Julius Simon Street, Haifa, 31006, Israel",
+              "client_id": "323731",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=323731&domain=1",
+              "name": "Unilever Israel Foods Ltd"
+            },
+            {
+              "address": "Nassaukade 5, Rotterdam, 3071 JL, Netherlands",
+              "client_id": "664698",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=664698&domain=1",
+              "name": "Unilever Nederland B.V."
+            },
+            {
+              "address": "18 Nepal Park, 139407, Singapore",
+              "client_id": "1829968",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=1829968&domain=1",
+              "name": "Unilever Asia Private Limited"
+            },
+            {
+              "address": "Roineentie 10 Helsinki 00510, Finland",
+              "client_id": "391864",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=391864&domain=1",
+              "name": "Unilever Finland Oy"
+            },
+            {
+              "address": "Hindustan Lever House, Legal Department, 165-166 Backbay Reclamation, Mumbai - 400 020, India",
+              "client_id": "353066",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=353066&domain=1",
+              "name": "Hindustan Unilever Limited"
+            },
+            {
+              "address": "Unilever House B. D. Sawant Marg Chakala, Andheri (East), Mumbai, Maharashtra, 400099, India",
+              "client_id": "459126",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=459126&domain=1",
+              "name": "Hindustan Unilever Limited"
+            },
+            {
+              "address": "Unilever House, B. D. Sawant Marg, Chakala, Andheri (East), Mumbai , Maharashtra, 400099, Mumbai, 400099, India",
+              "client_id": "670090",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=670090&domain=1",
+              "name": "Hindustan Unilever Limited"
+            },
+            {
+              "address": "Unilever Unilever House Springfield Drive, LEATHERHEAD, Surrey, KT22 7GR, United Kingdom",
+              "client_id": "432601",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=432601&domain=1",
+              "name": "UNILEVER UK LIMITED"
+            },
+            {
+              "address": "C/ Tecnología, 19, Viladecans, BARCELONA, 08840, Spain",
+              "client_id": "963316",
+              "marks_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/search?id=963316&domain=1",
+              "name": "Unilever Espana S.A"
+            }
+          ],
+          "page": 1,
+          "postcode": null,
+          "source_url": "https://trademarks.ipo.gov.uk/ipo-tmowner/page/Results?Postcode=&Name=Unilever&page=1",
+          "total_owners": 41,
+          "total_pages": 3
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "trademarks-ipo-gov-uk",
+        "capability": "trade-marks/search_owners"
+      }
+    }
+  ]
+}

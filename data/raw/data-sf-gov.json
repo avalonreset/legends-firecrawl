@@ -1,0 +1,1336 @@
+{
+  "id": "data-sf-gov",
+  "provider": "data-sf-gov",
+  "name": "DataSF open data portal",
+  "description": "San Francisco's open data portal (data.sf.gov, a Socrata site): search the dataset catalog, read a dataset's metadata and columns, query and count rows of any dataset with SoQL ($select/$where/$order/$group/$q and bare field filters, including spatial functions), and list the portal's category and tag facets.",
+  "toolCount": 5,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "data-sf-gov"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "data-sf-gov/open-data/dataset",
+      "provider": "data-sf-gov",
+      "capability": "open-data/dataset",
+      "name": "Dataset",
+      "description": "Before `rows`: column field names and datatypes must come from here, not be guessed. Accepts a 4x4 id or any data.sf.gov / data.sfgov.org dataset URL.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "dataset_id",
+          "type": "string",
+          "in": "body",
+          "about": "4x4 id (for example `3i4a-hu95`) or a portal URL containing it: https://data.sf.gov/d/<id>, .../<Category>/<Name>/<id>, .../resource/<id>.json (data.sfgov.org accepted).",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Metadata and the column list of one DataSF asset from /api/views/<4x4>.json: name, description, category, tags, attribution, license, provenance, creation/update timestamps, publishing department and frequency, custom metadata fields, and every column with its SoQL field_name (which can differ from the display name and may be truncated to 10 characters on legacy imports), datatype (text, number, calendar_date, point, multipolygon ...), description and cached value statistics (counts and top values). Also returns the landing source_url and the SODA api_url. Unknown ids are not_found.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "api_url",
+            "type": "string",
+            "about": "SODA endpoint https://data.sf.gov/resource/<id>.json."
+          },
+          {
+            "name": "asset_type",
+            "type": "string",
+            "about": "`dataset`, `filter`, `map`, `chart`, `href` ... Only `dataset` (and filters of datasets) answer `rows`."
+          },
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "attribution_link",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "column_count",
+            "type": "number"
+          },
+          {
+            "name": "columns",
+            "type": "object[]"
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601 UTC, converted from the portal's epoch seconds."
+          },
+          {
+            "name": "custom_fields",
+            "type": "object",
+            "about": "metadata.custom_fields exactly as published: a map of section name to a map of field name to string value (Publishing Details, Department Metrics, Internal Management ...)."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "display_type",
+            "type": "string"
+          },
+          {
+            "name": "download_count",
+            "type": "number"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "license",
+            "type": "object"
+          },
+          {
+            "name": "metadata_url",
+            "type": "string",
+            "about": "The /api/views/<id>.json document this was shaped from."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "provenance",
+            "type": "string"
+          },
+          {
+            "name": "publication_date",
+            "type": "string"
+          },
+          {
+            "name": "publishing_department",
+            "type": "string",
+            "about": "metadata.custom_fields['Department Metrics']['Publishing Department'] when present."
+          },
+          {
+            "name": "publishing_frequency",
+            "type": "string",
+            "about": "metadata.custom_fields['Publishing Details']['Publishing frequency'] when present."
+          },
+          {
+            "name": "rows_updated_at",
+            "type": "string",
+            "about": "ISO 8601 UTC: when the data rows last changed."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Portal permalink https://data.sf.gov/d/<id>."
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "view_count",
+            "type": "number"
+          },
+          {
+            "name": "view_last_modified",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "dataset_id": "3i4a-hu95"
+        },
+        "response": {
+          "api_url": "https://data.sf.gov/resource/3i4a-hu95.json",
+          "asset_type": "dataset",
+          "attribution": "City and County of San Francisco Planning Department",
+          "attribution_link": "https://sfplanning.org/zoning",
+          "category": "Geographic Locations and Boundaries",
+          "column_count": 7,
+          "columns": [
+            {
+              "cached": null,
+              "datatype": "multipolygon",
+              "description": "the_geom",
+              "field_name": "the_geom",
+              "name": "the_geom",
+              "position": 1,
+              "render_type": "multipolygon"
+            },
+            {
+              "cached": {
+                "cardinality": 10617,
+                "count": 10617,
+                "non_null_count": 10617,
+                "null_count": 0,
+                "top": [
+                  {
+                    "count": 1872,
+                    "value": "RH-1"
+                  },
+                  {
+                    "count": 1454,
+                    "value": "RH-2"
+                  },
+                  {
+                    "count": 908,
+                    "value": "RTO-C"
+                  },
+                  {
+                    "count": 795,
+                    "value": "P"
+                  },
+                  {
+                    "count": 763,
+                    "value": "NCD"
+                  },
+                  {
+                    "count": 605,
+                    "value": "RM-1"
+                  },
+                  {
+                    "count": 591,
+                    "value": "RH-3"
+                  },
+                  {
+                    "count": 584,
+                    "value": "RH-1(D)"
+                  },
+                  {
+                    "count": 347,
+                    "value": "NC-1"
+                  },
+                  {
+                    "count": 285,
+                    "value": "NCT"
+                  },
+                  {
+                    "count": 216,
+                    "value": "RM-2"
+                  },
+                  {
+                    "count": 180,
+                    "value": "RM-3"
+                  },
+                  {
+                    "count": 130,
+                    "value": "RC-4"
+                  },
+                  {
+                    "count": 129,
+                    "value": "PDR-2"
+                  },
+                  {
+                    "count": 112,
+                    "value": "UMU"
+                  },
+                  {
+                    "count": 101,
+                    "value": "C-2"
+                  },
+                  {
+                    "count": 97,
+                    "value": "PDR-1-G"
+                  },
+                  {
+                    "count": 87,
+                    "value": "NC-2"
+                  },
+                  {
+                    "count": 85,
+                    "value": "NC-3"
+                  },
+                  {
+                    "count": 83,
+                    "value": "RTO-1"
+                  }
+                ]
+              },
+              "datatype": "text",
+              "description": "zoning_sim",
+              "field_name": "zoning_sim",
+              "name": "zoning_sim",
+              "position": 2,
+              "render_type": "text"
+            },
+            {
+              "cached": {
+                "cardinality": 10617,
+                "count": 10617,
+                "non_null_count": 10617,
+                "null_count": 0,
+                "top": [
+                  {
+                    "count": 1872,
+                    "value": "RESIDENTIAL- HOUSE, ONE FAMILY"
+                  },
+                  {
+                    "count": 1454,
+                    "value": "RESIDENTIAL- HOUSE, TWO FAMILY"
+                  },
+                  {
+                    "count": 908,
+                    "value": "RESIDENTIAL TRANSIT ORIENTED DISTRICT - C"
+                  },
+                  {
+                    "count": 795,
+                    "value": "PUBLIC"
+                  },
+                  {
+                    "count": 605,
+                    "value": "RESIDENTIAL- MIXED, LOW DENSITY"
+                  },
+                  {
+                    "count": 591,
+                    "value": "RESIDENTIAL- HOUSE, THREE FAMILY"
+                  },
+                  {
+                    "count": 584,
+                    "value": "RESIDENTIAL- HOUSE, ONE FAMILY- DETACHED"
+                  },
+                  {
+                    "count": 347,
+                    "value": "NEIGHBORHOOD COMMERCIAL, CLUSTER"
+                  },
+                  {
+                    "count": 216,
+                    "value": "RESIDENTIAL- MIXED, MODERATE DENSITY"
+                  },
+                  {
+                    "count": 180,
+                    "value": "RESIDENTIAL- MIXED, MEDIUM DENSITY"
+                  },
+                  {
+                    "count": 130,
+                    "value": "RESIDENTIAL- COMMERCIAL, HIGH DENSITY"
+                  },
+                  {
+                    "count": 129,
+                    "value": "PDR PRODUCTION, DISTRIBUTION, AND REPAIR"
+                  },
+                  {
+                    "count": 112,
+                    "value": "URBAN MIXED USE"
+                  },
+                  {
+                    "count": 101,
+                    "value": "COMMUNITY BUSINESS"
+                  },
+                  {
+                    "count": 97,
+                    "value": "PRODUCTION, DISTRIBUTION & REPAIR - 1 - GENERAL"
+                  },
+                  {
+                    "count": 95,
+                    "value": "GEARY BOULEVARD NEIGHBORHOOD COMMERCIAL DISTRICT"
+                  },
+                  {
+                    "count": 87,
+                    "value": "NEIGHBORHOOD COMMERCIAL, SMALL SCALE"
+                  },
+                  {
+                    "count": 85,
+                    "value": "NEIGHBORHOOD COMMERCIAL, MODERATE SCALE"
+                  },
+                  {
+                    "count": 75,
+                    "value": "EXCELSIOR OUTER MISSION STREET NEIGHBORHOOD COMMERCIAL DISTRICT"
+                  },
+                  {
+                    "count": 75,
+                    "value": "RESIDENTIAL TRANSIT ORIENTED- MISSION"
+                  }
+                ]
+              },
+              "datatype": "text",
+              "description": "districtname",
+              "field_name": "districtna",
+              "name": "districtname",
+              "position": 3,
+              "render_type": "text"
+            },
+            {
+              "cached": {
+                "cardinality": 10617,
+                "count": 10617,
+                "non_null_count": 10617,
+                "null_count": 0,
+                "top": [
+                  {
+                    "count": 4506,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-19790#rid-0-0-0-20077"
+                  },
+                  {
+                    "count": 1068,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-19790#rid-0-0-0-56337"
+                  },
+                  {
+                    "count": 908,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-20086"
+                  },
+                  {
+                    "count": 790,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-19790#rid-0-0-0-50175"
+                  },
+                  {
+                    "count": 347,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-25360#rid-0-0-0-25492"
+                  },
+                  {
+                    "count": 282,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-19790#rid-0-0-0-20123"
+                  },
+                  {
+                    "count": 222,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-19790#rid-0-0-0-20120"
+                  },
+                  {
+                    "count": 162,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-19790#rid-0-0-0-20083"
+                  },
+                  {
+                    "count": 158,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-19790#rid-0-0-0-20086"
+                  },
+                  {
+                    "count": 112,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-67810"
+                  },
+                  {
+                    "count": 101,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-19790#rid-0-0-0-20117"
+                  },
+                  {
+                    "count": 99,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-19790#rid-0-0-0-34612"
+                  },
+                  {
+                    "count": 95,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-25360#rid-0-0-0-62706"
+                  },
+                  {
+                    "count": 87,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-25360#rid-0-0-0-25507"
+                  },
+                  {
+                    "count": 85,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-25360#rid-0-0-0-25522"
+                  },
+                  {
+                    "count": 75,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-25360#rid-0-0-0-25623"
+                  },
+                  {
+                    "count": 73,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-19790#rid-0-0-0-21366"
+                  },
+                  {
+                    "count": 66,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-19790#rid-0-0-0-20132"
+                  },
+                  {
+                    "count": 57,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-25360#rid-0-0-0-57664"
+                  },
+                  {
+                    "count": 48,
+                    "value": "https://codelibrary.amlegal.com/codes/san_francisco/latest/sf_planning/0-0-0-70715"
+                  }
+                ]
+              },
+              "datatype": "text",
+              "description": "url",
+              "field_name": "url",
+              "name": "url",
+              "position": 4,
+              "render_type": "text"
+            },
+            {
+              "cached": {
+                "cardinality": 10617,
+                "count": 10617,
+                "non_null_count": 10617,
+                "null_count": 0,
+                "top": [
+                  {
+                    "count": 5894,
+                    "value": "Residential"
+                  },
+                  {
+                    "count": 2214,
+                    "value": "Mixed Use"
+                  },
+                  {
+                    "count": 1292,
+                    "value": "Commercial"
+                  },
+                  {
+                    "count": 836,
+                    "value": "Public"
+                  },
+                  {
+                    "count": 378,
+                    "value": "Industrial"
+                  },
+                  {
+                    "count": 3,
+                    "value": "Mixed"
+                  }
+                ]
+              },
+              "datatype": "text",
+              "description": "gen",
+              "field_name": "gen",
+              "name": "gen",
+              "position": 5,
+              "render_type": "text"
+            },
+            {
+              "cached": {
+                "cardinality": 10617,
+                "count": 10617,
+                "non_null_count": 10617,
+                "null_count": 0,
+                "top": [
+                  {
+                    "count": 1872,
+                    "value": "RH-1"
+                  },
+                  {
+                    "count": 1454,
+                    "value": "RH-2"
+                  },
+                  {
+                    "count": 908,
+                    "value": "RTO-C"
+                  },
+                  {
+                    "count": 795,
+                    "value": "P"
+                  },
+                  {
+                    "count": 605,
+                    "value": "RM-1"
+                  },
+                  {
+                    "count": 591,
+                    "value": "RH-3"
+                  },
+                  {
+                    "count": 584,
+                    "value": "RH-1(D)"
+                  },
+                  {
+                    "count": 347,
+                    "value": "NC-1"
+                  },
+                  {
+                    "count": 216,
+                    "value": "RM-2"
+                  },
+                  {
+                    "count": 180,
+                    "value": "RM-3"
+                  },
+                  {
+                    "count": 130,
+                    "value": "RC-4"
+                  },
+                  {
+                    "count": 128,
+                    "value": "PDR-2"
+                  },
+                  {
+                    "count": 112,
+                    "value": "UMU"
+                  },
+                  {
+                    "count": 101,
+                    "value": "C-2"
+                  },
+                  {
+                    "count": 97,
+                    "value": "PDR-1-G"
+                  },
+                  {
+                    "count": 95,
+                    "value": "NCD-GEARY BOULEVARD"
+                  },
+                  {
+                    "count": 87,
+                    "value": "NC-2"
+                  },
+                  {
+                    "count": 85,
+                    "value": "NC-3"
+                  },
+                  {
+                    "count": 83,
+                    "value": "RTO-1"
+                  },
+                  {
+                    "count": 75,
+                    "value": "RTO-M"
+                  }
+                ]
+              },
+              "datatype": "text",
+              "description": "zoning",
+              "field_name": "zoning",
+              "name": "zoning",
+              "position": 6,
+              "render_type": "text"
+            },
+            {
+              "cached": {
+                "cardinality": 10617,
+                "count": 10617,
+                "non_null_count": 9709,
+                "null_count": 908,
+                "top": [
+                  {
+                    "count": 4507,
+                    "value": "209.1"
+                  },
+                  {
+                    "count": 1068,
+                    "value": "209.2"
+                  },
+                  {
+                    "count": 794,
+                    "value": "211"
+                  },
+                  {
+                    "count": 347,
+                    "value": "710.1"
+                  },
+                  {
+                    "count": 283,
+                    "value": "210.3"
+                  },
+                  {
+                    "count": 223,
+                    "value": "210.2"
+                  },
+                  {
+                    "count": 162,
+                    "value": "209.3"
+                  },
+                  {
+                    "count": 158,
+                    "value": "209.4"
+                  },
+                  {
+                    "count": 112,
+                    "value": "843"
+                  },
+                  {
+                    "count": 101,
+                    "value": "210.1"
+                  },
+                  {
+                    "count": 99,
+                    "value": "249.64"
+                  },
+                  {
+                    "count": 95,
+                    "value": "739"
+                  },
+                  {
+                    "count": 87,
+                    "value": "711.1"
+                  },
+                  {
+                    "count": 85,
+                    "value": "712.1"
+                  },
+                  {
+                    "count": 75,
+                    "value": "720"
+                  },
+                  {
+                    "count": 70,
+                    "value": "249.52"
+                  },
+                  {
+                    "count": 66,
+                    "value": "210.4"
+                  },
+                  {
+                    "count": 57,
+                    "value": "752"
+                  },
+                  {
+                    "count": 48,
+                    "value": "844"
+                  },
+                  {
+                    "count": 48,
+                    "value": "722.1"
+                  }
+                ]
+              },
+              "datatype": "text",
+              "description": "codesection",
+              "field_name": "codesectio",
+              "name": "codesection",
+              "position": 7,
+              "render_type": "text"
+            }
+          ],
+          "created_at": "2019-12-26T19:04:34Z",
+          "custom_fields": {
+            "Department Metrics": {
+              "Publishing Department": "Planning"
+            },
+            "Geospatial API Pre-release": {
+              "Enabled": "true"
+            },
+            "Internal Management": {
+              "Inventory ID": "CPC-0009"
+            },
+            "Publishing Details": {
+              "Data change frequency": "Quarterly",
+              "Geographic unit": "",
+              "Program link": "",
+              "Publishing frequency": "Quarterly"
+            }
+          },
+          "description": "The Zoning Districts are a component of the Zoning Map which in turn is a key component of the San Francisco Planning Code. More information can be found here: https://sfplanning.org/zoning\n\nThe official zoning map can be found here: https://experience.arcgis.com/experience/573d02b43b7b46e381df04b7f225da95",
+          "display_type": "table",
+          "download_count": 3109,
+          "id": "3i4a-hu95",
+          "license": {
+            "id": "PDDL",
+            "name": "Open Data Commons Public Domain Dedication and License",
+            "terms_link": "http://opendatacommons.org/licenses/pddl/1.0/"
+          },
+          "metadata_url": "https://data.sf.gov/api/views/3i4a-hu95.json",
+          "name": "Zoning Map - Zoning Districts",
+          "observed_at_ms": 1790056199439,
+          "provenance": "official",
+          "publication_date": "2019-12-26T19:07:58Z",
+          "publishing_department": "Planning",
+          "publishing_frequency": "Quarterly",
+          "rows_updated_at": "2026-09-21T11:24:30Z",
+          "source_url": "https://data.sf.gov/d/3i4a-hu95",
+          "tags": [
+            "planning",
+            "zoning",
+            "development"
+          ],
+          "view_count": 17577,
+          "view_last_modified": "2026-09-21T11:24:23Z"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "data-sf-gov",
+        "capability": "open-data/dataset"
+      }
+    },
+    {
+      "id": "data-sf-gov/open-data/datasets",
+      "provider": "data-sf-gov",
+      "capability": "open-data/datasets",
+      "name": "Datasets",
+      "description": "Start here when the 4x4 dataset id is unknown: find the dataset, then call `dataset` for its columns and `rows` for its data. Only results with type `dataset` (and a non-null api_url) have rows.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "category",
+          "type": "string",
+          "in": "body",
+          "about": "Exact portal category as returned by `facets` (for example `Housing and Buildings`)."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Opaque `next_cursor` from the previous page; send it with the same search parameters."
+        },
+        {
+          "name": "dataset_id",
+          "type": "string",
+          "in": "body",
+          "about": "Look up one asset by 4x4 id (for example `3i4a-hu95`) or by a data.sf.gov / data.sfgov.org URL containing it. Unknown ids are not_found."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page (1-100).",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "only",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict to one asset type. `datasets` are the tabular assets that `rows` can query.",
+          "oneOf": [
+            "datasets",
+            "maps",
+            "filters",
+            "charts",
+            "hrefs",
+            "files",
+            "stories",
+            "measures",
+            "visualizations"
+          ]
+        },
+        {
+          "name": "order",
+          "type": "string",
+          "in": "body",
+          "about": "Sort order. `relevance` (default) needs a `query`; the others are descending except `name`.",
+          "default": "relevance",
+          "oneOf": [
+            "relevance",
+            "updatedAt",
+            "createdAt",
+            "name",
+            "page_views_total",
+            "page_views_last_month",
+            "page_views_last_week",
+            "download_count"
+          ]
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text search over names, descriptions, tags and columns, for example `zoning` or `building permits`."
+        },
+        {
+          "name": "tags",
+          "type": "string[]",
+          "in": "body",
+          "about": "Portal tags as returned by `facets`; an asset must carry all of them."
+        }
+      ],
+      "response": {
+        "about": "Search the DataSF catalog through the Socrata Discovery API (search_context=data.sf.gov): free-text query, asset type, category, tags and sort order, or look up one asset by its 4x4 id. Each result carries the 4x4 dataset id, name, type (dataset, map, filter, href, chart, story ...), description, category, tags, timestamps, column field names and datatypes, download and view counts, the landing link, permalink and, for tabular datasets, the SODA api_url to pass to `rows`. Paged by `limit` and an opaque `cursor`. An unknown `dataset_id` is not_found; a query with no match is a successful empty result.",
+        "key": "datasets",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "api_url",
+            "type": "string",
+            "about": "SODA endpoint https://data.sf.gov/resource/<id>.json for tabular datasets; null for other asset types."
+          },
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "attribution_link",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "columns",
+            "type": "object[]",
+            "about": "Column field names (SoQL identifiers), display names and datatypes; empty for non-tabular assets."
+          },
+          {
+            "name": "created_at",
+            "type": "string"
+          },
+          {
+            "name": "data_updated_at",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "domain",
+            "type": "string"
+          },
+          {
+            "name": "download_count",
+            "type": "number"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Socrata 4x4 asset id."
+          },
+          {
+            "name": "license",
+            "type": "string"
+          },
+          {
+            "name": "link",
+            "type": "string",
+            "about": "Landing page on the portal."
+          },
+          {
+            "name": "metadata_updated_at",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "page_views_total",
+            "type": "number"
+          },
+          {
+            "name": "parent_ids",
+            "type": "string[]",
+            "about": "4x4 ids of the datasets a derived view (map, filter, chart) is built on."
+          },
+          {
+            "name": "permalink",
+            "type": "string"
+          },
+          {
+            "name": "provenance",
+            "type": "string",
+            "about": "`official` or `community`."
+          },
+          {
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "name": "type",
+            "type": "string",
+            "about": "Asset type as reported: dataset, map, filter, href, chart, story, file, measure, visualization ..."
+          },
+          {
+            "name": "updated_at",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "dataset_id": "3i4a-hu95"
+        },
+        "response": {
+          "count": 1,
+          "datasets": [
+            {
+              "api_url": "https://data.sf.gov/resource/3i4a-hu95.json",
+              "attribution": "City and County of San Francisco Planning Department",
+              "attribution_link": "https://sfplanning.org/zoning",
+              "category": "Geographic Locations and Boundaries",
+              "columns": [
+                {
+                  "datatype": "Text",
+                  "field_name": "zoning_sim",
+                  "name": "zoning_sim"
+                },
+                {
+                  "datatype": "Text",
+                  "field_name": "gen",
+                  "name": "gen"
+                },
+                {
+                  "datatype": "Text",
+                  "field_name": "url",
+                  "name": "url"
+                },
+                {
+                  "datatype": "Text",
+                  "field_name": "districtna",
+                  "name": "districtname"
+                },
+                {
+                  "datatype": "Text",
+                  "field_name": "zoning",
+                  "name": "zoning"
+                },
+                {
+                  "datatype": "Text",
+                  "field_name": "codesectio",
+                  "name": "codesection"
+                },
+                {
+                  "datatype": "MultiPolygon",
+                  "field_name": "the_geom",
+                  "name": "the_geom"
+                }
+              ],
+              "created_at": "2019-12-26T19:04:34.000Z",
+              "data_updated_at": "2026-09-21T11:24:30.000Z",
+              "description": "The Zoning Districts are a component of the Zoning Map which in turn is a key component of the San Francisco Planning Code. More information can be found here: https://sfplanning.org/zoning\n\nThe official zoning map can be found here: https://experience.arcgis.com/experience/573d02b43b7b46e381df04b7f225da95",
+              "domain": "data.sf.gov",
+              "download_count": 3109,
+              "id": "3i4a-hu95",
+              "license": "Open Data Commons Public Domain Dedication and License",
+              "link": "https://data.sf.gov/Geographic-Locations-and-Boundaries/Zoning-Map-Zoning-Districts/3i4a-hu95",
+              "metadata_updated_at": "2026-09-21T11:24:23.000Z",
+              "name": "Zoning Map - Zoning Districts",
+              "page_views_total": 17577,
+              "parent_ids": [],
+              "permalink": "https://data.sf.gov/d/3i4a-hu95",
+              "provenance": "official",
+              "tags": [
+                "zoning",
+                "development",
+                "planning"
+              ],
+              "type": "dataset",
+              "updated_at": "2026-09-21T11:24:30.000Z"
+            }
+          ],
+          "next_cursor": null,
+          "observed_at_ms": 1790056196312,
+          "portal": "data.sf.gov",
+          "query": null,
+          "source_url": "https://api.us.socrata.com/api/catalog/v1?search_context=data.sf.gov&ids=3i4a-hu95&limit=20&offset=0",
+          "total_count": 1
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "data-sf-gov",
+        "capability": "open-data/datasets"
+      }
+    },
+    {
+      "id": "data-sf-gov/open-data/facets",
+      "provider": "data-sf-gov",
+      "capability": "open-data/facets",
+      "name": "Facets",
+      "description": "Discover how the portal organises its assets before searching by category or tag.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "facet",
+          "type": "string",
+          "in": "body",
+          "about": "facet",
+          "required": true,
+          "oneOf": [
+            "categories",
+            "tags"
+          ]
+        }
+      ],
+      "response": {
+        "about": "The DataSF portal's category or tag facets with asset counts, from the Discovery API domain_categories / domain_tags endpoints scoped to data.sf.gov. Use the values as `category` / `tags` inputs to `datasets`.",
+        "key": "values",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "value",
+            "type": "string",
+            "about": "Category or tag name; the portal reports an empty string for uncategorised assets."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "facet": "categories"
+        },
+        "response": {
+          "count": 12,
+          "facet": "categories",
+          "observed_at_ms": 1790056209125,
+          "portal": "data.sf.gov",
+          "source_url": "https://api.us.socrata.com/api/catalog/v1/domain_categories?search_context=data.sf.gov",
+          "values": [
+            {
+              "count": 260,
+              "value": "City Management and Ethics"
+            },
+            {
+              "count": 178,
+              "value": "Transportation"
+            },
+            {
+              "count": 167,
+              "value": "City Infrastructure"
+            },
+            {
+              "count": 126,
+              "value": "Geographic Locations and Boundaries"
+            },
+            {
+              "count": 101,
+              "value": "Housing and Buildings"
+            },
+            {
+              "count": 89,
+              "value": ""
+            },
+            {
+              "count": 68,
+              "value": "Public Safety"
+            },
+            {
+              "count": 65,
+              "value": "Economy and Community"
+            },
+            {
+              "count": 58,
+              "value": "Health and Social Services"
+            },
+            {
+              "count": 38,
+              "value": "Culture and Recreation"
+            },
+            {
+              "count": 27,
+              "value": "Energy and Environment"
+            },
+            {
+              "count": 10,
+              "value": "COVID-19"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "data-sf-gov",
+        "capability": "open-data/facets"
+      }
+    },
+    {
+      "id": "data-sf-gov/open-data/row_count",
+      "provider": "data-sf-gov",
+      "capability": "open-data/row_count",
+      "name": "Row count",
+      "description": "Size a `rows` query before paging, or answer a pure how-many question.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "dataset_id",
+          "type": "string",
+          "in": "body",
+          "about": "4x4 id or a data.sf.gov / data.sfgov.org URL containing it.",
+          "required": true
+        },
+        {
+          "name": "filters",
+          "type": "object",
+          "in": "body",
+          "about": "Bare equality filters sent as `field=value` query parameters."
+        },
+        {
+          "name": "q",
+          "type": "string",
+          "in": "body",
+          "about": "SoQL $q full-text search."
+        },
+        {
+          "name": "where",
+          "type": "string",
+          "in": "body",
+          "about": "SoQL $where predicate."
+        }
+      ],
+      "response": {
+        "about": "Number of rows of a DataSF dataset matching optional `where`, `q` and `filters`, from `$select=count(*)` on the SODA endpoint. Returns the integer count and the exact request URL. An unknown dataset id is not_found; a SoQL error is invalid_input.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "data_last_modified",
+            "type": "string"
+          },
+          {
+            "name": "dataset_id",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "where",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "dataset_id": "3i4a-hu95"
+        },
+        "response": {
+          "count": 10617,
+          "data_last_modified": "Mon, 21 Sep 2026 11:24:25 GMT",
+          "dataset_id": "3i4a-hu95",
+          "observed_at_ms": 1790056206070,
+          "q": null,
+          "source_url": "https://data.sf.gov/resource/3i4a-hu95.json?%24select=count%28*%29",
+          "where": null
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "data-sf-gov",
+        "capability": "open-data/row_count"
+      }
+    },
+    {
+      "id": "data-sf-gov/open-data/rows",
+      "provider": "data-sf-gov",
+      "capability": "open-data/rows",
+      "name": "Rows",
+      "description": "Any question that needs actual records from a DataSF dataset. Get the 4x4 id from `datasets` and the column field names from `dataset` first. Use `row_count` to size a query before paging.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Row offset to start from: the `next_cursor` of the previous page. Pattern: ^[0-9]{1,12}$."
+        },
+        {
+          "name": "dataset_id",
+          "type": "string",
+          "in": "body",
+          "about": "4x4 id (for example `3i4a-hu95`) or a data.sf.gov / data.sfgov.org URL containing it.",
+          "required": true
+        },
+        {
+          "name": "filters",
+          "type": "object",
+          "in": "body",
+          "about": "Bare equality filters sent as `field=value` query parameters (for example {\"blklot\": \"3720009\"}); keys must be column field names, values strings."
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "in": "body",
+          "about": "SoQL $group; pair with aggregates in `select`."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page. The portal caps a request at 50000; wide datasets with geometry should use far less.",
+          "default": 100,
+          "min": 1,
+          "max": 50000
+        },
+        {
+          "name": "order",
+          "type": "string",
+          "in": "body",
+          "about": "SoQL $order, for example `filed_date DESC` or `count(*) DESC`. Default `:id` when no `group` is given."
+        },
+        {
+          "name": "q",
+          "type": "string",
+          "in": "body",
+          "about": "SoQL $q full-text search across all text columns."
+        },
+        {
+          "name": "select",
+          "type": "string",
+          "in": "body",
+          "about": "SoQL $select, for example `zoning_sim,districtna` or `zoning_sim,count(*)`. Default: all columns."
+        },
+        {
+          "name": "where",
+          "type": "string",
+          "in": "body",
+          "about": "SoQL $where, for example `zoning_sim like 'RH-1%'`, `filed_date between '2026-09-01T00:00:00' and '2026-09-02T00:00:00'`, `intersects(the_geom,'POINT(-122.3966 37.7897)')`, `within_circle(point,37.7897,-122.3966,50)`."
+        }
+      ],
+      "response": {
+        "about": "Query rows of any DataSF dataset through the SODA 2.1 endpoint https://data.sf.gov/resource/<4x4>.json with SoQL: `select` (columns, aggregates such as count(*)), `where` (SoQL predicates incl. like, between, intersects(the_geom,'POINT(lon lat)'), within_circle(point, lat, lon, meters), within_box), `order`, `group`, `q` (full text) and `filters` (bare field=value equality parameters), paged with `limit` (1-50000, default 100) and `cursor` (row offset). Without `order` (and without `group`) the program orders by the row id `:id` so pages are stable. Rows come back exactly as published: numbers and dates are strings, geometry is GeoJSON; `columns` lists the returned field names and Socrata types from the X-SODA2-Fields/Types headers. An unknown dataset id is not_found; a SoQL error (unknown column, bad syntax) is invalid_input carrying the portal's message; an empty page is a successful result with count 0.",
+        "key": "rows",
+        "paginated": true,
+        "fields": []
+      },
+      "example": {
+        "request": {
+          "dataset_id": "3i4a-hu95",
+          "limit": 5,
+          "select": "zoning_sim,districtna,gen",
+          "where": "intersects(the_geom,'POINT(-122.3966 37.7897)')"
+        },
+        "response": {
+          "columns": [
+            {
+              "datatype": "text",
+              "field_name": "zoning_sim"
+            },
+            {
+              "datatype": "text",
+              "field_name": "districtna"
+            },
+            {
+              "datatype": "text",
+              "field_name": "gen"
+            }
+          ],
+          "count": 1,
+          "data_last_modified": "Mon, 21 Sep 2026 11:24:25 GMT",
+          "dataset_id": "3i4a-hu95",
+          "limit": 5,
+          "next_cursor": null,
+          "observed_at_ms": 1790056202526,
+          "offset": 0,
+          "rows": [
+            {
+              "districtna": "DOWNTOWN- OFFICE (SPECIAL DEVELOPMENT)",
+              "gen": "Commercial",
+              "zoning_sim": "C-3-O(SD)"
+            }
+          ],
+          "source_url": "https://data.sf.gov/resource/3i4a-hu95.json?%24select=zoning_sim%2Cdistrictna%2Cgen&%24where=intersects%28the_geom%2C%27POINT%28-122.3966+37.7897%29%27%29&%24order=%3Aid&%24limit=5"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "data-sf-gov",
+        "capability": "open-data/rows"
+      }
+    }
+  ]
+}

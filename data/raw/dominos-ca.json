@@ -1,0 +1,2723 @@
+{
+  "id": "dominos-ca",
+  "provider": "dominos-ca",
+  "name": "Domino's Canada",
+  "description": "Public Canadian store directory, nearby locations, profiles and complete store-specific menus. Read-only; no order placement.",
+  "toolCount": 7,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "dominos-ca"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "dominos-ca/restaurants/categories",
+      "provider": "dominos-ca",
+      "capability": "restaurants/categories",
+      "name": "Menu categories",
+      "description": "Read the flattened menu category tree and coupon categories for a store.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "lang",
+          "type": "string",
+          "in": "body",
+          "about": "lang",
+          "default": "en",
+          "oneOf": [
+            "en",
+            "fr"
+          ]
+        },
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read the flattened menu category tree and coupon categories for a store.",
+        "key": "categories",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "code",
+            "type": "string"
+          },
+          {
+            "name": "depth",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "parent",
+            "type": "string"
+          },
+          {
+            "name": "product_codes",
+            "type": "string[]"
+          },
+          {
+            "name": "product_count",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "store_id": "10101"
+        },
+        "response": {
+          "categories": [
+            {
+              "code": "Pizza",
+              "depth": 0,
+              "name": "Pizza",
+              "parent": null,
+              "product_codes": [],
+              "product_count": 0
+            }
+          ],
+          "count": 19,
+          "coupon_categories": [
+            {
+              "code": "Feeds1To2",
+              "coupon_count": 14,
+              "name": "Feeds 1-2"
+            },
+            {
+              "code": "Feeds3To5",
+              "coupon_count": 8,
+              "name": "Feeds 3-5"
+            },
+            {
+              "code": "Feeds6Plus",
+              "coupon_count": 5,
+              "name": "Feeds 6+"
+            },
+            {
+              "code": "LunchOffers",
+              "coupon_count": 0,
+              "name": ""
+            },
+            {
+              "code": "All",
+              "coupon_count": 51,
+              "name": "See All"
+            },
+            {
+              "code": "AllStoreCoupons",
+              "coupon_count": 51,
+              "name": "All Available Coupons"
+            }
+          ],
+          "lang": "en",
+          "store_id": "10101"
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "dominos-ca",
+        "capability": "restaurants/categories"
+      }
+    },
+    {
+      "id": "dominos-ca/restaurants/category",
+      "provider": "dominos-ca",
+      "capability": "restaurants/category",
+      "name": "Category products",
+      "description": "Read products and priced size/crust variants in a category and its direct subcategories.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "category_code",
+          "type": "string",
+          "in": "body",
+          "about": "category_code",
+          "required": true
+        },
+        {
+          "name": "lang",
+          "type": "string",
+          "in": "body",
+          "about": "lang",
+          "default": "en",
+          "oneOf": [
+            "en",
+            "fr"
+          ]
+        },
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read products and priced size/crust variants in a category and its direct subcategories.",
+        "key": "products",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "code",
+            "type": "string"
+          },
+          {
+            "name": "default_toppings",
+            "type": "object[]"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "image_code",
+            "type": "string"
+          },
+          {
+            "name": "local",
+            "type": "boolean"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "needs_customization",
+            "type": "object",
+            "about": "Upstream customization flag, retained with its native type."
+          },
+          {
+            "name": "price_max",
+            "type": "number"
+          },
+          {
+            "name": "price_min",
+            "type": "number"
+          },
+          {
+            "name": "product_type",
+            "type": "string"
+          },
+          {
+            "name": "serving_size",
+            "type": "object",
+            "about": "Upstream serving-size value, retained with its native type."
+          },
+          {
+            "name": "servings",
+            "type": "object",
+            "about": "Upstream serving count, retained with its native type."
+          },
+          {
+            "name": "variant_count",
+            "type": "number"
+          },
+          {
+            "name": "variants",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "category_code": "Pizza",
+          "store_id": "10101"
+        },
+        "response": {
+          "code": "Pizza",
+          "description": "",
+          "lang": "en",
+          "name": "Pizza",
+          "product_count": 20,
+          "products": [],
+          "store_id": "10101",
+          "sub_categories": [
+            {
+              "code": "BuildYourOwn",
+              "has_sub_categories": false,
+              "name": "Build Your Own",
+              "product_count": 1,
+              "products": [
+                {
+                  "code": "S_PIZZA",
+                  "default_toppings": [
+                    {
+                      "code": "X",
+                      "qty": "1"
+                    },
+                    {
+                      "code": "C",
+                      "qty": "1"
+                    }
+                  ],
+                  "description": "A custom pizza made to order.",
+                  "image_code": "S_PIZZA",
+                  "local": false,
+                  "name": "Pizza",
+                  "needs_customization": true,
+                  "price_max": 14,
+                  "price_min": 9,
+                  "product_type": "Pizza",
+                  "serving_size": "1/4 pizza",
+                  "servings": "4 servings",
+                  "variant_count": 11,
+                  "variants": [
+                    {
+                      "allowed_cooking_instructions": [
+                        "LD",
+                        "NB",
+                        "PIECT",
+                        "SQCT",
+                        "UNCT",
+                        "OREG",
+                        "NOOREG",
+                        "RED_FLAKES",
+                        "NO_RED_FLAKES",
+                        "GAR_HERB",
+                        "NO_GAR_HERB"
+                      ],
+                      "code": "10THIN",
+                      "default_cooking_instructions": [
+                        "NB",
+                        "SQCT",
+                        "OREG",
+                        "NO_RED_FLAKES",
+                        "NO_GAR_HERB"
+                      ],
+                      "flavor_code": "THIN",
+                      "flavor_name": "Crunchy Thin Crust",
+                      "name": "10\" Crunchy Thin Crust",
+                      "prepared": true,
+                      "price": 9,
+                      "pricing": {
+                        "Price1-0": "9",
+                        "Price1-1": "10",
+                        "Price1-2": "11",
+                        "Price1-3": "12",
+                        "Price1-4": "13",
+                        "Price2-0": "9",
+                        "Price2-1": "10",
+                        "Price2-2": "11",
+                        "Price2-3": "12",
+                        "Price2-4": "13"
+                      },
+                      "product_code": "S_PIZZA",
+                      "size_code": "10",
+                      "size_name": "Small (10\")",
+                      "surcharge": 0,
+                      "tags": {
+                        "AggregatorAvailability": "UberEats|DoorDash|SKIP",
+                        "Cals": "Cals 220-520 per 1/4 pizza",
+                        "DefaultSides": "",
+                        "DefaultToppings": "X=1,C=1",
+                        "MaxOptionQty": "7",
+                        "SendDefaultCookingInstructions": [
+                          "SQCT",
+                          "OREG"
+                        ],
+                        "ServingSize": "1/4 pizza",
+                        "Servings": "4 servings"
+                      }
+                    },
+                    {
+                      "allowed_cooking_instructions": [
+                        "LD",
+                        "NB",
+                        "WD",
+                        "PIECT",
+                        "SQCT",
+                        "UNCT",
+                        "OREG",
+                        "NOOREG",
+                        "RED_FLAKES",
+                        "NO_RED_FLAKES",
+                        "GAR_HERB",
+                        "NO_GAR_HERB"
+                      ],
+                      "code": "10SCREEN",
+                      "default_cooking_instructions": [
+                        "NB",
+                        "PIECT",
+                        "NOOREG",
+                        "NO_RED_FLAKES",
+                        "NO_GAR_HERB"
+                      ],
+                      "flavor_code": "HANDTOSS",
+                      "flavor_name": "Hand Tossed",
+                      "name": "10\" Hand Tossed",
+                      "prepared": true,
+                      "price": 9,
+                      "pricing": {
+                        "Price1-0": "9",
+                        "Price1-1": "10",
+                        "Price1-2": "11",
+                        "Price1-3": "12",
+                        "Price1-4": "13",
+                        "Price2-0": "9",
+                        "Price2-1": "10",
+                        "Price2-2": "11",
+                        "Price2-3": "12",
+                        "Price2-4": "13"
+                      },
+                      "product_code": "S_PIZZA",
+                      "size_code": "10",
+                      "size_name": "Small (10\")",
+                      "surcharge": 0,
+                      "tags": {
+                        "AggregatorAvailability": "UberEats|DoorDash|SKIP",
+                        "Cals": "Cals 170-360 per slice",
+                        "DefaultSides": "",
+                        "DefaultToppings": "X=1,C=1",
+                        "MaxOptionQty": "7",
+                        "ServingSize": "1/6 pizza",
+                        "Servings": "6 slices"
+                      }
+                    },
+                    {
+                      "allowed_cooking_instructions": [
+                        "LD",
+                        "NB",
+                        "WD",
+                        "PIECT",
+                        "SQCT",
+                        "UNCT",
+                        "OREG",
+                        "NOOREG",
+                        "RED_FLAKES",
+                        "NO_RED_FLAKES",
+                        "GAR_HERB",
+                        "NO_GAR_HERB"
+                      ],
+                      "code": "P10IGFZA",
+                      "default_cooking_instructions": [
+                        "NB",
+                        "PIECT",
+                        "NOOREG",
+                        "NO_RED_FLAKES",
+                        "NO_GAR_HERB"
+                      ],
+                      "flavor_code": "GLUTENF",
+                      "flavor_name": "Gluten Free Crust",
+                      "name": "10\" Gluten-Free Crust Pizza",
+                      "prepared": true,
+                      "price": 10,
+                      "pricing": {
+                        "Price1-0": "10",
+                        "Price1-1": "11",
+                        "Price1-2": "12",
+                        "Price1-3": "13",
+                        "Price1-4": "14",
+                        "Price2-0": "10",
+                        "Price2-1": "11",
+                        "Price2-2": "12",
+                        "Price2-3": "13",
+                        "Price2-4": "14"
+                      },
+                      "product_code": "S_PIZZA",
+                      "size_code": "10",
+                      "size_name": "Small (10\")",
+                      "surcharge": 0,
+                      "tags": {
+                        "AggregatorAvailability": "UberEats|DoorDash|SKIP",
+                        "Cals": "Cals 140-320 per slice",
+                        "DefaultSides": "",
+                        "DefaultToppings": "X=1,C=1",
+                        "MaxOptionQty": "7",
+                        "ServingSize": "1/6 pizza",
+                        "Servings": "6 slices"
+                      }
+                    },
+                    {
+                      "allowed_cooking_instructions": [
+                        "LD",
+                        "NB",
+                        "PIECT",
+                        "SQCT",
+                        "UNCT",
+                        "OREG",
+                        "NOOREG",
+                        "RED_FLAKES",
+                        "NO_RED_FLAKES",
+                        "GAR_HERB",
+                        "NO_GAR_HERB"
+                      ],
+                      "code": "12THIN",
+                      "default_cooking_instructions": [
+                        "NB",
+                        "SQCT",
+                        "OREG",
+                        "NO_RED_FLAKES",
+                        "NO_GAR_HERB"
+                      ],
+                      "flavor_code": "THIN",
+                      "flavor_name": "Crunchy Thin Crust",
+                      "name": "12\" Crunchy Thin Crust",
+                      "prepared": true,
+                      "price": 12,
+                      "pricing": {
+                        "Price1-0": "12",
+                        "Price1-1": "13.5",
+                        "Price1-2": "15",
+                        "Price1-3": "16.5",
+                        "Price1-4": "18",
+                        "Price2-0": "12",
+                        "Price2-1": "13.5",
+                        "Price2-2": "15",
+                        "Price2-3": "16.5",
+                        "Price2-4": "18"
+                      },
+                      "product_code": "S_PIZZA",
+                      "size_code": "12",
+                      "size_name": "Medium (12\")",
+                      "surcharge": 0,
+                      "tags": {
+                        "AggregatorAvailability": "UberEats|DoorDash|SKIP",
+                        "Cals": "Cals 280-680 per 1/4 pizza",
+                        "DefaultSides": "",
+                        "DefaultToppings": "X=1,C=1",
+                        "MaxOptionQty": "7",
+                        "SendDefaultCookingInstructions": [
+                          "SQCT",
+                          "OREG"
+                        ],
+                        "ServingSize": "1/4 pizza",
+                        "Servings": "4 servings"
+                      }
+                    },
+                    {
+                      "allowed_cooking_instructions": [
+                        "LD",
+                        "NB",
+                        "WD",
+                        "PIECT",
+                        "SQCT",
+                        "UNCT",
+                        "OREG",
+                        "NOOREG",
+                        "RED_FLAKES",
+                        "NO_RED_FLAKES",
+                        "GAR_HERB",
+                        "NO_GAR_HERB"
+                      ],
+                      "code": "12SCREEN",
+                      "default_cooking_instructions": [
+                        "NB",
+                        "PIECT",
+                        "NOOREG",
+                        "NO_RED_FLAKES",
+                        "NO_GAR_HERB"
+                      ],
+                      "flavor_code": "HANDTOSS",
+                      "flavor_name": "Hand Tossed",
+                      "name": "12\" Hand Tossed ",
+                      "prepared": true,
+                      "price": 11,
+                      "pricing": {
+                        "Price1-0": "11",
+                        "Price1-1": "12.5",
+                        "Price1-2": "14",
+                        "Price1-3": "15.5",
+                        "Price1-4": "17",
+                        "Price2-0": "11",
+                        "Price2-1": "12.5",
+                        "Price2-2": "14",
+                        "Price2-3": "15.5",
+                        "Price2-4": "17"
+                      },
+                      "product_code": "S_PIZZA",
+                      "size_code": "12",
+                      "size_name": "Medium (12\")",
+                      "surcharge": 0,
+                      "tags": {
+                        "AggregatorAvailability": "UberEats|DoorDash|SKIP",
+                        "Cals": "Cals 180-380 per slice",
+                        "DefaultSides": "",
+                        "DefaultToppings": "X=1,C=1",
+                        "MaxOptionQty": "7",
+                        "ServingSize": "1/8 pizza",
+                        "Servings": "8 slices"
+                      }
+                    },
+                    {
+                      "allowed_cooking_instructions": [
+                        "LD",
+                        "NB",
+                        "WD",
+                        "6PIECUT",
+                        "8PIECUT",
+                        "UNCT",
+                        "OREG",
+                        "NOOREG",
+                        "RED_FLAKES",
+                        "NO_RED_FLAKES",
+                        "GAR_HERB",
+                        "NO_GAR_HERB"
+                      ],
+                      "code": "12HTTPIZ",
+                      "default_cooking_instructions": [
+                        "NB",
+                        "6PIECUT",
+                        "NOOREG",
+                        "NO_RED_FLAKES",
+                        "NO_GAR_HERB"
+                      ],
+                      "flavor_code": "HANDTOSSTHIN",
+                      "flavor_name": "New York Style",
+                      "name": "12\" New-York Style Pizza",
+                      "prepared": true,
+                      "price": 11,
+                      "pricing": {
+                        "Price1-0": "11",
+                        "Price1-1": "12.5",
+                        "Price1-2": "14",
+                        "Price1-3": "15.5",
+                        "Price1-4": "17",
+                        "Price2-0": "11",
+                        "Price2-1": "12.5",
+                        "Price2-2": "14",
+                        "Price2-3": "15.5",
+                        "Price2-4": "17"
+                      },
+                      "product_code": "S_PIZZA",
+                      "size_code": "12",
+                      "size_name": "Medium (12\")",
+                      "surcharge": 0,
+                      "tags": {
+                        "AggregatorAvailability": "UberEats|DoorDash|SKIP",
+                        "AllowedCookingInstructions": [
+                          "LD",
+                          "NB",
+                          "WD",
+                          "6PIECUT",
+                          "8PIECUT",
+                          "UNCT",
+                          "OREG",
+                          "NOOREG",
+                          "RED_FLAKES",
+                          "NO_RED_FLAKES",
+                          "GAR_HERB",
+                          "NO_GAR_HERB"
+                        ],
+                        "DefaultCookingInstructions": [
+                          "NB",
+                          "6PIECUT",
+                          "NOOREG",
+                          "NO_RED_FLAKES",
+                          "NO_GAR_HERB"
+                        ],
+                        "DefaultSides": "",
+                        "DefaultToppings": "X=1,C=1",
+                        "Feast": true,
+                        "MaxOptionQty": "7",
+                        "SendDefaultCookingInstructions": "6PIECUT",
+                        "ServingSize": "1/6 pizza",
+                        "Servings": "6 slices"
+                      }
+                    },
+                    {
+                      "allowed_cooking_instructions": [
+                        "LD",
+                        "NB",
+                        "WD",
+                        "PIECT",
+                        "SQCT",
+                        "UNCT",
+                        "OREG",
+                        "NOOREG",
+                        "RED_FLAKES",
+                        "NO_RED_FLAKES",
+                        "GAR_HERB",
+                        "NO_GAR_HERB"
+                      ],
+                      "code": "12SFFPIZ",
+                      "default_cooking_instructions": [
+                        "GAROIL",
+                        "NB",
+                        "PIECT",
+                        "NOOREG",
+                        "NO_RED_FLAKES",
+                        "NO_GAR_HERB"
+                      ],
+                      "flavor_code": "STUFFED",
+                      "flavor_name": "Parmesan Stuffed Crust*",
+                      "name": "12\" Parmesan Stuffed Crust Pizza",
+                      "prepared": true,
+                      "price": 12,
+                      "pricing": {
+                        "Price1-0": "12",
+                        "Price1-1": "13.5",
+                        "Price1-2": "15",
+                        "Price1-3": "16.5",
+                        "Price1-4": "18",
+                        "Price2-0": "12",
+                        "Price2-1": "13.5",
+                        "Price2-2": "15",
+                        "Price2-3": "16.5",
+                        "Price2-4": "18"
+                      },
+                      "product_code": "S_PIZZA",
+                      "size_code": "12",
+                      "size_name": "Medium (12\")",
+                      "surcharge": 6,
+                      "tags": {
+                        "AggregatorAvailability": "UberEats|DoorDash|SKIP",
+                        "DefaultSides": "",
+                        "DefaultToppings": "X=1,C=1",
+                        "MaxOptionQty": "7",
+                        "ServingSize": "1/6 pizza",
+                        "Servings": "6 slices"
+                      }
+                    },
+                    {
+                      "allowed_cooking_instructions": [
+                        "LD",
+                        "NB",
+                        "WD",
+                        "PIECT",
+                        "SQCT",
+                        "UNCT",
+                        "OREG",
+                        "NOOREG",
+                        "RED_FLAKES",
+                        "NO_RED_FLAKES",
+                        "GAR_HERB",
+                        "NO_GAR_HERB"
+                      ],
+                      "code": "P12IPAZA",
+                      "default_cooking_instructions": [
+                        "NB",
+                        "PIECT",
+                        "NOOREG",
+                        "NO_RED_FLAKES",
+                        "NO_GAR_HERB"
+                      ],
+                      "flavor_code": "NPAN",
+                      "flavor_name": "Handmade Pan*",
+                      "name": "12\" Handmade Pan Pizza",
+                      "prepared": true,
+                      "price": 12,
+                      "pricing": {
+                        "Price1-0": "12",
+                        "Price1-1": "13.5",
+                        "Price1-2": "15",
+                        "Price1-3": "16.5",
+                        "Price1-4": "18",
+                        "Price2-0": "12",
+                        "Price2-1": "13.5",
+                        "Price2-2": "15",
+                        "Price2-3": "16.5",
+                        "Price2-4": "18"
+                      },
+                      "product_code": "S_PIZZA",
+                      "size_code": "12",
+                      "size_name": "Medium (12\")",
+                      "surcharge": 1,
+                      "tags": {
+                        "AggregatorAvailability": "UberEats|DoorDash|SKIP",
+                        "Cals": "Cals 250-470 per slice",
+                        "DefaultSides": "",
+                        "DefaultToppings": "X=1,C=1,Cp=1",
+                        "DisabledToppings": "C",
+                        "HideOption": [
+                          "Cp"
+                        ],
+                        "MaxOptionQty": "7",
+                        "ServingSize": "1/8 pizza",
+                        "Servings": "8 slices",
+                        "WarnAfterOptionQty": "5"
+                      }
+                    },
+                    {
+                      "allowed_cooking_instructions": [
+                        "LD",
+                        "NB",
+                        "PIECT",
+                        "SQCT",
+                        "UNCT",
+                        "OREG",
+                        "NOOREG",
+                        "RED_FLAKES",
+                        "NO_RED_FLAKES",
+                        "GAR_HERB",
+                        "NO_GAR_HERB"
+                      ],
+                      "code": "14THIN",
+                      "default_cooking_instructions": [
+                        "NB",
+                        "SQCT",
+                        "OREG",
+                        "NO_RED_FLAKES",
+                        "NO_GAR_HERB"
+                      ],
+                      "flavor_code": "THIN",
+                      "flavor_name": "Crunchy Thin Crust",
+                      "name": "14\" Crunchy Thin Crust",
+                      "prepared": true,
+                      "price": 14,
+                      "pricing": {
+                        "Price1-0": "14",
+                        "Price1-1": "16",
+                        "Price1-2": "18",
+                        "Price1-3": "20",
+                        "Price1-4": "22",
+                        "Price2-0": "14",
+                        "Price2-1": "16",
+                        "Price2-2": "18",
+                        "Price2-3": "20",
+                        "Price2-4": "22"
+                      },
+                      "product_code": "S_PIZZA",
+                      "size_code": "14",
+                      "size_name": "Large (14\")",
+                      "surcharge": 0,
+                      "tags": {
+                        "AggregatorAvailability": "UberEats|DoorDash|SKIP",
+                        "Cals": "Cals 380-940 per 1/4 pizza",
+                        "DefaultSides": "",
+                        "DefaultToppings": "X=1,C=1",
+                        "MaxOptionQty": "7",
+                        "SendDefaultCookingInstructions": [
+                          "SQCT",
+                          "OREG"
+                        ],
+                        "ServingSize": "1/4 pizza",
+                        "Servings": "4 servings"
+                      }
+                    },
+                    {
+                      "allowed_cooking_instructions": [
+                        "LD",
+                        "NB",
+                        "WD",
+                        "PIECT",
+                        "SQCT",
+                        "UNCT",
+                        "OREG",
+                        "NOOREG",
+                        "RED_FLAKES",
+                        "NO_RED_FLAKES",
+                        "GAR_HERB",
+                        "NO_GAR_HERB"
+                      ],
+                      "code": "14SCREEN",
+                      "default_cooking_instructions": [
+                        "NB",
+                        "PIECT",
+                        "NOOREG",
+                        "NO_RED_FLAKES",
+                        "NO_GAR_HERB"
+                      ],
+                      "flavor_code": "HANDTOSS",
+                      "flavor_name": "Hand Tossed",
+                      "name": "14\" Hand Tossed ",
+                      "prepared": true,
+                      "price": 13,
+                      "pricing": {
+                        "Price1-0": "13",
+                        "Price1-1": "15",
+                        "Price1-2": "17",
+                        "Price1-3": "19",
+                        "Price1-4": "21",
+                        "Price2-0": "13",
+                        "Price2-1": "15",
+                        "Price2-2": "17",
+                        "Price2-3": "19",
+                        "Price2-4": "21"
+                      },
+                      "product_code": "S_PIZZA",
+                      "size_code": "14",
+                      "size_name": "Large (14\")",
+                      "surcharge": 0,
+                      "tags": {
+                        "AggregatorAvailability": "UberEats|DoorDash|SKIP",
+                        "Cals": "Cals 240-520 per slice",
+                        "DefaultSides": "",
+                        "DefaultToppings": "X=1,C=1",
+                        "MaxOptionQty": "7",
+                        "ServingSize": "1/8 pizza",
+                        "Servings": "8 slices"
+                      }
+                    },
+                    {
+                      "allowed_cooking_instructions": [
+                        "LD",
+                        "NB",
+                        "WD",
+                        "6PIECUT",
+                        "8PIECUT",
+                        "UNCT",
+                        "OREG",
+                        "NOOREG",
+                        "RED_FLAKES",
+                        "NO_RED_FLAKES",
+                        "GAR_HERB",
+                        "NO_GAR_HERB"
+                      ],
+                      "code": "14HTTPIZ",
+                      "default_cooking_instructions": [
+                        "NB",
+                        "6PIECUT",
+                        "NOOREG",
+                        "NO_RED_FLAKES",
+                        "NO_GAR_HERB"
+                      ],
+                      "flavor_code": "HANDTOSSTHIN",
+                      "flavor_name": "New York Style",
+                      "name": "14\" New-York Style Pizza",
+                      "prepared": true,
+                      "price": 13,
+                      "pricing": {
+                        "Price1-0": "13",
+                        "Price1-1": "15",
+                        "Price1-2": "17",
+                        "Price1-3": "19",
+                        "Price1-4": "21",
+                        "Price2-0": "13",
+                        "Price2-1": "15",
+                        "Price2-2": "17",
+                        "Price2-3": "19",
+                        "Price2-4": "21"
+                      },
+                      "product_code": "S_PIZZA",
+                      "size_code": "14",
+                      "size_name": "Large (14\")",
+                      "surcharge": 0,
+                      "tags": {
+                        "AggregatorAvailability": "UberEats|DoorDash|SKIP",
+                        "AllowedCookingInstructions": [
+                          "LD",
+                          "NB",
+                          "WD",
+                          "6PIECUT",
+                          "8PIECUT",
+                          "UNCT",
+                          "OREG",
+                          "NOOREG",
+                          "RED_FLAKES",
+                          "NO_RED_FLAKES",
+                          "GAR_HERB",
+                          "NO_GAR_HERB"
+                        ],
+                        "DefaultCookingInstructions": [
+                          "NB",
+                          "6PIECUT",
+                          "NOOREG",
+                          "NO_RED_FLAKES",
+                          "NO_GAR_HERB"
+                        ],
+                        "DefaultSides": "",
+                        "DefaultToppings": "X=1,C=1",
+                        "MaxOptionQty": "7",
+                        "SendDefaultCookingInstructions": "6PIECUT",
+                        "ServingSize": "1/6 pizza",
+                        "Servings": "6 slices"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "dominos-ca",
+        "capability": "restaurants/category"
+      }
+    },
+    {
+      "id": "dominos-ca/restaurants/directory",
+      "provider": "dominos-ca",
+      "capability": "restaurants/directory",
+      "name": "Store directory",
+      "description": "List Canadian stores from the public national directory: store ID, city, province and page URL.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [],
+      "response": {
+        "about": "List Canadian stores from the public national directory: store ID, city, province and page URL.",
+        "key": "stores",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "province",
+            "type": "string"
+          },
+          {
+            "name": "province_code",
+            "type": "string"
+          },
+          {
+            "name": "store_id",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "count": 680,
+          "source": "https://pizza.dominos.ca/",
+          "stores": [
+            {
+              "city": "Whistler",
+              "province": "british columbia",
+              "province_code": "BC",
+              "store_id": "10003",
+              "url": "https://pizza.dominos.ca/Whistler-British-Columbia-10003/"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "dominos-ca",
+        "capability": "restaurants/directory"
+      }
+    },
+    {
+      "id": "dominos-ca/restaurants/menu",
+      "provider": "dominos-ca",
+      "capability": "restaurants/menu",
+      "name": "Full menu",
+      "description": "Read the whole structured store menu: categories, products, variants, modifier tables and coupons.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "lang",
+          "type": "string",
+          "in": "body",
+          "about": "lang",
+          "default": "en",
+          "oneOf": [
+            "en",
+            "fr"
+          ]
+        },
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read the whole structured store menu: categories, products, variants, modifier tables and coupons.",
+        "key": "products",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "code",
+            "type": "string"
+          },
+          {
+            "name": "cooking_instructions",
+            "type": "object[]"
+          },
+          {
+            "name": "default_toppings",
+            "type": "object[]"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "flavors",
+            "type": "object[]"
+          },
+          {
+            "name": "image_code",
+            "type": "string"
+          },
+          {
+            "name": "local",
+            "type": "boolean"
+          },
+          {
+            "name": "max_option_qty",
+            "type": "object",
+            "about": "Provider-defined maximum option quantity."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "needs_customization",
+            "type": "object",
+            "about": "Upstream customization flag, retained with its native type."
+          },
+          {
+            "name": "option_quantities",
+            "type": "object",
+            "about": "Provider-defined allowed option quantities."
+          },
+          {
+            "name": "price_max",
+            "type": "number"
+          },
+          {
+            "name": "price_min",
+            "type": "number"
+          },
+          {
+            "name": "product_type",
+            "type": "string"
+          },
+          {
+            "name": "raw_available_toppings",
+            "type": "object",
+            "about": "Original provider topping-option grammar."
+          },
+          {
+            "name": "raw_default_toppings",
+            "type": "object",
+            "about": "Original provider default-topping grammar."
+          },
+          {
+            "name": "serving_size",
+            "type": "object",
+            "about": "Upstream serving-size value, retained with its native type."
+          },
+          {
+            "name": "servings",
+            "type": "object",
+            "about": "Upstream serving count, retained with its native type."
+          },
+          {
+            "name": "sides",
+            "type": "object[]"
+          },
+          {
+            "name": "sizes",
+            "type": "object[]"
+          },
+          {
+            "name": "toppings",
+            "type": "object[]"
+          },
+          {
+            "name": "variant_count",
+            "type": "number"
+          },
+          {
+            "name": "variants",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "store_id": "10101"
+        },
+        "response": {
+          "categories": [
+            {
+              "code": "Pizza",
+              "depth": 0,
+              "name": "Pizza",
+              "parent": null,
+              "product_codes": [],
+              "product_count": 0
+            }
+          ],
+          "counts": {
+            "categories": 19,
+            "coupons": 51,
+            "preconfigured_products": 16,
+            "products": 77,
+            "unsupported_products": 14,
+            "variants": 276
+          },
+          "coupon_categories": [
+            {
+              "code": "Feeds1To2",
+              "coupon_count": 14,
+              "name": "Feeds 1-2"
+            },
+            {
+              "code": "Feeds3To5",
+              "coupon_count": 8,
+              "name": "Feeds 3-5"
+            },
+            {
+              "code": "Feeds6Plus",
+              "coupon_count": 5,
+              "name": "Feeds 6+"
+            },
+            {
+              "code": "LunchOffers",
+              "coupon_count": 0,
+              "name": ""
+            },
+            {
+              "code": "All",
+              "coupon_count": 51,
+              "name": "See All"
+            },
+            {
+              "code": "AllStoreCoupons",
+              "coupon_count": 51,
+              "name": "All Available Coupons"
+            }
+          ],
+          "coupons": [
+            {
+              "bundle": true,
+              "code": "2008",
+              "description": "",
+              "image_code": "CARRY-1S1T",
+              "local": true,
+              "name": "Carry Out Special - 1 Small 1 Topping Pizza",
+              "price": 7.99,
+              "tags": {
+                "ServiceMethods": "Carryout",
+                "ValidServiceMethods": "Carryout"
+              },
+              "valid_service_methods": "Carryout"
+            }
+          ],
+          "lang": "en",
+          "products": [
+            {
+              "code": "F_1SMO1LAV",
+              "cooking_instructions": [],
+              "default_toppings": [],
+              "description": "1 Chocolate Lava Cake & 1 Smores Lava Cakes",
+              "flavors": [],
+              "image_code": "F_1SMO1LAV",
+              "local": false,
+              "max_option_qty": "99",
+              "name": "1 Chocolate Lava Cake & 1 Smores Lava Cakes",
+              "needs_customization": null,
+              "option_quantities": [
+                1
+              ],
+              "price_max": 6.99,
+              "price_min": 6.99,
+              "product_type": "Dessert",
+              "raw_available_toppings": "",
+              "raw_default_toppings": "",
+              "serving_size": "1 Cake",
+              "servings": null,
+              "sides": [
+                {
+                  "code": "SIDICE",
+                  "description": "",
+                  "name": "Icing"
+                }
+              ],
+              "sizes": [
+                {
+                  "code": "DRT2",
+                  "description": "",
+                  "name": "2-Piece",
+                  "sort_seq": "02",
+                  "tags": {
+                    "SKIP": true
+                  }
+                }
+              ],
+              "toppings": [],
+              "variant_count": 1,
+              "variants": [
+                {
+                  "allowed_cooking_instructions": [],
+                  "code": "B2PC1LV1SM",
+                  "default_cooking_instructions": [],
+                  "flavor_code": null,
+                  "flavor_name": null,
+                  "name": "Build Your Own 2-Piece Lava Cake Flight",
+                  "prepared": true,
+                  "price": 6.99,
+                  "pricing": {
+                    "Price1-0": "6.99",
+                    "Price1-1": "6.99",
+                    "Price1-2": "6.99",
+                    "Price1-3": "6.99",
+                    "Price1-4": "6.99",
+                    "Price2-0": "6.99",
+                    "Price2-1": "6.99",
+                    "Price2-2": "6.99",
+                    "Price2-3": "6.99",
+                    "Price2-4": "6.99"
+                  },
+                  "product_code": "F_1SMO1LAV",
+                  "size_code": "DRT2",
+                  "size_name": "2-Piece",
+                  "surcharge": 0,
+                  "tags": {
+                    "Cals": "350",
+                    "DefaultSides": "",
+                    "DefaultToppings": "",
+                    "EarlyAccessUntil": "2026-06-27",
+                    "ServingSize": "1 Cake",
+                    "isNewItem": true
+                  }
+                }
+              ]
+            }
+          ],
+          "source": "https://order.dominos.ca/power/store/10101/menu",
+          "store_id": "10101",
+          "unsupported_products": [
+            {
+              "code": "10TMEATZA",
+              "description": "10\" TC Meatzza Feast"
+            },
+            {
+              "code": "10TPFEAST",
+              "description": "10\" TC Pepperoni Feast"
+            },
+            {
+              "code": "10TPHILCS",
+              "description": "10\" TC ***Philly Steak"
+            },
+            {
+              "code": "10TVEGGIE",
+              "description": "10\" TC Veggie Feast"
+            },
+            {
+              "code": "14AMZNQ1",
+              "description": "Amzn Quarters HT Cheese (#1)"
+            },
+            {
+              "code": "14AMZNQ2",
+              "description": "Amzn Quarters HT Vegetable (#2)"
+            },
+            {
+              "code": "14AMZNQ3",
+              "description": "Amzn Quarters HT Chicken (#3)"
+            },
+            {
+              "code": "CCARD",
+              "description": "-- Credit Card"
+            },
+            {
+              "code": "INTERAC",
+              "description": "-- Debit"
+            },
+            {
+              "code": "P10ITHBQ",
+              "description": "10\" TC BBQ Chicken Feast"
+            },
+            {
+              "code": "PINPASBA",
+              "description": "Build Your Own Pasta"
+            },
+            {
+              "code": "PINPASBM",
+              "description": "Build Your Own Pasta"
+            },
+            {
+              "code": "_CASH",
+              "description": "-- Cash"
+            },
+            {
+              "code": "_SPACER",
+              "description": "-- >>>"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "dominos-ca",
+        "capability": "restaurants/menu"
+      }
+    },
+    {
+      "id": "dominos-ca/restaurants/modifiers",
+      "provider": "dominos-ca",
+      "capability": "restaurants/modifiers",
+      "name": "Product options",
+      "description": "Read full sizes, crusts, toppings, sides, cooking instructions and priced variants for a product.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "lang",
+          "type": "string",
+          "in": "body",
+          "about": "lang",
+          "default": "en",
+          "oneOf": [
+            "en",
+            "fr"
+          ]
+        },
+        {
+          "name": "product_code",
+          "type": "string",
+          "in": "body",
+          "about": "product_code",
+          "required": true
+        },
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read full sizes, crusts, toppings, sides, cooking instructions and priced variants for a product.",
+        "key": "variants",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "allowed_cooking_instructions",
+            "type": "string[]"
+          },
+          {
+            "name": "code",
+            "type": "string"
+          },
+          {
+            "name": "default_cooking_instructions",
+            "type": "string[]"
+          },
+          {
+            "name": "flavor_code",
+            "type": "string"
+          },
+          {
+            "name": "flavor_name",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "prepared",
+            "type": "boolean"
+          },
+          {
+            "name": "price",
+            "type": "number"
+          },
+          {
+            "name": "pricing",
+            "type": "object",
+            "about": "Provider-defined variant pricing rules preserved as supplied."
+          },
+          {
+            "name": "product_code",
+            "type": "string"
+          },
+          {
+            "name": "size_code",
+            "type": "string"
+          },
+          {
+            "name": "size_name",
+            "type": "string"
+          },
+          {
+            "name": "surcharge",
+            "type": "number"
+          },
+          {
+            "name": "tags",
+            "type": "object",
+            "about": "Provider-defined metadata tags preserved from the upstream menu without interpretation."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "product_code": "P_DOMINO",
+          "store_id": "10101"
+        },
+        "response": {
+          "code": "P_DOMINO",
+          "cooking_instructions": [
+            {
+              "code": "WD",
+              "group": "BAKE",
+              "group_name": "Bake",
+              "is_default": false,
+              "name": "Well Done"
+            },
+            {
+              "code": "NB",
+              "group": "BAKE",
+              "group_name": "Bake",
+              "is_default": true,
+              "name": "Normal Bake"
+            },
+            {
+              "code": "SQCT",
+              "group": "CUT",
+              "group_name": "Cut",
+              "is_default": true,
+              "name": "Square Cut"
+            },
+            {
+              "code": "UNCT",
+              "group": "CUT",
+              "group_name": "Cut",
+              "is_default": false,
+              "name": "Uncut"
+            },
+            {
+              "code": "GAR_HERB",
+              "group": "GAR_HERB",
+              "group_name": "Shake It Up",
+              "is_default": false,
+              "name": "With Garlic and Herbs"
+            },
+            {
+              "code": "NO_GAR_HERB",
+              "group": "GAR_HERB",
+              "group_name": "Shake It Up",
+              "is_default": true,
+              "name": "Without Garlic and Herbs"
+            }
+          ],
+          "default_toppings": [
+            {
+              "code": "X",
+              "qty": "1"
+            },
+            {
+              "code": "C",
+              "qty": "1"
+            }
+          ],
+          "description": "Grab something just for you. A Domino. A personal pizza, with a crispy Detroit-style parmesan crust.",
+          "flavors": [
+            {
+              "code": "DOMINO",
+              "description": "Grab something just for you. A Domino. A personal pizza, with a crispy Detroit-style parmesan crust.",
+              "name": "Domino™",
+              "sort_seq": "01",
+              "tags": {
+                "AllowedCookingInstructions": "WD:NB:SQCT:UNCT:GAR_HERB:NO_GAR_HERB",
+                "AllowedSeasonings": "GOBH:NoGOB",
+                "DefaultCookingInstructions": "NB:SQCT:NO_GAR_HERB",
+                "DefaultSeasonings": "GOBH",
+                "isNewItem": true
+              }
+            }
+          ],
+          "image_code": "P_DOMINO",
+          "lang": "en",
+          "local": false,
+          "max_option_qty": "3",
+          "name": "Domino™",
+          "needs_customization": true,
+          "option_quantities": [
+            "0",
+            "0.5",
+            "1",
+            "1.5"
+          ],
+          "price_max": 7.99,
+          "price_min": 7.99,
+          "product_type": "BuildYourOwnDomino",
+          "raw_available_toppings": "X=0:0.5:1,Xw=0:0.5:1,C,H,B,P,S,K,J,O,Z,R,V,M,N,Cp,E,G,Fe,Xf=0:0.5:1,Rd=0:0.5:1,D,Do,Pa,Q=0:0.5:1,Rp,Sp,St,T,Xm=0:0.5:1,Xp,Xy=0:0.5:1",
+          "raw_default_toppings": "X=1,C=1",
+          "serving_size": null,
+          "servings": null,
+          "sides": [],
+          "sizes": [
+            {
+              "code": "PERS",
+              "description": "",
+              "name": "Personal - 10\" x 4\"",
+              "sort_seq": "01",
+              "tags": {
+                "AggregatorToppingPrice": "UberEats:1.00|DoorDash:1.00|SKIP:1.00",
+                "isNewItem": true
+              }
+            }
+          ],
+          "store_id": "10101",
+          "toppings": [
+            {
+              "allowed_quantities": [
+                "0",
+                "0.5",
+                "1"
+              ],
+              "code": "X",
+              "default_quantity": "1",
+              "known": true,
+              "name": "Pizza Sauce",
+              "tags": {
+                "ExclusiveGroup": "Sauce",
+                "IgnoreQty": true,
+                "NonMeat": true,
+                "Sauce": true,
+                "WholeOnly": true
+              }
+            },
+            {
+              "allowed_quantities": [
+                "0",
+                "0.5",
+                "1"
+              ],
+              "code": "Xw",
+              "default_quantity": null,
+              "known": true,
+              "name": "Garlic Parmesan Sauce*",
+              "tags": {
+                "Allergens": "Milk:Egg",
+                "ExclusiveGroup": "Sauce",
+                "IgnoreQty": true,
+                "NonMeat": true,
+                "Sauce": true,
+                "WholeOnly": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "C",
+              "default_quantity": "1",
+              "known": true,
+              "name": "Cheese",
+              "tags": {
+                "Allergens": "Milk",
+                "Cheese": true,
+                "NonMeat": true,
+                "WholeOnly": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "H",
+              "default_quantity": null,
+              "known": true,
+              "name": "Ham",
+              "tags": {
+                "Meat": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "B",
+              "default_quantity": null,
+              "known": true,
+              "name": "Beef Crumble",
+              "tags": {
+                "Meat": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "P",
+              "default_quantity": null,
+              "known": true,
+              "name": "Pepperoni",
+              "tags": {
+                "Meat": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "S",
+              "default_quantity": null,
+              "known": true,
+              "name": "Sausage",
+              "tags": {
+                "Meat": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "K",
+              "default_quantity": null,
+              "known": true,
+              "name": "Bacon Strip Crumble",
+              "tags": {
+                "Meat": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "J",
+              "default_quantity": null,
+              "known": true,
+              "name": "Jalapeno Peppers",
+              "tags": {
+                "NonMeat": true,
+                "Vege": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "O",
+              "default_quantity": null,
+              "known": true,
+              "name": "Onions",
+              "tags": {
+                "NonMeat": true,
+                "Vege": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "Z",
+              "default_quantity": null,
+              "known": true,
+              "name": "Hot Banana Peppers",
+              "tags": {
+                "NonMeat": true,
+                "Vege": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "R",
+              "default_quantity": null,
+              "known": true,
+              "name": "Black Olives",
+              "tags": {
+                "NonMeat": true,
+                "Vege": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "V",
+              "default_quantity": null,
+              "known": true,
+              "name": "Green Olives",
+              "tags": {
+                "NonMeat": true,
+                "Vege": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "M",
+              "default_quantity": null,
+              "known": true,
+              "name": "Mushrooms",
+              "tags": {
+                "NonMeat": true,
+                "Vege": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "N",
+              "default_quantity": null,
+              "known": true,
+              "name": "Pineapple",
+              "tags": {
+                "NonMeat": true,
+                "Vege": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "Cp",
+              "default_quantity": null,
+              "known": true,
+              "name": "Provolone*",
+              "tags": {
+                "AggregatorToppingPrice": "UberEats:1.4|DoorDash:1.4|SKIP:1.4",
+                "Allergens": "Milk",
+                "BaseOptionQty": "1",
+                "NonMeat": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "E",
+              "default_quantity": null,
+              "known": true,
+              "name": "Cheddar*",
+              "tags": {
+                "AggregatorToppingPrice": "UberEats:1.4|DoorDash:1.4|SKIP:1.4",
+                "Allergens": "Milk",
+                "NonMeat": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "G",
+              "default_quantity": null,
+              "known": true,
+              "name": "Green Pepper",
+              "tags": {
+                "NonMeat": true,
+                "Vege": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "Fe",
+              "default_quantity": null,
+              "known": true,
+              "name": "Feta*",
+              "tags": {
+                "AggregatorToppingPrice": "UberEats:1.4|DoorDash:1.4|SKIP:1.4",
+                "Allergens": "Milk",
+                "NonMeat": true
+              }
+            },
+            {
+              "allowed_quantities": [
+                "0",
+                "0.5",
+                "1"
+              ],
+              "code": "Xf",
+              "default_quantity": null,
+              "known": true,
+              "name": "Alfredo Sauce*",
+              "tags": {
+                "Allergens": "Milk:Soy:Wheat",
+                "ExclusiveGroup": "Sauce",
+                "IgnoreQty": true,
+                "NonMeat": true,
+                "Sauce": true,
+                "WholeOnly": true
+              }
+            },
+            {
+              "allowed_quantities": [
+                "0",
+                "0.5",
+                "1"
+              ],
+              "code": "Rd",
+              "default_quantity": null,
+              "known": true,
+              "name": "Ranch Dressing*",
+              "tags": {
+                "Allergens": "Milk:Eggs",
+                "IgnoreQty": true,
+                "NonMeat": true,
+                "Sauce": true,
+                "WholeOnly": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "D",
+              "default_quantity": null,
+              "known": true,
+              "name": "Chicken*",
+              "tags": {
+                "AggregatorToppingPrice": "UberEats:1.5|DoorDash:1.5|SKIP:1.5",
+                "Meat": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "Do",
+              "default_quantity": null,
+              "known": true,
+              "name": "Donair Meat*",
+              "tags": {
+                "Meat": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "Pa",
+              "default_quantity": null,
+              "known": true,
+              "name": "Parmesan Asiago*",
+              "tags": {
+                "AggregatorToppingPrice": "UberEats:1.3|DoorDash:1.3|SKIP:1.3",
+                "NonMeat": true
+              }
+            },
+            {
+              "allowed_quantities": [
+                "0",
+                "0.5",
+                "1"
+              ],
+              "code": "Q",
+              "default_quantity": null,
+              "known": true,
+              "name": "BBQ Sauce*",
+              "tags": {
+                "ExclusiveGroup": "Sauce",
+                "IgnoreQty": true,
+                "NonMeat": true,
+                "Sauce": true,
+                "WholeOnly": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "Rp",
+              "default_quantity": null,
+              "known": true,
+              "name": "Roasted Red Peppers",
+              "tags": {
+                "NonMeat": true,
+                "Vege": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "Sp",
+              "default_quantity": null,
+              "known": true,
+              "name": "Baby Spinach",
+              "tags": {
+                "NonMeat": true,
+                "Vege": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "St",
+              "default_quantity": null,
+              "known": true,
+              "name": "Philly Steak*",
+              "tags": {
+                "AggregatorToppingPrice": "UberEats:1.5|DoorDash:1.5|SKIP:1.5",
+                "Meat": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "T",
+              "default_quantity": null,
+              "known": true,
+              "name": "Tomatoes",
+              "tags": {
+                "NonMeat": true,
+                "Vege": true
+              }
+            },
+            {
+              "allowed_quantities": [
+                "0",
+                "0.5",
+                "1"
+              ],
+              "code": "Xm",
+              "default_quantity": null,
+              "known": true,
+              "name": "Hearty Marinara Sauce*",
+              "tags": {
+                "ExclusiveGroup": "Sauce",
+                "IgnoreQty": true,
+                "NonMeat": true,
+                "Sauce": true,
+                "WholeOnly": true
+              }
+            },
+            {
+              "allowed_quantities": null,
+              "code": "Xp",
+              "default_quantity": null,
+              "known": true,
+              "name": "Brooklyn Pepperoni",
+              "tags": {
+                "Meat": true
+              }
+            },
+            {
+              "allowed_quantities": [
+                "0",
+                "0.5",
+                "1"
+              ],
+              "code": "Xy",
+              "default_quantity": null,
+              "known": true,
+              "name": "Donair Sauce*",
+              "tags": {
+                "ExclusiveGroup": "Sauce",
+                "IgnoreQty": true,
+                "NonMeat": true,
+                "Sauce": true,
+                "WholeOnly": true
+              }
+            }
+          ],
+          "variant_count": 1,
+          "variants": [
+            {
+              "allowed_cooking_instructions": [
+                "WD",
+                "NB",
+                "SQCT",
+                "UNCT",
+                "GAR_HERB",
+                "NO_GAR_HERB"
+              ],
+              "code": "PRSDOMINO",
+              "default_cooking_instructions": [
+                "NB",
+                "SQCT",
+                "NO_GAR_HERB"
+              ],
+              "flavor_code": "DOMINO",
+              "flavor_name": "Domino™",
+              "name": "Domino™",
+              "prepared": true,
+              "price": 7.99,
+              "pricing": {
+                "Price1-0": "7.99",
+                "Price1-1": "8.99",
+                "Price1-2": "9.99",
+                "Price1-3": "10.99",
+                "Price1-4": "11.99",
+                "Price2-0": "7.99",
+                "Price2-1": "8.99",
+                "Price2-2": "9.99",
+                "Price2-3": "10.99",
+                "Price2-4": "11.99"
+              },
+              "product_code": "P_DOMINO",
+              "size_code": "PERS",
+              "size_name": "Personal - 10\" x 4\"",
+              "surcharge": 0,
+              "tags": {
+                "AggregatorAvailability": "UberEats|DoorDash|SKIP",
+                "DefaultSides": "",
+                "DefaultToppings": "X=1,C=1",
+                "MaxOptionQty": "3",
+                "ParentProduct": "DOMINO",
+                "RelatedCategories": "BuildYourOwn",
+                "RelatedProducts": "S_PIZZA",
+                "SwitcherType": "SINGLE_BANNER",
+                "isNewItem": true
+              }
+            }
+          ]
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "dominos-ca",
+        "capability": "restaurants/modifiers"
+      }
+    },
+    {
+      "id": "dominos-ca/restaurants/store",
+      "provider": "dominos-ca",
+      "capability": "restaurants/store",
+      "name": "Store details",
+      "description": "Read one store profile, hours, payment methods, waits and service capabilities.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "lang",
+          "type": "string",
+          "in": "body",
+          "about": "lang",
+          "default": "en",
+          "oneOf": [
+            "en",
+            "fr"
+          ]
+        },
+        {
+          "name": "store_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]+$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read one store profile, hours, payment methods, waits and service capabilities.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "allow_carryout",
+            "type": "boolean"
+          },
+          {
+            "name": "allow_delivery",
+            "type": "boolean"
+          },
+          {
+            "name": "allow_dine_in",
+            "type": "boolean"
+          },
+          {
+            "name": "business_date",
+            "type": "string"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "estimated_wait_minutes",
+            "type": "object",
+            "about": "Unmodified public store estimated wait minutes metadata."
+          },
+          {
+            "name": "holidays",
+            "type": "object",
+            "about": "Unmodified public store holidays metadata."
+          },
+          {
+            "name": "hours",
+            "type": "object",
+            "about": "Unmodified public store hours metadata."
+          },
+          {
+            "name": "hours_description",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "is_online",
+            "type": "boolean"
+          },
+          {
+            "name": "is_open",
+            "type": "boolean"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "minimum_delivery_order_amount",
+            "type": "number"
+          },
+          {
+            "name": "payment_types",
+            "type": "object",
+            "about": "Unmodified public store payment types metadata."
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "postal_code",
+            "type": "string"
+          },
+          {
+            "name": "region",
+            "type": "string"
+          },
+          {
+            "name": "service_hours",
+            "type": "object",
+            "about": "Unmodified public store service hours metadata."
+          },
+          {
+            "name": "service_hours_description",
+            "type": "object",
+            "about": "Unmodified public store service hours description metadata."
+          },
+          {
+            "name": "street",
+            "type": "string"
+          },
+          {
+            "name": "time_zone",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "store_id": "10101"
+        },
+        "response": {
+          "address": "5315 17th Ave SE Unit 9, Calgary, AB T2A0W2",
+          "allow_carryout": true,
+          "allow_delivery": true,
+          "allow_dine_in": false,
+          "business_date": "2026-09-14",
+          "city": "Calgary",
+          "estimated_wait_minutes": {
+            "Carryout": {
+              "Max": 16,
+              "Min": 11
+            },
+            "Delivery": {
+              "Max": 28,
+              "Min": 18
+            }
+          },
+          "holidays": {},
+          "hours": {
+            "Fri": [
+              {
+                "CloseTime": "02:59",
+                "OpenTime": "00:00"
+              },
+              {
+                "CloseTime": "23:59",
+                "OpenTime": "10:00"
+              }
+            ],
+            "Mon": [
+              {
+                "CloseTime": "23:59",
+                "OpenTime": "10:00"
+              },
+              {
+                "CloseTime": "01:59",
+                "OpenTime": "00:00"
+              }
+            ],
+            "Sat": [
+              {
+                "CloseTime": "02:59",
+                "OpenTime": "00:00"
+              },
+              {
+                "CloseTime": "23:59",
+                "OpenTime": "10:00"
+              }
+            ],
+            "Sun": [
+              {
+                "CloseTime": "02:59",
+                "OpenTime": "00:00"
+              },
+              {
+                "CloseTime": "23:59",
+                "OpenTime": "10:00"
+              }
+            ],
+            "Thu": [
+              {
+                "CloseTime": "00:59",
+                "OpenTime": "00:00"
+              },
+              {
+                "CloseTime": "23:59",
+                "OpenTime": "10:00"
+              }
+            ],
+            "Tue": [
+              {
+                "CloseTime": "00:59",
+                "OpenTime": "00:00"
+              },
+              {
+                "CloseTime": "23:59",
+                "OpenTime": "10:00"
+              }
+            ],
+            "Wed": [
+              {
+                "CloseTime": "00:59",
+                "OpenTime": "00:00"
+              },
+              {
+                "CloseTime": "23:59",
+                "OpenTime": "10:00"
+              }
+            ]
+          },
+          "hours_description": "Mo-We 10:00am-1:00am\nTh-Sa 10:00am-3:00am\nSu 10:00am-2:00am",
+          "id": "10101",
+          "is_online": true,
+          "is_open": true,
+          "latitude": 51.0376,
+          "longitude": -113.957,
+          "minimum_delivery_order_amount": 12,
+          "payment_types": [
+            "Cash",
+            "GiftCard",
+            "CreditCard",
+            "DoorDebit",
+            "DoorCredit"
+          ],
+          "phone": "403-235-3355",
+          "postal_code": "T2A0W2",
+          "region": "AB",
+          "service_hours": {
+            "Carryout": {
+              "Fri": [
+                {
+                  "CloseTime": "02:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ],
+              "Mon": [
+                {
+                  "CloseTime": "01:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ],
+              "Sat": [
+                {
+                  "CloseTime": "02:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ],
+              "Sun": [
+                {
+                  "CloseTime": "02:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ],
+              "Thu": [
+                {
+                  "CloseTime": "00:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ],
+              "Tue": [
+                {
+                  "CloseTime": "00:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ],
+              "Wed": [
+                {
+                  "CloseTime": "00:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ]
+            },
+            "DeliverToMe": {
+              "Fri": [
+                {
+                  "CloseTime": "21:00",
+                  "OpenTime": "10:30"
+                }
+              ],
+              "Mon": [
+                {
+                  "CloseTime": "21:00",
+                  "OpenTime": "10:30"
+                }
+              ],
+              "Sat": [
+                {
+                  "CloseTime": "21:00",
+                  "OpenTime": "10:30"
+                }
+              ],
+              "Sun": [
+                {
+                  "CloseTime": "21:00",
+                  "OpenTime": "10:30"
+                }
+              ],
+              "Thu": [
+                {
+                  "CloseTime": "21:00",
+                  "OpenTime": "10:30"
+                }
+              ],
+              "Tue": [
+                {
+                  "CloseTime": "21:00",
+                  "OpenTime": "10:30"
+                }
+              ],
+              "Wed": [
+                {
+                  "CloseTime": "21:00",
+                  "OpenTime": "10:30"
+                }
+              ]
+            },
+            "Delivery": {
+              "Fri": [
+                {
+                  "CloseTime": "02:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ],
+              "Mon": [
+                {
+                  "CloseTime": "01:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ],
+              "Sat": [
+                {
+                  "CloseTime": "02:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ],
+              "Sun": [
+                {
+                  "CloseTime": "02:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ],
+              "Thu": [
+                {
+                  "CloseTime": "00:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ],
+              "Tue": [
+                {
+                  "CloseTime": "00:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ],
+              "Wed": [
+                {
+                  "CloseTime": "00:59",
+                  "OpenTime": "00:00"
+                },
+                {
+                  "CloseTime": "23:59",
+                  "OpenTime": "10:00"
+                }
+              ]
+            },
+            "DriveUpCarryout": {
+              "Fri": [
+                {
+                  "CloseTime": "20:59",
+                  "OpenTime": "16:00"
+                }
+              ],
+              "Mon": [
+                {
+                  "CloseTime": "20:59",
+                  "OpenTime": "16:00"
+                }
+              ],
+              "Sat": [
+                {
+                  "CloseTime": "20:59",
+                  "OpenTime": "16:00"
+                }
+              ],
+              "Sun": [
+                {
+                  "CloseTime": "20:59",
+                  "OpenTime": "16:00"
+                }
+              ],
+              "Thu": [
+                {
+                  "CloseTime": "20:59",
+                  "OpenTime": "16:00"
+                }
+              ],
+              "Tue": [
+                {
+                  "CloseTime": "20:59",
+                  "OpenTime": "16:00"
+                }
+              ],
+              "Wed": [
+                {
+                  "CloseTime": "20:59",
+                  "OpenTime": "16:00"
+                }
+              ]
+            }
+          },
+          "service_hours_description": {
+            "Carryout": "Mo-We 10:00am-1:00am\nTh-Sa 10:00am-3:00am\nSu 10:00am-2:00am",
+            "DeliverToMe": "Su-Sa 10:30am-9:00pm",
+            "Delivery": "Mo-We 10:00am-1:00am\nTh-Sa 10:00am-3:00am\nSu 10:00am-2:00am",
+            "DriveUpCarryout": "Su-Sa 4:00pm-9:00pm"
+          },
+          "street": "5315 17th Ave SE Unit 9",
+          "time_zone": "GMT-06:00"
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "dominos-ca",
+        "capability": "restaurants/store"
+      }
+    },
+    {
+      "id": "dominos-ca/restaurants/stores",
+      "provider": "dominos-ca",
+      "capability": "restaurants/stores",
+      "name": "Find nearby stores",
+      "description": "Find Canadian stores near latitude and longitude; returns address, hours, availability and waits.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "latitude",
+          "required": true,
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "longitude",
+          "required": true,
+          "min": -180,
+          "max": 180
+        }
+      ],
+      "response": {
+        "about": "Find Canadian stores near latitude and longitude; returns address, hours, availability and waits.",
+        "key": "stores",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "allow_carryout",
+            "type": "boolean"
+          },
+          {
+            "name": "allow_delivery",
+            "type": "boolean"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "distance",
+            "type": "number"
+          },
+          {
+            "name": "estimated_wait_minutes",
+            "type": "object",
+            "about": "Unmodified public store estimated wait minutes metadata."
+          },
+          {
+            "name": "hours_description",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "is_delivery_store",
+            "type": "boolean"
+          },
+          {
+            "name": "is_online",
+            "type": "boolean"
+          },
+          {
+            "name": "is_open",
+            "type": "boolean"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "postal_code",
+            "type": "string"
+          },
+          {
+            "name": "region",
+            "type": "string"
+          },
+          {
+            "name": "service_hours_description",
+            "type": "object",
+            "about": "Unmodified public store service hours description metadata."
+          },
+          {
+            "name": "service_is_open",
+            "type": "object",
+            "about": "Per-service upstream open status."
+          },
+          {
+            "name": "street",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "latitude": 43.6532,
+          "longitude": -79.3832
+        },
+        "response": {
+          "count": 73,
+          "engine": "GSLI",
+          "granularity": "None",
+          "query": {
+            "latitude": 43.6532,
+            "longitude": -79.3832
+          },
+          "resolved_address": {
+            "AddressLine3": null,
+            "AddressLine4": null,
+            "City": "",
+            "Latitude": 43.6532,
+            "Longitude": -79.3832,
+            "Neighborhood": "",
+            "PostalCode": "",
+            "Region": "CA",
+            "SectorName": "",
+            "Street": "",
+            "StreetName": "",
+            "StreetNumber": "",
+            "StreetRange": "",
+            "SubNeighborhood": "",
+            "UnitNumber": "",
+            "UnitType": ""
+          },
+          "stores": [
+            {
+              "address": "410 Queen St W, Toronto, ON M5V2A7",
+              "allow_carryout": true,
+              "allow_delivery": true,
+              "city": "Toronto",
+              "distance": 1755.3742717849636,
+              "estimated_wait_minutes": {
+                "Carryout": {
+                  "Max": 15,
+                  "Min": 10
+                },
+                "Delivery": {
+                  "Max": 20,
+                  "Min": 10
+                }
+              },
+              "hours_description": "Su-Th 10:30am-1:00am\nFr-Sa 10:30am-2:00am",
+              "id": "10544",
+              "is_delivery_store": false,
+              "is_online": true,
+              "is_open": true,
+              "latitude": 43.6487,
+              "longitude": -79.3977,
+              "phone": "416-504-3030",
+              "postal_code": "M5V2A7",
+              "region": "ON",
+              "service_hours_description": {
+                "Carryout": "Su-Th 10:30am-1:00am\nFr-Sa 10:30am-2:00am",
+                "DeliverToMe": "Su-Sa 10:30am-9:00pm",
+                "Delivery": "Su-Th 10:30am-1:00am\nFr-Sa 10:30am-2:00am"
+              },
+              "service_is_open": {
+                "Carryout": true,
+                "DeliverToMe": false,
+                "Delivery": true
+              },
+              "street": "410 Queen St W"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "dominos-ca",
+        "capability": "restaurants/stores"
+      }
+    }
+  ]
+}

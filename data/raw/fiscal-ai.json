@@ -1,0 +1,3882 @@
+{
+  "id": "fiscal-ai",
+  "provider": "fiscal-ai",
+  "name": "Fiscal.ai",
+  "description": "Company fundamentals with the record around them: standardized and as-reported statements, ratios, ownership, prices, earnings call transcripts, and what fund letters say about a company.",
+  "toolCount": 34,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "fiscal-ai"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "fiscal-ai/company/list",
+      "provider": "fiscal-ai",
+      "capability": "company/list",
+      "name": "Company directory",
+      "description": "Call to discover what is covered, or to resolve names to identifiers when you do not already have a ticker. Check the per-company dataset list before assuming a costlier capability will answer for it.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Page number, 1-indexed.",
+          "default": 1,
+          "name": "pageNumber",
+          "type": "number"
+        },
+        {
+          "about": "Return a slimmer row: fewer descriptors per company, for when the list is only being used to resolve identifiers.",
+          "name": "compact",
+          "type": "boolean"
+        }
+      ],
+      "response": {
+        "about": "One company per row. Free-plan keys receive a single page of free-plan companies. Paginated: the body also carries a `pagination` block with page, pageSize, totalCount, totalPages, hasNextPage and hasPreviousPage.",
+        "fields": [
+          {
+            "about": "Fiscal.ai's stable company identifier.",
+            "name": "companyFiscalIdentifier",
+            "type": "string"
+          },
+          {
+            "about": "Exchange and ticker joined by an underscore.",
+            "name": "companyKey",
+            "type": "string"
+          },
+          {
+            "about": "Display name in English.",
+            "name": "displayNameEnglish",
+            "type": "string"
+          },
+          {
+            "about": "Registered legal name.",
+            "name": "legalNameEnglish",
+            "type": "string"
+          },
+          {
+            "about": "Trading name in English.",
+            "name": "tradeNameEnglish",
+            "type": "string"
+          },
+          {
+            "about": "Legal name in the company's own script, keyed by language.",
+            "name": "legalNameNative",
+            "type": "object"
+          },
+          {
+            "about": "Trade name in the company's own script, keyed by language.",
+            "name": "tradeNameNative",
+            "type": "object"
+          },
+          {
+            "about": "Operating company, holding company, fund or trust.",
+            "name": "companyType",
+            "type": "string"
+          },
+          {
+            "about": "Active, acquired or delisted.",
+            "name": "companyStatus",
+            "type": "string"
+          },
+          {
+            "about": "ISO country code of the headquarters.",
+            "name": "headquartersCountryCode",
+            "type": "string"
+          },
+          {
+            "about": "Country name of the headquarters.",
+            "name": "headquartersCountryName",
+            "type": "string"
+          },
+          {
+            "about": "Region of the headquarters, for example North America.",
+            "name": "headquartersRegion",
+            "type": "string"
+          },
+          {
+            "about": "ISO country code of the legal domicile.",
+            "name": "legalDomicileCountryCode",
+            "type": "string"
+          },
+          {
+            "about": "Country name of the legal domicile.",
+            "name": "legalDomicileCountryName",
+            "type": "string"
+          },
+          {
+            "about": "GICS sector.",
+            "name": "sector",
+            "type": "string"
+          },
+          {
+            "about": "GICS industry group.",
+            "name": "industryGroup",
+            "type": "string"
+          },
+          {
+            "about": "GICS industry.",
+            "name": "industry",
+            "type": "string"
+          },
+          {
+            "about": "GICS sub-industry.",
+            "name": "subIndustry",
+            "type": "string"
+          },
+          {
+            "about": "Which standardized statement template this company maps onto.",
+            "name": "reportingTemplate",
+            "type": "string"
+          },
+          {
+            "about": "SEC Central Index Key, when it files with the SEC.",
+            "name": "cik",
+            "type": "string"
+          },
+          {
+            "about": "Market capitalisation in USD.",
+            "name": "marketCapUsd",
+            "type": "number"
+          },
+          {
+            "about": "The primary listing: ticker, exchange, MICs and trading currency.",
+            "name": "primaryListing",
+            "type": "object"
+          },
+          {
+            "about": "Fiscal.ai's numeric company id.",
+            "name": "companyId",
+            "type": "number"
+          },
+          {
+            "about": "The currency the company reports in.",
+            "name": "reportingCurrency",
+            "type": "string"
+          },
+          {
+            "about": "When this record last changed, as an epoch timestamp. Served live.",
+            "name": "updatedAt",
+            "type": "number"
+          },
+          {
+            "about": "Date of the next or most recent earnings filing. Served live.",
+            "name": "earningsFilingDate",
+            "type": "string"
+          },
+          {
+            "about": "Which datasets are held for this company. `compact=true` trims the descriptors above but keeps this, which is what makes the compact page worth asking for.",
+            "name": "availableDatasets",
+            "type": "string[]"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "company/list"
+      }
+    },
+    {
+      "id": "fiscal-ai/company/profile",
+      "provider": "fiscal-ai",
+      "capability": "company/profile",
+      "name": "Company profile",
+      "description": "Call first when starting from a company name or ticker: it returns every other identifier, so one call here makes the rest of this provider addressable. Also the only place peers and secondary listings are published.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "One company, with its listings and its peers.",
+        "fields": [
+          {
+            "about": "Fiscal.ai's stable company identifier.",
+            "name": "companyFiscalIdentifier",
+            "type": "string"
+          },
+          {
+            "about": "Exchange and ticker joined by an underscore, for example NASDAQ_MSFT.",
+            "name": "companyKey",
+            "type": "string"
+          },
+          {
+            "about": "Display name in English.",
+            "name": "displayNameEnglish",
+            "type": "string"
+          },
+          {
+            "about": "Registered legal name, which often differs from the trading name.",
+            "name": "legalNameEnglish",
+            "type": "string"
+          },
+          {
+            "about": "Trading name in English.",
+            "name": "tradeNameEnglish",
+            "type": "string"
+          },
+          {
+            "about": "Legal name in the company's own script, keyed by language. An object, not a string.",
+            "name": "legalNameNative",
+            "type": "object"
+          },
+          {
+            "about": "Trade name in the company's own script, keyed by language.",
+            "name": "tradeNameNative",
+            "type": "object"
+          },
+          {
+            "about": "Operating company, holding company, fund or trust.",
+            "name": "companyType",
+            "type": "string"
+          },
+          {
+            "about": "Whether the company is active, acquired or delisted.",
+            "name": "companyStatus",
+            "type": "string"
+          },
+          {
+            "about": "ISO country code of the headquarters.",
+            "name": "headquartersCountryCode",
+            "type": "string"
+          },
+          {
+            "about": "Country name of the headquarters.",
+            "name": "headquartersCountryName",
+            "type": "string"
+          },
+          {
+            "about": "Region of the headquarters, for example North America.",
+            "name": "headquartersRegion",
+            "type": "string"
+          },
+          {
+            "about": "ISO country code the company is legally domiciled in, which is not always where it operates.",
+            "name": "legalDomicileCountryCode",
+            "type": "string"
+          },
+          {
+            "about": "Country name of the legal domicile.",
+            "name": "legalDomicileCountryName",
+            "type": "string"
+          },
+          {
+            "about": "One-line business description.",
+            "name": "descriptionShort",
+            "type": "string"
+          },
+          {
+            "about": "Full business description.",
+            "name": "descriptionLong",
+            "type": "string"
+          },
+          {
+            "about": "Name of the current chief executive.",
+            "name": "chiefExecutiveOfficer",
+            "type": "string"
+          },
+          {
+            "about": "Year the company was founded.",
+            "name": "foundingYear",
+            "type": "number"
+          },
+          {
+            "about": "Year it first listed.",
+            "name": "ipoYear",
+            "type": "number"
+          },
+          {
+            "about": "GICS sector.",
+            "name": "sector",
+            "type": "string"
+          },
+          {
+            "about": "GICS industry group.",
+            "name": "industryGroup",
+            "type": "string"
+          },
+          {
+            "about": "GICS industry.",
+            "name": "industry",
+            "type": "string"
+          },
+          {
+            "about": "GICS sub-industry.",
+            "name": "subIndustry",
+            "type": "string"
+          },
+          {
+            "about": "Which standardized statement template this company's financials map onto.",
+            "name": "reportingTemplate",
+            "type": "string"
+          },
+          {
+            "about": "SEC Central Index Key, when the company files with the SEC.",
+            "name": "cik",
+            "type": "string"
+          },
+          {
+            "about": "Market capitalisation in USD.",
+            "name": "marketCapUsd",
+            "type": "number"
+          },
+          {
+            "about": "The primary listing: ticker, exchange code and name, and MICs.",
+            "name": "primaryListing",
+            "type": "object"
+          },
+          {
+            "about": "Every other listing of the same company on other exchanges.",
+            "name": "secondaryListings",
+            "type": "object[]"
+          },
+          {
+            "about": "Comparable companies, each with the peer relationship, market segment and a prose reason for the grouping alongside the company block.",
+            "name": "peers",
+            "type": "object[]"
+          },
+          {
+            "about": "Fiscal.ai's numeric company id. Prefer companyFiscalIdentifier, which is the stable one.",
+            "name": "companyId",
+            "type": "number"
+          },
+          {
+            "about": "The currency the company reports in, before any conversion a caller asks for.",
+            "name": "reportingCurrency",
+            "type": "string"
+          },
+          {
+            "about": "When this record last changed, as an epoch timestamp. Served live rather than cached.",
+            "name": "updatedAt",
+            "type": "number"
+          },
+          {
+            "about": "Date of the next or most recent earnings filing. Served live.",
+            "name": "earningsFilingDate",
+            "type": "string"
+          },
+          {
+            "about": "Which datasets Fiscal.ai holds for this company. Read it before spending a call on a capability it has no data for.",
+            "name": "availableDatasets",
+            "type": "string[]"
+          },
+          {
+            "about": "Which period types the financials cover, for example annual, quarterly, ltm.",
+            "name": "financialPeriodsAvailable",
+            "type": "string[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "company/profile"
+      }
+    },
+    {
+      "id": "fiscal-ai/company/segments-and-kpis",
+      "provider": "fiscal-ai",
+      "capability": "company/segments-and-kpis",
+      "name": "Segments and KPIs",
+      "description": "Call for the numbers a business is actually run on - segment revenue, units, subscribers - which never reach the three statements. Coverage is narrower than for financials, and varies by company.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated period filter: annual, quarterly, semi-annual, ltm, ytd, latest. Defaults to annual.",
+          "default": "annual",
+          "name": "periodType",
+          "type": "string"
+        },
+        {
+          "about": "ISO 4217 code to convert into, for example USD or EUR. Defaults to the company's own reporting currency, and the response carries the rate that was applied.",
+          "name": "currency",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "The breakdowns beneath the statements: reported segments and the operating KPIs a company discloses.",
+        "fields": [
+          {
+            "about": "The company's own reporting currency.",
+            "name": "reportingCurrency",
+            "type": "string"
+          },
+          {
+            "about": "The currency the values are expressed in, after any requested conversion.",
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "about": "Metric definitions, each with a stable numeric KPI id, whether it is a KPI or a segment line, format, and which period types it has been discontinued for.",
+            "name": "metrics",
+            "type": "object[]"
+          },
+          {
+            "about": "Segments grouped as the company presents them, for example revenue by geography, with rollup relationships between lines.",
+            "name": "segmentGroups",
+            "type": "object[]"
+          },
+          {
+            "about": "One row per period: periodId, periodType, reportDate, periodDuration, calendar and fiscal year and quarter, and the values keyed by the metric ids above.",
+            "name": "data",
+            "type": "object[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "company/segments-and-kpis"
+      }
+    },
+    {
+      "id": "fiscal-ai/company/shares-outstanding",
+      "provider": "fiscal-ai",
+      "capability": "company/shares-outstanding",
+      "name": "Shares outstanding",
+      "description": "Call when a per-share figure has to be computed, or when a dual-class structure means the headline share count is misleading. Point-in-time, not a series.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "Share count as of the latest filing, broken down by class.",
+        "fields": [
+          {
+            "about": "Date of the filing the count was taken from.",
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "about": "Total shares outstanding across all classes.",
+            "name": "totalSharesOutstanding",
+            "type": "number"
+          },
+          {
+            "about": "Total expressed in ordinary-share equivalents, which is the figure to use when classes convert at different rates.",
+            "name": "ordinaryTotalSharesOutstanding",
+            "type": "number"
+          },
+          {
+            "about": "Per class: name, whether it is the main class, count, conversion rate, ordinary-share conversion, and a link to the source filing.",
+            "name": "shareClasses",
+            "type": "object[]"
+          }
+        ],
+        "key": "",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "company/shares-outstanding"
+      }
+    },
+    {
+      "id": "fiscal-ai/events/calendar",
+      "provider": "fiscal-ai",
+      "capability": "events/calendar",
+      "name": "Earnings calendar",
+      "description": "Call to answer who reports when. Omit every company identifier for the whole calendar, which is what makes this the one capability here that answers a question not about a specific company. Read `eventStatus` before relying on a date - an estimated one moves.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "ISO country code of the headquarters, to restrict the calendar by geography.",
+          "name": "country",
+          "type": "string"
+        },
+        {
+          "about": "GICS sector, to restrict the calendar by industry.",
+          "name": "sector",
+          "type": "string"
+        },
+        {
+          "about": "Inclusive start of the event window, ISO 8601.",
+          "name": "startDate",
+          "type": "string"
+        },
+        {
+          "about": "Inclusive end of the event window, ISO 8601.",
+          "name": "endDate",
+          "type": "string"
+        },
+        {
+          "about": "Restrict by event status: confirmed, estimated, projected or reported. See `eventStatus` for what each means.",
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "about": "Page number, 1-indexed. Spelled `page` here, where every other Fiscal.ai list takes `pageNumber`.",
+          "default": 1,
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Rows per page, up to 250. Defaults to 250; page for more.",
+          "default": 250,
+          "max": 250,
+          "name": "pageSize",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "One earnings event per row, past and upcoming, sorted by event date. Global unless a company or filter narrows it. Paginated, but not like the other lists here: the body carries a `meta` block rather than a `pagination` block, with page, pageSize, totalCount, returnedCount, hasMore, nextPage (absent on the last page) and publicationVersion.",
+        "fields": [
+          {
+            "about": "Fiscal.ai's stable company identifier.",
+            "name": "companyFiscalIdentifier",
+            "type": "string"
+          },
+          {
+            "about": "Exchange and ticker joined by an underscore.",
+            "name": "companyKey",
+            "type": "string"
+          },
+          {
+            "about": "Display name.",
+            "name": "displayNameEnglish",
+            "type": "string"
+          },
+          {
+            "about": "GICS sector.",
+            "name": "sector",
+            "type": "string"
+          },
+          {
+            "about": "ISO country code of the headquarters.",
+            "name": "headquartersCountryCode",
+            "type": "string"
+          },
+          {
+            "about": "Market capitalisation in USD.",
+            "name": "marketCapUsd",
+            "type": "number"
+          },
+          {
+            "about": "Ticker, exchange code and name, and operating MIC of the primary listing.",
+            "name": "primaryListing",
+            "type": "object"
+          },
+          {
+            "about": "Event type. Earnings today; other types are promised.",
+            "name": "eventType",
+            "type": "string"
+          },
+          {
+            "about": "What the event is within its type: financial_results_release, earnings_call_for_results, periodic_financial_report or scheduled_trading_or_revenue_update.",
+            "name": "eventRole",
+            "type": "string"
+          },
+          {
+            "about": "The event's title, for example Q3 2026 Earnings Call.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal year of the period reported on.",
+            "name": "fiscalYear",
+            "type": "number"
+          },
+          {
+            "about": "Fiscal quarter of the period reported on, 1 to 4.",
+            "name": "fiscalQuarter",
+            "type": "number"
+          },
+          {
+            "about": "The period written out, for example Q3 2026.",
+            "name": "periodLabel",
+            "type": "string"
+          },
+          {
+            "about": "quarterly, semi_annual, ytd, annual or transition.",
+            "name": "periodType",
+            "type": "string"
+          },
+          {
+            "about": "The span the company reported, as an amount and a unit.",
+            "name": "periodDuration",
+            "type": "object"
+          },
+          {
+            "about": "End date of the reported fiscal period.",
+            "name": "reportDate",
+            "type": "string"
+          },
+          {
+            "about": "confirmed is a company-stated date, estimated a source-derived one, projected a cadence-derived window, reported an event that has happened.",
+            "name": "eventStatus",
+            "type": "string"
+          },
+          {
+            "about": "Date of the event.",
+            "name": "eventDate",
+            "type": "string"
+          },
+          {
+            "about": "Start and end of the window, only when eventStatus is projected.",
+            "name": "dateWindow",
+            "type": "object"
+          },
+          {
+            "about": "before_open, during_market or after_close on the primary listing's venue.",
+            "name": "eventSession",
+            "type": "string"
+          },
+          {
+            "about": "Local time of the event when one is known.",
+            "name": "eventTime",
+            "type": "string"
+          },
+          {
+            "about": "IANA timezone the time is in.",
+            "name": "eventTimezone",
+            "type": "string"
+          },
+          {
+            "about": "The event's timestamp in UTC when a time is known.",
+            "name": "eventDatetimeUtc",
+            "type": "string"
+          },
+          {
+            "about": "Id of the event.",
+            "name": "eventId",
+            "type": "string"
+          },
+          {
+            "about": "Id shared by the events of one fiscal period, for example the release and the call.",
+            "name": "eventGroupId",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "events/calendar"
+      }
+    },
+    {
+      "id": "fiscal-ai/events/ir-events",
+      "provider": "fiscal-ai",
+      "capability": "events/ir-events",
+      "name": "IR event resources",
+      "description": "Call to find what exists for a quarter before asking for any of it - the deck, the release, the report, the transcript. Rows sharing a fiscal year and quarter are one event, so group on that pair rather than on the date.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "The resources attached to a company's earnings events, one row per resource.",
+        "fields": [
+          {
+            "about": "Event type. Earnings today; other types are promised.",
+            "name": "eventType",
+            "type": "string"
+          },
+          {
+            "about": "Date of the event.",
+            "name": "eventDate",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal year the event reports on.",
+            "name": "fiscalYear",
+            "type": "number"
+          },
+          {
+            "about": "Fiscal quarter the event reports on. Rows sharing a fiscal period belong to one event.",
+            "name": "fiscalQuarter",
+            "type": "number"
+          },
+          {
+            "about": "Whether the resource is a document, a transcript or an audio recording.",
+            "name": "resourceType",
+            "type": "string"
+          },
+          {
+            "about": "What the resource is: transcript, audio, interim_report, annual_report, slide_deck or press release.",
+            "name": "role",
+            "type": "string"
+          },
+          {
+            "about": "Id to resolve the resource with. For a transcript it is the eventKey events/transcript takes; for a document it is a filing accession number.",
+            "name": "resourceId",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal.ai's URL for the resource. Documents and audio must be fetched there rather than through this catalogue.",
+            "name": "url",
+            "type": "string"
+          }
+        ],
+        "key": "",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "events/ir-events"
+      }
+    },
+    {
+      "id": "fiscal-ai/events/transcript",
+      "provider": "fiscal-ai",
+      "capability": "events/transcript",
+      "name": "Earnings call transcript",
+      "description": "Call for what was said on the call, attributed and timed. The speaker mapping is what makes it worth more than the raw text: management's prepared remarks and an analyst's question can be told apart, and the Q&A boundary is given rather than guessed.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "The q{quarter}-{year} key of the event, for example q3-2026, from the events/ir-events list.",
+          "in": "path",
+          "name": "eventKey",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "The structured transcript of one earnings call.",
+        "fields": [
+          {
+            "about": "Which event this is: key, fiscal year and quarter, and date.",
+            "name": "event",
+            "type": "object"
+          },
+          {
+            "about": "Speaker mapping: label, name, role, company, and whether they are management, an analyst or the operator.",
+            "name": "speakers",
+            "type": "object[]"
+          },
+          {
+            "about": "The transcript itself: `text` is the whole call, `paragraphs` carries start and end timings, a speaker reference and the sentences within each, plus the Q&A section timing and summary counts.",
+            "name": "transcript",
+            "type": "object"
+          },
+          {
+            "about": "Where the call divides: prepared remarks and Q&A, each with its start and end, so a question can be told from a script without reading for it.",
+            "name": "sections",
+            "type": "object"
+          },
+          {
+            "about": "Summary counts for the call: speakers, paragraphs, sentences and duration.",
+            "name": "stats",
+            "type": "object"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "events/transcript"
+      }
+    },
+    {
+      "id": "fiscal-ai/filings/list",
+      "provider": "fiscal-ai",
+      "capability": "filings/list",
+      "name": "Company filings",
+      "description": "Call to find out what exists and when it was filed, and to get the document links. The filing bytes themselves are not retrievable through this provider - see its page for why - so treat `pdfUrl` as a handoff.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "What the company filed over the last 20 years: annual and interim reports, earnings press releases, current reports and initial registration statements.",
+        "fields": [
+          {
+            "about": "Accession number of the filing, which is also its id in the source documents cited elsewhere here.",
+            "name": "filingId",
+            "type": "string"
+          },
+          {
+            "about": "What the document is, in Fiscal.ai's vocabulary rather than the regulator's.",
+            "name": "documentType",
+            "type": "string"
+          },
+          {
+            "about": "The SEC form type, for example 10-K.",
+            "name": "secFormType",
+            "type": "string"
+          },
+          {
+            "about": "The SEC exhibit type, for example EX-99.1, when the document is an exhibit.",
+            "name": "secExhibitType",
+            "type": "string"
+          },
+          {
+            "about": "Date filed.",
+            "name": "filingDate",
+            "type": "string"
+          },
+          {
+            "about": "Period the filing reports on. Only populated for periodic reports.",
+            "name": "reportDate",
+            "type": "string"
+          },
+          {
+            "about": "Fiscal year the filing reports on.",
+            "name": "fiscalYear",
+            "type": "number"
+          },
+          {
+            "about": "Fiscal quarter the filing reports on.",
+            "name": "fiscalQuarter",
+            "type": "number"
+          },
+          {
+            "about": "Fiscal.ai's PDF endpoint for the document. Fetch it directly; this catalogue cannot return the bytes.",
+            "name": "pdfUrl",
+            "type": "string"
+          },
+          {
+            "about": "The regulator's own URL for the document, which is not always the SEC - Canadian filers resolve to SEDAR+.",
+            "name": "sourceUrl",
+            "type": "string"
+          }
+        ],
+        "key": "",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "filings/list"
+      }
+    },
+    {
+      "id": "fiscal-ai/financials/adjusted-metrics",
+      "provider": "fiscal-ai",
+      "capability": "financials/adjusted-metrics",
+      "name": "Adjusted metrics",
+      "description": "Call when comparing against analyst estimates or consensus, which are quoted on an adjusted basis rather than a GAAP one. Not a substitute for the statements: these are management's adjustments, and the exclusions are theirs.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated period filter: annual, quarterly, semi-annual, ltm, ytd, latest. Defaults to annual.",
+          "default": "annual",
+          "name": "periodType",
+          "type": "string"
+        },
+        {
+          "about": "ISO 4217 code to convert into, for example USD or EUR. Defaults to the company's own reporting currency, and the response carries the rate that was applied.",
+          "name": "currency",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "The adjusted, non-GAAP figures management presents alongside the statements. Dictionary and periods arrive together, as with the statements themselves.",
+        "fields": [
+          {
+            "about": "Metric definitions: metricId, metricName, metricFormat, and the isCurrency, isPerShare and isKeyMetric flags. Adjusted revenue, adjusted EPS, adjusted EBITDA and the rest.",
+            "name": "metrics",
+            "type": "object[]"
+          },
+          {
+            "about": "One row per period, as with the statements, except that the values sit under `metricValues` rather than `metricsValues` - the singular is upstream's, not a typo here.",
+            "name": "data",
+            "type": "object[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "financials/adjusted-metrics"
+      }
+    },
+    {
+      "id": "fiscal-ai/financials/balance-sheet",
+      "provider": "fiscal-ai",
+      "capability": "financials/balance-sheet",
+      "name": "Balance sheet",
+      "description": "Call when comparing companies, screening, or computing anything that has to mean the same thing across two filers. The mapping is visible: each standardized metric names the as-reported lines behind it, so a surprising figure can be traced rather than trusted.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated period filter: annual, quarterly, semi-annual, ltm, ytd, latest. Defaults to annual.",
+          "default": "annual",
+          "name": "periodType",
+          "type": "string"
+        },
+        {
+          "about": "ISO 4217 code to convert into, for example USD or EUR. Defaults to the company's own reporting currency, and the response carries the rate that was applied.",
+          "name": "currency",
+          "type": "string"
+        },
+        {
+          "about": "Include which reporting templates each standardized metric belongs to.",
+          "name": "includeReportingTemplates",
+          "type": "boolean"
+        },
+        {
+          "about": "Include the alternative as-reported line items that could have mapped to each standardized metric, which is how a mapping decision is audited.",
+          "name": "includeMappingAlternatives",
+          "type": "boolean"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "Balance sheet mapped onto a common schema - assets, liabilities and equity - so figures line up across companies. The dictionary and the periods arrive together as one body; a period's values are keyed by the metric ids in `metrics`.",
+        "fields": [
+          {
+            "about": "Which template this company's statements map onto.",
+            "name": "reportingTemplate",
+            "type": "string"
+          },
+          {
+            "about": "Standardized metric definitions: standardizedMetricId, metricName, metricFormat, the isPointInTime, isCurrency and isTotal flags, headers, and the asReportedMetrics that were combined into it with the operation each contributed.",
+            "name": "metrics",
+            "type": "object[]"
+          },
+          {
+            "about": "One row per period: periodId, periodType, reportDate, periodDuration, calendar and fiscal year and quarter, earningsDate, lastSourceFilingDate, isRestated, and the values keyed by the metric ids above.",
+            "name": "data",
+            "type": "object[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "financials/balance-sheet"
+      }
+    },
+    {
+      "id": "fiscal-ai/financials/balance-sheet-as-reported",
+      "provider": "fiscal-ai",
+      "capability": "financials/balance-sheet-as-reported",
+      "name": "Balance sheet, as reported",
+      "description": "Call when fidelity to the filing matters more than comparability: the labels and groupings are the company's own, so two companies cannot be lined up against each other. Use the standardized view for that. Each value carries a link back to the filing page it came from.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated period filter: annual, quarterly, semi-annual, ltm, ytd, latest. Defaults to annual.",
+          "default": "annual",
+          "name": "periodType",
+          "type": "string"
+        },
+        {
+          "about": "ISO 4217 code to convert into, for example USD or EUR. Defaults to the company's own reporting currency, and the response carries the rate that was applied.",
+          "name": "currency",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "Balance sheet line items exactly as the company disclosed them - assets, liabilities and equity - under its own labels. The dictionary and the periods arrive together as one body; a period's values are keyed by the metric ids in `metrics`, so neither half is readable alone.",
+        "fields": [
+          {
+            "about": "Line item definitions: asReportedMetricId, metricName, headers, metricFormat, and the isPointInTime, isCurrency, isPerShare and isKeyMetric flags.",
+            "name": "metrics",
+            "type": "object[]"
+          },
+          {
+            "about": "One row per period: periodId, periodType, reportDate, periodDuration, calendar and fiscal year and quarter, earningsDate, lastSourceFilingDate, isRestated, and the values keyed by the metric ids above. Each value here also carries `sources`: the filing it was read from, as the document and page-image URLs, the page number, and the original filing URL. That sourcing is what this view is priced at 30 for; the standardized view does not carry it.",
+            "name": "data",
+            "type": "object[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "financials/balance-sheet-as-reported"
+      }
+    },
+    {
+      "id": "fiscal-ai/financials/cash-flow-statement",
+      "provider": "fiscal-ai",
+      "capability": "financials/cash-flow-statement",
+      "name": "Cash flow statement",
+      "description": "Call when comparing companies, screening, or computing anything that has to mean the same thing across two filers. The mapping is visible: each standardized metric names the as-reported lines behind it, so a surprising figure can be traced rather than trusted.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated period filter: annual, quarterly, semi-annual, ltm, ytd, latest. Defaults to annual.",
+          "default": "annual",
+          "name": "periodType",
+          "type": "string"
+        },
+        {
+          "about": "ISO 4217 code to convert into, for example USD or EUR. Defaults to the company's own reporting currency, and the response carries the rate that was applied.",
+          "name": "currency",
+          "type": "string"
+        },
+        {
+          "about": "Include which reporting templates each standardized metric belongs to.",
+          "name": "includeReportingTemplates",
+          "type": "boolean"
+        },
+        {
+          "about": "Include the alternative as-reported line items that could have mapped to each standardized metric, which is how a mapping decision is audited.",
+          "name": "includeMappingAlternatives",
+          "type": "boolean"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "Cash flow statement mapped onto a common schema - operating, investing and financing cash flows - so figures line up across companies. The dictionary and the periods arrive together as one body; a period's values are keyed by the metric ids in `metrics`.",
+        "fields": [
+          {
+            "about": "Which template this company's statements map onto.",
+            "name": "reportingTemplate",
+            "type": "string"
+          },
+          {
+            "about": "Standardized metric definitions: standardizedMetricId, metricName, metricFormat, the isPointInTime, isCurrency and isTotal flags, headers, and the asReportedMetrics that were combined into it with the operation each contributed.",
+            "name": "metrics",
+            "type": "object[]"
+          },
+          {
+            "about": "One row per period: periodId, periodType, reportDate, periodDuration, calendar and fiscal year and quarter, earningsDate, lastSourceFilingDate, isRestated, and the values keyed by the metric ids above.",
+            "name": "data",
+            "type": "object[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "financials/cash-flow-statement"
+      }
+    },
+    {
+      "id": "fiscal-ai/financials/cash-flow-statement-as-reported",
+      "provider": "fiscal-ai",
+      "capability": "financials/cash-flow-statement-as-reported",
+      "name": "Cash flow statement, as reported",
+      "description": "Call when fidelity to the filing matters more than comparability: the labels and groupings are the company's own, so two companies cannot be lined up against each other. Use the standardized view for that. Each value carries a link back to the filing page it came from.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated period filter: annual, quarterly, semi-annual, ltm, ytd, latest. Defaults to annual.",
+          "default": "annual",
+          "name": "periodType",
+          "type": "string"
+        },
+        {
+          "about": "ISO 4217 code to convert into, for example USD or EUR. Defaults to the company's own reporting currency, and the response carries the rate that was applied.",
+          "name": "currency",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "Cash flow statement line items exactly as the company disclosed them - operating, investing and financing cash flows - under its own labels. The dictionary and the periods arrive together as one body; a period's values are keyed by the metric ids in `metrics`, so neither half is readable alone.",
+        "fields": [
+          {
+            "about": "Line item definitions: asReportedMetricId, metricName, headers, metricFormat, and the isPointInTime, isCurrency, isPerShare and isKeyMetric flags.",
+            "name": "metrics",
+            "type": "object[]"
+          },
+          {
+            "about": "One row per period: periodId, periodType, reportDate, periodDuration, calendar and fiscal year and quarter, earningsDate, lastSourceFilingDate, isRestated, and the values keyed by the metric ids above. Each value here also carries `sources`: the filing it was read from, as the document and page-image URLs, the page number, and the original filing URL. That sourcing is what this view is priced at 30 for; the standardized view does not carry it.",
+            "name": "data",
+            "type": "object[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "financials/cash-flow-statement-as-reported"
+      }
+    },
+    {
+      "id": "fiscal-ai/financials/income-statement",
+      "provider": "fiscal-ai",
+      "capability": "financials/income-statement",
+      "name": "Income statement",
+      "description": "Call when comparing companies, screening, or computing anything that has to mean the same thing across two filers. The mapping is visible: each standardized metric names the as-reported lines behind it, so a surprising figure can be traced rather than trusted.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated period filter: annual, quarterly, semi-annual, ltm, ytd, latest. Defaults to annual.",
+          "default": "annual",
+          "name": "periodType",
+          "type": "string"
+        },
+        {
+          "about": "ISO 4217 code to convert into, for example USD or EUR. Defaults to the company's own reporting currency, and the response carries the rate that was applied.",
+          "name": "currency",
+          "type": "string"
+        },
+        {
+          "about": "Include which reporting templates each standardized metric belongs to.",
+          "name": "includeReportingTemplates",
+          "type": "boolean"
+        },
+        {
+          "about": "Include the alternative as-reported line items that could have mapped to each standardized metric, which is how a mapping decision is audited.",
+          "name": "includeMappingAlternatives",
+          "type": "boolean"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "Income statement mapped onto a common schema - revenue, costs and earnings - so figures line up across companies. The dictionary and the periods arrive together as one body; a period's values are keyed by the metric ids in `metrics`.",
+        "fields": [
+          {
+            "about": "Which template this company's statements map onto.",
+            "name": "reportingTemplate",
+            "type": "string"
+          },
+          {
+            "about": "Standardized metric definitions: standardizedMetricId, metricName, metricFormat, the isPointInTime, isCurrency and isTotal flags, headers, and the asReportedMetrics that were combined into it with the operation each contributed.",
+            "name": "metrics",
+            "type": "object[]"
+          },
+          {
+            "about": "One row per period: periodId, periodType, reportDate, periodDuration, calendar and fiscal year and quarter, earningsDate, lastSourceFilingDate, isRestated, and the values keyed by the metric ids above.",
+            "name": "data",
+            "type": "object[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "financials/income-statement"
+      }
+    },
+    {
+      "id": "fiscal-ai/financials/income-statement-as-reported",
+      "provider": "fiscal-ai",
+      "capability": "financials/income-statement-as-reported",
+      "name": "Income statement, as reported",
+      "description": "Call when fidelity to the filing matters more than comparability: the labels and groupings are the company's own, so two companies cannot be lined up against each other. Use the standardized view for that. Each value carries a link back to the filing page it came from.",
+      "creditsCost": 30,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated period filter: annual, quarterly, semi-annual, ltm, ytd, latest. Defaults to annual.",
+          "default": "annual",
+          "name": "periodType",
+          "type": "string"
+        },
+        {
+          "about": "ISO 4217 code to convert into, for example USD or EUR. Defaults to the company's own reporting currency, and the response carries the rate that was applied.",
+          "name": "currency",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "Income statement line items exactly as the company disclosed them - revenue, costs and earnings - under its own labels. The dictionary and the periods arrive together as one body; a period's values are keyed by the metric ids in `metrics`, so neither half is readable alone.",
+        "fields": [
+          {
+            "about": "Line item definitions: asReportedMetricId, metricName, headers, metricFormat, and the isPointInTime, isCurrency, isPerShare and isKeyMetric flags.",
+            "name": "metrics",
+            "type": "object[]"
+          },
+          {
+            "about": "One row per period: periodId, periodType, reportDate, periodDuration, calendar and fiscal year and quarter, earningsDate, lastSourceFilingDate, isRestated, and the values keyed by the metric ids above. Each value here also carries `sources`: the filing it was read from, as the document and page-image URLs, the page number, and the original filing URL. That sourcing is what this view is priced at 30 for; the standardized view does not carry it.",
+            "name": "data",
+            "type": "object[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "financials/income-statement-as-reported"
+      }
+    },
+    {
+      "id": "fiscal-ai/fund-letters/companies",
+      "provider": "fiscal-ai",
+      "capability": "fund-letters/companies",
+      "name": "Companies in fund letters",
+      "description": "Call to find which companies professional investors are actually writing about, and how heavily, before asking what they said.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Page number, 1-indexed.",
+          "default": 1,
+          "name": "pageNumber",
+          "type": "number"
+        },
+        {
+          "about": "Rows per page, up to 250. Defaults to 250; page for more.",
+          "default": 250,
+          "max": 250,
+          "name": "pageSize",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "One company per row, most written-about first. Paginated: the body also carries a `pagination` block with page, pageSize, totalCount, totalPages, hasNextPage and hasPreviousPage.",
+        "fields": [
+          {
+            "about": "Fiscal.ai's stable company identifier.",
+            "name": "companyFiscalIdentifier",
+            "type": "string"
+          },
+          {
+            "about": "Exchange and ticker joined by an underscore.",
+            "name": "companyKey",
+            "type": "string"
+          },
+          {
+            "about": "Display name.",
+            "name": "displayNameEnglish",
+            "type": "string"
+          },
+          {
+            "about": "GICS sector.",
+            "name": "sector",
+            "type": "string"
+          },
+          {
+            "about": "GICS industry group.",
+            "name": "industryGroup",
+            "type": "string"
+          },
+          {
+            "about": "GICS industry.",
+            "name": "industry",
+            "type": "string"
+          },
+          {
+            "about": "GICS sub-industry.",
+            "name": "subIndustry",
+            "type": "string"
+          },
+          {
+            "about": "ISO country code of the headquarters.",
+            "name": "headquartersCountryCode",
+            "type": "string"
+          },
+          {
+            "about": "Country name of the headquarters.",
+            "name": "headquartersCountryName",
+            "type": "string"
+          },
+          {
+            "about": "Market capitalisation in USD.",
+            "name": "marketCapUsd",
+            "type": "number"
+          },
+          {
+            "about": "Ticker, exchange and MICs of the primary listing.",
+            "name": "primaryListing",
+            "type": "object"
+          },
+          {
+            "about": "How many letters mention it.",
+            "name": "letterCount",
+            "type": "number"
+          },
+          {
+            "about": "How many distinct firms.",
+            "name": "investorCount",
+            "type": "number"
+          },
+          {
+            "about": "How many distinct funds.",
+            "name": "fundCount",
+            "type": "number"
+          },
+          {
+            "about": "Earliest period it was written about.",
+            "name": "firstPeriod",
+            "type": "string"
+          },
+          {
+            "about": "Latest period it was written about.",
+            "name": "latestPeriod",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "fund-letters/companies"
+      }
+    },
+    {
+      "id": "fiscal-ai/fund-letters/company",
+      "provider": "fiscal-ai",
+      "capability": "fund-letters/company",
+      "name": "Theses on a company",
+      "description": "Call for the qualitative case on a company as professional investors put it, with the stance and conviction attached. The one capability here that answers what people think rather than what was reported.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "Everything investors' letters say about one company.",
+        "fields": [
+          {
+            "about": "The resolved company: identifiers, listing, classification and market cap.",
+            "name": "company",
+            "type": "object"
+          },
+          {
+            "about": "How many letters, investors and funds cover it, and over what period range.",
+            "name": "stats",
+            "type": "object"
+          },
+          {
+            "about": "Every published thesis, newest period first, each with the basis on which it was judged material, the relationship and stance, conviction, position size and basis, and the thesis, risk, catalyst and valuation sections behind it.",
+            "name": "theses",
+            "type": "object[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "fund-letters/company"
+      }
+    },
+    {
+      "id": "fiscal-ai/fund-letters/detail",
+      "provider": "fiscal-ai",
+      "capability": "fund-letters/detail",
+      "name": "Fund letter",
+      "description": "Call for what one letter actually argued. The narrative sections are the investor's own words; the theses are the extraction, and each names what it was based on so a thin mention is not mistaken for a conviction.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Letter id, from fund-letters/list.",
+          "in": "path",
+          "name": "letterId",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One fund letter, extracted.",
+        "fields": [
+          {
+            "about": "The letter's id.",
+            "name": "letterId",
+            "type": "string"
+          },
+          {
+            "about": "The investment firm: id, name and type.",
+            "name": "investor",
+            "type": "object"
+          },
+          {
+            "about": "The fund: id, name and type.",
+            "name": "fund",
+            "type": "object"
+          },
+          {
+            "about": "Reporting period, as a label, a year and a quarter.",
+            "name": "reportPeriod",
+            "type": "string"
+          },
+          {
+            "about": "When it was published.",
+            "name": "publicationDate",
+            "type": "string"
+          },
+          {
+            "about": "Whether it is a quarterly, annual or interim letter.",
+            "name": "letterType",
+            "type": "string"
+          },
+          {
+            "about": "The letter's own narrative on the market backdrop.",
+            "name": "marketBackdrop",
+            "type": "string"
+          },
+          {
+            "about": "What the fund did with the portfolio and why.",
+            "name": "portfolioPositioning",
+            "type": "string"
+          },
+          {
+            "about": "The performance narrative.",
+            "name": "performanceSummary",
+            "type": "string"
+          },
+          {
+            "about": "Structured returns: fund and benchmark return, excess return, and the benchmark's name, per period.",
+            "name": "performanceFigures",
+            "type": "object[]"
+          },
+          {
+            "about": "A thesis per security the letter materially discusses.",
+            "name": "theses",
+            "type": "object[]"
+          },
+          {
+            "about": "Topics the letter dwells on.",
+            "name": "keyTopics",
+            "type": "string[]"
+          },
+          {
+            "about": "Year of the reporting period.",
+            "name": "reportPeriodYear",
+            "type": "number"
+          },
+          {
+            "about": "Quarter of the reporting period.",
+            "name": "reportPeriodQuarter",
+            "type": "number"
+          },
+          {
+            "about": "Quarterly, annual or interim.",
+            "name": "reportPeriodType",
+            "type": "string"
+          },
+          {
+            "about": "The period written out.",
+            "name": "periodLabel",
+            "type": "string"
+          },
+          {
+            "about": "The letter's title.",
+            "name": "title",
+            "type": "string"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "fund-letters/detail"
+      }
+    },
+    {
+      "id": "fiscal-ai/fund-letters/investor",
+      "provider": "fiscal-ai",
+      "capability": "fund-letters/investor",
+      "name": "Investor profile",
+      "description": "Call to understand how a firm invests before weighting what it says about a company. The profile is derived from its own letters rather than from marketing material.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Investor id, from fund-letters/investors. Permanent.",
+          "in": "path",
+          "name": "investorId",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One firm's full fund-letters profile.",
+        "fields": [
+          {
+            "about": "Identity: id, name, type and principals.",
+            "name": "investor",
+            "type": "object"
+          },
+          {
+            "about": "The strategy profile evidenced across its letters: overview, why to follow it, concerns, strategy, style tags, asset class, geographic and sector focus, and decision process.",
+            "name": "profile",
+            "type": "object"
+          },
+          {
+            "about": "Coverage counts and the period range.",
+            "name": "stats",
+            "type": "object"
+          },
+          {
+            "about": "Every fund with published letters, with per-fund counts and period range.",
+            "name": "funds",
+            "type": "object[]"
+          },
+          {
+            "about": "The complete letter feed, newest first.",
+            "name": "letters",
+            "type": "object[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "fund-letters/investor"
+      }
+    },
+    {
+      "id": "fiscal-ai/fund-letters/investors",
+      "provider": "fiscal-ai",
+      "capability": "fund-letters/investors",
+      "name": "Fund letter investors",
+      "description": "Call to find the investorId for a firm, or to pick firms by style or sector focus before reading any letters. Sorted by coverage, so the most-covered firms come first.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Page number, 1-indexed.",
+          "default": 1,
+          "name": "pageNumber",
+          "type": "number"
+        },
+        {
+          "about": "Rows per page, up to 250. Defaults to 250; page for more.",
+          "default": 250,
+          "max": 250,
+          "name": "pageSize",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "One firm per row, most covered first. Paginated: the body also carries a `pagination` block with page, pageSize, totalCount, totalPages, hasNextPage and hasPreviousPage.",
+        "fields": [
+          {
+            "about": "Investor id, which fund-letters/investor takes. Permanent.",
+            "name": "investorId",
+            "type": "string"
+          },
+          {
+            "about": "Firm name.",
+            "name": "investorName",
+            "type": "string"
+          },
+          {
+            "about": "What kind of firm it is, for example asset_manager.",
+            "name": "investorType",
+            "type": "string"
+          },
+          {
+            "about": "How many of its funds publish letters.",
+            "name": "fundCount",
+            "type": "number"
+          },
+          {
+            "about": "How many letters are held.",
+            "name": "letterCount",
+            "type": "number"
+          },
+          {
+            "about": "How many distinct companies it has written about.",
+            "name": "companyCount",
+            "type": "number"
+          },
+          {
+            "about": "How many theses were extracted across them.",
+            "name": "thesisCount",
+            "type": "number"
+          },
+          {
+            "about": "Earliest period covered.",
+            "name": "firstPeriod",
+            "type": "string"
+          },
+          {
+            "about": "Latest period covered.",
+            "name": "latestPeriod",
+            "type": "string"
+          },
+          {
+            "about": "Style tags evidenced across its letters, for example growth.",
+            "name": "styleTags",
+            "type": "string[]"
+          },
+          {
+            "about": "Sectors it concentrates in.",
+            "name": "sectorFocus",
+            "type": "string[]"
+          },
+          {
+            "about": "Geographies it concentrates in.",
+            "name": "geographicFocus",
+            "type": "string[]"
+          },
+          {
+            "about": "The firm's principals.",
+            "name": "principalNames",
+            "type": "string[]"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "fund-letters/investors"
+      }
+    },
+    {
+      "id": "fiscal-ai/fund-letters/list",
+      "provider": "fiscal-ai",
+      "capability": "fund-letters/list",
+      "name": "Fund letters",
+      "description": "Call to see what was published in a quarter. Returns the letter index rather than the letters - take a letterId to fund-letters/detail for the content.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Calendar year of the reporting period, 2020 or later. Upstream refuses the call without it.",
+          "name": "year",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "about": "Quarter, 1 to 4. Omit for the whole year.",
+          "name": "quarter",
+          "type": "number"
+        },
+        {
+          "about": "Restrict to one investment firm, by id from fund-letters/investors.",
+          "name": "investorId",
+          "type": "string"
+        },
+        {
+          "about": "Restrict to one fund, by id.",
+          "name": "fundId",
+          "type": "string"
+        },
+        {
+          "about": "Page number, 1-indexed.",
+          "default": 1,
+          "name": "pageNumber",
+          "type": "number"
+        },
+        {
+          "about": "Rows per page, up to 250. Defaults to 250; page for more.",
+          "default": 250,
+          "max": 250,
+          "name": "pageSize",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "One letter per row. Paginated: the body also carries a `pagination` block with page, pageSize, totalCount, totalPages, hasNextPage and hasPreviousPage.",
+        "fields": [
+          {
+            "about": "Letter id, which fund-letters/detail takes.",
+            "name": "letterId",
+            "type": "string"
+          },
+          {
+            "about": "The investment firm that published it.",
+            "name": "investorId",
+            "type": "string"
+          },
+          {
+            "about": "The fund the letter is for.",
+            "name": "fundId",
+            "type": "string"
+          },
+          {
+            "about": "Firm name.",
+            "name": "investorName",
+            "type": "string"
+          },
+          {
+            "about": "Fund name.",
+            "name": "fundName",
+            "type": "string"
+          },
+          {
+            "about": "Hedge fund, mutual fund, partnership.",
+            "name": "fundType",
+            "type": "string"
+          },
+          {
+            "about": "The letter's title.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Reporting period as a compact code, for example 2026Q1.",
+            "name": "reportPeriod",
+            "type": "string"
+          },
+          {
+            "about": "Year of that period.",
+            "name": "reportPeriodYear",
+            "type": "number"
+          },
+          {
+            "about": "Quarter of that period.",
+            "name": "reportPeriodQuarter",
+            "type": "number"
+          },
+          {
+            "about": "Quarterly, annual or interim.",
+            "name": "reportPeriodType",
+            "type": "string"
+          },
+          {
+            "about": "The period written out, for example Quarter Ended March 31, 2026.",
+            "name": "periodLabel",
+            "type": "string"
+          },
+          {
+            "about": "When it was published.",
+            "name": "publicationDate",
+            "type": "string"
+          },
+          {
+            "about": "What kind of letter it is.",
+            "name": "letterType",
+            "type": "string"
+          },
+          {
+            "about": "How many per-company theses were extracted from it.",
+            "name": "thesisCount",
+            "type": "number"
+          },
+          {
+            "about": "Topics the letter dwells on.",
+            "name": "keyTopics",
+            "type": "string[]"
+          },
+          {
+            "about": "Companies it discusses, by companyKey.",
+            "name": "companyKeys",
+            "type": "string[]"
+          },
+          {
+            "about": "The same companies by ticker.",
+            "name": "companyTickers",
+            "type": "string[]"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "fund-letters/list"
+      }
+    },
+    {
+      "id": "fiscal-ai/metrics/ratios-list",
+      "provider": "fiscal-ai",
+      "capability": "metrics/ratios-list",
+      "name": "Ratio definitions",
+      "description": "Call to find a ratio id before requesting a series, and to check `hasDailyData` before asking for a daily one - not every ratio has it.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [],
+      "response": {
+        "about": "One ratio per row.",
+        "fields": [
+          {
+            "about": "Stable id, which is what ratios/daily takes and ratios/series filters on.",
+            "name": "ratioId",
+            "type": "string"
+          },
+          {
+            "about": "Display name.",
+            "name": "metricName",
+            "type": "string"
+          },
+          {
+            "about": "How to render it.",
+            "name": "metricFormat",
+            "type": "string"
+          },
+          {
+            "about": "Whether the value is a currency amount rather than a ratio.",
+            "name": "isCurrency",
+            "type": "boolean"
+          },
+          {
+            "about": "What kind of ratio it is: valuation, profitability, leverage.",
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "about": "Whether a daily series exists. Check before calling ratios/daily.",
+            "name": "hasDailyData",
+            "type": "boolean"
+          },
+          {
+            "about": "The formula in words, for example Market Price per Share / Earnings per Share.",
+            "name": "formulaHuman",
+            "type": "string"
+          }
+        ],
+        "key": "",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "metrics/ratios-list"
+      }
+    },
+    {
+      "id": "fiscal-ai/metrics/standardized",
+      "provider": "fiscal-ai",
+      "capability": "metrics/standardized",
+      "name": "Standardized metrics",
+      "description": "Call to find the standardized metric id for a concept before requesting statements, rather than guessing at a name. Free, and takes no company.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [],
+      "response": {
+        "about": "One standardized metric per row, across every reporting template.",
+        "fields": [
+          {
+            "about": "Stable id, which is what the statements key their values by.",
+            "name": "standardizedMetricId",
+            "type": "string"
+          },
+          {
+            "about": "Display name.",
+            "name": "metricName",
+            "type": "string"
+          },
+          {
+            "about": "How to render it: number, ratio, percent.",
+            "name": "metricFormat",
+            "type": "string"
+          },
+          {
+            "about": "Which statement it belongs to.",
+            "name": "statementType",
+            "type": "string"
+          },
+          {
+            "about": "Whether it is a balance at a date rather than a flow over a period.",
+            "name": "isPointInTime",
+            "type": "boolean"
+          },
+          {
+            "about": "Whether it is a currency amount.",
+            "name": "isCurrency",
+            "type": "boolean"
+          },
+          {
+            "about": "The headers it sits under in a rendered statement.",
+            "name": "headers",
+            "type": "string[]"
+          },
+          {
+            "about": "Which reporting templates carry it.",
+            "name": "reportingTemplates",
+            "type": "string[]"
+          }
+        ],
+        "key": "metrics",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "metrics/standardized"
+      }
+    },
+    {
+      "id": "fiscal-ai/metrics/standardized-by-template",
+      "provider": "fiscal-ai",
+      "capability": "metrics/standardized-by-template",
+      "name": "Standardized metrics by template",
+      "description": "Call rather than the full list when the template is already known - it is the only place the prose definition and the sub-component breakdown of each metric are published, which is what settles what a line actually includes.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Reporting template, for example `standard`. A company's template is on its profile.",
+          "in": "path",
+          "name": "templateType",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "Which statement to list metrics for.",
+          "in": "path",
+          "name": "statementType",
+          "oneOf": [
+            "income-statement",
+            "balance-sheet",
+            "cash-flow-statement"
+          ],
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One metric per row, for one statement under one template. The body also carries the `reportingTemplate` it was asked for.",
+        "fields": [
+          {
+            "about": "Stable id.",
+            "name": "standardizedMetricId",
+            "type": "string"
+          },
+          {
+            "about": "Display name.",
+            "name": "metricName",
+            "type": "string"
+          },
+          {
+            "about": "How to render it.",
+            "name": "metricFormat",
+            "type": "string"
+          },
+          {
+            "about": "Whether it is a balance at a date rather than a flow.",
+            "name": "isPointInTime",
+            "type": "boolean"
+          },
+          {
+            "about": "Whether it is a currency amount.",
+            "name": "isCurrency",
+            "type": "boolean"
+          },
+          {
+            "about": "Whether it is a total rather than a component.",
+            "name": "isTotal",
+            "type": "boolean"
+          },
+          {
+            "about": "The headers it sits under.",
+            "name": "headers",
+            "type": "string[]"
+          },
+          {
+            "about": "A prose definition of what the line includes. Published here and nowhere else, which is the reason to prefer this over metrics/standardized.",
+            "name": "definition",
+            "type": "string"
+          },
+          {
+            "about": "The components it is built from, each with its metric id and the operation it contributes.",
+            "name": "subComponents",
+            "type": "object[]"
+          }
+        ],
+        "key": "metrics",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "metrics/standardized-by-template"
+      }
+    },
+    {
+      "id": "fiscal-ai/ownership/holder-holdings",
+      "provider": "fiscal-ai",
+      "capability": "ownership/holder-holdings",
+      "name": "Holdings by institution",
+      "description": "Call to read ownership from the investor's end rather than the company's - what a fund holds and how it is weighted. The counterpart to institutional-holders, over the same 13F data.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Institutional holder id, from ownership/holders-list or an institutional-holders row.",
+          "name": "holderId",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "Calendar year of the reported quarter. Defaults to the latest reported.",
+          "name": "year",
+          "type": "number"
+        },
+        {
+          "about": "Quarter, 1 to 4.",
+          "name": "quarter",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed.",
+          "default": 1,
+          "name": "pageNumber",
+          "type": "number"
+        },
+        {
+          "about": "Rows per page, up to 250. Defaults to 250; page for more.",
+          "default": 250,
+          "max": 250,
+          "name": "pageSize",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "One position per row, from the holder's side. Paginated: the body also carries a `pagination` block with page, pageSize, totalCount, totalPages, hasNextPage and hasPreviousPage.",
+        "fields": [
+          {
+            "about": "The institution whose portfolio this is.",
+            "name": "holderId",
+            "type": "string"
+          },
+          {
+            "about": "Whether the position is in a company or a fund.",
+            "name": "holdingType",
+            "type": "string"
+          },
+          {
+            "about": "The company held, when holdingType is company.",
+            "name": "company",
+            "type": "object"
+          },
+          {
+            "about": "The fund held, when holdingType is fund.",
+            "name": "fund",
+            "type": "object"
+          },
+          {
+            "about": "Quarter end the position was reported as of.",
+            "name": "reportDate",
+            "type": "string"
+          },
+          {
+            "about": "When the 13F was filed.",
+            "name": "filingDate",
+            "type": "string"
+          },
+          {
+            "about": "Shares held.",
+            "name": "shares",
+            "type": "number"
+          },
+          {
+            "about": "Currency of the values.",
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "about": "Value of the position.",
+            "name": "value",
+            "type": "number"
+          },
+          {
+            "about": "Change in shares since the prior quarter.",
+            "name": "sharesChange",
+            "type": "number"
+          },
+          {
+            "about": "That change as a percentage.",
+            "name": "sharesChangePercent",
+            "type": "number"
+          },
+          {
+            "about": "Change in value since the prior quarter.",
+            "name": "valueChange",
+            "type": "number"
+          },
+          {
+            "about": "The position as a percentage of the holder's portfolio.",
+            "name": "percentOfPortfolio",
+            "type": "number"
+          },
+          {
+            "about": "The filing behind the row.",
+            "name": "sources",
+            "type": "object[]"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "ownership/holder-holdings"
+      }
+    },
+    {
+      "id": "fiscal-ai/ownership/holders-list",
+      "provider": "fiscal-ai",
+      "capability": "ownership/holders-list",
+      "name": "Institution directory",
+      "description": "Call to resolve an institution's name to the holder id that ownership/holder-holdings needs. Free, and takes no company.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Page number, 1-indexed.",
+          "default": 1,
+          "name": "pageNumber",
+          "type": "number"
+        },
+        {
+          "about": "Rows per page, up to 250. Defaults to 250; page for more.",
+          "default": 250,
+          "max": 250,
+          "name": "pageSize",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "One institution per row. Paginated: the body also carries a `pagination` block with page, pageSize, totalCount, totalPages, hasNextPage and hasPreviousPage.",
+        "fields": [
+          {
+            "about": "Stable id, which is what ownership/holder-holdings takes.",
+            "name": "holderId",
+            "type": "string"
+          },
+          {
+            "about": "Normalized institution name.",
+            "name": "holderName",
+            "type": "string"
+          },
+          {
+            "about": "Its SEC Central Index Key, where known.",
+            "name": "cik",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "ownership/holders-list"
+      }
+    },
+    {
+      "id": "fiscal-ai/ownership/insider-holders",
+      "provider": "fiscal-ai",
+      "capability": "ownership/insider-holders",
+      "name": "Insider holders",
+      "description": "Call for the current standing position of officers and directors, including holdings held through trusts and other vehicles. Use insider-transactions for what they have been doing rather than what they hold.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Include holders marked inactive. Hidden by default; holders removed by an analyst override stay hidden either way.",
+          "default": "false",
+          "name": "includeInactive",
+          "type": "boolean"
+        },
+        {
+          "about": "Page number, 1-indexed.",
+          "default": 1,
+          "name": "pageNumber",
+          "type": "number"
+        },
+        {
+          "about": "Rows per page, up to 250. Defaults to 250; page for more.",
+          "default": 250,
+          "max": 250,
+          "name": "pageSize",
+          "type": "number"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "One insider per row, with their positions. Paginated: the body also carries a `pagination` block with page, pageSize, totalCount, totalPages, hasNextPage and hasPreviousPage.",
+        "fields": [
+          {
+            "about": "Stable id for the holder, which is how the same person is followed across companies.",
+            "name": "holderId",
+            "type": "string"
+          },
+          {
+            "about": "The insider's name.",
+            "name": "holderName",
+            "type": "string"
+          },
+          {
+            "about": "Their SEC Central Index Key, where one is known.",
+            "name": "cik",
+            "type": "string"
+          },
+          {
+            "about": "Their title at the company.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "How they relate to the company: officer, director, ten percent owner.",
+            "name": "relationship",
+            "type": "string[]"
+          },
+          {
+            "about": "Whether they are still in post.",
+            "name": "isActive",
+            "type": "boolean"
+          },
+          {
+            "about": "Shares held across every vehicle.",
+            "name": "sharesHeldTotal",
+            "type": "number"
+          },
+          {
+            "about": "Value of that total.",
+            "name": "valueTotal",
+            "type": "number"
+          },
+          {
+            "about": "That total as a percentage of shares outstanding.",
+            "name": "percentOfSharesOutstanding",
+            "type": "number"
+          },
+          {
+            "about": "Currency the values are in.",
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "about": "One entry per position: securityName, ownershipVehicle, sharesHeld, filingDate, value, percentOfSharesOutstanding, and the source filing pages behind it.",
+            "name": "holdings",
+            "type": "object[]"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "ownership/insider-holders"
+      }
+    },
+    {
+      "id": "fiscal-ai/ownership/insider-transactions",
+      "provider": "fiscal-ai",
+      "capability": "ownership/insider-transactions",
+      "name": "Insider transactions",
+      "description": "Call to see insider activity over time. Read `transactionType` before drawing conclusions: an option exercise or a tax withholding is not a market sale, and they sit in the same series.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Include holders marked inactive. Hidden by default; holders removed by an analyst override stay hidden either way.",
+          "default": "false",
+          "name": "includeInactive",
+          "type": "boolean"
+        },
+        {
+          "about": "Page number, 1-indexed.",
+          "default": 1,
+          "name": "pageNumber",
+          "type": "number"
+        },
+        {
+          "about": "Rows per page, up to 250. Defaults to 250; page for more.",
+          "default": 250,
+          "max": 250,
+          "name": "pageSize",
+          "type": "number"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "One insider transaction per row. Paginated: the body also carries a `pagination` block with page, pageSize, totalCount, totalPages, hasNextPage and hasPreviousPage.",
+        "fields": [
+          {
+            "about": "Stable id for the holder who traded.",
+            "name": "holderId",
+            "type": "string"
+          },
+          {
+            "about": "Their name.",
+            "name": "holderName",
+            "type": "string"
+          },
+          {
+            "about": "When the trade was filed, which lags the trade itself.",
+            "name": "filingDate",
+            "type": "string"
+          },
+          {
+            "about": "How they relate to the company.",
+            "name": "relationship",
+            "type": "string[]"
+          },
+          {
+            "about": "Their title at the company.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "When the trade happened.",
+            "name": "transactionDate",
+            "type": "string"
+          },
+          {
+            "about": "What kind of transaction it was. Read this before drawing conclusions: an option exercise or a tax withholding sits in the same series as an open-market sale.",
+            "name": "transactionType",
+            "type": "string"
+          },
+          {
+            "about": "Whether shares were acquired or disposed.",
+            "name": "acquiredDisposed",
+            "type": "string"
+          },
+          {
+            "about": "Number of shares.",
+            "name": "shares",
+            "type": "number"
+          },
+          {
+            "about": "Lowest price in the trade's range.",
+            "name": "priceLow",
+            "type": "number"
+          },
+          {
+            "about": "Highest price in the trade's range.",
+            "name": "priceHigh",
+            "type": "number"
+          },
+          {
+            "about": "Total value of the transaction.",
+            "name": "transactionValue",
+            "type": "number"
+          },
+          {
+            "about": "Currency of those values.",
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "about": "Shares the holder held afterwards.",
+            "name": "sharesAfter",
+            "type": "number"
+          },
+          {
+            "about": "Which security was traded.",
+            "name": "securityName",
+            "type": "string"
+          },
+          {
+            "about": "The filing pages behind the row.",
+            "name": "sources",
+            "type": "object[]"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "ownership/insider-transactions"
+      }
+    },
+    {
+      "id": "fiscal-ai/ownership/institutional-holders",
+      "provider": "fiscal-ai",
+      "capability": "ownership/institutional-holders",
+      "name": "Institutional holders",
+      "description": "Call to see who institutionally owns a company and who moved last quarter. 13F data lags: the report date is the quarter end, the filing date is up to 45 days later, and both are returned so the lag is visible.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Calendar year of the reported quarter. Defaults to the latest reported.",
+          "name": "year",
+          "type": "number"
+        },
+        {
+          "about": "Quarter, 1 to 4. Pass with `year` to read a historical position rather than the latest.",
+          "name": "quarter",
+          "type": "number"
+        },
+        {
+          "about": "Page number, 1-indexed.",
+          "default": 1,
+          "name": "pageNumber",
+          "type": "number"
+        },
+        {
+          "about": "Rows per page, up to 250. Defaults to 250; page for more.",
+          "default": 250,
+          "max": 250,
+          "name": "pageSize",
+          "type": "number"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "One institutional holder per row, for one reported quarter. Paginated: the body also carries a `pagination` block with page, pageSize, totalCount, totalPages, hasNextPage and hasPreviousPage.",
+        "fields": [
+          {
+            "about": "Stable id for the institution.",
+            "name": "holderId",
+            "type": "string"
+          },
+          {
+            "about": "Normalized institution name.",
+            "name": "holderName",
+            "type": "string"
+          },
+          {
+            "about": "Its SEC Central Index Key, where known.",
+            "name": "cik",
+            "type": "string"
+          },
+          {
+            "about": "Quarter end the position was reported as of.",
+            "name": "reportDate",
+            "type": "string"
+          },
+          {
+            "about": "When the 13F was filed, up to 45 days after the report date.",
+            "name": "filingDate",
+            "type": "string"
+          },
+          {
+            "about": "Shares held.",
+            "name": "shares",
+            "type": "number"
+          },
+          {
+            "about": "Currency of the values.",
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "about": "Value of the position.",
+            "name": "value",
+            "type": "number"
+          },
+          {
+            "about": "Change in shares since the prior quarter.",
+            "name": "sharesChange",
+            "type": "number"
+          },
+          {
+            "about": "That change as a percentage.",
+            "name": "sharesChangePercent",
+            "type": "number"
+          },
+          {
+            "about": "Change in value since the prior quarter.",
+            "name": "valueChange",
+            "type": "number"
+          },
+          {
+            "about": "The position as a percentage of shares outstanding.",
+            "name": "percentOfSharesOutstanding",
+            "type": "number"
+          },
+          {
+            "about": "The filing behind the row.",
+            "name": "sources",
+            "type": "object[]"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "ownership/institutional-holders"
+      }
+    },
+    {
+      "id": "fiscal-ai/prices/daily",
+      "provider": "fiscal-ai",
+      "capability": "prices/daily",
+      "name": "Daily prices",
+      "description": "Call for a daily close series. Prices are split-adjusted already, so no correction against prices/splits is needed; the series is per listing, so a cross-listed company answers in whichever listing the identifier denoted.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Inclusive start date, ISO 8601.",
+          "name": "startDate",
+          "type": "string"
+        },
+        {
+          "about": "Inclusive end date, ISO 8601.",
+          "name": "endDate",
+          "type": "string"
+        },
+        {
+          "about": "Return only the most recent bar, ignoring the date window.",
+          "name": "latest",
+          "type": "boolean"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "Daily bars for one listing, most recent first.",
+        "fields": [
+          {
+            "about": "Which listing the series belongs to.",
+            "name": "listingFiscalIdentifier",
+            "type": "string"
+          },
+          {
+            "about": "Ticker of that listing.",
+            "name": "ticker",
+            "type": "string"
+          },
+          {
+            "about": "Exchange code of the listing.",
+            "name": "exchangeCode",
+            "type": "string"
+          },
+          {
+            "about": "The currency the prices are quoted in, which is the listing's trading currency and not necessarily the company's reporting currency.",
+            "name": "tradingCurrency",
+            "type": "string"
+          },
+          {
+            "about": "Whether the listing is still trading.",
+            "name": "tradingStatus",
+            "type": "string"
+          },
+          {
+            "about": "The segment MIC, beside the operating one.",
+            "name": "segmentMic",
+            "type": "string"
+          },
+          {
+            "about": "The operating MIC of the exchange.",
+            "name": "operatingMic",
+            "type": "string"
+          },
+          {
+            "about": "One entry per trading day: date, openPrice, closePrice and volume. Split-adjusted.",
+            "name": "prices",
+            "type": "object[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "prices/daily"
+      }
+    },
+    {
+      "id": "fiscal-ai/prices/intraday",
+      "provider": "fiscal-ai",
+      "capability": "prices/intraday",
+      "name": "Intraday prices",
+      "description": "Call when the question is about movement within a session - a reaction to an announcement, say. Rounded to two decimals, so it is not a tick feed for execution purposes.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Inclusive start date, ISO 8601.",
+          "name": "startDate",
+          "type": "string"
+        },
+        {
+          "about": "Inclusive end date, ISO 8601.",
+          "name": "endDate",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "Intraday prices, one entry per trade.",
+        "fields": [
+          {
+            "about": "Timestamp of the trade.",
+            "name": "datetime",
+            "type": "string"
+          },
+          {
+            "about": "Price, split-adjusted and rounded to two decimal places.",
+            "name": "price",
+            "type": "number"
+          }
+        ],
+        "key": "",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "prices/intraday"
+      }
+    },
+    {
+      "id": "fiscal-ai/prices/splits",
+      "provider": "fiscal-ai",
+      "capability": "prices/splits",
+      "name": "Stock splits",
+      "description": "Call to explain a discontinuity, or to reconcile against a price series from elsewhere that is not split-adjusted. The series returned by prices/daily already is, so this is not needed to correct it.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "Every historical split and stock dividend.",
+        "fields": [
+          {
+            "about": "Date the split was announced.",
+            "name": "announceDate",
+            "type": "string"
+          },
+          {
+            "about": "Record date.",
+            "name": "recordDate",
+            "type": "string"
+          },
+          {
+            "about": "Ex-date, which is when the price series steps.",
+            "name": "exDate",
+            "type": "string"
+          },
+          {
+            "about": "Pay date.",
+            "name": "payDate",
+            "type": "string"
+          },
+          {
+            "about": "Whether it was a stock split or a stock dividend.",
+            "name": "splitType",
+            "type": "string"
+          },
+          {
+            "about": "The ratio applied.",
+            "name": "rate",
+            "type": "number"
+          }
+        ],
+        "key": "",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "prices/splits"
+      }
+    },
+    {
+      "id": "fiscal-ai/ratios/daily",
+      "provider": "fiscal-ai",
+      "capability": "ratios/daily",
+      "name": "Daily ratio series",
+      "description": "Call when the question is how a ratio moved between reporting dates rather than what it was at them. Each day is recomputed against that day's close and the then-current fundamentals, so it is a real series, not a step function.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Which ratio to return a daily series for. Only ratios whose `hasDailyData` is true have one.",
+          "in": "path",
+          "name": "ratioId",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "ISO 4217 code to convert into, for example USD or EUR. Defaults to the company's own reporting currency, and the response carries the rate that was applied.",
+          "name": "currency",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "One ratio, recomputed for each trading day.",
+        "fields": [
+          {
+            "about": "Trading date.",
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "about": "The ratio's value on that day.",
+            "name": "ratio",
+            "type": "number"
+          }
+        ],
+        "key": "",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "ratios/daily"
+      }
+    },
+    {
+      "id": "fiscal-ai/ratios/series",
+      "provider": "fiscal-ai",
+      "capability": "ratios/series",
+      "name": "Ratios by period",
+      "description": "Call for valuation, margin and leverage ratios already computed against the reported statements, rather than recomputing them from financials and risking a different denominator.",
+      "creditsCost": 15,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Fiscal.ai's stable company identifier, the `companyFiscalIdentifier` field. The only identifier that survives a ticker change or a relisting, so prefer it when carrying a company between calls.",
+          "name": "fscl",
+          "type": "string"
+        },
+        {
+          "about": "Exchange and ticker joined by an underscore: `NASDAQ_MSFT` for US and Canadian listings, or MIC code and ticker elsewhere, as in `XWAR_PKN`.",
+          "name": "companyKey",
+          "type": "string"
+        },
+        {
+          "about": "Ticker symbol, for example MSFT. Only unique within an exchange, so pass `exchange` with it.",
+          "name": "ticker",
+          "type": "string"
+        },
+        {
+          "about": "Exchange code for `ticker`, for example NASDAQ, or a MIC code for a non-US/CA listing.",
+          "name": "exchange",
+          "type": "string"
+        },
+        {
+          "about": "CUSIP of the security. Licensed identifier.",
+          "name": "cusip",
+          "type": "string"
+        },
+        {
+          "about": "ISIN of the security. Licensed identifier.",
+          "name": "isin",
+          "type": "string"
+        },
+        {
+          "about": "OpenFIGI identifier of the security. Licensed identifier.",
+          "name": "figi",
+          "type": "string"
+        },
+        {
+          "about": "SEC Central Index Key. Use when a company has no ticker, or after a rename.",
+          "name": "cik",
+          "type": "string"
+        },
+        {
+          "about": "Comma-separated period filter: annual, quarterly, semi-annual, ltm, ytd, latest. Defaults to annual.",
+          "default": "annual",
+          "name": "periodType",
+          "type": "string"
+        },
+        {
+          "about": "ISO 4217 code to convert into, for example USD or EUR. Defaults to the company's own reporting currency, and the response carries the rate that was applied.",
+          "name": "currency",
+          "type": "string"
+        },
+        {
+          "about": "Restrict to one ratio by id. Omit for every supported ratio. Ids come from metrics/ratios-list.",
+          "name": "ratioId",
+          "type": "string"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "fscl",
+          "companyKey",
+          "ticker",
+          "cusip",
+          "isin",
+          "figi",
+          "cik"
+        ]
+      ],
+      "response": {
+        "about": "Every supported ratio for a company, per reporting period. Dictionary and periods arrive together as one body, as with the statements.",
+        "fields": [
+          {
+            "about": "Ratio definitions: ratioId, metricName, metricFormat, category, isCurrency and hasDailyData.",
+            "name": "metrics",
+            "type": "object[]"
+          },
+          {
+            "about": "One row per period: periodId, periodType, reportDate, periodDuration, calendar and fiscal year and quarter, the values keyed by ratio id under `metricValues`, and the tradingCurrency and reportingCurrency blocks carrying the original currency and the rate applied.",
+            "name": "data",
+            "type": "object[]"
+          }
+        ],
+        "key": ""
+      },
+      "execute": {
+        "provider": "fiscal-ai",
+        "capability": "ratios/series"
+      }
+    }
+  ]
+}

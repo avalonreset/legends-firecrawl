@@ -1,0 +1,518 @@
+{
+  "id": "builtin-com",
+  "provider": "builtin-com",
+  "name": "Built In",
+  "description": "Technology job search, public role details and company profiles from Built In.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "builtin-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "builtin-com/jobs/company",
+      "provider": "builtin-com",
+      "capability": "jobs/company",
+      "name": "Company",
+      "description": "Read one company profile by returned slug: description, website, logo, source employee count and industries. Headcount is a public source observation; founding year omitted because source metadata is unreliable.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "slug",
+          "type": "string",
+          "in": "body",
+          "about": "Company slug returned by search or the job company_url. Pattern: ^[a-z0-9-]{1,200}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read one company profile by returned slug: description, website, logo, source employee count and industries. Headcount is a public source observation; founding year omitted because source metadata is unreliable.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "employee_count",
+            "type": "number"
+          },
+          {
+            "name": "industries",
+            "type": "string[]"
+          },
+          {
+            "name": "logo_url",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "slug": "guidant-inc"
+        },
+        "response": {
+          "description": "Guidant’s patented technology enables cemeteries to sell cemetery property and other products completely online from their own website, offering a seamless, consumer-friendly e-commerce experience. \n\nFor consumers, it gives them the capability to search, shop, and purchase cemetery property directly from the cemetery’s website. The experience is quick, convenient, and completely on their terms. It’s as simple as booking a seat on an airplane or buying a ticket to the ballgame. Guidant enables cemeteries to give their families an easy, transparent way to make choices that feel right for them.\n\nSell 24/7 - Families can browse, select, and purchase property any time - even after hours.\n\nCapture Customers You Never See In-Person - Convert online shoppers, pre-need planners, and out-of-town families who prefer to buy digitally.\n\nSave Staff Time - Reduce the manual process and payment tracking so your team can focus on family service and customer support.\n\nDeliver a Modern Experience - Offer families an online buying experience from the comfort of their own home at their own pace.",
+          "employee_count": 8,
+          "industries": [
+            "eCommerce",
+            "Information Technology",
+            "Marketing Tech",
+            "Software",
+            "Analytics",
+            "Business Intelligence",
+            "Consulting"
+          ],
+          "logo_url": "https://static.builtin.com/companies-assets/271308/logo/e3bec8eb-6182-4ab6-b4e4-7bdcb6ea76f3/Guidant-Logo-Green@3x.png",
+          "name": "Guidant, Inc",
+          "observed_at_ms": 1789508876619,
+          "slug": "guidant-inc",
+          "source_url": "https://builtin.com/company/guidant-inc",
+          "website": "https://www.ourguidant.com"
+        },
+        "recordedAt": "2026-09-15T21:47:56Z"
+      },
+      "execute": {
+        "provider": "builtin-com",
+        "capability": "jobs/company"
+      }
+    },
+    {
+      "id": "builtin-com/jobs/job",
+      "provider": "builtin-com",
+      "capability": "jobs/job",
+      "name": "Job",
+      "description": "Read one canonical Built In job URL: description, employer, source salary range/currency/unit, posting/expiry dates, locations, benefits and industry. Missing values remain unknown; a listing is not a current hiring guarantee.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Canonical https://builtin.com/job/slug/id URL returned by search.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read one canonical Built In job URL: description, employer, source salary range/currency/unit, posting/expiry dates, locations, benefits and industry. Missing values remain unknown; a listing is not a current hiring guarantee.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "benefits",
+            "type": "string[]"
+          },
+          {
+            "name": "company_name",
+            "type": "string"
+          },
+          {
+            "name": "company_url",
+            "type": "string"
+          },
+          {
+            "name": "date_posted",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "employment_types",
+            "type": "string[]"
+          },
+          {
+            "name": "industries",
+            "type": "string[]"
+          },
+          {
+            "name": "job_id",
+            "type": "string"
+          },
+          {
+            "name": "locations",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "remote_type",
+            "type": "string"
+          },
+          {
+            "name": "salary_currency",
+            "type": "string"
+          },
+          {
+            "name": "salary_max",
+            "type": "number"
+          },
+          {
+            "name": "salary_min",
+            "type": "number"
+          },
+          {
+            "name": "salary_unit",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "valid_through",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://builtin.com/job/technical-project-manager/10441439"
+        },
+        "response": {
+          "benefits": [
+            "Offers company equity",
+            "Offers performance bonuses",
+            "Offers generous PTO",
+            "Provides paid holidays",
+            "Utilizes an Unlimited PTO policy",
+            "Utilizes an open door policy that encourages accessibility",
+            "Open office floor plan to encourage communication and collaboration",
+            "Hosts in-person all-hands meetings",
+            "Defined values and mission statements",
+            "Defined policies promoting a professional, respectful workplace",
+            "Prioritizes mission-driven work in decision-making processes",
+            "Prioritizes real-world impact of work in decision-making processes",
+            "Promotes a strong in-person office culture",
+            "Leadership is transparent and communicative",
+            "Provides onsite office parking",
+            "Provides free snacks and drinks",
+            "Some meals provided",
+            "Employees provided with well-designed, comfortable workspace",
+            "Allows work from home occasionally",
+            "Defined working hours and availability expectations",
+            "In-office days / expectations are defined",
+            "Managers offer consistent feedback loops",
+            "Provides modern technology across teams",
+            "Managers give public shoutouts and celebrate employee milestones",
+            "Promote from within"
+          ],
+          "company_name": "Guidant, Inc",
+          "company_url": "https://builtin.com/company/guidant-inc",
+          "date_posted": "2026-09-15",
+          "description": "Opening: Technical Program Manager Location: Woodland Hills, CA (Hybrid / On-site with Founders) Compensation: $95,000 - $115,000 + Equity About Guidant Guidant is bringing convenience, transparency, and dignity to the death care space, starting with the $6B+ U.S. cemetery real estate market (part of a broader $20B+ industry) ripe for digital transformation. The Mission Accelerate client onboarding and operational execution. You will bridge client success and core engineering by utilizing Al workflows to rapidly prototype, configure, and launch custom client experiences without compromising core platform stability. The Opportunity Founded by industry veterans with a surging book of business, we are assembling a tech-forward Founding Trio in Woodland Hills, CA to accelerate our growth: Growth Product Manager Technical Program Manager Founding Lead Engineer Collaborating directly alongside our founders, this team will leverage Al to compress client rollout cycles while rapidly scaling our core e-commerce platform. Seed funded with strong market validation, we offer competitive equity, so our founding partners build and share directly in our long-term success. Opening: Technical Program Manager (TPM) Location: Woodland Hills, CA (Hybrid / On-site with Founders) Compensation: $95,000 - $115,000 + Equity Core Responsibilities Rapid Client Deployment: Lead technical onboarding workflows for enterprise clients, managing integrations, content migration, and tailored front-end setups. Al Tooling & Prototyping: Leverage Al development assistants and automated pipelines to rapidly configure client-facing assets, matching client brand standards while maintaining backend standardization. Cross-Functional Execution: Own sprint planning, client rollout schedules, project portfolio planning, portfolio reporting and technical deliverables between product, engineering, and external executive partners. Feedback Loop Standardization: Synthesize recurring client deployment requirements into actionable platform feature requests for the core engineering team. Minimum Qualifications 3+ years of experience as a Technical Program Manager, Technical Implementation Manager, or Solutions Engineer in SaaS/tech. Working technical knowledge of modern web technology (APls, webhooks, CMS structures, HTML/CSS/JS basics). Experience utilizing modern Al workflows, LLM tools, or rapid prototyping frameworks to accelerate technical execution. Exceptional communication skills with a track record of managing enterprise client relationships and senior engineering stakeholders. ﻿﻿On-site availability in Woodland Hills, CA to collaborate closely with leadership. Preferred Qualifications Background in PropTech, e-commerce onboarding, or SaaS enterprise software integrations. Experience in agile development methodologies and project management tooling (Jira, Asana, MS Project, Smartsheet, Linear, GitHub, Notion). Strong technical background (e.g., Computer Science degree or developer background turned technical program manager).",
+          "employment_types": [
+            "FULL_TIME"
+          ],
+          "industries": [
+            "eCommerce",
+            "Information Technology",
+            "Marketing Tech",
+            "Software",
+            "Analytics",
+            "Business Intelligence",
+            "Consulting"
+          ],
+          "job_id": "10441439",
+          "locations": [
+            {
+              "city": "Los Angeles",
+              "country": "USA",
+              "region": "California"
+            }
+          ],
+          "observed_at_ms": 1789508876312,
+          "remote_type": null,
+          "salary_currency": "USD",
+          "salary_max": 115000,
+          "salary_min": 95000,
+          "salary_unit": "YEAR",
+          "source_url": "https://builtin.com/job/technical-project-manager/10441439",
+          "title": "Technical Program Manager",
+          "valid_through": "2026-10-15T21:41:06+00:00"
+        },
+        "recordedAt": "2026-09-15T21:47:56Z"
+      },
+      "execute": {
+        "provider": "builtin-com",
+        "capability": "jobs/job"
+      }
+    },
+    {
+      "id": "builtin-com/jobs/search",
+      "provider": "builtin-com",
+      "capability": "jobs/search",
+      "name": "Search",
+      "description": "Search Built In public technology jobs by keyword, with pages1-100 and source ordering. Returns job URLs and company slugs for detail lookups. No location or remote filters in this initial contract.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query"
+        }
+      ],
+      "response": {
+        "about": "Search Built In public technology jobs by keyword, with pages1-100 and source ordering. Returns job URLs and company slugs for detail lookups. No location or remote filters in this initial contract.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "company_name",
+            "type": "string"
+          },
+          {
+            "name": "company_slug",
+            "type": "string"
+          },
+          {
+            "name": "job_id",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "has_more": true,
+          "next_page": 2,
+          "observed_at_ms": 1789508866597,
+          "page": 1,
+          "records": [
+            {
+              "company_name": "Guidant, Inc",
+              "company_slug": "guidant-inc",
+              "job_id": "10441439",
+              "source_url": "https://builtin.com/job/technical-project-manager/10441439",
+              "title": "Technical Program Manager"
+            },
+            {
+              "company_name": "Sierra Space",
+              "company_slug": "sierra-space",
+              "job_id": "11195267",
+              "source_url": "https://builtin.com/job/sr-spacecraft-operations-systems-engineer/11195267",
+              "title": "Sr Spacecraft Operations Systems Engineer"
+            },
+            {
+              "company_name": "Sierra Space",
+              "company_slug": "sierra-space",
+              "job_id": "11192327",
+              "source_url": "https://builtin.com/job/principal-material-science-engineer-contamination-control-lead/11192327",
+              "title": "Principal Material Science Engineer - Contamination Control Lead"
+            },
+            {
+              "company_name": "Sierra Space",
+              "company_slug": "sierra-space",
+              "job_id": "11060611",
+              "source_url": "https://builtin.com/job/test-engineer-i/11060611",
+              "title": "Test Engineer I"
+            },
+            {
+              "company_name": "CoreWeave",
+              "company_slug": "coreweave",
+              "job_id": "11195258",
+              "source_url": "https://builtin.com/job/vp-enterprise-risk-compliance/11195258",
+              "title": "VP, Enterprise Risk & Compliance"
+            },
+            {
+              "company_name": "CoreWeave",
+              "company_slug": "coreweave",
+              "job_id": "11195256",
+              "source_url": "https://builtin.com/job/staff-technical-sourcing-manager/11195256",
+              "title": "Staff Technical Sourcing Manager"
+            },
+            {
+              "company_name": "CoreWeave",
+              "company_slug": "coreweave",
+              "job_id": "11192377",
+              "source_url": "https://builtin.com/job/senior-technical-program-manager/11192377",
+              "title": "Senior Technical Program Manager"
+            },
+            {
+              "company_name": "Shield AI",
+              "company_slug": "shield-ai",
+              "job_id": "11195247",
+              "source_url": "https://builtin.com/job/staff-supplier-development-engineer-structures-welding-r5984/11195247",
+              "title": "Staff Supplier Development Engineer - Structures & Welding (R5984)"
+            },
+            {
+              "company_name": "Shield AI",
+              "company_slug": "shield-ai",
+              "job_id": "11192422",
+              "source_url": "https://builtin.com/job/associate-systems-administrator-r5874/11192422",
+              "title": "Associate Systems Administrator (R5874)"
+            },
+            {
+              "company_name": "Shield AI",
+              "company_slug": "shield-ai",
+              "job_id": "11192380",
+              "source_url": "https://builtin.com/job/senior-engineer-ai-engineering-r5856/11192380",
+              "title": "Senior Engineer, AI Engineering (R5856)"
+            },
+            {
+              "company_name": "Vertafore",
+              "company_slug": "vertafore",
+              "job_id": "11195144",
+              "source_url": "https://builtin.com/job/business-operations-analyst-i-provisioning-compliance/11195144",
+              "title": "Business Operations Analyst I - Provisioning & Compliance"
+            },
+            {
+              "company_name": "Vertafore",
+              "company_slug": "vertafore",
+              "job_id": "11192341",
+              "source_url": "https://builtin.com/job/vp-deputy-general-counsel/11192341",
+              "title": "VP, Deputy General Counsel"
+            },
+            {
+              "company_name": "Vertafore",
+              "company_slug": "vertafore",
+              "job_id": "11192312",
+              "source_url": "https://builtin.com/job/sr-database-administrator/11192312",
+              "title": "Sr. Database Administrator"
+            },
+            {
+              "company_name": "Taboola",
+              "company_slug": "taboola",
+              "job_id": "11195098",
+              "source_url": "https://builtin.com/job/advertising-account-manager/11195098",
+              "title": "Advertising Account Manager"
+            },
+            {
+              "company_name": "Taboola",
+              "company_slug": "taboola",
+              "job_id": "11189263",
+              "source_url": "https://builtin.com/job/advertising-account-manager/11189263",
+              "title": "Advertising Account Manager"
+            },
+            {
+              "company_name": "Taboola",
+              "company_slug": "taboola",
+              "job_id": "10980992",
+              "source_url": "https://builtin.com/job/salesforce-and-genai-system-analyst/10980992",
+              "title": "Salesforce and GenAI System Analyst"
+            },
+            {
+              "company_name": "SharkNinja",
+              "company_slug": "sharkninja",
+              "job_id": "11195091",
+              "source_url": "https://builtin.com/job/sales-operations-manager-commercial-expansion-team-north-america/11195091",
+              "title": "Sales Operations Manager - Commercial Expansion Team (North America)"
+            },
+            {
+              "company_name": "SharkNinja",
+              "company_slug": "sharkninja",
+              "job_id": "11195092",
+              "source_url": "https://builtin.com/job/senior-embedded-firmware-developer/11195092",
+              "title": "Senior Embedded Firmware Developer"
+            },
+            {
+              "company_name": "SharkNinja",
+              "company_slug": "sharkninja",
+              "job_id": "11195088",
+              "source_url": "https://builtin.com/job/senior-mechanical-engineer-motorized-treats/11195088",
+              "title": "Senior Mechanical Engineer - Motorized/Treats"
+            },
+            {
+              "company_name": "Dropbox",
+              "company_slug": "dropbox",
+              "job_id": "11195021",
+              "source_url": "https://builtin.com/job/customer-success-manager/11195021",
+              "title": "Customer Success Manager"
+            },
+            {
+              "company_name": "TransUnion",
+              "company_slug": "transunion",
+              "job_id": "11194953",
+              "source_url": "https://builtin.com/job/client-executive-card-and-banking/11194953",
+              "title": "Client Executive - Card and Banking"
+            },
+            {
+              "company_name": "TransUnion",
+              "company_slug": "transunion",
+              "job_id": "11185322",
+              "source_url": "https://builtin.com/job/senior-data-management-and-quality-analyst/11185322",
+              "title": "Senior Data Management and Quality Analyst"
+            },
+            {
+              "company_name": "TransUnion",
+              "company_slug": "transunion",
+              "job_id": "11175716",
+              "source_url": "https://builtin.com/job/senior-director-technical-product-management-credit-risk/11175716",
+              "title": "Senior Director, Technical Product Management, Credit Risk"
+            },
+            {
+              "company_name": "GC AI",
+              "company_slug": "gc-ai",
+              "job_id": "11194923",
+              "source_url": "https://builtin.com/job/executive-assistant-ceo/11194923",
+              "title": "Executive Assistant to the CEO"
+            }
+          ],
+          "source_url": "https://builtin.com/jobs"
+        },
+        "recordedAt": "2026-09-15T21:47:46Z"
+      },
+      "execute": {
+        "provider": "builtin-com",
+        "capability": "jobs/search"
+      }
+    }
+  ]
+}

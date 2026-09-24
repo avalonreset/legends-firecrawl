@@ -1,0 +1,1474 @@
+{
+  "id": "ebay-com",
+  "provider": "ebay-com",
+  "name": "eBay listings",
+  "description": "eBay.com listings through the site's item-module JSON: item detail, variations, shipping and returns terms, and search autosuggest. Keyword search, sold listings and seller pages are HTML behind Akamai/orch and are not offered. Public US marketplace (www.ebay.com, USD), anonymous session, no bidding or purchases.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "ebay-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "ebay-com/listings/item",
+      "provider": "ebay-com",
+      "capability": "listings/item",
+      "name": "Item",
+      "description": "You have an item number or /itm/ URL and want its current listing data without loading the HTML page.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "item_id",
+          "type": "string",
+          "in": "body",
+          "about": "eBay item number (9-15 digits), e.g. \"398411135079\" Pattern: ^[0-9]{9,15}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "An /itm/{id} listing URL on any ebay.* storefront; the numeric id is used"
+        }
+      ],
+      "response": {
+        "about": "Read one eBay.com listing from the item-module JSON: title, buy-box price and discount, best-offer flag, price details, condition and item specifics, shipping and returns summary for the anonymous US default destination, call-to-action labels, primary image, seller description URL, variation count and listing status/dates/seller.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "best_offer",
+            "type": "boolean",
+            "about": "The buy box shows \"or Best Offer\""
+          },
+          {
+            "name": "condition",
+            "type": "string",
+            "about": "The Condition row of Item specifics"
+          },
+          {
+            "name": "cta_labels",
+            "type": "string[]",
+            "about": "Buy box call-to-action labels (Buy It Now, Make offer, Add to cart, Add to Watchlist, ...)"
+          },
+          {
+            "name": "delivery_estimate",
+            "type": "string",
+            "about": "Delivery row of the shipping summary for the anonymous default destination (ZIP 23462)"
+          },
+          {
+            "name": "description_url",
+            "type": "string",
+            "about": "Seller description document on itm.ebaydesc.com; null when absent"
+          },
+          {
+            "name": "discount_price",
+            "type": "object"
+          },
+          {
+            "name": "has_variations",
+            "type": "boolean"
+          },
+          {
+            "name": "image_url",
+            "type": "string",
+            "about": "Primary image (i.ebayimg.com s-l500) from the add-to-cart action; null when absent"
+          },
+          {
+            "name": "item_id",
+            "type": "string"
+          },
+          {
+            "name": "item_specifics",
+            "type": "object[]",
+            "about": "ABOUT_THIS_ITEM rows as labelled by the seller"
+          },
+          {
+            "name": "listing",
+            "type": "object"
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "about": "Item location from the shipping summary (\"Located in: ...\")"
+          },
+          {
+            "name": "modules_present",
+            "type": "string[]",
+            "about": "Names of the item modules eBay answered"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when this program read the source"
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "price_details",
+            "type": "object[]",
+            "about": "PRICE_DETAILS rows (item price, shipping, discounts, estimated total); null when the listing has no price-details module"
+          },
+          {
+            "name": "returns_summary",
+            "type": "object[]"
+          },
+          {
+            "name": "shipping_summary",
+            "type": "object[]"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Canonical listing URL https://www.ebay.com/itm/{item_id}"
+          },
+          {
+            "name": "variation_count",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "item_id": "398411135079"
+        },
+        "response": {
+          "best_offer": true,
+          "condition": "New: Other (See Details): A new, unused item with absolutely no signs of wear. The item may be missing the original packaging, or in the original packaging but not sealed. The item may be a factory second or a new, unused item with defects. See the seller’s listing for full details and description of any imperfections. See all condition definitions",
+          "cta_labels": [
+            "Buy It Now",
+            "Add to cart",
+            "See in cart",
+            "Make offer",
+            "Add to Watchlist",
+            "Added to Watchlist"
+          ],
+          "delivery_estimate": "Estimated between Thu, Sep 24 and Wed, Sep 30 to 23462",
+          "description_url": "https://itm.ebaydesc.com/itmdesc/398411135079?t=0&category=19006&seller=rayhancrochetstand&excSoj=1&ver=1&excTrk=1&lsite=0&ittenable=true&domain=ebay.com&descgauge=1&cspheader=1&oneClk=2&secureDesc=1",
+          "discount_price": null,
+          "has_variations": false,
+          "image_url": "https://i.ebayimg.com/images/g/qaEAAeSwfmBqrrUe/s-l500.jpg",
+          "item_id": "398411135079",
+          "item_specifics": [
+            {
+              "label": "Age Level",
+              "value": "16+"
+            },
+            {
+              "label": "Brand",
+              "value": "LEGO"
+            },
+            {
+              "label": "Condition",
+              "value": "New: Other (See Details): A new, unused item with absolutely no signs of wear. The item may be missing the original packaging, or in the original packaging but not sealed. The item may be a factory second or a new, unused item with defects. See the seller’s listing for full details and description of any imperfections. See all condition definitions"
+            },
+            {
+              "label": "Features",
+              "value": "Without Box, Without Manual"
+            },
+            {
+              "label": "Interests",
+              "value": "Space, Fantasy, Movies"
+            },
+            {
+              "label": "Item Height",
+              "value": "4.646 in"
+            },
+            {
+              "label": "Item Length",
+              "value": "11.102 in"
+            },
+            {
+              "label": "Item Width",
+              "value": "10.315 in"
+            },
+            {
+              "label": "LEGO Character",
+              "value": "none"
+            },
+            {
+              "label": "LEGO Set Name",
+              "value": "Millennium Falcon"
+            },
+            {
+              "label": "LEGO Set Number",
+              "value": "75375"
+            },
+            {
+              "label": "LEGO Subtheme",
+              "value": "Starship Collection"
+            },
+            {
+              "label": "LEGO Theme",
+              "value": "Star Wars"
+            },
+            {
+              "label": "Material",
+              "value": "Plastic"
+            },
+            {
+              "label": "MPN",
+              "value": "75375"
+            },
+            {
+              "label": "Number of Pieces",
+              "value": "921"
+            },
+            {
+              "label": "Packaging",
+              "value": "Box"
+            },
+            {
+              "label": "Release Year",
+              "value": "2024"
+            },
+            {
+              "label": "Type",
+              "value": "Complete Set"
+            }
+          ],
+          "listing": {
+            "end_date": "2026-10-19T16:23:25.000Z",
+            "guest_checkout": true,
+            "immediate_pay": true,
+            "locale": "en_US_MAIN",
+            "marketplace": "EBAY_US",
+            "seller_username": "rayhancrochetstand",
+            "single_sku_out_of_stock": false,
+            "start_date": "2026-09-19T16:23:25.000Z",
+            "status": "ACTIVE"
+          },
+          "location": "Tucson, AZ, United States",
+          "modules_present": [
+            "ABOUT_THIS_ITEM",
+            "BUY_BOX",
+            "BUY_BOX_CTA",
+            "ITEM_DESCRIPTION_MIN_VIEW_MODULE",
+            "RETURNS_ATF_SECTION_MODULE",
+            "SEMANTIC_DATA",
+            "SHIPPING_ATF_SECTION_MODULE",
+            "TITLE"
+          ],
+          "observed_at_ms": 1789852456907,
+          "price": {
+            "currency": "USD",
+            "text": "US $39.99",
+            "value": 39.99
+          },
+          "price_details": null,
+          "returns_summary": [
+            {
+              "label": "Returns",
+              "values": [
+                "Seller does not accept returns. See details"
+              ]
+            }
+          ],
+          "shipping_summary": [
+            {
+              "label": "Pickup",
+              "values": [
+                "Free local pickup over 60 mi from 23462. See map"
+              ]
+            },
+            {
+              "label": "Shipping",
+              "values": [
+                "Free Standard Tracked Shipping. See details",
+                "Located in: Tucson, AZ, United States"
+              ]
+            },
+            {
+              "label": "Delivery",
+              "values": [
+                "Estimated between Thu, Sep 24 and Wed, Sep 30 to 23462"
+              ]
+            }
+          ],
+          "title": "LEGO Star Wars: Millennium Falcon (75375)",
+          "url": "https://www.ebay.com/itm/398411135079",
+          "variation_count": 0
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "ebay-com",
+        "capability": "listings/item"
+      }
+    },
+    {
+      "id": "ebay-com/listings/item_shipping",
+      "provider": "ebay-com",
+      "capability": "listings/item_shipping",
+      "name": "Item shipping",
+      "description": "You need the shipping service, delivery estimate, ships-to list or returns policy of a listing.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "item_id",
+          "type": "string",
+          "in": "body",
+          "about": "eBay item number (9-15 digits), e.g. \"398411135079\" Pattern: ^[0-9]{9,15}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "An /itm/{id} listing URL on any ebay.* storefront; the numeric id is used"
+        }
+      ],
+      "response": {
+        "about": "Shipping and returns terms of one listing as eBay shows them to an anonymous US visitor (default ship-to ZIP 23462): shipping services with delivery estimate and cost lines, handling time, item location, ships-to and excludes country lists, tax note and the returns policy rows. The site's rates modal ignores destination parameters without a signed-in session, so no destination is taken.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "excludes",
+            "type": "string[]"
+          },
+          {
+            "name": "handling_time",
+            "type": "string"
+          },
+          {
+            "name": "item_id",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "about": "Item location row"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when this program read the source"
+          },
+          {
+            "name": "returns_rows",
+            "type": "object[]"
+          },
+          {
+            "name": "services",
+            "type": "object[]",
+            "about": "One entry per Shipping row"
+          },
+          {
+            "name": "shipping_rows",
+            "type": "object[]"
+          },
+          {
+            "name": "ships_to",
+            "type": "string[]"
+          },
+          {
+            "name": "taxes",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "item_id": "168626375118"
+        },
+        "response": {
+          "excludes": [
+            "APO/FPO",
+            "Alaska/Hawaii",
+            "American Samoa",
+            "Barbados",
+            "French Guiana",
+            "French Polynesia",
+            "Guadeloupe",
+            "Guam",
+            "Libya",
+            "Marshall Islands",
+            "Martinique",
+            "Micronesia",
+            "New Caledonia",
+            "Palau",
+            "Reunion",
+            "Russian Federation",
+            "Ukraine",
+            "Venezuela",
+            "Virgin Islands (U.S.)"
+          ],
+          "handling_time": "Will usually ship within 1 business day of receiving cleared payment. Learn more",
+          "item_id": "168626375118",
+          "location": "Detroit, Michigan, United States",
+          "observed_at_ms": 1789852778994,
+          "returns_rows": [
+            {
+              "label": "Returns",
+              "values": [
+                "Accepted within 30 days"
+              ]
+            },
+            {
+              "label": "Returns shipping",
+              "values": [
+                "Buyer pays return shipping. If you use an eBay shipping label, it will be deducted from your refund amount"
+              ]
+            },
+            {
+              "label": "Refund",
+              "values": [
+                "Money Back, Replacement"
+              ]
+            },
+            {
+              "label": "Return policy",
+              "values": [
+                "Refer to eBay Return policy for more details. You are covered by the eBay Money Back Guarantee if you receive an item that is not as described in the listing."
+              ]
+            }
+          ],
+          "services": [
+            {
+              "details": [
+                "Estimated between Tue, Sep 22 and Fri, Sep 25",
+                "Shipping: Free shipping"
+              ],
+              "service": "USPS Priority Mail®"
+            }
+          ],
+          "shipping_rows": [
+            {
+              "label": "Shipping",
+              "values": [
+                "USPS Priority Mail®",
+                "Estimated between Tue, Sep 22 and Fri, Sep 25",
+                "Shipping: Free shipping"
+              ]
+            },
+            {
+              "label": "Location",
+              "values": [
+                "Detroit, Michigan, United States"
+              ]
+            },
+            {
+              "label": "Ships to",
+              "values": [
+                "Albania, Algeria, Andorra, Angola, Anguilla, Antigua and Barbuda, Argentina, Aruba, Australia, Austria, Bahamas, Bangladesh, Belgium, Belize, Benin, Bermuda, Bolivia, Bosnia and Herzegovina, Botswana, Brazil, Bulgaria, Burkina Faso, Burundi, Cameroon, Canada, Cape Verde Islands, Cayman Islands, Chile, Colombia, Costa Rica, Cyprus, Czech Republic, Côte d'Ivoire (Ivory Coast), Denmark, Djibouti, Dominican Republic, Ecuador, El Salvador, Equatorial Guinea, Estonia, Ethiopia, Fiji, Finland, France, Gabon Republic, Gambia, Germany, Ghana, Gibraltar, Greece, Greenland, Grenada, Guatemala, Guinea, Guinea-Bissau, Guyana, Honduras, Hungary, Iceland, India, Indonesia, Ireland, Italy, Jamaica, Japan, Kenya, Kiribati, Latvia, Lesotho, Liberia, Liechtenstein, Lithuania, Luxembourg, Madagascar, Malawi, Malaysia, Maldives, Mali, Malta, Mauritania, Mauritius, Mexico, Monaco, Montenegro, Montserrat, Morocco, Mozambique, Namibia, Nauru, Nepal, Netherlands, New Zealand, Niger, Nigeria, North Macedonia, Norway, Pakistan, Panama, Papua New Guinea, Paraguay, Peru, Philippines, Poland, Portugal, Puerto Rico, Republic of Croatia, Republic of the Congo, Romania, Rwanda, Saint Kitts-Nevis, Saint Lucia, Saint Vincent and the Grenadines, San Marino, Senegal, Serbia, Seychelles, Sierra Leone, Singapore, Slovakia, Slovenia, Solomon Islands, South Korea, Spain, Sri Lanka, Suriname, Swaziland, Sweden, Switzerland, Tanzania, Thailand, Togo, Tonga, Trinidad and Tobago, Tunisia, Turkey, Turks and Caicos Islands, Uganda, United Kingdom, United States, Uruguay, Vanuatu, Vatican City State, Wallis and Futuna, Western Samoa, Zambia"
+              ]
+            },
+            {
+              "label": "Excludes",
+              "values": [
+                "APO/FPO, Alaska/Hawaii, American Samoa, Barbados, French Guiana, French Polynesia, Guadeloupe, Guam, Libya, Marshall Islands, Martinique, Micronesia, New Caledonia, Palau, Reunion, Russian Federation, Ukraine, Venezuela, Virgin Islands (U.S.)"
+              ]
+            },
+            {
+              "label": "Handling time",
+              "values": [
+                "Will usually ship within 1 business day of receiving cleared payment. Learn more"
+              ]
+            },
+            {
+              "label": "Taxes",
+              "values": [
+                "Taxes may be applicable at checkout. Learn more"
+              ]
+            }
+          ],
+          "ships_to": [
+            "Albania",
+            "Algeria",
+            "Andorra",
+            "Angola",
+            "Anguilla",
+            "Antigua and Barbuda",
+            "Argentina",
+            "Aruba",
+            "Australia",
+            "Austria",
+            "Bahamas",
+            "Bangladesh",
+            "Belgium",
+            "Belize",
+            "Benin",
+            "Bermuda",
+            "Bolivia",
+            "Bosnia and Herzegovina",
+            "Botswana",
+            "Brazil",
+            "Bulgaria",
+            "Burkina Faso",
+            "Burundi",
+            "Cameroon",
+            "Canada",
+            "Cape Verde Islands",
+            "Cayman Islands",
+            "Chile",
+            "Colombia",
+            "Costa Rica",
+            "Cyprus",
+            "Czech Republic",
+            "Côte d'Ivoire (Ivory Coast)",
+            "Denmark",
+            "Djibouti",
+            "Dominican Republic",
+            "Ecuador",
+            "El Salvador",
+            "Equatorial Guinea",
+            "Estonia",
+            "Ethiopia",
+            "Fiji",
+            "Finland",
+            "France",
+            "Gabon Republic",
+            "Gambia",
+            "Germany",
+            "Ghana",
+            "Gibraltar",
+            "Greece",
+            "Greenland",
+            "Grenada",
+            "Guatemala",
+            "Guinea",
+            "Guinea-Bissau",
+            "Guyana",
+            "Honduras",
+            "Hungary",
+            "Iceland",
+            "India",
+            "Indonesia",
+            "Ireland",
+            "Italy",
+            "Jamaica",
+            "Japan",
+            "Kenya",
+            "Kiribati",
+            "Latvia",
+            "Lesotho",
+            "Liberia",
+            "Liechtenstein",
+            "Lithuania",
+            "Luxembourg",
+            "Madagascar",
+            "Malawi",
+            "Malaysia",
+            "Maldives",
+            "Mali",
+            "Malta",
+            "Mauritania",
+            "Mauritius",
+            "Mexico",
+            "Monaco",
+            "Montenegro",
+            "Montserrat",
+            "Morocco",
+            "Mozambique",
+            "Namibia",
+            "Nauru",
+            "Nepal",
+            "Netherlands",
+            "New Zealand",
+            "Niger",
+            "Nigeria",
+            "North Macedonia",
+            "Norway",
+            "Pakistan",
+            "Panama",
+            "Papua New Guinea",
+            "Paraguay",
+            "Peru",
+            "Philippines",
+            "Poland",
+            "Portugal",
+            "Puerto Rico",
+            "Republic of Croatia",
+            "Republic of the Congo",
+            "Romania",
+            "Rwanda",
+            "Saint Kitts-Nevis",
+            "Saint Lucia",
+            "Saint Vincent and the Grenadines",
+            "San Marino",
+            "Senegal",
+            "Serbia",
+            "Seychelles",
+            "Sierra Leone",
+            "Singapore",
+            "Slovakia",
+            "Slovenia",
+            "Solomon Islands",
+            "South Korea",
+            "Spain",
+            "Sri Lanka",
+            "Suriname",
+            "Swaziland",
+            "Sweden",
+            "Switzerland",
+            "Tanzania",
+            "Thailand",
+            "Togo",
+            "Tonga",
+            "Trinidad and Tobago",
+            "Tunisia",
+            "Turkey",
+            "Turks and Caicos Islands",
+            "Uganda",
+            "United Kingdom",
+            "United States",
+            "Uruguay",
+            "Vanuatu",
+            "Vatican City State",
+            "Wallis and Futuna",
+            "Western Samoa",
+            "Zambia"
+          ],
+          "taxes": "Taxes may be applicable at checkout. Learn more",
+          "url": "https://www.ebay.com/itm/168626375118"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "ebay-com",
+        "capability": "listings/item_shipping"
+      }
+    },
+    {
+      "id": "ebay-com/listings/item_variations",
+      "provider": "ebay-com",
+      "capability": "listings/item_variations",
+      "name": "Item variations",
+      "description": "The item has variations (item.has_variations) and you need per-SKU prices and availability.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "item_id",
+          "type": "string",
+          "in": "body",
+          "about": "eBay item number (9-15 digits), e.g. \"398411135079\" Pattern: ^[0-9]{9,15}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "An /itm/{id} listing URL on any ebay.* storefront; the numeric id is used"
+        }
+      ],
+      "response": {
+        "about": "Read the multi-SKU variation model of one listing: selection menus (Color, Size, ...), their values with stock flags, and every variation with its own price, discount and purchasable quantity. Listings without variations answer has_variations false.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "has_variations",
+            "type": "boolean"
+          },
+          {
+            "name": "item_id",
+            "type": "string"
+          },
+          {
+            "name": "menus",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when this program read the source"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "variation_count",
+            "type": "number"
+          },
+          {
+            "name": "variations",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "item_id": "168626375118"
+        },
+        "response": {
+          "has_variations": true,
+          "item_id": "168626375118",
+          "menus": [
+            {
+              "label": "Color",
+              "menu_id": "1000",
+              "values": [
+                {
+                  "matching_variation_ids": [
+                    "467995439245",
+                    "467995439244",
+                    "467995439243",
+                    "467995439242",
+                    "467995439238",
+                    "467995439237",
+                    "467995439236",
+                    "467995439235",
+                    "467995439234"
+                  ],
+                  "name": "BLACK/TAN",
+                  "out_of_stock": false,
+                  "value_id": "0"
+                },
+                {
+                  "matching_variation_ids": [
+                    "467995439229",
+                    "467995439241",
+                    "467995439240"
+                  ],
+                  "name": "WHITE/BLACK/GRAY",
+                  "out_of_stock": false,
+                  "value_id": "1"
+                },
+                {
+                  "matching_variation_ids": [
+                    "467995439231",
+                    "467995439247",
+                    "467995439230",
+                    "467995439246",
+                    "467995439239",
+                    "467995439233",
+                    "467995439232"
+                  ],
+                  "name": "WHITE/BLUE/RED",
+                  "out_of_stock": false,
+                  "value_id": "2"
+                }
+              ]
+            },
+            {
+              "label": "US Shoe Size",
+              "menu_id": "1001",
+              "values": [
+                {
+                  "matching_variation_ids": [
+                    "467995439230",
+                    "467995439229",
+                    "467995439234"
+                  ],
+                  "name": "10",
+                  "out_of_stock": false,
+                  "value_id": "3"
+                },
+                {
+                  "matching_variation_ids": [
+                    "467995439231",
+                    "467995439235"
+                  ],
+                  "name": "10.5",
+                  "out_of_stock": false,
+                  "value_id": "4"
+                },
+                {
+                  "matching_variation_ids": [
+                    "467995439236",
+                    "467995439232"
+                  ],
+                  "name": "11",
+                  "out_of_stock": false,
+                  "value_id": "5"
+                },
+                {
+                  "matching_variation_ids": [
+                    "467995439237",
+                    "467995439233"
+                  ],
+                  "name": "12",
+                  "out_of_stock": false,
+                  "value_id": "6"
+                },
+                {
+                  "matching_variation_ids": [
+                    "467995439242",
+                    "467995439240",
+                    "467995439239"
+                  ],
+                  "name": "14",
+                  "out_of_stock": false,
+                  "value_id": "7"
+                },
+                {
+                  "matching_variation_ids": [
+                    "467995439246",
+                    "467995439241",
+                    "467995439238"
+                  ],
+                  "name": "15",
+                  "out_of_stock": false,
+                  "value_id": "8"
+                },
+                {
+                  "matching_variation_ids": [
+                    "467995439243"
+                  ],
+                  "name": "9.5",
+                  "out_of_stock": false,
+                  "value_id": "9"
+                },
+                {
+                  "matching_variation_ids": [
+                    "467995439244"
+                  ],
+                  "name": "8",
+                  "out_of_stock": false,
+                  "value_id": "10"
+                },
+                {
+                  "matching_variation_ids": [
+                    "467995439247",
+                    "467995439245"
+                  ],
+                  "name": "13",
+                  "out_of_stock": false,
+                  "value_id": "11"
+                }
+              ]
+            }
+          ],
+          "observed_at_ms": 1789852479545,
+          "url": "https://www.ebay.com/itm/168626375118",
+          "variation_count": 19,
+          "variations": [
+            {
+              "availability_text": "3 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 3,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "WHITE/BLACK/GRAY"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "10"
+                }
+              ],
+              "variation_id": "467995439229"
+            },
+            {
+              "availability_text": "3 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 3,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "WHITE/BLUE/RED"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "10"
+                }
+              ],
+              "variation_id": "467995439230"
+            },
+            {
+              "availability_text": "3 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 3,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "WHITE/BLUE/RED"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "10.5"
+                }
+              ],
+              "variation_id": "467995439231"
+            },
+            {
+              "availability_text": "3 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 3,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "WHITE/BLUE/RED"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "11"
+                }
+              ],
+              "variation_id": "467995439232"
+            },
+            {
+              "availability_text": "3 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 3,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "WHITE/BLUE/RED"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "12"
+                }
+              ],
+              "variation_id": "467995439233"
+            },
+            {
+              "availability_text": "2 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 2,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "BLACK/TAN"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "10"
+                }
+              ],
+              "variation_id": "467995439234"
+            },
+            {
+              "availability_text": "4 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 4,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "BLACK/TAN"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "10.5"
+                }
+              ],
+              "variation_id": "467995439235"
+            },
+            {
+              "availability_text": "2 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 2,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "BLACK/TAN"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "11"
+                }
+              ],
+              "variation_id": "467995439236"
+            },
+            {
+              "availability_text": "3 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 3,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "BLACK/TAN"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "12"
+                }
+              ],
+              "variation_id": "467995439237"
+            },
+            {
+              "availability_text": "3 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 3,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "BLACK/TAN"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "15"
+                }
+              ],
+              "variation_id": "467995439238"
+            },
+            {
+              "availability_text": "3 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 3,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "WHITE/BLUE/RED"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "14"
+                }
+              ],
+              "variation_id": "467995439239"
+            },
+            {
+              "availability_text": "4 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 4,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "WHITE/BLACK/GRAY"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "14"
+                }
+              ],
+              "variation_id": "467995439240"
+            },
+            {
+              "availability_text": "3 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 3,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "WHITE/BLACK/GRAY"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "15"
+                }
+              ],
+              "variation_id": "467995439241"
+            },
+            {
+              "availability_text": "3 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 3,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "BLACK/TAN"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "14"
+                }
+              ],
+              "variation_id": "467995439242"
+            },
+            {
+              "availability_text": "5 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 5,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "BLACK/TAN"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "9.5"
+                }
+              ],
+              "variation_id": "467995439243"
+            },
+            {
+              "availability_text": "4 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 4,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "BLACK/TAN"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "8"
+                }
+              ],
+              "variation_id": "467995439244"
+            },
+            {
+              "availability_text": "3 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 3,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "BLACK/TAN"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "13"
+                }
+              ],
+              "variation_id": "467995439245"
+            },
+            {
+              "availability_text": "2 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 2,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "WHITE/BLUE/RED"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "15"
+                }
+              ],
+              "variation_id": "467995439246"
+            },
+            {
+              "availability_text": "5 available30 sold",
+              "discount_price": {
+                "currency": "USD",
+                "text": "$83.30 with coupon code",
+                "value": 83.3
+              },
+              "out_of_stock": false,
+              "price": {
+                "currency": "USD",
+                "text": "US $98.00",
+                "value": 98
+              },
+              "quantity_available": 5,
+              "selection": [
+                {
+                  "label": "Color",
+                  "value": "WHITE/BLUE/RED"
+                },
+                {
+                  "label": "US Shoe Size",
+                  "value": "13"
+                }
+              ],
+              "variation_id": "467995439247"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "ebay-com",
+        "capability": "listings/item_variations"
+      }
+    },
+    {
+      "id": "ebay-com/listings/suggest",
+      "provider": "ebay-com",
+      "capability": "listings/suggest",
+      "name": "Suggest",
+      "description": "Expand a partial product query into the keywords eBay proposes before searching.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "prefix",
+          "type": "string",
+          "in": "body",
+          "about": "Partial search text, 1-100 characters",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Keyword autosuggest for a search prefix: completed keywords with optional category hints, each with its search URL.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when this program read the source"
+          },
+          {
+            "name": "prefix",
+            "type": "string"
+          },
+          {
+            "name": "suggestions",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "prefix": "lego millen"
+        },
+        "response": {
+          "count": 10,
+          "observed_at_ms": 1789852459274,
+          "prefix": "lego millen",
+          "suggestions": [
+            {
+              "categories": [
+                {
+                  "category_id": "183446",
+                  "name": "Building Toys"
+                }
+              ],
+              "keyword": "lego millennium falcon",
+              "search_url": "https://www.ebay.com/sch/i.html?_nkw=lego+millennium+falcon&_sacat=0&_from=R40&_pgn=1&_ipg=60&_sop=12"
+            },
+            {
+              "categories": [],
+              "keyword": "lego millennium falcon 75192",
+              "search_url": "https://www.ebay.com/sch/i.html?_nkw=lego+millennium+falcon+75192&_sacat=0&_from=R40&_pgn=1&_ipg=60&_sop=12"
+            },
+            {
+              "categories": [],
+              "keyword": "lego millennium falcon 75375",
+              "search_url": "https://www.ebay.com/sch/i.html?_nkw=lego+millennium+falcon+75375&_sacat=0&_from=R40&_pgn=1&_ipg=60&_sop=12"
+            },
+            {
+              "categories": [],
+              "keyword": "lego millennium falcon 75257",
+              "search_url": "https://www.ebay.com/sch/i.html?_nkw=lego+millennium+falcon+75257&_sacat=0&_from=R40&_pgn=1&_ipg=60&_sop=12"
+            },
+            {
+              "categories": [],
+              "keyword": "lego millennium falcon 7965",
+              "search_url": "https://www.ebay.com/sch/i.html?_nkw=lego+millennium+falcon+7965&_sacat=0&_from=R40&_pgn=1&_ipg=60&_sop=12"
+            },
+            {
+              "categories": [],
+              "keyword": "lego millennium falcon ultimate collector series",
+              "search_url": "https://www.ebay.com/sch/i.html?_nkw=lego+millennium+falcon+ultimate+collector+series&_sacat=0&_from=R40&_pgn=1&_ipg=60&_sop=12"
+            },
+            {
+              "categories": [],
+              "keyword": "lego millennium falcon ucs",
+              "search_url": "https://www.ebay.com/sch/i.html?_nkw=lego+millennium+falcon+ucs&_sacat=0&_from=R40&_pgn=1&_ipg=60&_sop=12"
+            },
+            {
+              "categories": [],
+              "keyword": "lego millennium falcon 75105",
+              "search_url": "https://www.ebay.com/sch/i.html?_nkw=lego+millennium+falcon+75105&_sacat=0&_from=R40&_pgn=1&_ipg=60&_sop=12"
+            },
+            {
+              "categories": [],
+              "keyword": "lego millennium falcon 10179",
+              "search_url": "https://www.ebay.com/sch/i.html?_nkw=lego+millennium+falcon+10179&_sacat=0&_from=R40&_pgn=1&_ipg=60&_sop=12"
+            },
+            {
+              "categories": [],
+              "keyword": "lego millennium falcon 4504",
+              "search_url": "https://www.ebay.com/sch/i.html?_nkw=lego+millennium+falcon+4504&_sacat=0&_from=R40&_pgn=1&_ipg=60&_sop=12"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "ebay-com",
+        "capability": "listings/suggest"
+      }
+    }
+  ]
+}

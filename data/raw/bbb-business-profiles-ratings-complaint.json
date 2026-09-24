@@ -1,0 +1,644 @@
+{
+  "id": "bbb-business-profiles-ratings-complaint",
+  "provider": "bbb-business-profiles-ratings-complaint",
+  "name": "BBB business profiles",
+  "description": "Better Business Bureau (bbb.org) business search, profiles with BBB letter grade and accreditation, complaint histories and customer reviews for the US and Canada.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "bbb-business-profiles-ratings-complaint"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "bbb-business-profiles-ratings-complaint/businesses/complaints",
+      "provider": "bbb-business-profiles-ratings-complaint",
+      "capability": "businesses/complaints",
+      "name": "Complaint history",
+      "description": "One page (10) of the public complaint history for a BBB business identified by profile URL or bbb_id + business_id: complaint type, status, date, redacted text and business/consumer responses, with per-type and per-status counts, optional type/status filters, and the profile's complaint totals (all, closed in 3 years, closed in 12 months).",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "in": "body",
+          "type": "string",
+          "about": "HTTPS www.bbb.org/{us|ca}/<state>/<city>/profile/<category>/<name>-<bbb_id>-<business_id> profile URL (section suffixes such as /complaints are accepted). Provide either url, or bbb_id with business_id."
+        },
+        {
+          "name": "bbb_id",
+          "in": "body",
+          "type": "string",
+          "about": "4-digit BBB office id from search results, e.g. 0825. Provide together with business_id."
+        },
+        {
+          "name": "business_id",
+          "in": "body",
+          "type": "string",
+          "about": "Numeric BBB business id from search results, e.g. 90019908. Provide together with bbb_id."
+        },
+        {
+          "name": "country",
+          "in": "body",
+          "type": "string",
+          "about": "Only with bbb_id/business_id: which BBB site holds the profile.",
+          "default": "us",
+          "oneOf": [
+            "us",
+            "ca"
+          ]
+        },
+        {
+          "name": "page",
+          "in": "body",
+          "type": "number",
+          "about": "Page number, 1 to 100 (10 per page, newest first).",
+          "min": 1,
+          "max": 100,
+          "default": 1
+        },
+        {
+          "name": "complaint_type",
+          "in": "body",
+          "type": "string",
+          "about": "BBB complaint type slug as returned in filters.type: billingissues, serviceorrepair, productissues, order, customerservice, salesadvertising, delivery, facilities and others."
+        },
+        {
+          "name": "status",
+          "in": "body",
+          "type": "string",
+          "about": "BBB complaint status slug as returned in filters.status: answered, resolved, unanswered, unpursuable."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "url",
+          "bbb_id"
+        ],
+        [
+          "url",
+          "business_id"
+        ]
+      ],
+      "response": {
+        "about": "One page (10) of the public complaint history for a BBB business identified by profile URL or bbb_id + business_id: complaint type, status, date, redacted text and business/consumer responses, with per-type and per-status counts, optional type/status filters, and the profile's complaint totals (all, closed in 3 years, closed in 12 months).",
+        "key": "complaints",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "responses",
+            "type": "object[]",
+            "about": "Published business/customer response text and dates."
+          }
+        ]
+      },
+      "execute": {
+        "provider": "bbb-business-profiles-ratings-complaint",
+        "capability": "businesses/complaints"
+      }
+    },
+    {
+      "id": "bbb-business-profiles-ratings-complaint/businesses/profile",
+      "provider": "bbb-business-profiles-ratings-complaint",
+      "capability": "businesses/profile",
+      "name": "Business profile",
+      "description": "One BBB business profile identified by its bbb.org profile URL or by bbb_id + business_id (from search): BBB letter grade with reasons, accreditation status and dates, file-opened/start/incorporation dates, years in business, entity type, categories, address, coordinates, contacts, websites, social links, local BBB office, alerts, and complaint and customer-review totals.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "in": "body",
+          "type": "string",
+          "about": "HTTPS www.bbb.org/{us|ca}/<state>/<city>/profile/<category>/<name>-<bbb_id>-<business_id> profile URL (section suffixes such as /complaints are accepted). Provide either url, or bbb_id with business_id."
+        },
+        {
+          "name": "bbb_id",
+          "in": "body",
+          "type": "string",
+          "about": "4-digit BBB office id from search results, e.g. 0825. Provide together with business_id."
+        },
+        {
+          "name": "business_id",
+          "in": "body",
+          "type": "string",
+          "about": "Numeric BBB business id from search results, e.g. 90019908. Provide together with bbb_id."
+        },
+        {
+          "name": "country",
+          "in": "body",
+          "type": "string",
+          "about": "Only with bbb_id/business_id: which BBB site holds the profile.",
+          "default": "us",
+          "oneOf": [
+            "us",
+            "ca"
+          ]
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "url",
+          "bbb_id"
+        ],
+        [
+          "url",
+          "business_id"
+        ]
+      ],
+      "response": {
+        "about": "One BBB business profile identified by its bbb.org profile URL or by bbb_id + business_id (from search): BBB letter grade with reasons, accreditation status and dates, file-opened/start/incorporation dates, years in business, entity type, categories, address, coordinates, contacts, websites, social links, local BBB office, alerts, and complaint and customer-review totals.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "bbb_id",
+            "type": "string"
+          },
+          {
+            "name": "business_id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "alternate_names",
+            "type": "string[]"
+          },
+          {
+            "name": "profile_url",
+            "type": "string",
+            "about": "Canonical bbb.org profile URL."
+          },
+          {
+            "name": "complaints_url",
+            "type": "string"
+          },
+          {
+            "name": "reviews_url",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "name": "additional_websites",
+            "type": "string[]"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "additional_phones",
+            "type": "string[]"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "object",
+            "about": "{ grade, reasons, not_rated_reason }: BBB letter grade A+ to F or NR with BBB's published reasons."
+          },
+          {
+            "name": "accreditation",
+            "type": "object",
+            "about": "{ is_accredited, status_code, accredited_since, revoked_at, texts }. accredited_since stays on file for formerly accredited businesses."
+          },
+          {
+            "name": "dates",
+            "type": "object",
+            "about": "{ bbb_file_opened, business_started, business_started_locally, incorporated, new_owner } as YYYY-MM-DD or null."
+          },
+          {
+            "name": "years_in_business",
+            "type": "number"
+          },
+          {
+            "name": "entity_type",
+            "type": "string"
+          },
+          {
+            "name": "number_of_employees",
+            "type": "number"
+          },
+          {
+            "name": "is_out_of_business",
+            "type": "boolean"
+          },
+          {
+            "name": "is_hq",
+            "type": "boolean"
+          },
+          {
+            "name": "is_multi_location",
+            "type": "boolean"
+          },
+          {
+            "name": "hq_information",
+            "type": "object",
+            "about": "HQ profile reference for branch profiles, or null."
+          },
+          {
+            "name": "business_description",
+            "type": "string"
+          },
+          {
+            "name": "products_and_services",
+            "type": "string"
+          },
+          {
+            "name": "primary_category",
+            "type": "string"
+          },
+          {
+            "name": "primary_category_id",
+            "type": "string"
+          },
+          {
+            "name": "categories",
+            "type": "object[]",
+            "about": "{ name, url }."
+          },
+          {
+            "name": "has_high_risk_category",
+            "type": "boolean"
+          },
+          {
+            "name": "address",
+            "type": "object",
+            "about": "{ line1, line2, city, state, postal_code, formatted }."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "service_area_descriptions",
+            "type": "string[]"
+          },
+          {
+            "name": "service_area_postal_codes",
+            "type": "string[]"
+          },
+          {
+            "name": "contacts",
+            "type": "object[]",
+            "about": "{ name, title, is_principal, is_management, is_primary }."
+          },
+          {
+            "name": "social_media",
+            "type": "object[]",
+            "about": "{ type, url }."
+          },
+          {
+            "name": "local_bbb",
+            "type": "object",
+            "about": "{ name, url } of the BBB office holding the file."
+          },
+          {
+            "name": "reviews_summary",
+            "type": "object",
+            "about": "{ total, average_star_rating, suppressed } for the whole profile."
+          },
+          {
+            "name": "complaints_summary",
+            "type": "object",
+            "about": "{ total, closed_past_3_years, closed_past_12_months } for the whole profile."
+          },
+          {
+            "name": "alerts",
+            "type": "object[]",
+            "about": "BBB alerts as published (pattern of complaints, government actions)."
+          },
+          {
+            "name": "latest_reviews",
+            "type": "object[]",
+            "about": "{ id, display_name, preview_text }."
+          },
+          {
+            "name": "payment_methods",
+            "type": "string[]"
+          },
+          {
+            "name": "license",
+            "type": "object",
+            "about": "Licensing block as published, or null."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "bbb-business-profiles-ratings-complaint",
+        "capability": "businesses/profile"
+      }
+    },
+    {
+      "id": "bbb-business-profiles-ratings-complaint/businesses/reviews",
+      "provider": "bbb-business-profiles-ratings-complaint",
+      "capability": "businesses/reviews",
+      "name": "Customer reviews",
+      "description": "One page (10) of BBB customer reviews for a business identified by profile URL or bbb_id + business_id: star rating, reviewer display name, date, text and business/customer follow-up responses, plus the profile's review total and average star rating.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "in": "body",
+          "type": "string",
+          "about": "HTTPS www.bbb.org/{us|ca}/<state>/<city>/profile/<category>/<name>-<bbb_id>-<business_id> profile URL (section suffixes such as /complaints are accepted). Provide either url, or bbb_id with business_id."
+        },
+        {
+          "name": "bbb_id",
+          "in": "body",
+          "type": "string",
+          "about": "4-digit BBB office id from search results, e.g. 0825. Provide together with business_id."
+        },
+        {
+          "name": "business_id",
+          "in": "body",
+          "type": "string",
+          "about": "Numeric BBB business id from search results, e.g. 90019908. Provide together with bbb_id."
+        },
+        {
+          "name": "country",
+          "in": "body",
+          "type": "string",
+          "about": "Only with bbb_id/business_id: which BBB site holds the profile.",
+          "default": "us",
+          "oneOf": [
+            "us",
+            "ca"
+          ]
+        },
+        {
+          "name": "page",
+          "in": "body",
+          "type": "number",
+          "about": "Page number, 1 to 100 (10 per page, newest first).",
+          "min": 1,
+          "max": 100,
+          "default": 1
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "url",
+          "bbb_id"
+        ],
+        [
+          "url",
+          "business_id"
+        ]
+      ],
+      "response": {
+        "about": "One page (10) of BBB customer reviews for a business identified by profile URL or bbb_id + business_id: star rating, reviewer display name, date, text and business/customer follow-up responses, plus the profile's review total and average star rating.",
+        "key": "reviews",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "star_rating",
+            "type": "number"
+          },
+          {
+            "name": "display_name",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "responses",
+            "type": "object[]",
+            "about": "Published business/customer response text and dates."
+          }
+        ]
+      },
+      "execute": {
+        "provider": "bbb-business-profiles-ratings-complaint",
+        "capability": "businesses/reviews"
+      }
+    },
+    {
+      "id": "bbb-business-profiles-ratings-complaint/businesses/search",
+      "provider": "bbb-business-profiles-ratings-complaint",
+      "capability": "businesses/search",
+      "name": "Business search",
+      "description": "Find BBB business profiles by business name or category near a place (US or Canada). Returns one page of 15 results with each business's BBB letter grade, accreditation flag, categories, address, phones, coordinates and profile URL, plus totals for pagination. BBB's matching is fuzzy: check the returned name.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "query",
+          "in": "body",
+          "type": "string",
+          "about": "Business name or category, 1 to 200 characters, e.g. roofing, Comcast, moving company.",
+          "required": true
+        },
+        {
+          "name": "location",
+          "in": "body",
+          "type": "string",
+          "about": "City and state/province (Austin, TX) or postal code, up to 120 characters. Omit for a nationwide search."
+        },
+        {
+          "name": "country",
+          "in": "body",
+          "type": "string",
+          "about": "Which BBB site to search.",
+          "default": "us",
+          "oneOf": [
+            "us",
+            "ca"
+          ]
+        },
+        {
+          "name": "page",
+          "in": "body",
+          "type": "number",
+          "about": "Results page, 1 to 100 (15 results per page).",
+          "min": 1,
+          "max": 100,
+          "default": 1
+        },
+        {
+          "name": "sort",
+          "in": "body",
+          "type": "string",
+          "about": "Result order.",
+          "default": "Relevance",
+          "oneOf": [
+            "Relevance",
+            "Distance",
+            "Rating",
+            "AToZ",
+            "ZToA"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Find BBB business profiles by business name or category near a place (US or Canada). Returns one page of 15 results with each business's BBB letter grade, accreditation flag, categories, address, phones, coordinates and profile URL, plus totals for pagination. BBB's matching is fuzzy: check the returned name.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "business_id",
+            "type": "string"
+          },
+          {
+            "name": "bbb_id",
+            "type": "string"
+          },
+          {
+            "name": "bbb_name",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "primary_category",
+            "type": "string"
+          },
+          {
+            "name": "categories",
+            "type": "object[]"
+          },
+          {
+            "name": "rating",
+            "type": "string"
+          },
+          {
+            "name": "rating_score",
+            "type": "number"
+          },
+          {
+            "name": "accredited",
+            "type": "boolean"
+          },
+          {
+            "name": "is_charity",
+            "type": "boolean"
+          },
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "postal_code",
+            "type": "string"
+          },
+          {
+            "name": "phones",
+            "type": "string[]"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "distance",
+            "type": "number"
+          },
+          {
+            "name": "profile_url",
+            "type": "string"
+          },
+          {
+            "name": "local_report_url",
+            "type": "string"
+          },
+          {
+            "name": "logo_url",
+            "type": "string"
+          },
+          {
+            "name": "out_of_business_status",
+            "type": "string"
+          },
+          {
+            "name": "service_areas_summary",
+            "type": "string[]"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "bbb-business-profiles-ratings-complaint",
+        "capability": "businesses/search"
+      }
+    }
+  ]
+}

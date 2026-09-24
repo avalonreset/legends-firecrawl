@@ -1,0 +1,928 @@
+{
+  "id": "fda-gov",
+  "provider": "fda-gov",
+  "name": "FDA",
+  "description": "US FDA drug, food and device enforcement recalls, Drugs@FDA applications, structured labeling and device 510(k) decisions via openFDA.",
+  "toolCount": 6,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "fda-gov"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "fda-gov/records/device_clearances",
+      "provider": "fda-gov",
+      "capability": "records/device_clearances",
+      "name": "Device clearances",
+      "description": "Search device 510(k) submission decision records and resolve a k_number. Preserve decision_code and decision_date; do not equate every returned submission with clearance or PMA approval.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 5,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Plain openFDA search expression, e.g. product_description:aspirin or report_date:[20250101 TO 20251231]. Use spaces around AND, OR and TO; do not URL-encode the expression or use + as a space. Literal plus signs are preserved. Mutually exclusive with record_id. Omit both to browse source default order."
+        },
+        {
+          "name": "record_id",
+          "type": "string",
+          "in": "body",
+          "about": "Source identifier returned by this dataset. Exact quoted lookup; mutually exclusive with query. Pattern: ^[A-Za-z0-9-]{1,100}$."
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "skip",
+          "default": 0,
+          "min": 0,
+          "max": 25000
+        }
+      ],
+      "response": {
+        "about": "Search device 510(k) submission decision records and resolve a k_number. Preserve decision_code and decision_date; do not equate every returned submission with clearance or PMA approval.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "data",
+            "type": "object",
+            "about": "Unmodified source record from this openFDA dataset, including nested arrays and harmonized openfda identifiers when available. No approval or safety inference is added."
+          },
+          {
+            "name": "record_id",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 1
+        },
+        "response": {
+          "dataset": "device_clearances",
+          "disclaimer": "Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.",
+          "last_updated": "2026-09-07",
+          "next_skip": 1,
+          "observed_at_ms": 1789509514341,
+          "pagination_truncated": false,
+          "records": [
+            {
+              "data": {
+                "address_1": "9705 International Ct. N.",
+                "address_2": "",
+                "advisory_committee": "",
+                "advisory_committee_description": "Unknown",
+                "applicant": "Bioderm, Inc.",
+                "city": "St. Petersburg",
+                "clearance_type": "Traditional",
+                "contact": "MARIE B TEIXEIRA",
+                "country_code": "US",
+                "date_received": "1998-08-21",
+                "decision_code": "SESE",
+                "decision_date": "1998-10-13",
+                "decision_description": "Substantially Equivalent",
+                "device_name": "BTF THIN FILM WOUND DRESSING",
+                "expedited_review_flag": "",
+                "k_number": "K982939",
+                "openfda": {
+                  "device_class": "U",
+                  "device_name": "Dressing, Wound And Burn, Occlusive",
+                  "fei_number": [
+                    "3014562978",
+                    "3005012805",
+                    "3041276591",
+                    "1000305720",
+                    "1000117748",
+                    "3031168520",
+                    "3010419931",
+                    "3012421607",
+                    "3002807111",
+                    "3004365956",
+                    "3005747797",
+                    "3010034780",
+                    "3030733800",
+                    "3010041511",
+                    "3002806830",
+                    "1219313",
+                    "3003636207",
+                    "1526534",
+                    "3012494290",
+                    "3012502601",
+                    "3013557562",
+                    "3001451571"
+                  ],
+                  "medical_specialty_description": "Unknown",
+                  "registration_number": [
+                    "3014562978",
+                    "3005012805",
+                    "3041276591",
+                    "3031168520",
+                    "1320894",
+                    "3010419931",
+                    "3012421607",
+                    "9680091",
+                    "3004365956",
+                    "3010034780",
+                    "3011137372",
+                    "3030733800",
+                    "3010041511",
+                    "3005941719",
+                    "1219313",
+                    "3003636207",
+                    "1526534",
+                    "3012494290",
+                    "1223925",
+                    "1644312",
+                    "3012502601",
+                    "3013557562"
+                  ],
+                  "regulation_number": ""
+                },
+                "postal_code": "33716",
+                "product_code": "MGP",
+                "review_advisory_committee": "SU",
+                "state": "FL",
+                "statement_or_summary": "Summary",
+                "third_party_flag": "N",
+                "zip_code": "33716"
+              },
+              "record_id": "K982939",
+              "source_url": "https://api.fda.gov/device/510k.json?search=k_number%3A%22K982939%22&skip=0&limit=1"
+            }
+          ],
+          "skip": 0,
+          "source_url": "https://api.fda.gov/device/510k.json?skip=0&limit=1",
+          "total_matching": 176070
+        },
+        "recordedAt": "2026-09-15T21:58:34Z"
+      },
+      "execute": {
+        "provider": "fda-gov",
+        "capability": "records/device_clearances"
+      }
+    },
+    {
+      "id": "fda-gov/records/device_recalls",
+      "provider": "fda-gov",
+      "capability": "records/device_recalls",
+      "name": "Device recalls",
+      "description": "Search medical device enforcement recall records and resolve a recall_number. Preserve recall reason, status and classification; this is not the separate device recall classification dataset.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 5,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Plain openFDA search expression, e.g. product_description:aspirin or report_date:[20250101 TO 20251231]. Use spaces around AND, OR and TO; do not URL-encode the expression or use + as a space. Literal plus signs are preserved. Mutually exclusive with record_id. Omit both to browse source default order."
+        },
+        {
+          "name": "record_id",
+          "type": "string",
+          "in": "body",
+          "about": "Source identifier returned by this dataset. Exact quoted lookup; mutually exclusive with query. Pattern: ^[A-Za-z0-9-]{1,100}$."
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "skip",
+          "default": 0,
+          "min": 0,
+          "max": 25000
+        }
+      ],
+      "response": {
+        "about": "Search medical device enforcement recall records and resolve a recall_number. Preserve recall reason, status and classification; this is not the separate device recall classification dataset.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "data",
+            "type": "object",
+            "about": "Unmodified source record from this openFDA dataset, including nested arrays and harmonized openfda identifiers when available. No approval or safety inference is added."
+          },
+          {
+            "name": "record_id",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 1
+        },
+        "response": {
+          "dataset": "device_recalls",
+          "disclaimer": "Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.",
+          "last_updated": "2026-09-09",
+          "next_skip": 1,
+          "observed_at_ms": 1789509514341,
+          "pagination_truncated": false,
+          "records": [
+            {
+              "data": {
+                "address_1": "15 Hampshire St",
+                "address_2": "",
+                "center_classification_date": "20230811",
+                "city": "Mansfield",
+                "classification": "Class I",
+                "code_info": "GTIN: 20884521128009  LOT Numbers: 2200400154",
+                "country": "United States",
+                "distribution_pattern": "US Nationwide - Worldwide Distribution  Foreign:  Argentina Austria Bahrain Bangladesh Belgium Brazil Brunei Darussalam Canada Cayman Islands China Costa Rica Czech Republic Denmark Dominican Republic Finland France French Polynesia Germany Greece Hungary India Iran, Islamic Republic Of Ireland Italy Kuwait Malaysia Maldives Mauritius Mexico Nepal Netherlands New Caledonia Nicaragua Norway Philippines Poland Portugal Puerto Rico Saudi Arabia Singapore Slovakia South Africa Spain Sri Lanka Sweden Switzerland Thailand Turkey United Arab Emirates United Kingdom",
+                "event_id": "92660",
+                "initial_firm_notification": "Letter",
+                "more_code_info": "",
+                "openfda": {},
+                "postal_code": "02048-1113",
+                "product_description": "MAHURKAR 12 Fr High Pressure Triple Lumen Acute Dialysis Catheter, 24 cm, Straight Extensions, IC Tray    REF: 8888102004HP",
+                "product_quantity": "685 units",
+                "product_type": "Devices",
+                "reason_for_recall": "Catheter center lumen was found to have an occlusion in the tip of the catheter; the source of the occlusion an excessive MDX, a silicone-based lubricant which coats the catheter tip. An occluded, partially or fully, and/or uncured or excessive MDX may dislodge from the catheter lead to  full catheter obstruction resulting in delay to treatment and partial obstruction resulting in reduced flow, or particulate dislodgement that may result in delay to treatment, hemolysis, embolism/embolus or thrombosis/thrombus",
+                "recall_initiation_date": "20230628",
+                "recall_number": "Z-2372-2023",
+                "recalling_firm": "Covidien LP",
+                "report_date": "20230823",
+                "state": "MA",
+                "status": "Ongoing",
+                "voluntary_mandated": "Voluntary: Firm initiated"
+              },
+              "record_id": "Z-2372-2023",
+              "source_url": "https://api.fda.gov/device/enforcement.json?search=recall_number%3A%22Z-2372-2023%22&skip=0&limit=1"
+            }
+          ],
+          "skip": 0,
+          "source_url": "https://api.fda.gov/device/enforcement.json?skip=0&limit=1",
+          "total_matching": 39949
+        },
+        "recordedAt": "2026-09-15T21:58:34Z"
+      },
+      "execute": {
+        "provider": "fda-gov",
+        "capability": "records/device_recalls"
+      }
+    },
+    {
+      "id": "fda-gov/records/drug_applications",
+      "provider": "fda-gov",
+      "capability": "records/drug_applications",
+      "name": "Drug applications",
+      "description": "Search Drugs@FDA applications and submission histories, or resolve an application_number. Inspect submission statuses: a returned record alone is not proof of current approval or availability.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 5,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Plain openFDA search expression, e.g. product_description:aspirin or report_date:[20250101 TO 20251231]. Use spaces around AND, OR and TO; do not URL-encode the expression or use + as a space. Literal plus signs are preserved. Mutually exclusive with record_id. Omit both to browse source default order."
+        },
+        {
+          "name": "record_id",
+          "type": "string",
+          "in": "body",
+          "about": "Source identifier returned by this dataset. Exact quoted lookup; mutually exclusive with query. Pattern: ^[A-Za-z0-9-]{1,100}$."
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "skip",
+          "default": 0,
+          "min": 0,
+          "max": 25000
+        }
+      ],
+      "response": {
+        "about": "Search Drugs@FDA applications and submission histories, or resolve an application_number. Inspect submission statuses: a returned record alone is not proof of current approval or availability.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "data",
+            "type": "object",
+            "about": "Unmodified source record from this openFDA dataset, including nested arrays and harmonized openfda identifiers when available. No approval or safety inference is added."
+          },
+          {
+            "name": "record_id",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 1
+        },
+        "response": {
+          "dataset": "drug_applications",
+          "disclaimer": "Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.",
+          "last_updated": "2026-09-15",
+          "next_skip": 1,
+          "observed_at_ms": 1789509514341,
+          "pagination_truncated": false,
+          "records": [
+            {
+              "data": {
+                "application_number": "ANDA088119",
+                "products": [
+                  {
+                    "active_ingredients": [
+                      {
+                        "name": "ISONIAZID",
+                        "strength": "300MG"
+                      }
+                    ],
+                    "brand_name": "ISONIAZID",
+                    "dosage_form": "TABLET",
+                    "marketing_status": "Discontinued",
+                    "product_number": "001",
+                    "reference_drug": "No",
+                    "reference_standard": "No",
+                    "route": "ORAL"
+                  }
+                ],
+                "sponsor_name": "DURAMED PHARMS BARR",
+                "submissions": [
+                  {
+                    "submission_class_code": "LABELING",
+                    "submission_class_code_description": "Labeling",
+                    "submission_number": "15",
+                    "submission_status": "AP",
+                    "submission_status_date": "19970512",
+                    "submission_type": "SUPPL"
+                  },
+                  {
+                    "submission_class_code": "LABELING",
+                    "submission_class_code_description": "Labeling",
+                    "submission_number": "13",
+                    "submission_status": "AP",
+                    "submission_status_date": "19891115",
+                    "submission_type": "SUPPL"
+                  },
+                  {
+                    "submission_class_code": "MANUF (CMC)",
+                    "submission_class_code_description": "Manufacturing (CMC)",
+                    "submission_number": "5",
+                    "submission_status": "AP",
+                    "submission_status_date": "19850619",
+                    "submission_type": "SUPPL"
+                  },
+                  {
+                    "submission_number": "1",
+                    "submission_status": "AP",
+                    "submission_status_date": "19830317",
+                    "submission_type": "ORIG"
+                  },
+                  {
+                    "submission_class_code": "LABELING",
+                    "submission_class_code_description": "Labeling",
+                    "submission_number": "11",
+                    "submission_status": "AP",
+                    "submission_status_date": "19890817",
+                    "submission_type": "SUPPL"
+                  },
+                  {
+                    "submission_class_code": "MANUF (CMC)",
+                    "submission_class_code_description": "Manufacturing (CMC)",
+                    "submission_number": "3",
+                    "submission_status": "AP",
+                    "submission_status_date": "19850529",
+                    "submission_type": "SUPPL"
+                  },
+                  {
+                    "submission_class_code": "MANUF (CMC)",
+                    "submission_class_code_description": "Manufacturing (CMC)",
+                    "submission_number": "1",
+                    "submission_status": "AP",
+                    "submission_status_date": "19830805",
+                    "submission_type": "SUPPL"
+                  },
+                  {
+                    "submission_class_code": "MANUF (CMC)",
+                    "submission_class_code_description": "Manufacturing (CMC)",
+                    "submission_number": "8",
+                    "submission_status": "AP",
+                    "submission_status_date": "19850619",
+                    "submission_type": "SUPPL"
+                  },
+                  {
+                    "submission_class_code": "LABELING",
+                    "submission_class_code_description": "Labeling",
+                    "submission_number": "14",
+                    "submission_status": "AP",
+                    "submission_status_date": "19901109",
+                    "submission_type": "SUPPL"
+                  },
+                  {
+                    "submission_class_code": "MANUF (CMC)",
+                    "submission_class_code_description": "Manufacturing (CMC)",
+                    "submission_number": "6",
+                    "submission_status": "AP",
+                    "submission_status_date": "19850619",
+                    "submission_type": "SUPPL"
+                  },
+                  {
+                    "submission_class_code": "LABELING",
+                    "submission_class_code_description": "Labeling",
+                    "submission_number": "12",
+                    "submission_status": "AP",
+                    "submission_status_date": "19890321",
+                    "submission_type": "SUPPL"
+                  },
+                  {
+                    "submission_class_code": "MANUF (CMC)",
+                    "submission_class_code_description": "Manufacturing (CMC)",
+                    "submission_number": "4",
+                    "submission_status": "AP",
+                    "submission_status_date": "19850529",
+                    "submission_type": "SUPPL"
+                  },
+                  {
+                    "submission_class_code": "LABELING",
+                    "submission_class_code_description": "Labeling",
+                    "submission_number": "10",
+                    "submission_status": "AP",
+                    "submission_status_date": "19880331",
+                    "submission_type": "SUPPL"
+                  }
+                ]
+              },
+              "record_id": "ANDA088119",
+              "source_url": "https://api.fda.gov/drug/drugsfda.json?search=application_number%3A%22ANDA088119%22&skip=0&limit=1"
+            }
+          ],
+          "skip": 0,
+          "source_url": "https://api.fda.gov/drug/drugsfda.json?skip=0&limit=1",
+          "total_matching": 29329
+        },
+        "recordedAt": "2026-09-15T21:58:34Z"
+      },
+      "execute": {
+        "provider": "fda-gov",
+        "capability": "records/drug_applications"
+      }
+    },
+    {
+      "id": "fda-gov/records/drug_labels",
+      "provider": "fda-gov",
+      "capability": "records/drug_labels",
+      "name": "Drug labels",
+      "description": "Search structured drug labeling and resolve a source label id. Includes source warnings and indications where available. Label presence does not itself establish FDA approval.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 5,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Plain openFDA search expression, e.g. product_description:aspirin or report_date:[20250101 TO 20251231]. Use spaces around AND, OR and TO; do not URL-encode the expression or use + as a space. Literal plus signs are preserved. Mutually exclusive with record_id. Omit both to browse source default order."
+        },
+        {
+          "name": "record_id",
+          "type": "string",
+          "in": "body",
+          "about": "Source identifier returned by this dataset. Exact quoted lookup; mutually exclusive with query. Pattern: ^[A-Za-z0-9-]{1,100}$."
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "skip",
+          "default": 0,
+          "min": 0,
+          "max": 25000
+        }
+      ],
+      "response": {
+        "about": "Search structured drug labeling and resolve a source label id. Includes source warnings and indications where available. Label presence does not itself establish FDA approval.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "data",
+            "type": "object",
+            "about": "Unmodified source record from this openFDA dataset, including nested arrays and harmonized openfda identifiers when available. No approval or safety inference is added."
+          },
+          {
+            "name": "record_id",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 1
+        },
+        "response": {
+          "dataset": "drug_labels",
+          "disclaimer": "Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.",
+          "last_updated": "2026-09-15",
+          "next_skip": 1,
+          "observed_at_ms": 1789509514341,
+          "pagination_truncated": false,
+          "records": [
+            {
+              "data": {
+                "active_ingredient": [
+                  "ACTIVE INGREDIENT SILICEA HPUS 2X and higher"
+                ],
+                "do_not_use": [
+                  "Do not use if capseal is broken or missing. Close the cap tightly after use."
+                ],
+                "dosage_and_administration": [
+                  "DOSAGE Adults- Take 4 or 6 Pellets by mouth, three times daily or as suggested by physician. Children 2 years and older- take 1/2 the adult dose."
+                ],
+                "effective_time": "20210902",
+                "id": "ca7bbcc8-2354-375c-e053-2995a90a72a0",
+                "inactive_ingredient": [
+                  "INACTIVE INGREDIENTS Sucrose"
+                ],
+                "indications_and_usage": [
+                  "INDICATIONS Condition listed above or as directed by the physician"
+                ],
+                "keep_out_of_reach_of_children": [
+                  "Keep this and all medication out of reach of children"
+                ],
+                "openfda": {
+                  "brand_name": [
+                    "SILICEA"
+                  ],
+                  "generic_name": [
+                    "SILICEA"
+                  ],
+                  "is_original_packager": [
+                    true
+                  ],
+                  "manufacturer_name": [
+                    "Rxhomeo Private Limited d.b.a. Rxhomeo, Inc"
+                  ],
+                  "package_ndc": [
+                    "15631-0404-0",
+                    "15631-0404-1",
+                    "15631-0404-2",
+                    "15631-0404-3",
+                    "15631-0404-4",
+                    "15631-0404-5",
+                    "15631-0404-6",
+                    "15631-0404-7"
+                  ],
+                  "product_ndc": [
+                    "15631-0404"
+                  ],
+                  "product_type": [
+                    "HUMAN OTC DRUG"
+                  ],
+                  "route": [
+                    "ORAL"
+                  ],
+                  "spl_id": [
+                    "ca7bbcc8-2354-375c-e053-2995a90a72a0"
+                  ],
+                  "spl_set_id": [
+                    "0000025c-6dbf-4af7-a741-5cbacaed519a"
+                  ],
+                  "substance_name": [
+                    "SILICON DIOXIDE"
+                  ],
+                  "unii": [
+                    "ETJ7Z6XBU4"
+                  ],
+                  "upc": [
+                    "8907460005526"
+                  ]
+                },
+                "package_label_principal_display_panel": [
+                  "Mini-Label Label-Pellets Blister-Pack Carton-Pack"
+                ],
+                "pregnancy_or_breast_feeding": [
+                  "As with any drug, if you are pregnant, or nursing a baby, seek professional advice before taking this product."
+                ],
+                "purpose": [
+                  "USES USES: Temporary Relief - Acne, Boils* * Claims based on traditional homeopathic practice, not accepted medical evidence. Not FDA evaluated."
+                ],
+                "questions": [
+                  "QUESTIONS OR COMMENTS www.Rxhomeo.com | 1.888.2796642 | info@rxhomeo.com Rxhomeo, Inc 3200 Commander Dr, Ste 100-W1, Carrollton, TX 75006 USA"
+                ],
+                "set_id": "0000025c-6dbf-4af7-a741-5cbacaed519a",
+                "spl_product_data_elements": [
+                  "SILICEA SILICEA SUCROSE SILICON DIOXIDE SILICON DIOXIDE"
+                ],
+                "stop_use": [
+                  "If symptoms do not improve in 4 days, or worsen, discontinue use and seek assistance of health professional."
+                ],
+                "storage_and_handling": [
+                  "STORAGE Store in a cool dark place"
+                ],
+                "version": "2",
+                "warnings": [
+                  "WARNINGS This product is to be used for self-limiting conditions If symptoms do not improve in 4 days, or worsen, discontinue use and seek assistance of health professional. As with any drug, if you are pregnant, or nursing a baby, seek professional advice before taking this product. Keep this and all medication out of reach of children Do not use if capseal is broken or missing. Close the cap tightly after use."
+                ]
+              },
+              "record_id": "ca7bbcc8-2354-375c-e053-2995a90a72a0",
+              "source_url": "https://api.fda.gov/drug/label.json?search=id%3A%22ca7bbcc8-2354-375c-e053-2995a90a72a0%22&skip=0&limit=1"
+            }
+          ],
+          "skip": 0,
+          "source_url": "https://api.fda.gov/drug/label.json?skip=0&limit=1",
+          "total_matching": 262883
+        },
+        "recordedAt": "2026-09-15T21:58:34Z"
+      },
+      "execute": {
+        "provider": "fda-gov",
+        "capability": "records/drug_labels"
+      }
+    },
+    {
+      "id": "fda-gov/records/drug_recalls",
+      "provider": "fda-gov",
+      "capability": "records/drug_recalls",
+      "name": "Drug recalls",
+      "description": "Search drug enforcement recall records, including classification, reason and recall status. Search product_description, recalling_firm or report_date, or resolve a recall_number using record_id.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 5,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Plain openFDA search expression, e.g. product_description:aspirin or report_date:[20250101 TO 20251231]. Use spaces around AND, OR and TO; do not URL-encode the expression or use + as a space. Literal plus signs are preserved. Mutually exclusive with record_id. Omit both to browse source default order."
+        },
+        {
+          "name": "record_id",
+          "type": "string",
+          "in": "body",
+          "about": "Source identifier returned by this dataset. Exact quoted lookup; mutually exclusive with query. Pattern: ^[A-Za-z0-9-]{1,100}$."
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "skip",
+          "default": 0,
+          "min": 0,
+          "max": 25000
+        }
+      ],
+      "response": {
+        "about": "Search drug enforcement recall records, including classification, reason and recall status. Search product_description, recalling_firm or report_date, or resolve a recall_number using record_id.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "data",
+            "type": "object",
+            "about": "Unmodified source record from this openFDA dataset, including nested arrays and harmonized openfda identifiers when available. No approval or safety inference is added."
+          },
+          {
+            "name": "record_id",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 1
+        },
+        "response": {
+          "dataset": "drug_recalls",
+          "disclaimer": "Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.",
+          "last_updated": "2026-09-09",
+          "next_skip": 1,
+          "observed_at_ms": 1789509514341,
+          "pagination_truncated": false,
+          "records": [
+            {
+              "data": {
+                "address_1": "4625 N University St",
+                "address_2": "N/A",
+                "center_classification_date": "20151117",
+                "city": "Peoria",
+                "classification": "Class II",
+                "code_info": "Lot #: 072915, Exp 10/29/2015",
+                "country": "United States",
+                "distribution_pattern": "Nationwide",
+                "event_id": "72241",
+                "initial_firm_notification": "Letter",
+                "openfda": {},
+                "postal_code": "61614-5828",
+                "product_description": "Progesterone 100 mg/mL in Corn Oil Injection, 2 mL vials, Rx only, Essential Wellness PHARMACY, 4625 N. University, Peoria, IL 61614.",
+                "product_quantity": "1 vial",
+                "product_type": "Drugs",
+                "reason_for_recall": "Lack of Assurance of Sterility:  A recall of all compounded sterile preparations within expiry is being initiated due to observations associated with poor sterile production practices resulting in a lack of sterility assurance for their finished drugs.",
+                "recall_initiation_date": "20150903",
+                "recall_number": "D-321-2016",
+                "recalling_firm": "Kalman Health & Wellness, Inc. dba Essential Wellness Pharma",
+                "report_date": "20151125",
+                "state": "IL",
+                "status": "Terminated",
+                "termination_date": "20171229",
+                "voluntary_mandated": "Voluntary: Firm initiated"
+              },
+              "record_id": "D-321-2016",
+              "source_url": "https://api.fda.gov/drug/enforcement.json?search=recall_number%3A%22D-321-2016%22&skip=0&limit=1"
+            }
+          ],
+          "skip": 0,
+          "source_url": "https://api.fda.gov/drug/enforcement.json?skip=0&limit=1",
+          "total_matching": 17965
+        },
+        "recordedAt": "2026-09-15T21:58:34Z"
+      },
+      "execute": {
+        "provider": "fda-gov",
+        "capability": "records/drug_recalls"
+      }
+    },
+    {
+      "id": "fda-gov/records/food_recalls",
+      "provider": "fda-gov",
+      "capability": "records/food_recalls",
+      "name": "Food recalls",
+      "description": "Search food enforcement recall records and resolve a recall_number. Source recall status and affected product descriptions are preserved.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 5,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Plain openFDA search expression, e.g. product_description:aspirin or report_date:[20250101 TO 20251231]. Use spaces around AND, OR and TO; do not URL-encode the expression or use + as a space. Literal plus signs are preserved. Mutually exclusive with record_id. Omit both to browse source default order."
+        },
+        {
+          "name": "record_id",
+          "type": "string",
+          "in": "body",
+          "about": "Source identifier returned by this dataset. Exact quoted lookup; mutually exclusive with query. Pattern: ^[A-Za-z0-9-]{1,100}$."
+        },
+        {
+          "name": "skip",
+          "type": "number",
+          "in": "body",
+          "about": "skip",
+          "default": 0,
+          "min": 0,
+          "max": 25000
+        }
+      ],
+      "response": {
+        "about": "Search food enforcement recall records and resolve a recall_number. Source recall status and affected product descriptions are preserved.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "data",
+            "type": "object",
+            "about": "Unmodified source record from this openFDA dataset, including nested arrays and harmonized openfda identifiers when available. No approval or safety inference is added."
+          },
+          {
+            "name": "record_id",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 1
+        },
+        "response": {
+          "dataset": "food_recalls",
+          "disclaimer": "Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.",
+          "last_updated": "2026-09-09",
+          "next_skip": 1,
+          "observed_at_ms": 1789509514341,
+          "pagination_truncated": false,
+          "records": [
+            {
+              "data": {
+                "address_1": "4131 SW 47th Ave Ste 1403",
+                "address_2": "",
+                "center_classification_date": "20161025",
+                "city": "Davie",
+                "classification": "Class II",
+                "code_info": "UPC No. 632687615989; Lot No. 30661601, Exp. Date 05/2018.",
+                "country": "United States",
+                "distribution_pattern": "FL, MI, MS, and OH.",
+                "event_id": "75272",
+                "initial_firm_notification": "Letter",
+                "more_code_info": "",
+                "openfda": {},
+                "postal_code": "33314-4036",
+                "product_description": "CytoDetox, Hydrolyzed Clinoptilolite Fragments, 1 oz./30 mL, OTC Non-Sterile.  Dietary supplement.",
+                "product_quantity": "1,990 bottles",
+                "product_type": "Food",
+                "reason_for_recall": "Recall initiated as a precautionary measure due to potential risk of product contamination with Burkholderia cepacia.",
+                "recall_initiation_date": "20160808",
+                "recall_number": "F-0276-2017",
+                "recalling_firm": "Pharmatech LLC",
+                "report_date": "20161102",
+                "state": "FL",
+                "status": "Terminated",
+                "termination_date": "20240923",
+                "voluntary_mandated": "Voluntary: Firm initiated"
+              },
+              "record_id": "F-0276-2017",
+              "source_url": "https://api.fda.gov/food/enforcement.json?search=recall_number%3A%22F-0276-2017%22&skip=0&limit=1"
+            }
+          ],
+          "skip": 0,
+          "source_url": "https://api.fda.gov/food/enforcement.json?skip=0&limit=1",
+          "total_matching": 29406
+        },
+        "recordedAt": "2026-09-15T21:58:34Z"
+      },
+      "execute": {
+        "provider": "fda-gov",
+        "capability": "records/food_recalls"
+      }
+    }
+  ]
+}

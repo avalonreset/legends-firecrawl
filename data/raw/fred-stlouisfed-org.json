@@ -1,0 +1,3491 @@
+{
+  "id": "fred-stlouisfed-org",
+  "provider": "fred-stlouisfed-org",
+  "name": "FRED (Federal Reserve Economic Data)",
+  "description": "FRED (Federal Reserve Economic Data), the St. Louis Fed's database of US and international economic time series: headline US indicators such as the monthly unemployment rate (UNRATE), CPI inflation (CPIAUCSL), GDP (GDP, GDPC1), nonfarm payrolls (PAYEMS), the federal funds rate (FEDFUNDS) and Treasury yields (DGS10), plus 800,000+ other series. Search series by text, browse categories, releases, sources and tags, read one series' metadata (units, frequency, seasonal adjustment, source, notes, date range, last update) and fetch its observations (daily, weekly, monthly, quarterly or annual values) with date window, frequency aggregation and transformation, paginated, from the site's keyless JSON, CSV and HTML endpoints.",
+  "toolCount": 10,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "fred-stlouisfed-org"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "fred-stlouisfed-org/economic-data/category",
+      "provider": "fred-stlouisfed-org",
+      "capability": "economic-data/category",
+      "name": "Category",
+      "description": "Discover series by topic instead of by text: start at the root, follow `children[].category_id`, then read `series[].series_id` for `series` / `series_observations`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "category_id",
+          "type": "number",
+          "in": "body",
+          "about": "FRED category id (integer, e.g. 106 for GDP/GNP, 32991 for Money, Banking, & Finance; 0 or omitted for the root), a numeric string, or a pasted https://fred.stlouisfed.org/categories/{id} URL.",
+          "min": 0
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "Series page within the category (50 series per page); pass `next_page` from the previous result.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "Browse the FRED category tree from the site's category pages (server-rendered HTML). Without `category_id` (or with 0) it lists the top-level categories; with an id it returns that category's name, breadcrumb path, child categories (with FRED's printed series count) and the series listed on one page (50 per page, `pageID` pagination via `page`/`next_page`), each with id, title, the attributes line as printed (units, frequency, seasonal adjustment) and the observation range as printed. An unknown category id is `not_found`.",
+        "key": "series",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "attributes",
+            "type": "string",
+            "about": "The attributes line as printed, e.g. \"Billions of Chained 2017 Dollars, Quarterly, Seasonally Adjusted Annual Rate\"."
+          },
+          {
+            "name": "frequency",
+            "type": "string"
+          },
+          {
+            "name": "observation_range",
+            "type": "string",
+            "about": "As printed, e.g. \"Q1 1947 to Q2 2026 (Aug 26)\" (the parenthesis is the last update)."
+          },
+          {
+            "name": "seasonal_adjustment",
+            "type": "string"
+          },
+          {
+            "name": "series_id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "about": "Group title as printed; FRED groups unit/frequency variants of one measure under one title."
+          },
+          {
+            "name": "units",
+            "type": "string",
+            "about": "Units split from `attributes`; null when the line does not end in FRED's frequency + seasonal-adjustment vocabulary."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "category_id": 106
+        },
+        "response": {
+          "category_id": 106,
+          "children": [
+            {
+              "category_id": 33020,
+              "name": "Shares of GDP",
+              "series_count": "75"
+            }
+          ],
+          "name": "GDP/GNP",
+          "next_page": 2,
+          "observed_at_ms": 1790009035874,
+          "page": 1,
+          "path": [
+            {
+              "category_id": 32992,
+              "name": "National Accounts"
+            },
+            {
+              "category_id": 18,
+              "name": "National Income & Product Accounts"
+            }
+          ],
+          "series": [
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "GDPC1",
+              "title": "Real Gross Domestic Product",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/GDPC1"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 1947 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A191RL1Q225SBEA",
+              "title": "Real Gross Domestic Product",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RL1Q225SBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "GDPCA",
+              "title": "Real Gross Domestic Product",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/GDPCA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1930 to 2025 (Mar 13)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A191RL1A225NBEA",
+              "title": "Real Gross Domestic Product",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RL1A225NBEA"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Quarterly, Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1948 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "A191RO1Q156NBEA",
+              "title": "Real Gross Domestic Product",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/A191RO1Q156NBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "ND000334Q",
+              "title": "Real Gross Domestic Product",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/ND000334Q"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2003 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "OB000334Q",
+              "title": "Real Gross Domestic Product",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/OB000334Q"
+            },
+            {
+              "attributes": "Index 2017=100, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NB000334Q",
+              "title": "Real Gross Domestic Product",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/NB000334Q"
+            },
+            {
+              "attributes": "Billions of Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "GDP",
+              "title": "Gross Domestic Product",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/GDP"
+            },
+            {
+              "attributes": "Billions of Dollars, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "GDPA",
+              "title": "Gross Domestic Product",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/GDPA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A191RP1Q027SBEA",
+              "title": "Gross Domestic Product",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RP1Q027SBEA"
+            },
+            {
+              "attributes": "Millions of Dollars, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NA000334Q",
+              "title": "Gross Domestic Product",
+              "units": "Millions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/NA000334Q"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1930 to 2025 (Mar 13)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A191RP1A027NBEA",
+              "title": "Gross Domestic Product",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RP1A027NBEA"
+            },
+            {
+              "attributes": "Index 2017=100, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NC000334Q",
+              "title": "Gross Domestic Product",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/NC000334Q"
+            },
+            {
+              "attributes": "Chained 2017 Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A939RX0Q048SBEA",
+              "title": "Real gross domestic product per capita",
+              "units": "Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/A939RX0Q048SBEA"
+            },
+            {
+              "attributes": "Percent Change at Annual Rate, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q3 2011 to Q3 2026 (4 days ago)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "GDPNOW",
+              "title": "GDPNow",
+              "units": "Percent Change at Annual Rate",
+              "url": "https://fred.stlouisfed.org/series/GDPNOW"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1949 to Q4 2036 (Feb 27)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "GDPPOT",
+              "title": "Real Potential Gross Domestic Product",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/GDPPOT"
+            },
+            {
+              "attributes": "Percent Change at Annual Rate, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 2013 to Q3 2026 (2 days ago)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "STLENI",
+              "title": "St. Louis Fed Economic News Index: Real GDP Nowcast",
+              "units": "Percent Change at Annual Rate",
+              "url": "https://fred.stlouisfed.org/series/STLENI"
+            },
+            {
+              "attributes": "Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A939RC0A052NBEA",
+              "title": "Gross domestic product per capita",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/A939RC0A052NBEA"
+            },
+            {
+              "attributes": "Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A939RC0Q052SBEA",
+              "title": "Gross domestic product per capita",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/A939RC0Q052SBEA"
+            },
+            {
+              "attributes": "Index, Weekly, Not Seasonally Adjusted",
+              "frequency": "Weekly",
+              "observation_range": "2008-01-05 to 2026-09-12 (4 days ago)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "WEI",
+              "title": "Weekly Economic Index (Lewis-Mertens-Stock)",
+              "units": "Index",
+              "url": "https://fred.stlouisfed.org/series/WEI"
+            },
+            {
+              "attributes": "Billions of Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "GNP",
+              "title": "Gross National Product",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/GNP"
+            },
+            {
+              "attributes": "Billions of Dollars, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "GNPA",
+              "title": "Gross National Product",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/GNPA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A001RP1Q027SBEA",
+              "title": "Gross National Product",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A001RP1Q027SBEA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1930 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A001RP1A027NBEA",
+              "title": "Gross National Product",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A001RP1A027NBEA"
+            },
+            {
+              "attributes": "Billions of 2017 US Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "LB0000031Q020SBEA",
+              "title": "Real Final Sales to Private Domestic Purchasers",
+              "units": "Billions of 2017 US Dollars",
+              "url": "https://fred.stlouisfed.org/series/LB0000031Q020SBEA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "PB0000031Q225SBEA",
+              "title": "Real Final Sales to Private Domestic Purchasers",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/PB0000031Q225SBEA"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1948 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "PE0000031Q156NBEA",
+              "title": "Real Final Sales to Private Domestic Purchasers",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/PE0000031Q156NBEA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1930 to 2025 (Mar 13)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "PB0000031A225NBEA",
+              "title": "Real Final Sales to Private Domestic Purchasers",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/PB0000031A225NBEA"
+            },
+            {
+              "attributes": "Fourth Quarter to Fourth Quarter Percent Change, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "2026 to 2029 (4 days ago)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "GDPC1CTM",
+              "title": "FOMC Summary of Economic Projections for the Growth Rate of Real Gross Domestic Product, Central Tendency, Midpoint",
+              "units": "Fourth Quarter to Fourth Quarter Percent Change",
+              "url": "https://fred.stlouisfed.org/series/GDPC1CTM"
+            },
+            {
+              "attributes": "Billions of Dollars, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (May 28)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A032RC1A027NBEA",
+              "title": "National income",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/A032RC1A027NBEA"
+            },
+            {
+              "attributes": "Monthly",
+              "frequency": "Monthly",
+              "observation_range": "Jan 1960 to Jun 2026 (Aug 31)",
+              "seasonal_adjustment": null,
+              "series_id": "BBKMGDP",
+              "title": "Brave-Butters-Kelley Real Gross Domestic Product",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/BBKMGDP"
+            },
+            {
+              "attributes": "Quarterly",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1960 to Q2 2026 (Aug 31)",
+              "seasonal_adjustment": null,
+              "series_id": "BBKQGDP",
+              "title": "Brave-Butters-Kelley Real Gross Domestic Product",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/BBKQGDP"
+            },
+            {
+              "attributes": "Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A261RX1Q020SBEA",
+              "title": "Real gross domestic income",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/A261RX1Q020SBEA"
+            },
+            {
+              "attributes": "Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (May 28)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A261RX1A020NBEA",
+              "title": "Real gross domestic income",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/A261RX1A020NBEA"
+            },
+            {
+              "attributes": "Billions of Dollars, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1949 to Q4 2036 (Feb 27)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NGDPPOT",
+              "title": "Nominal Potential Gross Domestic Product",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/NGDPPOT"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "PB0000091Q225SBEA",
+              "title": "Real Average of GDP and GDI",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/PB0000091Q225SBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "LB0000091Q020SBEA",
+              "title": "Real Average of GDP and GDI",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/LB0000091Q020SBEA"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1948 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "PE0000091Q156NBEA",
+              "title": "Real Average of GDP and GDI",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/PE0000091Q156NBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (May 28)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "LB0000091A020NBEA",
+              "title": "Real Average of GDP and GDI",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/LB0000091A020NBEA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1930 to 2025 (May 28)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "PB0000091A225NBEA",
+              "title": "Real Average of GDP and GDI",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/PB0000091A225NBEA"
+            },
+            {
+              "attributes": "Fourth Quarter to Fourth Quarter Percent Change, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "2026 to 2029 (4 days ago)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "GDPC1MD",
+              "title": "FOMC Summary of Economic Projections for the Growth Rate of Real Gross Domestic Product, Median",
+              "units": "Fourth Quarter to Fourth Quarter Percent Change",
+              "url": "https://fred.stlouisfed.org/series/GDPC1MD"
+            },
+            {
+              "attributes": "Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A027RC1A027NBEA",
+              "title": "Net national product",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/A027RC1A027NBEA"
+            },
+            {
+              "attributes": "Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A027RC1Q027SBEA",
+              "title": "Net national product",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/A027RC1Q027SBEA"
+            },
+            {
+              "attributes": "Monthly",
+              "frequency": "Monthly",
+              "observation_range": "Jan 1960 to Jul 2026 (Aug 31)",
+              "seasonal_adjustment": null,
+              "series_id": "BBKMLEIX",
+              "title": "Brave-Butters-Kelley Leading Index",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/BBKMLEIX"
+            },
+            {
+              "attributes": "Quarterly",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1960 to Q2 2026 (Aug 31)",
+              "seasonal_adjustment": null,
+              "series_id": "BBKQLEIX",
+              "title": "Brave-Butters-Kelley Leading Index",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/BBKQLEIX"
+            },
+            {
+              "attributes": "Billions of Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "CBI",
+              "title": "Change in Private Inventories",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/CBI"
+            },
+            {
+              "attributes": "Millions of Dollars, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NA000373Q",
+              "title": "Change in Private Inventories",
+              "units": "Millions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/NA000373Q"
+            },
+            {
+              "attributes": "Billions of Dollars, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "CBIA",
+              "title": "Change in Private Inventories",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/CBIA"
+            },
+            {
+              "attributes": "Billions of Dollars, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (May 28)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "X032RC1A027NBEA",
+              "title": "Net national factor income",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/X032RC1A027NBEA"
+            }
+          ],
+          "url": "https://fred.stlouisfed.org/categories/106"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fred-stlouisfed-org",
+        "capability": "economic-data/category"
+      }
+    },
+    {
+      "id": "fred-stlouisfed-org/economic-data/release",
+      "provider": "fred-stlouisfed-org",
+      "capability": "economic-data/release",
+      "name": "Release",
+      "description": "Browse the series a release publishes (e.g. release 53 = Gross Domestic Product) and hand `series[].series_id` to `series` / `series_observations`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page (50 rows per page); pass `next_page` from the previous result.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "release_id",
+          "type": "number",
+          "in": "body",
+          "about": "FRED release id (e.g. 53 Gross Domestic Product, 50 Employment Situation), a numeric string, or a pasted https://fred.stlouisfed.org/release?rid={id} URL.",
+          "required": true,
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "One FRED release from its site page (/release?rid=): name, publishing source, the release's website link, its release tables (element ids with FRED's printed record counts, for the site's /release/tables view) and one 50-row page of the series in the release (id, group title, attributes line split into units / frequency / seasonal adjustment when FRED's vocabulary allows, observation range as printed), with `page`/`next_page`. An unknown release id is `not_found`.",
+        "key": "series",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "attributes",
+            "type": "string",
+            "about": "The attributes line as printed, e.g. \"Billions of Chained 2017 Dollars, Quarterly, Seasonally Adjusted Annual Rate\"."
+          },
+          {
+            "name": "frequency",
+            "type": "string"
+          },
+          {
+            "name": "observation_range",
+            "type": "string",
+            "about": "As printed, e.g. \"Q1 1947 to Q2 2026 (Aug 26)\" (the parenthesis is the last update)."
+          },
+          {
+            "name": "seasonal_adjustment",
+            "type": "string"
+          },
+          {
+            "name": "series_id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "about": "Group title as printed; FRED groups unit/frequency variants of one measure under one title."
+          },
+          {
+            "name": "units",
+            "type": "string",
+            "about": "Units split from `attributes`; null when the line does not end in FRED's frequency + seasonal-adjustment vocabulary."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "release_id": 53
+        },
+        "response": {
+          "link": "https://www.bea.gov/data/gdp/gross-domestic-product",
+          "name": "Gross Domestic Product",
+          "next_page": 2,
+          "observed_at_ms": 1790009471985,
+          "page": 1,
+          "release_id": 53,
+          "series": [
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "GDPC1",
+              "title": "Real Gross Domestic Product",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/GDPC1"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 1947 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A191RL1Q225SBEA",
+              "title": "Real Gross Domestic Product",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RL1Q225SBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "GDPCA",
+              "title": "Real Gross Domestic Product",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/GDPCA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1930 to 2025 (Mar 13)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A191RL1A225NBEA",
+              "title": "Real Gross Domestic Product",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RL1A225NBEA"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Quarterly, Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1948 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "A191RO1Q156NBEA",
+              "title": "Real Gross Domestic Product",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/A191RO1Q156NBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "ND000334Q",
+              "title": "Real Gross Domestic Product",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/ND000334Q"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2003 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "OB000334Q",
+              "title": "Real Gross Domestic Product",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/OB000334Q"
+            },
+            {
+              "attributes": "Index 2017=100, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NB000334Q",
+              "title": "Real Gross Domestic Product",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/NB000334Q"
+            },
+            {
+              "attributes": "Billions of Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "GDP",
+              "title": "Gross Domestic Product",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/GDP"
+            },
+            {
+              "attributes": "Billions of Dollars, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "GDPA",
+              "title": "Gross Domestic Product",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/GDPA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A191RP1Q027SBEA",
+              "title": "Gross Domestic Product",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RP1Q027SBEA"
+            },
+            {
+              "attributes": "Millions of Dollars, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NA000334Q",
+              "title": "Gross Domestic Product",
+              "units": "Millions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/NA000334Q"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1930 to 2025 (Mar 13)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A191RP1A027NBEA",
+              "title": "Gross Domestic Product",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RP1A027NBEA"
+            },
+            {
+              "attributes": "Index 2017=100, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NC000334Q",
+              "title": "Gross Domestic Product",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/NC000334Q"
+            },
+            {
+              "attributes": "Quarterly, Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "PCECTPI",
+              "title": "Personal Consumption Expenditures: Chain-type Price Index",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/PCECTPI"
+            },
+            {
+              "attributes": "Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "DPCERG3A086NBEA",
+              "title": "Personal Consumption Expenditures: Chain-type Price Index",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/DPCERG3A086NBEA"
+            },
+            {
+              "attributes": "Billions of Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "PCEC",
+              "title": "Personal Consumption Expenditures",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/PCEC"
+            },
+            {
+              "attributes": "Billions of Dollars, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "PCECA",
+              "title": "Personal Consumption Expenditures",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/PCECA"
+            },
+            {
+              "attributes": "Millions of Dollars, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NA000349Q",
+              "title": "Personal Consumption Expenditures",
+              "units": "Millions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/NA000349Q"
+            },
+            {
+              "attributes": "Index 2017=100, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NC000349Q",
+              "title": "Personal Consumption Expenditures",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/NC000349Q"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Quarterly, Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1960 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "BPCCRO1Q156NBEA",
+              "title": "Personal Consumption Expenditures Excluding Food and Energy (Chain-Type Price Index)",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/BPCCRO1Q156NBEA"
+            },
+            {
+              "attributes": "Index 2017=100, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "DPCCRG3A086NBEA",
+              "title": "Personal Consumption Expenditures Excluding Food and Energy (Chain-Type Price Index)",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/DPCCRG3A086NBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "PCECC96",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/PCECC96"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "DPCERL1Q225SBEA",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/DPCERL1Q225SBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Apr 9)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "PCECCA",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/PCECCA"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Quarterly, Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1948 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "DPCERO1Q156NBEA",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/DPCERO1Q156NBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "ND000349Q",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/ND000349Q"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1930 to 2025 (Mar 13)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "DPCERL1A225NBEA",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/DPCERL1A225NBEA"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2003 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "OB000349Q",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/OB000349Q"
+            },
+            {
+              "attributes": "Index 2017=100, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NB000349Q",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/NB000349Q"
+            },
+            {
+              "attributes": "Chained 2017 Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A939RX0Q048SBEA",
+              "title": "Real gross domestic product per capita",
+              "units": "Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/A939RX0Q048SBEA"
+            },
+            {
+              "attributes": "Billions of Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "CP",
+              "title": "Corporate Profits After Tax (without IVA and CCAdj)",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/CP"
+            },
+            {
+              "attributes": "Billions of Dollars, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A091RC1Q027SBEA",
+              "title": "Federal government current expenditures: Interest payments",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/A091RC1Q027SBEA"
+            },
+            {
+              "attributes": "Millions of Dollars, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NA000308Q",
+              "title": "Federal government current expenditures: Interest payments",
+              "units": "Millions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/NA000308Q"
+            },
+            {
+              "attributes": "Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 1959 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "DPCCRV1Q225SBEA",
+              "title": "Personal Consumption Expenditures (PCE) Excluding Food and Energy (Chain-Type Price Index)",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/DPCCRV1Q225SBEA"
+            },
+            {
+              "attributes": "Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1930 to 2025 (Feb 20)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "DPCCRV1A225NBEA",
+              "title": "Personal Consumption Expenditures (PCE) Excluding Food and Energy (Chain-Type Price Index)",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/DPCCRV1A225NBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "DPIC96",
+              "title": "Real Disposable Personal Income",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/DPIC96"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Quarterly, Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1948 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "A067RO1Q156NBEA",
+              "title": "Real Disposable Personal Income",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/A067RO1Q156NBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (May 28)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A067RX1A020NBEA",
+              "title": "Real Disposable Personal Income",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/A067RX1A020NBEA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 1947 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A067RL1Q156SBEA",
+              "title": "Real Disposable Personal Income",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A067RL1Q156SBEA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1930 to 2025 (Mar 13)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A067RL1A156NBEA",
+              "title": "Real Disposable Personal Income",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A067RL1A156NBEA"
+            },
+            {
+              "attributes": "Index 2017=100, Quarterly, Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "GDPDEF",
+              "title": "Gross Domestic Product: Implicit Price Deflator",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/GDPDEF"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A191RI1Q225SBEA",
+              "title": "Gross Domestic Product: Implicit Price Deflator",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RI1Q225SBEA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1930 to 2025 (Feb 20)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A191RI1A225NBEA",
+              "title": "Gross Domestic Product: Implicit Price Deflator",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RI1A225NBEA"
+            },
+            {
+              "attributes": "Billions of Dollars, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "FGEXPND",
+              "title": "Federal Government: Current Expenditures",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/FGEXPND"
+            },
+            {
+              "attributes": "Millions of Dollars, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NA000283Q",
+              "title": "Federal Government: Current Expenditures",
+              "units": "Millions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/NA000283Q"
+            },
+            {
+              "attributes": "Annual",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (Feb 20)",
+              "seasonal_adjustment": null,
+              "series_id": "B230RC0A052NBEA",
+              "title": "Population",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/B230RC0A052NBEA"
+            },
+            {
+              "attributes": "Quarterly",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": null,
+              "series_id": "B230RC0Q173SBEA",
+              "title": "Population",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/B230RC0Q173SBEA"
+            },
+            {
+              "attributes": "Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "DPI",
+              "title": "Disposable Personal Income",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/DPI"
+            },
+            {
+              "attributes": "Annual, Not Seasonally Adjusted",
+              "frequency": "Annual",
+              "observation_range": "1929 to 2025 (May 28)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "A067RC1A027NBEA",
+              "title": "Disposable Personal Income",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/A067RC1A027NBEA"
+            }
+          ],
+          "source": {
+            "name": "U.S. Bureau of Economic Analysis",
+            "source_id": 18,
+            "url": "https://fred.stlouisfed.org/source?soid=18"
+          },
+          "tables": [
+            {
+              "element_id": 13690,
+              "name": "Section 1 - Domestic Product and Income",
+              "records": "2,820",
+              "url": "https://fred.stlouisfed.org/release/tables?rid=53&eid=13690"
+            },
+            {
+              "element_id": 4081,
+              "name": "Section 2 - Personal Income and Outlays",
+              "records": "1,475",
+              "url": "https://fred.stlouisfed.org/release/tables?rid=53&eid=4081"
+            },
+            {
+              "element_id": 5221,
+              "name": "Section 3 - Government Current Receipts and Expenditures",
+              "records": "2,051",
+              "url": "https://fred.stlouisfed.org/release/tables?rid=53&eid=5221"
+            },
+            {
+              "element_id": 5402,
+              "name": "Section 4 - Foreign Transactions",
+              "records": "501",
+              "url": "https://fred.stlouisfed.org/release/tables?rid=53&eid=5402"
+            },
+            {
+              "element_id": 7579,
+              "name": "Section 5 - Saving and Investment",
+              "records": "1,936",
+              "url": "https://fred.stlouisfed.org/release/tables?rid=53&eid=7579"
+            },
+            {
+              "element_id": 15424,
+              "name": "Section 6 - Income and Employment by Industry",
+              "records": "54",
+              "url": "https://fred.stlouisfed.org/release/tables?rid=53&eid=15424"
+            },
+            {
+              "element_id": 15425,
+              "name": "Section 7 - Supplemental Tables",
+              "records": "236",
+              "url": "https://fred.stlouisfed.org/release/tables?rid=53&eid=15425"
+            },
+            {
+              "element_id": 291652,
+              "name": "Section 8 - Not Seasonally Adjusted",
+              "records": "200",
+              "url": "https://fred.stlouisfed.org/release/tables?rid=53&eid=291652"
+            }
+          ],
+          "url": "https://fred.stlouisfed.org/release?rid=53"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fred-stlouisfed-org",
+        "capability": "economic-data/release"
+      }
+    },
+    {
+      "id": "fred-stlouisfed-org/economic-data/releases",
+      "provider": "fred-stlouisfed-org",
+      "capability": "economic-data/releases",
+      "name": "Releases",
+      "description": "Find a `release_id` for `release`; releases group the series a statistical agency publishes together.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page (50 rows per page); pass `next_page` from the previous result.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "List FRED data releases (e.g. Gross Domestic Product, Employment Situation) from the site's /releases page: alphabetical, 50 per page with `page`/`next_page`; `total` is the count FRED prints (\"Releases 1 - 50 of 332\"). A page past the end is `not_found`.",
+        "key": "releases",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "release_id",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Release page on fred.stlouisfed.org."
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "next_page": 2,
+          "observed_at_ms": 1790009465835,
+          "page": 1,
+          "releases": [
+            {
+              "name": "AD&Co US Mortgage High Yield Index",
+              "release_id": 489,
+              "url": "https://fred.stlouisfed.org/release?rid=489"
+            },
+            {
+              "name": "ADP National Employment Report",
+              "release_id": 194,
+              "url": "https://fred.stlouisfed.org/release?rid=194"
+            },
+            {
+              "name": "Advance Economic Indicators",
+              "release_id": 435,
+              "url": "https://fred.stlouisfed.org/release?rid=435"
+            },
+            {
+              "name": "Advance Monthly Sales for Retail and Food Services",
+              "release_id": 9,
+              "url": "https://fred.stlouisfed.org/release?rid=9"
+            },
+            {
+              "name": "Age-Adjusted Premature Death Rate",
+              "release_id": 433,
+              "url": "https://fred.stlouisfed.org/release?rid=433"
+            },
+            {
+              "name": "Alternative Measures of Labor Underutilization for States",
+              "release_id": 353,
+              "url": "https://fred.stlouisfed.org/release?rid=353"
+            },
+            {
+              "name": "A Millennium of Macroeconomic Data for the UK",
+              "release_id": 389,
+              "url": "https://fred.stlouisfed.org/release?rid=389"
+            },
+            {
+              "name": "An Arbitrage-Free Three-Factor Term Structure Model and the Recent Behavior of Long-Term Yields and Distant-Horizon Forward Rates",
+              "release_id": 354,
+              "url": "https://fred.stlouisfed.org/release?rid=354"
+            },
+            {
+              "name": "Annual Estimates of the Population for Counties",
+              "release_id": 119,
+              "url": "https://fred.stlouisfed.org/release?rid=119"
+            },
+            {
+              "name": "Annual Estimates of the Population for the U.S. and States, and for Puerto Rico",
+              "release_id": 118,
+              "url": "https://fred.stlouisfed.org/release?rid=118"
+            },
+            {
+              "name": "Annual Estimates of the Population of Metropolitan and Micropolitan Statistical Areas",
+              "release_id": 111,
+              "url": "https://fred.stlouisfed.org/release?rid=111"
+            },
+            {
+              "name": "Annual Integrated Economic Survey (AIES)",
+              "release_id": 868,
+              "url": "https://fred.stlouisfed.org/release?rid=868"
+            },
+            {
+              "name": "Annual Survey of State Government Tax Collections",
+              "release_id": 143,
+              "url": "https://fred.stlouisfed.org/release?rid=143"
+            },
+            {
+              "name": "Asia and Pacific Regional Economic Outlook",
+              "release_id": 366,
+              "url": "https://fred.stlouisfed.org/release?rid=366"
+            },
+            {
+              "name": "Australian Foreign Exchange Transactions",
+              "release_id": 165,
+              "url": "https://fred.stlouisfed.org/release?rid=165"
+            },
+            {
+              "name": "Average Price Data",
+              "release_id": 454,
+              "url": "https://fred.stlouisfed.org/release?rid=454"
+            },
+            {
+              "name": "Banking and Monetary Statistics, 1914-1941",
+              "release_id": 388,
+              "url": "https://fred.stlouisfed.org/release?rid=388"
+            },
+            {
+              "name": "Bank of Japan Accounts",
+              "release_id": 266,
+              "url": "https://fred.stlouisfed.org/release?rid=266"
+            },
+            {
+              "name": "Bankrate Consumer Polls",
+              "release_id": 741,
+              "url": "https://fred.stlouisfed.org/release?rid=741"
+            },
+            {
+              "name": "Bankrate Monitor (BRM) National Index",
+              "release_id": 742,
+              "url": "https://fred.stlouisfed.org/release?rid=742"
+            },
+            {
+              "name": "Bankstats (Monetary & Financial Statistics)",
+              "release_id": 270,
+              "url": "https://fred.stlouisfed.org/release?rid=270"
+            },
+            {
+              "name": "BEA Regions Employment and Unemployment",
+              "release_id": 138,
+              "url": "https://fred.stlouisfed.org/release?rid=138"
+            },
+            {
+              "name": "BEA Regions Health Insurance Coverage",
+              "release_id": 153,
+              "url": "https://fred.stlouisfed.org/release?rid=153"
+            },
+            {
+              "name": "BEA Regions Housing Units Authorized By Building Permits",
+              "release_id": 173,
+              "url": "https://fred.stlouisfed.org/release?rid=173"
+            },
+            {
+              "name": "BIS Effective Exchange Rate Indices",
+              "release_id": 319,
+              "url": "https://fred.stlouisfed.org/release?rid=319"
+            },
+            {
+              "name": "Brave-Butters-Kelley Indexes",
+              "release_id": 488,
+              "url": "https://fred.stlouisfed.org/release?rid=488"
+            },
+            {
+              "name": "Budget and Economic Outlook",
+              "release_id": 99,
+              "url": "https://fred.stlouisfed.org/release?rid=99"
+            },
+            {
+              "name": "Burdened Households",
+              "release_id": 413,
+              "url": "https://fred.stlouisfed.org/release?rid=413"
+            },
+            {
+              "name": "Business Formation Statistics",
+              "release_id": 443,
+              "url": "https://fred.stlouisfed.org/release?rid=443"
+            },
+            {
+              "name": "Business Leaders Survey",
+              "release_id": 322,
+              "url": "https://fred.stlouisfed.org/release?rid=322"
+            },
+            {
+              "name": "Cass Freight Index Report",
+              "release_id": 280,
+              "url": "https://fred.stlouisfed.org/release?rid=280"
+            },
+            {
+              "name": "CBOE Market Statistics",
+              "release_id": 200,
+              "url": "https://fred.stlouisfed.org/release?rid=200"
+            },
+            {
+              "name": "Characteristics of Minimum Wage Workers",
+              "release_id": 384,
+              "url": "https://fred.stlouisfed.org/release?rid=384"
+            },
+            {
+              "name": "Charge-Off and Delinquency Rates on Loans and Leases at Commercial Banks",
+              "release_id": 231,
+              "url": "https://fred.stlouisfed.org/release?rid=231"
+            },
+            {
+              "name": "Chicago Fed Advance Retail Trade Summary",
+              "release_id": 494,
+              "url": "https://fred.stlouisfed.org/release?rid=494"
+            },
+            {
+              "name": "Chicago Fed Midwest Economy Index",
+              "release_id": 333,
+              "url": "https://fred.stlouisfed.org/release?rid=333"
+            },
+            {
+              "name": "Chicago Fed Midwest Manufacturing Index",
+              "release_id": 292,
+              "url": "https://fred.stlouisfed.org/release?rid=292"
+            },
+            {
+              "name": "Chicago Fed National Activity Index",
+              "release_id": 219,
+              "url": "https://fred.stlouisfed.org/release?rid=219"
+            },
+            {
+              "name": "Chicago Fed National Financial Conditions Index",
+              "release_id": 221,
+              "url": "https://fred.stlouisfed.org/release?rid=221"
+            },
+            {
+              "name": "Chicago Fed Survey of Economic Conditions",
+              "release_id": 372,
+              "url": "https://fred.stlouisfed.org/release?rid=372"
+            },
+            {
+              "name": "Cleveland Financial Stress Index",
+              "release_id": 302,
+              "url": "https://fred.stlouisfed.org/release?rid=302"
+            },
+            {
+              "name": "Coinbase Cryptocurrencies",
+              "release_id": 441,
+              "url": "https://fred.stlouisfed.org/release?rid=441"
+            },
+            {
+              "name": "Coinbase Index",
+              "release_id": 440,
+              "url": "https://fred.stlouisfed.org/release?rid=440"
+            },
+            {
+              "name": "Commercial Paper",
+              "release_id": 86,
+              "url": "https://fred.stlouisfed.org/release?rid=86"
+            },
+            {
+              "name": "Community Bank Sentiment Index",
+              "release_id": 505,
+              "url": "https://fred.stlouisfed.org/release?rid=505"
+            },
+            {
+              "name": "Construction Spending",
+              "release_id": 229,
+              "url": "https://fred.stlouisfed.org/release?rid=229"
+            },
+            {
+              "name": "Consumer Expenditure Surveys",
+              "release_id": 479,
+              "url": "https://fred.stlouisfed.org/release?rid=479"
+            },
+            {
+              "name": "Consumer Price Index",
+              "release_id": 10,
+              "url": "https://fred.stlouisfed.org/release?rid=10"
+            },
+            {
+              "name": "Corporate Bond Yield Curve",
+              "release_id": 402,
+              "url": "https://fred.stlouisfed.org/release?rid=402"
+            },
+            {
+              "name": "Cotton Production in New England",
+              "release_id": 458,
+              "url": "https://fred.stlouisfed.org/release?rid=458"
+            }
+          ],
+          "total": 332,
+          "url": "https://fred.stlouisfed.org/releases"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fred-stlouisfed-org",
+        "capability": "economic-data/releases"
+      }
+    },
+    {
+      "id": "fred-stlouisfed-org/economic-data/series",
+      "provider": "fred-stlouisfed-org",
+      "capability": "economic-data/series",
+      "name": "Series",
+      "description": "Confirm what a `series_id` (or a pasted fred.stlouisfed.org/series/{id} page URL) measures and which `units`/`frequency` values `series_observations` accepts for it; the data points themselves come from `series_observations`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "series_id",
+          "type": "string",
+          "in": "body",
+          "about": "FRED series id, e.g. GDP, UNRATE, CPIAUCSL (case-insensitive), or a pasted https://fred.stlouisfed.org/series/{id} URL.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Metadata for one FRED economic time series (e.g. UNRATE unemployment rate, CPIAUCSL consumer price index, GDP) from the site's series JSON (graph/api/series): title, units, frequency, seasonal adjustment, source, notes, first and last observation date, last update, the transformations (units codes) and aggregation frequencies FRED offers for it. An unknown series id is `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "available_frequencies",
+            "type": "string[]",
+            "about": "Aggregation frequencies FRED offers for this series (native first), e.g. Quarterly, Semiannual, Annual."
+          },
+          {
+            "name": "available_units",
+            "type": "object[]"
+          },
+          {
+            "name": "frequency",
+            "type": "string"
+          },
+          {
+            "name": "frequency_short",
+            "type": "string"
+          },
+          {
+            "name": "last_updated",
+            "type": "string",
+            "about": "As FRED states it, e.g. 2026-08-26 07:49:01-05 (US Central time)."
+          },
+          {
+            "name": "notes",
+            "type": "string",
+            "about": "FRED notes (source account codes, methodology, copyright or citation notes). Null when the site carries none."
+          },
+          {
+            "name": "observation_end",
+            "type": "string"
+          },
+          {
+            "name": "observation_start",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "seasonal_adjustment",
+            "type": "string"
+          },
+          {
+            "name": "seasonal_adjustment_short",
+            "type": "string"
+          },
+          {
+            "name": "series_id",
+            "type": "string"
+          },
+          {
+            "name": "source",
+            "type": "string",
+            "about": "Data source as printed under the chart, e.g. U.S. Bureau of Economic Analysis. Null when the site prints none."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "units",
+            "type": "string",
+            "about": "Units of the level series (transformation `lin`), e.g. Billions of Dollars."
+          },
+          {
+            "name": "units_short",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Series page on fred.stlouisfed.org."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "series_id": "GDP"
+        },
+        "response": {
+          "available_frequencies": [
+            "Quarterly",
+            "Semiannual",
+            "Annual"
+          ],
+          "available_units": [
+            {
+              "code": "cca",
+              "label": "Continuously Compounded Annual Rate of Change"
+            },
+            {
+              "code": "cch",
+              "label": "Continuously Compounded Rate of Change"
+            },
+            {
+              "code": "ch1",
+              "label": "Change from Year Ago, Billions of Dollars"
+            },
+            {
+              "code": "chg",
+              "label": "Change, Billions of Dollars"
+            },
+            {
+              "code": "lin",
+              "label": "Billions of Dollars"
+            },
+            {
+              "code": "pc1",
+              "label": "Percent Change from Year Ago"
+            },
+            {
+              "code": "pca",
+              "label": "Compounded Annual Rate of Change"
+            },
+            {
+              "code": "pch",
+              "label": "Percent Change"
+            }
+          ],
+          "frequency": "Quarterly",
+          "frequency_short": "Q",
+          "last_updated": "2026-08-26 07:49:01-05",
+          "notes": "BEA Account Code: A191RC\n\nGross domestic product (GDP), the featured measure of U.S. output, is the market value of the goods and services produced by labor and property located in the United States.For more information, see the Guide to the National Income and Product Accounts of the United States (NIPA) and the Bureau of Economic Analysis (http://www.bea.gov/national/pdf/nipaguid.pdf).",
+          "observation_end": "2026-04-01",
+          "observation_start": "1947-01-01",
+          "observed_at_ms": 1790008349105,
+          "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+          "seasonal_adjustment_short": "SAAR",
+          "series_id": "GDP",
+          "source": "U.S. Bureau of Economic Analysis",
+          "title": "Gross Domestic Product",
+          "units": "Billions of Dollars",
+          "units_short": "Bil. of $",
+          "url": "https://fred.stlouisfed.org/series/GDP"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fred-stlouisfed-org",
+        "capability": "economic-data/series"
+      }
+    },
+    {
+      "id": "fred-stlouisfed-org/economic-data/series_observations",
+      "provider": "fred-stlouisfed-org",
+      "capability": "economic-data/series_observations",
+      "name": "Series observations",
+      "description": "Get the historical values of a known `series_id` or a pasted fred.stlouisfed.org/series/{id} page URL (monthly US unemployment rate = UNRATE, CPI = CPIAUCSL, real GDP = GDPC1); pick `units` and `frequency` from `series.available_units` / `series.available_frequencies`. Use `series_search` first when only the concept is known.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "aggregation_method",
+          "type": "string",
+          "in": "body",
+          "about": "How observations are aggregated when `frequency` is lower than native: average, sum or end of period.",
+          "default": "avg",
+          "oneOf": [
+            "avg",
+            "sum",
+            "eop"
+          ]
+        },
+        {
+          "name": "frequency",
+          "type": "string",
+          "in": "body",
+          "about": "Aggregate to a lower frequency (FRED API codes: d daily, w weekly, bw biweekly, m monthly, q quarterly, sa semiannual, a annual). Omit for the native frequency.",
+          "oneOf": [
+            "d",
+            "w",
+            "bw",
+            "m",
+            "q",
+            "sa",
+            "a"
+          ]
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Observations per page.",
+          "default": 1000,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "observation_end",
+          "type": "string",
+          "in": "body",
+          "about": "Last observation date (inclusive), YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "observation_start",
+          "type": "string",
+          "in": "body",
+          "about": "First observation date (inclusive), YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "Zero-based index of the first observation to return, in `sort_order`; pass `next_offset` from the previous page.",
+          "default": 0,
+          "min": 0
+        },
+        {
+          "name": "series_id",
+          "type": "string",
+          "in": "body",
+          "about": "FRED series id, e.g. GDP, UNRATE (case-insensitive), or a pasted https://fred.stlouisfed.org/series/{id} page URL or https://fred.stlouisfed.org/graph/fredgraph.csv?id=... URL (its `id` is used; other query parameters are ignored).",
+          "required": true
+        },
+        {
+          "name": "sort_order",
+          "type": "string",
+          "in": "body",
+          "about": "Date order of the observations.",
+          "default": "asc",
+          "oneOf": [
+            "asc",
+            "desc"
+          ]
+        },
+        {
+          "name": "units",
+          "type": "string",
+          "in": "body",
+          "about": "FRED transformation code: lin levels, chg change, ch1 change from year ago, pch percent change, pc1 percent change from year ago, pca compounded annual rate of change, cch continuously compounded rate of change, cca continuously compounded annual rate of change, log natural log.",
+          "default": "lin",
+          "oneOf": [
+            "lin",
+            "chg",
+            "ch1",
+            "pch",
+            "pc1",
+            "pca",
+            "cch",
+            "cca",
+            "log"
+          ]
+        }
+      ],
+      "response": {
+        "about": "The data points of one FRED economic time series, e.g. the monthly US unemployment rate (UNRATE), CPI inflation (CPIAUCSL), quarterly GDP, nonfarm payrolls (PAYEMS), the federal funds rate (FEDFUNDS) or the 10-year Treasury yield (DGS10), from the site's keyless CSV export (graph/fredgraph.csv): date/value rows, optionally windowed by date, aggregated to a lower frequency and transformed (percent change, change from year ago, ...). The full CSV is fetched once and paginated client-side with `limit`/`offset`; `count` is the total number of rows FRED returned for the request. Values FRED leaves blank (not yet published, missing) are `value: null` with `raw: \".\"`, matching the FRED API's missing-value marker. Vintage (as-of) data is not available on this endpoint. An unknown series id is `not_found`.",
+        "key": "observations",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "raw",
+            "type": "string",
+            "about": "The value as FRED prints it; \".\" marks a missing value, as in the FRED API."
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "about": "Numeric value; null when FRED reports the observation as missing."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "frequency": "a",
+          "observation_end": "2025-12-31",
+          "observation_start": "2020-01-01",
+          "series_id": "GDP",
+          "units": "pc1"
+        },
+        "response": {
+          "aggregation_method": "avg",
+          "count": 6,
+          "frequency": "a",
+          "limit": 1000,
+          "next_offset": null,
+          "observation_end": "2025-01-01",
+          "observation_start": "2020-01-01",
+          "observations": [
+            {
+              "date": "2020-01-01",
+              "raw": "-0.76462",
+              "value": -0.76462
+            },
+            {
+              "date": "2021-01-01",
+              "raw": "10.99571",
+              "value": 10.99571
+            },
+            {
+              "date": "2022-01-01",
+              "raw": "9.81625",
+              "value": 9.81625
+            },
+            {
+              "date": "2023-01-01",
+              "raw": "6.74315",
+              "value": 6.74315
+            },
+            {
+              "date": "2024-01-01",
+              "raw": "5.34489",
+              "value": 5.34489
+            },
+            {
+              "date": "2025-01-01",
+              "raw": "4.99722",
+              "value": 4.99722
+            }
+          ],
+          "observed_at_ms": 1790008357538,
+          "offset": 0,
+          "series_id": "GDP",
+          "sort_order": "asc",
+          "units": "pc1",
+          "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDP&cosd=2020-01-01&coed=2025-12-31&fq=Annual&fam=avg&transformation=pc1"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fred-stlouisfed-org",
+        "capability": "economic-data/series_observations"
+      }
+    },
+    {
+      "id": "fred-stlouisfed-org/economic-data/series_search",
+      "provider": "fred-stlouisfed-org",
+      "capability": "economic-data/series_search",
+      "name": "Series search",
+      "description": "Start here to find a `series_id` (e.g. UNRATE, CPIAUCSL) for `series` and `series_observations`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum number of series to return.",
+          "default": 25,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "search_text",
+          "type": "string",
+          "in": "body",
+          "about": "Words of a series title or a series id, e.g. \"unemployment rate\", \"consumer price\", \"GDP\". A pasted https://fred.stlouisfed.org/searchresults/?st=... URL is accepted; its `st` query is used.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Search FRED series by free text through the site's series autocomplete (graph/api/series/sitesearch). Returns matching series with id, title, observation date range, frequency, units and seasonal adjustment; at most `limit` results (the site answers with a bounded suggestion list, so there is no further page). A query with no match is an empty result.",
+        "key": "series",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "frequency",
+            "type": "string",
+            "about": "As FRED states it: Daily, Weekly, Monthly, Quarterly, Annual, ..."
+          },
+          {
+            "name": "observation_end",
+            "type": "string"
+          },
+          {
+            "name": "observation_start",
+            "type": "string"
+          },
+          {
+            "name": "popularity",
+            "type": "number",
+            "about": "FRED popularity score when the site supplies one; the autocomplete usually returns null."
+          },
+          {
+            "name": "seasonal_adjustment",
+            "type": "string"
+          },
+          {
+            "name": "series_id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "units",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Series page on fred.stlouisfed.org."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 5,
+          "search_text": "unemployment rate"
+        },
+        "response": {
+          "count": 5,
+          "observed_at_ms": 1790008354566,
+          "search_text": "unemployment rate",
+          "series": [
+            {
+              "frequency": "Monthly",
+              "observation_end": "2026-08-01",
+              "observation_start": "1948-01-01",
+              "popularity": null,
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "UNRATE",
+              "title": "Unemployment Rate",
+              "units": "Percent",
+              "url": "https://fred.stlouisfed.org/series/UNRATE"
+            },
+            {
+              "frequency": "Quarterly",
+              "observation_end": "2036-10-01",
+              "observation_start": "1949-01-01",
+              "popularity": null,
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NROU",
+              "title": "Noncyclical Rate of Unemployment",
+              "units": "Percent",
+              "url": "https://fred.stlouisfed.org/series/NROU"
+            },
+            {
+              "frequency": "Monthly",
+              "observation_end": "2026-07-01",
+              "observation_start": "1948-01-01",
+              "popularity": null,
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "LNS14024887",
+              "title": "Unemployment Rate - 16-24 Yrs.",
+              "units": "Percent",
+              "url": "https://fred.stlouisfed.org/series/LNS14024887"
+            },
+            {
+              "frequency": "Monthly",
+              "observation_end": "2026-08-01",
+              "observation_start": "1972-01-01",
+              "popularity": null,
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "LNS14000006",
+              "title": "Unemployment Rate - Black or African American",
+              "units": "Percent",
+              "url": "https://fred.stlouisfed.org/series/LNS14000006"
+            },
+            {
+              "frequency": "Monthly",
+              "observation_end": "2026-08-01",
+              "observation_start": "1976-01-01",
+              "popularity": null,
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "CAUR",
+              "title": "Unemployment Rate in California",
+              "units": "Percent",
+              "url": "https://fred.stlouisfed.org/series/CAUR"
+            }
+          ],
+          "url": "https://fred.stlouisfed.org/graph/api/series/sitesearch/unemployment%20rate?q=unemployment%20rate"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fred-stlouisfed-org",
+        "capability": "economic-data/series_search"
+      }
+    },
+    {
+      "id": "fred-stlouisfed-org/economic-data/source",
+      "provider": "fred-stlouisfed-org",
+      "capability": "economic-data/source",
+      "name": "Source",
+      "description": "See what an agency publishes (e.g. source 18 = U.S. Bureau of Economic Analysis) and hand `releases[].release_id` to `release`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "source_id",
+          "type": "number",
+          "in": "body",
+          "about": "FRED source id (e.g. 18 U.S. Bureau of Economic Analysis, 22 U.S. Bureau of Labor Statistics), a numeric string, or a pasted https://fred.stlouisfed.org/source?soid={id} URL.",
+          "required": true,
+          "min": 1
+        }
+      ],
+      "response": {
+        "about": "One FRED data source from its site page (/source?soid=): name and the releases it publishes (id, name, url). An unknown source id is `not_found`.",
+        "key": "releases",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "release_id",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Release page on fred.stlouisfed.org."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "source_id": 18
+        },
+        "response": {
+          "name": "U.S. Bureau of Economic Analysis",
+          "observed_at_ms": 1790009481842,
+          "releases": [
+            {
+              "name": "Federal Recovery Programs and BEA Statistics",
+              "release_id": 286,
+              "url": "https://fred.stlouisfed.org/release?rid=286"
+            },
+            {
+              "name": "Fixed Assets",
+              "release_id": 356,
+              "url": "https://fred.stlouisfed.org/release?rid=356"
+            },
+            {
+              "name": "Gross Domestic Product",
+              "release_id": 53,
+              "url": "https://fred.stlouisfed.org/release?rid=53"
+            },
+            {
+              "name": "Gross Domestic Product by County",
+              "release_id": 397,
+              "url": "https://fred.stlouisfed.org/release?rid=397"
+            },
+            {
+              "name": "Gross Domestic Product by Industry",
+              "release_id": 331,
+              "url": "https://fred.stlouisfed.org/release?rid=331"
+            },
+            {
+              "name": "Gross Domestic Product by State",
+              "release_id": 140,
+              "url": "https://fred.stlouisfed.org/release?rid=140"
+            },
+            {
+              "name": "Health Care Satellite Account",
+              "release_id": 360,
+              "url": "https://fred.stlouisfed.org/release?rid=360"
+            },
+            {
+              "name": "Personal Consumption Expenditures by State",
+              "release_id": 391,
+              "url": "https://fred.stlouisfed.org/release?rid=391"
+            },
+            {
+              "name": "Personal Income and Outlays",
+              "release_id": 54,
+              "url": "https://fred.stlouisfed.org/release?rid=54"
+            },
+            {
+              "name": "Personal Income by County",
+              "release_id": 175,
+              "url": "https://fred.stlouisfed.org/release?rid=175"
+            },
+            {
+              "name": "Personal Income by State",
+              "release_id": 110,
+              "url": "https://fred.stlouisfed.org/release?rid=110"
+            },
+            {
+              "name": "Real Personal Income for States",
+              "release_id": 403,
+              "url": "https://fred.stlouisfed.org/release?rid=403"
+            },
+            {
+              "name": "Supplemental Estimates, Motor Vehicles",
+              "release_id": 93,
+              "url": "https://fred.stlouisfed.org/release?rid=93"
+            },
+            {
+              "name": "Supplemental Estimates, Underlying Detail Tables",
+              "release_id": 281,
+              "url": "https://fred.stlouisfed.org/release?rid=281"
+            },
+            {
+              "name": "U.S. International Investment Position",
+              "release_id": 359,
+              "url": "https://fred.stlouisfed.org/release?rid=359"
+            },
+            {
+              "name": "U.S. International Trade in Goods and Services",
+              "release_id": 51,
+              "url": "https://fred.stlouisfed.org/release?rid=51"
+            },
+            {
+              "name": "U.S. International Transactions",
+              "release_id": 49,
+              "url": "https://fred.stlouisfed.org/release?rid=49"
+            }
+          ],
+          "source_id": 18,
+          "url": "https://fred.stlouisfed.org/source?soid=18"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fred-stlouisfed-org",
+        "capability": "economic-data/source"
+      }
+    },
+    {
+      "id": "fred-stlouisfed-org/economic-data/sources",
+      "provider": "fred-stlouisfed-org",
+      "capability": "economic-data/sources",
+      "name": "Sources",
+      "description": "Find a `source_id` for `source`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page (50 rows per page); pass `next_page` from the previous result.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "List FRED data sources (statistical agencies, central banks, researchers) from the site's /sources page: alphabetical, 50 per page with `page`/`next_page`; `total` is the count FRED prints. A page past the end is `not_found`.",
+        "key": "sources",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "source_id",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Source page on fred.stlouisfed.org."
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "next_page": 2,
+          "observed_at_ms": 1790009476874,
+          "page": 1,
+          "sources": [
+            {
+              "name": "Aaronson, Daniel",
+              "source_id": 164,
+              "url": "https://fred.stlouisfed.org/source?soid=164"
+            },
+            {
+              "name": "Ahir, Hites",
+              "source_id": 154,
+              "url": "https://fred.stlouisfed.org/source?soid=154"
+            },
+            {
+              "name": "American Financial Exchange",
+              "source_id": 168,
+              "url": "https://fred.stlouisfed.org/source?soid=168"
+            },
+            {
+              "name": "Anbil, Sriya",
+              "source_id": 156,
+              "url": "https://fred.stlouisfed.org/source?soid=156"
+            },
+            {
+              "name": "Anderson, Richard G.",
+              "source_id": 82,
+              "url": "https://fred.stlouisfed.org/source?soid=82"
+            },
+            {
+              "name": "Andrew Davidson & Co., Inc.",
+              "source_id": 163,
+              "url": "https://fred.stlouisfed.org/source?soid=163"
+            },
+            {
+              "name": "Automatic Data Processing, Inc.",
+              "source_id": 42,
+              "url": "https://fred.stlouisfed.org/source?soid=42"
+            },
+            {
+              "name": "Baker, Scott R.",
+              "source_id": 80,
+              "url": "https://fred.stlouisfed.org/source?soid=80"
+            },
+            {
+              "name": "Bank for International Settlements",
+              "source_id": 93,
+              "url": "https://fred.stlouisfed.org/source?soid=93"
+            },
+            {
+              "name": "Bank of England",
+              "source_id": 76,
+              "url": "https://fred.stlouisfed.org/source?soid=76"
+            },
+            {
+              "name": "Bank of Italy",
+              "source_id": 33,
+              "url": "https://fred.stlouisfed.org/source?soid=33"
+            },
+            {
+              "name": "Bank of Japan",
+              "source_id": 37,
+              "url": "https://fred.stlouisfed.org/source?soid=37"
+            },
+            {
+              "name": "Bank of Mexico",
+              "source_id": 38,
+              "url": "https://fred.stlouisfed.org/source?soid=38"
+            },
+            {
+              "name": "Bankrate, LLC",
+              "source_id": 64,
+              "url": "https://fred.stlouisfed.org/source?soid=64"
+            },
+            {
+              "name": "Barrero, Jose Maria",
+              "source_id": 499,
+              "url": "https://fred.stlouisfed.org/source?soid=499"
+            },
+            {
+              "name": "Bick, Alexander",
+              "source_id": 9,
+              "url": "https://fred.stlouisfed.org/source?soid=9"
+            },
+            {
+              "name": "Blandin, Adam",
+              "source_id": 13,
+              "url": "https://fred.stlouisfed.org/source?soid=13"
+            },
+            {
+              "name": "Bloom, Nick",
+              "source_id": 104,
+              "url": "https://fred.stlouisfed.org/source?soid=104"
+            },
+            {
+              "name": "Board of Governors of the Federal Reserve System (US)",
+              "source_id": 1,
+              "url": "https://fred.stlouisfed.org/source?soid=1"
+            },
+            {
+              "name": "Carlson, Mark",
+              "source_id": 157,
+              "url": "https://fred.stlouisfed.org/source?soid=157"
+            },
+            {
+              "name": "Cass Information Systems, Inc.",
+              "source_id": 81,
+              "url": "https://fred.stlouisfed.org/source?soid=81"
+            },
+            {
+              "name": "Center for Financial Stability",
+              "source_id": 162,
+              "url": "https://fred.stlouisfed.org/source?soid=162"
+            },
+            {
+              "name": "Centers for Disease Control and Prevention",
+              "source_id": 135,
+              "url": "https://fred.stlouisfed.org/source?soid=135"
+            },
+            {
+              "name": "Central Bank of the Republic of Turkey",
+              "source_id": 35,
+              "url": "https://fred.stlouisfed.org/source?soid=35"
+            },
+            {
+              "name": "Chauvet, Marcelle",
+              "source_id": 102,
+              "url": "https://fred.stlouisfed.org/source?soid=102"
+            },
+            {
+              "name": "Chicago Board Options Exchange",
+              "source_id": 47,
+              "url": "https://fred.stlouisfed.org/source?soid=47"
+            },
+            {
+              "name": "Coinbase",
+              "source_id": 141,
+              "url": "https://fred.stlouisfed.org/source?soid=141"
+            },
+            {
+              "name": "Conference of State Bank Supervisors",
+              "source_id": 169,
+              "url": "https://fred.stlouisfed.org/source?soid=169"
+            },
+            {
+              "name": "Council of Economic Advisers (US)",
+              "source_id": 15,
+              "url": "https://fred.stlouisfed.org/source?soid=15"
+            },
+            {
+              "name": "CredAbility Nonprofit Credit Counseling & Education",
+              "source_id": 67,
+              "url": "https://fred.stlouisfed.org/source?soid=67"
+            },
+            {
+              "name": "Dartmouth Atlas of Healthcare",
+              "source_id": 128,
+              "url": "https://fred.stlouisfed.org/source?soid=128"
+            },
+            {
+              "name": "Davis, Lance E.",
+              "source_id": 146,
+              "url": "https://fred.stlouisfed.org/source?soid=146"
+            },
+            {
+              "name": "Davis, Steven J.",
+              "source_id": 105,
+              "url": "https://fred.stlouisfed.org/source?soid=105"
+            },
+            {
+              "name": "Deming, David",
+              "source_id": 20,
+              "url": "https://fred.stlouisfed.org/source?soid=20"
+            },
+            {
+              "name": "Deutsche Bundesbank",
+              "source_id": 32,
+              "url": "https://fred.stlouisfed.org/source?soid=32"
+            },
+            {
+              "name": "DHI Group, Inc.",
+              "source_id": 133,
+              "url": "https://fred.stlouisfed.org/source?soid=133"
+            },
+            {
+              "name": "DiCecio, Riccardo",
+              "source_id": 88,
+              "url": "https://fred.stlouisfed.org/source?soid=88"
+            },
+            {
+              "name": "Dow Jones & Company",
+              "source_id": 11,
+              "url": "https://fred.stlouisfed.org/source?soid=11"
+            },
+            {
+              "name": "Dwyer, Gerald P.",
+              "source_id": 71,
+              "url": "https://fred.stlouisfed.org/source?soid=71"
+            },
+            {
+              "name": "Ellieroth, Kathrin",
+              "source_id": 434,
+              "url": "https://fred.stlouisfed.org/source?soid=434"
+            },
+            {
+              "name": "Equifax",
+              "source_id": 99,
+              "url": "https://fred.stlouisfed.org/source?soid=99"
+            },
+            {
+              "name": "European Central Bank",
+              "source_id": 77,
+              "url": "https://fred.stlouisfed.org/source?soid=77"
+            },
+            {
+              "name": "Eurostat",
+              "source_id": 61,
+              "url": "https://fred.stlouisfed.org/source?soid=61"
+            },
+            {
+              "name": "Fannie Mae",
+              "source_id": 400,
+              "url": "https://fred.stlouisfed.org/source?soid=400"
+            },
+            {
+              "name": "Federal Bureau of Investigation",
+              "source_id": 126,
+              "url": "https://fred.stlouisfed.org/source?soid=126"
+            },
+            {
+              "name": "Federal Deposit Insurance Corporation",
+              "source_id": 69,
+              "url": "https://fred.stlouisfed.org/source?soid=69"
+            },
+            {
+              "name": "Federal Financial Institutions Examination Council (US)",
+              "source_id": 6,
+              "url": "https://fred.stlouisfed.org/source?soid=6"
+            },
+            {
+              "name": "Federal Reserve Bank of Atlanta",
+              "source_id": 91,
+              "url": "https://fred.stlouisfed.org/source?soid=91"
+            },
+            {
+              "name": "Federal Reserve Bank of Chicago",
+              "source_id": 54,
+              "url": "https://fred.stlouisfed.org/source?soid=54"
+            },
+            {
+              "name": "Federal Reserve Bank of Cleveland",
+              "source_id": 90,
+              "url": "https://fred.stlouisfed.org/source?soid=90"
+            }
+          ],
+          "total": 126,
+          "url": "https://fred.stlouisfed.org/sources"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fred-stlouisfed-org",
+        "capability": "economic-data/sources"
+      }
+    },
+    {
+      "id": "fred-stlouisfed-org/economic-data/tag_series",
+      "provider": "fred-stlouisfed-org",
+      "capability": "economic-data/tag_series",
+      "name": "Tag series",
+      "description": "Find series by tag combination, e.g. gdp;quarterly or usa;monthly;nsa, then read them with `series` / `series_observations`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page (50 rows per page); pass `next_page` from the previous result.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "tag_names",
+          "type": "string",
+          "in": "body",
+          "about": "One or more FRED tag names separated by `;` (FRED API convention), e.g. \"gdp;quarterly\", \"usa;monthly;nsa\" (case-insensitive; at most 10), or a pasted https://fred.stlouisfed.org/tags/series?t=... URL.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Series carrying every one of the given tags, from the site's /tags/series page: 50 per page in FRED's popularity order with `page`/`next_page`; `total` is the count in the page title (\"9,767 Series\"); `tags` echoes the tags FRED applied (machine name and display name). Each series carries id, group title, the attributes line (units / frequency / seasonal adjustment split out when FRED's vocabulary allows) and the observation range as printed. A tag FRED does not know is `not_found` (the site would otherwise ignore it and list the whole catalogue).",
+        "key": "series",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "attributes",
+            "type": "string",
+            "about": "The attributes line as printed, e.g. \"Billions of Chained 2017 Dollars, Quarterly, Seasonally Adjusted Annual Rate\"."
+          },
+          {
+            "name": "frequency",
+            "type": "string"
+          },
+          {
+            "name": "observation_range",
+            "type": "string",
+            "about": "As printed, e.g. \"Q1 1947 to Q2 2026 (Aug 26)\" (the parenthesis is the last update)."
+          },
+          {
+            "name": "seasonal_adjustment",
+            "type": "string"
+          },
+          {
+            "name": "series_id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "about": "Group title as printed; FRED groups unit/frequency variants of one measure under one title."
+          },
+          {
+            "name": "units",
+            "type": "string",
+            "about": "Units split from `attributes`; null when the line does not end in FRED's frequency + seasonal-adjustment vocabulary."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "tag_names": "gdp;quarterly"
+        },
+        "response": {
+          "next_page": 2,
+          "observed_at_ms": 1790009793893,
+          "page": 1,
+          "series": [
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "GDPC1",
+              "title": "Real Gross Domestic Product",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/GDPC1"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q2 1947 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A191RL1Q225SBEA",
+              "title": "Real Gross Domestic Product",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RL1Q225SBEA"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1948 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "A191RO1Q156NBEA",
+              "title": "Real Gross Domestic Product",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/A191RO1Q156NBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "ND000334Q",
+              "title": "Real Gross Domestic Product",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/ND000334Q"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 2003 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "OB000334Q",
+              "title": "Real Gross Domestic Product",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/OB000334Q"
+            },
+            {
+              "attributes": "Index 2017=100, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NB000334Q",
+              "title": "Real Gross Domestic Product",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/NB000334Q"
+            },
+            {
+              "attributes": "Billions of Dollars, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "GDP",
+              "title": "Gross Domestic Product",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/GDP"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q2 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A191RP1Q027SBEA",
+              "title": "Gross Domestic Product",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RP1Q027SBEA"
+            },
+            {
+              "attributes": "Millions of Dollars, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NA000334Q",
+              "title": "Gross Domestic Product",
+              "units": "Millions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/NA000334Q"
+            },
+            {
+              "attributes": "Index 2017=100, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NC000334Q",
+              "title": "Gross Domestic Product",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/NC000334Q"
+            },
+            {
+              "attributes": "Percent of GDP, Quarterly, Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1966 to Q1 2026 (Jun 25)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "GFDEGDQ188S",
+              "title": "Federal Debt: Total Public Debt as Percent of Gross Domestic Product",
+              "units": "Percent of GDP",
+              "url": "https://fred.stlouisfed.org/series/GFDEGDQ188S"
+            },
+            {
+              "attributes": "Index 2017=100, Quarterly, Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "PCECTPI",
+              "title": "Personal Consumption Expenditures: Chain-type Price Index",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/PCECTPI"
+            },
+            {
+              "attributes": "Billions of Dollars, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "PCEC",
+              "title": "Personal Consumption Expenditures",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/PCEC"
+            },
+            {
+              "attributes": "Millions of Dollars, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NA000349Q",
+              "title": "Personal Consumption Expenditures",
+              "units": "Millions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/NA000349Q"
+            },
+            {
+              "attributes": "Index 2017=100, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NC000349Q",
+              "title": "Personal Consumption Expenditures",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/NC000349Q"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Quarterly, Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1960 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "BPCCRO1Q156NBEA",
+              "title": "Personal Consumption Expenditures Excluding Food and Energy (Chain-Type Price Index)",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/BPCCRO1Q156NBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "PCECC96",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/PCECC96"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q2 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "DPCERL1Q225SBEA",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/DPCERL1Q225SBEA"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1948 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "DPCERO1Q156NBEA",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/DPCERO1Q156NBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "ND000349Q",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/ND000349Q"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 2003 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "OB000349Q",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/OB000349Q"
+            },
+            {
+              "attributes": "Index 2017=100, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NB000349Q",
+              "title": "Real Personal Consumption Expenditures",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/NB000349Q"
+            },
+            {
+              "attributes": "Chained 2017 Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A939RX0Q048SBEA",
+              "title": "Real gross domestic product per capita",
+              "units": "Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/A939RX0Q048SBEA"
+            },
+            {
+              "attributes": "Billions of Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "CP",
+              "title": "Corporate Profits After Tax (without IVA and CCAdj)",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/CP"
+            },
+            {
+              "attributes": "Billions of Dollars, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A091RC1Q027SBEA",
+              "title": "Federal government current expenditures: Interest payments",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/A091RC1Q027SBEA"
+            },
+            {
+              "attributes": "Millions of Dollars, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NA000308Q",
+              "title": "Federal government current expenditures: Interest payments",
+              "units": "Millions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/NA000308Q"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 1959 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "DPCCRV1Q225SBEA",
+              "title": "Personal Consumption Expenditures (PCE) Excluding Food and Energy (Chain-Type Price Index)",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/DPCCRV1Q225SBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "DPIC96",
+              "title": "Real Disposable Personal Income",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/DPIC96"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1948 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "A067RO1Q156NBEA",
+              "title": "Real Disposable Personal Income",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/A067RO1Q156NBEA"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q2 1947 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A067RL1Q156SBEA",
+              "title": "Real Disposable Personal Income",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A067RL1Q156SBEA"
+            },
+            {
+              "attributes": "Index 2017=100, Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "GDPDEF",
+              "title": "Gross Domestic Product: Implicit Price Deflator",
+              "units": "Index 2017=100",
+              "url": "https://fred.stlouisfed.org/series/GDPDEF"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q2 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A191RI1Q225SBEA",
+              "title": "Gross Domestic Product: Implicit Price Deflator",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A191RI1Q225SBEA"
+            },
+            {
+              "attributes": "Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1950 to Q2 2026 (Sep 7)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "NGDPSAXDCUSQ",
+              "title": "Nominal Gross Domestic Product (GDP) for United States",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/NGDPSAXDCUSQ"
+            },
+            {
+              "attributes": "Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1950 to Q2 2026 (Sep 7)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NGDPNSAXDCUSQ",
+              "title": "Nominal Gross Domestic Product (GDP) for United States",
+              "units": null,
+              "url": "https://fred.stlouisfed.org/series/NGDPNSAXDCUSQ"
+            },
+            {
+              "attributes": "Percent Change at Annual Rate, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q3 2011 to Q3 2026 (4 days ago)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "GDPNOW",
+              "title": "GDPNow",
+              "units": "Percent Change at Annual Rate",
+              "url": "https://fred.stlouisfed.org/series/GDPNOW"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1949 to Q4 2036 (Feb 27)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "GDPPOT",
+              "title": "Real Potential Gross Domestic Product",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/GDPPOT"
+            },
+            {
+              "attributes": "Billions of Dollars, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "FGEXPND",
+              "title": "Federal Government: Current Expenditures",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/FGEXPND"
+            },
+            {
+              "attributes": "Millions of Dollars, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "NA000283Q",
+              "title": "Federal Government: Current Expenditures",
+              "units": "Millions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/NA000283Q"
+            },
+            {
+              "attributes": "Thousands, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "B230RC0Q173SBEA",
+              "title": "Population",
+              "units": "Thousands",
+              "url": "https://fred.stlouisfed.org/series/B230RC0Q173SBEA"
+            },
+            {
+              "attributes": "Ratio, Quarterly, Not Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 2005 to Q2 2025 (Mar 2)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "HDTGPDUSQ163N",
+              "title": "Household Debt to GDP for United States",
+              "units": "Ratio",
+              "url": "https://fred.stlouisfed.org/series/HDTGPDUSQ163N"
+            },
+            {
+              "attributes": "Billions of Dollars",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": null,
+              "series_id": "DPI",
+              "title": "Disposable Personal Income",
+              "units": "Billions of Dollars",
+              "url": "https://fred.stlouisfed.org/series/DPI"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period",
+              "frequency": null,
+              "observation_range": "Q2 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": null,
+              "series_id": "A067RP1Q027SBEA",
+              "title": "Disposable Personal Income",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A067RP1Q027SBEA"
+            },
+            {
+              "attributes": "Percent Change at Annual Rate, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q2 2013 to Q3 2026 (2 days ago)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "STLENI",
+              "title": "St. Louis Fed Economic News Index: Real GDP Nowcast",
+              "units": "Percent Change at Annual Rate",
+              "url": "https://fred.stlouisfed.org/series/STLENI"
+            },
+            {
+              "attributes": "Billions of Chained 2015 Yen, Quarterly, Seasonally Adjusted",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1994 to Q2 2026 (Sep 7)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "JPNRGDPEXP",
+              "title": "Real Gross Domestic Product for Japan",
+              "units": "Billions of Chained 2015 Yen",
+              "url": "https://fred.stlouisfed.org/series/JPNRGDPEXP"
+            },
+            {
+              "attributes": "Chained 2017 Dollars, Quarterly, Seasonally Adjusted Annual Rate",
+              "frequency": "Quarterly",
+              "observation_range": "Q1 1947 to Q2 2026 (Jul 30)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A229RX0Q048SBEA",
+              "title": "Real Disposable Personal Income: Per Capita",
+              "units": "Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/A229RX0Q048SBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q1 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "GPDIC1",
+              "title": "Real Gross Private Domestic Investment",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/GPDIC1"
+            },
+            {
+              "attributes": "Percent Change from Preceding Period, Seasonally Adjusted Annual Rate",
+              "frequency": null,
+              "observation_range": "Q2 1947 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+              "series_id": "A006RL1Q225SBEA",
+              "title": "Real Gross Private Domestic Investment",
+              "units": "Percent Change from Preceding Period",
+              "url": "https://fred.stlouisfed.org/series/A006RL1Q225SBEA"
+            },
+            {
+              "attributes": "Billions of Chained 2017 Dollars, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 2002 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "ND000335Q",
+              "title": "Real Gross Private Domestic Investment",
+              "units": "Billions of Chained 2017 Dollars",
+              "url": "https://fred.stlouisfed.org/series/ND000335Q"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 1948 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Seasonally Adjusted",
+              "series_id": "B006RO1Q156NBEA",
+              "title": "Real Gross Private Domestic Investment",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/B006RO1Q156NBEA"
+            },
+            {
+              "attributes": "Percent Change from Quarter One Year Ago, Not Seasonally Adjusted",
+              "frequency": null,
+              "observation_range": "Q1 2003 to Q2 2026 (Aug 26)",
+              "seasonal_adjustment": "Not Seasonally Adjusted",
+              "series_id": "OB000335Q",
+              "title": "Real Gross Private Domestic Investment",
+              "units": "Percent Change from Quarter One Year Ago",
+              "url": "https://fred.stlouisfed.org/series/OB000335Q"
+            }
+          ],
+          "tags": [
+            {
+              "name": "Gross Domestic Product",
+              "tag": "gdp"
+            },
+            {
+              "name": "Quarterly",
+              "tag": "quarterly"
+            }
+          ],
+          "total": 9767,
+          "url": "https://fred.stlouisfed.org/tags/series?t=gdp%3Bquarterly"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fred-stlouisfed-org",
+        "capability": "economic-data/tag_series"
+      }
+    },
+    {
+      "id": "fred-stlouisfed-org/economic-data/tags",
+      "provider": "fred-stlouisfed-org",
+      "capability": "economic-data/tags",
+      "name": "Tags",
+      "description": "Discover tag names to combine in `tag_series`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page (50 rows per page); pass `next_page` from the previous result.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "List FRED tags (keywords attached to series: geography, frequency, seasonal adjustment, source, concept) from the site's /tags page, ordered by series count, 50 per page with `page`/`next_page`; `total` is the count FRED prints (\"Tags 1 - 50 of 6079\"). Each tag carries its machine name (`tag`, the value for `tag_series.tag_names`), display name and the series count as printed. The site serves the first 30 pages (1,500 most-used tags) and answers 404 beyond them: `next_page` is null on page 30 and a page past the end is `not_found`.",
+        "key": "tags",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Display name, e.g. Not Seasonally Adjusted."
+          },
+          {
+            "name": "series_count",
+            "type": "string",
+            "about": "Series count as FRED prints it, e.g. \"680,000+\"; null when not printed."
+          },
+          {
+            "name": "tag",
+            "type": "string",
+            "about": "Tag name as FRED's API and URLs use it, e.g. nsa, usa, gdp, quarterly."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Series-by-tag page on fred.stlouisfed.org."
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "next_page": 2,
+          "observed_at_ms": 1790009788227,
+          "page": 1,
+          "tags": [
+            {
+              "name": "Not Seasonally Adjusted",
+              "series_count": "680,000+",
+              "tag": "nsa",
+              "url": "https://fred.stlouisfed.org/tags/series?t=nsa"
+            },
+            {
+              "name": "United States of America",
+              "series_count": "610,000+",
+              "tag": "usa",
+              "url": "https://fred.stlouisfed.org/tags/series?t=usa"
+            },
+            {
+              "name": "Public Domain: Citation Requested",
+              "series_count": "550,000+",
+              "tag": "public domain: citation requested",
+              "url": "https://fred.stlouisfed.org/tags/series?t=public+domain%3A+citation+requested"
+            },
+            {
+              "name": "Annual",
+              "series_count": "440,000+",
+              "tag": "annual",
+              "url": "https://fred.stlouisfed.org/tags/series?t=annual"
+            },
+            {
+              "name": "County or County Equivalent",
+              "series_count": "290,000+",
+              "tag": "county",
+              "url": "https://fred.stlouisfed.org/tags/series?t=county"
+            },
+            {
+              "name": "Nation",
+              "series_count": "250,000+",
+              "tag": "nation",
+              "url": "https://fred.stlouisfed.org/tags/series?t=nation"
+            },
+            {
+              "name": "Census",
+              "series_count": "210,000+",
+              "tag": "census",
+              "url": "https://fred.stlouisfed.org/tags/series?t=census"
+            },
+            {
+              "name": "Monthly",
+              "series_count": "190,000+",
+              "tag": "monthly",
+              "url": "https://fred.stlouisfed.org/tags/series?t=monthly"
+            },
+            {
+              "name": "Copyrighted: Citation Required",
+              "series_count": "180,000+",
+              "tag": "copyrighted: citation required",
+              "url": "https://fred.stlouisfed.org/tags/series?t=copyrighted%3A+citation+required"
+            },
+            {
+              "name": "Bureau of Labor Statistics",
+              "series_count": "160,000+",
+              "tag": "bls",
+              "url": "https://fred.stlouisfed.org/tags/series?t=bls"
+            },
+            {
+              "name": "Persons",
+              "series_count": "110,000+",
+              "tag": "persons",
+              "url": "https://fred.stlouisfed.org/tags/series?t=persons"
+            },
+            {
+              "name": "Quarterly",
+              "series_count": "100,000+",
+              "tag": "quarterly",
+              "url": "https://fred.stlouisfed.org/tags/series?t=quarterly"
+            },
+            {
+              "name": "Employment",
+              "series_count": "99,000+",
+              "tag": "employment",
+              "url": "https://fred.stlouisfed.org/tags/series?t=employment"
+            },
+            {
+              "name": "5-Year",
+              "series_count": "96,000+",
+              "tag": "5-year",
+              "url": "https://fred.stlouisfed.org/tags/series?t=5-year"
+            },
+            {
+              "name": "American Community Survey",
+              "series_count": "90,000+",
+              "tag": "acs",
+              "url": "https://fred.stlouisfed.org/tags/series?t=acs"
+            },
+            {
+              "name": "Seasonally Adjusted",
+              "series_count": "84,000+",
+              "tag": "sa",
+              "url": "https://fred.stlouisfed.org/tags/series?t=sa"
+            },
+            {
+              "name": "State",
+              "series_count": "83,000+",
+              "tag": "state",
+              "url": "https://fred.stlouisfed.org/tags/series?t=state"
+            },
+            {
+              "name": "Realtor.com",
+              "series_count": "81,000+",
+              "tag": "realtor.com",
+              "url": "https://fred.stlouisfed.org/tags/series?t=realtor.com"
+            },
+            {
+              "name": "Metropolitan Statistical Area",
+              "series_count": "80,000+",
+              "tag": "msa",
+              "url": "https://fred.stlouisfed.org/tags/series?t=msa"
+            },
+            {
+              "name": "Population",
+              "series_count": "79,000+",
+              "tag": "population",
+              "url": "https://fred.stlouisfed.org/tags/series?t=population"
+            },
+            {
+              "name": "Price",
+              "series_count": "77,000+",
+              "tag": "price",
+              "url": "https://fred.stlouisfed.org/tags/series?t=price"
+            },
+            {
+              "name": "St. Louis Fed",
+              "series_count": "72,000+",
+              "tag": "frb stl",
+              "url": "https://fred.stlouisfed.org/tags/series?t=frb+stl"
+            },
+            {
+              "name": "Small Area Income & Poverty Estimates",
+              "series_count": "71,000+",
+              "tag": "saipe",
+              "url": "https://fred.stlouisfed.org/tags/series?t=saipe"
+            },
+            {
+              "name": "Bureau of Economic Analysis",
+              "series_count": "70,000+",
+              "tag": "bea",
+              "url": "https://fred.stlouisfed.org/tags/series?t=bea"
+            },
+            {
+              "name": "Gross Domestic Product",
+              "series_count": "66,000+",
+              "tag": "gdp",
+              "url": "https://fred.stlouisfed.org/tags/series?t=gdp"
+            },
+            {
+              "name": "Discontinued",
+              "series_count": "64,000+",
+              "tag": "discontinued",
+              "url": "https://fred.stlouisfed.org/tags/series?t=discontinued"
+            },
+            {
+              "name": "Poverty",
+              "series_count": "62,000+",
+              "tag": "poverty",
+              "url": "https://fred.stlouisfed.org/tags/series?t=poverty"
+            },
+            {
+              "name": "Board of Governors",
+              "series_count": "60,000+",
+              "tag": "frb",
+              "url": "https://fred.stlouisfed.org/tags/series?t=frb"
+            },
+            {
+              "name": "Industry",
+              "series_count": "59,000+",
+              "tag": "industry",
+              "url": "https://fred.stlouisfed.org/tags/series?t=industry"
+            },
+            {
+              "name": "Estimate",
+              "series_count": "59,000+",
+              "tag": "estimate",
+              "url": "https://fred.stlouisfed.org/tags/series?t=estimate"
+            },
+            {
+              "name": "Org. for Economic Co-operation and Development",
+              "series_count": "58,000+",
+              "tag": "oecd",
+              "url": "https://fred.stlouisfed.org/tags/series?t=oecd"
+            },
+            {
+              "name": "Child",
+              "series_count": "58,000+",
+              "tag": "child",
+              "url": "https://fred.stlouisfed.org/tags/series?t=child"
+            },
+            {
+              "name": "Main Economic Indicators",
+              "series_count": "55,000+",
+              "tag": "mei",
+              "url": "https://fred.stlouisfed.org/tags/series?t=mei"
+            },
+            {
+              "name": "State and Metro Area Employment, Hours, and Earnings",
+              "series_count": "55,000+",
+              "tag": "sae",
+              "url": "https://fred.stlouisfed.org/tags/series?t=sae"
+            },
+            {
+              "name": "Private",
+              "series_count": "55,000+",
+              "tag": "private",
+              "url": "https://fred.stlouisfed.org/tags/series?t=private"
+            },
+            {
+              "name": "Indexes",
+              "series_count": "53,000+",
+              "tag": "indexes",
+              "url": "https://fred.stlouisfed.org/tags/series?t=indexes"
+            },
+            {
+              "name": "Services",
+              "series_count": "52,000+",
+              "tag": "services",
+              "url": "https://fred.stlouisfed.org/tags/series?t=services"
+            },
+            {
+              "name": "Median",
+              "series_count": "47,000+",
+              "tag": "median",
+              "url": "https://fred.stlouisfed.org/tags/series?t=median"
+            },
+            {
+              "name": "Rate",
+              "series_count": "44,000+",
+              "tag": "rate",
+              "url": "https://fred.stlouisfed.org/tags/series?t=rate"
+            },
+            {
+              "name": "Z.1 US Financial Accounts",
+              "series_count": "43,000+",
+              "tag": "z1",
+              "url": "https://fred.stlouisfed.org/tags/series?t=z1"
+            },
+            {
+              "name": "Listing",
+              "series_count": "42,000+",
+              "tag": "listing",
+              "url": "https://fred.stlouisfed.org/tags/series?t=listing"
+            },
+            {
+              "name": "Price Index",
+              "series_count": "38,000+",
+              "tag": "price index",
+              "url": "https://fred.stlouisfed.org/tags/series?t=price+index"
+            },
+            {
+              "name": "Manufacturing",
+              "series_count": "38,000+",
+              "tag": "manufacturing",
+              "url": "https://fred.stlouisfed.org/tags/series?t=manufacturing"
+            },
+            {
+              "name": "Goods",
+              "series_count": "35,000+",
+              "tag": "goods",
+              "url": "https://fred.stlouisfed.org/tags/series?t=goods"
+            },
+            {
+              "name": "Percent",
+              "series_count": "34,000+",
+              "tag": "percent",
+              "url": "https://fred.stlouisfed.org/tags/series?t=percent"
+            },
+            {
+              "name": "Assets",
+              "series_count": "33,000+",
+              "tag": "assets",
+              "url": "https://fred.stlouisfed.org/tags/series?t=assets"
+            },
+            {
+              "name": "Texas",
+              "series_count": "32,000+",
+              "tag": "tx",
+              "url": "https://fred.stlouisfed.org/tags/series?t=tx"
+            },
+            {
+              "name": "Unemployment",
+              "series_count": "30,000+",
+              "tag": "unemployment",
+              "url": "https://fred.stlouisfed.org/tags/series?t=unemployment"
+            },
+            {
+              "name": "Income",
+              "series_count": "30,000+",
+              "tag": "income",
+              "url": "https://fred.stlouisfed.org/tags/series?t=income"
+            },
+            {
+              "name": "Labor",
+              "series_count": "30,000+",
+              "tag": "labor",
+              "url": "https://fred.stlouisfed.org/tags/series?t=labor"
+            }
+          ],
+          "total": 6079,
+          "url": "https://fred.stlouisfed.org/tags"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fred-stlouisfed-org",
+        "capability": "economic-data/tags"
+      }
+    }
+  ]
+}

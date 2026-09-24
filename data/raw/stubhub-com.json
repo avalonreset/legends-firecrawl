@@ -1,0 +1,532 @@
+{
+  "id": "stubhub-com",
+  "provider": "stubhub-com",
+  "name": "StubHub",
+  "description": "Search StubHub events, read event details and retrieve paginated public resale offers with quantity restrictions and price/fee disclosures. Uses anonymous web pages and read-only inventory requests.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "stubhub-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "stubhub-com/events/event",
+      "provider": "stubhub-com",
+      "capability": "events/event",
+      "name": "Event",
+      "description": "Read event identity, venue, source status, performers and current inventory counts. Unconfirmed times are null; utc_offset_ms is the source offset, not an IANA timezone.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "url",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read event identity, venue, source status, performers and current inventory counts. Unconfirmed times are null; utc_offset_ms is the source offset, not an IANA timezone.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "availability",
+            "type": "string"
+          },
+          {
+            "name": "available_quantities",
+            "type": "number[]"
+          },
+          {
+            "name": "available_tickets",
+            "type": "number"
+          },
+          {
+            "name": "date_confirmed",
+            "type": "boolean"
+          },
+          {
+            "name": "datetime_local",
+            "type": "string"
+          },
+          {
+            "name": "event_id",
+            "type": "number"
+          },
+          {
+            "name": "event_state",
+            "type": "number"
+          },
+          {
+            "name": "formatted_datetime",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "performers",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "starts_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "time_confirmed",
+            "type": "boolean"
+          },
+          {
+            "name": "total_listings",
+            "type": "number"
+          },
+          {
+            "name": "utc_offset_ms",
+            "type": "number"
+          },
+          {
+            "name": "venue",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.stubhub.com/los-angeles-lakers-los-angeles-tickets-10-8-2026/event/161677518/"
+        },
+        "response": {
+          "availability": "available",
+          "available_quantities": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "available_tickets": 6156,
+          "date_confirmed": true,
+          "datetime_local": null,
+          "event_id": 161677518,
+          "event_state": 1,
+          "formatted_datetime": "Oct 08 2026 • TBA",
+          "name": "NBA Preseason: Sacramento Kings at Los Angeles Lakers",
+          "observed_at_ms": 1790088613508,
+          "performers": [
+            {
+              "category_id": 5973,
+              "name": "Los Angeles Lakers"
+            },
+            {
+              "category_id": 6802,
+              "name": "Sacramento Kings"
+            }
+          ],
+          "source_url": "https://www.stubhub.com/los-angeles-lakers-los-angeles-tickets-10-8-2026/event/161677518/",
+          "starts_at_ms": null,
+          "time_confirmed": false,
+          "total_listings": 1951,
+          "utc_offset_ms": -25200000,
+          "venue": {
+            "address": "1111 South Figueroa Street, Los Angeles, California, 90015",
+            "city": "Los Angeles",
+            "country_code": "US",
+            "latitude": 34.0430175,
+            "longitude": -118.2672541,
+            "name": "Crypto.com Arena",
+            "region": "California",
+            "venue_id": 1934
+          }
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "stubhub-com",
+        "capability": "events/event"
+      }
+    },
+    {
+      "id": "stubhub-com/events/listings",
+      "provider": "stubhub-com",
+      "capability": "events/listings",
+      "name": "Listings",
+      "description": "Read one page of public resale offers for an event and ticket quantity. Numeric price is per ticket; display_total_for_quantity is the source-rendered group total. Fee disclosures and allowed quantities are preserved. No checkout or reservations.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "quantity",
+          "type": "number",
+          "in": "body",
+          "about": "quantity",
+          "default": 2,
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "url",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read one page of public resale offers for an event and ticket quantity. Numeric price is per ticket; display_total_for_quantity is the source-rendered group total. Fee disclosures and allowed quantities are preserved. No checkout or reservations.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "detail_fee_disclosure",
+            "type": "string"
+          },
+          {
+            "name": "estimated_fees",
+            "type": "boolean"
+          },
+          {
+            "name": "event_id",
+            "type": "number"
+          },
+          {
+            "name": "grid_fee_disclosure",
+            "type": "string"
+          },
+          {
+            "name": "listings",
+            "type": "object[]"
+          },
+          {
+            "name": "matching_listings",
+            "type": "number"
+          },
+          {
+            "name": "next_page",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "page_size",
+            "type": "number"
+          },
+          {
+            "name": "quantity",
+            "type": "number"
+          },
+          {
+            "name": "remaining",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_listings",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "quantity": 2,
+          "url": "https://www.stubhub.com/los-angeles-lakers-los-angeles-tickets-10-8-2026/event/161677518/"
+        },
+        "response": {
+          "detail_fee_disclosure": "including all fees",
+          "estimated_fees": true,
+          "event_id": 161677518,
+          "grid_fee_disclosure": "incl. fees",
+          "listings": [
+            {
+              "available_quantities": [
+                2
+              ],
+              "available_tickets": 2,
+              "currency": "USD",
+              "display_fees": "",
+              "display_price_per_ticket": "$146",
+              "display_taxes": "",
+              "display_total_for_quantity": "$293",
+              "event_id": 161677518,
+              "listing_id": 14009653741,
+              "max_quantity": 2,
+              "notes": [
+                "Clear view"
+              ],
+              "price_per_ticket": 146.49,
+              "row": "5",
+              "section": "214",
+              "seller_currency": "USD",
+              "ticket_class": "Middle Level",
+              "ticket_type": "Mobile Transfer ticket"
+            },
+            {
+              "available_quantities": [
+                1,
+                2,
+                4
+              ],
+              "available_tickets": 4,
+              "currency": "USD",
+              "display_fees": "",
+              "display_price_per_ticket": "$41",
+              "display_taxes": "",
+              "display_total_for_quantity": "$83",
+              "event_id": 161677518,
+              "listing_id": 14109130508,
+              "max_quantity": 4,
+              "notes": [
+                "Clear view"
+              ],
+              "price_per_ticket": 41.01,
+              "row": "7",
+              "section": "311",
+              "seller_currency": "USD",
+              "ticket_class": "Upper Level",
+              "ticket_type": "Mobile Transfer ticket"
+            },
+            {
+              "available_quantities": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                8
+              ],
+              "available_tickets": 8,
+              "currency": "USD",
+              "display_fees": "",
+              "display_price_per_ticket": "$41",
+              "display_taxes": "",
+              "display_total_for_quantity": "$83",
+              "event_id": 161677518,
+              "listing_id": 14135811749,
+              "max_quantity": 8,
+              "notes": [
+                "Clear view"
+              ],
+              "price_per_ticket": 41.01,
+              "row": "4",
+              "section": "309",
+              "seller_currency": "USD",
+              "ticket_class": "Upper Level",
+              "ticket_type": "Mobile Transfer ticket"
+            }
+          ],
+          "matching_listings": 374,
+          "next_page": 2,
+          "observed_at_ms": 1790088652309,
+          "page": 1,
+          "page_size": 10,
+          "quantity": 2,
+          "remaining": 364,
+          "source_url": "https://www.stubhub.com/los-angeles-lakers-los-angeles-tickets-10-8-2026/event/161677518/",
+          "total_listings": 1951
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "stubhub-com",
+        "capability": "events/listings"
+      }
+    },
+    {
+      "id": "stubhub-com/events/search",
+      "provider": "stubhub-com",
+      "capability": "events/search",
+      "name": "Search",
+      "description": "Search public StubHub events by keywords such as an artist, team, venue or city. Returns one relevance-ranked page; pass next_page as page. No structured date or location filters.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Search public StubHub events by keywords such as an artist, team, venue or city. Returns one relevance-ranked page; pass next_page as page. No structured date or location filters.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "events",
+            "type": "object[]"
+          },
+          {
+            "name": "next_page",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "page_size",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_count",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "Lakers"
+        },
+        "response": {
+          "events": [
+            {
+              "date_confirmed": true,
+              "event_id": 161689735,
+              "event_state": 1,
+              "formatted_date": "Dec 25",
+              "formatted_time": "2:00 PM",
+              "has_active_listings": true,
+              "name": "Philadelphia 76ers at Los Angeles Lakers",
+              "source_url": "https://www.stubhub.com/los-angeles-lakers-los-angeles-tickets-12-25-2026/event/161689735/",
+              "starts_at_ms": 1798236000000,
+              "time_confirmed": true,
+              "utc_offset_ms": -28800000,
+              "venue": {
+                "city": "Los Angeles",
+                "country_code": "US",
+                "name": "Crypto.com Arena",
+                "region": "CA",
+                "venue_id": 1934
+              }
+            },
+            {
+              "date_confirmed": true,
+              "event_id": 161689707,
+              "event_state": 1,
+              "formatted_date": "Oct 21",
+              "formatted_time": "7:00 PM",
+              "has_active_listings": true,
+              "name": "Golden State Warriors at Los Angeles Lakers",
+              "source_url": "https://www.stubhub.com/los-angeles-lakers-los-angeles-tickets-10-21-2026/event/161689707/",
+              "starts_at_ms": 1792634400000,
+              "time_confirmed": true,
+              "utc_offset_ms": -25200000,
+              "venue": {
+                "city": "Los Angeles",
+                "country_code": "US",
+                "name": "Crypto.com Arena",
+                "region": "CA",
+                "venue_id": 1934
+              }
+            },
+            {
+              "date_confirmed": true,
+              "event_id": 161689702,
+              "event_state": 1,
+              "formatted_date": "Oct 23",
+              "formatted_time": "7:00 PM",
+              "has_active_listings": true,
+              "name": "LA Clippers at Los Angeles Lakers",
+              "source_url": "https://www.stubhub.com/los-angeles-lakers-los-angeles-tickets-10-23-2026/event/161689702/",
+              "starts_at_ms": 1792807200000,
+              "time_confirmed": true,
+              "utc_offset_ms": -25200000,
+              "venue": {
+                "city": "Los Angeles",
+                "country_code": "US",
+                "name": "Crypto.com Arena",
+                "region": "CA",
+                "venue_id": 1934
+              }
+            }
+          ],
+          "next_page": 2,
+          "observed_at_ms": 1790088600600,
+          "page": 1,
+          "page_size": 20,
+          "query": "Lakers",
+          "source_url": "https://www.stubhub.com/secure/search/?q=Lakers&allowExplore=false",
+          "total_count": 567
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "stubhub-com",
+        "capability": "events/search"
+      }
+    }
+  ]
+}

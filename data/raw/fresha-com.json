@@ -1,0 +1,3039 @@
+{
+  "id": "fresha-com",
+  "provider": "fresha-com",
+  "name": "Fresha",
+  "description": "Fresha marketplace discovery without an account: find salons, spas and other venues near a geocode by treatment, filter by a date and time window to see available start times per service, read a venue's public service menu (advertised prices, durations, variants), team, hours and latest reviews, and find professionals and their profiles. Anonymous persisted GraphQL queries on www.fresha.com; reading only, no bookings, holds or carts.",
+  "toolCount": 5,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "fresha-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "fresha-com/professionals/professional_detail",
+      "provider": "fresha-com",
+      "capability": "professionals/professional_detail",
+      "name": "Professional detail",
+      "description": "Detail read after search_professionals or autocomplete, or for a pasted fresha.com/p/ link.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "slug",
+          "type": "string",
+          "in": "body",
+          "about": "Professional slug as in https://www.fresha.com/p/{slug}. Pattern: ^[a-z0-9]+(-[a-z0-9]+)*$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted https://www.fresha.com/p/{slug} URL."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "slug",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One Fresha professional profile by slug or pasted /p/ URL: about, headline, languages, statistics, rating with latest reviews, the venues they work at (with addresses) and every service they offer with advertised price, duration and variants. Persisted query ProfessionalProfile_Page_Query (spec ep-11). Unknown slug -> not_found.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "about",
+            "type": "string"
+          },
+          {
+            "name": "appointments_completed_formatted",
+            "type": "string"
+          },
+          {
+            "name": "avatar_url",
+            "type": "string"
+          },
+          {
+            "name": "book_now_employee_id",
+            "type": "string",
+            "about": "Employee id at the primary venue."
+          },
+          {
+            "name": "clients_served_formatted",
+            "type": "string"
+          },
+          {
+            "name": "display_name",
+            "type": "string"
+          },
+          {
+            "name": "external_links",
+            "type": "object[]"
+          },
+          {
+            "name": "headline",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "interests",
+            "type": "string[]"
+          },
+          {
+            "name": "is_verified",
+            "type": "boolean"
+          },
+          {
+            "name": "languages",
+            "type": "string[]"
+          },
+          {
+            "name": "locality",
+            "type": "string"
+          },
+          {
+            "name": "locations",
+            "type": "object[]",
+            "about": "Venues where the professional works."
+          },
+          {
+            "name": "member_since",
+            "type": "string",
+            "about": "ISO date the professional joined Fresha."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the program observed the source."
+          },
+          {
+            "name": "price_note",
+            "type": "string",
+            "about": "Fixed caveat: advertised prices are starting prices, not quotes; taxes and fees are not stated by the site."
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "rating_formatted",
+            "type": "string"
+          },
+          {
+            "name": "reviews",
+            "type": "object"
+          },
+          {
+            "name": "reviews_count",
+            "type": "number"
+          },
+          {
+            "name": "service_count",
+            "type": "number"
+          },
+          {
+            "name": "services",
+            "type": "object[]",
+            "about": "Services this professional offers, with the venue slug on each."
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "source",
+            "type": "string",
+            "about": "Always `www.fresha.com`."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "slug": "hannamari-schwartz-6531344"
+        },
+        "response": {
+          "about": "Hi! I am Hannamari. I have been working as a stylist since 1997. I absolutely love creating custom styles that bring out my clients best features. I often hear feedback such as \"best haircut I've ever had\" or \"I keep getting compliments on my color\". My clients happiness is always most important  for me, and I am a great listener. Book with me if you are ready to look and feel your absolute best!",
+          "appointments_completed_formatted": "68",
+          "avatar_url": "https://cdn-partners-api.fresha.com/user-account-avatars/processed/2229559/medium/c80d3f31-92f3-4f9d-ad22-f8abeca28a7f-6287.png",
+          "book_now_employee_id": "5503648",
+          "clients_served_formatted": "62",
+          "display_name": "Hannamari Schwartz",
+          "external_links": [
+            {
+              "kind": "INSTAGRAM",
+              "url": "https://instagram.com/hannamari.schwartz"
+            }
+          ],
+          "headline": "Master of haircuts, custom colors and special events styling.",
+          "id": "6531344",
+          "interests": [
+            "Dogs",
+            "Nutrition",
+            "Skincare",
+            "Ambition",
+            "Being active",
+            "Confidence",
+            "Creativity",
+            "Empathy",
+            "Positivity"
+          ],
+          "is_verified": false,
+          "languages": [
+            "English",
+            "Finnish"
+          ],
+          "locality": "Troutman Park, Fort Collins",
+          "locations": [
+            {
+              "address": {
+                "apartment_suite": null,
+                "city": "Fort Collins",
+                "country_code": "US",
+                "formatted": "1015 West Horsetooth Road, 111, Troutman Park, Fort Collins, Colorado",
+                "latitude": null,
+                "longitude": null,
+                "postal_code": "80526",
+                "region": "Colorado",
+                "street": "1015 West Horsetooth Road"
+              },
+              "business_type": "Beauty Salon",
+              "contact_number": "+1 970-214-2344",
+              "country_code": "US",
+              "id": "3153608",
+              "is_fresha_verified": true,
+              "name": "Orchidee Salon and Spa",
+              "owner_id": "3051035",
+              "rating": 5,
+              "rating_formatted": "5.0",
+              "reviews_count": 64,
+              "slug": "orchidee-salon-and-spa-fort-collins-1015-west-horsetooth-road-m37bb4qr",
+              "url": "https://www.fresha.com/a/orchidee-salon-and-spa-fort-collins-1015-west-horsetooth-road-m37bb4qr"
+            }
+          ],
+          "member_since": "2026-07-27",
+          "observed_at_ms": 1790020754673,
+          "price_note": "retail_price is the venue's advertised price; taxes and fees are not stated by the site.",
+          "rating": 5,
+          "rating_formatted": "5.0",
+          "reviews": {
+            "has_more": true,
+            "latest": [
+              {
+                "author_name": "Christine S",
+                "context": "1 week ago  •  Custom Color and Cut",
+                "date_formatted": "Wed, Sep 9, 2026 at 10:23 PM",
+                "date_iso": null,
+                "id": "01a0898e-0202-7872-9aa2-516303d27883",
+                "rating": 5,
+                "reply": null,
+                "text": "Every time Hannamari performs a miracle with my curly, dry overgrown hair. This time was no exception. The color she recommended is beautiful and the cut...I love it!"
+              },
+              {
+                "author_name": "John S",
+                "context": "1 week ago  •  Partial Highlight and Cut - Setup",
+                "date_formatted": "Wed, Sep 9, 2026 at 6:27 PM",
+                "date_iso": null,
+                "id": "01a088b6-c9bd-751b-8e33-5331c8293ab2",
+                "rating": 5,
+                "reply": null,
+                "text": "Hannamari is awesome."
+              },
+              {
+                "author_name": "Kathi C",
+                "context": "2 weeks ago  •  Woman's Haircut",
+                "date_formatted": "Tue, Sep 1, 2026 at 6:28 PM",
+                "date_iso": null,
+                "id": "01a05f84-39df-7e06-8e3d-17238527010d",
+                "rating": 5,
+                "reply": null,
+                "text": "Hannamarie is so easy to work with."
+              },
+              {
+                "author_name": "Gina D",
+                "context": "3 weeks ago  •  Woman's Haircut",
+                "date_formatted": "Wed, Aug 26, 2026 at 2:43 PM",
+                "date_iso": null,
+                "id": "01a03fd0-9769-7641-bfe7-7572a90a3a75",
+                "rating": 5,
+                "reply": null,
+                "text": "Hannah Marie is wonderful.  She is talented and I love my haircut.  The salon is very nice and relaxing"
+              },
+              {
+                "author_name": "Kathi C",
+                "context": "3 weeks ago  •  Woman's Haircut",
+                "date_formatted": "Tue, Aug 25, 2026 at 1:23 PM",
+                "date_iso": null,
+                "id": "01a03a60-d924-75b6-b8cb-e193e503e1a9",
+                "rating": 5,
+                "reply": null,
+                "text": "Hannahmarie did a fantastic job helping me get back on track with my haircuts. She was so easy to talk to about what was right & what was difficult with my hair. Everyone I encountered at the salon was friendly and helpful. I will definitely be back."
+              },
+              {
+                "author_name": "Mary P",
+                "context": "6 days ago  •  Women's Haircut",
+                "date_formatted": "Tue, Sep 15, 2026 at 1:06 PM",
+                "date_iso": null,
+                "id": "01a0a676-e76e-797f-8104-08dfb755d2c5",
+                "rating": 5,
+                "reply": null,
+                "text": null
+              }
+            ],
+            "total": 7
+          },
+          "reviews_count": 7,
+          "service_count": 36,
+          "services": [
+            {
+              "description": null,
+              "duration_caption": "45 min",
+              "id": "s:25367800",
+              "max_seconds": 2700,
+              "min_seconds": null,
+              "name": "Men's haircut",
+              "non_discounted_price": null,
+              "price_type": null,
+              "retail_price": {
+                "currency": "USD",
+                "value": 50
+              },
+              "retail_price_formatted": "$50",
+              "service_id": "25367800",
+              "variants": [
+                {
+                  "description": null,
+                  "duration_caption": "45 min",
+                  "id": "29030732",
+                  "name": "Men's haircut",
+                  "retail_price_formatted": "$50"
+                }
+              ],
+              "venue_slug": "orchidee-salon-and-spa-fort-collins-1015-west-horsetooth-road-m37bb4qr"
+            },
+            {
+              "description": "Experience a fresh and revitalizing change with our expert women's haircut service. Our skilled stylists will work with you to create a look that enhances your natural beauty and reflects your personal style. Enjoy a relaxing atmosphere while you transform your hair and boost your confidence.",
+              "duration_caption": "1 hr",
+              "id": "s:25287258",
+              "max_seconds": 3600,
+              "min_seconds": null,
+              "name": "Women's Haircut",
+              "non_discounted_price": null,
+              "price_type": null,
+              "retail_price": {
+                "currency": "USD",
+                "value": 75
+              },
+              "retail_price_formatted": "$75",
+              "service_id": "25287258",
+              "variants": [
+                {
+                  "description": null,
+                  "duration_caption": "1 hr",
+                  "id": "28923884",
+                  "name": "Women's Haircut",
+                  "retail_price_formatted": "$75"
+                }
+              ],
+              "venue_slug": "orchidee-salon-and-spa-fort-collins-1015-west-horsetooth-road-m37bb4qr"
+            },
+            {
+              "description": "Transform your look with natural-looking highlights that brighten and enhance your hair. Our balayage technique offers a sun-kissed effect that blends beautifully for a low-maintenance, stunning finish. Experience a fresh approach to coloring your hair that looks effortlessly chic.",
+              "duration_caption": "3 hr",
+              "id": "s:25018519",
+              "max_seconds": 10800,
+              "min_seconds": null,
+              "name": "Balayage",
+              "non_discounted_price": null,
+              "price_type": null,
+              "retail_price": {
+                "currency": "USD",
+                "value": 250
+              },
+              "retail_price_formatted": "from $250",
+              "service_id": "25018519",
+              "variants": [
+                {
+                  "description": null,
+                  "duration_caption": "3 hr",
+                  "id": "28584068",
+                  "name": "Balayage",
+                  "retail_price_formatted": "from $250"
+                }
+              ],
+              "venue_slug": "orchidee-salon-and-spa-fort-collins-1015-west-horsetooth-road-m37bb4qr"
+            },
+            {
+              "description": "Transform your hair with a vibrant, refreshed look that enhances your natural color. This service involves applying a toner or glaze to balance tones and add shine, leaving your locks looking brilliant and healthy. Experience a boost in glow and richness for your stunning style.",
+              "duration_caption": "30 min",
+              "id": "s:25018611",
+              "max_seconds": 1800,
+              "min_seconds": null,
+              "name": "Toner/Glaze",
+              "non_discounted_price": null,
+              "price_type": null,
+              "retail_price": {
+                "currency": "USD",
+                "value": 35
+              },
+              "retail_price_formatted": "$35",
+              "service_id": "25018611",
+              "variants": [
+                {
+                  "description": null,
+                  "duration_caption": "30 min",
+                  "id": "28584173",
+                  "name": "Toner/Glaze",
+                  "retail_price_formatted": "$35"
+                }
+              ],
+              "venue_slug": "orchidee-salon-and-spa-fort-collins-1015-west-horsetooth-road-m37bb4qr"
+            },
+            {
+              "description": "Elevate your look with a gorgeous blend of dimension and brightness. Partial highlights enhance your natural hair color, adding a sun-kissed glow and vibrant texture that perfectly complements your style. Experience a refreshing transformation that leaves your hair looking radiant and beautifully illuminated.",
+              "duration_caption": "2 hr, 30 min",
+              "id": "s:25018568",
+              "max_seconds": 9000,
+              "min_seconds": null,
+              "name": "Partial Highlight",
+              "non_discounted_price": null,
+              "price_type": null,
+              "retail_price": {
+                "currency": "USD",
+                "value": 190
+              },
+              "retail_price_formatted": "from $190",
+              "service_id": "25018568",
+              "variants": [
+                {
+                  "description": null,
+                  "duration_caption": "2 hr, 30 min",
+                  "id": "28584120",
+                  "name": "Partial Highlight",
+                  "retail_price_formatted": "from $190"
+                }
+              ],
+              "venue_slug": "orchidee-salon-and-spa-fort-collins-1015-west-horsetooth-road-m37bb4qr"
+            },
+            {
+              "description": "Refresh your look and maintain your stunning hair extensions with our touch-up service. This quick and convenient appointment ensures your extensions are securely re-positioned for a seamless, natural appearance, allowing you to flaunt your gorgeous style with confidence.",
+              "duration_caption": "1 hr, 30 min",
+              "id": "s:25018662",
+              "max_seconds": 5400,
+              "min_seconds": null,
+              "name": "Extension Move Up",
+              "non_discounted_price": null,
+              "price_type": null,
+              "retail_price": {
+                "currency": "USD",
+                "value": 250
+              },
+              "retail_price_formatted": "$250",
+              "service_id": "25018662",
+              "variants": [
+                {
+                  "description": null,
+                  "duration_caption": "1 hr, 30 min",
+                  "id": "28584228",
+                  "name": "Extension Move Up",
+                  "retail_price_formatted": "$250"
+                }
+              ],
+              "venue_slug": "orchidee-salon-and-spa-fort-collins-1015-west-horsetooth-road-m37bb4qr"
+            }
+          ],
+          "slug": "hannamari-schwartz-6531344",
+          "source": "www.fresha.com",
+          "url": "https://fresha.com/p/hannamari-schwartz-6531344"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fresha-com",
+        "capability": "professionals/professional_detail"
+      }
+    },
+    {
+      "id": "fresha-com/professionals/search_professionals",
+      "provider": "fresha-com",
+      "capability": "professionals/search_professionals",
+      "name": "Search professionals",
+      "description": "Find a stylist, therapist or barber near a place; then pass the slug to professional_detail.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "Search centre latitude (WGS84).",
+          "required": true,
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "Search centre longitude (WGS84).",
+          "required": true,
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Professionals per page, 1-20 (default 20).",
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Free text: a treatment or a professional's name.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Search individual professionals around a latitude/longitude by free text (a treatment or a name), one page of up to 20 with headline, locality, rating, their venues and matching services with advertised prices. Persisted query Search_Professionals_Query (spec ep-10).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "default_currency",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the program observed the source."
+          },
+          {
+            "name": "price_note",
+            "type": "string",
+            "about": "Fixed caveat: advertised prices are starting prices, not quotes; taxes and fees are not stated by the site."
+          },
+          {
+            "name": "professionals",
+            "type": "object[]"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "search_radius_km",
+            "type": "number"
+          },
+          {
+            "name": "source",
+            "type": "string",
+            "about": "Always `www.fresha.com`."
+          },
+          {
+            "name": "taxonomy_match",
+            "type": "object",
+            "about": "Taxonomy node the query matched, if any."
+          },
+          {
+            "name": "total_count",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "latitude": 40.7128,
+          "longitude": -74.006,
+          "page_size": 5,
+          "query": "haircut"
+        },
+        "response": {
+          "count": 5,
+          "default_currency": "USD",
+          "latitude": 40.7128,
+          "longitude": -74.006,
+          "next_cursor": "WzU3LjA5NzkzLDYuMjc0NDA0MzM2NzI0MzIsMzk2Njk3Ml0=",
+          "observed_at_ms": 1790020749434,
+          "price_note": "retail_price_formatted is the venue's advertised price (often a 'from' starting price); taxes and fees are not stated by the site.",
+          "professionals": [
+            {
+              "avatar_url": "https://cdn-partners-api.fresha.com/user-account-avatars/processed/2232788/medium/7fdab8a5-9629-4e81-af1d-daf87118a679-IMG_9796.jpeg",
+              "display_name": "Irina Hairstylist",
+              "distance_formatted": "7.7 mi",
+              "distance_km": 12.39,
+              "headline": "Hairstylist",
+              "id": "4218739",
+              "locality": "Brooklyn, New York",
+              "locations": [
+                {
+                  "distance_formatted": "7.7 mi",
+                  "id": "236685",
+                  "latitude": 40.6064687,
+                  "longitude": -73.9620883,
+                  "provider_id": "221156"
+                }
+              ],
+              "matching_service_count": 10,
+              "rating": 4.955882352941177,
+              "rating_formatted": "5.0",
+              "services": [
+                {
+                  "deal_price_formatted": null,
+                  "duration_caption": "20 min - 1 hr, 15 min",
+                  "employee_id": "3133342",
+                  "id": "s:3023350",
+                  "name": "Cut & Blowout",
+                  "retail_price_formatted": "from $15",
+                  "service_id": "3023350",
+                  "venues": [
+                    {
+                      "distance_formatted": "7.7 mi",
+                      "id": "236685",
+                      "locality": "Brooklyn, New York",
+                      "name": "Brooklyn Beauty Lounge",
+                      "slug": "brooklyn-beauty-lounge-new-york-2080-coney-island-avenue-cxlmkp5o",
+                      "url": "https://www.fresha.com/a/brooklyn-beauty-lounge-new-york-2080-coney-island-avenue-cxlmkp5o"
+                    }
+                  ]
+                },
+                {
+                  "deal_price_formatted": null,
+                  "duration_caption": "15 min",
+                  "employee_id": "3133342",
+                  "id": "s:8198599",
+                  "name": "Bangs Cut",
+                  "retail_price_formatted": "$25",
+                  "service_id": "8198599",
+                  "venues": [
+                    {
+                      "distance_formatted": "7.7 mi",
+                      "id": "236685",
+                      "locality": "Brooklyn, New York",
+                      "name": "Brooklyn Beauty Lounge",
+                      "slug": "brooklyn-beauty-lounge-new-york-2080-coney-island-avenue-cxlmkp5o",
+                      "url": "https://www.fresha.com/a/brooklyn-beauty-lounge-new-york-2080-coney-island-avenue-cxlmkp5o"
+                    }
+                  ]
+                }
+              ],
+              "slug": "irina-hairstylist-4218739",
+              "url": "https://www.fresha.com/p/irina-hairstylist-4218739"
+            },
+            {
+              "avatar_url": "https://cdn-partners-api.fresha.com/user-account-avatars/processed/1983374/medium/c0e4593d-c7e3-4932-a7e8-0b3872fd339b-IMG_0266.jpeg",
+              "display_name": "Ben Nb",
+              "distance_formatted": "4.9 mi",
+              "distance_km": 7.913,
+              "headline": "Colorist,Treatments ,Haircuts",
+              "id": "6148544",
+              "locality": "Manhattan, New York",
+              "locations": [
+                {
+                  "distance_formatted": "4.9 mi",
+                  "id": "2810718",
+                  "latitude": 40.7726829,
+                  "longitude": -73.955261,
+                  "provider_id": "2717978"
+                }
+              ],
+              "matching_service_count": 33,
+              "rating": 4.852941176470588,
+              "rating_formatted": "4.9",
+              "services": [
+                {
+                  "deal_price_formatted": null,
+                  "duration_caption": "1 hr - 1 hr, 15 min",
+                  "employee_id": "5061128",
+                  "id": "s:22839104",
+                  "name": "Haircut & Blowdry",
+                  "retail_price_formatted": "from $110",
+                  "service_id": "22839104",
+                  "venues": [
+                    {
+                      "distance_formatted": "4.9 mi",
+                      "id": "2810718",
+                      "locality": "Manhattan, New York",
+                      "name": "Bleu Ciel  (2nd Avenue)",
+                      "slug": "bleu-ciel-2nd-avenue-new-york-1498-2nd-avenue-neilzrgq",
+                      "url": "https://www.fresha.com/a/bleu-ciel-2nd-avenue-new-york-1498-2nd-avenue-neilzrgq"
+                    }
+                  ]
+                },
+                {
+                  "deal_price_formatted": null,
+                  "duration_caption": "1 hr",
+                  "employee_id": "5061128",
+                  "id": "s:22838893",
+                  "name": "Mens Haircut",
+                  "retail_price_formatted": "from $65",
+                  "service_id": "22838893",
+                  "venues": [
+                    {
+                      "distance_formatted": "4.9 mi",
+                      "id": "2810718",
+                      "locality": "Manhattan, New York",
+                      "name": "Bleu Ciel  (2nd Avenue)",
+                      "slug": "bleu-ciel-2nd-avenue-new-york-1498-2nd-avenue-neilzrgq",
+                      "url": "https://www.fresha.com/a/bleu-ciel-2nd-avenue-new-york-1498-2nd-avenue-neilzrgq"
+                    }
+                  ]
+                }
+              ],
+              "slug": "ben-nb-6148544",
+              "url": "https://www.fresha.com/p/ben-nb-6148544"
+            },
+            {
+              "avatar_url": "https://cdn-partners-api.fresha.com/user-account-avatars/processed/2036166/medium/8fb28440-53ea-4784-a789-d1f767935b61-IMG_4094.jpeg",
+              "display_name": "Eric Schrieber",
+              "distance_formatted": "2.3 mi",
+              "distance_km": 3.714,
+              "headline": "Haircuts for all! ",
+              "id": "6252223",
+              "locality": "Brooklyn, New York",
+              "locations": [
+                {
+                  "distance_formatted": "2.3 mi",
+                  "id": "2900856",
+                  "latitude": 40.7145311,
+                  "longitude": -73.9619965,
+                  "provider_id": "2728881"
+                }
+              ],
+              "matching_service_count": 6,
+              "rating": 5,
+              "rating_formatted": "5.0",
+              "services": [
+                {
+                  "deal_price_formatted": null,
+                  "duration_caption": "30 min",
+                  "employee_id": "5180374",
+                  "id": "s:23261984",
+                  "name": "Haircut",
+                  "retail_price_formatted": "$55",
+                  "service_id": "23261984",
+                  "venues": [
+                    {
+                      "distance_formatted": "2.3 mi",
+                      "id": "2900856",
+                      "locality": "Brooklyn, New York",
+                      "name": "Otis & Finn Williamsburg",
+                      "slug": "otis-finn-williamsburg-new-york-154-grand-street-hwi5s0hz",
+                      "url": "https://www.fresha.com/a/otis-finn-williamsburg-new-york-154-grand-street-hwi5s0hz"
+                    }
+                  ]
+                },
+                {
+                  "deal_price_formatted": null,
+                  "duration_caption": "20 min",
+                  "employee_id": "5180374",
+                  "id": "s:23265870",
+                  "name": "Buzzcut",
+                  "retail_price_formatted": "$35",
+                  "service_id": "23265870",
+                  "venues": [
+                    {
+                      "distance_formatted": "2.3 mi",
+                      "id": "2900856",
+                      "locality": "Brooklyn, New York",
+                      "name": "Otis & Finn Williamsburg",
+                      "slug": "otis-finn-williamsburg-new-york-154-grand-street-hwi5s0hz",
+                      "url": "https://www.fresha.com/a/otis-finn-williamsburg-new-york-154-grand-street-hwi5s0hz"
+                    }
+                  ]
+                }
+              ],
+              "slug": "eric-schrieber-6252223",
+              "url": "https://www.fresha.com/p/eric-schrieber-6252223"
+            },
+            {
+              "avatar_url": "https://cdn-partners-api.fresha.com/user-account-avatars/processed/2206898/medium/64ac2750-fc48-4fdf-b35c-2b06e12b6ac5-b730bd09-6392-4f1d-a2af-b1e60aefa516.jpeg",
+              "display_name": "Hemer perez pardo",
+              "distance_formatted": "3.4 mi",
+              "distance_km": 5.489,
+              "headline": "Haircut & Color Master",
+              "id": "3966976",
+              "locality": "Manhattan, New York",
+              "locations": [
+                {
+                  "distance_formatted": "3.4 mi",
+                  "id": "1126424",
+                  "latitude": 40.7604931,
+                  "longitude": -73.9891857,
+                  "provider_id": "1068243"
+                }
+              ],
+              "matching_service_count": 18,
+              "rating": 4.971631205673759,
+              "rating_formatted": "5.0",
+              "services": [
+                {
+                  "deal_price_formatted": null,
+                  "duration_caption": "1 hr, 10 min",
+                  "employee_id": "2805757",
+                  "id": "s:13760302",
+                  "name": "Clipper Cuts & Fades",
+                  "retail_price_formatted": "from $49",
+                  "service_id": "13760302",
+                  "venues": [
+                    {
+                      "distance_formatted": "3.4 mi",
+                      "id": "1126424",
+                      "locality": "Manhattan, New York",
+                      "name": "West Vibe Hair Salon - Top Rated Hair Salon in NYC",
+                      "slug": "west-vibe-hair-salon-top-rated-hair-salon-in-nyc-new-york-352-west-46th-street-sg6d04ew",
+                      "url": "https://www.fresha.com/a/west-vibe-hair-salon-top-rated-hair-salon-in-nyc-new-york-352-west-46th-street-sg6d04ew"
+                    }
+                  ]
+                },
+                {
+                  "deal_price_formatted": null,
+                  "duration_caption": "1 hr - 2 hr, 30 min",
+                  "employee_id": "2805757",
+                  "id": "s:13760316",
+                  "name": "Standard haircuts + Blowout",
+                  "retail_price_formatted": "$115",
+                  "service_id": "13760316",
+                  "venues": [
+                    {
+                      "distance_formatted": "3.4 mi",
+                      "id": "1126424",
+                      "locality": "Manhattan, New York",
+                      "name": "West Vibe Hair Salon - Top Rated Hair Salon in NYC",
+                      "slug": "west-vibe-hair-salon-top-rated-hair-salon-in-nyc-new-york-352-west-46th-street-sg6d04ew",
+                      "url": "https://www.fresha.com/a/west-vibe-hair-salon-top-rated-hair-salon-in-nyc-new-york-352-west-46th-street-sg6d04ew"
+                    }
+                  ]
+                }
+              ],
+              "slug": "hemer-perez-pardo-3966976",
+              "url": "https://www.fresha.com/p/hemer-perez-pardo-3966976"
+            },
+            {
+              "avatar_url": "https://cdn-partners-api.fresha.com/user-account-avatars/processed/436253/medium/58ebad77-beb5-4602-b51c-0367adacc259-avatar.png",
+              "display_name": "Caesar Vasilescu",
+              "distance_formatted": "3.4 mi",
+              "distance_km": 5.489,
+              "headline": "Colorist / Advance Haircuts",
+              "id": "3966972",
+              "locality": "Manhattan, New York",
+              "locations": [
+                {
+                  "distance_formatted": "3.4 mi",
+                  "id": "1126424",
+                  "latitude": 40.7604931,
+                  "longitude": -73.9891857,
+                  "provider_id": "1068243"
+                }
+              ],
+              "matching_service_count": 38,
+              "rating": 4.9672897196261685,
+              "rating_formatted": "5.0",
+              "services": [
+                {
+                  "deal_price_formatted": null,
+                  "duration_caption": "1 hr, 25 min",
+                  "employee_id": "2761009",
+                  "id": "s:13760302",
+                  "name": "Clipper Cuts & Fades",
+                  "retail_price_formatted": "from $49",
+                  "service_id": "13760302",
+                  "venues": [
+                    {
+                      "distance_formatted": "3.4 mi",
+                      "id": "1126424",
+                      "locality": "Manhattan, New York",
+                      "name": "West Vibe Hair Salon - Top Rated Hair Salon in NYC",
+                      "slug": "west-vibe-hair-salon-top-rated-hair-salon-in-nyc-new-york-352-west-46th-street-sg6d04ew",
+                      "url": "https://www.fresha.com/a/west-vibe-hair-salon-top-rated-hair-salon-in-nyc-new-york-352-west-46th-street-sg6d04ew"
+                    }
+                  ]
+                },
+                {
+                  "deal_price_formatted": null,
+                  "duration_caption": "1 hr - 2 hr, 30 min",
+                  "employee_id": "2761009",
+                  "id": "s:13760316",
+                  "name": "Standard haircuts + Blowout",
+                  "retail_price_formatted": "from $115",
+                  "service_id": "13760316",
+                  "venues": [
+                    {
+                      "distance_formatted": "3.4 mi",
+                      "id": "1126424",
+                      "locality": "Manhattan, New York",
+                      "name": "West Vibe Hair Salon - Top Rated Hair Salon in NYC",
+                      "slug": "west-vibe-hair-salon-top-rated-hair-salon-in-nyc-new-york-352-west-46th-street-sg6d04ew",
+                      "url": "https://www.fresha.com/a/west-vibe-hair-salon-top-rated-hair-salon-in-nyc-new-york-352-west-46th-street-sg6d04ew"
+                    }
+                  ]
+                }
+              ],
+              "slug": "caesar-vasilescu-3966972",
+              "url": "https://www.fresha.com/p/caesar-vasilescu-3966972"
+            }
+          ],
+          "query": "haircut",
+          "search_radius_km": 2,
+          "source": "www.fresha.com",
+          "taxonomy_match": {
+            "id": "tag:haircut"
+          },
+          "total_count": 207
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fresha-com",
+        "capability": "professionals/search_professionals"
+      }
+    },
+    {
+      "id": "fresha-com/venues/autocomplete",
+      "provider": "fresha-com",
+      "capability": "venues/autocomplete",
+      "name": "Autocomplete",
+      "description": "Resolve a treatment name to a taxonomy id before search_venues, or find a venue/professional slug by name.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Partial or full treatment, venue or professional name.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Fresha's search-box suggestions for a partial query: treatment taxonomy ids (tag:/category:/type:, usable as search_venues.treatment_id), venues and professionals with their slugs. Venue/professional distances are relative to the proxy exit and informational only. Persisted query Search_AutocompleteAll_Query (spec ep-5).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "counts",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the program observed the source."
+          },
+          {
+            "name": "professionals",
+            "type": "object[]"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "source",
+            "type": "string",
+            "about": "Always `www.fresha.com`."
+          },
+          {
+            "name": "taxonomy",
+            "type": "object[]"
+          },
+          {
+            "name": "venues",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "haircut"
+        },
+        "response": {
+          "counts": {
+            "professionals": "27",
+            "taxonomy": "99+",
+            "venues": "20"
+          },
+          "observed_at_ms": 1790020738460,
+          "professionals": [
+            {
+              "description": "Master of haircuts, custom colors and special events styling. • Troutman Park, Fort Collins",
+              "display_name": "Hannamari Schwartz",
+              "distance_formatted": ">30 mi",
+              "id": "6531344",
+              "slug": "hannamari-schwartz-6531344",
+              "url": "https://www.fresha.com/p/hannamari-schwartz-6531344"
+            },
+            {
+              "description": "Hey want haircut  • Far West Side, San Antonio",
+              "display_name": "LadyLiz Cooper",
+              "distance_formatted": ">30 mi",
+              "id": "6510676",
+              "slug": "ladyliz-cooper-6510676",
+              "url": "https://www.fresha.com/p/ladyliz-cooper-6510676"
+            },
+            {
+              "description": "I specialize in extensions, haircuts, styling, and blowouts • Oak Brook, Oak Brook",
+              "display_name": "Ellie Navarro",
+              "distance_formatted": ">30 mi",
+              "id": "6527854",
+              "slug": "ellie-navarro-6527854",
+              "url": "https://www.fresha.com/p/ellie-navarro-6527854"
+            }
+          ],
+          "query": "haircut",
+          "source": "www.fresha.com",
+          "taxonomy": [
+            {
+              "highlighted_name": "Haircut",
+              "id": "tag:haircut",
+              "kind": "tag",
+              "name": "Haircut",
+              "score": 895.82715
+            },
+            {
+              "highlighted_name": "**Dry** haircut",
+              "id": "tag:dry-haircut",
+              "kind": "tag",
+              "name": "Dry haircut",
+              "score": 761.1684
+            },
+            {
+              "highlighted_name": "**Men's** haircut",
+              "id": "tag:mens-haircut",
+              "kind": "tag",
+              "name": "Men's haircut",
+              "score": 747.72327
+            },
+            {
+              "highlighted_name": "**Women's** haircut",
+              "id": "tag:womens-haircut",
+              "kind": "tag",
+              "name": "Women's haircut",
+              "score": 688.46405
+            },
+            {
+              "highlighted_name": "**Wet** haircut",
+              "id": "tag:wet-haircut",
+              "kind": "tag",
+              "name": "Wet haircut",
+              "score": 682.63605
+            }
+          ],
+          "venues": [
+            {
+              "business_type": "Beauty Salon",
+              "description": "Beauty Salon  •  1705 Commercial Circle, Wamego",
+              "distance_formatted": ">30 mi",
+              "id": "381916",
+              "name": "Family Haircutters",
+              "slug": "family-haircutters-wamego-1705-commercial-circle-dzy9noxt",
+              "url": "https://www.fresha.com/a/family-haircutters-wamego-1705-commercial-circle-dzy9noxt"
+            },
+            {
+              "business_type": "Hair Salon",
+              "description": "Hair Salon  •  New Wave Hair Salon, 308 East Broadway, Mayfield",
+              "distance_formatted": ">30 mi",
+              "id": "1261427",
+              "name": "KK HairArtist",
+              "slug": "kk-hairartist-mayfield-new-wave-hair-salon-308-east-broadway-g4zyoupm",
+              "url": "https://www.fresha.com/a/kk-hairartist-mayfield-new-wave-hair-salon-308-east-broadway-g4zyoupm"
+            },
+            {
+              "business_type": "Beauty Salon",
+              "description": "Beauty Salon  •  Five Points, Huntsville",
+              "distance_formatted": ">30 mi",
+              "id": "10251",
+              "name": "Hairitage House Salon",
+              "slug": "hairitage-house-salon-huntsville-701-halsey-avenue-northeast-nata2j5s",
+              "url": "https://www.fresha.com/a/hairitage-house-salon-huntsville-701-halsey-avenue-northeast-nata2j5s"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fresha-com",
+        "capability": "venues/autocomplete"
+      }
+    },
+    {
+      "id": "fresha-com/venues/search_venues",
+      "provider": "fresha-com",
+      "capability": "venues/search_venues",
+      "name": "Search venues",
+      "description": "Discovery: find venues offering a treatment near a place, or check which venues have openings on a date; then pass a venue slug to venue_detail.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "availability_date",
+          "type": "string",
+          "in": "body",
+          "about": "Venue-local date, YYYY-MM-DD. Adds each matching service's available start times for that day and keeps only venues with availability. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "availability_start_time_from",
+          "type": "string",
+          "in": "body",
+          "about": "Earliest start time HH:MM (24h, venue-local). Needs availability_date. Pattern: ^[0-9]{2}:[0-9]{2}$."
+        },
+        {
+          "name": "availability_start_time_to",
+          "type": "string",
+          "in": "body",
+          "about": "Latest start time HH:MM (24h, venue-local). Needs availability_date. Pattern: ^[0-9]{2}:[0-9]{2}$."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page."
+        },
+        {
+          "name": "fresha_verified_only",
+          "type": "boolean",
+          "in": "body",
+          "about": "Only Fresha-verified venues. Default false."
+        },
+        {
+          "name": "has_deals",
+          "type": "boolean",
+          "in": "body",
+          "about": "Only venues with deals. Default false."
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "Search centre latitude (WGS84). Always required: without it the site geolocates the proxy exit.",
+          "required": true,
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "Search centre longitude (WGS84).",
+          "required": true,
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Venues per page, 1-20 (default 20).",
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Free text: a treatment (`massage`), business type or venue name. Pass this and/or treatment_id."
+        },
+        {
+          "name": "treatment_id",
+          "type": "string",
+          "in": "body",
+          "about": "Taxonomy id from autocomplete: `tag:haircut`, `category:massage`, `type:barbering`. Pattern: ^(tag|category|type):[a-z0-9]+(-[a-z0-9]+)*$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "query",
+          "treatment_id"
+        ]
+      ],
+      "response": {
+        "about": "Search Fresha venues around a latitude/longitude by free text and/or a taxonomy treatment_id, one page of up to 20 venues with their matching services and advertised prices. With availability_date (and an optional HH:MM window) the site returns only venues with openings that day and lists each matching service's available start times, without starting a booking. Persisted query Search_Venues_Query (spec ep-3).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "availability_date",
+            "type": "string"
+          },
+          {
+            "name": "count",
+            "type": "number",
+            "about": "Venues on this page."
+          },
+          {
+            "name": "default_currency",
+            "type": "string",
+            "about": "Default currency the site picked for this geocode."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Pass as `cursor` for the next page; null when exhausted."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the program observed the source."
+          },
+          {
+            "name": "price_note",
+            "type": "string",
+            "about": "Fixed caveat: advertised prices are starting prices, not quotes; taxes and fees are not stated by the site."
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "resolved_treatment",
+            "type": "object",
+            "about": "The taxonomy node the site resolved for treatment_id, or null."
+          },
+          {
+            "name": "search_radius_km",
+            "type": "number"
+          },
+          {
+            "name": "source",
+            "type": "string",
+            "about": "Always `www.fresha.com`."
+          },
+          {
+            "name": "total_count",
+            "type": "number",
+            "about": "Venues matching (site's pageInfo.count)."
+          },
+          {
+            "name": "treatment_id",
+            "type": "string"
+          },
+          {
+            "name": "venues",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "latitude": 40.7128,
+          "longitude": -74.006,
+          "page_size": 5,
+          "query": "massage"
+        },
+        "response": {
+          "availability_date": null,
+          "count": 5,
+          "default_currency": "USD",
+          "latitude": 40.7128,
+          "longitude": -74.006,
+          "next_cursor": "WzE3MC4xNDQ5NCwxLjIyMjExNDQ0NTczNjUwODUsMTQ3ODAxMF0=",
+          "observed_at_ms": 1790020731424,
+          "price_note": "retail_price_formatted is the venue's advertised price (often a 'from' starting price); taxes and fees are not stated by the site.",
+          "query": "massage",
+          "resolved_treatment": null,
+          "search_radius_km": 2,
+          "source": "www.fresha.com",
+          "total_count": 158,
+          "treatment_id": null,
+          "venues": [
+            {
+              "address": {
+                "country_code": "US",
+                "formatted": "Queens, Astoria, New York",
+                "latitude": 40.76176071166992,
+                "longitude": -73.9404525756836
+              },
+              "business_type": "Spa & sauna",
+              "distance_formatted": "4.8 mi",
+              "distance_km": 7.755,
+              "featured": false,
+              "has_deals": false,
+              "id": "2586721",
+              "image_url": "https://images.fresha.com/locations/location-profile-images/2505572/5784465/0e5713e7-2bb0-4347-ab54-8f837bdcb054-A1AMassage-US-NewYork-NewYork-QueensAstoria-Fresha.jpg",
+              "is_fresha_verified": true,
+              "is_new": false,
+              "matching_service_count": 2,
+              "name": "A1A Massage",
+              "rating": 5,
+              "rating_formatted": "5.0",
+              "reviews_count": 6,
+              "services": [
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": null,
+                  "duration_caption": "1 hr",
+                  "has_more_available_start_times": false,
+                  "id": "s:19519230",
+                  "name": "60min Full Body Massage",
+                  "retail_price_formatted": "$140",
+                  "service_id": "19519230"
+                },
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": null,
+                  "duration_caption": "1 hr, 30 min",
+                  "has_more_available_start_times": false,
+                  "id": "s:19520877",
+                  "name": "90 Minute Full Body Massage",
+                  "retail_price_formatted": "$180",
+                  "service_id": "19520877"
+                }
+              ],
+              "slug": "a1a-massage-new-york-9-20-35th-avenue-jzktb4g5",
+              "url": "https://www.fresha.com/a/a1a-massage-new-york-9-20-35th-avenue-jzktb4g5"
+            },
+            {
+              "address": {
+                "country_code": "US",
+                "formatted": "Manhattan, New York",
+                "latitude": 40.76034164428711,
+                "longitude": -73.99659729003906
+              },
+              "business_type": "Massage",
+              "distance_formatted": "3.3 mi",
+              "distance_km": 5.345,
+              "featured": false,
+              "has_deals": true,
+              "id": "3168916",
+              "image_url": "https://images.fresha.com/locations/location-profile-images/3065600/6579559/d21cff8f-0550-4cc0-87b8-1112334338b4-MassageEnvyMidtownWest-US-NewYork-NewYork-Manhattan-Fresha.jpg",
+              "is_fresha_verified": false,
+              "is_new": true,
+              "matching_service_count": 4,
+              "name": "Massage Envy Midtown West",
+              "rating": 5,
+              "rating_formatted": "5.0",
+              "reviews_count": 1,
+              "services": [
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": "from $60",
+                  "duration_caption": "1 hr",
+                  "has_more_available_start_times": false,
+                  "id": "s:25146705",
+                  "name": "Aescape Robotic Recovery Massage - 60 minutes",
+                  "retail_price_formatted": "$80",
+                  "service_id": "25146705"
+                },
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": "from $30",
+                  "duration_caption": "30 min",
+                  "has_more_available_start_times": false,
+                  "id": "s:25146665",
+                  "name": "Aescape Robotic Recovery Massage - 30 minutes",
+                  "retail_price_formatted": "$40",
+                  "service_id": "25146665"
+                },
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": "from $60",
+                  "duration_caption": "1 hr",
+                  "has_more_available_start_times": false,
+                  "id": "s:25146725",
+                  "name": "Full Body Infrared Red Light Therapy",
+                  "retail_price_formatted": "$80",
+                  "service_id": "25146725"
+                }
+              ],
+              "slug": "massage-envy-midtown-west-new-york-525-west-42nd-street-vyomnnvc",
+              "url": "https://www.fresha.com/a/massage-envy-midtown-west-new-york-525-west-42nd-street-vyomnnvc"
+            },
+            {
+              "address": {
+                "country_code": "US",
+                "formatted": "Midtown, New York City",
+                "latitude": 40.74871063232422,
+                "longitude": -73.98521423339844
+              },
+              "business_type": "Waxing Salon",
+              "distance_formatted": "2.7 mi",
+              "distance_km": 4.36,
+              "featured": false,
+              "has_deals": false,
+              "id": "1328218",
+              "image_url": "https://images.fresha.com/locations/location-profile-images/741412/5808392/33d7ef1c-6074-435d-a415-5610c1bdd252-Alexspot24MensSpaTrimmingManscapingWaxingForMenMassageSpa-US-NewYork-NewYork-Manhattan-Fresha.jpg",
+              "is_fresha_verified": true,
+              "is_new": false,
+              "matching_service_count": 77,
+              "name": "Alexspot24 NYC-Mens Grooming, Mens Waxing & Massage Spa",
+              "rating": 4.9,
+              "rating_formatted": "4.9",
+              "reviews_count": 2144,
+              "services": [
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": null,
+                  "duration_caption": "30 min - 1 hr, 30 min",
+                  "has_more_available_start_times": false,
+                  "id": "s:9588763",
+                  "name": "🧠 Relax Bodywork/Relajante Mens/Hombres - 30/60/90min",
+                  "retail_price_formatted": "$75",
+                  "service_id": "9588763"
+                },
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": null,
+                  "duration_caption": "1 hr - 1 hr, 30 min",
+                  "has_more_available_start_times": false,
+                  "id": "s:9588758",
+                  "name": "💪Deep Tissue BodyWork 60/90min (deportivo/de tejido profundo)",
+                  "retail_price_formatted": "from $139",
+                  "service_id": "9588758"
+                },
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": null,
+                  "duration_caption": "55 min",
+                  "has_more_available_start_times": false,
+                  "id": "s:15040374",
+                  "name": "❤️ NEW: Butt Lover Massage (Focus on Glutes+Legs+Back)",
+                  "retail_price_formatted": "$125",
+                  "service_id": "15040374"
+                }
+              ],
+              "slug": "alexspot24-nyc-mens-grooming-mens-waxing-massage-spa-new-york-city-1-w34th-street-ulz2rkzl",
+              "url": "https://www.fresha.com/a/alexspot24-nyc-mens-grooming-mens-waxing-massage-spa-new-york-city-1-w34th-street-ulz2rkzl"
+            },
+            {
+              "address": {
+                "country_code": "US",
+                "formatted": "Brooklyn, Prospect Lefferts Gardens, New York",
+                "latitude": 40.6597900390625,
+                "longitude": -73.95076751708984
+              },
+              "business_type": "Massage",
+              "distance_formatted": "4.7 mi",
+              "distance_km": 7.512,
+              "featured": false,
+              "has_deals": true,
+              "id": "1044419",
+              "image_url": "https://images.fresha.com/locations/location-profile-images/990050/1221192/6db61b29-87b1-4573-bb03-6ba15071a6e6.jpg",
+              "is_fresha_verified": true,
+              "is_new": false,
+              "matching_service_count": 24,
+              "name": "Brooklyn Massage and Spa by Angelica",
+              "rating": 5,
+              "rating_formatted": "5.0",
+              "reviews_count": 34,
+              "services": [
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": "from $81",
+                  "duration_caption": "1 hr",
+                  "has_more_available_start_times": false,
+                  "id": "s:12149511",
+                  "name": "Deep Tissue Massage",
+                  "retail_price_formatted": "from $90",
+                  "service_id": "12149511"
+                },
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": "from $89.10",
+                  "duration_caption": "1 hr",
+                  "has_more_available_start_times": false,
+                  "id": "s:23822804",
+                  "name": "Lymphatic full body fluid manually drainage",
+                  "retail_price_formatted": "from $99",
+                  "service_id": "23822804"
+                },
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": "from $81",
+                  "duration_caption": "1 hr",
+                  "has_more_available_start_times": false,
+                  "id": "s:12149377",
+                  "name": "Hot Stone",
+                  "retail_price_formatted": "from $90",
+                  "service_id": "12149377"
+                }
+              ],
+              "slug": "brooklyn-massage-and-spa-by-angelica-new-york-1140-nostrand-avenue-n789p4d8",
+              "url": "https://www.fresha.com/a/brooklyn-massage-and-spa-by-angelica-new-york-1140-nostrand-avenue-n789p4d8"
+            },
+            {
+              "address": {
+                "country_code": "US",
+                "formatted": "191 Lefante Way, Bayonne",
+                "latitude": 40.668212890625,
+                "longitude": -74.10626220703125
+              },
+              "business_type": "Massage",
+              "distance_formatted": "6.1 mi",
+              "distance_km": 9.8,
+              "featured": false,
+              "has_deals": false,
+              "id": "1478010",
+              "image_url": "https://images.fresha.com/locations/location-profile-images/1403617/5451724/a1cb3d74-501e-4b34-93a3-e7e8d7357932-TayloredSpaandMassage-US-NewJersey-Bayonne-Fresha.jpg",
+              "is_fresha_verified": true,
+              "is_new": false,
+              "matching_service_count": 28,
+              "name": "Taylored Spa and Massage",
+              "rating": 5,
+              "rating_formatted": "5.0",
+              "reviews_count": 177,
+              "services": [
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": null,
+                  "duration_caption": "1 hr - 2 hr",
+                  "has_more_available_start_times": false,
+                  "id": "s:17075789",
+                  "name": "Deep Tissue Massage",
+                  "retail_price_formatted": "$100",
+                  "service_id": "17075789"
+                },
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": null,
+                  "duration_caption": "1 hr - 2 hr",
+                  "has_more_available_start_times": false,
+                  "id": "s:17086532",
+                  "name": "Swedish Massage",
+                  "retail_price_formatted": "$85",
+                  "service_id": "17086532"
+                },
+                {
+                  "available_start_times": [],
+                  "deal_price_formatted": null,
+                  "duration_caption": "20 min",
+                  "has_more_available_start_times": false,
+                  "id": "s:23286798",
+                  "name": "Taylored Scalp Massage Add-on",
+                  "retail_price_formatted": "$30",
+                  "service_id": "23286798"
+                }
+              ],
+              "slug": "taylored-spa-and-massage-bayonne-191-lefante-way-ow1qrvd7",
+              "url": "https://www.fresha.com/a/taylored-spa-and-massage-bayonne-191-lefante-way-ow1qrvd7"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fresha-com",
+        "capability": "venues/search_venues"
+      }
+    },
+    {
+      "id": "fresha-com/venues/venue_detail",
+      "provider": "fresha-com",
+      "capability": "venues/venue_detail",
+      "name": "Venue detail",
+      "description": "Detail read after search_venues or autocomplete, or for a pasted fresha.com/a/ link.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "slug",
+          "type": "string",
+          "in": "body",
+          "about": "Venue slug as in https://www.fresha.com/a/{slug}. Pattern: ^[a-z0-9]+(-[a-z0-9]+)*$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted https://www.fresha.com/a/{slug} URL."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "slug",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One Fresha venue by slug or pasted /a/ URL: identity, address, contact, currency, rating and review histogram with the latest reviews, weekly hours and open/closed status, features, public team members, and the full service menu grouped as the venue groups it, with advertised prices (price_type STARTS_AT marks 'from' prices), durations and variants. Persisted query Location_Page_Query (spec ep-8). Unknown slug -> not_found.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "business_type",
+            "type": "string"
+          },
+          {
+            "name": "contact_number",
+            "type": "string"
+          },
+          {
+            "name": "country_code",
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "type": "string",
+            "about": "Venue currency (ISO 4217)."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "employees",
+            "type": "object[]",
+            "about": "Team members the venue lists publicly (empty when hidden)."
+          },
+          {
+            "name": "featured",
+            "type": "boolean"
+          },
+          {
+            "name": "features",
+            "type": "object[]"
+          },
+          {
+            "name": "has_deals",
+            "type": "boolean"
+          },
+          {
+            "name": "has_gift_cards",
+            "type": "boolean"
+          },
+          {
+            "name": "has_group_appointments",
+            "type": "boolean"
+          },
+          {
+            "name": "has_memberships",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "is_bookable",
+            "type": "boolean"
+          },
+          {
+            "name": "is_fresha_verified",
+            "type": "boolean"
+          },
+          {
+            "name": "is_new",
+            "type": "boolean"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the program observed the source."
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "about": "Fresha provider (business owner) id."
+          },
+          {
+            "name": "price_note",
+            "type": "string",
+            "about": "Fixed caveat: advertised prices are starting prices, not quotes; taxes and fees are not stated by the site."
+          },
+          {
+            "name": "price_range",
+            "type": "object"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "rating_formatted",
+            "type": "string"
+          },
+          {
+            "name": "reviews",
+            "type": "object"
+          },
+          {
+            "name": "reviews_count",
+            "type": "number"
+          },
+          {
+            "name": "service_count",
+            "type": "number"
+          },
+          {
+            "name": "service_groups",
+            "type": "object[]",
+            "about": "The public service menu, grouped as the venue groups it."
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "source",
+            "type": "string",
+            "about": "Always `www.fresha.com`."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "working_hours",
+            "type": "object",
+            "about": "Weekly hours and current open/closed status (venue-local; timezone not exposed)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "slug": "pink-armadillo-hair-co-norwich-124-east-2nd-avenue-p9tt7x2d"
+        },
+        "response": {
+          "address": {
+            "apartment_suite": null,
+            "city": "Norwich",
+            "country_code": "US",
+            "formatted": "124 East 2nd Avenue, Norwich, Kansas",
+            "latitude": 37.45734786987305,
+            "longitude": -97.8488540649414,
+            "postal_code": "67118",
+            "region": "Kansas",
+            "street": "124 East 2nd Avenue"
+          },
+          "business_type": "Hair Salon",
+          "contact_number": "+1 620-478-2277",
+          "country_code": "US",
+          "currency": "USD",
+          "description": "At Pink Armadillo Hair Co in Norwich, we specialize in providing stylish and personalized hair services that reflect your unique personality. Our talented team offers a range of treatments, including haircuts, coloring, and styling, all designed to help you look and feel your best. We pride ourselves on creating a fun and welcoming atmosphere where you can relax and enjoy your experience. Visit us to discover your perfect look and let us help you shine.",
+          "employees": [
+            {
+              "avatar_url": "https://cdn-partners-api.fresha.com/user-account-avatars/processed/2254390/medium/bf5f1ee2-8616-4c7e-8fed-426fcbdeec06-IMG_2989.jpeg",
+              "id": "5583730",
+              "job_title": null,
+              "name": "Brenna",
+              "rating": null
+            },
+            {
+              "avatar_url": "https://cdn-partners-api.fresha.com/user-account-avatars/processed/2245192/medium/8a521e68-558e-4573-83a6-a9ceded5decf-IMG_9020.jpeg",
+              "id": "5553027",
+              "job_title": "Cosmetologist",
+              "name": "Madi",
+              "rating": null
+            },
+            {
+              "avatar_url": "https://cdn-partners-api.fresha.com/user-account-avatars/processed/509197/medium/7f8f3f3f-6198-4c10-912d-f35d63fb44e7-IMG_5795.jpeg",
+              "id": "2998045",
+              "job_title": "Nail Artist",
+              "name": "Brayln",
+              "rating": null
+            },
+            {
+              "avatar_url": "https://cdn-partners-api.fresha.com/employee-avatars/processed/77968/medium/b322936f-eb63-4f06-9e1d-8ab699eee1dc-IMG_6304.jpeg",
+              "id": "699057",
+              "job_title": "Owner",
+              "name": "Audra",
+              "rating": null
+            }
+          ],
+          "featured": false,
+          "features": [
+            {
+              "id": "kid_friendly",
+              "label": "Kid-friendly"
+            },
+            {
+              "id": "wheelchair_accessible",
+              "label": "Wheelchair accessible"
+            },
+            {
+              "id": "parking_available",
+              "label": "Parking available"
+            },
+            {
+              "id": "woman_owned",
+              "label": "Woman-owned"
+            }
+          ],
+          "has_deals": false,
+          "has_gift_cards": true,
+          "has_group_appointments": false,
+          "has_memberships": false,
+          "id": "494613",
+          "images": [
+            "https://images.fresha.com/locations/location-profile-images/220156/460765/7d41535e-8e98-45d1-a312-f64cb45301de.jpg?class=venue-gallery-large"
+          ],
+          "is_bookable": true,
+          "is_fresha_verified": true,
+          "is_new": false,
+          "name": "Pink Armadillo Hair Co.",
+          "observed_at_ms": 1790020744053,
+          "owner_id": "220156",
+          "price_note": "retail_price is the venue's advertised price; price_type STARTS_AT means a 'from' price. Taxes and fees are not stated by the site.",
+          "price_range": {
+            "maximum": {
+              "currency": "USD",
+              "value": 255
+            },
+            "minimum": {
+              "currency": "USD",
+              "value": 10
+            }
+          },
+          "rating": 5,
+          "rating_formatted": "5.0",
+          "reviews": {
+            "by_rating": {
+              "1": 0,
+              "2": 0,
+              "3": 0,
+              "4": 0,
+              "5": 6
+            },
+            "has_more": false,
+            "latest": [
+              {
+                "author_name": "Angie K",
+                "context": "1 week ago  •  Root Only Re-Touch (single color)   •  with Audra",
+                "date_formatted": "Thu, Sep 10, 2026 at 1:39 PM",
+                "date_iso": "2026-09-10T13:39:45.004Z",
+                "id": "01a08c9e-6221-7378-946e-71461418ab2a",
+                "rating": 5,
+                "reply": null,
+                "text": "Love my hair!!"
+              },
+              {
+                "author_name": "Katie F",
+                "context": "7 months ago  •  Root to Tip Color  •  with Audra",
+                "date_formatted": "Wed, Feb 18, 2026 at 12:35 PM",
+                "date_iso": "2026-02-18T12:35:32.993Z",
+                "id": "019e8828-d726-79a0-988d-b11ae4775a4b",
+                "rating": 5,
+                "reply": null,
+                "text": "Always my favorite place to go!"
+              },
+              {
+                "author_name": "Jodi S",
+                "context": "2 years ago  •  Gel Manicure   •  with Brayln",
+                "date_formatted": "Wed, Aug 14, 2024 at 8:08 PM",
+                "date_iso": "2024-08-14T20:08:00.548Z",
+                "id": "019e897c-018a-7367-9fca-c1a0d5712150",
+                "rating": 5,
+                "reply": null,
+                "text": "Brayln and Audra are the best!"
+              },
+              {
+                "author_name": "Jodi S",
+                "context": "2 years ago  •  Gel Manicure   •  with Brayln",
+                "date_formatted": "Wed, Jun 12, 2024 at 4:24 PM",
+                "date_iso": "2024-06-12T16:24:17.096Z",
+                "id": "019e8897-891c-7728-a6c2-2933789b62b9",
+                "rating": 5,
+                "reply": null,
+                "text": "Great"
+              },
+              {
+                "author_name": "Tiffany F",
+                "context": "2 years ago  •  Haircut  •  with Audra",
+                "date_formatted": "Tue, May 28, 2024 at 3:39 PM",
+                "date_iso": "2024-05-28T15:39:33.632Z",
+                "id": "019e899b-fa3f-7427-8522-08ef9661c7a6",
+                "rating": 5,
+                "reply": null,
+                "text": "Love coming here for my hair care! Always does an amazing job !"
+              },
+              {
+                "author_name": "Fran F",
+                "context": "3 years ago  •  Full Blonding Service + K18 Treatment  •  with Audra",
+                "date_formatted": "Fri, Jul 21, 2023 at 9:59 AM",
+                "date_iso": "2023-07-21T09:59:51.076Z",
+                "id": "019e8999-d4d9-739d-bec3-ed7fd223a515",
+                "rating": 5,
+                "reply": null,
+                "text": "Great as Always!!!!!"
+              }
+            ],
+            "total": 6
+          },
+          "reviews_count": 6,
+          "service_count": 56,
+          "service_groups": [
+            {
+              "id": "6617181",
+              "name": "Brenna Services",
+              "services": [
+                {
+                  "description": null,
+                  "duration_caption": "45 min",
+                  "id": "s:25598551",
+                  "max_seconds": 2700,
+                  "min_seconds": 2700,
+                  "name": "Mens/Kids Cut",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 30
+                  },
+                  "retail_price_formatted": "from $30",
+                  "service_id": "25598551",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "45 min",
+                      "id": "29334091",
+                      "name": "Mens/Kids Cut",
+                      "retail_price_formatted": "from $30"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "15 min",
+                  "id": "s:25598554",
+                  "max_seconds": 900,
+                  "min_seconds": 900,
+                  "name": "Beard",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 14
+                  },
+                  "retail_price_formatted": "from $14",
+                  "service_id": "25598554",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "15 min",
+                      "id": "29334094",
+                      "name": "Beard",
+                      "retail_price_formatted": "from $14"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "1 hr",
+                  "id": "s:25598556",
+                  "max_seconds": 3600,
+                  "min_seconds": 3600,
+                  "name": "Scalp Massage",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 14
+                  },
+                  "retail_price_formatted": "from $14",
+                  "service_id": "25598556",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "1 hr",
+                      "id": "29334096",
+                      "name": "Scalp Massage",
+                      "retail_price_formatted": "from $14"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "20 min",
+                  "id": "s:25598561",
+                  "max_seconds": 1200,
+                  "min_seconds": 1200,
+                  "name": "Shoulder Massage",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 14
+                  },
+                  "retail_price_formatted": "from $14",
+                  "service_id": "25598561",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "20 min",
+                      "id": "29334101",
+                      "name": "Shoulder Massage",
+                      "retail_price_formatted": "from $14"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "20 min",
+                  "id": "s:25598563",
+                  "max_seconds": 1200,
+                  "min_seconds": 1200,
+                  "name": "Hand Massage",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 14
+                  },
+                  "retail_price_formatted": "from $14",
+                  "service_id": "25598563",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "20 min",
+                      "id": "29334103",
+                      "name": "Hand Massage",
+                      "retail_price_formatted": "from $14"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "20 min",
+                  "id": "s:25598570",
+                  "max_seconds": 1200,
+                  "min_seconds": 1200,
+                  "name": "Waxing",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 12
+                  },
+                  "retail_price_formatted": "from $12",
+                  "service_id": "25598570",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "20 min",
+                      "id": "29334110",
+                      "name": "Waxing",
+                      "retail_price_formatted": "from $12"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "10 min",
+                  "id": "s:25598575",
+                  "max_seconds": 600,
+                  "min_seconds": 600,
+                  "name": "Lineup",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 15
+                  },
+                  "retail_price_formatted": "from $15",
+                  "service_id": "25598575",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "10 min",
+                      "id": "29334115",
+                      "name": "Lineup",
+                      "retail_price_formatted": "from $15"
+                    }
+                  ],
+                  "venue_slug": null
+                }
+              ]
+            },
+            {
+              "id": "6562949",
+              "name": "Madi Services",
+              "services": [
+                {
+                  "description": "An all over brighter blonde feel, throughout the entire head. Comes with a haircut.",
+                  "duration_caption": "3 hr",
+                  "id": "s:25369243",
+                  "max_seconds": 10800,
+                  "min_seconds": 10800,
+                  "name": "Full Blonding",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 150
+                  },
+                  "retail_price_formatted": "from $150",
+                  "service_id": "25369243",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "3 hr",
+                      "id": "29032591",
+                      "name": "Full Blonding",
+                      "retail_price_formatted": "from $150"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "Wanting to just get a touch up but not a full foil? Book this! Still getting the bright blonde feel! Comes with a haircut.",
+                  "duration_caption": "2 hr, 30 min",
+                  "id": "s:25369298",
+                  "max_seconds": 9000,
+                  "min_seconds": 9000,
+                  "name": "Partial Blonding",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 120
+                  },
+                  "retail_price_formatted": "from $120",
+                  "service_id": "25369298",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "2 hr, 30 min",
+                      "id": "29032659",
+                      "name": "Partial Blonding",
+                      "retail_price_formatted": "from $120"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "A lived in look that allows distance between appointments. Comes with a haircut.",
+                  "duration_caption": "3 hr, 30 min",
+                  "id": "s:25369396",
+                  "max_seconds": 12600,
+                  "min_seconds": 12600,
+                  "name": "Low Maintenance Color",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 150
+                  },
+                  "retail_price_formatted": "from $150",
+                  "service_id": "25369396",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "3 hr, 30 min",
+                      "id": "29032798",
+                      "name": "Low Maintenance Color",
+                      "retail_price_formatted": "from $150"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "Any color, all over, root touch up or root melts.",
+                  "duration_caption": "2 hr, 30 min",
+                  "id": "s:25369489",
+                  "max_seconds": 9000,
+                  "min_seconds": 9000,
+                  "name": "All Over Color",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 100
+                  },
+                  "retail_price_formatted": "from $100",
+                  "service_id": "25369489",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "2 hr, 30 min",
+                      "id": "29032921",
+                      "name": "All Over Color",
+                      "retail_price_formatted": "from $100"
+                    },
+                    {
+                      "description": null,
+                      "duration_caption": "2 hr, 30 min",
+                      "id": "29032922",
+                      "name": "Root Touch-Up",
+                      "retail_price_formatted": "from $100"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "10 min",
+                  "id": "s:25369557",
+                  "max_seconds": 600,
+                  "min_seconds": 600,
+                  "name": "Split End Treatment",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 25
+                  },
+                  "retail_price_formatted": "$25",
+                  "service_id": "25369557",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "10 min",
+                      "id": "29033022",
+                      "name": "Split End Treatment",
+                      "retail_price_formatted": "$25"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "Enhance the shine and vibrancy of your hair with a gloss treatment that adds depth dimension and a glossy finish to your hair color, leaving it looking luscious and healthy.",
+                  "duration_caption": "1 hr, 10 min",
+                  "id": "s:25369501",
+                  "max_seconds": 4200,
+                  "min_seconds": 4200,
+                  "name": "Gloss",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 65
+                  },
+                  "retail_price_formatted": "from $65",
+                  "service_id": "25369501",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "1 hr, 10 min",
+                      "id": "29032936",
+                      "name": "Gloss",
+                      "retail_price_formatted": "from $65"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "A hair treatment that cuts down styling time for people who struggle with frizz. Leave with a frizz free, glossy feel that lasts up to three months with proper maintenance.",
+                  "duration_caption": "2 hr, 30 min",
+                  "id": "s:25369530",
+                  "max_seconds": 9000,
+                  "min_seconds": 9000,
+                  "name": "Brazilian Blowout",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 225
+                  },
+                  "retail_price_formatted": "$225",
+                  "service_id": "25369530",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "2 hr, 30 min",
+                      "id": "29032991",
+                      "name": "Brazilian Blowout ",
+                      "retail_price_formatted": "$225"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "20 min",
+                  "id": "s:25369541",
+                  "max_seconds": 1200,
+                  "min_seconds": 1200,
+                  "name": "Deep Conditioning Treatment",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 25
+                  },
+                  "retail_price_formatted": "$25",
+                  "service_id": "25369541",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "20 min",
+                      "id": "29033004",
+                      "name": "Deep Conditioning Treatment ",
+                      "retail_price_formatted": "$25"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "Need a relaxing, scalp treatment and head massage? This is for you!! Comes with a wash and style.",
+                  "duration_caption": "1 hr",
+                  "id": "s:25369519",
+                  "max_seconds": 3600,
+                  "min_seconds": 3600,
+                  "name": "Scalp Massage",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 40
+                  },
+                  "retail_price_formatted": "$40",
+                  "service_id": "25369519",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "1 hr",
+                      "id": "29032956",
+                      "name": "Scalp Massage",
+                      "retail_price_formatted": "$40"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "1 hr",
+                  "id": "s:25369509",
+                  "max_seconds": 3600,
+                  "min_seconds": 3600,
+                  "name": "Haircut",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 45
+                  },
+                  "retail_price_formatted": "$45",
+                  "service_id": "25369509",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "1 hr",
+                      "id": "29032944",
+                      "name": "Haircut",
+                      "retail_price_formatted": "$45"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "A wash, blowout and style.",
+                  "duration_caption": "1 hr - 1 hr, 30 min",
+                  "id": "s:25369441",
+                  "max_seconds": 5400,
+                  "min_seconds": 3600,
+                  "name": "Blowout",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 35
+                  },
+                  "retail_price_formatted": "from $35",
+                  "service_id": "25369441",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "1 hr",
+                      "id": "29032870",
+                      "name": "Blowout ",
+                      "retail_price_formatted": "from $35"
+                    },
+                    {
+                      "description": null,
+                      "duration_caption": "1 hr, 30 min",
+                      "id": "29032871",
+                      "name": "w/ Extensions",
+                      "retail_price_formatted": "$70"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "10 min",
+                  "id": "s:25369305",
+                  "max_seconds": 600,
+                  "min_seconds": 600,
+                  "name": "Waxing",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 15
+                  },
+                  "retail_price_formatted": "from $15",
+                  "service_id": "25369305",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "10 min",
+                      "id": "29032671",
+                      "name": "Face Wax",
+                      "retail_price_formatted": "from $15"
+                    },
+                    {
+                      "description": null,
+                      "duration_caption": "10 min",
+                      "id": "29032672",
+                      "name": "Eyebrow Wax",
+                      "retail_price_formatted": "from $15"
+                    }
+                  ],
+                  "venue_slug": null
+                }
+              ]
+            },
+            {
+              "id": "2610092",
+              "name": "Nails",
+              "services": [
+                {
+                  "description": null,
+                  "duration_caption": "5 min",
+                  "id": "s:25617998",
+                  "max_seconds": 300,
+                  "min_seconds": 300,
+                  "name": "after hours fee",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 15
+                  },
+                  "retail_price_formatted": "$15",
+                  "service_id": "25617998",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "5 min",
+                      "id": "29360926",
+                      "name": "after hours fee",
+                      "retail_price_formatted": "$15"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "1 hr",
+                  "id": "s:23368954",
+                  "max_seconds": 3600,
+                  "min_seconds": 3600,
+                  "name": "consult",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 0
+                  },
+                  "retail_price_formatted": "$0",
+                  "service_id": "23368954",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "1 hr",
+                      "id": "26745957",
+                      "name": "consult ",
+                      "retail_price_formatted": "$0"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "2 hr",
+                  "id": "s:12459100",
+                  "max_seconds": 7200,
+                  "min_seconds": 7200,
+                  "name": "Structured Gel Manicure",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 50
+                  },
+                  "retail_price_formatted": "$50",
+                  "service_id": "12459100",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "2 hr",
+                      "id": "14431383",
+                      "name": "Structured Gel Manicure ",
+                      "retail_price_formatted": "$50"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "1 hr, 30 min",
+                  "id": "s:12921277",
+                  "max_seconds": 5400,
+                  "min_seconds": 5400,
+                  "name": "Structured Gel Fill",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 45
+                  },
+                  "retail_price_formatted": "$45",
+                  "service_id": "12921277",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "1 hr, 30 min",
+                      "id": "26767292",
+                      "name": "Structured Gel Fill ",
+                      "retail_price_formatted": "$45"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "45 min",
+                  "id": "s:15087921",
+                  "max_seconds": 2700,
+                  "min_seconds": 2700,
+                  "name": "Detailed Nail Art",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 10
+                  },
+                  "retail_price_formatted": "from $10",
+                  "service_id": "15087921",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "45 min",
+                      "id": "17411640",
+                      "name": "Detailed Nail Art",
+                      "retail_price_formatted": "from $10"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "30 min - 45 min",
+                  "id": "s:15087910",
+                  "max_seconds": 2700,
+                  "min_seconds": 1800,
+                  "name": "Kids manicure",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 10
+                  },
+                  "retail_price_formatted": "from $10",
+                  "service_id": "15087910",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "30 min",
+                      "id": "17411621",
+                      "name": "Without polish",
+                      "retail_price_formatted": "$10"
+                    },
+                    {
+                      "description": null,
+                      "duration_caption": "45 min",
+                      "id": "17411622",
+                      "name": "With polish",
+                      "retail_price_formatted": "$20"
+                    }
+                  ],
+                  "venue_slug": null
+                }
+              ]
+            },
+            {
+              "id": "583284",
+              "name": "Audra Services",
+              "services": [
+                {
+                  "description": "A customized haircut designed to complement your features, lifestyle, and personal style. Includes a professional shampoo, precision cut, and blow-dry finish, leaving your hair refreshed, polished, and beautifully styled.\n\nDoes not include color or other chemical services.",
+                  "duration_caption": "30 min - 1 hr",
+                  "id": "s:3011044",
+                  "max_seconds": 3600,
+                  "min_seconds": 1800,
+                  "name": "Haircut",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 30
+                  },
+                  "retail_price_formatted": "from $30",
+                  "service_id": "3011044",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "30 min",
+                      "id": "3556803",
+                      "name": "Dry Cut",
+                      "retail_price_formatted": "$30"
+                    },
+                    {
+                      "description": "Shoulder length and shorter.",
+                      "duration_caption": "45 min",
+                      "id": "7438685",
+                      "name": "Shampoo/Cut/Style Short Hair ",
+                      "retail_price_formatted": "$45"
+                    },
+                    {
+                      "description": "Shoulder length and longer.",
+                      "duration_caption": "1 hr",
+                      "id": "18751410",
+                      "name": "Shampoo/Cut/Style Long Hair ",
+                      "retail_price_formatted": "$55"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "A professional shampoo and blow-dry service designed to leave your hair smooth, polished, and beautifully styled. Includes a customized wash, blow-dry, and finishing style for your desired look-whether you prefer sleek and smooth, bouncy and voluminous, or soft and wavy.\n\nDoes not include haircut or chemical services.",
+                  "duration_caption": "45 min",
+                  "id": "s:3011045",
+                  "max_seconds": 2700,
+                  "min_seconds": 2700,
+                  "name": "Blow Out",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 35
+                  },
+                  "retail_price_formatted": "$35",
+                  "service_id": "3011045",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "45 min",
+                      "id": "3556804",
+                      "name": "Blow Out",
+                      "retail_price_formatted": "$35"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": null,
+                  "duration_caption": "10 min - 1 hr",
+                  "id": "s:6284100",
+                  "max_seconds": 3600,
+                  "min_seconds": 600,
+                  "name": "Mens Cut/Boys Cut",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 10
+                  },
+                  "retail_price_formatted": "from $10",
+                  "service_id": "6284100",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "10 min",
+                      "id": "7400946",
+                      "name": "Men’s Shampoo Add On ",
+                      "retail_price_formatted": "$10"
+                    },
+                    {
+                      "description": null,
+                      "duration_caption": "10 min",
+                      "id": "7400947",
+                      "name": "Beard Trim",
+                      "retail_price_formatted": "$10"
+                    },
+                    {
+                      "description": null,
+                      "duration_caption": "15 min",
+                      "id": "7400944",
+                      "name": "Basic Crew Cut",
+                      "retail_price_formatted": "$30"
+                    },
+                    {
+                      "description": null,
+                      "duration_caption": "1 hr",
+                      "id": "29020999",
+                      "name": "Fade/Specialty Cuts",
+                      "retail_price_formatted": "$40"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "Come in and discuss your hair goals so we can make a plan.",
+                  "duration_caption": "30 min",
+                  "id": "s:25606159",
+                  "max_seconds": 1800,
+                  "min_seconds": 1800,
+                  "name": "Consultation",
+                  "non_discounted_price": null,
+                  "price_type": "FREE",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 0
+                  },
+                  "retail_price_formatted": "free",
+                  "service_id": "25606159",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "30 min",
+                      "id": "29344615",
+                      "name": "Consultation",
+                      "retail_price_formatted": "free"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "Enhance your look with vibrant color that adds depth and dimension to your hair. Partial highlights are designed to brighten specific sections, creating a beautifully sun-kissed effect without having to spend so much time in the chair. We focus on all the places the sun would naturally hit your hair. Included are shampoo, cut and style.",
+                  "duration_caption": "2 hr, 30 min",
+                  "id": "s:25606107",
+                  "max_seconds": 9000,
+                  "min_seconds": 9000,
+                  "name": "Partial Highlight",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 130
+                  },
+                  "retail_price_formatted": "from $130",
+                  "service_id": "25606107",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "2 hr, 30 min",
+                      "id": "29344548",
+                      "name": "Partial Highlight",
+                      "retail_price_formatted": "from $130"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "This service includes a full head of highlights, shampoo, cut and style.",
+                  "duration_caption": "4 hr",
+                  "id": "s:25606038",
+                  "max_seconds": 14400,
+                  "min_seconds": 14400,
+                  "name": "Full Blonding Service",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 215
+                  },
+                  "retail_price_formatted": "from $215",
+                  "service_id": "25606038",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "4 hr",
+                      "id": "29344445",
+                      "name": "Full Blonding Service",
+                      "retail_price_formatted": "from $215"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "A customized service designed to brighten and enhance your hair, adding dimension. This includes highlights, balayage, foilayage, any lightening techniques. This blonding service includes a K-18 deep conditioning treatment, shampoo, cut and style. \n\n Please note: any extra colors added in with your blonding service will be an additional $10 per bowl.",
+                  "duration_caption": "4 hr",
+                  "id": "s:3011441",
+                  "max_seconds": 14400,
+                  "min_seconds": 14400,
+                  "name": "Full Blonding Service + K18 Treatment",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 255
+                  },
+                  "retail_price_formatted": "from $255",
+                  "service_id": "3011441",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "4 hr",
+                      "id": "3557271",
+                      "name": "Full Blonding Service + K18 Treatment",
+                      "retail_price_formatted": "from $255"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "This service is for my girlies who like to live life between appointments, keeping a nice rooted grow out while maintaining brightness around the face. Shampoo, cut and style included.",
+                  "duration_caption": "2 hr, 30 min",
+                  "id": "s:25606063",
+                  "max_seconds": 9000,
+                  "min_seconds": 9000,
+                  "name": "Lived-In Color with Money Pieces",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 155
+                  },
+                  "retail_price_formatted": "from $155",
+                  "service_id": "25606063",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "2 hr, 30 min",
+                      "id": "29344473",
+                      "name": "Lived-In Color with Money Pieces",
+                      "retail_price_formatted": "from $155"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "Refresh your regrowth with a professional root color application. Perfect for covering gray or mainging your existing color between full-color appointments. Includes shampoo, cut and style. \n\nThis does not include any blonding services.",
+                  "duration_caption": "2 hr",
+                  "id": "s:3011273",
+                  "max_seconds": 7200,
+                  "min_seconds": 7200,
+                  "name": "Root Only Re-Touch (single color)",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 90
+                  },
+                  "retail_price_formatted": "$90",
+                  "service_id": "3011273",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "2 hr",
+                      "id": "3557067",
+                      "name": "Root Only Re-Touch (single color) ",
+                      "retail_price_formatted": "$90"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "A full root-to-tip color application for an all over, uniform result. This service is perfect for covering gray, refreshing natural color, or going darker from roots to ends. Included is a personalized color, professional color application, shampoo, cut and style. \n\nPlease note: this service is not intended for blonding, highlights, balayage or major color corrections.",
+                  "duration_caption": "2 hr",
+                  "id": "s:6317219",
+                  "max_seconds": 7200,
+                  "min_seconds": 7200,
+                  "name": "Root to Tip Color",
+                  "non_discounted_price": null,
+                  "price_type": "STARTS_AT",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 115
+                  },
+                  "retail_price_formatted": "from $115",
+                  "service_id": "6317219",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "2 hr",
+                      "id": "7438652",
+                      "name": "Root to Tip Color",
+                      "retail_price_formatted": "from $115"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "A professional restorative treatment designed to help repair and strengthen damaged hair from chemical services, heat, and environmental stress. The K18 molecular repair treatment works to restore hair’s strength, softness, and elasticity, leaving it healthier-looking, smoother, and more manageable.",
+                  "duration_caption": "5 min",
+                  "id": "s:21859989",
+                  "max_seconds": 300,
+                  "min_seconds": 300,
+                  "name": "K18 Treatment with Service",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 45
+                  },
+                  "retail_price_formatted": "$45",
+                  "service_id": "21859989",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "5 min",
+                      "id": "25050385",
+                      "name": "K18 Treatment with Service",
+                      "retail_price_formatted": "$45"
+                    }
+                  ],
+                  "venue_slug": null
+                },
+                {
+                  "description": "A professional restorative treatment designed to help repair and strengthen damaged hair from chemical services, heat, and environmental stress. The K18 molecular repair treatment works to restore hair’s strength, softness, and elasticity, leaving it healthier-looking, smoother, and more manageable.\n\nTreatment does not include a haircut or blowout unless otherwise specified.",
+                  "duration_caption": "1 hr",
+                  "id": "s:6156622",
+                  "max_seconds": 3600,
+                  "min_seconds": 3600,
+                  "name": "K18 Stand Alone Treatment",
+                  "non_discounted_price": null,
+                  "price_type": "FIXED",
+                  "retail_price": {
+                    "currency": "USD",
+                    "value": 55
+                  },
+                  "retail_price_formatted": "$55",
+                  "service_id": "6156622",
+                  "variants": [
+                    {
+                      "description": null,
+                      "duration_caption": "1 hr",
+                      "id": "7255756",
+                      "name": "K18 Stand Alone Treatment",
+                      "retail_price_formatted": "$55"
+                    }
+                  ],
+                  "venue_slug": null
+                }
+              ]
+            }
+          ],
+          "slug": "pink-armadillo-hair-co-norwich-124-east-2nd-avenue-p9tt7x2d",
+          "source": "www.fresha.com",
+          "url": "https://www.fresha.com/a/pink-armadillo-hair-co-norwich-124-east-2nd-avenue-p9tt7x2d",
+          "working_hours": {
+            "days": [
+              {
+                "day": "Monday",
+                "hours": [
+                  "9:30 AM - 1:30 PM"
+                ],
+                "is_closed": false,
+                "is_today": true
+              },
+              {
+                "day": "Tuesday",
+                "hours": [
+                  "9:00 AM - 6:00 PM"
+                ],
+                "is_closed": false,
+                "is_today": false
+              },
+              {
+                "day": "Wednesday",
+                "hours": [
+                  "9:00 AM - 6:00 PM"
+                ],
+                "is_closed": false,
+                "is_today": false
+              },
+              {
+                "day": "Thursday",
+                "hours": [
+                  "9:00 AM - 6:00 PM"
+                ],
+                "is_closed": false,
+                "is_today": false
+              },
+              {
+                "day": "Friday",
+                "hours": [
+                  "9:00 AM - 3:00 PM"
+                ],
+                "is_closed": false,
+                "is_today": false
+              },
+              {
+                "day": "Saturday",
+                "hours": [
+                  "9:00 AM - 3:00 PM"
+                ],
+                "is_closed": false,
+                "is_today": false
+              },
+              {
+                "day": "Sunday",
+                "hours": [
+                  "Closed"
+                ],
+                "is_closed": true,
+                "is_today": false
+              }
+            ],
+            "status": {
+              "details": "- opens on Tuesday at 9:00 AM",
+              "name": "Closed",
+              "state": "CLOSED"
+            }
+          }
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "fresha-com",
+        "capability": "venues/venue_detail"
+      }
+    }
+  ]
+}

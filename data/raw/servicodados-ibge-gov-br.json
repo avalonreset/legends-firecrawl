@@ -1,0 +1,2235 @@
+{
+  "id": "servicodados-ibge-gov-br",
+  "provider": "servicodados-ibge-gov-br",
+  "name": "IBGE service data API",
+  "description": "Brazil's national statistics institute (IBGE) open JSON API at servicodados.ibge.gov.br: territorial codes (localidades), SIDRA aggregated statistics (agregados: official municipal / state / national population and household counts from the 2022 Census and the yearly population estimates, IPCA, PNAD, GDP and ~8,000 other tables), 2010 Census first-name frequencies and rankings, IBGE news/releases and release calendar, country profiles and indicators (paises), territorial meshes (malhas) and the CNAE activity classification. Anonymous, no key, Portuguese-language values as published.",
+  "toolCount": 12,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "servicodados-ibge-gov-br"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "servicodados-ibge-gov-br/official-statistics/agregado_dados",
+      "provider": "servicodados-ibge-gov-br",
+      "capability": "official-statistics/agregado_dados",
+      "name": "Agregado dados",
+      "description": "Official population or household count of a Brazilian municipality, state or the country (Census 2022: 4709/93 population, 4712/381 occupied households, 4712/382 residents in households; estimates: 6579/9324), IPCA (1737/63), PNAD unemployment (4099/4099), municipal GDP (5938/37), IPCA by group (7060/63 + classificacao 315) or any other table after agregado_metadados told you the ids. Resolve the municipality code first with localidades (e.g. São Bernardo do Campo = 3548708). Unknown agregado or variable ids are not_found; a level the table does not offer is invalid_input.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "agregado",
+          "type": "number",
+          "in": "body",
+          "about": "SIDRA table id, e.g. 4709 (Census 2022 population), 4712 (Census 2022 occupied households), 6579 (population estimates), 1737 (IPCA).",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "classificacao",
+          "type": "object[]",
+          "in": "body",
+          "about": "classificacao"
+        },
+        {
+          "name": "localidades",
+          "type": "object[]",
+          "in": "body",
+          "about": "Territorial selections; default N1 all (Brazil)."
+        },
+        {
+          "name": "periodos",
+          "type": "string",
+          "in": "body",
+          "about": "`-N` (last N periods, default -6), `all`, one period (2024, 202408), a range (202401-202412) or a comma list (2020,2022). Pattern: ^(all|-[0-9]{1,3}|[0-9]{4,6}(-[0-9]{4,6})?(,[0-9]{4,6}(-[0-9]{4,6})?)*)$.",
+          "default": "-6"
+        },
+        {
+          "name": "variaveis",
+          "type": "number[]",
+          "in": "body",
+          "about": "Variable ids from agregado_metadados; joined with `|` upstream. Omit for `allxp` (every variable except percentages)."
+        }
+      ],
+      "response": {
+        "about": "Query a SIDRA table (/api/v3/agregados/{agregado}/periodos/{periodos}/variaveis/{variaveis}?localidades=...&classificacao=...): one or more variables, a period selector (`-3` last three, `2024`, `202401-202412`, `2020,2022`, `all`), one or more territorial levels each with explicit ids or `all`, and optional classification/category filters. This is the official source for municipal population and household counts (market sizing, demographics): Census 2022 resident population is agregado 4709 variavel 93, Census 2022 occupied private households (domicílios particulares permanentes ocupados) and their residents are agregado 4712 variaveis 381 and 382 (5930 = residents per household), and the yearly population estimates are agregado 6579 variavel 9324; select a municipality with localidades [{nivel: N6, ids: [7-digit IBGE code]}], a state with N3. Values come back as the source publishes them (strings; `...`, `-`, `X` are SIDRA's not-available markers).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "agregado",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds when this program observed the response."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The exact servicodados.ibge.gov.br request that produced this result."
+          },
+          {
+            "name": "value_count",
+            "type": "number",
+            "about": "Number of (variable, classification, locality, period) cells returned."
+          },
+          {
+            "name": "variaveis",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "agregado": 1737,
+          "periodos": "-3",
+          "variaveis": [
+            63
+          ]
+        },
+        "response": {
+          "agregado": 1737,
+          "observed_at_ms": 1790047010074,
+          "source_url": "https://servicodados.ibge.gov.br/api/v3/agregados/1737/periodos/-3/variaveis/63?localidades=N1[all]",
+          "value_count": 3,
+          "variaveis": [
+            {
+              "id": "63",
+              "resultados": [
+                {
+                  "classificacoes": [],
+                  "series": [
+                    {
+                      "localidade": {
+                        "id": "1",
+                        "nivel": {
+                          "id": "N1",
+                          "nome": "Brasil"
+                        },
+                        "nome": "Brasil"
+                      },
+                      "serie": {
+                        "202606": "0.16",
+                        "202607": "0.07",
+                        "202608": "-0.32"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "unidade": "%",
+              "variavel": "IPCA - Variação mensal"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "servicodados-ibge-gov-br",
+        "capability": "official-statistics/agregado_dados"
+      }
+    },
+    {
+      "id": "servicodados-ibge-gov-br/official-statistics/agregado_metadados",
+      "provider": "servicodados-ibge-gov-br",
+      "capability": "official-statistics/agregado_metadados",
+      "name": "Agregado metadados",
+      "description": "Pick the variavel ids, classificacao/categoria ids, nivel and periods to pass to agregado_dados. Unknown table ids are not_found.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "agregado",
+          "type": "number",
+          "in": "body",
+          "about": "SIDRA table id, e.g. 1737 (IPCA), 4709 (Census 2022 population), 4712 (Census 2022 occupied households), 6579 (population estimates), 4099 (PNAD unemployment), 5938 (municipal GDP).",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "include_periodos",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also fetch /periodos and return every period id (monthly tables have hundreds)."
+        },
+        {
+          "name": "localidades_nivel",
+          "type": "string",
+          "in": "body",
+          "about": "Also fetch /localidades/{nivel} and return the localities the table offers at that level (N3 = 27 states; N6 = up to 5,570 municipalities). Pattern: ^N[0-9]{1,3}$."
+        }
+      ],
+      "response": {
+        "about": "Metadata of one SIDRA table (/api/v3/agregados/{id}/metadados): name, survey, subject, periodicity with first/last period, territorial levels, variables (id, name, unit) and classifications with their categories; optionally the full list of period ids (/periodos) and the localities available at one level (/localidades/{nivel}).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "assunto",
+            "type": "string"
+          },
+          {
+            "name": "classificacoes",
+            "type": "object[]"
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "localidades",
+            "type": "object[]",
+            "about": "Localities at localidades_nivel when given; null otherwise."
+          },
+          {
+            "name": "nivel_territorial",
+            "type": "object"
+          },
+          {
+            "name": "nome",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds when this program observed the response."
+          },
+          {
+            "name": "periodicidade",
+            "type": "object"
+          },
+          {
+            "name": "periodos",
+            "type": "string[]",
+            "about": "Period ids (YYYY, YYYYMM or YYYYQQ) when include_periodos is true; null otherwise."
+          },
+          {
+            "name": "pesquisa",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The exact servicodados.ibge.gov.br request that produced this result."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "variaveis",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "agregado": 1737
+        },
+        "response": {
+          "assunto": "Índices de preços",
+          "classificacoes": [],
+          "id": 1737,
+          "localidades": null,
+          "nivel_territorial": {
+            "administrativo": [
+              "N1"
+            ],
+            "especial": [],
+            "ibge": []
+          },
+          "nome": "IPCA - Série histórica com número-índice, variação mensal e variações acumuladas em 3 meses, em 6 meses, no ano e em 12 meses (a partir de dezembro/1979)",
+          "observed_at_ms": 1790047002569,
+          "periodicidade": {
+            "fim": 202608,
+            "frequencia": "mensal",
+            "inicio": 197912
+          },
+          "periodos": null,
+          "pesquisa": "Índice Nacional de Preços ao Consumidor Amplo",
+          "source_url": "https://servicodados.ibge.gov.br/api/v3/agregados/1737/metadados",
+          "url": "https://sidra.ibge.gov.br/tabela/1737",
+          "variaveis": [
+            {
+              "id": 2266,
+              "nome": "IPCA - Número-índice (base: dezembro de 1993 = 100)",
+              "sumarizacao": [],
+              "unidade": "Número-índice"
+            },
+            {
+              "id": 63,
+              "nome": "IPCA - Variação mensal",
+              "sumarizacao": [],
+              "unidade": "%"
+            },
+            {
+              "id": 2263,
+              "nome": "IPCA - Variação acumulada em 3 meses",
+              "sumarizacao": [],
+              "unidade": "%"
+            },
+            {
+              "id": 2264,
+              "nome": "IPCA - Variação acumulada em 6 meses",
+              "sumarizacao": [],
+              "unidade": "%"
+            },
+            {
+              "id": 69,
+              "nome": "IPCA - Variação acumulada no ano",
+              "sumarizacao": [],
+              "unidade": "%"
+            },
+            {
+              "id": 2265,
+              "nome": "IPCA - Variação acumulada em 12 meses",
+              "sumarizacao": [],
+              "unidade": "%"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "servicodados-ibge-gov-br",
+        "capability": "official-statistics/agregado_metadados"
+      }
+    },
+    {
+      "id": "servicodados-ibge-gov-br/official-statistics/agregados",
+      "provider": "servicodados-ibge-gov-br",
+      "capability": "official-statistics/agregados",
+      "name": "Agregados",
+      "description": "Find the agregado id (and then, with agregado_metadados, the variable and classification ids) before calling agregado_dados. Pass a query or at least one filter: the unfiltered catalog has ~8,000 tables. Rows carry only id and name (no period), and a query like `domicilios` with nivel N6 matches hundreds of Census tables ordered by id, so for the headline municipal population / household counts skip the search and call agregado_dados directly with 4709 (Census 2022 population), 4712 (Census 2022 occupied households and residents) or 6579 (yearly population estimates).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "assunto",
+          "type": "number",
+          "in": "body",
+          "about": "Subject id (e.g. 148). See the agregados docs for the list.",
+          "min": 1
+        },
+        {
+          "name": "classificacao",
+          "type": "number",
+          "in": "body",
+          "about": "Classification id the table must carry.",
+          "min": 1
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (default 50).",
+          "default": 50,
+          "min": 1,
+          "max": 500
+        },
+        {
+          "name": "nivel",
+          "type": "string",
+          "in": "body",
+          "about": "Territorial level the table must offer: N1 Brazil, N2 macro-region, N3 UF, N6 municipality... Pattern: ^N[0-9]{1,3}$."
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "next_offset from the previous page.",
+          "min": 0
+        },
+        {
+          "name": "periodicidade",
+          "type": "string",
+          "in": "body",
+          "about": "Periodicity code: P1 annual, P5 monthly, P8 quarterly, P13 census... Pattern: ^P[0-9]{1,2}$."
+        },
+        {
+          "name": "periodo",
+          "type": "string",
+          "in": "body",
+          "about": "Period the table must cover (e.g. 2024 or 202401). Pattern: ^[0-9]{4,6}$."
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Substring matched (case- and accent-insensitive) against the table name or the survey name, e.g. `ipca`, `populacao residente estimada`."
+        }
+      ],
+      "response": {
+        "about": "Discover SIDRA tables (agregados) from the /api/v3/agregados catalog: filter server-side by assunto, periodicidade (P1 P5 P8 ...), nivel (N1 N3 N6 ...), periodo and classificacao, and client-side by a case/accent-insensitive text query over the table name and survey name. Returns flat rows {id, nome, pesquisa_id, pesquisa_nome} sliced with limit / offset.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Agregado (SIDRA table) id."
+          },
+          {
+            "name": "nome",
+            "type": "string"
+          },
+          {
+            "name": "pesquisa_id",
+            "type": "string",
+            "about": "Survey code, e.g. IP for IPCA."
+          },
+          {
+            "name": "pesquisa_nome",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "sidra.ibge.gov.br table page."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "assunto": 148,
+          "limit": 5,
+          "query": "tarifa minima"
+        },
+        "response": {
+          "count": 3,
+          "items": [
+            {
+              "id": "1367",
+              "nome": "Número de municípios, total e os que estabelecem tarifa mínima para consumo de água, por faixa de volume de consumo",
+              "pesquisa_id": "SB",
+              "pesquisa_nome": "Pesquisa Nacional de Saneamento Básico",
+              "url": "https://sidra.ibge.gov.br/tabela/1367"
+            },
+            {
+              "id": "1788",
+              "nome": "Número de distritos cujas entidades prestadoras de serviço de abastecimento de água estabelecem tarifa mínima para consumo, por faixa de volume de consumo",
+              "pesquisa_id": "SB",
+              "pesquisa_nome": "Pesquisa Nacional de Saneamento Básico",
+              "url": "https://sidra.ibge.gov.br/tabela/1788"
+            },
+            {
+              "id": "7474",
+              "nome": "Municípios com serviço de abastecimento de água por rede geral de distribuição em funcionamento, com cobrança de tarifa mínima mensal para a categoria residencial e valor médio da tarifa mínima mensal da água para categoria residencial, por volume do consumo mensal referente à tarifa mínima",
+              "pesquisa_id": "SB",
+              "pesquisa_nome": "Pesquisa Nacional de Saneamento Básico",
+              "url": "https://sidra.ibge.gov.br/tabela/7474"
+            }
+          ],
+          "next_offset": null,
+          "observed_at_ms": 1790046995075,
+          "source_url": "https://servicodados.ibge.gov.br/api/v3/agregados?assunto=148",
+          "total": 3
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "servicodados-ibge-gov-br",
+        "capability": "official-statistics/agregados"
+      }
+    },
+    {
+      "id": "servicodados-ibge-gov-br/official-statistics/calendario",
+      "provider": "servicodados-ibge-gov-br",
+      "capability": "official-statistics/calendario",
+      "name": "Calendario",
+      "description": "When the next IPCA / PNAD / PIB release is scheduled, or the release history of a product.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "ate",
+          "type": "string",
+          "in": "body",
+          "about": "Release date on or before, YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "de",
+          "type": "string",
+          "in": "body",
+          "about": "Release date on or after, YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "min": 1
+        },
+        {
+          "name": "produto",
+          "type": "string",
+          "in": "body",
+          "about": "Product id or alias; omit for every product. Pattern: ^[a-z0-9-]{1,120}$."
+        },
+        {
+          "name": "qtd",
+          "type": "number",
+          "in": "body",
+          "about": "Items per page (default 10).",
+          "default": 10,
+          "min": 1,
+          "max": 100
+        }
+      ],
+      "response": {
+        "about": "IBGE release calendar (/api/v3/calendario/): upcoming and past release dates, optionally for one product (produto id or alias, e.g. 9173 or pesquisa-nacional-por-amostra-de-domicilios-continua-trimestral) and a date window; paginated.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "alias_produto",
+            "type": "string"
+          },
+          {
+            "name": "ano_referencia_fim",
+            "type": "number"
+          },
+          {
+            "name": "ano_referencia_inicio",
+            "type": "number"
+          },
+          {
+            "name": "data_divulgacao",
+            "type": "string",
+            "about": "As published: DD/MM/YYYY HH:MM:SS."
+          },
+          {
+            "name": "descricao",
+            "type": "string"
+          },
+          {
+            "name": "descricao_produto",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "link",
+            "type": "string"
+          },
+          {
+            "name": "mes_referencia_fim",
+            "type": "number"
+          },
+          {
+            "name": "mes_referencia_inicio",
+            "type": "number"
+          },
+          {
+            "name": "nome_produto",
+            "type": "string"
+          },
+          {
+            "name": "produto_id",
+            "type": "number"
+          },
+          {
+            "name": "tipo",
+            "type": "string"
+          },
+          {
+            "name": "tipo_id",
+            "type": "number"
+          },
+          {
+            "name": "titulo",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "qtd": 5
+        },
+        "response": {
+          "count": 2427,
+          "items": [
+            {
+              "alias_produto": "pesquisas-trimestrais-do-abate-de-animais-do-leite-do-couro-e-da-producao-de-ovos-de-galinha",
+              "ano_referencia_fim": 2026,
+              "ano_referencia_inicio": 2026,
+              "data_divulgacao": "23/03/2027 12:00:00",
+              "descricao": "",
+              "descricao_produto": "",
+              "id": 4365,
+              "link": "",
+              "mes_referencia_fim": 12,
+              "mes_referencia_inicio": 10,
+              "nome_produto": "Pesquisas Trimestrais do Abate de Animais, do Leite, do Couro e da Produção de Ovos de Galinha",
+              "produto_id": 19111,
+              "tipo": "Divulgação de Indicadores",
+              "tipo_id": 1,
+              "titulo": "Pesquisas Trimestrais do Abate de Animais, do Leite, do Couro e da Produção de Ovos de Galinha"
+            },
+            {
+              "alias_produto": "contas-nacionais-trimestrais",
+              "ano_referencia_fim": 2026,
+              "ano_referencia_inicio": 2026,
+              "data_divulgacao": "02/03/2027 12:00:00",
+              "descricao": "",
+              "descricao_produto": "<p align=\"justify\">Apresenta os valores correntes e os índices de volume (1995=100) trimestralmente para o Produto Interno Bruto a preços de mercado, impostos sobre produtos, valor adicionado a preços básicos, consumo pessoal, consumo do governo, formação bruta de capital fixo, variação de estoques, exportações e importações de bens e serviços. São calculadas duas séries de números-índices: a com base no ano anterior e a encadeada com referência em 2010 (1995 = 100). A série encadeada é ajustada sazonalmente pelo X13-ARIMA possibilitando o cálculo das taxas de variação em relação ao trimestre imediatamente anterior.</p>\r\n<p align=\"justify\">No IBGE, a pesquisa foi iniciada em 1988 e reestruturada a partir de 1998, quando os seus resultados foram integrados ao Sistema de Contas Nacionais, de periodicidade anual.</p>\r\n<p align=\"justify\">Em 2015, continuando a compatibilidade com o Sistema Anual, as Contas Nacionais Trimestrais também foram reformuladas, adotando o Manual Internacional SNA 2008, passando para a referência 2010.</p>\r\n<p>As ponderações anuais são obtidas a partir deste novo sistema de contas.</p>\r\n<p><strong>Periodicidade:</strong> Trimestral</p>\r\n<p><strong>Abrangência geográfica:</strong> Brasil</p>",
+              "id": 4364,
+              "link": "",
+              "mes_referencia_fim": 12,
+              "mes_referencia_inicio": 10,
+              "nome_produto": "Sistema de Contas Nacionais Trimestrais",
+              "produto_id": 9300,
+              "tipo": "Divulgação de Indicadores",
+              "tipo_id": 1,
+              "titulo": "Sistema de Contas Nacionais Trimestrais"
+            },
+            {
+              "alias_produto": "pesquisa-nacional-por-amostra-de-domicilios-continua-trimestral",
+              "ano_referencia_fim": 2026,
+              "ano_referencia_inicio": 2026,
+              "data_divulgacao": "19/02/2027 12:00:00",
+              "descricao": "",
+              "descricao_produto": "<p align=\"justify\">Destina-se a produzir informações contínuas sobre a inserção da população no mercado de trabalho associada a características demográficas e de educação, e, também, para o estudo do desenvolvimento socioeconômico do País, agregando a produção de resultados anuais sobre temas permanentes da pesquisa (como trabalho infantil e outras formas de trabalho, migração, fecundidade etc.) e outros aspectos relevantes selecionados de acordo com as necessidades de informação.</p>\r\n<p align=\"justify\">A pesquisa é realizada por meio de uma amostra de domicílios, extraída de uma amostra mestra, de forma a garantir a representatividade dos resultados para os diversos níveis geográficos definidos para sua divulgação. A cada trimestre, são investigados 211.344 domicílios particulares permanentes, em aproximadamente 16.000 setores censitários, distribuídos em cerca de 3.500 municípios.</p>\r\n<p align=\"justify\"><strong>Periodicidade:</strong> Mensal, para um conjunto restrito de indicadores relacionados à força de trabalho e somente para o nível geográfico de Brasil; trimestral, para indicadores relacionados à força de trabalho; anual, para os demais temas permanentes da pesquisa e indicadores complementares relacionados à força de trabalho; e variável, para outros temas ou tópicos dos temas permanentes a serem pesquisados com maior periodicidade ou ocasionalmente.</p>\r\n<p align=\"justify\"><strong>Abrangência geográfica:</strong> Brasil, Grandes Regiões, Unidades da Federação, 20 Regiões Metropolitanas que contêm Municípios das Capitais (Manaus, Belém, Macapá, São Luís, Fortaleza, Natal, João Pessoa, Recife, Maceió, Aracaju, Salvador, Belo Horizonte, Vitória, Rio de Janeiro, São Paulo, Curitiba, Florianópolis, Porto Alegre, Vale do Rio Cuiabá, e Goiânia), Municípios das Capitais e Região Integrada de Desenvolvimento da Grande Teresina.</p>\r\n<p><strong>Análise dos dados da PNAD Contínua utilizando o software R</strong></p>\r\n<ul>\r\n<li><a id=\"asdfree\" class=\"link_desligado\" href=\"http://www.asdfree.com/search/label/pesquisa%20nacional%20por%20amostra%20de%20domicilios%20continua%20%28pnadc%29\" target=\"_blank\" rel=\"noopener noreferrer\">http://www.asdfree.com/search/label/pesquisa%20nacional%20por%20amostra%20de%20domicilios%20continua%20%28pnadc%29</a></li>\r\n</ul>",
+              "id": 4363,
+              "link": "",
+              "mes_referencia_fim": 12,
+              "mes_referencia_inicio": 10,
+              "nome_produto": "Divulgação trimestral#pnadc2",
+              "produto_id": 9173,
+              "tipo": "Divulgação de Indicadores",
+              "tipo_id": 1,
+              "titulo": "Pesquisa Nacional por Amostra de Domicílios Contínua Trimestral"
+            },
+            {
+              "alias_produto": "primeiros-resultados-das-pesquisas-trimestrais-do-abate-de-animais-do-leite-do-couro-e-da-producao-de-ovos-de-galinha",
+              "ano_referencia_fim": 2026,
+              "ano_referencia_inicio": 2026,
+              "data_divulgacao": "19/02/2027 12:00:00",
+              "descricao": "",
+              "descricao_produto": "",
+              "id": 4362,
+              "link": "",
+              "mes_referencia_fim": 12,
+              "mes_referencia_inicio": 10,
+              "nome_produto": "Pesquisas Trimestrais do Abate de Animais, do Leite, do Couro e da Produção de Ovos de Galinha: Primeiros Resultados",
+              "produto_id": 19120,
+              "tipo": "Divulgação de Indicadores",
+              "tipo_id": 1,
+              "titulo": "Pesquisas Trimestrais do Abate de Animais, do Leite, do Couro e da Produção de Ovos de Galinha: Primeiros resultados"
+            },
+            {
+              "alias_produto": "pesquisa-mensal-de-comercio",
+              "ano_referencia_fim": 0,
+              "ano_referencia_inicio": 2026,
+              "data_divulgacao": "17/02/2027 12:00:00",
+              "descricao": "",
+              "descricao_produto": "<p>A <strong>Pesquisa Mensal de Comércio</strong> produz indicadores que permitem acompanhar o comportamento conjuntural do comércio varejista no País, investigando a receita bruta de revenda nas empresas formalmente constituídas, com 20 ou mais pessoas ocupadas, e cuja atividade principal é o comércio varejista. A pesquisa foi iniciada em janeiro de 1995, apenas na Região Metropolitana do Rio de Janeiro, produzindo indicadores de faturamento real e nominal, pessoal ocupado e salários e outras remunerações.</p>\r\n<p>A partir de 1997, a pesquisa foi expandida para as Regiões Metropolitanas de Recife e Salvador. A versão da pesquisa com abrangência nacional teve início no ano 2000, produzindo indicadores de volume e de receita nominal, desagregados em cinco grupos de atividades, para o Brasil e os Estados do Ceará, Pernambuco, Bahia, Minas Gerais, Espírito Santo, Rio de Janeiro, São Paulo, Paraná, Santa Catarina, Rio Grande do Sul, Goiás e Distrito Federal. Para as demais Unidades da Federação, são divulgados indicadores para o comércio varejista, sem desagregação.</p>\r\n<p>A partir de janeiro de 2004, iniciou-se a série da pesquisa, com base 2003=100. O segmento \"Demais artigos de uso pessoal e doméstico\" foi desagregado, iniciando a série de indicadores para os segmentos de \"Artigos farmacêuticos, médicos, ortopédicos, de perfumaria e cosméticos\", \"Equipamentos e materiais para escritório, informática e comunicação\", \"Livros, jornais, revistas e papelaria\" e \"Outros artigos de uso pessoal e doméstico\". A série 2003=100 expande a abrangência dos indicadores incluindo o comércio de material de construção e dá inicio à série de índices do Comércio Varejista Ampliado, que agrega, aos índices do varejo, as atividades \"Veículos, motocicletas, partes e peças\" e \"Material de construção\", que incluem o ramo atacadista.</p>\r\n<p>A partir de 2005, iniciou-se o cálculo dos indicadores de receita nominal e de volume de vendas ajustados sazonalmente.</p>\r\n<p>Em 2012, de janeiro em diante, iniciou-se nova série da pesquisa, com base 2011=100.</p>\r\n<p>A partir de janeiro de 2017, iniciou-se uma nova série com ano-base em 2014.</p>\r\n<p> </p>\r\n<p><strong>Periodicidade:</strong> Mensal</p>\r\n<p><strong>Abrangência geográfica: </strong>Brasil e Unidades da Federação</p>",
+              "id": 4361,
+              "link": "",
+              "mes_referencia_fim": 0,
+              "mes_referencia_inicio": 12,
+              "nome_produto": "Pesquisa Mensal de Comércio",
+              "produto_id": 9227,
+              "tipo": "Divulgação de Indicadores",
+              "tipo_id": 1,
+              "titulo": "Pesquisa Mensal de Comércio"
+            }
+          ],
+          "next_page": 2,
+          "observed_at_ms": 1790047048520,
+          "page": 1,
+          "source_url": "https://servicodados.ibge.gov.br/api/v3/calendario/?qtd=5&page=1",
+          "total_pages": 486
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "servicodados-ibge-gov-br",
+        "capability": "official-statistics/calendario"
+      }
+    },
+    {
+      "id": "servicodados-ibge-gov-br/official-statistics/cnae",
+      "provider": "servicodados-ibge-gov-br",
+      "capability": "official-statistics/cnae",
+      "name": "Cnae",
+      "description": "Decode a CNAE code from a company registry (7-digit subclasse 0111301, 5-digit classe 01113) or browse the hierarchy.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "id",
+          "type": "string",
+          "in": "body",
+          "about": "Code at that level (A, 01, 011, 01113, 0111301). Omit to list. Pattern: ^[A-Za-z0-9]{1,7}$."
+        },
+        {
+          "name": "nivel",
+          "type": "string",
+          "in": "body",
+          "about": "nivel",
+          "required": true,
+          "oneOf": [
+            "secoes",
+            "divisoes",
+            "grupos",
+            "classes",
+            "subclasses"
+          ]
+        },
+        {
+          "name": "parent_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9]{1,7}$."
+        },
+        {
+          "name": "parent_nivel",
+          "type": "string",
+          "in": "body",
+          "about": "List only the children of this parent level.",
+          "oneOf": [
+            "secoes",
+            "divisoes",
+            "grupos",
+            "classes"
+          ]
+        }
+      ],
+      "response": {
+        "about": "CNAE 2.x economic-activity classification (/api/v2/cnae): list a level (secoes, divisoes, grupos, classes, subclasses), optionally under a parent (e.g. classes of divisao 01), or fetch one code with its full parent chain and notes.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "descricao",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "id": "0111301",
+          "nivel": "subclasses"
+        },
+        "response": {
+          "count": 1,
+          "items": [
+            {
+              "atividades": [
+                "ARROZ QUANDO ATIVIDADE COMPLEMENTAR AO CULTIVO; BENEFICIAMENTO DE",
+                "ARROZ; CULTIVO DE",
+                "SEMENTE DE ARROZ (QUANDO REALIZADA JUNTAMENTE AO CULTIVO); PRODUÇÃO DE"
+              ],
+              "classe": {
+                "descricao": "CULTIVO DE CEREAIS",
+                "grupo": {
+                  "descricao": "PRODUÇÃO DE LAVOURAS TEMPORÁRIAS",
+                  "divisao": {
+                    "descricao": "AGRICULTURA, PECUÁRIA E SERVIÇOS RELACIONADOS",
+                    "id": "01",
+                    "secao": {
+                      "descricao": "AGRICULTURA, PECUÁRIA, PRODUÇÃO FLORESTAL, PESCA E AQÜICULTURA",
+                      "id": "A"
+                    }
+                  },
+                  "id": "011"
+                },
+                "id": "01113",
+                "observacoes": [
+                  "Esta classe compreende - o cultivo de alpiste, arroz, aveia, centeio, cevada, milho, milheto, painço, sorgo, trigo, trigo preto, triticale e outros cereais não especificados anteriormente",
+                  "Esta classe compreende ainda - o beneficiamento de cereais em estabelecimento agrícola, quando atividade complementar ao cultivo\r\n- a produção de sementes de cereais, quando atividade complementar ao cultivo",
+                  "Esta classe NÃO compreende - a produção de sementes certificadas dos cereais desta classe, inclusive modificadas geneticamente (01.41-5)\r\n- os serviços de preparação de terreno, cultivo e colheita realizados sob contrato (01.61-0)\r\n- o beneficiamento de cereais em estabelecimento agrícola realizado sob contrato (01.63-6)\r\n- o processamento ou beneficiamento de cereais em estabelecimento não-agrícola (grupo 10.4) e (grupo 10.6)\r\n- a produção de biocombustível (19.32-2)"
+                ]
+              },
+              "descricao": "CULTIVO DE ARROZ",
+              "id": "0111301",
+              "observacoes": [
+                "Esta subclasse compreende - o cultivo de arroz",
+                "Esta subclasse compreende ainda - o beneficiamento de arroz em estabelecimento agrícola, quando atividade complementar ao cultivo \r\n\r\n- a produção de sementes de arroz, quando atividade complementar ao cultivo",
+                "Esta subclasse NÃO compreende - a produção de sementes certificadas de arroz, inclusive modificadas geneticamente (0141-5/01)\r\n- os serviços de preparação de terreno, cultivo e colheita realizados sob contrato (0161-0/03)\r\n- o beneficiamento de arroz realizado no estabelecimento agrícola sob contrato (0163-6/00)\r\n- a produção de óleo de arroz em bruto (1041-4/00)\r\n- o beneficiamento de arroz em estabelecimento não-agrícola (1061-9/01)"
+              ]
+            }
+          ],
+          "nivel": "subclasses",
+          "observed_at_ms": 1790047071321,
+          "source_url": "https://servicodados.ibge.gov.br/api/v2/cnae/subclasses/0111301"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "servicodados-ibge-gov-br",
+        "capability": "official-statistics/cnae"
+      }
+    },
+    {
+      "id": "servicodados-ibge-gov-br/official-statistics/localidade",
+      "provider": "servicodados-ibge-gov-br",
+      "capability": "official-statistics/localidade",
+      "name": "Localidade",
+      "description": "Turn a municipality or state code into its name and hierarchy (microrregiao, mesorregiao, regiao imediata/intermediaria, UF, regiao), e.g. to label agregados results or join with other Brazilian sources.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "ids",
+          "type": "string[]",
+          "in": "body",
+          "about": "IBGE codes (7-digit municipio, 2-digit estado id or its sigla, ...).",
+          "required": true
+        },
+        {
+          "name": "nivel",
+          "type": "string",
+          "in": "body",
+          "about": "Level of the ids.",
+          "required": true,
+          "oneOf": [
+            "regioes",
+            "estados",
+            "mesorregioes",
+            "microrregioes",
+            "regioes-intermediarias",
+            "regioes-imediatas",
+            "regioes-metropolitanas",
+            "municipios",
+            "distritos",
+            "subdistritos"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Look up one or more localities by IBGE code at a level (/api/v1/localidades/{nivel}/{id|id|...}): full parent hierarchy per item. Unknown codes are dropped by the source; when none resolves the result is not_found.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "number",
+            "about": "IBGE code of the locality."
+          },
+          {
+            "name": "nome",
+            "type": "string"
+          },
+          {
+            "name": "sigla",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "ids": [
+            "3550308"
+          ],
+          "nivel": "municipios"
+        },
+        "response": {
+          "count": 1,
+          "items": [
+            {
+              "id": 3550308,
+              "microrregiao": {
+                "id": 35061,
+                "mesorregiao": {
+                  "UF": {
+                    "id": 35,
+                    "nome": "São Paulo",
+                    "regiao": {
+                      "id": 3,
+                      "nome": "Sudeste",
+                      "sigla": "SE"
+                    },
+                    "sigla": "SP"
+                  },
+                  "id": 3515,
+                  "nome": "Metropolitana de São Paulo"
+                },
+                "nome": "São Paulo"
+              },
+              "nome": "São Paulo",
+              "regiao-imediata": {
+                "id": 350001,
+                "nome": "São Paulo",
+                "regiao-intermediaria": {
+                  "UF": {
+                    "id": 35,
+                    "nome": "São Paulo",
+                    "regiao": {
+                      "id": 3,
+                      "nome": "Sudeste",
+                      "sigla": "SE"
+                    },
+                    "sigla": "SP"
+                  },
+                  "id": 3501,
+                  "nome": "São Paulo"
+                }
+              }
+            }
+          ],
+          "missing": [],
+          "nivel": "municipios",
+          "observed_at_ms": 1790046987644,
+          "source_url": "https://servicodados.ibge.gov.br/api/v1/localidades/municipios/3550308"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "servicodados-ibge-gov-br",
+        "capability": "official-statistics/localidade"
+      }
+    },
+    {
+      "id": "servicodados-ibge-gov-br/official-statistics/localidades",
+      "provider": "servicodados-ibge-gov-br",
+      "capability": "official-statistics/localidades",
+      "name": "Localidades",
+      "description": "Resolve IBGE codes before querying agregados (N3 = estado id, N6 = municipio id), enumerate the municipalities of a state, or find a municipality by (partial, accent-insensitive) name. municipios, distritos and subdistritos require a parent so one call never fetches the 5,570-row national list.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Items per page (default 100).",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "nivel",
+          "type": "string",
+          "in": "body",
+          "about": "Level to list.",
+          "required": true,
+          "oneOf": [
+            "regioes",
+            "estados",
+            "mesorregioes",
+            "microrregioes",
+            "regioes-intermediarias",
+            "regioes-imediatas",
+            "regioes-metropolitanas",
+            "municipios",
+            "distritos",
+            "subdistritos"
+          ]
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "next_offset from the previous page of the same query.",
+          "min": 0
+        },
+        {
+          "name": "parent_id",
+          "type": "string",
+          "in": "body",
+          "about": "Parent id: numeric IBGE code or, for estados, the two-letter sigla (35 or SP). Pattern: ^[A-Za-z0-9]{1,9}$."
+        },
+        {
+          "name": "parent_nivel",
+          "type": "string",
+          "in": "body",
+          "about": "Level of the bounding parent (estados for municipios of a state, municipios for its distritos, regioes for its estados, ...).",
+          "oneOf": [
+            "regioes",
+            "estados",
+            "mesorregioes",
+            "microrregioes",
+            "regioes-intermediarias",
+            "regioes-imediatas",
+            "municipios",
+            "distritos"
+          ]
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Case- and accent-insensitive substring of `nome` applied client-side (e.g. `sao paulo`, `campinas`)."
+        }
+      ],
+      "response": {
+        "about": "List Brazilian localities of one level (regioes, estados, mesorregioes, microrregioes, regioes-intermediarias, regioes-imediatas, regioes-metropolitanas, municipios, distritos, subdistritos) from /api/v1/localidades, optionally bounded to a parent locality (e.g. municipios of estado 35 / SP, distritos of municipio 3550308) and filtered by name. Ordered by name; sliced client-side with limit / offset.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "number",
+            "about": "IBGE code of the locality."
+          },
+          {
+            "name": "nome",
+            "type": "string"
+          },
+          {
+            "name": "sigla",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "nivel": "regioes"
+        },
+        "response": {
+          "count": 5,
+          "items": [
+            {
+              "id": 5,
+              "nome": "Centro-Oeste",
+              "sigla": "CO"
+            },
+            {
+              "id": 2,
+              "nome": "Nordeste",
+              "sigla": "NE"
+            },
+            {
+              "id": 1,
+              "nome": "Norte",
+              "sigla": "N"
+            },
+            {
+              "id": 3,
+              "nome": "Sudeste",
+              "sigla": "SE"
+            },
+            {
+              "id": 4,
+              "nome": "Sul",
+              "sigla": "S"
+            }
+          ],
+          "next_offset": null,
+          "nivel": "regioes",
+          "observed_at_ms": 1790046980171,
+          "parent": null,
+          "query": null,
+          "source_url": "https://servicodados.ibge.gov.br/api/v1/localidades/regioes?orderBy=nome",
+          "total": 5
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "servicodados-ibge-gov-br",
+        "capability": "official-statistics/localidades"
+      }
+    },
+    {
+      "id": "servicodados-ibge-gov-br/official-statistics/malha",
+      "provider": "servicodados-ibge-gov-br",
+      "capability": "official-statistics/malha",
+      "name": "Malha",
+      "description": "Draw or geo-join a Brazilian state, municipality or region; get its centroid and area in km2. Use qualidade=minima unless you need detailed geometry (maxima meshes are megabytes).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "id",
+          "type": "string",
+          "in": "body",
+          "about": "IBGE code (35 or SP for a state, 3550308 for a municipality, BR for the country). Pattern: ^[A-Za-z0-9]{1,9}$.",
+          "required": true
+        },
+        {
+          "name": "intrarregiao",
+          "type": "string",
+          "in": "body",
+          "about": "Split the mesh into the localities of this level (e.g. municipio inside a state).",
+          "oneOf": [
+            "regiao",
+            "UF",
+            "mesorregiao",
+            "microrregiao",
+            "regiao-intermediaria",
+            "regiao-imediata",
+            "municipio"
+          ]
+        },
+        {
+          "name": "nivel",
+          "type": "string",
+          "in": "body",
+          "about": "nivel",
+          "required": true,
+          "oneOf": [
+            "paises",
+            "regioes",
+            "estados",
+            "mesorregioes",
+            "microrregioes",
+            "regioes-intermediarias",
+            "regioes-imediatas",
+            "municipios"
+          ]
+        },
+        {
+          "name": "qualidade",
+          "type": "string",
+          "in": "body",
+          "about": "qualidade",
+          "default": "minima",
+          "oneOf": [
+            "minima",
+            "intermediaria",
+            "maxima"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Territorial mesh (boundary) of one locality from /api/v4/malhas/{nivel}/{id} as GeoJSON at a chosen simplification quality (minima | intermediaria | maxima), optionally subdivided into intra-region features (intrarregiao), plus the mesh metadata (/metadados: centroid, bounding box, area).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "feature_count",
+            "type": "number"
+          },
+          {
+            "name": "geojson",
+            "type": "object",
+            "about": "GeoJSON FeatureCollection exactly as the source returns it."
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "metadados",
+            "type": "object",
+            "about": "Mesh metadata as /metadados returns it: id, nome, nivel-geografico, centroide {longitude, latitude}, regiao-limitrofe (bounding corners), area {dimensao, unidade}."
+          },
+          {
+            "name": "nivel",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds when this program observed the response."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The exact servicodados.ibge.gov.br request that produced this result."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "id": "3550308",
+          "nivel": "municipios"
+        },
+        "response": {
+          "feature_count": 1,
+          "geojson": {
+            "features": [
+              {
+                "geometry": {
+                  "coordinates": [
+                    [
+                      [
+                        -46.8061,
+                        -23.9396
+                      ],
+                      [
+                        -46.7894,
+                        -23.941
+                      ],
+                      [
+                        -46.7422,
+                        -23.9916
+                      ],
+                      [
+                        -46.6912,
+                        -23.9849
+                      ],
+                      [
+                        -46.6502,
+                        -24.0015
+                      ],
+                      [
+                        -46.6116,
+                        -23.9694
+                      ],
+                      [
+                        -46.6071,
+                        -23.9536
+                      ],
+                      [
+                        -46.6162,
+                        -23.8627
+                      ],
+                      [
+                        -46.6324,
+                        -23.8514
+                      ],
+                      [
+                        -46.6215,
+                        -23.7846
+                      ],
+                      [
+                        -46.6542,
+                        -23.7305
+                      ],
+                      [
+                        -46.6177,
+                        -23.7122
+                      ],
+                      [
+                        -46.6317,
+                        -23.6966
+                      ],
+                      [
+                        -46.6165,
+                        -23.658
+                      ],
+                      [
+                        -46.5834,
+                        -23.6412
+                      ],
+                      [
+                        -46.5793,
+                        -23.6044
+                      ],
+                      [
+                        -46.548,
+                        -23.6061
+                      ],
+                      [
+                        -46.5063,
+                        -23.6258
+                      ],
+                      [
+                        -46.4854,
+                        -23.623
+                      ],
+                      [
+                        -46.4724,
+                        -23.6388
+                      ],
+                      [
+                        -46.4154,
+                        -23.6386
+                      ],
+                      [
+                        -46.3948,
+                        -23.6124
+                      ],
+                      [
+                        -46.3831,
+                        -23.5993
+                      ],
+                      [
+                        -46.3946,
+                        -23.5318
+                      ],
+                      [
+                        -46.3664,
+                        -23.5122
+                      ],
+                      [
+                        -46.3867,
+                        -23.4747
+                      ],
+                      [
+                        -46.4121,
+                        -23.4704
+                      ],
+                      [
+                        -46.461,
+                        -23.4831
+                      ],
+                      [
+                        -46.4937,
+                        -23.4765
+                      ],
+                      [
+                        -46.5621,
+                        -23.5001
+                      ],
+                      [
+                        -46.5705,
+                        -23.4589
+                      ],
+                      [
+                        -46.5669,
+                        -23.4162
+                      ],
+                      [
+                        -46.5363,
+                        -23.3636
+                      ],
+                      [
+                        -46.5538,
+                        -23.3616
+                      ],
+                      [
+                        -46.6006,
+                        -23.3886
+                      ],
+                      [
+                        -46.6121,
+                        -23.4173
+                      ],
+                      [
+                        -46.6551,
+                        -23.4307
+                      ],
+                      [
+                        -46.6697,
+                        -23.4183
+                      ],
+                      [
+                        -46.6999,
+                        -23.4234
+                      ],
+                      [
+                        -46.7356,
+                        -23.3881
+                      ],
+                      [
+                        -46.823,
+                        -23.4011
+                      ],
+                      [
+                        -46.8233,
+                        -23.4224
+                      ],
+                      [
+                        -46.8005,
+                        -23.4696
+                      ],
+                      [
+                        -46.7987,
+                        -23.4706
+                      ],
+                      [
+                        -46.7755,
+                        -23.4662
+                      ],
+                      [
+                        -46.7601,
+                        -23.5548
+                      ],
+                      [
+                        -46.8055,
+                        -23.5876
+                      ],
+                      [
+                        -46.8081,
+                        -23.6092
+                      ],
+                      [
+                        -46.7505,
+                        -23.604
+                      ],
+                      [
+                        -46.7927,
+                        -23.6472
+                      ],
+                      [
+                        -46.8013,
+                        -23.686
+                      ],
+                      [
+                        -46.7961,
+                        -23.7387
+                      ],
+                      [
+                        -46.7773,
+                        -23.7667
+                      ],
+                      [
+                        -46.8006,
+                        -23.8017
+                      ],
+                      [
+                        -46.7627,
+                        -23.8274
+                      ],
+                      [
+                        -46.7761,
+                        -23.8558
+                      ],
+                      [
+                        -46.7766,
+                        -23.8927
+                      ],
+                      [
+                        -46.8044,
+                        -23.8923
+                      ],
+                      [
+                        -46.8109,
+                        -23.9203
+                      ],
+                      [
+                        -46.8061,
+                        -23.9396
+                      ]
+                    ]
+                  ],
+                  "type": "Polygon"
+                },
+                "properties": {
+                  "codarea": "3550308"
+                },
+                "type": "Feature"
+              }
+            ],
+            "type": "FeatureCollection"
+          },
+          "id": "3550308",
+          "metadados": {
+            "area": {
+              "dimensao": "1522.683",
+              "unidade": {
+                "id": "km2",
+                "nome": "Quilômetros quadrados"
+              }
+            },
+            "centroide": {
+              "latitude": -23.6504,
+              "longitude": -46.6482
+            },
+            "id": "3550308",
+            "nivel-geografico": "município",
+            "nome": "São Paulo",
+            "regiao-limitrofe": [
+              {
+                "latitude": -23.3568,
+                "longitude": -46.8263
+              },
+              {
+                "latitude": -24.0082,
+                "longitude": -46.3651
+              }
+            ]
+          },
+          "nivel": "municipios",
+          "observed_at_ms": 1790047063790,
+          "source_url": "https://servicodados.ibge.gov.br/api/v4/malhas/municipios/3550308?formato=application%2Fvnd.geo%2Bjson&qualidade=minima"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "servicodados-ibge-gov-br",
+        "capability": "official-statistics/malha"
+      }
+    },
+    {
+      "id": "servicodados-ibge-gov-br/official-statistics/nomes",
+      "provider": "servicodados-ibge-gov-br",
+      "capability": "official-statistics/nomes",
+      "name": "Nomes",
+      "description": "How common a Brazilian first name is, how its popularity changed by decade, or where in Brazil it concentrates.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "group_by",
+          "type": "string",
+          "in": "body",
+          "about": "`UF` splits the frequency by state (one item per UF with populacao, frequencia and proporcao).",
+          "oneOf": [
+            "UF"
+          ]
+        },
+        {
+          "name": "localidade",
+          "type": "string",
+          "in": "body",
+          "about": "IBGE code of an estado (35) or municipio (3550308); default Brazil. Pattern: ^[0-9]{1,7}$."
+        },
+        {
+          "name": "nomes",
+          "type": "string[]",
+          "in": "body",
+          "about": "First names (accents optional: maria, joao, JOSÉ).",
+          "required": true
+        },
+        {
+          "name": "sexo",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict to a sex.",
+          "oneOf": [
+            "F",
+            "M"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Frequency of one or more first names in the 2010 Census (/api/v2/censos/nomes/{nome|nome}): total by birth decade for Brazil or one locality (estado / municipio id), optionally by sex, or grouped by state (groupBy=UF: population, frequency and proportion per 100,000 for each UF). Names unknown to the census are not_found.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "localidade",
+            "type": "string",
+            "about": "`BR`, a UF id or a municipio id."
+          },
+          {
+            "name": "nome",
+            "type": "string",
+            "about": "Name as the census stores it (uppercase); absent when grouped by UF."
+          },
+          {
+            "name": "res",
+            "type": "object[]"
+          },
+          {
+            "name": "sexo",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "nomes": [
+            "maria"
+          ]
+        },
+        "response": {
+          "count": 1,
+          "items": [
+            {
+              "localidade": "BR",
+              "nome": "MARIA",
+              "res": [
+                {
+                  "frequencia": 336477,
+                  "periodo": "1930["
+                },
+                {
+                  "frequencia": 749053,
+                  "periodo": "[1930,1940["
+                },
+                {
+                  "frequencia": 1487042,
+                  "periodo": "[1940,1950["
+                },
+                {
+                  "frequencia": 2476482,
+                  "periodo": "[1950,1960["
+                },
+                {
+                  "frequencia": 2495491,
+                  "periodo": "[1960,1970["
+                },
+                {
+                  "frequencia": 1616019,
+                  "periodo": "[1970,1980["
+                },
+                {
+                  "frequencia": 917968,
+                  "periodo": "[1980,1990["
+                },
+                {
+                  "frequencia": 544296,
+                  "periodo": "[1990,2000["
+                },
+                {
+                  "frequencia": 1111301,
+                  "periodo": "[2000,2010["
+                }
+              ],
+              "sexo": null
+            }
+          ],
+          "observed_at_ms": 1790047017561,
+          "source_url": "https://servicodados.ibge.gov.br/api/v2/censos/nomes/maria"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "servicodados-ibge-gov-br",
+        "capability": "official-statistics/nomes"
+      }
+    },
+    {
+      "id": "servicodados-ibge-gov-br/official-statistics/nomes_ranking",
+      "provider": "servicodados-ibge-gov-br",
+      "capability": "official-statistics/nomes_ranking",
+      "name": "Nomes ranking",
+      "description": "Most common names in Brazil or a state, by decade or sex.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "decada",
+          "type": "number",
+          "in": "body",
+          "about": "Birth decade start year, a multiple of 10 (1930..2000).",
+          "min": 1930,
+          "max": 2010
+        },
+        {
+          "name": "localidade",
+          "type": "string",
+          "in": "body",
+          "about": "IBGE code of an estado (35) or municipio (3550308); default Brazil. Pattern: ^[0-9]{1,7}$."
+        },
+        {
+          "name": "sexo",
+          "type": "string",
+          "in": "body",
+          "about": "sexo",
+          "oneOf": [
+            "F",
+            "M"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Ranking of the most frequent first names in the 2010 Census (/api/v2/censos/nomes/ranking), optionally for one birth decade, one locality (estado or municipio id) and one sex. Top 20 as the source publishes.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "frequencia",
+            "type": "number"
+          },
+          {
+            "name": "nome",
+            "type": "string"
+          },
+          {
+            "name": "ranking",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "decada": 1990,
+          "localidade": "35",
+          "sexo": "F"
+        },
+        "response": {
+          "count": 20,
+          "decada": 1990,
+          "items": [
+            {
+              "frequencia": 118428,
+              "nome": "ANA",
+              "ranking": 1
+            },
+            {
+              "frequencia": 105247,
+              "nome": "MARIA",
+              "ranking": 2
+            },
+            {
+              "frequencia": 75764,
+              "nome": "JULIANA",
+              "ranking": 3
+            },
+            {
+              "frequencia": 64059,
+              "nome": "VANESSA",
+              "ranking": 4
+            },
+            {
+              "frequencia": 56602,
+              "nome": "FERNANDA",
+              "ranking": 5
+            },
+            {
+              "frequencia": 56554,
+              "nome": "PATRICIA",
+              "ranking": 6
+            },
+            {
+              "frequencia": 56117,
+              "nome": "ALINE",
+              "ranking": 7
+            },
+            {
+              "frequencia": 46724,
+              "nome": "CAMILA",
+              "ranking": 8
+            },
+            {
+              "frequencia": 45389,
+              "nome": "ADRIANA",
+              "ranking": 9
+            },
+            {
+              "frequencia": 44461,
+              "nome": "RENATA",
+              "ranking": 10
+            },
+            {
+              "frequencia": 42806,
+              "nome": "FABIANA",
+              "ranking": 11
+            },
+            {
+              "frequencia": 41961,
+              "nome": "PRISCILA",
+              "ranking": 12
+            },
+            {
+              "frequencia": 41834,
+              "nome": "DANIELA",
+              "ranking": 13
+            },
+            {
+              "frequencia": 39404,
+              "nome": "LUCIANA",
+              "ranking": 14
+            },
+            {
+              "frequencia": 35908,
+              "nome": "TATIANE",
+              "ranking": 15
+            },
+            {
+              "frequencia": 33774,
+              "nome": "CRISTIANE",
+              "ranking": 16
+            },
+            {
+              "frequencia": 29611,
+              "nome": "SIMONE",
+              "ranking": 17
+            },
+            {
+              "frequencia": 29514,
+              "nome": "VIVIANE",
+              "ranking": 18
+            },
+            {
+              "frequencia": 29371,
+              "nome": "MICHELE",
+              "ranking": 19
+            },
+            {
+              "frequencia": 29085,
+              "nome": "ELAINE",
+              "ranking": 20
+            }
+          ],
+          "localidade": "35",
+          "observed_at_ms": 1790047033758,
+          "sexo": null,
+          "source_url": "https://servicodados.ibge.gov.br/api/v2/censos/nomes/ranking?decada=1990&localidade=35&sexo=F"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "servicodados-ibge-gov-br",
+        "capability": "official-statistics/nomes_ranking"
+      }
+    },
+    {
+      "id": "servicodados-ibge-gov-br/official-statistics/noticias",
+      "provider": "servicodados-ibge-gov-br",
+      "capability": "official-statistics/noticias",
+      "name": "Noticias",
+      "description": "Recent IBGE releases (IPCA, PNAD, PIB...), news about a product or matching a keyword. Follow next_page until null.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "ate",
+          "type": "string",
+          "in": "body",
+          "about": "Published on or before, YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "busca",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text search."
+        },
+        {
+          "name": "de",
+          "type": "string",
+          "in": "body",
+          "about": "Published on or after, YYYY-MM-DD. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "destaque",
+          "type": "boolean",
+          "in": "body",
+          "about": "Only highlighted items."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "Page number (1-based); next_page from the previous call.",
+          "min": 1
+        },
+        {
+          "name": "produto_id",
+          "type": "number",
+          "in": "body",
+          "about": "Product id from /api/v1/produtos (9173 = PNAD Continua); upstream `idproduto`.",
+          "min": 1
+        },
+        {
+          "name": "qtd",
+          "type": "number",
+          "in": "body",
+          "about": "Items per page (default 10).",
+          "default": 10,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "tipo",
+          "type": "string",
+          "in": "body",
+          "about": "tipo",
+          "oneOf": [
+            "noticia",
+            "release"
+          ]
+        }
+      ],
+      "response": {
+        "about": "IBGE news and releases from the Agencia de Noticias feed (/api/v3/noticias/): newest first, paginated (qtd per page, page), filtered by text (busca), type (noticia | release), product id, highlight flag and publication date range.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "data_publicacao",
+            "type": "string",
+            "about": "As published: DD/MM/YYYY HH:MM:SS (America/Sao_Paulo)."
+          },
+          {
+            "name": "destaque",
+            "type": "boolean"
+          },
+          {
+            "name": "editorias",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "imagens",
+            "type": "object",
+            "about": "Upstream `imagens` JSON (image_intro, image_fulltext, captions) decoded from its string form; empty when none."
+          },
+          {
+            "name": "introducao",
+            "type": "string"
+          },
+          {
+            "name": "link",
+            "type": "string",
+            "about": "Article URL on agenciadenoticias.ibge.gov.br."
+          },
+          {
+            "name": "produto_id",
+            "type": "number"
+          },
+          {
+            "name": "produtos",
+            "type": "string"
+          },
+          {
+            "name": "produtos_relacionados",
+            "type": "string"
+          },
+          {
+            "name": "tipo",
+            "type": "string"
+          },
+          {
+            "name": "titulo",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "qtd": 5
+        },
+        "response": {
+          "count": 6142,
+          "items": [
+            {
+              "data_publicacao": "21/09/2026 11:29:35",
+              "destaque": true,
+              "editorias": "ibge",
+              "id": 48104,
+              "imagens": {
+                "float_fulltext": "",
+                "float_intro": "",
+                "image_fulltext": "images/agenciadenoticias/ibge/2026_09/mapa_mundi_g20.png",
+                "image_fulltext_alt": "",
+                "image_fulltext_caption": "",
+                "image_intro": "images/agenciadenoticias/ibge/2026_09/mapa_mundi_g20.png",
+                "image_intro_alt": "",
+                "image_intro_caption": ""
+              },
+              "introducao": "Mapa disponível na Loja IBGE. Os mapas-múndi disponibilizados gratuitamente pelo IBGE desde 7 de setembro já registraram 7.408 downloads. A iniciativa, anunciada em comemoração ao Dia da Independência do Brasil, reuniu os mapas lançados pelo Instituto...",
+              "link": "http://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/48104-colecao-de-mapas-mundi-do-ibge-ultrapassa-7-4-mil-downloads-apos-liberacao-gratuita.html",
+              "produto_id": 0,
+              "produtos": "",
+              "produtos_relacionados": "",
+              "tipo": "Notícia",
+              "titulo": "Coleção de mapas-múndi do IBGE ultrapassa 7,4 mil downloads após liberação gratuita"
+            },
+            {
+              "data_publicacao": "21/09/2026 09:00:09",
+              "destaque": true,
+              "editorias": "ibge",
+              "id": 48103,
+              "imagens": {
+                "float_fulltext": "",
+                "float_intro": "",
+                "image_fulltext": "images/agenciadenoticias/ibge/2026_09/Agenda-IBGE_HOME.jpg",
+                "image_fulltext_alt": "",
+                "image_fulltext_caption": "",
+                "image_intro": "images/agenciadenoticias/ibge/2026_09/Agenda-IBGE_HOME.jpg",
+                "image_intro_alt": "",
+                "image_intro_caption": ""
+              },
+              "introducao": "Agenda IBGE traz a programação do instituto para a semana - Foto: Bel Corção/Brasil com S O Instituto Brasileiro de Geografia e Estatística (IBGE) disponibilizou hoje (21) a Agenda IBGE para a semana dos dias 21 a 27 de setembro. A edição contempla as...",
+              "link": "http://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/48103-ibge-disponibiliza-agenda-semanal-com-programacoes-para-os-dias-21-a-27-de-setembro.html",
+              "produto_id": 0,
+              "produtos": "",
+              "produtos_relacionados": "",
+              "tipo": "Notícia",
+              "titulo": "IBGE disponibiliza Agenda semanal com programações para os dias 21 a 27 de setembro"
+            },
+            {
+              "data_publicacao": "18/09/2026 05:23:56",
+              "destaque": true,
+              "editorias": "ibge",
+              "id": 48096,
+              "imagens": {
+                "float_fulltext": "",
+                "float_intro": "",
+                "image_fulltext": "images/agenciadenoticias/ibge/2026_09/confest-home.jpg",
+                "image_fulltext_alt": "",
+                "image_fulltext_caption": "",
+                "image_intro": "images/agenciadenoticias/ibge/2026_09/confest-home.jpg",
+                "image_intro_alt": "",
+                "image_intro_caption": ""
+              },
+              "introducao": "A Conferência será realizada de 8 a 10 de dezembro de 2026, no Centro de Convenções de Natal, em Natal (RN). A iniciativa reunirá especialistas, gestores públicos, pesquisadores, instituições parceiras e representantes da sociedade civil para debater...",
+              "link": "http://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/48096-ibge-abre-inscricoes-para-a-confest-confege-2026.html",
+              "produto_id": 0,
+              "produtos": "",
+              "produtos_relacionados": "",
+              "tipo": "Notícia",
+              "titulo": "IBGE abre inscrições para a CONFEST/CONFEGE 2026"
+            },
+            {
+              "data_publicacao": "18/09/2026 11:00:00",
+              "destaque": true,
+              "editorias": "ibge",
+              "id": 48092,
+              "imagens": {
+                "float_fulltext": "",
+                "float_intro": "",
+                "image_fulltext": "images/agenciadenoticias/ibge/0001-ESCLARECIMENTO_HOME.jpg",
+                "image_fulltext_alt": "",
+                "image_fulltext_caption": "",
+                "image_intro": "images/agenciadenoticias/ibge/0001-ESCLARECIMENTO_HOME.jpg",
+                "image_intro_alt": "",
+                "image_intro_caption": ""
+              },
+              "introducao": "Os manuais de Contas Nacionais definem que toda atividade econômica deve ser medida para estimar a geração de renda (PIB) e os demais componentes da economia de um país. Independentemente de serem informais ou ilegais, as atividades devem (na medida em...",
+              "link": "http://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/48092-ibge-esclarece-nova-serie-do-sistema-de-contas-nacionais.html",
+              "produto_id": 0,
+              "produtos": "",
+              "produtos_relacionados": "",
+              "tipo": "Notícia",
+              "titulo": "IBGE Esclarece: nova série do Sistema de Contas Nacionais"
+            },
+            {
+              "data_publicacao": "18/09/2026 10:00:00",
+              "destaque": true,
+              "editorias": "sociais",
+              "id": 48091,
+              "imagens": {
+                "float_fulltext": "",
+                "float_intro": "",
+                "image_fulltext": "images/agenciadenoticias/estatisticas_sociais/2026_09/pexels-gustavo-fring-Corte6.jpg",
+                "image_fulltext_alt": "",
+                "image_fulltext_caption": "",
+                "image_intro": "images/agenciadenoticias/estatisticas_sociais/2026_09/pexels-gustavo-fring-Corte6.jpg",
+                "image_intro_alt": "",
+                "image_intro_caption": ""
+              },
+              "introducao": "Taxa de analfabetismo entre pessoas de 15 a 29 anos com deficiência era de 12,2% em 2022 - Foto: Gustavo Fring/Pexels O IBGE divulga hoje (18) a publicação Pessoas com deficiência e as desigualdades sociais no Brasil. Nesta segunda edição, o informativo...",
+              "link": "http://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/48091-desigualdades-afetam-acesso-a-espacos-participacao-e-direitos-das-pessoas-com-deficiencia.html",
+              "produto_id": 34889,
+              "produtos": "34889|Pessoas com Deficiência e as Desigualdades Sociais no Brasil|pessoas-com-deficiencia-e-as-desigualdades-sociais-no-brasil|3059",
+              "produtos_relacionados": "34889",
+              "tipo": "Notícia",
+              "titulo": "Desigualdades afetam acesso a espaços, participação e direitos das pessoas com deficiência"
+            }
+          ],
+          "next_page": 2,
+          "observed_at_ms": 1790047041175,
+          "page": 1,
+          "source_url": "https://servicodados.ibge.gov.br/api/v3/noticias/?qtd=5&page=1",
+          "total_pages": 1229
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "servicodados-ibge-gov-br",
+        "capability": "official-statistics/noticias"
+      }
+    },
+    {
+      "id": "servicodados-ibge-gov-br/official-statistics/paises",
+      "provider": "servicodados-ibge-gov-br",
+      "capability": "official-statistics/paises",
+      "name": "Paises",
+      "description": "A country fact sheet or a UN-sourced indicator series (GDP per capita, population, life expectancy...) as IBGE republishes them, for Brazil or any of 193 countries.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "indicadores",
+          "type": "number[]",
+          "in": "body",
+          "about": "Indicator ids (77819.. 77862; 77823 = GDP per capita). When given, `indicadores` in the output carries the series."
+        },
+        {
+          "name": "lang",
+          "type": "string",
+          "in": "body",
+          "about": "EN or ES for translated names; default PT.",
+          "oneOf": [
+            "EN",
+            "ES"
+          ]
+        },
+        {
+          "name": "paises",
+          "type": "string[]",
+          "in": "body",
+          "about": "ISO 3166-1 alpha-2 codes (BR, AR, US).",
+          "required": true
+        },
+        {
+          "name": "periodo",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict the series to one period (year). Pattern: ^[0-9]{4}$."
+        }
+      ],
+      "response": {
+        "about": "Country profiles from IBGE Paises (/api/v1/paises/{ISO2|ISO2}): identifiers (M49, ISO alpha-2/3), names (PT/EN/ES), area, location, languages, capital, currency, history; optionally one or more indicator series (/indicadores/{id|id}, e.g. 77823 GDP per capita) for the same countries. Unknown codes are dropped by the source; when none resolves the result is not_found.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "object",
+            "about": "Country identifiers."
+          },
+          {
+            "name": "nome",
+            "type": "object",
+            "about": "Country names by language."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "indicadores": [
+            77823
+          ],
+          "paises": [
+            "BR"
+          ]
+        },
+        "response": {
+          "count": 1,
+          "indicadores": [
+            {
+              "id": 77823,
+              "indicador": "Economia - PIB per capita",
+              "series": [
+                {
+                  "pais": {
+                    "id": "BR",
+                    "nome": "Brasil"
+                  },
+                  "serie": {
+                    "1990": "3117.74",
+                    "1995": "4756.75",
+                    "2000": "3766.55",
+                    "2001": "3176.29",
+                    "2002": "2855.94",
+                    "2003": "3090.61",
+                    "2004": "3663.82",
+                    "2005": "4827.78",
+                    "2006": "5934.14",
+                    "2007": "7409.69",
+                    "2008": "8908.33",
+                    "2009": "8678.66",
+                    "2010": "11403.28",
+                    "2011": "13396.62",
+                    "2012": "12521.72",
+                    "2013": "12458.89",
+                    "2014": "12274.99",
+                    "2015": "8936.20",
+                    "2016": "8836.29",
+                    "2017": "10080.51",
+                    "2018": "9300.66",
+                    "2019": "9029.83",
+                    "2020": "7074.19",
+                    "2021": "7972.54",
+                    "2022": "9281.33",
+                    "2023": "10294.87",
+                    "-": null,
+                    "1990-1995": null,
+                    "1995-2000": null,
+                    "1999-2001": null,
+                    "2000-2002": null,
+                    "2000-2005": null,
+                    "2001-2003": null,
+                    "2002-2004": null,
+                    "2003-2005": null,
+                    "2004-2006": null,
+                    "2005-2007": null,
+                    "2005-2010": null,
+                    "2006-2008": null,
+                    "2007-2009": null,
+                    "2008-2010": null,
+                    "2009-2011": null,
+                    "2010-2012": null,
+                    "2010-2015": null,
+                    "2011-2013": null,
+                    "2012-2014": null,
+                    "2013-2015": null,
+                    "2014-2016": null,
+                    "2015-2017": null,
+                    "2015-2020": null,
+                    "2016-2018": null,
+                    "2017-2019": null,
+                    "2018-2020": null,
+                    "2019-2021": null,
+                    "2020-2022": null,
+                    "2021-2023": null,
+                    "2022-2024": null
+                  }
+                }
+              ],
+              "unidade": {
+                "classe": "N",
+                "id": "US$",
+                "multiplicador": 1
+              }
+            }
+          ],
+          "items": [
+            {
+              "area": {
+                "total": "8509360,850",
+                "unidade": {
+                  "multiplicador": 1,
+                  "nome": "quilômetros quadrados",
+                  "símbolo": "km2"
+                }
+              },
+              "governo": {
+                "capital": {
+                  "nome": "Brasília"
+                }
+              },
+              "historico": "Maior país da América do Sul, com vasta área de litoral banhada pelo oceano Atlântico. Tem fronteiras com Venezuela, Guiana, Suriname, Guiana Francesa, Colômbia, Peru, Bolívia, Paraguai, Argentina e Uruguai. O topônimo “Brasil” tem sua origem muito discutida, embora boa parte das explicações se refiram ao pau-brasil daqui extraído. Para alguns filólogos, vem do tupi ibira-ciri, “pau eriçado”. Os europeus, ao ouvirem este nome dado pelos indígenas à madeira de coloração avermelhada, chamaram-na de “brasil”. As extensas porções de terras que hoje constituem o país foram habitadas por tribos que pertenciam ao tronco tupi-guarani, caribe e arawak. Para todos os efeitos, a frota chefiada pelo fidalgo português Pedro Álvares de Gouveia (ele só adquiriria o sobrenome Cabral com o falecimento de seu irmão primogênito, João Fernandes, em 1515) foi oficialmente a primeira a chegar às terras que hoje fazem parte do Brasil. Sabe-se, no entanto, que outros europeus aqui aportaram antes de Pedro Álvares, mas não puderam tomar posse, nem sequer anunciar que haviam encontrado o local, por conta do Tratado de Tordesilhas. A colonização do país se inicia com Martim Afonso de Souza em 1532. Antes disso, as novas terras só serviam à Coroa portuguesa como entreposto na linha comercial Lisboa-Índia e para extração de pau-brasil. Em 1540, Portugal resolve terceirizar a colonização do Brasil, repartindo as terras em capitanias hereditárias a serem entregues a fidalgos que deveriam explorá-las e fazê-las se desenvolver. O modelo não alcança os resultados necessários, mesmo com a presença de representantes da Coroa, os governadores-gerais. Das capitanias, somente São Vicente e Pernambuco conseguem bons resultados econômicos, especialmente a segunda, que desenvolve latifúndios de cana-de-açúcar produtivos.A França e, posteriormente, a Holanda resolvem tirar um quinhão das novas terras descobertas ao sul do Equador. Franceses tentam estabelecer colonização no Rio de Janeiro e no Maranhão. Holandeses tentam incursões na Bahia e em Pernambuco, onde conseguem se assentar por algum tempo. Os portugueses conseguem expulsar os estrangeiros invasores, retomando as possessões que estavam sob o seu domínio. Ao longo dos séculos XVII e XVIII, expedições chamadas Entradas e Bandeiras vão expandindo as terras da Colônia para oeste, conquistando espaços que estavam na parte espanhola do Tratado de Tordesilhas.Foi estabelecido um fluxo de mão de obra escrava inicialmente indígena e, posteriormente, negra africana para as plantações brasileiras e para a procura e extração de metais preciosos. No século XVIII, já havia um razoável núcleo urbano em várias regiões do Brasil, a ponto de fazer germinar ideias separatistas, como ocorreu em Vila Rica, com a Conjuração Mineira, prontamente rechaçada pelo governo português. No início do século XIX, um fato seria determinante para o futuro da colônia. Napoleão invade Portugal, no seu esforço de estrangular comercialmente a Inglaterra e isso acarreta na fuga da família real portuguesa, incluindo a rainha Maria I, e seu filho, o príncipe regente D. João, que governava Portugal desde 1792, por conta dos problemas psíquicos de sua mãe. Eles chegam a Salvador, em 1807, e de lá seguem para a capital da colônia, o Rio de Janeiro, onde se estabelecem a partir de 1808. Aqui, D. João abre os portos brasileiros às nações amigas, eleva o Brasil à condição de Reino Unido e cria uma infraestrutura básica na colônia. Com isso, o porto do Rio de Janeiro, que era o mais importante do país, se expande, dinamizando a economia, atraindo mais pessoas para a Corte. No Brasil, D. Maria I, dita a Louca, morre em 1816, e D. João é aclamado como novo rei de Portugal e do Brasil, embora tendo que retornar a Lisboa em 1821. As cortes portuguesas querem fazer o Brasil voltar à condição de colônia, com monopólio comercial, o que não interessava mais aos brasileiros. Em 1822, Portugal pressiona o príncipe regente D. Pedro e ele, insuflado por José Bonifácio, pela princesa Leopoldina e por outras pessoas de influência na Corte, resolve declarar o Brasil independente de Portugal. Isso se deu em 7 de setembro de 1822, na província de São Paulo, às margens do riacho Ipiranga. O Brasil independente se transforma em um império, com D. Pedro I assumindo a chefia do governo. A primeira constituição foi outorgada em 1824, e a fase do Primeiro Reinado transcorre em meio a muitas crises políticas. Em 1831, o imperador Pedro I abdica em prol de seu filho e segue para Portugal. A década de 1830 foi das mais agitadas na vida política brasileira. O país passa a ser governado por regentes provisórios, até que o infante D. Pedro adquira idade para assumir o trono. Em 1840, antecipam a maioridade do príncipe e ele assume como imperador. Por quase cinquenta anos ele governaria o país, consolidaria a unidade nacional brasileira e, mesmo enfrentando crises políticas e revoltas civis nas províncias, manteria o país coeso e com um produto agrícola de forte penetração internacional: o café. A lavoura cafeeira, ao tempo do Império, era totalmente assentada na mão de obra escrava negra. Enormes latifúndios cafeeiros davam sustentação econômica ao país. Em 1865, o Brasil, unido à Argentina e ao Uruguai, declara guerra ao Paraguai e é vencedor do conflito em 1870. A partir dessa década, começam a surgir as primeiras leis que levariam à abolição da escravatura: em 1871, com a Lei do Ventre Livre, que libertava todos os filhos de escravos; em 1885, com a Lei Saraiva-Cotegipe, ou dos Sexagenários, que libertava escravos com mais de 60 anos; e finalmente, com a definitiva Lei Áurea, de 13 de maio de 1888, que extinguia a escravidão no país. No ano seguinte, a monarquia chegava ao fim, com o golpe militar que proclamou a República. Começou o ciclo de presidentes, a partir do proclamador Deodoro da Fonseca. Esse período, que passaria à História como a Velha República, se caracterizou por várias crises políticas. Somente um presidente, Campos Sales, não decretou estado de sítio em seu governo. Em 1930, uma revolta chefiada por Getúlio Vargas toma o poder e mantém o seu líder por 15 anos na chefia do governo. Após a Segunda Guerra, ventos liberalizantes chegam ao Brasil e destituem Vargas. Dutra é eleito, mas Getúlio retorna pelas urnas à presidência e de lá só sai morto, após suicidar-se em meio a uma grave crise política, em agosto de 1954. Dez anos depois, ocorre uma nova crise, culminando com o golpe militar em 1º de abril de 1964, que mergulhou o Brasil em um período de ditadura até 1985. Com a redemocratização, uma nova Constituição foi votada pelo Congresso em 1988.Em 2016, a então presidenta eleita do Brasil, Dilma Vana Rousseff, sofreu um processo de impedimento e o país passou a ser governado  pelo então vice-presidente, Michel Temer. Nas eleições presidenciais de outubro de 2018, Jair Bolsonaro foi eleito presidente da República.",
+              "id": {
+                "ISO-3166-1-ALPHA-2": "BR",
+                "ISO-3166-1-ALPHA-3": "BRA",
+                "M49": 76
+              },
+              "linguas": [
+                {
+                  "id": {
+                    "ISO-639-1": "pt",
+                    "ISO-639-2": "por"
+                  },
+                  "nome": "português"
+                }
+              ],
+              "localizacao": {
+                "regiao": {
+                  "id": {
+                    "M49": 19
+                  },
+                  "nome": "América"
+                },
+                "regiao-intermediaria": {
+                  "id": {
+                    "M49": 5
+                  },
+                  "nome": "América do sul"
+                },
+                "sub-regiao": {
+                  "id": {
+                    "M49": 419
+                  },
+                  "nome": "América Latina e Caribe"
+                }
+              },
+              "nome": {
+                "abreviado": "Brasil",
+                "abreviado-EN": "Brazil",
+                "abreviado-ES": "Brasil"
+              },
+              "unidades-monetarias": [
+                {
+                  "id": {
+                    "ISO-4217-ALPHA": "BRL",
+                    "ISO-4217-NUMERICO": "986"
+                  },
+                  "nome": "Real brasileiro"
+                }
+              ]
+            }
+          ],
+          "missing": [],
+          "observed_at_ms": 1790047056155,
+          "source_url": "https://servicodados.ibge.gov.br/api/v1/paises/BR"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "servicodados-ibge-gov-br",
+        "capability": "official-statistics/paises"
+      }
+    }
+  ]
+}

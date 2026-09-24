@@ -1,0 +1,1603 @@
+{
+  "id": "databrowser-uis-unesco-org",
+  "provider": "databrowser-uis-unesco-org",
+  "name": "UNESCO UIS",
+  "description": "UNESCO UIS published versions, geographies, indicators and education observations.",
+  "toolCount": 5,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "databrowser-uis-unesco-org"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "databrowser-uis-unesco-org/statistics/data",
+      "provider": "databrowser-uis-unesco-org",
+      "capability": "statistics/data",
+      "name": "Data",
+      "description": "Retrieve observations for up to 20 indicator codes across ISO3 countries and/or UIS regional aggregates, optionally limited to a year range and pinned to a data version. Each observation keeps the source value, magnitude and qualifier flags, footnotes and the version id; pages are sorted by indicator, geo unit, year.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Opaque next_cursor from the previous page of the same query. null or omitted = first page."
+        },
+        {
+          "name": "end",
+          "type": "number",
+          "in": "body",
+          "about": "Last year, inclusive.",
+          "min": 1900,
+          "max": 2100
+        },
+        {
+          "name": "geo_unit_type",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict to national or regional units when geo_units is empty.",
+          "oneOf": [
+            "country",
+            "region",
+            "null"
+          ]
+        },
+        {
+          "name": "geo_units",
+          "type": "string[]",
+          "in": "body",
+          "about": "ISO3 country codes and/or region ids such as `SDG: Sub-Saharan Africa`. Empty = every geo unit (combine with geo_unit_type)."
+        },
+        {
+          "name": "include_footnotes",
+          "type": "boolean",
+          "in": "body",
+          "about": "Request per-observation footnotes from UIS."
+        },
+        {
+          "name": "include_metadata",
+          "type": "boolean",
+          "in": "body",
+          "about": "Attach indicator_metadata (glossary, disaggregations, availability) for each requested indicator."
+        },
+        {
+          "name": "indicator_codes",
+          "type": "string[]",
+          "in": "body",
+          "about": "UIS indicator codes (see indicators / indicator). Unknown codes answer not_found.",
+          "required": true
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Records per page (1 to 1000).",
+          "default": 100,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "start",
+          "type": "number",
+          "in": "body",
+          "about": "First year, inclusive.",
+          "min": 1900,
+          "max": 2100
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "in": "body",
+          "about": "UIS data version id such as 20260507-91260335 (see versions). null or omitted = current default version. Pattern: ^[0-9]{8}-[0-9a-fA-F]{8}$."
+        }
+      ],
+      "response": {
+        "about": "Retrieve observations for up to 20 indicator codes across ISO3 countries and/or UIS regional aggregates, optionally limited to a year range and pinned to a data version. Each observation keeps the source value, magnitude and qualifier flags, footnotes and the version id; pages are sorted by indicator, geo unit, year.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response fully satisfied the requested operation (not whether all pages were consumed)."
+          },
+          {
+            "name": "count",
+            "type": "number",
+            "about": "Number of records in this page."
+          },
+          {
+            "name": "function",
+            "type": "string"
+          },
+          {
+            "name": "indicator_metadata",
+            "type": "object[]",
+            "about": "Present when include_metadata=true, otherwise null."
+          },
+          {
+            "name": "license",
+            "type": "object"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Cursor for the next page; null when this is the last page."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time this response was produced."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Publication timestamp of the data version the records come from; null when the source does not state one for this operation."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Exact api.uis.unesco.org URL that produced this response."
+          },
+          {
+            "name": "total_records",
+            "type": "number",
+            "about": "Matching observations across all pages."
+          },
+          {
+            "name": "version",
+            "type": "string",
+            "about": "UIS data version the response was read from; null when the operation was not version-scoped."
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "end": 2024,
+          "geo_units": [
+            "BRA"
+          ],
+          "indicator_codes": [
+            "CR.1.F"
+          ],
+          "page_size": 5,
+          "start": 2020
+        },
+        "response": {
+          "complete": true,
+          "count": 5,
+          "function": "data",
+          "indicator_metadata": null,
+          "license": {
+            "attribution": "Source: UNESCO Institute for Statistics (UIS), https://api.uis.unesco.org/api/public, extracted 2026-09-15T03:50:00.000Z",
+            "name": "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
+            "share_alike": true,
+            "terms_url": "https://databrowser.uis.unesco.org/terms-and-conditions",
+            "url": "https://creativecommons.org/licenses/by-sa/4.0/"
+          },
+          "next_cursor": null,
+          "observed_at_ms": 1789444200000,
+          "records": [
+            {
+              "data_source": "ECLAC based on Pesquisa por Amostra de Domicilios Continua - PNAD Continua, National, Annual",
+              "footnotes": [
+                {
+                  "subtype": "Data sources",
+                  "text": "ECLAC based on Pesquisa por Amostra de Domicilios Continua - PNAD Continua, National, Annual",
+                  "type": "Source"
+                }
+              ],
+              "geo_unit": "BRA",
+              "geo_unit_type": "country",
+              "indicator_code": "CR.1.F",
+              "indicator_name": "Completion rate, primary education, female (%)",
+              "magnitude": null,
+              "observed_at_ms": 1789444200000,
+              "qualifier": null,
+              "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1.F&geoUnit=BRA&start=2020&end=2020&footnotes=true&indicatorMetadata=false&version=20260507-91260335",
+              "stable_id": "20260507-91260335|CR.1.F|BRA|2020",
+              "unit_label": "%",
+              "value": "97.3",
+              "value_number": 97.3,
+              "version": "20260507-91260335",
+              "year": 2020
+            },
+            {
+              "data_source": "ECLAC based on Pesquisa por Amostra de Domicilios Continua - PNAD Continua, National, Annual",
+              "footnotes": [
+                {
+                  "subtype": "Data sources",
+                  "text": "ECLAC based on Pesquisa por Amostra de Domicilios Continua - PNAD Continua, National, Annual",
+                  "type": "Source"
+                }
+              ],
+              "geo_unit": "BRA",
+              "geo_unit_type": "country",
+              "indicator_code": "CR.1.F",
+              "indicator_name": "Completion rate, primary education, female (%)",
+              "magnitude": null,
+              "observed_at_ms": 1789444200000,
+              "qualifier": null,
+              "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1.F&geoUnit=BRA&start=2021&end=2021&footnotes=true&indicatorMetadata=false&version=20260507-91260335",
+              "stable_id": "20260507-91260335|CR.1.F|BRA|2021",
+              "unit_label": "%",
+              "value": "97.6",
+              "value_number": 97.6,
+              "version": "20260507-91260335",
+              "year": 2021
+            },
+            {
+              "data_source": "ECLAC based on Pesquisa por Amostra de Domicilios Continua - PNAD Continua, National, Annual",
+              "footnotes": [
+                {
+                  "subtype": "Data sources",
+                  "text": "ECLAC based on Pesquisa por Amostra de Domicilios Continua - PNAD Continua, National, Annual",
+                  "type": "Source"
+                }
+              ],
+              "geo_unit": "BRA",
+              "geo_unit_type": "country",
+              "indicator_code": "CR.1.F",
+              "indicator_name": "Completion rate, primary education, female (%)",
+              "magnitude": null,
+              "observed_at_ms": 1789444200000,
+              "qualifier": null,
+              "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1.F&geoUnit=BRA&start=2022&end=2022&footnotes=true&indicatorMetadata=false&version=20260507-91260335",
+              "stable_id": "20260507-91260335|CR.1.F|BRA|2022",
+              "unit_label": "%",
+              "value": "98",
+              "value_number": 98,
+              "version": "20260507-91260335",
+              "year": 2022
+            },
+            {
+              "data_source": "ECLAC based on Pesquisa por Amostra de Domicilios Continua - PNAD Continua, National, Annual",
+              "footnotes": [
+                {
+                  "subtype": "Data sources",
+                  "text": "ECLAC based on Pesquisa por Amostra de Domicilios Continua - PNAD Continua, National, Annual",
+                  "type": "Source"
+                }
+              ],
+              "geo_unit": "BRA",
+              "geo_unit_type": "country",
+              "indicator_code": "CR.1.F",
+              "indicator_name": "Completion rate, primary education, female (%)",
+              "magnitude": null,
+              "observed_at_ms": 1789444200000,
+              "qualifier": null,
+              "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1.F&geoUnit=BRA&start=2023&end=2023&footnotes=true&indicatorMetadata=false&version=20260507-91260335",
+              "stable_id": "20260507-91260335|CR.1.F|BRA|2023",
+              "unit_label": "%",
+              "value": "97.4",
+              "value_number": 97.4,
+              "version": "20260507-91260335",
+              "year": 2023
+            },
+            {
+              "data_source": "Brazil Pesquisa Nacional por Amostra de Domicilios Continua (PNAD-C) 2024 2nd Quarter. The survey collected data on school attendance and educational attainment for age 0 and above.",
+              "footnotes": [
+                {
+                  "subtype": "Data sources",
+                  "text": "Brazil Pesquisa Nacional por Amostra de Domicilios Continua (PNAD-C) 2024 2nd Quarter. The survey collected data on school attendance and educational attainment for age 0 and above.",
+                  "type": "Source"
+                }
+              ],
+              "geo_unit": "BRA",
+              "geo_unit_type": "country",
+              "indicator_code": "CR.1.F",
+              "indicator_name": "Completion rate, primary education, female (%)",
+              "magnitude": null,
+              "observed_at_ms": 1789444200000,
+              "qualifier": null,
+              "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1.F&geoUnit=BRA&start=2024&end=2024&footnotes=true&indicatorMetadata=false&version=20260507-91260335",
+              "stable_id": "20260507-91260335|CR.1.F|BRA|2024",
+              "unit_label": "%",
+              "value": "98.09703063964844",
+              "value_number": 98.09703063964844,
+              "version": "20260507-91260335",
+              "year": 2024
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:50:00.000Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": "2026-05-08T16:58:36.233Z",
+          "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1.F&geoUnit=BRA&start=2020&end=2024&footnotes=true&indicatorMetadata=true&version=20260507-91260335",
+          "total_records": 5,
+          "version": "20260507-91260335",
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:50:00Z"
+      },
+      "execute": {
+        "provider": "databrowser-uis-unesco-org",
+        "capability": "statistics/data"
+      }
+    },
+    {
+      "id": "databrowser-uis-unesco-org/statistics/geographies",
+      "provider": "databrowser-uis-unesco-org",
+      "capability": "statistics/geographies",
+      "name": "Geographies",
+      "description": "List UIS geo units of one type: countries (ISO 3166-1 alpha-3 ids) or regional aggregates (`GROUP: Name` ids such as `SDG: Sub-Saharan Africa`), optionally filtered by name substring or aggregate family, for the default or a pinned version.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Opaque next_cursor from the previous page of the same query. null or omitted = first page."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Records per page (1 to 1000).",
+          "default": 1000,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive substring matched against the id and name."
+        },
+        {
+          "name": "region_group",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict regions to one aggregate family: SDG, WB, UNICEF, UIS, MDG, GPE, ECA, ESCAP, ESCWA, ECE, AIMS, ALECSO, ECLAC, CECC-SICA, UNESCO."
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "in": "body",
+          "about": "country = national units (ISO3); region = regional aggregates.",
+          "required": true,
+          "oneOf": [
+            "country",
+            "region"
+          ]
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "in": "body",
+          "about": "UIS data version id such as 20260507-91260335 (see versions). null or omitted = current default version. Pattern: ^[0-9]{8}-[0-9a-fA-F]{8}$."
+        }
+      ],
+      "response": {
+        "about": "List UIS geo units of one type: countries (ISO 3166-1 alpha-3 ids) or regional aggregates (`GROUP: Name` ids such as `SDG: Sub-Saharan Africa`), optionally filtered by name substring or aggregate family, for the default or a pinned version.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response fully satisfied the requested operation (not whether all pages were consumed)."
+          },
+          {
+            "name": "count",
+            "type": "number",
+            "about": "Number of records in this page."
+          },
+          {
+            "name": "function",
+            "type": "string"
+          },
+          {
+            "name": "license",
+            "type": "object"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Cursor for the next page; null when this is the last page."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time this response was produced."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Publication timestamp of the data version the records come from; null when the source does not state one for this operation."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Exact api.uis.unesco.org URL that produced this response."
+          },
+          {
+            "name": "version",
+            "type": "string",
+            "about": "UIS data version the response was read from; null when the operation was not version-scoped."
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "page_size": 5,
+          "query": "Brazil",
+          "type": "country"
+        },
+        "response": {
+          "complete": true,
+          "count": 1,
+          "function": "geographies",
+          "license": {
+            "attribution": "Source: UNESCO Institute for Statistics (UIS), https://api.uis.unesco.org/api/public, extracted 2026-09-15T03:50:00.000Z",
+            "name": "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
+            "share_alike": true,
+            "terms_url": "https://databrowser.uis.unesco.org/terms-and-conditions",
+            "url": "https://creativecommons.org/licenses/by-sa/4.0/"
+          },
+          "next_cursor": null,
+          "observed_at_ms": 1789444200000,
+          "records": [
+            {
+              "geo_unit": "BRA",
+              "geo_unit_type": "country",
+              "geo_unit_type_source": "NATIONAL",
+              "name": "Brazil",
+              "observed_at_ms": 1789444200000,
+              "region_group": null,
+              "source_url": "https://api.uis.unesco.org/api/public/definitions/geounits"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:50:00.000Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://api.uis.unesco.org/api/public/definitions/geounits",
+          "version": null,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:50:00Z"
+      },
+      "execute": {
+        "provider": "databrowser-uis-unesco-org",
+        "capability": "statistics/geographies"
+      }
+    },
+    {
+      "id": "databrowser-uis-unesco-org/statistics/indicator",
+      "provider": "databrowser-uis-unesco-org",
+      "capability": "statistics/indicator",
+      "name": "Indicator",
+      "description": "Look up one indicator code and return its full metadata: name, theme, unit label, data availability, glossary definition and calculation method, and the disaggregation dimensions the code encodes. Unknown codes answer not_found.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "indicator_code",
+          "type": "string",
+          "in": "body",
+          "about": "UIS indicator code, e.g. CR.1.F, ROFST.1.CP, XGDP.FSGOV, EXPGDP.TOT. Pattern: ^[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*$.",
+          "required": true
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "in": "body",
+          "about": "UIS data version id such as 20260507-91260335 (see versions). null or omitted = current default version. Pattern: ^[0-9]{8}-[0-9a-fA-F]{8}$."
+        }
+      ],
+      "response": {
+        "about": "Look up one indicator code and return its full metadata: name, theme, unit label, data availability, glossary definition and calculation method, and the disaggregation dimensions the code encodes. Unknown codes answer not_found.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response fully satisfied the requested operation (not whether all pages were consumed)."
+          },
+          {
+            "name": "count",
+            "type": "number",
+            "about": "Number of records in this page."
+          },
+          {
+            "name": "function",
+            "type": "string"
+          },
+          {
+            "name": "license",
+            "type": "object"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Cursor for the next page; null when this is the last page."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time this response was produced."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Publication timestamp of the data version the records come from; null when the source does not state one for this operation."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Exact api.uis.unesco.org URL that produced this response."
+          },
+          {
+            "name": "version",
+            "type": "string",
+            "about": "UIS data version the response was read from; null when the operation was not version-scoped."
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "indicator_code": "CR.1.F"
+        },
+        "response": {
+          "complete": true,
+          "count": 1,
+          "function": "indicator",
+          "license": {
+            "attribution": "Source: UNESCO Institute for Statistics (UIS), https://api.uis.unesco.org/api/public, extracted 2026-09-15T03:50:00.000Z",
+            "name": "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
+            "share_alike": true,
+            "terms_url": "https://databrowser.uis.unesco.org/terms-and-conditions",
+            "url": "https://creativecommons.org/licenses/by-sa/4.0/"
+          },
+          "next_cursor": null,
+          "observed_at_ms": 1789444200000,
+          "records": [
+            {
+              "data_availability": {
+                "geo_unit_types": [
+                  "country",
+                  "region"
+                ],
+                "total_records": 2575,
+                "year_max": 2025,
+                "year_min": 1990
+              },
+              "disaggregations": [
+                {
+                  "code": "Sex:Female",
+                  "name": "Female",
+                  "type_code": "Sex",
+                  "type_name": "Sex"
+                },
+                {
+                  "code": "EduLvl:ISCED1",
+                  "name": "ISCED 1 - Primary education",
+                  "type_code": "EduLvl",
+                  "type_name": "Education Level"
+                }
+              ],
+              "glossary": [
+                {
+                  "calculation_method": "The number of persons in the relevant age group who have completed the last grade of the given level of education is expressed as a percentage of the total population (in the survey sample) of the same age group. As with attendance rates, individuals are assigned completion age group based on actual or assumed age at the beginning of the school year.",
+                  "data_source": "Population censuses and household surveys which collect data on the highest level of education or grade completed by children and young people in a household, through self- or household-declaration. In the former case, each household member above a certain age reports his or her own level of educational attainment. In the latter case, one person, usually the head of the household or another reference person, indicates the highest grade and/or level of education completed by each member of the household. Administrative data from ministries of education on the structure of the education system (entrance ages and durations) are also needed.\n\nSurveys can serve as a source of data if they collect information for the age groups of concern. In addition to national surveys, international sample surveys, such as Demographic and Health Surveys (DHS, http://dhsprogram.com) or Multiple Indicator Cluster Surveys (MICS, http://mics.unicef.org), are another source. These surveys are designed to meet commonly agreed upon international data needs and aim to assure cross-national comparability, while also providing data for national policy purposes. These surveys are implemented on a regular basis in selected countries, on average every 3 to 5 years.\n\nPopulation censuses can also be a source of attainment data but they are carried out less frequently than household surveys, often only once per decade.  Data on attainment collected with surveys or censuses are usually mapped to ISCED levels post-enumeration.",
+                  "definition": "SDG Indicator 4.1.2: Percentage of a cohort of children or young people aged 3-5 years above the intended age for the last grade of each level of education who have completed that grade.\n\nThe intended age for the last grade of each level of education is the age at which pupils would enter the grade if they had started school at the official primary entrance age, had studied full-time and had progressed without repeating or skipping a grade.\n\nFor example, if the official age of entry into primary education is 6 years, and if primary education has 6 grades, the intended age for the last grade of primary education is 11 years. In this case, 14-16 years (11 + 3 = 14 and 11 + 5 = 16) would be the reference age group for calculation of the primary completion rate.",
+                  "definition_source": "UNESCO Institute for Statistics",
+                  "interpretation": "A completion rate at or near 100% indicates that most or all children and adolescents have completed a level of education by the time they are 3 to 5 years older than the official age of entry into the last grade of the given level of education.\n\nA low completion rate indicates low or delayed entry into a given level of education, high drop-out, high repetition, late completion, or a combination of these factors.  To identify the causes of low completion rates, it is necessary to examine other indicators, for example the out-of-school rate, the gross intake ratio to the last grade, and the percentage of over-age children.  When disaggregated by sex, location and other characteristics, this indicator can identify excluded population groups.",
+                  "limitations": "Education levels and grades reported in household surveys may not align with the country ISCED mappings, with implications for comparability. Programme completion is typically determined using data on the highest grade completed and the official duration for the given level.  As a result, individuals that complete a programme corresponding to a given ISCED level that has a duration less than the official duration of that ISCED level are assumed to not have completed. In addition, changes in the official duration of education levels over time can prevent the accurate assessment of the completion status of older cohorts.",
+                  "name": "Completion rate (primary education, lower secondary education, upper secondary education)",
+                  "term_id": 3201
+                }
+              ],
+              "indicator_code": "CR.1.F",
+              "last_data_update": "2026-02-09",
+              "last_data_update_description": "February 2026 Data Release",
+              "last_data_update_raw": "02/09/2026",
+              "name": "Completion rate, primary education, female (%)",
+              "observed_at_ms": 1789444200000,
+              "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1.F&footnotes=true&indicatorMetadata=true&version=20260507-91260335",
+              "theme": "education",
+              "theme_source": "EDUCATION",
+              "unit_label": "%"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:50:00.000Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1.F&footnotes=true&indicatorMetadata=true&version=20260507-91260335",
+          "version": "20260507-91260335",
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:50:00Z"
+      },
+      "execute": {
+        "provider": "databrowser-uis-unesco-org",
+        "capability": "statistics/indicator"
+      }
+    },
+    {
+      "id": "databrowser-uis-unesco-org/statistics/indicators",
+      "provider": "databrowser-uis-unesco-org",
+      "capability": "statistics/indicators",
+      "name": "Indicators",
+      "description": "Search the full UIS indicator catalogue (about 5,000 codes including sex, wealth-quintile, location and parity-index disaggregations) by free text and theme, with data availability per indicator. Returns one page; follow next_cursor for more.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Opaque next_cursor from the previous page of the same query. null or omitted = first page."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Records per page (1 to 200).",
+          "default": 20,
+          "min": 1,
+          "max": 200
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Whitespace-separated terms; every term must appear in the code or name (case-insensitive). Empty or null lists everything."
+        },
+        {
+          "name": "theme",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict to one UIS theme.",
+          "oneOf": [
+            "education",
+            "science",
+            "culture",
+            "demographic",
+            "null"
+          ]
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "in": "body",
+          "about": "UIS data version id such as 20260507-91260335 (see versions). null or omitted = current default version. Pattern: ^[0-9]{8}-[0-9a-fA-F]{8}$."
+        }
+      ],
+      "response": {
+        "about": "Search the full UIS indicator catalogue (about 5,000 codes including sex, wealth-quintile, location and parity-index disaggregations) by free text and theme, with data availability per indicator. Returns one page; follow next_cursor for more.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response fully satisfied the requested operation (not whether all pages were consumed)."
+          },
+          {
+            "name": "count",
+            "type": "number",
+            "about": "Number of records in this page."
+          },
+          {
+            "name": "function",
+            "type": "string"
+          },
+          {
+            "name": "license",
+            "type": "object"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Cursor for the next page; null when this is the last page."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time this response was produced."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Publication timestamp of the data version the records come from; null when the source does not state one for this operation."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Exact api.uis.unesco.org URL that produced this response."
+          },
+          {
+            "name": "version",
+            "type": "string",
+            "about": "UIS data version the response was read from; null when the operation was not version-scoped."
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "page_size": 5,
+          "query": "completion rate primary"
+        },
+        "response": {
+          "complete": true,
+          "count": 5,
+          "function": "indicators",
+          "license": {
+            "attribution": "Source: UNESCO Institute for Statistics (UIS), https://api.uis.unesco.org/api/public, extracted 2026-09-15T03:50:00.000Z",
+            "name": "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
+            "share_alike": true,
+            "terms_url": "https://databrowser.uis.unesco.org/terms-and-conditions",
+            "url": "https://creativecommons.org/licenses/by-sa/4.0/"
+          },
+          "next_cursor": "5:34ee0f5e7634f051",
+          "observed_at_ms": 1789444200000,
+          "records": [
+            {
+              "data_availability": {
+                "geo_unit_types": [
+                  "country",
+                  "region"
+                ],
+                "total_records": 2568,
+                "year_max": 2025,
+                "year_min": 1990
+              },
+              "indicator_code": "CR.1",
+              "last_data_update": "2026-02-09",
+              "last_data_update_description": "February 2026 Data Release",
+              "last_data_update_raw": "02/09/2026",
+              "name": "Completion rate, primary education, both sexes (%)",
+              "observed_at_ms": 1789444200000,
+              "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1&footnotes=true&indicatorMetadata=true",
+              "theme": "education",
+              "theme_source": "EDUCATION",
+              "unit_label": "%"
+            },
+            {
+              "data_availability": {
+                "geo_unit_types": [
+                  "country"
+                ],
+                "total_records": 38,
+                "year_max": 2024,
+                "year_min": 2008
+              },
+              "indicator_code": "CR.1.ABL",
+              "last_data_update": "2026-02-09",
+              "last_data_update_description": "February 2026 Data Release",
+              "last_data_update_raw": "02/09/2026",
+              "name": "Completion rate, primary education, not disabled, both sexes (%)",
+              "observed_at_ms": 1789444200000,
+              "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1.ABL&footnotes=true&indicatorMetadata=true",
+              "theme": "education",
+              "theme_source": "EDUCATION",
+              "unit_label": "%"
+            },
+            {
+              "data_availability": {
+                "geo_unit_types": [
+                  "country"
+                ],
+                "total_records": 38,
+                "year_max": 2024,
+                "year_min": 2008
+              },
+              "indicator_code": "CR.1.ABL.F",
+              "last_data_update": "2026-02-09",
+              "last_data_update_description": "February 2026 Data Release",
+              "last_data_update_raw": "02/09/2026",
+              "name": "Completion rate, primary education, not disabled, female (%)",
+              "observed_at_ms": 1789444200000,
+              "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1.ABL.F&footnotes=true&indicatorMetadata=true",
+              "theme": "education",
+              "theme_source": "EDUCATION",
+              "unit_label": "%"
+            },
+            {
+              "data_availability": {
+                "geo_unit_types": [
+                  "country"
+                ],
+                "total_records": 33,
+                "year_max": 2024,
+                "year_min": 2010
+              },
+              "indicator_code": "CR.1.ABL.GPIA",
+              "last_data_update": "2026-02-09",
+              "last_data_update_description": "February 2026 Data Release",
+              "last_data_update_raw": "02/09/2026",
+              "name": "Completion rate, primary education, not disabled, adjusted gender parity index (GPIA)",
+              "observed_at_ms": 1789444200000,
+              "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1.ABL.GPIA&footnotes=true&indicatorMetadata=true",
+              "theme": "education",
+              "theme_source": "EDUCATION",
+              "unit_label": "GPIA"
+            },
+            {
+              "data_availability": {
+                "geo_unit_types": [
+                  "country"
+                ],
+                "total_records": 38,
+                "year_max": 2024,
+                "year_min": 2008
+              },
+              "indicator_code": "CR.1.ABL.M",
+              "last_data_update": "2026-02-09",
+              "last_data_update_description": "February 2026 Data Release",
+              "last_data_update_raw": "02/09/2026",
+              "name": "Completion rate, primary education, not disabled, male (%)",
+              "observed_at_ms": 1789444200000,
+              "source_url": "https://api.uis.unesco.org/api/public/data/indicators?indicator=CR.1.ABL.M&footnotes=true&indicatorMetadata=true",
+              "theme": "education",
+              "theme_source": "EDUCATION",
+              "unit_label": "%"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:50:00.000Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://api.uis.unesco.org/api/public/definitions/indicators?glossaryTerms=false&disaggregations=false",
+          "version": null,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:50:00Z"
+      },
+      "execute": {
+        "provider": "databrowser-uis-unesco-org",
+        "capability": "statistics/indicators"
+      }
+    },
+    {
+      "id": "databrowser-uis-unesco-org/statistics/versions",
+      "provider": "databrowser-uis-unesco-org",
+      "capability": "statistics/versions",
+      "name": "Versions",
+      "description": "List every published UIS data version (release) with its publication date, description, and per-theme last-update status, flagging the current default. Use a version_id to pin data, indicators and geographies to a release.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [],
+      "response": {
+        "about": "List every published UIS data version (release) with its publication date, description, and per-theme last-update status, flagging the current default. Use a version_id to pin data, indicators and geographies to a release.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response fully satisfied the requested operation (not whether all pages were consumed)."
+          },
+          {
+            "name": "count",
+            "type": "number",
+            "about": "Number of records in this page."
+          },
+          {
+            "name": "function",
+            "type": "string"
+          },
+          {
+            "name": "license",
+            "type": "object"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Cursor for the next page; null when this is the last page."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time this response was produced."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Publication timestamp of the data version the records come from; null when the source does not state one for this operation."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Exact api.uis.unesco.org URL that produced this response."
+          },
+          {
+            "name": "version",
+            "type": "string",
+            "about": "UIS data version the response was read from; null when the operation was not version-scoped."
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "complete": true,
+          "count": 15,
+          "function": "versions",
+          "license": {
+            "attribution": "Source: UNESCO Institute for Statistics (UIS), https://api.uis.unesco.org/api/public, extracted 2026-09-15T03:50:00.000Z",
+            "name": "Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)",
+            "share_alike": true,
+            "terms_url": "https://databrowser.uis.unesco.org/terms-and-conditions",
+            "url": "https://creativecommons.org/licenses/by-sa/4.0/"
+          },
+          "next_cursor": null,
+          "observed_at_ms": 1789444200000,
+          "records": [
+            {
+              "description": null,
+              "is_default": true,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2026-05-08T16:58:36.233Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "February 2026 Data Release",
+                  "last_update": "2026-02-09",
+                  "last_update_raw": "02/09/2026",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "February 2026 Data Release",
+                  "last_update": "2026-02-09",
+                  "last_update_raw": "02/09/2026",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "February 2026 Data Release",
+                  "last_update": "2026-02-09",
+                  "last_update_raw": "02/09/2026",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "February 2026 Data Release",
+                  "last_update": "2026-02-09",
+                  "last_update_raw": "02/09/2026",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20260507-91260335"
+            },
+            {
+              "description": "Updated release files with fix for some indicators",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2026-03-11T19:40:01.748Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "February 2026 Data Release",
+                  "last_update": "2026-02-09",
+                  "last_update_raw": "02/09/2026",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "February 2026 Data Release",
+                  "last_update": "2026-02-09",
+                  "last_update_raw": "02/09/2026",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "February 2026 Data Release",
+                  "last_update": "2026-02-09",
+                  "last_update_raw": "02/09/2026",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "February 2026 Data Release",
+                  "last_update": "2026-02-09",
+                  "last_update_raw": "02/09/2026",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20260311-78618c3e"
+            },
+            {
+              "description": null,
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2026-02-26T17:19:14.438Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "February 2026 Data Release",
+                  "last_update": "2026-02-09",
+                  "last_update_raw": "02/09/2026",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "February 2026 Data Release",
+                  "last_update": "2026-02-09",
+                  "last_update_raw": "02/09/2026",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "February 2026 Data Release",
+                  "last_update": "2026-02-09",
+                  "last_update_raw": "02/09/2026",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "February 2026 Data Release",
+                  "last_update": "2026-02-09",
+                  "last_update_raw": "02/09/2026",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20260224-aef8b145"
+            },
+            {
+              "description": "November 2025 SCCI Refresh",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2025-11-13T17:46:49.151Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "September 2025 Data Release",
+                  "last_update": "2025-09-17",
+                  "last_update_raw": "9/17/2025",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "November 2025 Data Release",
+                  "last_update": "2025-11-01",
+                  "last_update_raw": "11/01/2025",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "November 2025 Data Release",
+                  "last_update": "2025-11-01",
+                  "last_update_raw": "11/01/2025",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "September 2025 Data Release",
+                  "last_update": "2025-09-09",
+                  "last_update_raw": "9/9/2025",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20251112-3e719d9a"
+            },
+            {
+              "description": "September 2025 Data Release",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2025-09-18T13:31:02.790Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "September 2025 Data Release",
+                  "last_update": "2025-09-17",
+                  "last_update_raw": "9/17/2025",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": "2025-02-23",
+                  "last_update_raw": "2/23/2025",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": "2025-02-23",
+                  "last_update_raw": "2/23/2025",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "September 2025 Data Release",
+                  "last_update": "2025-09-09",
+                  "last_update_raw": "9/9/2025",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20250917-73f4b95c"
+            },
+            {
+              "description": "September 2025 release",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2025-09-12T02:55:22.686Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "September 2025 Data Release",
+                  "last_update": "2025-09-09",
+                  "last_update_raw": "9/9/2025",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": "2025-02-23",
+                  "last_update_raw": "2/23/2025",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": "2025-02-23",
+                  "last_update_raw": "2/23/2025",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "September 2025 Data Release",
+                  "last_update": "2025-09-09",
+                  "last_update_raw": "9/9/2025",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20250910-c4a5b1fe"
+            },
+            {
+              "description": "Dropping data for Hong Kong coming from the dynamic templates",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2025-04-16T14:45:45.869Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20250416-f6707727"
+            },
+            {
+              "description": "Dropping indicators with value=0 and magnitude=NA coming from HHS",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2025-03-25T23:19:35.051Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20250325-6f032139"
+            },
+            {
+              "description": "Dropping Moldova 2024 population based-indicators",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2025-03-12T14:01:51.015Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20250312-e714f4e9"
+            },
+            {
+              "description": "February 2025 DR",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2025-02-27T15:29:19.309Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "February 2025 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2025-02-23",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20250225-2ae60fad"
+            },
+            {
+              "description": "SCCI Data refresh - Nov 2024 - DATA_FRESHNESS.CSV update",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2024-11-21T23:37:39.608Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "September 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-10-29",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "November 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-11-21",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "November 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-11-21",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "September 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-10-29",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20241121-61101499"
+            },
+            {
+              "description": "SCCI data refresh",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2024-11-21T18:57:35.136Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "September 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-10-29",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "November 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-11-21",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "November 2023 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2023-11-25",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "September 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-10-29",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20241113-98786d81"
+            },
+            {
+              "description": "Drop data for CIV on MYS for 1988 and 1998 and update some other education datapoints",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2024-10-30T17:28:00.868Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "September 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-10-29",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "February 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-02-24",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "November 2023 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2023-11-25",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "September 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-10-29",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20241030-9d4d089e"
+            },
+            {
+              "description": "Glossary Update",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2024-09-15T14:44:07.750Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "September 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-09-05",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "February 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-02-28",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "November 2023 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2023-11-25",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "September 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-09-05",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20240913-b8ca1963"
+            },
+            {
+              "description": "September 2024 Data Release (first data publication via API)",
+              "is_default": false,
+              "observed_at_ms": 1789444200000,
+              "release_date": "2024-09-11T06:15:13.018Z",
+              "source_url": "https://api.uis.unesco.org/api/public/versions",
+              "theme_status": [
+                {
+                  "description": "September 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-09-05",
+                  "theme": "education",
+                  "theme_source": "EDUCATION"
+                },
+                {
+                  "description": "February 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-02-28",
+                  "theme": "science",
+                  "theme_source": "SCIENCE_TECHNOLOGY_INNOVATION"
+                },
+                {
+                  "description": "November 2023 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2023-11-25",
+                  "theme": "culture",
+                  "theme_source": "CULTURE"
+                },
+                {
+                  "description": "September 2024 Data Release",
+                  "last_update": null,
+                  "last_update_raw": "2024-09-05",
+                  "theme": "demographic",
+                  "theme_source": "DEMOGRAPHIC_SOCIOECONOMIC"
+                }
+              ],
+              "version_id": "20240910-b5ad4d82"
+            }
+          ],
+          "retrieved_at": "2026-09-15T03:50:00.000Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": "2026-05-08T16:58:36.233Z",
+          "source_url": "https://api.uis.unesco.org/api/public/versions",
+          "version": "20260507-91260335",
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15T03:50:00Z"
+      },
+      "execute": {
+        "provider": "databrowser-uis-unesco-org",
+        "capability": "statistics/versions"
+      }
+    }
+  ]
+}

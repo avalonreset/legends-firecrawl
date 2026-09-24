@@ -1,0 +1,1379 @@
+{
+  "id": "join-com",
+  "provider": "join-com",
+  "name": "JOIN job ads",
+  "description": "Employer career pages hosted by JOIN (join.com): read an employer's profile with offices and benefits, list its online job ads with category and city filters, read one ad with description, salary, contract and working terms, and enumerate the employer's job categories. Keyed by the employer's join.com slug; JOIN publishes no cross-employer search or directory.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "join-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "join-com/jobs/categories",
+      "provider": "join-com",
+      "capability": "jobs/categories",
+      "name": "Categories",
+      "description": "To find category ids for jobs, or to name the category ids in jobs aggregations.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company_id",
+          "type": "number",
+          "in": "body",
+          "about": "JOIN's numeric company id (company.company_id). Exactly one of company_slug, company_id or url. Pattern: ^[0-9]{1,12}$.",
+          "min": 1
+        },
+        {
+          "name": "company_slug",
+          "type": "string",
+          "in": "body",
+          "about": "The employer's slug on join.com: the segment after https://join.com/companies/ (equals company.domain in JOIN payloads), e.g. accenture, join. Case-insensitive. Pattern: ^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted employer page URL https://join.com/companies/<slug>. Exactly one of company_slug, company_id or url. Pattern: ^https?://."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "company_slug",
+          "company_id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "The job categories an employer uses on JOIN from GET /api/companies/<id>/categories: id, name, slug and parent id, the vocabulary for jobs.category_ids and the names behind aggregations.categories.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "categories",
+            "type": "object[]",
+            "about": "Categories in the API's order; empty when the employer has no online ads."
+          },
+          {
+            "name": "company",
+            "type": "object"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Retrieval instant, Unix ms."
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_slug": "accenture"
+        },
+        "response": {
+          "categories": [
+            {
+              "id": 229,
+              "name": "Assistance, Secretarial",
+              "parent_id": 185,
+              "slug": "assistance_secretarial"
+            },
+            {
+              "id": 217,
+              "name": "Business Analyst",
+              "parent_id": 183,
+              "slug": "business_analyst"
+            },
+            {
+              "id": 214,
+              "name": "Business Consulting",
+              "parent_id": 183,
+              "slug": "business_consulting"
+            },
+            {
+              "id": 363,
+              "name": "Construction Engineering",
+              "parent_id": 195,
+              "slug": "construction_engineering"
+            },
+            {
+              "id": 273,
+              "name": "Consulting",
+              "parent_id": 183,
+              "slug": "consulting"
+            },
+            {
+              "id": 346,
+              "name": "Data Processing, Data Engineer",
+              "parent_id": 4,
+              "slug": "data_processing_data_engineer"
+            },
+            {
+              "id": 372,
+              "name": "Engineering",
+              "parent_id": 195,
+              "slug": "others_engineering"
+            },
+            {
+              "id": 351,
+              "name": "IT",
+              "parent_id": 4,
+              "slug": "others_it"
+            },
+            {
+              "id": 309,
+              "name": "Legal",
+              "parent_id": 192,
+              "slug": "others_legal"
+            },
+            {
+              "id": 216,
+              "name": "Management and Consulting",
+              "parent_id": 183,
+              "slug": "others_management_consulting"
+            },
+            {
+              "id": 209,
+              "name": "Management, Team Leader",
+              "parent_id": 183,
+              "slug": "management_consulting_team_leader"
+            },
+            {
+              "id": 344,
+              "name": "SAP/ERP Consulting, Development",
+              "parent_id": 4,
+              "slug": "sap_erp_consulting_development"
+            }
+          ],
+          "company": {
+            "id": 1067,
+            "name": "Accenture",
+            "slug": "accenture",
+            "url": "https://join.com/companies/accenture"
+          },
+          "count": 12,
+          "observed_at_ms": 1790170419754,
+          "source": "join.com",
+          "source_url": "https://join.com/api/companies/1067/categories"
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "join-com",
+        "capability": "jobs/categories"
+      }
+    },
+    {
+      "id": "join-com/jobs/company",
+      "provider": "join-com",
+      "capability": "jobs/company",
+      "name": "Company",
+      "description": "To resolve an employer slug (the segment after join.com/companies/) to its numeric company id and city ids before listing jobs, or to read the employer's benefits and offices.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company_slug",
+          "type": "string",
+          "in": "body",
+          "about": "The employer's slug on join.com: the segment after https://join.com/companies/ (equals company.domain in JOIN payloads), e.g. accenture, join. Case-insensitive. Pattern: ^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted employer page URL https://join.com/companies/<slug>. Exactly one of company_slug or url. Pattern: ^https?://."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "company_slug",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "An employer's JOIN profile from GET /api/companies/by-domain/<slug>: numeric company id, name, description, industry, size band, website, HQ location, social links, benefits, values and every office with its city id and online job count.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "benefits",
+            "type": "object[]",
+            "about": "Benefits the employer lists; empty when none are published."
+          },
+          {
+            "name": "company_id",
+            "type": "number",
+            "about": "JOIN's numeric company id; accepted by jobs and categories as company_id."
+          },
+          {
+            "name": "company_slug",
+            "type": "string",
+            "about": "The slug as JOIN states it (company.domain)."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "id_param",
+            "type": "string",
+            "about": "JOIN's <id>-<slug> identifier for the company."
+          },
+          {
+            "name": "industry",
+            "type": "object"
+          },
+          {
+            "name": "is_public",
+            "type": "boolean"
+          },
+          {
+            "name": "lat",
+            "type": "number"
+          },
+          {
+            "name": "linkedin_url",
+            "type": "string"
+          },
+          {
+            "name": "lng",
+            "type": "number"
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "about": "Headquarters as free text (e.g. 'Zürich, Switzerland')."
+          },
+          {
+            "name": "logo_id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "number_of_employees",
+            "type": "string",
+            "about": "Size band as JOIN labels it (e.g. '5001+')."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Retrieval instant, Unix ms."
+          },
+          {
+            "name": "offices",
+            "type": "object[]",
+            "about": "Offices in JOIN's order; empty when the employer lists none."
+          },
+          {
+            "name": "social_media_links",
+            "type": "object[]"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The API URL that answered."
+          },
+          {
+            "name": "spontaneous_application_enabled",
+            "type": "boolean"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "The employer's career page https://join.com/companies/<slug>."
+          },
+          {
+            "name": "values",
+            "type": "object[]",
+            "about": "Company values the employer lists; empty when none are published."
+          },
+          {
+            "name": "website",
+            "type": "string",
+            "about": "The employer's own website or careers URL; null when not set."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_slug": "accenture"
+        },
+        "response": {
+          "benefits": [
+            {
+              "description": "The workplace is fully accessible for people with reduced mobility.",
+              "id": 4,
+              "name": "Barrier-free access",
+              "type": "OFFICE"
+            },
+            {
+              "description": "An on-site cafeteria serving meals during working hours.",
+              "id": 5,
+              "name": "Cafeteria",
+              "type": "OFFICE"
+            },
+            {
+              "description": "Funded training, courses and certifications to grow your skills.",
+              "id": 6,
+              "name": "Career Training",
+              "type": "DEVELOPMENT"
+            },
+            {
+              "description": "A company vehicle, in some cases also for private use.",
+              "id": 8,
+              "name": "Company car",
+              "type": "OFFICE"
+            },
+            {
+              "description": "A work phone, in some cases also for private use.",
+              "id": 9,
+              "name": "Company cellphone",
+              "type": "OFFICE"
+            },
+            {
+              "description": "A laptop and the software you need, provided by the employer.",
+              "id": 10,
+              "name": "Company laptop",
+              "type": "OFFICE"
+            },
+            {
+              "description": "An employer-supported pension scheme to build up retirement savings.",
+              "id": 11,
+              "name": "Company pension plan",
+              "type": "FINANCIAL"
+            },
+            {
+              "description": "A share in the company's success through equity or stock options.",
+              "id": 12,
+              "name": "Company stock options",
+              "type": "FINANCIAL"
+            },
+            {
+              "description": "Reduced prices on company products and partner offers.",
+              "id": 13,
+              "name": "Employee discounts",
+              "type": "FINANCIAL"
+            },
+            {
+              "description": "Adapt your start and end times around your life and workload.",
+              "id": 14,
+              "name": "Flexible working hours",
+              "type": "FLEXIBILITY"
+            },
+            {
+              "description": "Free coffee, tea, water and soft drinks at the office.",
+              "id": 15,
+              "name": "Free beverages",
+              "type": "OFFICE"
+            },
+            {
+              "description": "Free fruit, snacks and small refreshments at the office.",
+              "id": 18,
+              "name": "Free snacks",
+              "type": "OFFICE"
+            },
+            {
+              "description": "Work from home for part of your working week.",
+              "id": 19,
+              "name": "Home Office",
+              "type": "FLEXIBILITY"
+            },
+            {
+              "description": "Regular one-on-one guidance from an experienced colleague.",
+              "id": 21,
+              "name": "Mentoring sessions",
+              "type": "DEVELOPMENT"
+            },
+            {
+              "description": "Work fully remotely, from home or anywhere agreed.",
+              "id": 29,
+              "name": "Remote work",
+              "type": "FLEXIBILITY"
+            },
+            {
+              "description": "Take an extended break from work and return to your role.",
+              "id": 30,
+              "name": "Sabbatical",
+              "type": "HEALTH"
+            },
+            {
+              "description": "A subsidised gym or sports membership of your choice.",
+              "id": 31,
+              "name": "Sport membership",
+              "type": "HEALTH"
+            }
+          ],
+          "company_id": 1067,
+          "company_slug": "accenture",
+          "description": "Accenture is a leading global professional services company that helps the world’s leading businesses, governments and other organizations build their digital core, optimize their operations, accelerate revenue growth and enhance citizen services - creating tangible value at speed and scale. We are a talent- and innovation-led company with approximately 779,000 people serving clients in more than 120 countries. Technology is at the core of change today, and we are one of the world’s leaders in helping drive that change. We combine our strength in technology and leadership in cloud, data and AI with unmatched industry experience, functional expertise and global delivery capability. Our broad range of services, solutions and assets across Strategy & Consulting, Technology, Operations, Industry X and Song, together with our culture of shared success and commitment to creating 360° value, enable us to help our clients reinvent and build trusted, lasting relationships.",
+          "id_param": "1067-accenture",
+          "industry": {
+            "id": 402,
+            "name": "Strategic Management Services",
+            "slug": "strategic_management_services"
+          },
+          "is_public": true,
+          "lat": 47.37689971923828,
+          "linkedin_url": "https://www.linkedin.com/company/accenture-dach",
+          "lng": 8.5416898727417,
+          "location": "Zürich, Switzerland",
+          "logo_id": "5b741e1ed6ed89002375215b",
+          "name": "Accenture",
+          "number_of_employees": "5001+",
+          "observed_at_ms": 1790170405826,
+          "offices": [
+            {
+              "city_id": "caffeeb9-e60e-49f8-98d6-04fe6eeb3653",
+              "city_name": "Kronberg",
+              "country_id": 86,
+              "country_name": "Germany",
+              "id": 309041,
+              "is_default": false,
+              "name": "Kronberg bei Frankfurt",
+              "online_jobs_count": 5,
+              "postal_code": null,
+              "street_name": null,
+              "street_number": null
+            },
+            {
+              "city_id": "04d66278-4ebb-4c00-a281-ed2aa195250d",
+              "city_name": "Berlin",
+              "country_id": 86,
+              "country_name": "Germany",
+              "id": 352429,
+              "is_default": false,
+              "name": "Accenture",
+              "online_jobs_count": 4,
+              "postal_code": "10963",
+              "street_name": "Hallesches Ufer",
+              "street_number": "40"
+            },
+            {
+              "city_id": "7ef1a7ad-5441-468d-b6e1-34a7c2c206d3",
+              "city_name": "Vienna",
+              "country_id": 16,
+              "country_name": "Austria",
+              "id": 355563,
+              "is_default": false,
+              "name": "Accenture Wien",
+              "online_jobs_count": 2,
+              "postal_code": "1010",
+              "street_name": "Schottenring",
+              "street_number": "16"
+            },
+            {
+              "city_id": "d2dbd866-b642-4378-ae00-33a6b3e48f4f",
+              "city_name": "Frankfurt am Main",
+              "country_id": 86,
+              "country_name": "Germany",
+              "id": 111836,
+              "is_default": true,
+              "name": null,
+              "online_jobs_count": 2,
+              "postal_code": null,
+              "street_name": null,
+              "street_number": null
+            },
+            {
+              "city_id": "e67c99d1-0d0a-472d-ba93-e4f9da9b6605",
+              "city_name": "Düsseldorf",
+              "country_id": 86,
+              "country_name": "Germany",
+              "id": 349011,
+              "is_default": false,
+              "name": null,
+              "online_jobs_count": 2,
+              "postal_code": null,
+              "street_name": null,
+              "street_number": null
+            },
+            {
+              "city_id": "e732301e-cde9-426d-ac6d-a0cde7454c42",
+              "city_name": "Munich",
+              "country_id": 86,
+              "country_name": "Germany",
+              "id": 352430,
+              "is_default": false,
+              "name": "Accenture",
+              "online_jobs_count": 1,
+              "postal_code": "81541",
+              "street_name": "Balanstraße",
+              "street_number": "73"
+            },
+            {
+              "city_id": "0c3f1ce8-b52d-48a3-96a9-57d1300e5a72",
+              "city_name": "Aachen",
+              "country_id": 86,
+              "country_name": "Germany",
+              "id": 322221,
+              "is_default": false,
+              "name": "Aachen",
+              "online_jobs_count": 1,
+              "postal_code": null,
+              "street_name": null,
+              "street_number": null
+            },
+            {
+              "city_id": "cfb9a259-a33c-4bbe-afe4-96806785a98c",
+              "city_name": "Innsbruck",
+              "country_id": 16,
+              "country_name": "Austria",
+              "id": 367895,
+              "is_default": false,
+              "name": null,
+              "online_jobs_count": 1,
+              "postal_code": null,
+              "street_name": null,
+              "street_number": null
+            }
+          ],
+          "social_media_links": [
+            {
+              "platform": "INSTAGRAM",
+              "url": "https://www.instagram.com/accenturedach/"
+            },
+            {
+              "platform": "YOUTUBE",
+              "url": "https://www.youtube.com/AccentureVideosASG"
+            }
+          ],
+          "source": "join.com",
+          "source_url": "https://join.com/api/companies/by-domain/accenture?locale=en-us",
+          "spontaneous_application_enabled": true,
+          "url": "https://join.com/companies/accenture",
+          "values": [
+            {
+              "id": 8,
+              "name": "Community"
+            },
+            {
+              "id": 13,
+              "name": "Curiosity"
+            },
+            {
+              "id": 15,
+              "name": "Diversity"
+            },
+            {
+              "id": 17,
+              "name": "Education"
+            },
+            {
+              "id": 19,
+              "name": "Empower"
+            },
+            {
+              "id": 23,
+              "name": "Growth"
+            },
+            {
+              "id": 28,
+              "name": "Inclusion"
+            },
+            {
+              "id": 30,
+              "name": "Innovation"
+            },
+            {
+              "id": 32,
+              "name": "Leadership"
+            },
+            {
+              "id": 35,
+              "name": "Open-mindedness"
+            },
+            {
+              "id": 41,
+              "name": "Respect"
+            },
+            {
+              "id": 43,
+              "name": "Social justice"
+            },
+            {
+              "id": 45,
+              "name": "Sustainability"
+            },
+            {
+              "id": 46,
+              "name": "Teamwork"
+            }
+          ],
+          "website": "https://www.accenture.com/de-en/careers"
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "join-com",
+        "capability": "jobs/company"
+      }
+    },
+    {
+      "id": "join-com/jobs/job",
+      "provider": "join-com",
+      "capability": "jobs/job",
+      "name": "Job",
+      "description": "When you have a job id or last_id from jobs, or a pasted ad URL (join.com/companies/<slug>/<id_param> or join.com/jobs/<last_id>), and need the description, salary, hours, vacation or contract terms.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "job_id",
+          "type": "string",
+          "in": "body",
+          "about": "JOIN job id (items[].id) or last_id (the numeric prefix of id_param); both resolve to the same ad. Pattern: ^[0-9]{1,12}$.",
+          "min": 1
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted ad URL https://join.com/companies/<slug>/<id_param> or https://join.com/jobs/<last_id>. Exactly one of job_id or url. Pattern: ^https?://."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "job_id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One job ad merged from the public REST detail (GET /api/public/jobs/<id>: title, status, employer, language, description sections as Markdown, salary in minor units with frequency, required documents, settings) and the candidate GraphQL detail (PublicJob: category, employment and contract type, working terms, hybrid arrangement, city, country, office address). Recruiter contact name and e-mail are not returned.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "benefits",
+            "type": "string",
+            "about": "Ad section as Markdown."
+          },
+          {
+            "name": "category",
+            "type": "object"
+          },
+          {
+            "name": "city",
+            "type": "object"
+          },
+          {
+            "name": "company",
+            "type": "object"
+          },
+          {
+            "name": "contract_type",
+            "type": "object"
+          },
+          {
+            "name": "country",
+            "type": "object"
+          },
+          {
+            "name": "created_at",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "The whole ad text as Markdown (JOIN's description field)."
+          },
+          {
+            "name": "documents",
+            "type": "object[]",
+            "about": "Application documents the employer asks for."
+          },
+          {
+            "name": "employment_terms",
+            "type": "object"
+          },
+          {
+            "name": "employment_type",
+            "type": "object"
+          },
+          {
+            "name": "hybrid",
+            "type": "object"
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "JOIN job id."
+          },
+          {
+            "name": "id_param",
+            "type": "string"
+          },
+          {
+            "name": "intro",
+            "type": "string",
+            "about": "Ad section as Markdown."
+          },
+          {
+            "name": "language",
+            "type": "object",
+            "about": "Language of the ad text."
+          },
+          {
+            "name": "last_id",
+            "type": "number",
+            "about": "JOIN lastId, the numeric prefix of id_param."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Retrieval instant, Unix ms."
+          },
+          {
+            "name": "office",
+            "type": "object",
+            "about": "Office address of the ad; null when the ad has none."
+          },
+          {
+            "name": "og_image_url",
+            "type": "string"
+          },
+          {
+            "name": "outro",
+            "type": "string",
+            "about": "Ad section as Markdown."
+          },
+          {
+            "name": "remote_region",
+            "type": "object"
+          },
+          {
+            "name": "remote_type",
+            "type": "string"
+          },
+          {
+            "name": "requirements",
+            "type": "string",
+            "about": "Ad section as Markdown."
+          },
+          {
+            "name": "salary",
+            "type": "object",
+            "about": "Salary as the employer entered it; from/to null when not given."
+          },
+          {
+            "name": "settings",
+            "type": "object"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The REST detail URL that answered."
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "JOIN status as stated (ONLINE for a live ad; other values mean the ad is no longer live)."
+          },
+          {
+            "name": "tasks",
+            "type": "string",
+            "about": "Ad section as Markdown."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public ad page https://join.com/companies/<slug>/<id_param>."
+          },
+          {
+            "name": "workplace_type",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "job_id": "16500870"
+        },
+        "response": {
+          "benefits": "*   Attraktive Benefits eines globalen Unternehmens\n*   Zugriff auf internationales Wissen und Expertennetzwerke\n*   Flexible Arbeitszeitmodelle & Homeoffice\n*   Überstundenausgleich\n*   Umfangreiche Trainings- und Weiterbildungsmöglichkeiten\n*   Zusammenarbeit mit führenden Expert:innen\n*   Stetige fachliche und persönliche Weiterentwicklung",
+          "category": {
+            "id": 346,
+            "name": "Datenbankentwicklung, Data Warehouse"
+          },
+          "city": {
+            "country": "Österreich",
+            "id": "7ef1a7ad-5441-468d-b6e1-34a7c2c206d3",
+            "name": "Wien",
+            "region": null
+          },
+          "company": {
+            "id": 1067,
+            "location": "Zürich, Switzerland",
+            "name": "Accenture",
+            "slug": "accenture",
+            "url": "https://join.com/companies/accenture",
+            "website": "https://www.accenture.com/de-en/careers"
+          },
+          "contract_type": null,
+          "country": {
+            "id": 16,
+            "iso3166": "AT",
+            "name": "Österreich"
+          },
+          "created_at": "2026-07-27T09:14:44.187Z",
+          "description": "Wir begleiten unsere Kunden Ende-zu-Ende - von der strategischen, KI-nativen Neuausrichtung & Zieldefinition der Organisation über die Konzeption & Entwicklung von cutting-edge KI-Lösungen bis hin zum technischen Design & der Implementierung von KI- & Daten-Plattformen. Dabei verbinden wir fachliche Expertise, moderne KI-Technologien (insb. generative und agentische KI) und tiefes Technologieverständnis, um messbaren, transformativen Geschäftswert zu schaffen.\n\n## Aufgaben\n\n**Das erwartet dich:**\n\n*   **KI- und Datenanwendungen mit Vision**  \nNutze dein technisches Fachwissen und deine Leidenschaft für moderne Technologien, um die nächste Generation von KI- und Datenarchitekturen für unsere Kunden zu gestalten und den Einsatz generativer und agentischer KI voranzutreiben.  \n \n*   **Technologieberatung auf höchstem Niveau**  \nAls Teil eines interdisziplinären Teams identifizierst du als Technology Consultant die passenden Technologien und Architekturen, um Daten- und KI-Anwendungen effizient und skalierbar nutzbar zu machen. Du bewertest technologische Optionen, entwirfst Zielarchitekturen und leitest daraus belastbare technische Konzepte und Roadmaps ab.  \n \n*   **Realer Impact für Industrien und Gesellschaft**  \nBei Accenture arbeitest du mit weltweit führenden Unternehmen und Institutionen an wegweisenden Lösungen. Das Ziel: datengetriebene Anwendungsfälle identifizieren, gestalten, testen und erfolgreich in die Praxis bringen - von der ersten Idee bis zur Skalierung. So schaffst du echten Mehrwert und treibst Innovation voran.  \n \n*   **Implementierung von Lösungen mit nachhaltigem Erfolg**  \nIn enger Zusammenarbeit mit Entscheidungsträger:innen und Umsetzungsteams verantwortest du die technische Realisierung von Lösungen im KI und Datenbereich. Du stellst eine saubere Integration in bestehende Systemlandschaften sicher und begleitest den Übergang in den produktiven Betrieb - mit besonderem Augenmerk auf Stabilität, Sicherheit, Skalierbarkeit und langfristige Wartbarkeit.\n\n## Qualifikation\n\n**Darauf freuen wir uns:**\n\n*   Erfolgreicher Abschluss eines relevanten Studiums auf Master- oder PhD-Niveau im IT-Bereich, bevorzugt mit Schwerpunkt KI, Data Engineering, Software-Engineering oder Datenbanken.  \n \n*   Mindestens 2-3 Jahre Berufserfahrung in einem einschlägigen Bereich.  \n \n*   Fortgeschrittene Kenntnisse in diesen Bereichen setzen wir voraus: Software-Engineering (z.B.: Python, Scala, Java, C#, Go), Version Control System (z.B.: Git, Azure DevOps), Datenmanipulation (z.B.: SQL, R, Spark), SQL-Datenbanken (z.B.: MS SQL Server, Oracle, Postgres), Web APIs (z.B.: REST, SOAP).  \n \n*   Zusätzlich erwarten wir uns Expertise in einem der folgenden Kernbereiche:  \n\\- Advanced AI: AI & ML Development (LangChain/Graph, LlamaIndex, PyTorch, MLflow) sowie Erfahrung mit LLM Foundation-/Fine Tuned Models (Open AI, Mistral, Anthropic, Hugging Face) und Vektordatenbanken (Azure AI Search, Chroma DB, PgVector)  \n\\- Data Architecture & Engineering: Data Warehouse/Data Integration (z.B.: Databricks, Snowflake, MS Fabric, BigQuery, Azure Synapse) sowie NoSQL Datenbanken (z.B.: Azure Cosmos DB, MongoDB, InfluxDB)  \n \n*   Folgende Kenntnisse in einem oder mehreren dieser Bereiche sind ein Plus: Continuous Integration & Delivery (z.B.: Unit Testing, Jenkins, Release Management), Cloud Architekturen (z.B.: AWS, Azure, GCP - Zertifizierungen erwünscht), Big Data /In-Memory-Datenbanken (z.B.:Cloudera, Redis), Graphdatenbanken (Neo4j, Amazon Neptune, ArangoDB), Streaming Plattformen z.B. (Apache Kafka, Azure Event Hubs), Containerisierung & Orchestrierung (z. B. Docker, Kubernetes).  \n \n*   Projektbezogene Mobilität, Kommunikationsstärke auf Deutsch und Englisch sowie eine hohe Kundenorientierung\n\n## Benefits\n\n*   Attraktive Benefits eines globalen Unternehmens\n*   Zugriff auf internationales Wissen und Expertennetzwerke\n*   Flexible Arbeitszeitmodelle & Homeoffice\n*   Überstundenausgleich\n*   Umfangreiche Trainings- und Weiterbildungsmöglichkeiten\n*   Zusammenarbeit mit führenden Expert:innen\n*   Stetige fachliche und persönliche Weiterentwicklung\n\n​**Die Accenture-Kultur: Hier machst DU den Unterschied**  \nDeine Fähigkeiten, dein Naturell und deine Ambitionen machen dich einzigartig. Und wenn die unterschiedlichsten Talente, Stärken und Sichtweisen aufeinandertreffen, entsteht etwas Großartiges: Ideen, die in der Welt etwas bewegen. Deshalb setzen wir bei Accenture auf Diversität und freie Entfaltung. Schaffe dir ein Arbeitsumfeld, in dem du aufgehst. Mit Aufgaben, die dir am Herzen liegen. Mit einem Workload, der zu dir passt. Und mit einer Arbeitsweise, die sich an deinen Zielen orientiert. Wie du dich vernetzen, weiterbilden und persönlich wachsen willst, liegt bei dir. Es ist deine Karriere. Wir helfen dir, sie so zu gestalten, wie du es dir vorstellst. \n\nNeben spannenden Projekten bieten wir dir ein sehr attraktives Vergütungspaket, flexible Arbeitszeiten, ein modernes Umfeld und viele weitere zusätzliche Benefits. Du hast bei uns die Möglichkeit, basierend auf deiner individuellen Leistung aktiv dein Jahreseinkommen positiv zu beeinflussen.\n\nDas Jahresbruttogehalt für diese Position startet, je nach Qualifikation und Erfahrung, bei 61.000 €.\n\nWir freuen uns auf deine Bewerbung!",
+          "documents": [
+            {
+              "constraint": "REQUIRED",
+              "type": "CV"
+            },
+            {
+              "constraint": "OPTIONAL",
+              "type": "COVER_LETTER"
+            }
+          ],
+          "employment_terms": null,
+          "employment_type": {
+            "google_type": "FULL_TIME",
+            "id": 6,
+            "name": "Angestellte/r"
+          },
+          "hybrid": null,
+          "id": 16500870,
+          "id_param": "16715486-advanced-ai-und-data-architect-engineer-all-genders",
+          "intro": "Wir begleiten unsere Kunden Ende-zu-Ende - von der strategischen, KI-nativen Neuausrichtung & Zieldefinition der Organisation über die Konzeption & Entwicklung von cutting-edge KI-Lösungen bis hin zum technischen Design & der Implementierung von KI- & Daten-Plattformen. Dabei verbinden wir fachliche Expertise, moderne KI-Technologien (insb. generative und agentische KI) und tiefes Technologieverständnis, um messbaren, transformativen Geschäftswert zu schaffen.",
+          "language": {
+            "iso6391": "de",
+            "locale": "de-de",
+            "name": "German"
+          },
+          "last_id": 16715486,
+          "observed_at_ms": 1790170415184,
+          "office": {
+            "city_name": "Wien",
+            "country_name": "Österreich",
+            "postal_code": "1010",
+            "street_name": "Schottenring",
+            "street_number": "16"
+          },
+          "og_image_url": "https://cdn.join.com/ogimages/16500870/1785310003648.png",
+          "outro": "​**Die Accenture-Kultur: Hier machst DU den Unterschied**  \nDeine Fähigkeiten, dein Naturell und deine Ambitionen machen dich einzigartig. Und wenn die unterschiedlichsten Talente, Stärken und Sichtweisen aufeinandertreffen, entsteht etwas Großartiges: Ideen, die in der Welt etwas bewegen. Deshalb setzen wir bei Accenture auf Diversität und freie Entfaltung. Schaffe dir ein Arbeitsumfeld, in dem du aufgehst. Mit Aufgaben, die dir am Herzen liegen. Mit einem Workload, der zu dir passt. Und mit einer Arbeitsweise, die sich an deinen Zielen orientiert. Wie du dich vernetzen, weiterbilden und persönlich wachsen willst, liegt bei dir. Es ist deine Karriere. Wir helfen dir, sie so zu gestalten, wie du es dir vorstellst. \n\nNeben spannenden Projekten bieten wir dir ein sehr attraktives Vergütungspaket, flexible Arbeitszeiten, ein modernes Umfeld und viele weitere zusätzliche Benefits. Du hast bei uns die Möglichkeit, basierend auf deiner individuellen Leistung aktiv dein Jahreseinkommen positiv zu beeinflussen.\n\nDas Jahresbruttogehalt für diese Position startet, je nach Qualifikation und Erfahrung, bei 61.000 €.\n\nWir freuen uns auf deine Bewerbung!",
+          "remote_region": null,
+          "remote_type": null,
+          "requirements": "**Darauf freuen wir uns:**\n\n*   Erfolgreicher Abschluss eines relevanten Studiums auf Master- oder PhD-Niveau im IT-Bereich, bevorzugt mit Schwerpunkt KI, Data Engineering, Software-Engineering oder Datenbanken.  \n \n*   Mindestens 2-3 Jahre Berufserfahrung in einem einschlägigen Bereich.  \n \n*   Fortgeschrittene Kenntnisse in diesen Bereichen setzen wir voraus: Software-Engineering (z.B.: Python, Scala, Java, C#, Go), Version Control System (z.B.: Git, Azure DevOps), Datenmanipulation (z.B.: SQL, R, Spark), SQL-Datenbanken (z.B.: MS SQL Server, Oracle, Postgres), Web APIs (z.B.: REST, SOAP).  \n \n*   Zusätzlich erwarten wir uns Expertise in einem der folgenden Kernbereiche:  \n\\- Advanced AI: AI & ML Development (LangChain/Graph, LlamaIndex, PyTorch, MLflow) sowie Erfahrung mit LLM Foundation-/Fine Tuned Models (Open AI, Mistral, Anthropic, Hugging Face) und Vektordatenbanken (Azure AI Search, Chroma DB, PgVector)  \n\\- Data Architecture & Engineering: Data Warehouse/Data Integration (z.B.: Databricks, Snowflake, MS Fabric, BigQuery, Azure Synapse) sowie NoSQL Datenbanken (z.B.: Azure Cosmos DB, MongoDB, InfluxDB)  \n \n*   Folgende Kenntnisse in einem oder mehreren dieser Bereiche sind ein Plus: Continuous Integration & Delivery (z.B.: Unit Testing, Jenkins, Release Management), Cloud Architekturen (z.B.: AWS, Azure, GCP - Zertifizierungen erwünscht), Big Data /In-Memory-Datenbanken (z.B.:Cloudera, Redis), Graphdatenbanken (Neo4j, Amazon Neptune, ArangoDB), Streaming Plattformen z.B. (Apache Kafka, Azure Event Hubs), Containerisierung & Orchestrierung (z. B. Docker, Kubernetes).  \n \n*   Projektbezogene Mobilität, Kommunikationsstärke auf Deutsch und Englisch sowie eine hohe Kundenorientierung",
+          "salary": {
+            "frequency": "PER_YEAR",
+            "from": {
+              "amount": 61000,
+              "amount_minor": 6100000,
+              "currency": "EUR"
+            },
+            "shown": true,
+            "to": null
+          },
+          "settings": {
+            "apply_later": true,
+            "job_sharing": true,
+            "show_salary": true
+          },
+          "source": "join.com",
+          "source_url": "https://join.com/api/public/jobs/16500870",
+          "status": "ONLINE",
+          "tasks": "**Das erwartet dich:**\n\n*   **KI- und Datenanwendungen mit Vision**  \nNutze dein technisches Fachwissen und deine Leidenschaft für moderne Technologien, um die nächste Generation von KI- und Datenarchitekturen für unsere Kunden zu gestalten und den Einsatz generativer und agentischer KI voranzutreiben.  \n \n*   **Technologieberatung auf höchstem Niveau**  \nAls Teil eines interdisziplinären Teams identifizierst du als Technology Consultant die passenden Technologien und Architekturen, um Daten- und KI-Anwendungen effizient und skalierbar nutzbar zu machen. Du bewertest technologische Optionen, entwirfst Zielarchitekturen und leitest daraus belastbare technische Konzepte und Roadmaps ab.  \n \n*   **Realer Impact für Industrien und Gesellschaft**  \nBei Accenture arbeitest du mit weltweit führenden Unternehmen und Institutionen an wegweisenden Lösungen. Das Ziel: datengetriebene Anwendungsfälle identifizieren, gestalten, testen und erfolgreich in die Praxis bringen - von der ersten Idee bis zur Skalierung. So schaffst du echten Mehrwert und treibst Innovation voran.  \n \n*   **Implementierung von Lösungen mit nachhaltigem Erfolg**  \nIn enger Zusammenarbeit mit Entscheidungsträger:innen und Umsetzungsteams verantwortest du die technische Realisierung von Lösungen im KI und Datenbereich. Du stellst eine saubere Integration in bestehende Systemlandschaften sicher und begleitest den Übergang in den produktiven Betrieb - mit besonderem Augenmerk auf Stabilität, Sicherheit, Skalierbarkeit und langfristige Wartbarkeit.",
+          "title": "Advanced AI & Data Architect / Engineer (all genders)",
+          "updated_at": "2026-09-16T16:30:32.641Z",
+          "url": "https://join.com/companies/accenture/16715486-advanced-ai-und-data-architect-engineer-all-genders",
+          "workplace_type": "ONSITE"
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "join-com",
+        "capability": "jobs/job"
+      }
+    },
+    {
+      "id": "join-com/jobs/jobs",
+      "provider": "join-com",
+      "capability": "jobs/jobs",
+      "name": "Jobs",
+      "description": "Start here with an employer slug (or company_id from company) to enumerate its openings; pass next_page back as page. Use category_ids from categories or this function's aggregations, city_id from company offices or aggregations. There is no keyword search on JOIN.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "category_ids",
+          "type": "number[]",
+          "in": "body",
+          "about": "JOIN category ids (filters.categoryIds); ids from categories or aggregations.categories."
+        },
+        {
+          "name": "city_id",
+          "type": "string",
+          "in": "body",
+          "about": "JOIN city UUID (filters.placeIds); from company offices[].city_id or aggregations.cities[].city_id. Pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$."
+        },
+        {
+          "name": "company_id",
+          "type": "number",
+          "in": "body",
+          "about": "JOIN's numeric company id (company.company_id). Exactly one of company_slug, company_id or url. Pattern: ^[0-9]{1,12}$.",
+          "min": 1
+        },
+        {
+          "name": "company_slug",
+          "type": "string",
+          "in": "body",
+          "about": "The employer's slug on join.com: the segment after https://join.com/companies/ (equals company.domain in JOIN payloads), e.g. accenture, join. Case-insensitive. Pattern: ^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page; pass next_page back here. A page past the last one is rejected as invalid_input.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Ads per page (the API accepted up to 50).",
+          "default": 20,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted employer page URL https://join.com/companies/<slug>. Exactly one of company_slug, company_id or url. Pattern: ^https?://."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "company_slug",
+          "company_id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One page of an employer's online job ads from the candidate GraphQL API (PublicJobsList), filtered server-side by category ids and/or a city id, with per-category and per-city counts. Each ad carries id, title, status, workplace and remote type, city, country, category, employment and contract type, working terms (vacation days, weekly hours, start date, probation) and hybrid arrangement where the employer filled them in. Salary is not in the listing: read it with job.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "category",
+            "type": "object"
+          },
+          {
+            "name": "city",
+            "type": "object"
+          },
+          {
+            "name": "contract_type",
+            "type": "object"
+          },
+          {
+            "name": "country",
+            "type": "object"
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601 UTC as the API returns it."
+          },
+          {
+            "name": "employment_terms",
+            "type": "object",
+            "about": "Working terms the employer filled in; null when the ad has none."
+          },
+          {
+            "name": "employment_type",
+            "type": "object"
+          },
+          {
+            "name": "hybrid",
+            "type": "object",
+            "about": "Hybrid arrangement; null unless the ad is HYBRID with details."
+          },
+          {
+            "name": "id",
+            "type": "number",
+            "about": "JOIN job id; pass to job as job_id."
+          },
+          {
+            "name": "id_param",
+            "type": "string",
+            "about": "URL segment of the ad, <last_id>-<title-slug>."
+          },
+          {
+            "name": "last_id",
+            "type": "number",
+            "about": "The numeric prefix of id_param (JOIN's lastId); also accepted by job and by https://join.com/jobs/<last_id>."
+          },
+          {
+            "name": "remote_type",
+            "type": "string",
+            "about": "For REMOTE ads: COUNTRY, REGION, ... as stated; null otherwise."
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "JOIN status as stated (ONLINE for a live ad)."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string",
+            "about": "ISO 8601 UTC as the API returns it."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public ad page https://join.com/companies/<slug>/<id_param>."
+          },
+          {
+            "name": "workplace_type",
+            "type": "string",
+            "about": "ONSITE, HYBRID or REMOTE as stated."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_slug": "accenture",
+          "page_size": 5
+        },
+        "response": {
+          "aggregations": {
+            "categories": [
+              {
+                "category_id": 216,
+                "count": 3
+              },
+              {
+                "category_id": 214,
+                "count": 1
+              },
+              {
+                "category_id": 372,
+                "count": 1
+              },
+              {
+                "category_id": 229,
+                "count": 1
+              },
+              {
+                "category_id": 344,
+                "count": 3
+              },
+              {
+                "category_id": 209,
+                "count": 1
+              },
+              {
+                "category_id": 363,
+                "count": 1
+              },
+              {
+                "category_id": 351,
+                "count": 2
+              },
+              {
+                "category_id": 309,
+                "count": 1
+              },
+              {
+                "category_id": 346,
+                "count": 1
+              },
+              {
+                "category_id": 217,
+                "count": 1
+              },
+              {
+                "category_id": 273,
+                "count": 4
+              }
+            ],
+            "cities": [
+              {
+                "city_id": "e67c99d1-0d0a-472d-ba93-e4f9da9b6605",
+                "count": 2,
+                "name": "Düsseldorf, Germany"
+              },
+              {
+                "city_id": "cfb9a259-a33c-4bbe-afe4-96806785a98c",
+                "count": 1,
+                "name": "Innsbruck, Austria"
+              },
+              {
+                "city_id": "caffeeb9-e60e-49f8-98d6-04fe6eeb3653",
+                "count": 5,
+                "name": "Kronberg, Germany"
+              },
+              {
+                "city_id": "7ef1a7ad-5441-468d-b6e1-34a7c2c206d3",
+                "count": 2,
+                "name": "Vienna, Austria"
+              },
+              {
+                "city_id": null,
+                "count": 2,
+                "name": "Remote"
+              },
+              {
+                "city_id": "d2dbd866-b642-4378-ae00-33a6b3e48f4f",
+                "count": 2,
+                "name": "Frankfurt am Main, Germany"
+              },
+              {
+                "city_id": "0c3f1ce8-b52d-48a3-96a9-57d1300e5a72",
+                "count": 1,
+                "name": "Aachen, Germany"
+              },
+              {
+                "city_id": "e732301e-cde9-426d-ac6d-a0cde7454c42",
+                "count": 1,
+                "name": "Munich, Germany"
+              },
+              {
+                "city_id": "04d66278-4ebb-4c00-a281-ed2aa195250d",
+                "count": 4,
+                "name": "Berlin, Germany"
+              }
+            ]
+          },
+          "category_ids": null,
+          "city_id": null,
+          "company": {
+            "id": 1067,
+            "name": "Accenture",
+            "slug": "accenture",
+            "url": "https://join.com/companies/accenture"
+          },
+          "count": 5,
+          "items": [
+            {
+              "category": {
+                "id": 209,
+                "name": "Management, Team Leader"
+              },
+              "city": {
+                "country": "Germany",
+                "id": "caffeeb9-e60e-49f8-98d6-04fe6eeb3653",
+                "name": "Kronberg",
+                "region": "Hessen"
+              },
+              "contract_type": null,
+              "country": {
+                "iso3166": "DE",
+                "name": "Germany"
+              },
+              "created_at": "2026-06-12T12:54:17.776Z",
+              "employment_terms": null,
+              "employment_type": {
+                "id": 6,
+                "name": "Employee"
+              },
+              "hybrid": null,
+              "id": 16297188,
+              "id_param": "16697950-manager-deal-structuting-und-pricing-all-genders",
+              "last_id": 16697950,
+              "remote_type": null,
+              "status": "ONLINE",
+              "title": "Manager Deal Structuting & Pricing (all genders)",
+              "updated_at": "2026-09-12T14:00:36.936Z",
+              "url": "https://join.com/companies/accenture/16697950-manager-deal-structuting-und-pricing-all-genders",
+              "workplace_type": "ONSITE"
+            },
+            {
+              "category": {
+                "id": 214,
+                "name": "Business Consulting"
+              },
+              "city": {
+                "country": "Germany",
+                "id": "d2dbd866-b642-4378-ae00-33a6b3e48f4f",
+                "name": "Frankfurt am Main",
+                "region": "Hessen"
+              },
+              "contract_type": null,
+              "country": {
+                "iso3166": "DE",
+                "name": "Germany"
+              },
+              "created_at": "2026-04-09T07:57:19.771Z",
+              "employment_terms": null,
+              "employment_type": {
+                "id": 6,
+                "name": "Employee"
+              },
+              "hybrid": null,
+              "id": 15981231,
+              "id_param": "16712289-manufacturing-systems-specialist-pas-x-all-genders",
+              "last_id": 16712289,
+              "remote_type": null,
+              "status": "ONLINE",
+              "title": "Manufacturing Systems Specialist PAS-X (all genders)",
+              "updated_at": "2026-09-16T09:00:33.599Z",
+              "url": "https://join.com/companies/accenture/16712289-manufacturing-systems-specialist-pas-x-all-genders",
+              "workplace_type": "HYBRID"
+            },
+            {
+              "category": {
+                "id": 216,
+                "name": "Management and Consulting"
+              },
+              "city": {
+                "country": "Germany",
+                "id": "d2dbd866-b642-4378-ae00-33a6b3e48f4f",
+                "name": "Frankfurt am Main",
+                "region": "Hessen"
+              },
+              "contract_type": null,
+              "country": {
+                "iso3166": "DE",
+                "name": "Germany"
+              },
+              "created_at": "2026-07-20T12:45:07.334Z",
+              "employment_terms": null,
+              "employment_type": {
+                "id": 6,
+                "name": "Employee"
+              },
+              "hybrid": null,
+              "id": 16471398,
+              "id_param": "16700028-consultant-infrastructure-und-capital-projects-all-genders",
+              "last_id": 16700028,
+              "remote_type": "COUNTRY",
+              "status": "ONLINE",
+              "title": "Consultant Infrastructure & Capital Projects (all genders)",
+              "updated_at": "2026-09-13T10:00:35.732Z",
+              "url": "https://join.com/companies/accenture/16700028-consultant-infrastructure-und-capital-projects-all-genders",
+              "workplace_type": "REMOTE"
+            },
+            {
+              "category": {
+                "id": 216,
+                "name": "Management and Consulting"
+              },
+              "city": {
+                "country": "Germany",
+                "id": "caffeeb9-e60e-49f8-98d6-04fe6eeb3653",
+                "name": "Kronberg",
+                "region": "Hessen"
+              },
+              "contract_type": null,
+              "country": {
+                "iso3166": "DE",
+                "name": "Germany"
+              },
+              "created_at": "2025-04-07T16:03:32.816Z",
+              "employment_terms": null,
+              "employment_type": {
+                "id": 6,
+                "name": "Employee"
+              },
+              "hybrid": null,
+              "id": 13941241,
+              "id_param": "16723637-sap-technology-delivery-lead-all-genders",
+              "last_id": 16723637,
+              "remote_type": null,
+              "status": "ONLINE",
+              "title": "SAP Technology Delivery Lead (all genders)",
+              "updated_at": "2026-09-21T09:08:18.971Z",
+              "url": "https://join.com/companies/accenture/16723637-sap-technology-delivery-lead-all-genders",
+              "workplace_type": "HYBRID"
+            },
+            {
+              "category": {
+                "id": 216,
+                "name": "Management and Consulting"
+              },
+              "city": {
+                "country": "Germany",
+                "id": "caffeeb9-e60e-49f8-98d6-04fe6eeb3653",
+                "name": "Kronberg",
+                "region": "Hessen"
+              },
+              "contract_type": null,
+              "country": {
+                "iso3166": "DE",
+                "name": "Germany"
+              },
+              "created_at": "2026-04-14T17:07:19.508Z",
+              "employment_terms": null,
+              "employment_type": {
+                "id": 6,
+                "name": "Employee"
+              },
+              "hybrid": null,
+              "id": 16010649,
+              "id_param": "16736785-medizinische-kodierfachkraft-all-genders",
+              "last_id": 16736785,
+              "remote_type": null,
+              "status": "ONLINE",
+              "title": "Medizinische Kodierfachkraft (all genders)",
+              "updated_at": "2026-09-22T10:30:51.108Z",
+              "url": "https://join.com/companies/accenture/16736785-medizinische-kodierfachkraft-all-genders",
+              "workplace_type": "HYBRID"
+            }
+          ],
+          "next_page": 2,
+          "observed_at_ms": 1790170410533,
+          "page": 1,
+          "page_count": 4,
+          "page_size": 5,
+          "row_count": 20,
+          "source": "join.com",
+          "source_url": "https://join.com/candidate-api/graphql"
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "join-com",
+        "capability": "jobs/jobs"
+      }
+    }
+  ]
+}

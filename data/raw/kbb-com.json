@@ -1,0 +1,1507 @@
+{
+  "id": "kbb-com",
+  "provider": "kbb-com",
+  "name": "Kelley Blue Book",
+  "description": "US car inventory, listing details, model-year trims and regional Kelley Blue Book valuations.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "kbb-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "kbb-com/vehicles/book_value",
+      "provider": "kbb-com",
+      "capability": "vehicles/book_value",
+      "name": "Book value",
+      "description": "Kelley Blue Book value for one vehicle: make, model, year, trim (slug from `trims`, or KBB vehicle_id), mileage and condition. Returns the selected trade-in or private-party value with its KBB range, all four condition values for both price types, typical mileage and the ZIP/edition the values are valid for.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "condition",
+          "type": "string",
+          "in": "body",
+          "about": "condition",
+          "default": "good",
+          "oneOf": [
+            "fair",
+            "good",
+            "very_good",
+            "excellent"
+          ]
+        },
+        {
+          "name": "make",
+          "type": "string",
+          "in": "body",
+          "about": "kbb.com make slug, e.g. toyota.",
+          "required": true
+        },
+        {
+          "name": "mileage",
+          "type": "number",
+          "in": "body",
+          "about": "Odometer miles.",
+          "required": true,
+          "min": 1,
+          "max": 999999
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "in": "body",
+          "about": "kbb.com model slug, e.g. camry.",
+          "required": true
+        },
+        {
+          "name": "price_type",
+          "type": "string",
+          "in": "body",
+          "about": "price_type",
+          "default": "trade_in",
+          "oneOf": [
+            "trade_in",
+            "private_party"
+          ]
+        },
+        {
+          "name": "trim",
+          "type": "string",
+          "in": "body",
+          "about": "kbb.com trim slug such as le-sedan-4d (see `trims`.slug). Required unless vehicle_id is given."
+        },
+        {
+          "name": "vehicle_id",
+          "type": "number",
+          "in": "body",
+          "about": "KBB vehicle id from `trims`; overrides trim.",
+          "min": 1
+        },
+        {
+          "name": "year",
+          "type": "number",
+          "in": "body",
+          "about": "year",
+          "required": true,
+          "min": 1992,
+          "max": 2027
+        },
+        {
+          "name": "zip",
+          "type": "string",
+          "in": "body",
+          "about": "Market ZIP; KBB values vary by region. Defaults to the proxy's location. Pattern: ^[0-9]{5}$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "trim",
+          "vehicle_id"
+        ]
+      ],
+      "response": {
+        "about": "Kelley Blue Book value for one vehicle: make, model, year, trim (slug from `trims`, or KBB vehicle_id), mileage and condition. Returns the selected trade-in or private-party value with its KBB range, all four condition values for both price types, typical mileage and the ZIP/edition the values are valid for.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "body_style",
+            "type": "string"
+          },
+          {
+            "name": "condition",
+            "type": "string"
+          },
+          {
+            "name": "consumer_rating",
+            "type": "number"
+          },
+          {
+            "name": "consumer_review_count",
+            "type": "number"
+          },
+          {
+            "name": "data_version_date",
+            "type": "string"
+          },
+          {
+            "name": "disclaimer",
+            "type": "string"
+          },
+          {
+            "name": "drive_train",
+            "type": "string"
+          },
+          {
+            "name": "engine",
+            "type": "string"
+          },
+          {
+            "name": "engine_type",
+            "type": "string"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "make",
+            "type": "string"
+          },
+          {
+            "name": "mileage",
+            "type": "number"
+          },
+          {
+            "name": "model",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "price_type",
+            "type": "string"
+          },
+          {
+            "name": "range",
+            "type": "object"
+          },
+          {
+            "name": "ranges",
+            "type": "object[]"
+          },
+          {
+            "name": "size_class",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "transmission",
+            "type": "string"
+          },
+          {
+            "name": "trim",
+            "type": "string"
+          },
+          {
+            "name": "trim_slug",
+            "type": "string"
+          },
+          {
+            "name": "typical_mileage",
+            "type": "number"
+          },
+          {
+            "name": "valid_through",
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "about": "KBB value for the requested price type and condition, USD."
+          },
+          {
+            "name": "values",
+            "type": "object"
+          },
+          {
+            "name": "vehicle_id",
+            "type": "string"
+          },
+          {
+            "name": "year",
+            "type": "number"
+          },
+          {
+            "name": "zip",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "condition": "good",
+          "make": "toyota",
+          "mileage": 45000,
+          "model": "camry",
+          "price_type": "trade_in",
+          "trim": "le-sedan-4d",
+          "year": 2020,
+          "zip": "94102"
+        },
+        "response": {
+          "body_style": "Sedan",
+          "condition": "good",
+          "consumer_rating": null,
+          "consumer_review_count": 349,
+          "data_version_date": "2026-09-19T00:00:00Z",
+          "disclaimer": "Values are Kelley Blue Book opinions for the ZIP code and edition shown; actual prices vary.",
+          "drive_train": "FWD",
+          "engine": "4-Cyl, 2.5 Liter",
+          "engine_type": "Gas",
+          "image_url": "https://file.kelleybluebookimages.com/kbb/base/evox/ExtSpP/12105/2020-Toyota-Camry-360SpinFrame_12105_028_2400x1800.png",
+          "make": "Toyota",
+          "mileage": 45000,
+          "model": "Camry",
+          "observed_at_ms": 1789838267079,
+          "price_type": "trade_in",
+          "range": {
+            "high": 19200,
+            "low": 17300
+          },
+          "ranges": [
+            {
+              "condition": "fair",
+              "high": 17850,
+              "low": 16100,
+              "price_type": "trade_in",
+              "type": "Trade-In Value Fair",
+              "value": 16950
+            },
+            {
+              "condition": "good",
+              "high": 19200,
+              "low": 17300,
+              "price_type": "trade_in",
+              "type": "Trade-In Value Good",
+              "value": 18250
+            },
+            {
+              "condition": "excellent",
+              "high": 20250,
+              "low": 18200,
+              "price_type": "trade_in",
+              "type": "Trade-In Value Excellent",
+              "value": 19200
+            },
+            {
+              "condition": "fair",
+              "high": 19590,
+              "low": 17990,
+              "price_type": "private_party",
+              "type": "Private Party Value Fair",
+              "value": 18790
+            },
+            {
+              "condition": "good",
+              "high": 21090,
+              "low": 19290,
+              "price_type": "private_party",
+              "type": "Private Party Value Good",
+              "value": 20190
+            },
+            {
+              "condition": "excellent",
+              "high": 22190,
+              "low": 20290,
+              "price_type": "private_party",
+              "type": "Private Party Value Excellent",
+              "value": 21240
+            },
+            {
+              "condition": "very_good",
+              "high": 19750,
+              "low": 17750,
+              "price_type": "trade_in",
+              "type": "Trade-In Value Very Good",
+              "value": 18750
+            },
+            {
+              "condition": "very_good",
+              "high": 21690,
+              "low": 19840,
+              "price_type": "private_party",
+              "type": "Private Party Value Very Good",
+              "value": 20740
+            }
+          ],
+          "size_class": "Midsize Cars",
+          "source_url": "https://www.kbb.com/toyota/camry/2020/le-sedan-4d/?mileage=45000&condition=good&pricetype=trade-in",
+          "transmission": "Automatic",
+          "trim": "LE Sedan 4D",
+          "trim_slug": "le-sedan-4d",
+          "typical_mileage": 91604,
+          "valid_through": "09/19/2026",
+          "value": 18250,
+          "values": {
+            "private_party": {
+              "excellent": 21240,
+              "fair": 18790,
+              "good": 20190,
+              "very_good": 20740
+            },
+            "trade_in": {
+              "excellent": 19200,
+              "fair": 16950,
+              "good": 18250,
+              "very_good": 18750
+            }
+          },
+          "vehicle_id": "445266",
+          "year": 2020,
+          "zip": "94102"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "kbb-com",
+        "capability": "vehicles/book_value"
+      }
+    },
+    {
+      "id": "kbb-com/vehicles/listing",
+      "provider": "kbb-com",
+      "capability": "vehicles/listing",
+      "name": "Listing",
+      "description": "One kbb.com listing by its numeric listing id (from `listings`): full description, features, every photo URL, seller address and rating, warranties, price history and KBB Fair Purchase Price. Expired or unknown ids are an error.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "listing_id",
+          "type": "number",
+          "in": "body",
+          "about": "KBB / Autotrader listing id, e.g. 761906797.",
+          "required": true
+        },
+        {
+          "name": "zip",
+          "type": "string",
+          "in": "body",
+          "about": "Optional ZIP used for the seller distance. Pattern: ^[0-9]{5}$."
+        }
+      ],
+      "response": {
+        "about": "One kbb.com listing by its numeric listing id (from `listings`): full description, features, every photo URL, seller address and rating, warranties, price history and KBB Fair Purchase Price. Expired or unknown ids are an error.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "body_style",
+            "type": "string"
+          },
+          {
+            "name": "days_on_site",
+            "type": "number"
+          },
+          {
+            "name": "deal_indicator",
+            "type": "string",
+            "about": "KBB deal rating (Great, Good or Fair) where KBB publishes one; null for listings KBB does not rate."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "display_price",
+            "type": "number"
+          },
+          {
+            "name": "distance_miles",
+            "type": "number"
+          },
+          {
+            "name": "drive_type",
+            "type": "string"
+          },
+          {
+            "name": "engine",
+            "type": "string"
+          },
+          {
+            "name": "exterior_color",
+            "type": "string"
+          },
+          {
+            "name": "features",
+            "type": "object",
+            "about": "Source-native feature groups containing their descriptions."
+          },
+          {
+            "name": "fuel_type",
+            "type": "string"
+          },
+          {
+            "name": "image_count",
+            "type": "number"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "name": "interior_color",
+            "type": "string"
+          },
+          {
+            "name": "is_certified",
+            "type": "boolean"
+          },
+          {
+            "name": "is_newly_listed",
+            "type": "boolean"
+          },
+          {
+            "name": "is_reduced_price",
+            "type": "boolean"
+          },
+          {
+            "name": "kbb_fair_purchase_price",
+            "type": "object"
+          },
+          {
+            "name": "kbb_vehicle_id",
+            "type": "string"
+          },
+          {
+            "name": "listing_id",
+            "type": "string"
+          },
+          {
+            "name": "listing_type",
+            "type": "string"
+          },
+          {
+            "name": "make",
+            "type": "string"
+          },
+          {
+            "name": "mileage",
+            "type": "number"
+          },
+          {
+            "name": "model",
+            "type": "string"
+          },
+          {
+            "name": "mpg_city",
+            "type": "number"
+          },
+          {
+            "name": "mpg_highway",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "packages",
+            "type": "string[]"
+          },
+          {
+            "name": "price",
+            "type": "number",
+            "about": "Advertised sale price in USD; null when the seller hides the price."
+          },
+          {
+            "name": "price_history",
+            "type": "object[]"
+          },
+          {
+            "name": "price_valid_until",
+            "type": "string"
+          },
+          {
+            "name": "seller",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "stock_number",
+            "type": "string"
+          },
+          {
+            "name": "style_id",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "transmission",
+            "type": "string"
+          },
+          {
+            "name": "trim",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "vehicle_history_preview",
+            "type": "string[]"
+          },
+          {
+            "name": "vin",
+            "type": "string"
+          },
+          {
+            "name": "warranties",
+            "type": "object",
+            "about": "Source-native warranty categories and remaining coverage."
+          },
+          {
+            "name": "year",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "listing_id": 761906797
+        },
+        "response": {
+          "body_style": null,
+          "days_on_site": 336,
+          "deal_indicator": "Great",
+          "description": "Up for sale is my 2012 Toyota Camry SE Sedan 4D. This black beauty with a gray interior has served me well and is in good condition. With 209,302 miles on the odometer, it's priced lower than average for its age and mileage.<br><br>Key features:<br> 2.5L 4-cylinder engine<br> 6-speed automatic transmission<br> Front-wheel drive<br> Premium wheels<br> Moon roof<br> Bluetooth connectivity<br> CD/MP3 player<br> Cruise control<br> Keyless entry<br><br>Safety features include ABS, stability control, and multiple airbags. The car also has fog lights and a rear spoiler for a sporty look.<br><br>Feel free to chat me if you have any questions about this reliable Camry.",
+          "display_price": 5999,
+          "distance_miles": 364.79,
+          "drive_type": "FWD",
+          "engine": "4-Cylinder",
+          "exterior_color": "Black",
+          "features": {
+            "exterior": [
+              "Fog Lights",
+              "Premium Wheels",
+              "Rear Spoiler"
+            ],
+            "interior": [
+              "Air Conditioning",
+              "Leather",
+              "Moon Roof",
+              "Power Door Locks",
+              "Power Seat",
+              "Power Windows"
+            ],
+            "mechanical": [
+              "Power Steering"
+            ],
+            "other": [
+              "Entune",
+              "Tilt & Telescoping Wheel"
+            ],
+            "safety": [
+              "ABS (4-Wheel)",
+              "Anti-Theft System",
+              "Daytime Running Lights",
+              "Dual Air Bags",
+              "F&R Head Curtain Air Bags",
+              "F&R Side Air Bags",
+              "Knee Air Bags",
+              "Stability Control",
+              "Traction Control"
+            ],
+            "technology": [
+              "AM/FM Stereo",
+              "Bluetooth Wireless",
+              "CD/MP3 (Single Disc)",
+              "Cruise Control",
+              "JBL Premium Sound",
+              "Keyless Entry",
+              "Navigation System"
+            ]
+          },
+          "fuel_type": "Gasoline",
+          "image_count": 8,
+          "image_url": "https://assets.cai-media-management.com/ps-vehicle-media/2380be8d-d853-4477-a406-bf35b3382268.jpg",
+          "images": [
+            "https://assets.cai-media-management.com/ps-vehicle-media/2380be8d-d853-4477-a406-bf35b3382268.jpg",
+            "https://assets.cai-media-management.com/ps-vehicle-media/f5558887-58d7-461d-b494-dd030083900b.jpg",
+            "https://www.kbb.com/cm-api/content/static/img/psx/psx_value_prop_1.jpg",
+            "https://assets.cai-media-management.com/ps-vehicle-media/c6821e21-7134-497e-9de2-e3af429e0f28.jpg",
+            "https://assets.cai-media-management.com/ps-vehicle-media/c6fb86ff-ac91-42c9-a4af-82fe5f06a3ad.jpg",
+            "https://assets.cai-media-management.com/ps-vehicle-media/c6435161-30fd-45a0-96f1-a3ca24849ff3.jpg",
+            "https://assets.cai-media-management.com/ps-vehicle-media/e11c65d1-6f31-4d62-b953-cec8785a478a.jpg",
+            "https://www.kbb.com/cm-api/content/static/img/psx/psx_value_prop_2.jpg"
+          ],
+          "interior_color": "Black",
+          "is_certified": null,
+          "is_newly_listed": false,
+          "is_reduced_price": false,
+          "kbb_fair_purchase_price": {
+            "amount": 6368,
+            "delta": 369,
+            "high": 6868,
+            "low": 5843
+          },
+          "kbb_vehicle_id": "370421",
+          "listing_id": "761906797",
+          "listing_type": "Used",
+          "make": "Toyota",
+          "mileage": 209302,
+          "model": "Camry",
+          "mpg_city": 24,
+          "mpg_highway": 34,
+          "observed_at_ms": 1789010000000,
+          "packages": [],
+          "price": 5999,
+          "price_history": [],
+          "price_valid_until": "2026-10-08",
+          "seller": {
+            "address": null,
+            "city": "Long Beach",
+            "disclaimer": "Price excludes government taxes and fees.",
+            "id": "75563471",
+            "is_private_seller": true,
+            "latitude": null,
+            "longitude": null,
+            "name": "Dorothy Dawn M",
+            "phone": null,
+            "rating": null,
+            "review_count": null,
+            "state": "CA",
+            "website": null,
+            "zip": "90802"
+          },
+          "source_url": "https://www.kbb.com/cars-for-sale/vehicle/761906797",
+          "stock_number": "4T1BF1FK9CU578015",
+          "style_id": "332536",
+          "title": "Used 2012 Toyota Camry SE",
+          "transmission": "6-Speed Automatic",
+          "trim": "SE",
+          "url": "https://www.kbb.com/cars-for-sale/vehicle/761906797",
+          "vehicle_history_preview": [
+            "NO_SALVAGE_TITLE",
+            "NO_ACCIDENTS_REPORTED",
+            "ONE_OWNER"
+          ],
+          "vin": "4T1BF1FK9CU578015",
+          "warranties": {
+            "basic": {
+              "details": "3 Years/36,000 Miles",
+              "miles": 36000,
+              "remaining_miles": -173302,
+              "remaining_years": -11,
+              "years": 3
+            },
+            "corrosion": {
+              "details": "5 Years/Unlimited Miles",
+              "miles": -1,
+              "remaining_miles": -1,
+              "remaining_years": -9,
+              "years": 5
+            },
+            "drivetrain": {
+              "details": "5 Years/60,000 Miles",
+              "miles": 60000,
+              "remaining_miles": -149302,
+              "remaining_years": -9,
+              "years": 5
+            },
+            "roadsideAssistance": {
+              "details": "2 Years/25,000 Miles 24/7 Roadside Assistance",
+              "miles": 25000,
+              "remaining_miles": -184302,
+              "remaining_years": -12,
+              "years": 2
+            }
+          },
+          "year": 2012
+        },
+        "recordedAt": "2026-09-10T00:00:00Z"
+      },
+      "execute": {
+        "provider": "kbb-com",
+        "capability": "vehicles/listing"
+      }
+    },
+    {
+      "id": "kbb-com/vehicles/listings",
+      "provider": "kbb-com",
+      "capability": "vehicles/listings",
+      "name": "Listings",
+      "description": "Search kbb.com dealer and private-seller inventory for a make (optionally model and trim) within a radius of a US ZIP code, optionally filtered by year, price, maximum mileage, exterior colour and drivetrain. Returns one page of 25 listings with price, KBB Fair Purchase Price and deal rating, mileage, VIN, seller and distance, plus the total match count for pagination.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "drive_type",
+          "type": "string",
+          "in": "body",
+          "about": "Drivetrain group. kbb.com groups AWD and 4WD together, so awd and 4wd return the same listings (drive_type AWD4WD).",
+          "oneOf": [
+            "awd",
+            "4wd",
+            "fwd",
+            "rwd"
+          ]
+        },
+        {
+          "name": "exterior_color",
+          "type": "string",
+          "in": "body",
+          "about": "kbb.com exterior colour group; matches the manufacturer colour names in `exterior_color` (e.g. white matches Snowflake White Pearl Mica).",
+          "oneOf": [
+            "beige",
+            "black",
+            "blue",
+            "brown",
+            "burgundy",
+            "charcoal",
+            "gold",
+            "gray",
+            "green",
+            "off_white",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "silver",
+            "tan",
+            "turquoise",
+            "white",
+            "yellow"
+          ]
+        },
+        {
+          "name": "listing_type",
+          "type": "string",
+          "in": "body",
+          "about": "Inventory to search: used, new, certified pre-owned, or all three. Defaults to used.",
+          "default": "used",
+          "oneOf": [
+            "used",
+            "new",
+            "certified",
+            "all"
+          ]
+        },
+        {
+          "name": "make",
+          "type": "string",
+          "in": "body",
+          "about": "kbb.com make slug, e.g. toyota, honda, ford, mercedes-benz.",
+          "required": true
+        },
+        {
+          "name": "mileage_max",
+          "type": "number",
+          "in": "body",
+          "about": "Only listings with at most this many miles on the odometer (kbb.com maxMileage filter; any ceiling, not just the site's 10,000-mile steps).",
+          "min": 1,
+          "max": 999999
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "in": "body",
+          "about": "kbb.com model slug, e.g. camry, civic, f150, model-3. Omit for all models of the make."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "Result page; 25 listings per page.",
+          "default": 1,
+          "min": 1,
+          "max": 40
+        },
+        {
+          "name": "price_max",
+          "type": "number",
+          "in": "body",
+          "about": "Highest advertised price to include, in whole US dollars; must not be below price_min.",
+          "min": 0
+        },
+        {
+          "name": "price_min",
+          "type": "number",
+          "in": "body",
+          "about": "Lowest advertised price to include, in whole US dollars.",
+          "min": 0
+        },
+        {
+          "name": "radius_miles",
+          "type": "number",
+          "in": "body",
+          "about": "Search radius in miles; 0 means nationwide. KBB pads a market's results with remote 'virtual dealer' delivery listings whose distance is not the seller's; with a non-zero radius these are excluded (count may be below page_size while total_count still includes them).",
+          "default": 50,
+          "oneOf": [
+            "0",
+            "10",
+            "25",
+            "50",
+            "75",
+            "100",
+            "200",
+            "300",
+            "400",
+            "500"
+          ]
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Result order: relevance (KBB default), price_asc / price_desc by KBB derived price (advertised price plus fees, so advertised prices are only approximately ordered), mileage_asc, year_desc (newest model year first), distance_asc (nearest seller first), newest (most recently listed first).",
+          "default": "relevance",
+          "oneOf": [
+            "relevance",
+            "price_asc",
+            "price_desc",
+            "mileage_asc",
+            "year_desc",
+            "distance_asc",
+            "newest"
+          ]
+        },
+        {
+          "name": "trim",
+          "type": "string",
+          "in": "body",
+          "about": "Trim name as shown in listings (e.g. SE, XLE, Sport Touring). Requires model."
+        },
+        {
+          "name": "year_max",
+          "type": "number",
+          "in": "body",
+          "about": "Newest model year to include, inclusive; must not be below year_min.",
+          "min": 1981,
+          "max": 2030
+        },
+        {
+          "name": "year_min",
+          "type": "number",
+          "in": "body",
+          "about": "Oldest model year to include, inclusive.",
+          "min": 1981,
+          "max": 2030
+        },
+        {
+          "name": "zip",
+          "type": "string",
+          "in": "body",
+          "about": "Five-digit US ZIP code at the centre of the search. Pattern: ^[0-9]{5}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Search kbb.com dealer and private-seller inventory for a make (optionally model and trim) within a radius of a US ZIP code, optionally filtered by year, price, maximum mileage, exterior colour and drivetrain. Returns one page of 25 listings with price, KBB Fair Purchase Price and deal rating, mileage, VIN, seller and distance, plus the total match count for pagination.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "has_next",
+            "type": "boolean"
+          },
+          {
+            "name": "listings",
+            "type": "object[]"
+          },
+          {
+            "name": "next_page",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "page_size",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "stats",
+            "type": "object"
+          },
+          {
+            "name": "total_count",
+            "type": "number",
+            "about": "Total matching listings across all pages."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "make": "toyota",
+          "model": "camry",
+          "radius_miles": 50,
+          "zip": "90210"
+        },
+        "response": {
+          "count": 25,
+          "has_next": true,
+          "listings": [
+            {
+              "body_style": "Sedan",
+              "days_on_site": 17,
+              "deal_indicator": null,
+              "description": "2012 Toyota Camry SE under 96k miles, clean title, nonsmoker. Charcoal exterior with a clean black interior. Well-maintained and in ...",
+              "display_price": 11400,
+              "distance_miles": 9,
+              "drive_type": "FWD",
+              "engine": "4-Cylinder",
+              "exterior_color": "Charcoal",
+              "features": null,
+              "fuel_type": "Gasoline",
+              "image_count": 1,
+              "image_url": "https://assets.cai-media-management.com/ps-vehicle-media/34b658e6-99ac-4fc5-a407-6c2fec15b04a.jpg",
+              "interior_color": "Black",
+              "is_newly_listed": false,
+              "is_reduced_price": false,
+              "kbb_fair_purchase_price": {
+                "amount": 10429,
+                "delta": -971,
+                "high": 10954,
+                "low": 9929
+              },
+              "kbb_vehicle_id": "370421",
+              "listing_id": "790004288",
+              "listing_type": "USED",
+              "make": "Toyota",
+              "mileage": 95850,
+              "model": "Camry",
+              "mpg_city": 25,
+              "mpg_highway": 35,
+              "price": 11400,
+              "price_valid_until": "2027-09-02",
+              "seller": {
+                "city": "Los Angeles",
+                "id": "75917303",
+                "is_private_seller": true,
+                "name": "Private Seller Exchange",
+                "phone": null,
+                "state": "CA",
+                "website": null,
+                "zip": "90045"
+              },
+              "stock_number": "4T1BF1FK0CU602038",
+              "style_id": "332536",
+              "title": "Used 2012 Toyota Camry SE",
+              "transmission": "6-Speed Automatic",
+              "trim": "SE",
+              "url": "https://www.kbb.com/cars-for-sale/vehicle/790004288",
+              "vehicle_history_preview": [
+                "NO_SALVAGE_TITLE",
+                "ACCIDENTS_REPORTED",
+                "ONE_OWNER"
+              ],
+              "vin": "4T1BF1FK0CU602038",
+              "year": 2012
+            },
+            {
+              "body_style": "Sedan",
+              "days_on_site": 43,
+              "deal_indicator": "Great",
+              "description": "48/47 City/Highway MPG 2025 Toyota Camry SE GOLD CPO CARFAX One-Owner. Clean CARFAX. Certified. Toyota Gold Certified Details:",
+              "display_price": 29973,
+              "distance_miles": 6.14,
+              "drive_type": "FWD",
+              "engine": "Hybrid",
+              "exterior_color": "Ice Cap",
+              "features": null,
+              "fuel_type": "Hybrid Gas/Electric",
+              "image_count": 1,
+              "image_url": "https://atcimages.kbb.com/hn/c/6f1ab439b5b64bb6bcf2e80d5cf1bb22.jpg",
+              "interior_color": "Black",
+              "is_newly_listed": false,
+              "is_reduced_price": false,
+              "kbb_fair_purchase_price": {
+                "amount": 31290,
+                "delta": 1317,
+                "high": 32390,
+                "low": 30190
+              },
+              "kbb_vehicle_id": "475493",
+              "listing_id": "787693153",
+              "listing_type": "USED",
+              "make": "Toyota",
+              "mileage": 8130,
+              "model": "Camry",
+              "mpg_city": 48,
+              "mpg_highway": 47,
+              "price": 29973,
+              "price_valid_until": "2027-08-07",
+              "seller": {
+                "city": "Van Nuys",
+                "id": "72925383",
+                "is_private_seller": false,
+                "name": "Keyes Toyota",
+                "phone": "8185285272",
+                "state": "CA",
+                "website": "https://www.keyestoyota.com/",
+                "zip": "91401"
+              },
+              "stock_number": "SU608477P",
+              "style_id": "453133",
+              "title": "Used 2025 Toyota Camry SE w/ Convenience Package",
+              "transmission": "Continuously Variable Automatic",
+              "trim": "SE",
+              "url": "https://www.kbb.com/cars-for-sale/vehicle/787693153",
+              "vehicle_history_preview": [
+                "NO_SALVAGE_TITLE",
+                "NO_FRAME_DAMAGE",
+                "NO_FLOOD_WATER_DAMAGE",
+                "NO_ACCIDENTS_REPORTED",
+                "ONE_OWNER",
+                "FREE_REPORT"
+              ],
+              "vin": "4T1DAACK9SU608477",
+              "year": 2025
+            }
+          ],
+          "next_page": 2,
+          "observed_at_ms": 1789837839789,
+          "page": 1,
+          "page_size": 25,
+          "query": {
+            "city": "Beverly Hills",
+            "listing_type": "used",
+            "make": "TOYOTA",
+            "model": "CAMRY",
+            "price_max": null,
+            "price_min": null,
+            "radius_miles": 50,
+            "sort": "relevance",
+            "state": "CA",
+            "trim": null,
+            "year_max": null,
+            "year_min": null,
+            "zip": "90210"
+          },
+          "source_url": "https://www.kbb.com/cars-for-sale/used/toyota/camry/beverly-hills-ca?firstRecord=0&numRecords=25&searchRadius=50&zip=90210",
+          "stats": {
+            "price_average": 24609.39264531435,
+            "price_max": 41990,
+            "price_min": 2995,
+            "year_max": 2026,
+            "year_min": 2001
+          },
+          "total_count": 849
+        },
+        "recordedAt": "2026-09-19T00:00:00Z"
+      },
+      "execute": {
+        "provider": "kbb-com",
+        "capability": "vehicles/listings"
+      }
+    },
+    {
+      "id": "kbb-com/vehicles/trims",
+      "provider": "kbb-com",
+      "capability": "vehicles/trims",
+      "name": "Trims",
+      "description": "Every trim kbb.com prices for a model year (make, model, year): KBB vehicle id, trim slug for `book_value`, Fair Purchase Price, typical-mileage trade-in and private-party values, engine, drivetrain and EPA figures, plus the model year's depreciation history and forecast.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "make",
+          "type": "string",
+          "in": "body",
+          "about": "kbb.com make slug, e.g. toyota.",
+          "required": true
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "in": "body",
+          "about": "kbb.com model slug, e.g. camry.",
+          "required": true
+        },
+        {
+          "name": "year",
+          "type": "number",
+          "in": "body",
+          "about": "year",
+          "required": true,
+          "min": 1992,
+          "max": 2027
+        },
+        {
+          "name": "zip",
+          "type": "string",
+          "in": "body",
+          "about": "Market ZIP for the values; defaults to the proxy's location. Pattern: ^[0-9]{5}$."
+        }
+      ],
+      "response": {
+        "about": "Every trim kbb.com prices for a model year (make, model, year): KBB vehicle id, trim slug for `book_value`, Fair Purchase Price, typical-mileage trade-in and private-party values, engine, drivetrain and EPA figures, plus the model year's depreciation history and forecast.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "available_years",
+            "type": "number[]"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "depreciation",
+            "type": "object"
+          },
+          {
+            "name": "make",
+            "type": "string"
+          },
+          {
+            "name": "model",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "specs",
+            "type": "object"
+          },
+          {
+            "name": "trims",
+            "type": "object[]"
+          },
+          {
+            "name": "year",
+            "type": "number"
+          },
+          {
+            "name": "zip",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "make": "toyota",
+          "model": "camry",
+          "year": 2020
+        },
+        "response": {
+          "available_years": [
+            2026,
+            2025,
+            2024,
+            2023,
+            2022,
+            2021,
+            2020,
+            2019,
+            2018,
+            2017,
+            2016,
+            2015,
+            2014,
+            2013,
+            2012,
+            2011,
+            2010,
+            2009,
+            2008,
+            2007,
+            2006,
+            2005,
+            2004,
+            2003,
+            2002,
+            2001,
+            2000,
+            1999,
+            1998,
+            1997,
+            1996,
+            1995,
+            1994,
+            1993,
+            1992
+          ],
+          "count": 10,
+          "depreciation": {
+            "current_resale_value": 15700,
+            "current_trade_in_value": 13400,
+            "forecast": [
+              {
+                "annual_depreciation": 2254,
+                "resale_value": 13446,
+                "trade_in_value": 11476,
+                "year": 2027
+              },
+              {
+                "annual_depreciation": 2050,
+                "resale_value": 11396,
+                "trade_in_value": 9726,
+                "year": 2028
+              }
+            ],
+            "historical": [
+              {
+                "annual_depreciation": 6465,
+                "resale_value": 15208,
+                "trade_in_value": 12606,
+                "year": 2023
+              },
+              {
+                "annual_depreciation": -4024,
+                "resale_value": 19232,
+                "trade_in_value": 17098,
+                "year": 2024
+              },
+              {
+                "annual_depreciation": 2477,
+                "resale_value": 16755,
+                "trade_in_value": 14908,
+                "year": 2025
+              },
+              {
+                "annual_depreciation": 1055,
+                "resale_value": 15700,
+                "trade_in_value": 13400,
+                "year": 2026
+              }
+            ],
+            "total_three_year_depreciation": -492
+          },
+          "make": "Toyota",
+          "model": "Camry",
+          "observed_at_ms": 1789010000000,
+          "source_url": "https://www.kbb.com/toyota/camry/2020/",
+          "specs": {
+            "basic_warranty": "3 years or 36000 miles",
+            "fuel_economy": "City 29 mpg/Hwy 41 mpg/Comb 34 mpg",
+            "fuel_type": "Gas",
+            "horsepower": "203 @ 6600 RPM",
+            "image_url": "https://file.kelleybluebookimages.com/kbb/base/evox/ExtSpP/12105/2020-Toyota-Camry-360SpinFrame_12105_028_2400x1800.png",
+            "max_seating": "5"
+          },
+          "trims": [
+            {
+              "body_style": "Sedan",
+              "combined_mpg": "34 MPG",
+              "drive_train": "FWD",
+              "engine": "4-Cyl, 2.5 Liter",
+              "epa_city": 29,
+              "epa_highway": 41,
+              "ev_range_miles": null,
+              "fair_purchase_price": 17000,
+              "horsepower": "203 @ 6600 RPM",
+              "is_ev": false,
+              "name": "L Sedan 4D",
+              "private_party_value": 15700,
+              "seating": 5,
+              "slug": "l-sedan-4d",
+              "trade_in_value": 13400,
+              "vehicle_id": "445263"
+            },
+            {
+              "body_style": "Sedan",
+              "combined_mpg": "32 MPG",
+              "drive_train": "FWD",
+              "engine": "4-Cyl, 2.5 Liter",
+              "epa_city": 28,
+              "epa_highway": 39,
+              "ev_range_miles": null,
+              "fair_purchase_price": 17500,
+              "horsepower": "203 @ 6600 RPM",
+              "is_ev": false,
+              "name": "LE Sedan 4D",
+              "private_party_value": 16150,
+              "seating": 5,
+              "slug": "le-sedan-4d",
+              "trade_in_value": 14650,
+              "vehicle_id": "445266"
+            },
+            {
+              "body_style": "Sedan",
+              "combined_mpg": "32 MPG",
+              "drive_train": "FWD",
+              "engine": "4-Cyl, 2.5 Liter",
+              "epa_city": 28,
+              "epa_highway": 39,
+              "ev_range_miles": null,
+              "fair_purchase_price": 18600,
+              "horsepower": "203 @ 6600 RPM",
+              "is_ev": false,
+              "name": "SE Sedan 4D",
+              "private_party_value": 17200,
+              "seating": 5,
+              "slug": "se-sedan-4d",
+              "trade_in_value": 15150,
+              "vehicle_id": "445260"
+            },
+            {
+              "body_style": "Sedan",
+              "combined_mpg": "32 MPG",
+              "drive_train": "FWD",
+              "engine": "4-Cyl, 2.5 Liter",
+              "epa_city": 28,
+              "epa_highway": 39,
+              "ev_range_miles": null,
+              "fair_purchase_price": 19650,
+              "horsepower": "203 @ 6600 RPM",
+              "is_ev": false,
+              "name": "SE Nightshade Edition Sedan 4D",
+              "private_party_value": 18100,
+              "seating": 5,
+              "slug": "se-nightshade-edition-sedan-4d",
+              "trade_in_value": 16450,
+              "vehicle_id": "445268"
+            },
+            {
+              "body_style": "Sedan",
+              "combined_mpg": "31 MPG",
+              "drive_train": "FWD",
+              "engine": "4-Cyl, 2.5 Liter",
+              "epa_city": 27,
+              "epa_highway": 38,
+              "ev_range_miles": null,
+              "fair_purchase_price": 20200,
+              "horsepower": "203 @ 6800 RPM",
+              "is_ev": false,
+              "name": "XLE Sedan 4D",
+              "private_party_value": 18650,
+              "seating": 5,
+              "slug": "xle-sedan-4d",
+              "trade_in_value": 17150,
+              "vehicle_id": "445255"
+            },
+            {
+              "body_style": "Sedan",
+              "combined_mpg": "31 MPG",
+              "drive_train": "FWD",
+              "engine": "4-Cyl, 2.5 Liter",
+              "epa_city": 27,
+              "epa_highway": 38,
+              "ev_range_miles": null,
+              "fair_purchase_price": 21900,
+              "horsepower": "206 @ 6800 RPM",
+              "is_ev": false,
+              "name": "XSE Sedan 4D",
+              "private_party_value": 20200,
+              "seating": 5,
+              "slug": "xse-sedan-4d",
+              "trade_in_value": 18300,
+              "vehicle_id": "445278"
+            },
+            {
+              "body_style": "Sedan",
+              "combined_mpg": "25 MPG",
+              "drive_train": "FWD",
+              "engine": "V6, 3.5 Liter",
+              "epa_city": 22,
+              "epa_highway": 31,
+              "ev_range_miles": null,
+              "fair_purchase_price": 25500,
+              "horsepower": "301 @ 6600 RPM",
+              "is_ev": false,
+              "name": "TRD Sedan 4D",
+              "private_party_value": 23300,
+              "seating": 5,
+              "slug": "trd-sedan-4d",
+              "trade_in_value": 22400,
+              "vehicle_id": "445290"
+            },
+            {
+              "body_style": "Sedan",
+              "combined_mpg": "52 MPG",
+              "drive_train": "FWD",
+              "engine": "4-Cyl, Hybrid, 2.5 Liter",
+              "epa_city": 51,
+              "epa_highway": 53,
+              "ev_range_miles": null,
+              "fair_purchase_price": 18600,
+              "horsepower": "208 @ 5700 RPM",
+              "is_ev": false,
+              "name": "LE Sedan 4D",
+              "private_party_value": 17150,
+              "seating": 5,
+              "slug": "le-sedan-4d",
+              "trade_in_value": 15850,
+              "vehicle_id": "445914"
+            },
+            {
+              "body_style": "Sedan",
+              "combined_mpg": "46 MPG",
+              "drive_train": "FWD",
+              "engine": "4-Cyl, Hybrid, 2.5 Liter",
+              "epa_city": 44,
+              "epa_highway": 47,
+              "ev_range_miles": null,
+              "fair_purchase_price": 20900,
+              "horsepower": "208 @ 5700 RPM",
+              "is_ev": false,
+              "name": "SE Sedan 4D",
+              "private_party_value": 19250,
+              "seating": 5,
+              "slug": "se-sedan-4d",
+              "trade_in_value": 17650,
+              "vehicle_id": "445960"
+            },
+            {
+              "body_style": "Sedan",
+              "combined_mpg": "46 MPG",
+              "drive_train": "FWD",
+              "engine": "4-Cyl, Hybrid, 2.5 Liter",
+              "epa_city": 44,
+              "epa_highway": 47,
+              "ev_range_miles": null,
+              "fair_purchase_price": 23300,
+              "horsepower": "208 @ 5700 RPM",
+              "is_ev": false,
+              "name": "XLE Sedan 4D",
+              "private_party_value": 21400,
+              "seating": 5,
+              "slug": "xle-sedan-4d",
+              "trade_in_value": 17300,
+              "vehicle_id": "445966"
+            }
+          ],
+          "year": 2020,
+          "zip": null
+        },
+        "recordedAt": "2026-09-10T00:00:00Z"
+      },
+      "execute": {
+        "provider": "kbb-com",
+        "capability": "vehicles/trims"
+      }
+    }
+  ]
+}

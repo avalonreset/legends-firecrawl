@@ -1,0 +1,2231 @@
+{
+  "id": "find-and-update-company-information-service-gov-uk",
+  "provider": "find-and-update-company-information-service-gov-uk",
+  "name": "Companies House",
+  "description": "Public UK company searches, profiles, filings, officers, ownership, charges and historic records from the Companies House website.",
+  "toolCount": 15,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "find-and-update-company-information-service-gov-uk"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/advanced_search",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/advanced_search",
+      "name": "Advanced search",
+      "description": "Search companies by name, free-text registered-office address, dates, status, type and one SIC code. Returns one page; source limits access to 10,000 results and dissolved coverage to 2010 onward.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "dissolved_from",
+          "type": "string",
+          "in": "body",
+          "about": "YYYY-MM-DD. Dissolution bounds must be 2010 or later."
+        },
+        {
+          "name": "dissolved_to",
+          "type": "string",
+          "in": "body",
+          "about": "YYYY-MM-DD. Dissolution bounds must be 2010 or later."
+        },
+        {
+          "name": "incorporated_from",
+          "type": "string",
+          "in": "body",
+          "about": "YYYY-MM-DD. Dissolution bounds must be 2010 or later."
+        },
+        {
+          "name": "incorporated_to",
+          "type": "string",
+          "in": "body",
+          "about": "YYYY-MM-DD. Dissolution bounds must be 2010 or later."
+        },
+        {
+          "name": "name_excludes",
+          "type": "string",
+          "in": "body",
+          "about": "name_excludes"
+        },
+        {
+          "name": "name_includes",
+          "type": "string",
+          "in": "body",
+          "about": "name_includes"
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "One-based, 20 rows per full page; source stops at 10,000 results.",
+          "default": 1,
+          "min": 1,
+          "max": 500
+        },
+        {
+          "name": "registered_office_contains",
+          "type": "string",
+          "in": "body",
+          "about": "registered_office_contains"
+        },
+        {
+          "name": "sic_code",
+          "type": "string",
+          "in": "body",
+          "about": "Exactly one SIC code. The website does not accept lists. Pattern: ^[0-9]{5}$."
+        },
+        {
+          "name": "statuses",
+          "type": "string[]",
+          "in": "body",
+          "about": "statuses"
+        },
+        {
+          "name": "subtypes",
+          "type": "string[]",
+          "in": "body",
+          "about": "subtypes"
+        },
+        {
+          "name": "types",
+          "type": "string[]",
+          "in": "body",
+          "about": "types"
+        }
+      ],
+      "response": {
+        "about": "Search companies by name, free-text registered-office address, dates, status, type and one SIC code. Returns one page; source limits access to 10,000 results and dissolved coverage to 2010 onward.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "company_number",
+            "type": "string"
+          },
+          {
+            "name": "company_type",
+            "type": "string"
+          },
+          {
+            "name": "disqualification_id",
+            "type": "string"
+          },
+          {
+            "name": "disqualification_kind",
+            "type": "string"
+          },
+          {
+            "name": "dissolved_on",
+            "type": "string"
+          },
+          {
+            "name": "incorporated_on",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": "string"
+          },
+          {
+            "name": "matching_previous_names",
+            "type": "string[]"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "officer_id",
+            "type": "string"
+          },
+          {
+            "name": "sic_codes",
+            "type": "string[]"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "subtype",
+            "type": "string"
+          },
+          {
+            "name": "summary",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "name_includes": "tesco",
+          "statuses": [
+            "active"
+          ]
+        },
+        "response": {
+          "dissolved_coverage_from": "2010-01-01",
+          "observed_at_ms": 1789834000000,
+          "pagination": {
+            "end_reason": null,
+            "limited_by_source": false,
+            "next_cursor": null,
+            "next_page": 2,
+            "next_url": "https://find-and-update.company-information.service.gov.uk/advanced-search/get-results?companyNameIncludes=tesco&incorporationFromDay=&incorporationFromMonth=&incorporationFromYear=&incorporationToDay=&incorporationToMonth=&incorporationToYear=&status=active&dissolvedFromDay=&dissolvedFromMonth=&dissolvedFromYear=&dissolvedToDay=&dissolvedToMonth=&dissolvedToYear=&page=2",
+            "page": 1,
+            "previous_cursor": null,
+            "previous_page": null,
+            "previous_url": null,
+            "source_result_limit": 10000,
+            "total_reported": 102
+          },
+          "records": [
+            {
+              "address": null,
+              "company_number": "SA000044",
+              "company_type": "Assurance company",
+              "disqualification_id": null,
+              "disqualification_kind": null,
+              "dissolved_on": null,
+              "incorporated_on": null,
+              "kind": "company",
+              "matching_previous_names": [],
+              "name": "TESCO PERSONAL FINANCE LIFE LIMITED",
+              "officer_id": null,
+              "sic_codes": [],
+              "status": "Active",
+              "subtype": null,
+              "summary": "TESCO PERSONAL FINANCE LIFE LIMITED Active Assurance company SA000044",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/SA000044"
+            },
+            {
+              "address": "Tesco House, Shire Park, Kestrel Way, Welwyn Garden City, United Kingdom AL7 1GA",
+              "company_number": "02353133",
+              "company_type": "Private limited company",
+              "disqualification_id": null,
+              "disqualification_kind": null,
+              "dissolved_on": null,
+              "incorporated_on": "28 February 1989",
+              "kind": "company",
+              "matching_previous_names": [],
+              "name": "TESCO PROPERTY HOLDINGS LIMITED",
+              "officer_id": null,
+              "sic_codes": [
+                "70100"
+              ],
+              "status": "Active",
+              "subtype": null,
+              "summary": "TESCO PROPERTY HOLDINGS LIMITED Active Private limited company 02353133 - Incorporated on 28 February 1989 Tesco House, Shire Park, Kestrel Way, Welwyn Garden City, United Kingdom AL7 1GA SIC codes - 70100",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/02353133"
+            }
+          ],
+          "returned": 20,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/advanced-search/get-results?companyNameIncludes=tesco&status=active&incorporationFromDay=&incorporationFromMonth=&incorporationFromYear=&incorporationToDay=&incorporationToMonth=&incorporationToYear=&dissolvedFromDay=&dissolvedFromMonth=&dissolvedFromYear=&dissolvedToDay=&dissolvedToMonth=&dissolvedToYear=&page=1",
+          "state": "found"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/advanced_search"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/alphabetical_search",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/alphabetical_search",
+      "name": "Alphabetical search",
+      "description": "Read an alphabetical window of company names with opaque previous/next cursors. This is not a substring search.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company_name",
+          "type": "string",
+          "in": "body",
+          "about": "company_name",
+          "required": true
+        },
+        {
+          "name": "search_after",
+          "type": "string",
+          "in": "body",
+          "about": "search_after"
+        },
+        {
+          "name": "search_before",
+          "type": "string",
+          "in": "body",
+          "about": "search_before"
+        }
+      ],
+      "response": {
+        "about": "Read an alphabetical window of company names with opaque previous/next cursors. This is not a substring search.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "company_number",
+            "type": "string"
+          },
+          {
+            "name": "company_type",
+            "type": "string"
+          },
+          {
+            "name": "disqualification_id",
+            "type": "string"
+          },
+          {
+            "name": "disqualification_kind",
+            "type": "string"
+          },
+          {
+            "name": "dissolved_on",
+            "type": "string"
+          },
+          {
+            "name": "incorporated_on",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": "string"
+          },
+          {
+            "name": "matching_previous_names",
+            "type": "string[]"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "officer_id",
+            "type": "string"
+          },
+          {
+            "name": "sic_codes",
+            "type": "string[]"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "subtype",
+            "type": "string"
+          },
+          {
+            "name": "summary",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_name": "tesco"
+        },
+        "response": {
+          "match_mode": "alphabetical_window",
+          "observed_at_ms": 1789834000000,
+          "pagination": {
+            "end_reason": null,
+            "limited_by_source": false,
+            "next_cursor": "TESCOBARBERSWOOD:07137692",
+            "next_page": null,
+            "next_url": "https://find-and-update.company-information.service.gov.uk/alphabetical-search/get-results?companyName=tesco&searchAfter=TESCOBARBERSWOOD%3A07137692",
+            "page": null,
+            "previous_cursor": "TESCFINANCE:14963284",
+            "previous_page": null,
+            "previous_url": "https://find-and-update.company-information.service.gov.uk/alphabetical-search/get-results?companyName=tesco&searchBefore=TESCFINANCE%3A14963284",
+            "source_result_limit": null,
+            "total_reported": null
+          },
+          "records": [
+            {
+              "address": null,
+              "company_number": "14963284",
+              "company_type": null,
+              "disqualification_id": null,
+              "disqualification_kind": null,
+              "dissolved_on": null,
+              "incorporated_on": null,
+              "kind": "company",
+              "matching_previous_names": [],
+              "name": "TESC FINANCE LTD",
+              "officer_id": null,
+              "sic_codes": [],
+              "status": "Dissolved",
+              "subtype": null,
+              "summary": "TESC FINANCE LTD 14963284 Dissolved",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/14963284"
+            },
+            {
+              "address": null,
+              "company_number": "11309287",
+              "company_type": null,
+              "disqualification_id": null,
+              "disqualification_kind": null,
+              "dissolved_on": null,
+              "incorporated_on": null,
+              "kind": "company",
+              "matching_previous_names": [],
+              "name": "TESC (GLASS) LIMITED",
+              "officer_id": null,
+              "sic_codes": [],
+              "status": "Dissolved",
+              "subtype": null,
+              "summary": "TESC (GLASS) LIMITED 11309287 Dissolved",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/11309287"
+            }
+          ],
+          "returned": 40,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/alphabetical-search/get-results?companyName=tesco",
+          "state": "found"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/alphabetical_search"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/charge",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/charge",
+      "name": "Charge",
+      "description": "Read a returned charge identifier, dates, status, entitled parties, particulars and filing links.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "charge_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9_-]{1,200}$.",
+          "required": true
+        },
+        {
+          "name": "company_number",
+          "type": "string",
+          "in": "body",
+          "about": "Eight-character company number, retaining prefixes and leading zeros. Pattern: ^[A-Z0-9]{8}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read a returned charge identifier, dates, status, entitled parties, particulars and filing links.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "charge",
+            "type": "object"
+          },
+          {
+            "name": "company_name",
+            "type": "string"
+          },
+          {
+            "name": "company_number",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "charge_id": "5QU1lSudRI2jTIfUv_AOVxfLxVE",
+          "company_number": "00445790"
+        },
+        "response": {
+          "charge": {
+            "amount_secured": "All sums due or to become due under the terms of the aforementioned instrument creating or evidencing the charge",
+            "charge_id": "5QU1lSudRI2jTIfUv_AOVxfLxVE",
+            "created_on": "4 November 2009",
+            "delivered_on": "6 November 2009",
+            "documents": [
+              {
+                "label": "View PDF",
+                "url": "https://find-and-update.company-information.service.gov.uk/company/00445790/filing-history/MzAwMjU2MDE2MWFkaXF6a2N4/document?format=pdf&download=0"
+              }
+            ],
+            "fields": [
+              {
+                "label": "Created",
+                "value": "4 November 2009"
+              },
+              {
+                "label": "Delivered",
+                "value": "6 November 2009"
+              },
+              {
+                "label": "Status",
+                "value": "Outstanding"
+              },
+              {
+                "label": "Transaction Filed",
+                "value": "Registration of a charge (MG01)"
+              }
+            ],
+            "particulars": "Right title benefit and interest in and to the account being the euro designated account in the name of the company with sort code 40-05-15 account number 67851117, and the deposit. See image for full details.",
+            "persons_entitled": [
+              "Tesco Trustee Company of Ireland Limited as Trustee of the Tesco Ireland Limited Senior Executive Pension Scheme"
+            ],
+            "status": "Outstanding",
+            "title": "Account security agreement",
+            "url": "https://find-and-update.company-information.service.gov.uk/company/00445790/charges/5QU1lSudRI2jTIfUv_AOVxfLxVE"
+          },
+          "company_name": "TESCO PLC",
+          "company_number": "00445790",
+          "observed_at_ms": 1789834000000,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/company/00445790/charges/5QU1lSudRI2jTIfUv_AOVxfLxVE",
+          "state": "found"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/charge"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/charges",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/charges",
+      "name": "Charges",
+      "description": "Read one company-charge page, optionally outstanding charges only.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company_number",
+          "type": "string",
+          "in": "body",
+          "about": "Eight-character company number, retaining prefixes and leading zeros. Pattern: ^[A-Z0-9]{8}$.",
+          "required": true
+        },
+        {
+          "name": "outstanding_only",
+          "type": "boolean",
+          "in": "body",
+          "about": "outstanding_only"
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "One page per call. 1000 is a tool request bound, not a guarantee of source coverage.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "Read one company-charge page, optionally outstanding charges only.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "amount_secured",
+            "type": "string"
+          },
+          {
+            "name": "charge_id",
+            "type": "string"
+          },
+          {
+            "name": "created_on",
+            "type": "string"
+          },
+          {
+            "name": "delivered_on",
+            "type": "string"
+          },
+          {
+            "name": "documents",
+            "type": "object[]"
+          },
+          {
+            "name": "fields",
+            "type": "object[]"
+          },
+          {
+            "name": "particulars",
+            "type": "string"
+          },
+          {
+            "name": "persons_entitled",
+            "type": "string[]"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_number": "00445790",
+          "outstanding_only": true
+        },
+        "response": {
+          "company_name": "TESCO PLC",
+          "company_number": "00445790",
+          "count_summary": "9 charges registered",
+          "observed_at_ms": 1789834000000,
+          "outstanding_only": true,
+          "pagination": {
+            "end_reason": "no_next_link",
+            "limited_by_source": false,
+            "next_cursor": null,
+            "next_page": null,
+            "next_url": null,
+            "page": 1,
+            "previous_cursor": null,
+            "previous_page": null,
+            "previous_url": null,
+            "source_result_limit": null,
+            "total_reported": null
+          },
+          "records": [
+            {
+              "amount_secured": null,
+              "charge_id": "5QU1lSudRI2jTIfUv_AOVxfLxVE",
+              "created_on": "4 November 2009",
+              "delivered_on": "6 November 2009",
+              "documents": [],
+              "fields": [
+                {
+                  "label": "Created",
+                  "value": "4 November 2009"
+                },
+                {
+                  "label": "Delivered",
+                  "value": "6 November 2009"
+                },
+                {
+                  "label": "Status",
+                  "value": "Outstanding"
+                }
+              ],
+              "particulars": "Right title benefit and interest in and to the account…",
+              "persons_entitled": [
+                "Tesco Trustee Company of Ireland Limited as Trustee of the Tesco Ireland Limited Senior Executive Pension Scheme"
+              ],
+              "status": "Outstanding",
+              "title": "Account security agreement",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/00445790/charges/5QU1lSudRI2jTIfUv_AOVxfLxVE"
+            },
+            {
+              "amount_secured": null,
+              "charge_id": "co-_yIXMvPnNBqPuNZqOcwFwqtM",
+              "created_on": "4 November 2009",
+              "delivered_on": "6 November 2009",
+              "documents": [],
+              "fields": [
+                {
+                  "label": "Created",
+                  "value": "4 November 2009"
+                },
+                {
+                  "label": "Delivered",
+                  "value": "6 November 2009"
+                },
+                {
+                  "label": "Status",
+                  "value": "Outstanding"
+                }
+              ],
+              "particulars": "Right title benefit and interest in and to the account…",
+              "persons_entitled": [
+                "Tesco Ireland Pension Trustees Limited as Trustee of the Tesco Ireland Limited Pension Plan"
+              ],
+              "status": "Outstanding",
+              "title": "Account security agreement",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/00445790/charges/co-_yIXMvPnNBqPuNZqOcwFwqtM"
+            }
+          ],
+          "returned": 2,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/company/00445790/charges?page=1",
+          "state": "found"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/charges"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/company",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/company",
+      "name": "Company",
+      "description": "Read a company overview, deadlines, SICs, former names and available sections. Preserve different date/address meanings and partial profiles for special company types.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company_number",
+          "type": "string",
+          "in": "body",
+          "about": "Eight-character company number, retaining prefixes and leading zeros. Pattern: ^[A-Z0-9]{8}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read a company overview, deadlines, SICs, former names and available sections. Preserve different date/address meanings and partial profiles for special company types.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "accounts",
+            "type": "object"
+          },
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "company_number",
+            "type": "string"
+          },
+          {
+            "name": "company_type",
+            "type": "string"
+          },
+          {
+            "name": "confirmation_statement",
+            "type": "object"
+          },
+          {
+            "name": "creation_date",
+            "type": "object"
+          },
+          {
+            "name": "fields",
+            "type": "object[]"
+          },
+          {
+            "name": "incorporated_on",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "previous_names",
+            "type": "object[]"
+          },
+          {
+            "name": "referral_url",
+            "type": "string"
+          },
+          {
+            "name": "sections",
+            "type": "object[]"
+          },
+          {
+            "name": "sic_codes",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "tabs",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_number": "00445790"
+        },
+        "response": {
+          "accounts": {
+            "due_by": "26 August 2027",
+            "last_date": "28 February 2026",
+            "next_date": "26 February 2027"
+          },
+          "address": {
+            "label": "Registered office address",
+            "value": "Tesco House, Shire Park, Kestrel Way, Welwyn Garden City, United Kingdom, AL7 1GA"
+          },
+          "company_number": "00445790",
+          "company_type": "Public limited Company",
+          "confirmation_statement": {
+            "due_by": "2 July 2027",
+            "last_date": "18 June 2026",
+            "next_date": "18 June 2027"
+          },
+          "creation_date": {
+            "label": "Incorporated on",
+            "value": "27 November 1947"
+          },
+          "fields": [
+            {
+              "label": "Registered office address",
+              "value": "Tesco House, Shire Park, Kestrel Way, Welwyn Garden City, United Kingdom, AL7 1GA"
+            },
+            {
+              "label": "Company status",
+              "value": "Active"
+            },
+            {
+              "label": "Company type",
+              "value": "Public limited Company"
+            },
+            {
+              "label": "Incorporated on",
+              "value": "27 November 1947"
+            }
+          ],
+          "incorporated_on": "27 November 1947",
+          "name": "TESCO PLC",
+          "observed_at_ms": 1789834000000,
+          "previous_names": [
+            {
+              "name": "TESCO STORES (HOLDINGS) PUBLIC LIMITED COMPANY",
+              "period": "14 Dec 1981 - 25 Aug 1983"
+            },
+            {
+              "name": "TESCO STORES (HOLDINGS) LIMITED",
+              "period": "27 Nov 1947 - 14 Dec 1981"
+            }
+          ],
+          "referral_url": null,
+          "sections": [
+            {
+              "heading": "Accounts",
+              "text": "Accounts Next accounts made up to 26 February 2027 due by 26 August 2027 Last accounts made up to 28 February 2026"
+            },
+            {
+              "heading": "Confirmation statement",
+              "text": "Confirmation statement Next statement date 18 June 2027 due by 2 July 2027 Last statement dated 18 June 2026"
+            }
+          ],
+          "sic_codes": [
+            {
+              "code": "47110",
+              "description": "Retail sale in non-specialised stores with food, beverages or tobacco predominating"
+            }
+          ],
+          "source_url": "https://find-and-update.company-information.service.gov.uk/company/00445790",
+          "state": "found",
+          "status": "Active",
+          "tabs": [
+            {
+              "label": "Overview",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/00445790"
+            },
+            {
+              "label": "Filing history",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/00445790/filing-history"
+            },
+            {
+              "label": "People",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/00445790/officers"
+            },
+            {
+              "label": "Charges",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/00445790/charges"
+            },
+            {
+              "label": "More",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/00445790/more"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/company"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/disqualification",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/disqualification",
+      "name": "Disqualification",
+      "description": "Read a returned natural-person or corporate disqualification record, preserving the published sanction/order/undertaking classification.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9_-]{1,200}$.",
+          "required": true
+        },
+        {
+          "name": "kind",
+          "type": "string",
+          "in": "body",
+          "about": "kind",
+          "required": true,
+          "oneOf": [
+            "natural",
+            "corporate"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Read a returned natural-person or corporate disqualification record, preserving the published sanction/order/undertaking classification.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "fields",
+            "type": "object[]"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "id": "354kFTeGMQLnUTrczYjZhoqtVPw",
+          "kind": "corporate"
+        },
+        "response": {
+          "fields": [
+            {
+              "label": "Address provided by the disqualifying authority",
+              "value": "4-Y Lesnoy Per, D. 4, Office 429, Moscow, Russia, 125047"
+            },
+            {
+              "label": "Start date",
+              "value": "16 June 2026"
+            },
+            {
+              "label": "UK Sanction List Reference",
+              "value": "RUS3643"
+            },
+            {
+              "label": "Reason",
+              "value": "Sanctions and Anti-Money Laundering Act 2018 (Section 3A): Disqualification of persons designated under sanctions legislation"
+            }
+          ],
+          "id": "354kFTeGMQLnUTrczYjZhoqtVPw",
+          "kind": "corporate",
+          "name": "LLC SMITH",
+          "observed_at_ms": 1789834000000,
+          "records": [
+            {
+              "fields": [
+                {
+                  "label": "Address provided by the disqualifying authority",
+                  "value": "4-Y Lesnoy Per, D. 4, Office 429, Moscow, Russia, 125047"
+                },
+                {
+                  "label": "Start date",
+                  "value": "16 June 2026"
+                },
+                {
+                  "label": "UK Sanction List Reference",
+                  "value": "RUS3643"
+                },
+                {
+                  "label": "Reason",
+                  "value": "Sanctions and Anti-Money Laundering Act 2018 (Section 3A): Disqualification of persons designated under sanctions legislation"
+                }
+              ],
+              "title": "Sanction"
+            }
+          ],
+          "returned": 1,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/disqualified-officers/corporate/354kFTeGMQLnUTrczYjZhoqtVPw",
+          "state": "found"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/disqualification"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/dissolved_search",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/dissolved_search",
+      "name": "Dissolved search",
+      "description": "Search the historic 1989-2009 dissolved-company index by name, previous name or alphabetical window. Report downloads can be unavailable or require sign-in.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "mode",
+          "type": "string",
+          "in": "body",
+          "about": "mode",
+          "default": "name_at_dissolution",
+          "oneOf": [
+            "name_at_dissolution",
+            "previous_names",
+            "alphabetical"
+          ]
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "One page per call. 1000 is a tool request bound, not a guarantee of source coverage.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        },
+        {
+          "name": "search_after",
+          "type": "string",
+          "in": "body",
+          "about": "search_after"
+        },
+        {
+          "name": "search_before",
+          "type": "string",
+          "in": "body",
+          "about": "search_before"
+        }
+      ],
+      "response": {
+        "about": "Search the historic 1989-2009 dissolved-company index by name, previous name or alphabetical window. Report downloads can be unavailable or require sign-in.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "company_number",
+            "type": "string"
+          },
+          {
+            "name": "dissolved_on",
+            "type": "string"
+          },
+          {
+            "name": "incorporated_on",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "previous_name",
+            "type": "string"
+          },
+          {
+            "name": "report_state",
+            "type": "string"
+          },
+          {
+            "name": "report_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "tesco"
+        },
+        "response": {
+          "coverage_from": "1989-01-01",
+          "coverage_to": "2009-12-31",
+          "mode": "name_at_dissolution",
+          "observed_at_ms": 1789834000000,
+          "pagination": {
+            "end_reason": null,
+            "limited_by_source": false,
+            "next_cursor": null,
+            "next_page": 2,
+            "next_url": "https://find-and-update.company-information.service.gov.uk/dissolved-search/get-results?companyName=tesco&changedName=name-at-dissolution&page=2",
+            "page": 1,
+            "previous_cursor": null,
+            "previous_page": null,
+            "previous_url": null,
+            "source_result_limit": null,
+            "total_reported": null
+          },
+          "records": [
+            {
+              "address": null,
+              "company_number": "01597473",
+              "dissolved_on": "11 Feb 1992",
+              "incorporated_on": "12 Nov 1981",
+              "name": "TESCO (ECONOMY) LTD.",
+              "previous_name": null,
+              "report_state": "unavailable",
+              "report_url": null
+            },
+            {
+              "address": "One Kingsway Cardiff CF10 3PW",
+              "company_number": "00272420",
+              "dissolved_on": "09 Feb 2007",
+              "incorporated_on": "24 Jan 1933",
+              "name": "TESCO (WHOLESALE) LIMITED",
+              "previous_name": null,
+              "report_state": "authentication_required",
+              "report_url": "https://find-and-update.company-information.service.gov.uk/signin?return_to=%2Fdissolved-search%2Fget-results%3FcompanyName%3Dtesco%26changedName%3Dname-at-dissolution"
+            }
+          ],
+          "returned": 20,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/dissolved-search/get-results?companyName=tesco&changedName=name-at-dissolution&page=1",
+          "state": "found"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/dissolved_search"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/filing_document",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/filing_document",
+      "name": "Filing document",
+      "description": "Return a stable public PDF filing link; optionally retrieve PDF bytes through validated redirects, capped at 5 MiB. Signed URLs are not returned.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company_number",
+          "type": "string",
+          "in": "body",
+          "about": "Eight-character company number, retaining prefixes and leading zeros. Pattern: ^[A-Z0-9]{8}$.",
+          "required": true
+        },
+        {
+          "name": "download",
+          "type": "boolean",
+          "in": "body",
+          "about": "False returns the stable link without fetching; true retrieves PDF bytes as base64, up to 5 MiB."
+        },
+        {
+          "name": "transaction_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9_-]{1,200}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Return a stable public PDF filing link; optionally retrieve PDF bytes through validated redirects, capped at 5 MiB. Signed URLs are not returned.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "bytes",
+            "type": "number"
+          },
+          {
+            "name": "company_number",
+            "type": "string"
+          },
+          {
+            "name": "content_base64",
+            "type": "string"
+          },
+          {
+            "name": "downloaded",
+            "type": "boolean"
+          },
+          {
+            "name": "format",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "transaction_id",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_number": "00445790",
+          "transaction_id": "MzU0MzY3ODg5MGFkaXF6a2N4"
+        },
+        "response": {
+          "bytes": null,
+          "company_number": "00445790",
+          "content_base64": null,
+          "downloaded": false,
+          "format": "pdf",
+          "observed_at_ms": 1789834000000,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/company/00445790/filing-history/MzU0MzY3ODg5MGFkaXF6a2N4/document?format=pdf&download=0",
+          "state": "link_only",
+          "transaction_id": "MzU0MzY3ODg5MGFkaXF6a2N4"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/filing_document"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/filings",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/filings",
+      "name": "Filings",
+      "description": "Read one filing-history page, optionally filtered by category, with annotations and stable document links.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "categories",
+          "type": "string[]",
+          "in": "body",
+          "about": "categories"
+        },
+        {
+          "name": "company_number",
+          "type": "string",
+          "in": "body",
+          "about": "Eight-character company number, retaining prefixes and leading zeros. Pattern: ^[A-Z0-9]{8}$.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "One page per call. 1000 is a tool request bound, not a guarantee of source coverage.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "Read one filing-history page, optionally filtered by category, with annotations and stable document links.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "annotations",
+            "type": "string[]"
+          },
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "documents",
+            "type": "object[]"
+          },
+          {
+            "name": "page_count",
+            "type": "number"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_number": "00445790"
+        },
+        "response": {
+          "categories": [],
+          "company_name": "TESCO PLC",
+          "company_number": "00445790",
+          "observed_at_ms": 1789834000000,
+          "pagination": {
+            "end_reason": null,
+            "limited_by_source": false,
+            "next_cursor": null,
+            "next_page": 2,
+            "next_url": "https://find-and-update.company-information.service.gov.uk/company/00445790/filing-history?page=2",
+            "page": 1,
+            "previous_cursor": null,
+            "previous_page": null,
+            "previous_url": null,
+            "source_result_limit": null,
+            "total_reported": null
+          },
+          "records": [
+            {
+              "annotations": [
+                "ANNOTATION Clarification hmrc confirmation received that appropriate duty has been paid on this repurchase"
+              ],
+              "date": "16 Sep 2026",
+              "description": "Purchase of own shares. ANNOTATION Clarification hmrc confirmation received that appropriate duty has been paid on this repurchase",
+              "documents": [
+                {
+                  "format": "pdf",
+                  "label": "View PDF",
+                  "transaction_id": "MzU0MzY3ODg5MGFkaXF6a2N4",
+                  "url": "https://find-and-update.company-information.service.gov.uk/company/00445790/filing-history/MzU0MzY3ODg5MGFkaXF6a2N4/document?format=pdf&download=0"
+                }
+              ],
+              "page_count": 4,
+              "type": "SH03"
+            },
+            {
+              "annotations": [
+                "GBP 397,007,409.26"
+              ],
+              "date": "26 Aug 2026",
+              "description": "Cancellation of shares. Statement of capital on 7 July 2026 GBP 397,007,409.26",
+              "documents": [
+                {
+                  "format": "pdf",
+                  "label": "View PDF",
+                  "transaction_id": "MzUzOTMzNzQ1OWFkaXF6a2N4",
+                  "url": "https://find-and-update.company-information.service.gov.uk/company/00445790/filing-history/MzUzOTMzNzQ1OWFkaXF6a2N4/document?format=pdf&download=0"
+                }
+              ],
+              "page_count": 4,
+              "type": "SH06"
+            }
+          ],
+          "returned": 25,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/company/00445790/filing-history?page=1",
+          "state": "found"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/filings"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/insolvency",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/insolvency",
+      "name": "Insolvency",
+      "description": "Read published insolvency cases for a company with an available insolvency page. An unavailable route is not evidence of no cases.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company_number",
+          "type": "string",
+          "in": "body",
+          "about": "Eight-character company number, retaining prefixes and leading zeros. Pattern: ^[A-Z0-9]{8}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read published insolvency cases for a company with an available insolvency page. An unavailable route is not evidence of no cases.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "case_number",
+            "type": "number"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_number": "03782379"
+        },
+        "response": {
+          "company_name": "CARILLION PLC",
+          "company_number": "03782379",
+          "count_summary": "1 Insolvency case",
+          "observed_at_ms": 1789834000000,
+          "records": [
+            {
+              "case_number": 1,
+              "description": "Case number 1 - Compulsory liquidation",
+              "fields": [
+                {
+                  "label": "Petition date",
+                  "value": "15 January 2018"
+                },
+                {
+                  "label": "Commencement of winding up",
+                  "value": "15 January 2018"
+                },
+                {
+                  "label": "Practitioner",
+                  "value": "The Official Receiver Or London 2nd Floor, 4 Abbey Orchard Street, Westminster, London, SW1P 2HT"
+                }
+              ]
+            }
+          ],
+          "returned": 1,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/company/03782379/insolvency",
+          "state": "found"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/insolvency"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/name_availability",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/name_availability",
+      "name": "Name availability",
+      "description": "Read the source name-conflict check. No exact match does not guarantee registration.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "name",
+          "type": "string",
+          "in": "body",
+          "about": "name",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read the source name-conflict check. No exact match does not guarantee registration.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "company_number",
+            "type": "string"
+          },
+          {
+            "name": "company_type",
+            "type": "string"
+          },
+          {
+            "name": "disqualification_id",
+            "type": "string"
+          },
+          {
+            "name": "disqualification_kind",
+            "type": "string"
+          },
+          {
+            "name": "dissolved_on",
+            "type": "string"
+          },
+          {
+            "name": "incorporated_on",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": "string"
+          },
+          {
+            "name": "matching_previous_names",
+            "type": "string[]"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "officer_id",
+            "type": "string"
+          },
+          {
+            "name": "sic_codes",
+            "type": "string[]"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "subtype",
+            "type": "string"
+          },
+          {
+            "name": "summary",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "name": "TESCO"
+        },
+        "response": {
+          "message": "The company name \" TESCO \" is considered to be the 'same as' the existing names shown below:",
+          "observed_at_ms": 1789834000000,
+          "outcome": "same_as_existing",
+          "query": "TESCO",
+          "records": [
+            {
+              "address": null,
+              "company_number": "00445790",
+              "company_type": "Public limited company",
+              "disqualification_id": null,
+              "disqualification_kind": null,
+              "dissolved_on": null,
+              "incorporated_on": "27 November 1947",
+              "kind": "company",
+              "matching_previous_names": [],
+              "name": "TESCO PLC",
+              "officer_id": null,
+              "sic_codes": [],
+              "status": null,
+              "subtype": null,
+              "summary": "TESCO PLC 00445790 - Incorporated on 27 November 1947 Public limited company",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/00445790"
+            }
+          ],
+          "registration_guaranteed": false,
+          "returned": 1,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/company-name-availability?q=TESCO",
+          "state": "found"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/name_availability"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/officer_appointments",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/officer_appointments",
+      "name": "Officer appointments",
+      "description": "Read one page of appointments for an officer identifier returned by the website, optionally current appointments only.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "current_only",
+          "type": "boolean",
+          "in": "body",
+          "about": "current_only"
+        },
+        {
+          "name": "officer_id",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[A-Za-z0-9_-]{1,200}$.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "One page per call. 1000 is a tool request bound, not a guarantee of source coverage.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "Read one page of appointments for an officer identifier returned by the website, optionally current appointments only.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "appointed_on",
+            "type": "string"
+          },
+          {
+            "name": "appointment_status",
+            "type": "string"
+          },
+          {
+            "name": "company_name",
+            "type": "string"
+          },
+          {
+            "name": "company_number",
+            "type": "string"
+          },
+          {
+            "name": "company_status",
+            "type": "string"
+          },
+          {
+            "name": "company_url",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "type": "object[]"
+          },
+          {
+            "name": "resigned_on",
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "officer_id": "uJ_F_UGCbPiYELlJ_fHc-J_goqo"
+        },
+        "response": {
+          "count_summary": "Total number of appointments 1",
+          "current_only": false,
+          "observed_at_ms": 1789834000000,
+          "officer_id": "uJ_F_UGCbPiYELlJ_fHc-J_goqo",
+          "officer_name": "Alex EXAMPLE",
+          "pagination": {
+            "end_reason": "no_next_link",
+            "limited_by_source": false,
+            "next_cursor": null,
+            "next_page": null,
+            "next_url": null,
+            "page": 1,
+            "previous_cursor": null,
+            "previous_page": null,
+            "previous_url": null,
+            "source_result_limit": null,
+            "total_reported": null
+          },
+          "records": [
+            {
+              "appointed_on": "14 April 2025",
+              "appointment_status": "Active",
+              "company_name": "TESCO PLC",
+              "company_number": "00445790",
+              "company_status": "Active",
+              "company_url": "https://find-and-update.company-information.service.gov.uk/company/00445790",
+              "fields": [
+                {
+                  "label": "Company status",
+                  "value": "Active"
+                },
+                {
+                  "label": "Correspondence address",
+                  "value": "Tesco House, Shire Park, Kestrel Way, Welwyn Garden City, United Kingdom, AL7 1GA"
+                },
+                {
+                  "label": "Role Active",
+                  "value": "Secretary"
+                },
+                {
+                  "label": "Appointed on",
+                  "value": "14 April 2025"
+                }
+              ],
+              "resigned_on": null,
+              "role": "Secretary"
+            }
+          ],
+          "returned": 1,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/officers/uJ_F_UGCbPiYELlJ_fHc-J_goqo/appointments?page=1",
+          "state": "found"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/officer_appointments"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/officers",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/officers",
+      "name": "Officers",
+      "description": "Read one company-officer page, including public appointment details; optionally current officers only.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company_number",
+          "type": "string",
+          "in": "body",
+          "about": "Eight-character company number, retaining prefixes and leading zeros. Pattern: ^[A-Z0-9]{8}$.",
+          "required": true
+        },
+        {
+          "name": "current_only",
+          "type": "boolean",
+          "in": "body",
+          "about": "current_only"
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "One page per call. 1000 is a tool request bound, not a guarantee of source coverage.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        }
+      ],
+      "response": {
+        "about": "Read one company-officer page, including public appointment details; optionally current officers only.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "appointed_on",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "type": "object[]"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "officer_id",
+            "type": "string"
+          },
+          {
+            "name": "resigned_on",
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_number": "00445790",
+          "current_only": true
+        },
+        "response": {
+          "company_name": "TESCO PLC",
+          "company_number": "00445790",
+          "count_summary": "11 current officers",
+          "current_only": true,
+          "observed_at_ms": 1789834000000,
+          "pagination": {
+            "end_reason": "no_next_link",
+            "limited_by_source": false,
+            "next_cursor": null,
+            "next_page": null,
+            "next_url": null,
+            "page": 1,
+            "previous_cursor": null,
+            "previous_page": null,
+            "previous_url": null,
+            "source_result_limit": null,
+            "total_reported": null
+          },
+          "records": [
+            {
+              "appointed_on": "14 April 2025",
+              "fields": [
+                {
+                  "label": "Correspondence address",
+                  "value": "Tesco House, Shire Park, Kestrel Way, Welwyn Garden City, United Kingdom, AL7 1GA"
+                },
+                {
+                  "label": "Role Active",
+                  "value": "Secretary"
+                },
+                {
+                  "label": "Appointed on",
+                  "value": "14 April 2025"
+                }
+              ],
+              "name": "EXAMPLE, Alex 1",
+              "officer_id": "uJ_F_UGCbPiYELlJ_fHc-J_goqo",
+              "resigned_on": null,
+              "role": "Secretary",
+              "status": "Active",
+              "url": "https://find-and-update.company-information.service.gov.uk/officers/uJ_F_UGCbPiYELlJ_fHc-J_goqo/appointments"
+            },
+            {
+              "appointed_on": "24 September 2018",
+              "fields": [
+                {
+                  "label": "Correspondence address",
+                  "value": "Tesco House, Shire Park, Kestrel Way, Welwyn Garden City, United Kingdom, AL7 1GA"
+                },
+                {
+                  "label": "Role Active",
+                  "value": "Director"
+                },
+                {
+                  "label": "Date of birth",
+                  "value": "January 1980"
+                },
+                {
+                  "label": "Appointed on",
+                  "value": "24 September 2018"
+                },
+                {
+                  "label": "Nationality",
+                  "value": "British"
+                },
+                {
+                  "label": "Place of residence",
+                  "value": "United Kingdom"
+                },
+                {
+                  "label": "Identity verification status",
+                  "value": "Verification requirements complete"
+                }
+              ],
+              "name": "EXAMPLE, Alex 2",
+              "officer_id": "aqrS_F-2zIvSaMNtl1opqDV4-w0",
+              "resigned_on": null,
+              "role": "Director",
+              "status": "Active",
+              "url": "https://find-and-update.company-information.service.gov.uk/officers/aqrS_F-2zIvSaMNtl1opqDV4-w0/appointments"
+            }
+          ],
+          "returned": 11,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/company/00445790/officers?page=1",
+          "state": "found"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/officers"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/persons_with_significant_control",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/persons_with_significant_control",
+      "name": "Persons with significant control",
+      "description": "Read public PSC records, statements or explicit exemption information for a company.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company_number",
+          "type": "string",
+          "in": "body",
+          "about": "Eight-character company number, retaining prefixes and leading zeros. Pattern: ^[A-Z0-9]{8}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read public PSC records, statements or explicit exemption information for a company.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "ceased_on",
+            "type": "string"
+          },
+          {
+            "name": "fields",
+            "type": "object[]"
+          },
+          {
+            "name": "kind",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "nature_of_control",
+            "type": "string[]"
+          },
+          {
+            "name": "notified_on",
+            "type": "string"
+          },
+          {
+            "name": "registration_number",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "company_number": "02353133"
+        },
+        "response": {
+          "company_name": "TESCO PROPERTY HOLDINGS LIMITED",
+          "company_number": "02353133",
+          "exemption_reason": null,
+          "exemptions": [],
+          "observed_at_ms": 1789834000000,
+          "pagination": {
+            "end_reason": "no_next_link",
+            "limited_by_source": false,
+            "next_cursor": null,
+            "next_page": null,
+            "next_url": null,
+            "page": 1,
+            "previous_cursor": null,
+            "previous_page": null,
+            "previous_url": null,
+            "source_result_limit": null,
+            "total_reported": null
+          },
+          "records": [
+            {
+              "ceased_on": null,
+              "fields": [
+                {
+                  "label": "Correspondence address",
+                  "value": "Tesco House, Shire Park, Kestrel Way, Welwyn Garden City, United Kingdom, AL7 1GA"
+                },
+                {
+                  "label": "Notified on",
+                  "value": "6 April 2016"
+                },
+                {
+                  "label": "Governing law",
+                  "value": "United Kingdom (England)"
+                },
+                {
+                  "label": "Legal form",
+                  "value": "Limited By Shares"
+                },
+                {
+                  "label": "Place registered",
+                  "value": "Companies House"
+                },
+                {
+                  "label": "Registration number",
+                  "value": "00243011"
+                },
+                {
+                  "label": "Incorporated in",
+                  "value": "England"
+                },
+                {
+                  "label": "Nature of control",
+                  "value": "Ownership of shares - 75% or more"
+                },
+                {
+                  "label": "Nature of control",
+                  "value": "Ownership of voting rights - 75% or more"
+                },
+                {
+                  "label": "Nature of control",
+                  "value": "Right to appoint or remove directors"
+                }
+              ],
+              "kind": "entity",
+              "name": "Tesco Holdings Limited",
+              "nature_of_control": [
+                "Ownership of shares - 75% or more",
+                "Ownership of voting rights - 75% or more",
+                "Right to appoint or remove directors"
+              ],
+              "notified_on": "6 April 2016",
+              "registration_number": "00243011",
+              "status": "Active"
+            }
+          ],
+          "returned": 1,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/company/02353133/persons-with-significant-control",
+          "state": "found",
+          "statements": []
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/persons_with_significant_control"
+      }
+    },
+    {
+      "id": "find-and-update-company-information-service-gov-uk/companies/search",
+      "provider": "find-and-update-company-information-service-gov-uk",
+      "capability": "companies/search",
+      "name": "Search",
+      "description": "Search one page of public company, officer or disqualification results. Defaults to companies.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "kind",
+          "type": "string",
+          "in": "body",
+          "about": "kind",
+          "default": "companies",
+          "oneOf": [
+            "companies",
+            "officers",
+            "disqualified",
+            "all"
+          ]
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "One page per call. 1000 is a tool request bound, not a guarantee of source coverage.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Search one page of public company, officer or disqualification results. Defaults to companies.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "name": "company_number",
+            "type": "string"
+          },
+          {
+            "name": "company_type",
+            "type": "string"
+          },
+          {
+            "name": "disqualification_id",
+            "type": "string"
+          },
+          {
+            "name": "disqualification_kind",
+            "type": "string"
+          },
+          {
+            "name": "dissolved_on",
+            "type": "string"
+          },
+          {
+            "name": "incorporated_on",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": "string"
+          },
+          {
+            "name": "matching_previous_names",
+            "type": "string[]"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "officer_id",
+            "type": "string"
+          },
+          {
+            "name": "sic_codes",
+            "type": "string[]"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "subtype",
+            "type": "string"
+          },
+          {
+            "name": "summary",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "tesco"
+        },
+        "response": {
+          "kind": "companies",
+          "observed_at_ms": 1789834000000,
+          "pagination": {
+            "end_reason": null,
+            "limited_by_source": false,
+            "next_cursor": null,
+            "next_page": 2,
+            "next_url": "https://find-and-update.company-information.service.gov.uk/search/companies?q=tesco&page=2",
+            "page": 1,
+            "previous_cursor": null,
+            "previous_page": null,
+            "previous_url": null,
+            "source_result_limit": null,
+            "total_reported": null
+          },
+          "records": [
+            {
+              "address": null,
+              "company_number": "00445790",
+              "company_type": null,
+              "disqualification_id": null,
+              "disqualification_kind": null,
+              "dissolved_on": null,
+              "incorporated_on": null,
+              "kind": "company",
+              "matching_previous_names": [
+                "TESCO STORES (HOLDINGS) PUBLIC LIMITED COMPANY"
+              ],
+              "name": "TESCO PLC",
+              "officer_id": null,
+              "sic_codes": [],
+              "status": null,
+              "subtype": null,
+              "summary": "TESCO PLC Matching previous names: TESCO STORES (HOLDINGS) PUBLIC LIMITED COMPANY 00445790 - Incorporated on 27 November 1947 Tesco House, Shire Park, Kestrel Way, Welwyn Garden City, United Kingdom, AL7 1GA",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/00445790"
+            },
+            {
+              "address": null,
+              "company_number": "09384423",
+              "company_type": null,
+              "disqualification_id": null,
+              "disqualification_kind": null,
+              "dissolved_on": null,
+              "incorporated_on": null,
+              "kind": "company",
+              "matching_previous_names": [
+                "TESCO TYRES LTD"
+              ],
+              "name": "KFORD TYRES (GORNAL) LTD",
+              "officer_id": null,
+              "sic_codes": [],
+              "status": null,
+              "subtype": null,
+              "summary": "KFORD TYRES (GORNAL) LTD Matching previous names: TESCO TYRES LTD 09384423 - Incorporated on 12 January 2015 2 Dawley Brook Road, Kingswinford, England, DY6 7BD",
+              "url": "https://find-and-update.company-information.service.gov.uk/company/09384423"
+            }
+          ],
+          "returned": 20,
+          "source_url": "https://find-and-update.company-information.service.gov.uk/search/companies?q=tesco&page=1",
+          "state": "found"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "find-and-update-company-information-service-gov-uk",
+        "capability": "companies/search"
+      }
+    }
+  ]
+}

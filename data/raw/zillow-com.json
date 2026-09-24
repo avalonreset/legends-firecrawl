@@ -1,0 +1,4710 @@
+{
+  "id": "zillow-com",
+  "provider": "zillow-com",
+  "name": "Zillow",
+  "description": "US home search, property details, photos, schools, scores and valuation history, plus rental listings (apartments, houses, townhomes, condos, rooms) and apartment buildings with per-unit availability, and the Zillow Observed Rent Index (ZORI) market rent series by metro, city, county or ZIP from Zillow Research.",
+  "toolCount": 15,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "zillow-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "zillow-com/properties/building",
+      "provider": "zillow-com",
+      "capability": "properties/building",
+      "name": "Building",
+      "description": "Details and unit availability for one building URL from rental_search (is_building = true). Single homes and units use rental.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "lot_id",
+          "type": "string",
+          "in": "body",
+          "about": "Declared by the contract but not resolvable on Zillow's public site; always rejected with invalid_input (code unsupported). Use url. Pattern: ^[0-9]+$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS www.zillow.com/apartments/{city}/{slug}/{key}/ or /b/... building URL as returned in rental_search records (is_building = true)."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "url",
+          "lot_id"
+        ]
+      ],
+      "response": {
+        "about": "One Zillow apartment community (multi-unit building): name, address, rent range basis, per-unit availability with beds, baths, sqft, rent, base rent, fees and available-from dates, pet policies, amenities, lease terms, office hours, contact and photos. Floor-plan summaries are retained when Zillow omits individual unit lists; unit_details_complete and coverage distinguish this from no availability.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "amenities",
+            "type": "string[]"
+          },
+          {
+            "name": "application_fee",
+            "type": "number"
+          },
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "available_from",
+            "type": "string"
+          },
+          {
+            "name": "available_unit_count",
+            "type": "number"
+          },
+          {
+            "name": "baths",
+            "type": "number"
+          },
+          {
+            "name": "beds",
+            "type": "number"
+          },
+          {
+            "name": "building_type",
+            "type": "string"
+          },
+          {
+            "name": "contact",
+            "type": "object"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "days_on_zillow",
+            "type": "number"
+          },
+          {
+            "name": "deposit",
+            "type": "number"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "floor_plans",
+            "type": "object[]",
+            "about": "Source floor-plan summaries, independent of individual unit availability."
+          },
+          {
+            "name": "home_type",
+            "type": "string"
+          },
+          {
+            "name": "home_types",
+            "type": "string[]"
+          },
+          {
+            "name": "is_building",
+            "type": "boolean"
+          },
+          {
+            "name": "lat",
+            "type": "number"
+          },
+          {
+            "name": "lease_terms",
+            "type": "string[]"
+          },
+          {
+            "name": "list_price_includes_required_monthly_fees",
+            "type": "boolean"
+          },
+          {
+            "name": "listed_at",
+            "type": "string"
+          },
+          {
+            "name": "listing_history",
+            "type": "string[]"
+          },
+          {
+            "name": "lon",
+            "type": "number"
+          },
+          {
+            "name": "lot_id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "office_hours",
+            "type": "string[]"
+          },
+          {
+            "name": "pet_policies",
+            "type": "object[]"
+          },
+          {
+            "name": "pets",
+            "type": "string[]"
+          },
+          {
+            "name": "photo_count",
+            "type": "number"
+          },
+          {
+            "name": "photo_urls",
+            "type": "string[]"
+          },
+          {
+            "name": "property_facts",
+            "type": "object"
+          },
+          {
+            "name": "region_ids",
+            "type": "object",
+            "about": "Source facts copied verbatim from Zillow; keys vary by listing."
+          },
+          {
+            "name": "rent",
+            "type": "number"
+          },
+          {
+            "name": "rent_basis",
+            "type": "string"
+          },
+          {
+            "name": "rent_max",
+            "type": "number"
+          },
+          {
+            "name": "rent_min",
+            "type": "number"
+          },
+          {
+            "name": "rent_unit",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "sqft",
+            "type": "number"
+          },
+          {
+            "name": "unit_count",
+            "type": "number"
+          },
+          {
+            "name": "unit_details_complete",
+            "type": "boolean",
+            "about": "False when floor plans or their individual unit lists are not supplied. Empty units then does not mean no availability; source summary counts remain independent."
+          },
+          {
+            "name": "units",
+            "type": "object[]"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "utilities_included",
+            "type": "string[]"
+          },
+          {
+            "name": "zpid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.zillow.com/apartments/austin-tx/the-mia/CkQ7qZ/"
+        },
+        "response": {
+          "attribution": "Data provided by Zillow, Inc. (https://www.zillow.com/)",
+          "complete": true,
+          "next_cursor": null,
+          "observed_at_ms": 1789475000000,
+          "records": [
+            {
+              "address": {
+                "city": "Austin",
+                "line1": "14305 Tandem Blvd",
+                "neighborhood": "Wells Branch",
+                "state": "TX",
+                "text": "14305 Tandem Blvd, Austin, TX 78728",
+                "zip": "78728"
+              },
+              "amenities": [
+                "Club House: Resident Lounge With Tv/Game Room",
+                "Fitness Center: Two-Level, 4,000 SF High-Tech Fitness Center"
+              ],
+              "application_fee": null,
+              "attribution": "Data provided by Zillow, Inc. (https://www.zillow.com/)",
+              "available_from": null,
+              "available_unit_count": 36,
+              "baths": null,
+              "beds": null,
+              "building_type": "FOR_RENT",
+              "contact": {
+                "name": "Greystar",
+                "phone": "(254) 998-3343"
+              },
+              "currency": "USD",
+              "days_on_zillow": null,
+              "deposit": null,
+              "description": "Charming design, homey features, and an elegant atmosphere come together at The Mia to create an experience unlike any other apartment community in North Austin. Each detail of our spacious floor plans and welcoming amenities was selected to create a space that feels like a warm hug each time you wa",
+              "home_type": "building",
+              "home_types": [
+                "apartment"
+              ],
+              "is_building": true,
+              "lat": 30.444693,
+              "lease_terms": [
+                "14 months"
+              ],
+              "list_price_includes_required_monthly_fees": true,
+              "listed_at": null,
+              "listing_history": null,
+              "lon": -97.692855,
+              "lot_id": "2752177050",
+              "name": "The Mia",
+              "office_hours": [
+                "Mon: 9:00AM - 6:00PM",
+                "Tue: 10:00AM - 6:00PM"
+              ],
+              "pet_policies": [
+                {
+                  "allowed": true,
+                  "deposit": null,
+                  "description": "| Restrictions: None",
+                  "max_number": null,
+                  "max_weight": null,
+                  "monthly_fee": 25,
+                  "one_time_fee": 300,
+                  "pet_type": "cats"
+                },
+                {
+                  "allowed": true,
+                  "deposit": null,
+                  "description": "| Restrictions: Rottweiler, doberman pinscher, pit bull terrier, staffordshire terrier, chow, presa canarias, akita, alaskan malamute, wolf hyrbid or any mix thereof.",
+                  "max_number": null,
+                  "max_weight": null,
+                  "monthly_fee": 25,
+                  "one_time_fee": 300,
+                  "pet_type": "dogs"
+                }
+              ],
+              "pets": [
+                "Cats",
+                "Large dogs",
+                "Small dogs"
+              ],
+              "photo_count": 33,
+              "photo_urls": [
+                "https://photos.zillowstatic.com/fp/5a24e747bc3510b8024097bd88f3ebe0-cc_ft_1536.webp",
+                "https://photos.zillowstatic.com/fp/a0e516aeadf81a1c3acbbda5a4be972b-cc_ft_1536.webp"
+              ],
+              "property_facts": {
+                "applications_accepted": "NOT_ELIGIBLE",
+                "building_details": [
+                  "335 units",
+                  "4 stories",
+                  "built in 2025"
+                ],
+                "is_low_income": false,
+                "is_senior_housing": false,
+                "is_student_housing": false,
+                "marketing_treatments": [
+                  "trustedListing",
+                  "paid",
+                  "multiFamilySalesListing",
+                  "paidOrUnpaidMultifamily",
+                  "paidMultifamily",
+                  "multifamilyPinnaclePackage"
+                ],
+                "provider_listing_id": "3m83908cdk2rb",
+                "screening_criteria": {
+                  "additional": null,
+                  "creditScore": null,
+                  "evictionHistory": null,
+                  "incomeToRent": null,
+                  "pastDebt": null,
+                  "rentalHistory": null
+                },
+                "special_offers": [
+                  {
+                    "description": "Lease Today & Enjoy Up To 12 Weeks Free base rent + up to $2,500 e-Gift Card on select homes!\nMinimum lease term applies. Other costs and fees excluded.",
+                    "endDate": null
+                  },
+                  {
+                    "description": "Total monthly leasing prices include base rent, all mandatory monthly fees and any user-selected optional fees. Excludes variable or usage-based fees and required charges due at or prior to move-in or at move-out.",
+                    "endDate": null
+                  }
+                ],
+                "time_zone": "America/Chicago"
+              },
+              "region_ids": {
+                "city": 10221,
+                "county": 1440,
+                "neighborhood": 238833,
+                "state": 54
+              },
+              "rent": null,
+              "rent_basis": "base_rent_excluding_required_fees",
+              "rent_max": 5796,
+              "rent_min": 1618,
+              "rent_unit": "USD per month",
+              "source_url": "https://www.zillow.com/apartments/austin-tx/the-mia/CkQ7qZ/",
+              "sqft": null,
+              "unit_count": 36,
+              "units": [
+                {
+                  "allowed_pets": [
+                    "Dogs",
+                    "Cats"
+                  ],
+                  "available_from": null,
+                  "available_from_raw": "0",
+                  "available_now": true,
+                  "base_rent": 1618,
+                  "baths": 1,
+                  "beds": 0,
+                  "deposit": null,
+                  "floor": null,
+                  "floor_plan": "Indigo",
+                  "lease_term": "14 Months",
+                  "listed_for_rent": true,
+                  "listing_type": null,
+                  "rent": 1755,
+                  "rent_basis": "list_price_including_required_monthly_fees",
+                  "rent_max": null,
+                  "rent_min": null,
+                  "required_monthly_fees_max": 137,
+                  "required_monthly_fees_min": 137,
+                  "sqft": 676,
+                  "unit": "Unit 102",
+                  "zpid": "415947158"
+                },
+                {
+                  "allowed_pets": [
+                    "Dogs",
+                    "Cats"
+                  ],
+                  "available_from": null,
+                  "available_from_raw": "0",
+                  "available_now": true,
+                  "base_rent": 1700,
+                  "baths": 1,
+                  "beds": 0,
+                  "deposit": null,
+                  "floor": null,
+                  "floor_plan": "Indigo",
+                  "lease_term": "14 Months",
+                  "listed_for_rent": true,
+                  "listing_type": null,
+                  "rent": 1837,
+                  "rent_basis": "list_price_including_required_monthly_fees",
+                  "rent_max": null,
+                  "rent_min": null,
+                  "required_monthly_fees_max": 137,
+                  "required_monthly_fees_min": 137,
+                  "sqft": 676,
+                  "unit": "Unit 302",
+                  "zpid": "416454223"
+                },
+                {
+                  "allowed_pets": [
+                    "Dogs",
+                    "Cats"
+                  ],
+                  "available_from": "2026-08-19T07:00:00Z",
+                  "available_from_raw": "1787122800000",
+                  "available_now": false,
+                  "base_rent": 1650,
+                  "baths": 1,
+                  "beds": 0,
+                  "deposit": null,
+                  "floor": null,
+                  "floor_plan": "Meadow",
+                  "lease_term": "14 Months",
+                  "listed_for_rent": true,
+                  "listing_type": null,
+                  "rent": 1787,
+                  "rent_basis": "list_price_including_required_monthly_fees",
+                  "rent_max": null,
+                  "rent_min": null,
+                  "required_monthly_fees_max": 137,
+                  "required_monthly_fees_min": 137,
+                  "sqft": 614,
+                  "unit": "Unit 390",
+                  "zpid": "436436851"
+                }
+              ],
+              "url": "https://www.zillow.com/apartments/austin-tx/the-mia/CkQ7qZ/",
+              "utilities_included": null,
+              "zpid": "415947131"
+            }
+          ],
+          "requested_url": "https://www.zillow.com/apartments/austin-tx/the-mia/CkQ7qZ/",
+          "retrieved_at": "2026-09-15T12:23:20Z",
+          "schema_version": "1.1.0",
+          "source_updated_at": null,
+          "terms_url": "https://www.zillow.com/z/corp/terms/",
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/building"
+      }
+    },
+    {
+      "id": "zillow-com/properties/comparables",
+      "provider": "zillow-com",
+      "capability": "properties/comparables",
+      "name": "Comparables",
+      "description": "Zillow home valuation comparables, distinct from nearby homes.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS www.zillow.com/homedetails/.../{zpid}_zpid/ URL"
+        },
+        {
+          "name": "zpid",
+          "type": "number",
+          "in": "body",
+          "about": "zpid"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "zpid",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Zillow home valuation comparables, distinct from nearby homes.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "homes",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "zpid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "zpid": "15132666"
+        },
+        "response": {
+          "count": 5,
+          "homes": [
+            {
+              "address": {
+                "city": "San Francisco",
+                "community": null,
+                "neighborhood": null,
+                "state": "CA",
+                "street": "3890 Market St APT 2",
+                "subdivision": null,
+                "zipcode": "94131"
+              },
+              "bathrooms": 1,
+              "bedrooms": 1,
+              "currency": "USD",
+              "home_type": "SINGLE_FAMILY",
+              "image_url": "https://photos.zillowstatic.com/fp/03ddd33cdde8d2f85311c852bdda620d-p_c.jpg",
+              "latitude": 37.752594,
+              "living_area": 828,
+              "living_area_units": "Square Feet",
+              "longitude": -122.44308,
+              "lot_area": 2705.076,
+              "lot_area_units": "Square Feet",
+              "price": 880000,
+              "status": "RECENTLY_SOLD",
+              "url": "https://www.zillow.com/homedetails/3890-Market-St-APT-2-San-Francisco-CA-94131/459472150_zpid/",
+              "zpid": "459472150"
+            },
+            {
+              "address": {
+                "city": "San Francisco",
+                "community": null,
+                "neighborhood": null,
+                "state": "CA",
+                "street": "3711 Market St #2",
+                "subdivision": null,
+                "zipcode": "94131"
+              },
+              "bathrooms": 1,
+              "bedrooms": 2,
+              "currency": "USD",
+              "home_type": "SINGLE_FAMILY",
+              "image_url": "https://photos.zillowstatic.com/fp/ed4de58ddc717f9916f0c12d0c6fe51a-p_c.jpg",
+              "latitude": 37.754433,
+              "living_area": 953,
+              "living_area_units": "Square Feet",
+              "longitude": -122.44161,
+              "lot_area": 2273.832,
+              "lot_area_units": "Square Feet",
+              "price": 1200000,
+              "status": "RECENTLY_SOLD",
+              "url": "https://www.zillow.com/homedetails/3711-Market-St-2-San-Francisco-CA-94131/457193529_zpid/",
+              "zpid": "457193529"
+            }
+          ],
+          "observed_at_ms": 1788810000000,
+          "zpid": "15132666"
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/comparables"
+      }
+    },
+    {
+      "id": "zillow-com/properties/locations",
+      "provider": "zillow-com",
+      "capability": "properties/locations",
+      "name": "Locations",
+      "description": "Resolve text into region or other typed suggestions. Results vary by type and do not include a bounding box; pass region_id (or region_ids[0]) with region_types[0] / region_subtype straight to search, which accepts a region alone and returns the region's bounds. Do not treat every suggestion id as a property zpid.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "count",
+          "type": "number",
+          "in": "body",
+          "about": "count",
+          "default": 10,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Resolve search text into region, property, school or semantic filter identifiers; result types vary.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "results",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "count": 5,
+          "query": "San Francisco, CA"
+        },
+        "response": {
+          "count": 5,
+          "observed_at_ms": 1788810000000,
+          "query": "San Francisco, CA",
+          "results": [
+            {
+              "builder_community_id": null,
+              "city": null,
+              "county": null,
+              "filters": {
+                "basementStatusType": null,
+                "baths": null,
+                "beds": null,
+                "excludeTypes": null,
+                "hoaFeesPerMonth": null,
+                "homeType": [
+                  "APARTMENT",
+                  "CONDO"
+                ],
+                "keywords": null,
+                "listingStatusType": [
+                  "FOR_SALE"
+                ],
+                "livingAreaSqft": null,
+                "lotSizeSqft": null,
+                "parkingSpots": null,
+                "price": null,
+                "searchRentalFilters": null,
+                "searchSaleFilters": null,
+                "showOnlyType": null,
+                "view": null,
+                "yearBuilt": null
+              },
+              "id": "San Francisco CA homes",
+              "location": null,
+              "region_id": null,
+              "region_ids": [
+                "20330"
+              ],
+              "region_subtype": null,
+              "region_types": [
+                "city"
+              ],
+              "resolution_status": "FULL_RESOLUTION",
+              "school_district_id": null,
+              "school_id": null,
+              "state": null,
+              "type": "SearchAssistanceSemanticResult"
+            },
+            {
+              "builder_community_id": null,
+              "city": null,
+              "county": null,
+              "filters": {
+                "basementStatusType": null,
+                "baths": null,
+                "beds": null,
+                "excludeTypes": null,
+                "hoaFeesPerMonth": null,
+                "homeType": [
+                  "SINGLEFAMILY"
+                ],
+                "keywords": null,
+                "listingStatusType": [
+                  "FOR_SALE"
+                ],
+                "livingAreaSqft": null,
+                "lotSizeSqft": null,
+                "parkingSpots": null,
+                "price": null,
+                "searchRentalFilters": null,
+                "searchSaleFilters": null,
+                "showOnlyType": null,
+                "view": null,
+                "yearBuilt": null
+              },
+              "id": "San Francisco CA single-family homes",
+              "location": null,
+              "region_id": null,
+              "region_ids": [
+                "20330"
+              ],
+              "region_subtype": null,
+              "region_types": [
+                "city"
+              ],
+              "resolution_status": "FULL_RESOLUTION",
+              "school_district_id": null,
+              "school_id": null,
+              "state": null,
+              "type": "SearchAssistanceSemanticResult"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/locations"
+      }
+    },
+    {
+      "id": "zillow-com/properties/map",
+      "provider": "zillow-com",
+      "capability": "properties/map",
+      "name": "Map",
+      "description": "Property/building clusters in a small map viewport (at most 0.1 degrees per axis). Each card carries only what Zillow's safelisted map document returns: zpid, url, status, price, currency, tax_assessed_value, coordinates, provider_listing_id and community/subdivision. Call property with the zpid for beds, baths, areas, home type, photos and the street address.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "bounds",
+          "type": "object",
+          "in": "body",
+          "about": "bounds",
+          "required": true
+        },
+        {
+          "name": "zoom",
+          "type": "number",
+          "in": "body",
+          "about": "zoom",
+          "default": 18,
+          "min": 16,
+          "max": 20
+        }
+      ],
+      "response": {
+        "about": "Property/building clusters in a small map viewport (at most 0.1 degrees per axis). Each card carries only what Zillow's safelisted map document returns: zpid, url, status, price, currency, tax_assessed_value, coordinates, provider_listing_id and community/subdivision. Call property with the zpid for beds, baths, areas, home type, photos and the street address.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "results",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "bounds": {
+            "east": -122.44310945732497,
+            "north": 37.7485,
+            "south": 37.74774131947597,
+            "west": -122.447438542675
+          },
+          "zoom": 18
+        },
+        "response": {
+          "count": 60,
+          "observed_at_ms": 1789842069408,
+          "results": [
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748463,
+                "longitude": -122.443245,
+                "price": 2195700,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": null,
+                "url": "https://www.zillow.com/homedetails/57-High-St-San-Francisco-CA-94114/447265231_zpid/",
+                "zpid": "447265231"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.747868,
+                "longitude": -122.44444,
+                "price": 1592100,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 456008,
+                "url": "https://www.zillow.com/homedetails/190-Portola-Dr-San-Francisco-CA-94131/15132606_zpid/",
+                "zpid": "15132606"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74833,
+                "longitude": -122.44324,
+                "price": 1880200,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 339706,
+                "url": "https://www.zillow.com/homedetails/75-High-St-San-Francisco-CA-94114/15132652_zpid/",
+                "zpid": "15132652"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74833,
+                "longitude": -122.44324,
+                "price": 1415000,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 294404,
+                "url": "https://www.zillow.com/homedetails/73-High-St-San-Francisco-CA-94114/15132653_zpid/",
+                "zpid": "15132653"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748398,
+                "longitude": -122.443245,
+                "price": 1597100,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 627743,
+                "url": "https://www.zillow.com/homedetails/67-High-St-San-Francisco-CA-94114/15132655_zpid/",
+                "zpid": "15132655"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748444,
+                "longitude": -122.44526,
+                "price": 1653100,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 553561,
+                "url": "https://www.zillow.com/homedetails/297-Glenview-Dr-San-Francisco-CA-94131/15132667_zpid/",
+                "zpid": "15132667"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74846,
+                "longitude": -122.4457,
+                "price": 1501300,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 513732,
+                "url": "https://www.zillow.com/homedetails/273-Glenview-Dr-San-Francisco-CA-94131/15132670_zpid/",
+                "zpid": "15132670"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748413,
+                "longitude": -122.44606,
+                "price": 1156600,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 341250,
+                "url": "https://www.zillow.com/homedetails/257-Glenview-Dr-San-Francisco-CA-94131/15132673_zpid/",
+                "zpid": "15132673"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748447,
+                "longitude": -122.4464,
+                "price": 1457400,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 78125,
+                "url": "https://www.zillow.com/homedetails/241-Glenview-Dr-San-Francisco-CA-94131/15132676_zpid/",
+                "zpid": "15132676"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74848,
+                "longitude": -122.44652,
+                "price": 1317300,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 551912,
+                "url": "https://www.zillow.com/homedetails/237-Glenview-Dr-San-Francisco-CA-94131/15132677_zpid/",
+                "zpid": "15132677"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748177,
+                "longitude": -122.44515,
+                "price": 1387000,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 87125,
+                "url": "https://www.zillow.com/homedetails/296-Glenview-Dr-San-Francisco-CA-94131/15132684_zpid/",
+                "zpid": "15132684"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748074,
+                "longitude": -122.445755,
+                "price": 1491100,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 94842,
+                "url": "https://www.zillow.com/homedetails/260-Glenview-Dr-San-Francisco-CA-94131/15132689_zpid/",
+                "zpid": "15132689"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748043,
+                "longitude": -122.44617,
+                "price": 1720100,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 903918,
+                "url": "https://www.zillow.com/homedetails/244-Glenview-Dr-San-Francisco-CA-94131/15132692_zpid/",
+                "zpid": "15132692"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748062,
+                "longitude": -122.44644,
+                "price": 1575100,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 203793,
+                "url": "https://www.zillow.com/homedetails/232-Glenview-Dr-San-Francisco-CA-94131/15132694_zpid/",
+                "zpid": "15132694"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.747868,
+                "longitude": -122.44523,
+                "price": 1699700,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 86082,
+                "url": "https://www.zillow.com/homedetails/940-Burnett-Ave-San-Francisco-CA-94131/15132700_zpid/",
+                "zpid": "15132700"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.747902,
+                "longitude": -122.44716,
+                "price": 1455500,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 168591,
+                "url": "https://www.zillow.com/homedetails/32-Dawnview-Way-San-Francisco-CA-94131/15132742_zpid/",
+                "zpid": "15132742"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74783,
+                "longitude": -122.44704,
+                "price": 1628800,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 408006,
+                "url": "https://www.zillow.com/homedetails/36-Dawnview-Way-San-Francisco-CA-94131/15132743_zpid/",
+                "zpid": "15132743"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.7478,
+                "longitude": -122.446915,
+                "price": 1444200,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 478458,
+                "url": "https://www.zillow.com/homedetails/40-Dawnview-Way-San-Francisco-CA-94131/15132744_zpid/",
+                "zpid": "15132744"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.747925,
+                "longitude": -122.44737,
+                "price": 1655700,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 885823,
+                "url": "https://www.zillow.com/homedetails/22-24-Dawnview-Way-San-Francisco-CA-94131/15133026_zpid/",
+                "zpid": "15133026"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74792,
+                "longitude": -122.44728,
+                "price": 1260300,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 479145,
+                "url": "https://www.zillow.com/homedetails/28-Dawnview-Way-San-Francisco-CA-94131/15133027_zpid/",
+                "zpid": "15133027"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74834,
+                "longitude": -122.44726,
+                "price": 1206200,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 66466,
+                "url": "https://www.zillow.com/homedetails/21-Dawnview-Way-San-Francisco-CA-94131/15133064_zpid/",
+                "zpid": "15133064"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748055,
+                "longitude": -122.44447,
+                "price": 1547500,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 301880,
+                "url": "https://www.zillow.com/homedetails/178-Portola-Dr-San-Francisco-CA-94131/332858763_zpid/",
+                "zpid": "332858763"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748276,
+                "longitude": -122.44477,
+                "price": 2872400,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 2812200,
+                "url": "https://www.zillow.com/homedetails/925-Burnett-Ave-San-Francisco-CA-94131/2068587737_zpid/",
+                "zpid": "2068587737"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748154,
+                "longitude": -122.44476,
+                "price": 1166500,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": null,
+                "url": "https://www.zillow.com/homedetails/935-Burnett-Ave-San-Francisco-CA-94131/2094877843_zpid/",
+                "zpid": "2094877843"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74836,
+                "longitude": -122.44478,
+                "price": 1091900,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": null,
+                "url": "https://www.zillow.com/homedetails/915-Burnett-Ave-1-San-Francisco-CA-94131/2104420478_zpid/",
+                "zpid": "2104420478"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748055,
+                "longitude": -122.44629,
+                "price": 1772300,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 681437,
+                "url": "https://www.zillow.com/homedetails/238-Glenview-Dr-San-Francisco-CA-94131/15132693_zpid/",
+                "zpid": "15132693"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74826,
+                "longitude": -122.44323,
+                "price": 2240200,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 740219,
+                "url": "https://www.zillow.com/homedetails/81-High-St-San-Francisco-CA-94114/15132650_zpid/",
+                "zpid": "15132650"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74777,
+                "longitude": -122.445435,
+                "price": 1536000,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 464152,
+                "url": "https://www.zillow.com/homedetails/84-Dawnview-Way-San-Francisco-CA-94131/15132755_zpid/",
+                "zpid": "15132755"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748184,
+                "longitude": -122.44681,
+                "price": 1475100,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 578442,
+                "url": "https://www.zillow.com/homedetails/216-Glenview-Dr-San-Francisco-CA-94131/15132697_zpid/",
+                "zpid": "15132697"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748035,
+                "longitude": -122.44602,
+                "price": 1656000,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 634897,
+                "url": "https://www.zillow.com/homedetails/250-Glenview-Dr-San-Francisco-CA-94131/15132691_zpid/",
+                "zpid": "15132691"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748325,
+                "longitude": -122.44734,
+                "price": 1052500,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 570234,
+                "url": "https://www.zillow.com/homedetails/15-Dawnview-Way-San-Francisco-CA-94131/15133065_zpid/",
+                "zpid": "15133065"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74813,
+                "longitude": -122.44539,
+                "price": 1510100,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 831720,
+                "url": "https://www.zillow.com/homedetails/280-Glenview-Dr-San-Francisco-CA-94131/15132686_zpid/",
+                "zpid": "15132686"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748093,
+                "longitude": -122.44563,
+                "price": 1922800,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 1152123,
+                "url": "https://www.zillow.com/homedetails/264-Glenview-Dr-San-Francisco-CA-94131/15132688_zpid/",
+                "zpid": "15132688"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.747772,
+                "longitude": -122.44521,
+                "price": 2920000,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 2584218,
+                "url": "https://www.zillow.com/homedetails/950-Burnett-Ave-San-Francisco-CA-94131/15132701_zpid/",
+                "zpid": "15132701"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748444,
+                "longitude": -122.44479,
+                "price": 2599400,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 2499566,
+                "url": "https://www.zillow.com/homedetails/905-Burnett-Ave-San-Francisco-CA-94131/332858762_zpid/",
+                "zpid": "332858762"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.7484,
+                "longitude": -122.4463,
+                "price": 1471400,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 961943,
+                "url": "https://www.zillow.com/homedetails/249-Glenview-Dr-San-Francisco-CA-94131/15132675_zpid/",
+                "zpid": "15132675"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748234,
+                "longitude": -122.446915,
+                "price": 2294500,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 1362441,
+                "url": "https://www.zillow.com/homedetails/208-Glenview-Dr-San-Francisco-CA-94131/15132698_zpid/",
+                "zpid": "15132698"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748493,
+                "longitude": -122.44558,
+                "price": 1573000,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 770666,
+                "url": "https://www.zillow.com/homedetails/281-Glenview-Dr-San-Francisco-CA-94131/15132669_zpid/",
+                "zpid": "15132669"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.747757,
+                "longitude": -122.44678,
+                "price": 1972200,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 1334044,
+                "url": "https://www.zillow.com/homedetails/44-Dawnview-Way-San-Francisco-CA-94131/15132745_zpid/",
+                "zpid": "15132745"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748055,
+                "longitude": -122.44588,
+                "price": 1842200,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 1411669,
+                "url": "https://www.zillow.com/homedetails/256-Glenview-Dr-San-Francisco-CA-94131/15132690_zpid/",
+                "zpid": "15132690"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748432,
+                "longitude": -122.44582,
+                "price": 1828200,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 1514560,
+                "url": "https://www.zillow.com/homedetails/269-Glenview-Dr-San-Francisco-CA-94131/15132671_zpid/",
+                "zpid": "15132671"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748165,
+                "longitude": -122.44323,
+                "price": 2723400,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 2332548,
+                "url": "https://www.zillow.com/homedetails/99-High-St-2-San-Francisco-CA-94114/67447695_zpid/",
+                "zpid": "67447695"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74831,
+                "longitude": -122.44702,
+                "price": 2005200,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 1655358,
+                "url": "https://www.zillow.com/homedetails/200-Glenview-Dr-San-Francisco-CA-94131/15132699_zpid/",
+                "zpid": "15132699"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74811,
+                "longitude": -122.44551,
+                "price": 2019600,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 2021599,
+                "url": "https://www.zillow.com/homedetails/272-Glenview-Dr-San-Francisco-CA-94131/15132687_zpid/",
+                "zpid": "15132687"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748165,
+                "longitude": -122.44323,
+                "price": 2173400,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 1938826,
+                "url": "https://www.zillow.com/homedetails/95-High-St-1-San-Francisco-CA-94114/61287349_zpid/",
+                "zpid": "61287349"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74826,
+                "longitude": -122.44323,
+                "price": 1702700,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 1248480,
+                "url": "https://www.zillow.com/homedetails/83-High-St-San-Francisco-CA-94114/15132651_zpid/",
+                "zpid": "15132651"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748413,
+                "longitude": -122.446175,
+                "price": 1640100,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 1310903,
+                "url": "https://www.zillow.com/homedetails/251-Glenview-Dr-San-Francisco-CA-94131/15132674_zpid/",
+                "zpid": "15132674"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74841,
+                "longitude": -122.44594,
+                "price": 1555900,
+                "provider_listing_id": null,
+                "status": "OTHER",
+                "tax_assessed_value": 1560600,
+                "url": "https://www.zillow.com/homedetails/265-Glenview-Dr-San-Francisco-CA-94131/15132672_zpid/",
+                "zpid": "15132672"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74816,
+                "longitude": -122.44336,
+                "price": 2378100,
+                "provider_listing_id": "2ghg6cewz9qwd",
+                "status": "OTHER",
+                "tax_assessed_value": null,
+                "url": "https://www.zillow.com/homedetails/97-High-St-San-Francisco-CA-94114/2129677138_zpid/",
+                "zpid": "2129677138"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748104,
+                "longitude": -122.44658,
+                "price": 1804100,
+                "provider_listing_id": "18dt82x21zd7k",
+                "status": "OTHER",
+                "tax_assessed_value": 1019802,
+                "url": "https://www.zillow.com/homedetails/224-Glenview-Dr-San-Francisco-CA-94131/15132695_zpid/",
+                "zpid": "15132695"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74815,
+                "longitude": -122.44527,
+                "price": 1272500,
+                "provider_listing_id": "4h5c9u9r05sev",
+                "status": "OTHER",
+                "tax_assessed_value": 987214,
+                "url": "https://www.zillow.com/homedetails/288-Glenview-Dr-San-Francisco-CA-94131/15132685_zpid/",
+                "zpid": "15132685"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748367,
+                "longitude": -122.44714,
+                "price": 1310800,
+                "provider_listing_id": "54e4fa2umyyze",
+                "status": "OTHER",
+                "tax_assessed_value": 66512,
+                "url": "https://www.zillow.com/homedetails/27-Dawnview-Way-San-Francisco-CA-94131/15133063_zpid/",
+                "zpid": "15133063"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748142,
+                "longitude": -122.44669,
+                "price": 2624700,
+                "provider_listing_id": "2207krahgmwrw",
+                "status": "OTHER",
+                "tax_assessed_value": 2433358,
+                "url": "https://www.zillow.com/homedetails/220-Glenview-Dr-San-Francisco-CA-94131/15132696_zpid/",
+                "zpid": "15132696"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748165,
+                "longitude": -122.44323,
+                "price": 2553000,
+                "provider_listing_id": "7uj16a8mkcef",
+                "status": "OTHER",
+                "tax_assessed_value": 2130828,
+                "url": "https://www.zillow.com/homedetails/99-High-St-3-San-Francisco-CA-94114/61287350_zpid/",
+                "zpid": "61287350"
+              },
+              "status": "OTHER"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.7483,
+                "longitude": -122.444496,
+                "price": 4895,
+                "provider_listing_id": "jezsqt560gj3",
+                "status": "FOR_RENT",
+                "tax_assessed_value": null,
+                "url": "https://www.zillow.com/homedetails/160-Portola-Dr-200-San-Francisco-CA-94131/465106161_zpid/",
+                "zpid": "465106161"
+              },
+              "status": "FOR_RENT"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748478,
+                "longitude": -122.446655,
+                "price": 850000,
+                "provider_listing_id": null,
+                "status": "SOLD",
+                "tax_assessed_value": 867000,
+                "url": "https://www.zillow.com/homedetails/233-Glenview-Dr-San-Francisco-CA-94131/15132678_zpid/",
+                "zpid": "15132678"
+              },
+              "status": "SOLD"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748287,
+                "longitude": -122.44448,
+                "price": 3600000,
+                "provider_listing_id": null,
+                "status": "SOLD",
+                "tax_assessed_value": null,
+                "url": "https://www.zillow.com/homedetails/160-Portola-Dr-San-Francisco-CA-94131/2055957223_zpid/",
+                "zpid": "2055957223"
+              },
+              "status": "SOLD"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.74775,
+                "longitude": -122.445564,
+                "price": 2150000,
+                "provider_listing_id": null,
+                "status": "RECENTLY_SOLD",
+                "tax_assessed_value": 1804511,
+                "url": "https://www.zillow.com/homedetails/80-Dawnview-Way-San-Francisco-CA-94131/15132754_zpid/",
+                "zpid": "15132754"
+              },
+              "status": "RECENTLY_SOLD"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748127,
+                "longitude": -122.44446,
+                "price": 2705000,
+                "provider_listing_id": null,
+                "status": "RECENTLY_SOLD",
+                "tax_assessed_value": null,
+                "url": "https://www.zillow.com/homedetails/172-Portola-Dr-San-Francisco-CA-94131/2108389848_zpid/",
+                "zpid": "2108389848"
+              },
+              "status": "RECENTLY_SOLD"
+            },
+            {
+              "count": 1,
+              "kind": "Property",
+              "property": {
+                "address": {
+                  "community": null,
+                  "subdivision": null
+                },
+                "currency": "USD",
+                "latitude": 37.748398,
+                "longitude": -122.443245,
+                "price": 1900000,
+                "provider_listing_id": "3bnnvn143vjhv",
+                "status": "RECENTLY_SOLD",
+                "tax_assessed_value": 1963234,
+                "url": "https://www.zillow.com/homedetails/65-High-St-San-Francisco-CA-94114/15132654_zpid/",
+                "zpid": "15132654"
+              },
+              "status": "RECENTLY_SOLD"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/map"
+      }
+    },
+    {
+      "id": "zillow-com/properties/nearby",
+      "provider": "zillow-com",
+      "capability": "properties/nearby",
+      "name": "Nearby",
+      "description": "Nearby property cards, including off-market homes.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "mode",
+          "type": "string",
+          "in": "body",
+          "about": "Selects the corresponding approved property query. Off-market responses may omit photos.",
+          "default": "for_sale",
+          "oneOf": [
+            "for_sale",
+            "off_market"
+          ]
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS www.zillow.com/homedetails/.../{zpid}_zpid/ URL"
+        },
+        {
+          "name": "zpid",
+          "type": "number",
+          "in": "body",
+          "about": "zpid"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "zpid",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Nearby property cards, including off-market homes.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "homes",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "object[]"
+          },
+          {
+            "name": "zpid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "zpid": "15132666"
+        },
+        "response": {
+          "count": 8,
+          "homes": [
+            {
+              "address": {
+                "city": "San Francisco",
+                "community": null,
+                "neighborhood": null,
+                "state": "CA",
+                "street": "890 Burnett Ave",
+                "subdivision": null,
+                "zipcode": "94131"
+              },
+              "bathrooms": 1,
+              "bedrooms": null,
+              "currency": "USD",
+              "home_type": "SINGLE_FAMILY",
+              "image_url": "https://maps.googleapis.com/maps/api/streetview?location=890+Burnett+Ave%2C+San+Francisco%2C+CA+94131&size=316x234&key=AIzaSyARFMLB1na-BBWf7_R3-5YOQQaHqEJf6RQ&source=outdoor&&signature=mqbra4MniCoPXfu2_lylsbT5UVg=",
+              "latitude": 37.748634,
+              "living_area": 888,
+              "living_area_units": "Square Feet",
+              "longitude": -122.44529,
+              "lot_area": 2914,
+              "lot_area_units": "Square Feet",
+              "price": 1298400,
+              "status": "OTHER",
+              "url": "https://www.zillow.com/homedetails/890-Burnett-Ave-San-Francisco-CA-94131/15132665_zpid/",
+              "zpid": "15132665"
+            },
+            {
+              "address": {
+                "city": "San Francisco",
+                "community": null,
+                "neighborhood": null,
+                "state": "CA",
+                "street": "297 Glenview Dr",
+                "subdivision": null,
+                "zipcode": "94131"
+              },
+              "bathrooms": 2,
+              "bedrooms": 4,
+              "currency": "USD",
+              "home_type": "SINGLE_FAMILY",
+              "image_url": "https://photos.zillowstatic.com/fp/6afbbaf555579d0adc4d0128e19f6a29-p_c.jpg",
+              "latitude": 37.748444,
+              "living_area": 1700,
+              "living_area_units": "Square Feet",
+              "longitude": -122.44526,
+              "lot_area": 3162,
+              "lot_area_units": "Square Feet",
+              "price": 1622900,
+              "status": "OTHER",
+              "url": "https://www.zillow.com/homedetails/297-Glenview-Dr-San-Francisco-CA-94131/15132667_zpid/",
+              "zpid": "15132667"
+            }
+          ],
+          "observed_at_ms": 1788810000000,
+          "warnings": [
+            {
+              "code": "OPTIONAL_VISUALIZATIONS_UNAVAILABLE",
+              "message": "Zillow could not load optional rich-media visualizations"
+            }
+          ],
+          "zpid": "15132666"
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/nearby"
+      }
+    },
+    {
+      "id": "zillow-com/properties/price_history",
+      "provider": "zillow-com",
+      "capability": "properties/price_history",
+      "name": "Price history",
+      "description": "Public listing and sale price events, timestamps and changes.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "mode",
+          "type": "string",
+          "in": "body",
+          "about": "Selects the corresponding approved property query. Off-market responses may omit photos.",
+          "default": "for_sale",
+          "oneOf": [
+            "for_sale",
+            "off_market"
+          ]
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS www.zillow.com/homedetails/.../{zpid}_zpid/ URL"
+        },
+        {
+          "name": "zpid",
+          "type": "number",
+          "in": "body",
+          "about": "zpid"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "zpid",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Public listing and sale price events, timestamps and changes.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "events",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "object[]"
+          },
+          {
+            "name": "zpid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "zpid": "15132666"
+        },
+        "response": {
+          "count": 3,
+          "events": [
+            {
+              "date": "2026-09-02",
+              "event": "Listed for sale",
+              "is_rental": false,
+              "price": 988888,
+              "price_change_rate": -0.011112,
+              "price_per_sqft": 1114,
+              "source": "MLSListings Inc",
+              "time_ms": 1788307200000
+            },
+            {
+              "date": "2026-07-28",
+              "event": "Sold",
+              "is_rental": false,
+              "price": 1000000,
+              "price_change_rate": 3.347826086956522,
+              "price_per_sqft": 1126,
+              "source": "Public Record",
+              "time_ms": 1785196800000
+            }
+          ],
+          "observed_at_ms": 1788810000000,
+          "warnings": [
+            {
+              "code": "OPTIONAL_VISUALIZATIONS_UNAVAILABLE",
+              "message": "Zillow could not load optional rich-media visualizations"
+            }
+          ],
+          "zpid": "15132666"
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/price_history"
+      }
+    },
+    {
+      "id": "zillow-com/properties/property",
+      "provider": "zillow-com",
+      "capability": "properties/property",
+      "name": "Property",
+      "description": "Property facts, original photos, price/tax history, schools and nearby homes; optionally fetch scores and valuation data in the same session.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "include",
+          "type": "string[]",
+          "in": "body",
+          "about": "include"
+        },
+        {
+          "name": "mode",
+          "type": "string",
+          "in": "body",
+          "about": "Selects the corresponding approved property query. Off-market responses may omit photos.",
+          "default": "for_sale",
+          "oneOf": [
+            "for_sale",
+            "off_market"
+          ]
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS www.zillow.com/homedetails/.../{zpid}_zpid/ URL"
+        },
+        {
+          "name": "zpid",
+          "type": "number",
+          "in": "body",
+          "about": "zpid"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "zpid",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Property facts, original photos, price/tax history, schools and nearby homes; optionally fetch scores and valuation data in the same session.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "comparables",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "property",
+            "type": "object"
+          },
+          {
+            "name": "scores",
+            "type": "object"
+          },
+          {
+            "name": "value_history",
+            "type": "object"
+          },
+          {
+            "name": "warnings",
+            "type": "object[]"
+          },
+          {
+            "name": "zpid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "zpid": "15132666"
+        },
+        "response": {
+          "observed_at_ms": 1788810000000,
+          "property": {
+            "address": {
+              "city": "San Francisco",
+              "community": null,
+              "neighborhood": null,
+              "state": "CA",
+              "street": "894 Burnett Ave",
+              "subdivision": null,
+              "zipcode": "94131"
+            },
+            "attribution": {
+              "agent_name": "Joey Oliva",
+              "broker_name": "Omarshall, Inc",
+              "disclaimer": "Based on information from the MLSListings MLS as of 2026-09-07 15:09:16 PDT. All data, including all measurements and calculations of area, is obtained from various sources and has not been, and will not be, verified by broker or MLS. All information should be independently reviewed and verified for accuracy. Properties may or may not be listed by the office/agent presenting the information.",
+              "mls_id": "ML82059800",
+              "mls_name": "MLSListings Inc"
+            },
+            "bathrooms": 1,
+            "bedrooms": 2,
+            "currency": "USD",
+            "days_on_zillow": 5,
+            "description": "Welcome to this classic Midtown Terrace home, thoughtfully updated for modern living while retaining its timeless San Francisco charm. This inviting two-bedroom, one-bath residence features a beautifully updated kitchen and bathroom, new flooring throughout, and fresh interior paint, creating a bright, clean and move-in-ready atmosphere. The comfortable floor plan offers well-proportioned living spaces and an easy connection to the homes good-sized backyardperfect for entertaining, gardening, relaxing outdoors, or creating your own urban retreat. A large attached garage provides generous parking, storage and additional possibilities. Ideally situated in desirable Midtown Terrace, the home enjoys a wonderfully convenient central San Francisco location with easy access to West Portal, Noe Valley, Glen Park, Forest Hill and the Castro, as well as nearby shopping, dining, parks and recreation. Convenient access to Muni and major commuter routes makes getting around the city or heading south equally easy. Freshly updated, exceptionally well located and filled with classic appeal, this Midtown Terrace home offers a wonderful opportunity to enjoy comfortable San Francisco living in one of the citys most centrally situated residential neighborhoods.",
+            "facts": {
+              "aboveGradeFinishedArea": null,
+              "accessibilityFeatures": null,
+              "additionalFeeInfo": null,
+              "additionalParcelsDescription": null,
+              "appliances": null,
+              "architecturalStyle": null,
+              "associationAmenities": null,
+              "associationFee": null,
+              "associationFee2": null,
+              "associationFeeIncludes": null,
+              "associationName": null,
+              "associationName2": null,
+              "associationPhone": null,
+              "associationPhone2": null,
+              "associations": [],
+              "atAGlanceFacts": [
+                {
+                  "factLabel": "Type",
+                  "factValue": "Single Family Residence, Residential"
+                },
+                {
+                  "factLabel": "Year Built",
+                  "factValue": "1958"
+                }
+              ],
+              "attic": null,
+              "availabilityDate": null,
+              "basement": null,
+              "basementYN": null,
+              "bathrooms": 1,
+              "bathroomsFloat": 1,
+              "bathroomsFull": 1,
+              "bathroomsHalf": null,
+              "bathroomsOneQuarter": null,
+              "bathroomsPartial": null,
+              "bathroomsThreeQuarter": null,
+              "bedrooms": 2,
+              "belowGradeFinishedArea": null,
+              "bodyType": null,
+              "builderModel": null,
+              "builderName": null,
+              "buildingArea": "888",
+              "buildingAreaSource": null,
+              "buildingFeatures": null,
+              "buildingName": null,
+              "canRaiseHorses": false,
+              "carportParkingCapacity": null,
+              "cityRegion": "San Francisco",
+              "commonWalls": null,
+              "communityFeatures": null,
+              "compensationBasedOn": null,
+              "constructionMaterials": [],
+              "contingency": null,
+              "cooling": [
+                "None"
+              ],
+              "coveredParkingCapacity": 2,
+              "cropsIncludedYN": null,
+              "cumulativeDaysOnMarket": null,
+              "developmentStatus": null,
+              "doorFeatures": null,
+              "electric": null,
+              "elementarySchool": null,
+              "elementarySchoolDistrict": "SanFranciscoUnified",
+              "elevation": null,
+              "elevationUnits": null,
+              "entryLevel": null,
+              "entryLocation": null,
+              "exclusions": null,
+              "exteriorFeatures": [],
+              "feesAndDues": [],
+              "fencing": null,
+              "fireplaceFeatures": null,
+              "fireplaces": null,
+              "flooring": null,
+              "foundationArea": null,
+              "foundationDetails": [
+                "Concrete Perimeter"
+              ],
+              "frontageLength": null,
+              "frontageType": null,
+              "furnished": false,
+              "garageParkingCapacity": 2,
+              "gas": [
+                "IndividualGasMeters"
+              ],
+              "greenBuildingVerificationType": null,
+              "greenEnergyEfficient": null,
+              "greenEnergyGeneration": null,
+              "greenIndoorAirQuality": null,
+              "greenSustainability": null,
+              "greenWaterConservation": null,
+              "hasAdditionalParcels": false,
+              "hasAssociation": null,
+              "hasAttachedGarage": true,
+              "hasAttachedProperty": false,
+              "hasCarport": false,
+              "hasCooling": false,
+              "hasElectricOnProperty": null,
+              "hasFireplace": null,
+              "hasGarage": true,
+              "hasHeating": true,
+              "hasHomeWarranty": false,
+              "hasLandLease": false,
+              "hasOpenParking": null,
+              "hasPetsAllowed": null,
+              "hasPrivatePool": null,
+              "hasRentControl": null,
+              "hasSpa": false,
+              "hasView": false,
+              "hasWaterfrontView": null,
+              "heating": [
+                "Central Forced Air Gas"
+              ],
+              "highSchool": null,
+              "highSchoolDistrict": "SanFranciscoUnified",
+              "hoaFee": null,
+              "hoaFeeTotal": null,
+              "homeType": "SingleFamily",
+              "horseAmenities": null,
+              "horseYN": false,
+              "inclusions": null,
+              "incomeIncludes": null,
+              "interiorFeatures": null,
+              "irrigationWaterRightsAcres": null,
+              "irrigationWaterRightsYN": null,
+              "isNewConstruction": false,
+              "isSeniorCommunity": null,
+              "landLeaseAmount": null,
+              "landLeaseExpirationDate": null,
+              "laundryFeatures": null,
+              "leaseTerm": null,
+              "levels": null,
+              "listAOR": null,
+              "listingId": null,
+              "listingTerms": null,
+              "livingArea": "888 sqft",
+              "livingAreaRange": null,
+              "livingAreaRangeUnits": null,
+              "livingQuarters": [],
+              "lotFeatures": null,
+              "lotSize": "2,779 sqft",
+              "lotSizeDimensions": null,
+              "mainLevelBathrooms": null,
+              "mainLevelBedrooms": null,
+              "marketingType": null,
+              "media": [],
+              "middleOrJuniorSchool": null,
+              "middleOrJuniorSchoolDistrict": null,
+              "municipality": null,
+              "numberOfUnitsInCommunity": null,
+              "numberOfUnitsVacant": null,
+              "offerReviewDate": null,
+              "onMarketDate": 1788307200000,
+              "openParkingCapacity": null,
+              "otherEquipment": null,
+              "otherFacts": [],
+              "otherParking": null,
+              "otherStructures": null,
+              "ownership": null,
+              "ownershipType": null,
+              "parcelNumber": "2851003",
+              "parkName": null,
+              "parkingCapacity": 2,
+              "parkingFeatures": [
+                "Attached",
+                "Tandem"
+              ],
+              "patioAndPorchFeatures": null,
+              "petsMaxWeight": null,
+              "poolFeatures": null,
+              "pricePerSquareFoot": 1114,
+              "propertyCondition": null,
+              "propertySubType": [
+                "Single Family Residence",
+                "Residential"
+              ],
+              "roadSurfaceType": null,
+              "roofType": "Composition",
+              "roomTypes": null,
+              "rooms": [
+                {
+                  "area": null,
+                  "description": null,
+                  "dimensions": null,
+                  "features": null,
+                  "level": null,
+                  "roomArea": null,
+                  "roomAreaSource": null,
+                  "roomAreaUnits": null,
+                  "roomDescription": null,
+                  "roomDimensions": null,
+                  "roomFeatures": [
+                    "DiningArea"
+                  ],
+                  "roomLength": null,
+                  "roomLengthWidthSource": null,
+                  "roomLengthWidthUnits": null,
+                  "roomLevel": null,
+                  "roomType": "DiningRoom",
+                  "roomWidth": null
+                },
+                {
+                  "area": null,
+                  "description": null,
+                  "dimensions": null,
+                  "features": null,
+                  "level": null,
+                  "roomArea": null,
+                  "roomAreaSource": null,
+                  "roomAreaUnits": null,
+                  "roomDescription": null,
+                  "roomDimensions": null,
+                  "roomFeatures": [
+                    "KitchenFamilyRoomCombo"
+                  ],
+                  "roomLength": null,
+                  "roomLengthWidthSource": null,
+                  "roomLengthWidthUnits": null,
+                  "roomLevel": null,
+                  "roomType": "FamilyRoom",
+                  "roomWidth": null
+                }
+              ],
+              "securityFeatures": null,
+              "sewer": [
+                "Public Sewer"
+              ],
+              "spaFeatures": null,
+              "specialListingConditions": "Standard",
+              "stories": 1,
+              "storiesDecimal": 1,
+              "storiesTotal": null,
+              "structureType": null,
+              "subdivisionName": null,
+              "taxAnnualAmount": 4371,
+              "taxAssessedValue": 367229,
+              "tenantPays": null,
+              "topography": null,
+              "totalActualRent": null,
+              "utilities": null,
+              "vegetation": null,
+              "view": [],
+              "virtualTour": null,
+              "waterBodyName": null,
+              "waterSource": null,
+              "waterView": null,
+              "waterViewYN": null,
+              "waterfrontFeatures": null,
+              "windowFeatures": null,
+              "woodedArea": null,
+              "yearBuilt": 1958,
+              "yearBuiltEffective": null,
+              "zoning": "RH1",
+              "zoningDescription": null
+            },
+            "home_type": "SINGLE_FAMILY",
+            "image_url": null,
+            "is_undisclosed_address": false,
+            "last_sold_price": 1000000,
+            "latitude": 37.748543,
+            "living_area": 888,
+            "living_area_units": "Square Feet",
+            "longitude": -122.445274,
+            "lot_area": 2779,
+            "lot_area_units": "Square Feet",
+            "nearby_homes": [
+              {
+                "address": {
+                  "city": "San Francisco",
+                  "community": null,
+                  "neighborhood": null,
+                  "state": "CA",
+                  "street": "890 Burnett Ave",
+                  "subdivision": null,
+                  "zipcode": "94131"
+                },
+                "bathrooms": 1,
+                "bedrooms": null,
+                "currency": "USD",
+                "home_type": "SINGLE_FAMILY",
+                "image_url": "https://maps.googleapis.com/maps/api/streetview?location=890+Burnett+Ave%2C+San+Francisco%2C+CA+94131&size=316x234&key=AIzaSyARFMLB1na-BBWf7_R3-5YOQQaHqEJf6RQ&source=outdoor&&signature=mqbra4MniCoPXfu2_lylsbT5UVg=",
+                "latitude": 37.748634,
+                "living_area": 888,
+                "living_area_units": "Square Feet",
+                "longitude": -122.44529,
+                "lot_area": 2914,
+                "lot_area_units": "Square Feet",
+                "price": 1298400,
+                "status": "OTHER",
+                "url": "https://www.zillow.com/homedetails/890-Burnett-Ave-San-Francisco-CA-94131/15132665_zpid/",
+                "zpid": "15132665"
+              },
+              {
+                "address": {
+                  "city": "San Francisco",
+                  "community": null,
+                  "neighborhood": null,
+                  "state": "CA",
+                  "street": "297 Glenview Dr",
+                  "subdivision": null,
+                  "zipcode": "94131"
+                },
+                "bathrooms": 2,
+                "bedrooms": 4,
+                "currency": "USD",
+                "home_type": "SINGLE_FAMILY",
+                "image_url": "https://photos.zillowstatic.com/fp/6afbbaf555579d0adc4d0128e19f6a29-p_c.jpg",
+                "latitude": 37.748444,
+                "living_area": 1700,
+                "living_area_units": "Square Feet",
+                "longitude": -122.44526,
+                "lot_area": 3162,
+                "lot_area_units": "Square Feet",
+                "price": 1622900,
+                "status": "OTHER",
+                "url": "https://www.zillow.com/homedetails/297-Glenview-Dr-San-Francisco-CA-94131/15132667_zpid/",
+                "zpid": "15132667"
+              }
+            ],
+            "open_houses": [
+              {
+                "end": "2026-09-07 19:00:00",
+                "start": "2026-09-07 17:00:00"
+              }
+            ],
+            "photos": [
+              {
+                "caption": "",
+                "sources": [
+                  {
+                    "format": "jpeg",
+                    "url": "https://photos.zillowstatic.com/fp/7aa9a61d8d96c6c29d2f8cbc46b11309-d_d.jpg",
+                    "width": 800
+                  },
+                  {
+                    "format": "jpeg",
+                    "url": "https://photos.zillowstatic.com/fp/7aa9a61d8d96c6c29d2f8cbc46b11309-o_a.jpg",
+                    "width": 1024
+                  }
+                ]
+              },
+              {
+                "caption": "",
+                "sources": [
+                  {
+                    "format": "jpeg",
+                    "url": "https://photos.zillowstatic.com/fp/f9586ae98bfb8cd5e9de2a0dc17cc8d7-d_d.jpg",
+                    "width": 800
+                  },
+                  {
+                    "format": "jpeg",
+                    "url": "https://photos.zillowstatic.com/fp/f9586ae98bfb8cd5e9de2a0dc17cc8d7-o_a.jpg",
+                    "width": 1024
+                  }
+                ]
+              }
+            ],
+            "price": 988888,
+            "price_history": [
+              {
+                "date": "2026-09-02",
+                "event": "Listed for sale",
+                "is_rental": false,
+                "price": 988888,
+                "price_change_rate": -0.011112,
+                "price_per_sqft": 1114,
+                "source": "MLSListings Inc",
+                "time_ms": 1788307200000
+              },
+              {
+                "date": "2026-07-28",
+                "event": "Sold",
+                "is_rental": false,
+                "price": 1000000,
+                "price_change_rate": 3.347826086956522,
+                "price_per_sqft": 1126,
+                "source": "Public Record",
+                "time_ms": 1785196800000
+              }
+            ],
+            "rent_zestimate": 4686,
+            "schools": {
+              "assigned": [
+                {
+                  "distance_miles": 0.7,
+                  "district_id": 1787,
+                  "district_name": "San Francisco Unified School District",
+                  "grades": "K-5",
+                  "level": "Elementary",
+                  "name": "Clarendon Alternative Elementary School",
+                  "rating": 9,
+                  "school_id": 5454,
+                  "type": "Public",
+                  "url": "https://www.greatschools.org/california/san-francisco/6351-Clarendon-Alternative-Elementary-School/"
+                },
+                {
+                  "distance_miles": 2.5,
+                  "district_id": 1787,
+                  "district_name": "San Francisco Unified School District",
+                  "grades": "8-12",
+                  "level": "Middle",
+                  "name": "Marshall (Thurgood) High School",
+                  "rating": 2,
+                  "school_id": 4674,
+                  "type": "Public",
+                  "url": "https://www.greatschools.org/california/san-francisco/6404-Marshall-Thurgood-High-School/"
+                }
+              ],
+              "nearby": [
+                {
+                  "distance_miles": 0.7,
+                  "district_id": null,
+                  "district_name": null,
+                  "grades": "K-5",
+                  "level": null,
+                  "name": "Clarendon Alternative Elementary School",
+                  "rating": 9,
+                  "school_id": null,
+                  "type": null,
+                  "url": "https://www.greatschools.org/california/san-francisco/6351-Clarendon-Alternative-Elementary-School/"
+                },
+                {
+                  "distance_miles": 2.5,
+                  "district_id": null,
+                  "district_name": null,
+                  "grades": "8-12",
+                  "level": null,
+                  "name": "Marshall (Thurgood) High School",
+                  "rating": 2,
+                  "school_id": null,
+                  "type": null,
+                  "url": "https://www.greatschools.org/california/san-francisco/6404-Marshall-Thurgood-High-School/"
+                }
+              ]
+            },
+            "status": "FOR_SALE",
+            "tax_history": [
+              {
+                "assessed_value": 367229,
+                "tax_increase_rate": 0.029393716,
+                "tax_paid": 4371.3,
+                "time_ms": 1757283708410,
+                "value_increase_rate": 0.019995555
+              },
+              {
+                "assessed_value": 360030,
+                "tax_increase_rate": 0.014588754,
+                "tax_paid": 4246.48,
+                "time_ms": 1725747708410,
+                "value_increase_rate": 0.01999881
+              }
+            ],
+            "time_zone": "America/Los_Angeles",
+            "url": "https://www.zillow.com/homedetails/894-Burnett-Ave-San-Francisco-CA-94131/15132666_zpid/",
+            "year_built": 1958,
+            "zestimate": 1159900,
+            "zpid": "15132666"
+          },
+          "warnings": [
+            {
+              "code": "OPTIONAL_VISUALIZATIONS_UNAVAILABLE",
+              "message": "Zillow could not load optional rich-media visualizations"
+            }
+          ],
+          "zpid": "15132666"
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/property"
+      }
+    },
+    {
+      "id": "zillow-com/properties/rental",
+      "provider": "zillow-com",
+      "capability": "properties/rental",
+      "name": "Rental",
+      "description": "Details for one rental identified by zpid or /homedetails/ URL from rental_search (is_building = false). For apartment communities use building.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "lot_id",
+          "type": "string",
+          "in": "body",
+          "about": "Declared by the contract but not resolvable on Zillow's public site; always rejected with invalid_input (code unsupported). Use url. Pattern: ^[0-9]+$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS www.zillow.com/homedetails/.../{zpid}_zpid/ URL as returned in rental_search records."
+        },
+        {
+          "name": "zpid",
+          "type": "number",
+          "in": "body",
+          "about": "Zillow property id of the rental listing."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "zpid",
+          "url",
+          "lot_id"
+        ]
+      ],
+      "response": {
+        "about": "One active Zillow rental listing in full: rent and fee basis, deposit, availability, pets, amenities, lease terms, contact, listing history, photos and the underlying property facts. Off-market, sold or for-sale homes are not_found.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "amenities",
+            "type": "string[]"
+          },
+          {
+            "name": "application_fee",
+            "type": "number"
+          },
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "available_from",
+            "type": "string"
+          },
+          {
+            "name": "base_rent",
+            "type": "number"
+          },
+          {
+            "name": "baths",
+            "type": "number"
+          },
+          {
+            "name": "beds",
+            "type": "number"
+          },
+          {
+            "name": "building_id",
+            "type": "string"
+          },
+          {
+            "name": "contact",
+            "type": "object"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "days_on_zillow",
+            "type": "number"
+          },
+          {
+            "name": "deposit",
+            "type": "number"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "fees_and_dues",
+            "type": "object[]"
+          },
+          {
+            "name": "furnished",
+            "type": "boolean"
+          },
+          {
+            "name": "home_type",
+            "type": "string"
+          },
+          {
+            "name": "is_building",
+            "type": "boolean"
+          },
+          {
+            "name": "lat",
+            "type": "number"
+          },
+          {
+            "name": "lease_terms",
+            "type": "string[]"
+          },
+          {
+            "name": "listed_at",
+            "type": "string"
+          },
+          {
+            "name": "listing_history",
+            "type": "object[]"
+          },
+          {
+            "name": "listing_source",
+            "type": "object"
+          },
+          {
+            "name": "living_area_units",
+            "type": "string"
+          },
+          {
+            "name": "lon",
+            "type": "number"
+          },
+          {
+            "name": "lot_id",
+            "type": "string"
+          },
+          {
+            "name": "pets",
+            "type": "string[]"
+          },
+          {
+            "name": "pets_max_weight",
+            "type": "string"
+          },
+          {
+            "name": "photo_count",
+            "type": "number"
+          },
+          {
+            "name": "photo_urls",
+            "type": "string[]"
+          },
+          {
+            "name": "property_facts",
+            "type": "object",
+            "about": "Source facts copied verbatim from Zillow; keys vary by listing."
+          },
+          {
+            "name": "provider_listing_id",
+            "type": "string"
+          },
+          {
+            "name": "rent",
+            "type": "number"
+          },
+          {
+            "name": "rent_basis",
+            "type": "string"
+          },
+          {
+            "name": "rent_max",
+            "type": "number"
+          },
+          {
+            "name": "rent_min",
+            "type": "number"
+          },
+          {
+            "name": "rent_unit",
+            "type": "string"
+          },
+          {
+            "name": "rent_zestimate",
+            "type": "number"
+          },
+          {
+            "name": "required_monthly_fees_max",
+            "type": "number"
+          },
+          {
+            "name": "required_monthly_fees_min",
+            "type": "number"
+          },
+          {
+            "name": "source_home_type",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "special_offers",
+            "type": "object[]"
+          },
+          {
+            "name": "sqft",
+            "type": "number"
+          },
+          {
+            "name": "sqft_unit",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "time_on_zillow_text",
+            "type": "string"
+          },
+          {
+            "name": "time_zone",
+            "type": "string"
+          },
+          {
+            "name": "units",
+            "type": "object[]"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "utilities_included",
+            "type": "string[]"
+          },
+          {
+            "name": "year_built",
+            "type": "number"
+          },
+          {
+            "name": "zillow_application_fee",
+            "type": "number"
+          },
+          {
+            "name": "zpid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "zpid": "71614113"
+        },
+        "response": {
+          "attribution": "Data provided by Zillow, Inc. (https://www.zillow.com/)",
+          "complete": true,
+          "next_cursor": null,
+          "observed_at_ms": 1789475000000,
+          "records": [
+            {
+              "address": {
+                "city": "Laveen",
+                "line1": "7805 S 48th Ln",
+                "neighborhood": null,
+                "state": "AZ",
+                "unit": null,
+                "zip": "85339"
+              },
+              "amenities": [
+                "Washer/Dryer Hookups",
+                "Washer Dryer Hookup"
+              ],
+              "application_fee": null,
+              "attribution": "Data provided by Zillow, Inc. (https://www.zillow.com/)",
+              "available_from": null,
+              "base_rent": 2095,
+              "baths": 2,
+              "beds": 4,
+              "building_id": null,
+              "contact": {
+                "name": "Crest Premier Properties",
+                "phone": "(480) 386-1396"
+              },
+              "currency": "USD",
+              "days_on_zillow": 53,
+              "deposit": 2095,
+              "description": ".Ideally located along the desirable Baseline Corridor, this well-maintained 4-bedroom, 2-bathroom home offers comfort, convenience, and easy access to South Mountain Park, where you'll enjoy miles of scenic hiking, biking, and outdoor recreation trails.\n\nInside, you'll find a bright and functional ",
+              "fees_and_dues": [
+                {
+                  "fee": "$2,095",
+                  "name": null,
+                  "phone": null,
+                  "type": "Deposit"
+                }
+              ],
+              "furnished": false,
+              "home_type": "house",
+              "is_building": false,
+              "lat": 33.37532,
+              "lease_terms": [
+                "Contact For Details"
+              ],
+              "listed_at": "2026-07-23T00:00:00Z",
+              "listing_history": [
+                {
+                  "date": "2026-07-23",
+                  "event": "Listed for rent",
+                  "is_rental": true,
+                  "price_change_rate": 0,
+                  "rent": 2095,
+                  "source": "Zillow Rentals",
+                  "time_ms": 1784764800000
+                },
+                {
+                  "date": "2024-05-24",
+                  "event": "Listing removed",
+                  "is_rental": true,
+                  "price_change_rate": 0,
+                  "rent": null,
+                  "source": "Zillow Rentals",
+                  "time_ms": 1716508800000
+                },
+                {
+                  "date": "2024-05-08",
+                  "event": "Listed for rent",
+                  "is_rental": true,
+                  "price_change_rate": 0.8217391304347826,
+                  "rent": 2095,
+                  "source": "Zillow Rentals",
+                  "time_ms": 1715126400000
+                }
+              ],
+              "listing_source": {
+                "applications_accepted": "THIRD_PARTY",
+                "broker_name": "Crest Premier Properties",
+                "last_checked_text": "2026-09-15 04:26:21",
+                "last_updated_text": "2026-09-08 20:41:34",
+                "mls_id": null,
+                "mls_name": "Zillow Rentals"
+              },
+              "living_area_units": "sqft",
+              "lon": -112.16373,
+              "lot_id": null,
+              "pets": null,
+              "pets_max_weight": null,
+              "photo_count": 37,
+              "photo_urls": [
+                "https://photos.zillowstatic.com/fp/d6c79e7b7b071301211f96fc55133a45-uncropped_scaled_within_1536_1152.jpg",
+                "https://photos.zillowstatic.com/fp/58d892224fd350e19dc95cbfa318d0be-uncropped_scaled_within_1536_1152.jpg"
+              ],
+              "property_facts": {
+                "appliances": [
+                  "Washer/Dryer Hookups"
+                ],
+                "atAGlanceFacts": [
+                  {
+                    "factLabel": "Type",
+                    "factValue": "Single Family Residence"
+                  },
+                  {
+                    "factLabel": "Cooling",
+                    "factValue": null
+                  },
+                  {
+                    "factLabel": "Heating",
+                    "factValue": null
+                  },
+                  {
+                    "factLabel": "Pets",
+                    "factValue": null
+                  },
+                  {
+                    "factLabel": "Parking",
+                    "factValue": "Contact manager"
+                  },
+                  {
+                    "factLabel": "Laundry",
+                    "factValue": "Washer Dryer Hookup"
+                  },
+                  {
+                    "factLabel": "Deposit & fees",
+                    "factValue": "$2,095"
+                  },
+                  {
+                    "factLabel": "One-time fees",
+                    "factValue": "$2,095"
+                  }
+                ],
+                "feesAndDues": [
+                  {
+                    "fee": "$2,095",
+                    "name": null,
+                    "phone": null,
+                    "type": "Deposit"
+                  }
+                ],
+                "homeType": "SingleFamily",
+                "leaseTerm": "Contact For Details",
+                "livingArea": "1,672 sqft",
+                "onMarketDate": 1784764800000,
+                "parcelNumber": "30021354",
+                "propertySubType": [
+                  "Single Family Residence"
+                ],
+                "taxAssessedValue": 315300,
+                "yearBuilt": null
+              },
+              "provider_listing_id": "330vyzqtu8280",
+              "rent": 2095,
+              "rent_basis": "list_price",
+              "rent_max": null,
+              "rent_min": null,
+              "rent_unit": "USD per month",
+              "rent_zestimate": 2045,
+              "required_monthly_fees_max": null,
+              "required_monthly_fees_min": null,
+              "source_home_type": "SINGLE_FAMILY",
+              "source_url": "https://www.zillow.com/homedetails/7805-S-48th-Ln-Laveen-AZ-85339/71614113_zpid/",
+              "special_offers": [],
+              "sqft": 1672,
+              "sqft_unit": "square feet",
+              "status": "FOR_RENT",
+              "time_on_zillow_text": "53 days",
+              "time_zone": "America/Phoenix",
+              "units": [],
+              "url": "https://www.zillow.com/homedetails/7805-S-48th-Ln-Laveen-AZ-85339/71614113_zpid/",
+              "utilities_included": null,
+              "year_built": null,
+              "zillow_application_fee": 35,
+              "zpid": "71614113"
+            }
+          ],
+          "requested_url": "https://www.zillow.com/homedetails/71614113_zpid/",
+          "retrieved_at": "2026-09-15T12:23:20Z",
+          "schema_version": "1.1.0",
+          "source_updated_at": null,
+          "terms_url": "https://www.zillow.com/z/corp/terms/",
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/rental"
+      }
+    },
+    {
+      "id": "zillow-com/properties/rental_search",
+      "provider": "zillow-com",
+      "capability": "properties/rental_search",
+      "name": "Rental search",
+      "description": "Discovery of rentals by area and filters; pass next_cursor back as cursor for later pages. Use rental for one listing and building for one apartment community.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "available_by",
+          "type": "string",
+          "in": "body",
+          "about": "Requested move-in date (YYYY-MM-DD) passed to Zillow's availability filter. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "baths_min",
+          "type": "number",
+          "in": "body",
+          "about": "Minimum bathrooms in half steps.",
+          "min": 0,
+          "max": 20
+        },
+        {
+          "name": "beds_min",
+          "type": "number",
+          "in": "body",
+          "about": "Minimum bedrooms (0 = studio allowed).",
+          "min": 0,
+          "max": 20
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from a previous page (`<regionId>:<regionType>:<page>`, pages 2-20). Location text is not re-resolved when a cursor is given."
+        },
+        {
+          "name": "furnished",
+          "type": "boolean",
+          "in": "body",
+          "about": "true restricts to furnished rentals; false/null does not filter."
+        },
+        {
+          "name": "home_types",
+          "type": "string[]",
+          "in": "body",
+          "about": "Restrict to these Zillow rental types; omit for all types."
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "in": "body",
+          "about": "City, zip, neighborhood, county or state text resolved through Zillow autocomplete, or an explicit Zillow region as `<regionId>:<regionType>` (e.g. `37607:17` for Brooklyn).",
+          "required": true
+        },
+        {
+          "name": "max_rent",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum monthly rent in whole USD.",
+          "min": 0,
+          "max": 1000000
+        },
+        {
+          "name": "min_rent",
+          "type": "number",
+          "in": "body",
+          "about": "Minimum monthly rent in whole USD.",
+          "min": 0,
+          "max": 1000000
+        },
+        {
+          "name": "pets",
+          "type": "string[]",
+          "in": "body",
+          "about": "Require listings that allow each of these pet kinds."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "relevance = Zillow priorityscore, rent_low/rent_high = monthly payment, newest = days on Zillow.",
+          "default": "relevance",
+          "oneOf": [
+            "relevance",
+            "rent_low",
+            "rent_high",
+            "newest",
+            "null"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Search Zillow rental listings (apartments, houses, townhomes, condos, rooms and apartment buildings) in a city, zip, neighborhood or region by rent, beds, baths, pets, furnishing, move-in date and sort; one page of up to 41 records per call, pages 1-20.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "available_from",
+            "type": "string"
+          },
+          {
+            "name": "available_unit_count",
+            "type": "number"
+          },
+          {
+            "name": "baths",
+            "type": "number"
+          },
+          {
+            "name": "beds",
+            "type": "number"
+          },
+          {
+            "name": "building_id",
+            "type": "string"
+          },
+          {
+            "name": "building_name",
+            "type": "string"
+          },
+          {
+            "name": "building_units",
+            "type": "object[]"
+          },
+          {
+            "name": "days_on_zillow",
+            "type": "number"
+          },
+          {
+            "name": "flags",
+            "type": "object"
+          },
+          {
+            "name": "home_type",
+            "type": "string"
+          },
+          {
+            "name": "is_building",
+            "type": "boolean"
+          },
+          {
+            "name": "lat",
+            "type": "number"
+          },
+          {
+            "name": "listed_at",
+            "type": "string"
+          },
+          {
+            "name": "lon",
+            "type": "number"
+          },
+          {
+            "name": "lot_id",
+            "type": "string"
+          },
+          {
+            "name": "pets",
+            "type": "string[]"
+          },
+          {
+            "name": "photo_urls",
+            "type": "string[]"
+          },
+          {
+            "name": "provider_listing_id",
+            "type": "string"
+          },
+          {
+            "name": "rent",
+            "type": "number"
+          },
+          {
+            "name": "rent_basis",
+            "type": "string"
+          },
+          {
+            "name": "rent_max",
+            "type": "number"
+          },
+          {
+            "name": "rent_min",
+            "type": "number"
+          },
+          {
+            "name": "rent_text",
+            "type": "string"
+          },
+          {
+            "name": "rent_unit",
+            "type": "string"
+          },
+          {
+            "name": "required_monthly_fees_max",
+            "type": "number"
+          },
+          {
+            "name": "required_monthly_fees_min",
+            "type": "number"
+          },
+          {
+            "name": "source_home_type",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "sqft",
+            "type": "number"
+          },
+          {
+            "name": "sqft_unit",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "status_text",
+            "type": "string"
+          },
+          {
+            "name": "time_on_zillow_ms",
+            "type": "number"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "zpid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "beds_min": 3,
+          "home_types": [
+            "house"
+          ],
+          "location": "Phoenix, AZ"
+        },
+        "response": {
+          "attribution": "Data provided by Zillow, Inc. (https://www.zillow.com/)",
+          "complete": true,
+          "count": 41,
+          "next_cursor": "40326:6:2",
+          "observed_at_ms": 1789475000000,
+          "page": 1,
+          "records": [
+            {
+              "address": {
+                "city": "Phoenix",
+                "line1": "6250 S  40th St # 6029",
+                "state": "AZ",
+                "text": "6250 S 40th St, Phoenix, AZ",
+                "zip": "85042"
+              },
+              "attribution": "Data provided by Zillow, Inc. (https://www.zillow.com/)",
+              "available_from": null,
+              "available_unit_count": 4,
+              "baths": null,
+              "beds": null,
+              "building_id": null,
+              "building_name": "Obsidian at South Mountain",
+              "building_units": [
+                {
+                  "beds": 3,
+                  "price_text": "$2,220+",
+                  "rent_from": 2220,
+                  "room_for_rent": false
+                }
+              ],
+              "days_on_zillow": null,
+              "flags": {
+                "has_3d_model": true,
+                "is_featured": true,
+                "is_undisclosed_address": null,
+                "marketing_treatments": [
+                  "trustedListing",
+                  "paid",
+                  "multiFamilySalesListing",
+                  "paidOrUnpaidMultifamily",
+                  "paidMultifamily",
+                  "multifamilyPinnaclePackage"
+                ],
+                "relaxed": false
+              },
+              "home_type": "building",
+              "is_building": true,
+              "lat": 33.390537,
+              "listed_at": null,
+              "lon": -111.996765,
+              "lot_id": "2750912400",
+              "pets": null,
+              "photo_urls": [
+                "https://photos.zillowstatic.com/fp/ca375bd8e08c550eda9eb7e03021b15c-p_e.jpg",
+                "https://photos.zillowstatic.com/fp/075e84d264a286e969e54ba5d25fe7a7-p_e.jpg"
+              ],
+              "provider_listing_id": "4rqu75841fgsa",
+              "rent": null,
+              "rent_basis": null,
+              "rent_max": null,
+              "rent_min": null,
+              "rent_text": null,
+              "rent_unit": "USD per month",
+              "required_monthly_fees_max": null,
+              "required_monthly_fees_min": null,
+              "source_home_type": null,
+              "source_url": "https://www.zillow.com/apartments/phoenix-az/obsidian-at-south-mountain/CkCN7P/",
+              "sqft": null,
+              "sqft_unit": "square feet",
+              "status": "FOR_RENT",
+              "status_text": "Obsidian at South Mountain",
+              "time_on_zillow_ms": null,
+              "url": "https://www.zillow.com/apartments/phoenix-az/obsidian-at-south-mountain/CkCN7P/",
+              "zpid": null
+            },
+            {
+              "address": {
+                "city": "Phoenix",
+                "line1": "2119 E  Voltaire Ave # 9",
+                "state": "AZ",
+                "text": "2119 E Voltaire Ave, Phoenix, AZ",
+                "zip": "85022"
+              },
+              "attribution": "Data provided by Zillow, Inc. (https://www.zillow.com/)",
+              "available_from": null,
+              "available_unit_count": 3,
+              "baths": null,
+              "beds": null,
+              "building_id": null,
+              "building_name": "Agave Townhomes",
+              "building_units": [
+                {
+                  "beds": 3,
+                  "price_text": "$2,385+",
+                  "rent_from": 2385,
+                  "room_for_rent": false
+                }
+              ],
+              "days_on_zillow": null,
+              "flags": {
+                "has_3d_model": true,
+                "is_featured": true,
+                "is_undisclosed_address": null,
+                "marketing_treatments": [
+                  "trustedListing",
+                  "paid",
+                  "zillowRentalManager",
+                  "multiFamilySalesListing",
+                  "paidOrUnpaidMultifamily",
+                  "paidMultifamily",
+                  "multifamilyPinnaclePackage"
+                ],
+                "relaxed": false
+              },
+              "home_type": "building",
+              "is_building": true,
+              "lat": 33.610363,
+              "listed_at": null,
+              "lon": -112.03712,
+              "lot_id": "2754096761",
+              "pets": null,
+              "photo_urls": [
+                "https://photos.zillowstatic.com/fp/d9671ee8f00c0d241f883be27d28b355-p_e.jpg",
+                "https://photos.zillowstatic.com/fp/878e5a9fcd8ede950a82d647bdd701b1-p_e.jpg"
+              ],
+              "provider_listing_id": "45fk41cz4eypu",
+              "rent": null,
+              "rent_basis": null,
+              "rent_max": null,
+              "rent_min": null,
+              "rent_text": null,
+              "rent_unit": "USD per month",
+              "required_monthly_fees_max": null,
+              "required_monthly_fees_min": null,
+              "source_home_type": null,
+              "source_url": "https://www.zillow.com/b/agave-townhomes-phoenix-az-CkkRNM/",
+              "sqft": null,
+              "sqft_unit": "square feet",
+              "status": "FOR_RENT",
+              "status_text": "Agave Townhomes",
+              "time_on_zillow_ms": null,
+              "url": "https://www.zillow.com/b/agave-townhomes-phoenix-az-CkkRNM/",
+              "zpid": null
+            }
+          ],
+          "region": {
+            "bounds": {
+              "east": -111.926086,
+              "north": 33.92057,
+              "south": 33.29026,
+              "west": -112.324056
+            },
+            "display_name": "Phoenix AZ",
+            "name": "Phoenix",
+            "region_id": 40326,
+            "region_type": 6
+          },
+          "retrieved_at": "2026-09-15T12:23:20Z",
+          "schema_version": "1.1.0",
+          "source_updated_at": null,
+          "terms_url": "https://www.zillow.com/z/corp/terms/",
+          "total": 1630,
+          "total_pages": 20,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/rental_search"
+      }
+    },
+    {
+      "id": "zillow-com/properties/schools",
+      "provider": "zillow-com",
+      "capability": "properties/schools",
+      "name": "Schools",
+      "description": "Nearby and assigned schools remain distinct, with ratings, grade levels and distance in miles.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "mode",
+          "type": "string",
+          "in": "body",
+          "about": "Selects the corresponding approved property query. Off-market responses may omit photos.",
+          "default": "for_sale",
+          "oneOf": [
+            "for_sale",
+            "off_market"
+          ]
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS www.zillow.com/homedetails/.../{zpid}_zpid/ URL"
+        },
+        {
+          "name": "zpid",
+          "type": "number",
+          "in": "body",
+          "about": "zpid"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "zpid",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Nearby and assigned schools remain distinct, with ratings, grade levels and distance in miles.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "schools",
+            "type": "object"
+          },
+          {
+            "name": "warnings",
+            "type": "object[]"
+          },
+          {
+            "name": "zpid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "zpid": "15132666"
+        },
+        "response": {
+          "observed_at_ms": 1788810000000,
+          "schools": {
+            "assigned": [
+              {
+                "distance_miles": 0.7,
+                "district_id": 1787,
+                "district_name": "San Francisco Unified School District",
+                "grades": "K-5",
+                "level": "Elementary",
+                "name": "Clarendon Alternative Elementary School",
+                "rating": 9,
+                "school_id": 5454,
+                "type": "Public",
+                "url": "https://www.greatschools.org/california/san-francisco/6351-Clarendon-Alternative-Elementary-School/"
+              },
+              {
+                "distance_miles": 2.5,
+                "district_id": 1787,
+                "district_name": "San Francisco Unified School District",
+                "grades": "8-12",
+                "level": "Middle",
+                "name": "Marshall (Thurgood) High School",
+                "rating": 2,
+                "school_id": 4674,
+                "type": "Public",
+                "url": "https://www.greatschools.org/california/san-francisco/6404-Marshall-Thurgood-High-School/"
+              }
+            ],
+            "nearby": [
+              {
+                "distance_miles": 0.7,
+                "district_id": null,
+                "district_name": null,
+                "grades": "K-5",
+                "level": null,
+                "name": "Clarendon Alternative Elementary School",
+                "rating": 9,
+                "school_id": null,
+                "type": null,
+                "url": "https://www.greatschools.org/california/san-francisco/6351-Clarendon-Alternative-Elementary-School/"
+              },
+              {
+                "distance_miles": 2.5,
+                "district_id": null,
+                "district_name": null,
+                "grades": "8-12",
+                "level": null,
+                "name": "Marshall (Thurgood) High School",
+                "rating": 2,
+                "school_id": null,
+                "type": null,
+                "url": "https://www.greatschools.org/california/san-francisco/6404-Marshall-Thurgood-High-School/"
+              }
+            ]
+          },
+          "warnings": [
+            {
+              "code": "OPTIONAL_VISUALIZATIONS_UNAVAILABLE",
+              "message": "Zillow could not load optional rich-media visualizations"
+            }
+          ],
+          "zpid": "15132666"
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/schools"
+      }
+    },
+    {
+      "id": "zillow-com/properties/scores",
+      "provider": "zillow-com",
+      "capability": "properties/scores",
+      "name": "Scores",
+      "description": "Walk, transit and bike scores; unavailable scores are null.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS www.zillow.com/homedetails/.../{zpid}_zpid/ URL"
+        },
+        {
+          "name": "zpid",
+          "type": "number",
+          "in": "body",
+          "about": "zpid"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "zpid",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Walk, transit and bike scores; unavailable scores are null.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "scores",
+            "type": "object"
+          },
+          {
+            "name": "zpid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "zpid": "15132666"
+        },
+        "response": {
+          "observed_at_ms": 1788810000000,
+          "scores": {
+            "bike": {
+              "description": "Bikeable",
+              "score": 59,
+              "url": null
+            },
+            "transit": {
+              "description": "Good Transit",
+              "score": 68,
+              "url": "https://www.walkscore.com/score/loc/lat=37.7485/lng=-122.4453/?utm_source=zillow2.com&utm_medium=ts_api&utm_campaign=ts_api"
+            },
+            "walk": {
+              "description": "Somewhat Walkable",
+              "score": 53,
+              "url": "https://www.walkscore.com/score/loc/lat=37.748543/lng=-122.445274/?utm_source=zillow2.com&utm_medium=ws_api&utm_campaign=ws_api"
+            }
+          },
+          "zpid": "15132666"
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/scores"
+      }
+    },
+    {
+      "id": "zillow-com/properties/search",
+      "provider": "zillow-com",
+      "capability": "properties/search",
+      "name": "Search",
+      "description": "Find for-sale listings in a region or a map box. Chain from locations: pass its region_id (or region_ids[0]) as region_id and its region_types[0] / region_subtype as region_type; bounds are then optional and the response's pages[].region.bounds carries the region's box for map or a narrower search. Alternatively supply bounds as {west, east, south, north} in longitude/latitude degrees. Rental listings are not supported by this search.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "bounds",
+          "type": "object",
+          "in": "body",
+          "about": "Map bounding box {west, east, south, north} in longitude/latitude degrees, west < east and south < north, at most 10 degrees per axis. Optional when region_id is given: the search then covers the whole region and returns its box in pages[].region.bounds."
+        },
+        {
+          "name": "include_map",
+          "type": "boolean",
+          "in": "body",
+          "about": "include_map"
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 20
+        },
+        {
+          "name": "pages",
+          "type": "number",
+          "in": "body",
+          "about": "pages",
+          "default": 1,
+          "min": 1,
+          "max": 3
+        },
+        {
+          "name": "region_id",
+          "type": "number",
+          "in": "body",
+          "about": "Zillow region identifier: a locations result's region_id or region_ids[0]. Sufficient on its own; with bounds it narrows the box to the region.",
+          "min": 1,
+          "max": 4294967295
+        },
+        {
+          "name": "region_type",
+          "type": "number",
+          "in": "body",
+          "about": "Region type as the numeric Zillow code (2 state, 4 county, 6 city, 7 zipcode, 8 neighborhood) or the matching region_types / region_subtype string returned by locations. Only pass with region_id.",
+          "default": 6,
+          "oneOf": [
+            "2",
+            "4",
+            "6",
+            "7",
+            "8",
+            "state",
+            "county",
+            "city",
+            "zipcode",
+            "neighborhood"
+          ]
+        },
+        {
+          "name": "zoom",
+          "type": "number",
+          "in": "body",
+          "about": "zoom",
+          "default": 11,
+          "min": 1,
+          "max": 20
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "bounds",
+          "region_id"
+        ]
+      ],
+      "response": {
+        "about": "For-sale listings ordered by relevance, one to three pages per call. Map/building results and relaxed matches stay separate.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "has_more",
+            "type": "boolean"
+          },
+          {
+            "name": "next_page",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "pages",
+            "type": "object[]"
+          },
+          {
+            "name": "returned_pages",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "bounds": {
+            "east": -121.92883561523438,
+            "north": 37.97304163792253,
+            "south": 37.56976806474773,
+            "west": -122.94232438476563
+          },
+          "include_map": true,
+          "pages": 1,
+          "region_id": 20330
+        },
+        "response": {
+          "count": 41,
+          "has_more": true,
+          "next_page": 2,
+          "observed_at_ms": 1788810000000,
+          "pages": [
+            {
+              "count": 41,
+              "has_next": true,
+              "map_results": [
+                {
+                  "address": "435 China Basin St, San Francisco, CA",
+                  "bathrooms": null,
+                  "bedrooms": null,
+                  "broker_name": null,
+                  "building_id": "37.771885--122.38857",
+                  "currency": "USD",
+                  "home_type": null,
+                  "image_url": "https://photos.zillowstatic.com/fp/915b04bcabb8f002b47516bd0e245286-p_e.jpg",
+                  "is_undisclosed_address": null,
+                  "kind": "building",
+                  "latitude": 37.771885,
+                  "living_area_sqft": null,
+                  "longitude": -122.38857,
+                  "lot_id": "1002116330",
+                  "minimum_area_sqft": 1429,
+                  "minimum_bathrooms": 2,
+                  "minimum_bedrooms": 2,
+                  "price": null,
+                  "price_is_zestimate": null,
+                  "price_text": "From $1,495,000",
+                  "status": "FOR_SALE",
+                  "status_text": "For sale",
+                  "unit_count": 2,
+                  "url": "https://www.zillow.com/b/435-china-basin-st-san-francisco-ca-5XqrYg/",
+                  "zpid": null
+                },
+                {
+                  "address": "125 Richland Ave, San Francisco, CA 94110",
+                  "bathrooms": 2,
+                  "bedrooms": 3,
+                  "broker_name": "Redfin",
+                  "building_id": null,
+                  "currency": "USD",
+                  "home_type": "SINGLE_FAMILY",
+                  "image_url": "https://photos.zillowstatic.com/fp/b4e934b96e0af2e671bf13b6fb81601a-p_e.jpg",
+                  "is_undisclosed_address": null,
+                  "kind": "property",
+                  "latitude": 37.736214,
+                  "living_area_sqft": 1870,
+                  "longitude": -122.42389,
+                  "lot_id": null,
+                  "minimum_area_sqft": null,
+                  "minimum_bathrooms": null,
+                  "minimum_bedrooms": null,
+                  "price": null,
+                  "price_is_zestimate": false,
+                  "price_text": "$1,695,000",
+                  "status": "FOR_SALE",
+                  "status_text": "House for sale",
+                  "unit_count": null,
+                  "url": "https://www.zillow.com/homedetails/125-Richland-Ave-San-Francisco-CA-94110/15163645_zpid/",
+                  "zpid": "15163645"
+                }
+              ],
+              "next_page": 2,
+              "page": 1,
+              "relaxed_map_results": [],
+              "relaxed_results": [],
+              "results": [
+                {
+                  "address": "435 China Basin St Unit 341, San Francisco, CA 94158",
+                  "bathrooms": 2,
+                  "bedrooms": 2,
+                  "broker_name": "Compass",
+                  "building_id": null,
+                  "currency": "USD",
+                  "home_type": "CONDO",
+                  "image_url": "https://photos.zillowstatic.com/fp/915b04bcabb8f002b47516bd0e245286-p_e.jpg",
+                  "is_undisclosed_address": false,
+                  "kind": "property",
+                  "latitude": 37.771885,
+                  "living_area_sqft": 1429,
+                  "longitude": -122.38857,
+                  "lot_id": null,
+                  "minimum_area_sqft": null,
+                  "minimum_bathrooms": null,
+                  "minimum_bedrooms": null,
+                  "price": 1798000,
+                  "price_is_zestimate": false,
+                  "price_text": "$1,798,000",
+                  "status": "FOR_SALE",
+                  "status_text": "Condo for sale",
+                  "unit_count": null,
+                  "url": "https://www.zillow.com/homedetails/435-China-Basin-St-UNIT-341-San-Francisco-CA-94158/116090005_zpid/",
+                  "zpid": "116090005"
+                },
+                {
+                  "address": "125 Richland Ave, San Francisco, CA 94110",
+                  "bathrooms": 2,
+                  "bedrooms": 3,
+                  "broker_name": "Redfin",
+                  "building_id": null,
+                  "currency": "USD",
+                  "home_type": "SINGLE_FAMILY",
+                  "image_url": "https://photos.zillowstatic.com/fp/b4e934b96e0af2e671bf13b6fb81601a-p_e.jpg",
+                  "is_undisclosed_address": false,
+                  "kind": "property",
+                  "latitude": 37.736214,
+                  "living_area_sqft": 1870,
+                  "longitude": -122.42389,
+                  "lot_id": null,
+                  "minimum_area_sqft": null,
+                  "minimum_bathrooms": null,
+                  "minimum_bedrooms": null,
+                  "price": 1695000,
+                  "price_is_zestimate": false,
+                  "price_text": "$1,695,000",
+                  "status": "FOR_SALE",
+                  "status_text": "House for sale",
+                  "unit_count": null,
+                  "url": "https://www.zillow.com/homedetails/125-Richland-Ave-San-Francisco-CA-94110/15163645_zpid/",
+                  "zpid": "15163645"
+                }
+              ],
+              "results_per_page": 41,
+              "total": 739,
+              "total_pages": 19
+            }
+          ],
+          "returned_pages": 1
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/search"
+      }
+    },
+    {
+      "id": "zillow-com/properties/tax_history",
+      "provider": "zillow-com",
+      "capability": "properties/tax_history",
+      "name": "Tax history",
+      "description": "Tax payment and assessed-value history with provider timestamps.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "mode",
+          "type": "string",
+          "in": "body",
+          "about": "Selects the corresponding approved property query. Off-market responses may omit photos.",
+          "default": "for_sale",
+          "oneOf": [
+            "for_sale",
+            "off_market"
+          ]
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS www.zillow.com/homedetails/.../{zpid}_zpid/ URL"
+        },
+        {
+          "name": "zpid",
+          "type": "number",
+          "in": "body",
+          "about": "zpid"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "zpid",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Tax payment and assessed-value history with provider timestamps.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "history",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "object[]"
+          },
+          {
+            "name": "zpid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "zpid": "15132666"
+        },
+        "response": {
+          "count": 25,
+          "history": [
+            {
+              "assessed_value": 367229,
+              "tax_increase_rate": 0.029393716,
+              "tax_paid": 4371.3,
+              "time_ms": 1757283708410,
+              "value_increase_rate": 0.019995555
+            },
+            {
+              "assessed_value": 360030,
+              "tax_increase_rate": 0.014588754,
+              "tax_paid": 4246.48,
+              "time_ms": 1725747708410,
+              "value_increase_rate": 0.01999881
+            }
+          ],
+          "observed_at_ms": 1788810000000,
+          "warnings": [
+            {
+              "code": "OPTIONAL_VISUALIZATIONS_UNAVAILABLE",
+              "message": "Zillow could not load optional rich-media visualizations"
+            }
+          ],
+          "zpid": "15132666"
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/tax_history"
+      }
+    },
+    {
+      "id": "zillow-com/properties/value_history",
+      "provider": "zillow-com",
+      "capability": "properties/value_history",
+      "name": "Value history",
+      "description": "Named valuation chart series. Point timestamps are Unix milliseconds; null values remain null.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "metric",
+          "type": "string",
+          "in": "body",
+          "about": "metric",
+          "default": "LOCAL_HOME_VALUES",
+          "oneOf": [
+            "LOCAL_HOME_VALUES",
+            "LISTING_PRICE",
+            "LOCAL_RENTAL_RATES",
+            "ZESTIMATE_PERCENT_CHANGE",
+            "TAX_ASSESSMENT",
+            "TAX_PAID"
+          ]
+        },
+        {
+          "name": "time_period",
+          "type": "string",
+          "in": "body",
+          "about": "time_period",
+          "default": "TEN_YEARS",
+          "oneOf": [
+            "ONE_YEAR",
+            "FIVE_YEARS",
+            "TEN_YEARS"
+          ]
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS www.zillow.com/homedetails/.../{zpid}_zpid/ URL"
+        },
+        {
+          "name": "zpid",
+          "type": "number",
+          "in": "body",
+          "about": "zpid"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "zpid",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Named valuation chart series. Point timestamps are Unix milliseconds; null values remain null.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "metric",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "series",
+            "type": "object[]"
+          },
+          {
+            "name": "time_period",
+            "type": "string"
+          },
+          {
+            "name": "zpid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "metric": "LOCAL_HOME_VALUES",
+          "time_period": "TEN_YEARS",
+          "zpid": "15132666"
+        },
+        "response": {
+          "metric": "LOCAL_HOME_VALUES",
+          "observed_at_ms": 1788810000000,
+          "series": [
+            {
+              "name": "This home",
+              "points": [
+                {
+                  "time_ms": 1485849600000,
+                  "value": 2600216
+                },
+                {
+                  "time_ms": 1488268800000,
+                  "value": 2573532
+                }
+              ]
+            }
+          ],
+          "time_period": "TEN_YEARS",
+          "zpid": "15132666"
+        },
+        "recordedAt": "2026-09-08"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/value_history"
+      }
+    },
+    {
+      "id": "zillow-com/properties/zori",
+      "provider": "zillow-com",
+      "capability": "properties/zori",
+      "name": "Zori",
+      "description": "Market-level rent index questions (median asking rent over time, YoY rent change for a metro/city/county/ZIP). Not for individual listings: use rental_search, rental or building for those. Resolve ambiguous names with the state (`Springfield, IL`) or pass the Zillow RegionID.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "from",
+          "type": "string",
+          "in": "body",
+          "about": "Earliest month to return (YYYY-MM or YYYY-MM-DD, compared by month). Pattern: ^[0-9]{4}-[0-9]{2}(-[0-9]{2})?$."
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "in": "body",
+          "about": "Region name with state (`San Francisco, CA`), a metro name as published (`San Francisco, CA`), a ZIP code, `United States` (metro file), or a Zillow RegionID.",
+          "required": true
+        },
+        {
+          "name": "region_type",
+          "type": "string",
+          "in": "body",
+          "about": "ZORI geography file: metro (MSAs plus the United States row), city, county or zip. Zillow publishes no neighborhood ZORI file.",
+          "required": true,
+          "oneOf": [
+            "metro",
+            "city",
+            "county",
+            "zip"
+          ]
+        },
+        {
+          "name": "seasonally_adjusted",
+          "type": "boolean",
+          "in": "body",
+          "about": "Read the seasonally adjusted (`_sa`) file variant."
+        },
+        {
+          "name": "series",
+          "type": "string",
+          "in": "body",
+          "about": "sfrcondomfr = all homes (single-family, condo and multifamily), sfr = single-family, mfr = multifamily.",
+          "default": "sfrcondomfr",
+          "oneOf": [
+            "sfrcondomfr",
+            "sfr",
+            "mfr",
+            "null"
+          ]
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "in": "body",
+          "about": "Latest month to return (YYYY-MM or YYYY-MM-DD, compared by month). latest and the derived changes refer to the last non-null month inside the bounds. Pattern: ^[0-9]{4}-[0-9]{2}(-[0-9]{2})?$."
+        }
+      ],
+      "response": {
+        "about": "Zillow Observed Rent Index (ZORI) monthly time series for one metro, city, county or ZIP from Zillow Research's public CSV exports: typical asking rent in USD per month, smoothed, optionally seasonally adjusted, with latest value and month-over-month / year-over-year change.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number",
+            "about": "Number of points returned (months inside the requested bounds, missing months included as null)."
+          },
+          {
+            "name": "latest",
+            "type": "object",
+            "about": "Last non-null point inside the requested bounds; null when none."
+          },
+          {
+            "name": "mom_change",
+            "type": "object",
+            "about": "Change from the month before `latest`; null when either value is missing."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "points",
+            "type": "object[]"
+          },
+          {
+            "name": "region",
+            "type": "object"
+          },
+          {
+            "name": "series",
+            "type": "object"
+          },
+          {
+            "name": "source_last_modified",
+            "type": "string",
+            "about": "The file host's Last-Modified header, as sent."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "yoy_change",
+            "type": "object",
+            "about": "Change from twelve months before `latest`; null when either value is missing."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "from": "2024-09",
+          "region": "San Francisco, CA",
+          "region_type": "city",
+          "series": "sfrcondomfr"
+        },
+        "response": {
+          "count": 24,
+          "latest": {
+            "month": "2026-08-31",
+            "value": 4682.5
+          },
+          "mom_change": {
+            "absolute": 148.26,
+            "percent": 3.27
+          },
+          "observed_at_ms": 1790055683736,
+          "points": [
+            {
+              "month": "2024-09-30",
+              "value": 3408.42
+            },
+            {
+              "month": "2024-10-31",
+              "value": 3405.12
+            },
+            {
+              "month": "2024-11-30",
+              "value": 3410.11
+            },
+            {
+              "month": "2024-12-31",
+              "value": 3411.28
+            },
+            {
+              "month": "2025-01-31",
+              "value": 3427.37
+            },
+            {
+              "month": "2025-02-28",
+              "value": 3454.77
+            },
+            {
+              "month": "2025-03-31",
+              "value": 3496.38
+            },
+            {
+              "month": "2025-04-30",
+              "value": 3540.38
+            },
+            {
+              "month": "2025-05-31",
+              "value": 3582.28
+            },
+            {
+              "month": "2025-06-30",
+              "value": 3634.83
+            },
+            {
+              "month": "2025-07-31",
+              "value": 3682.22
+            },
+            {
+              "month": "2025-08-31",
+              "value": 3739.5
+            },
+            {
+              "month": "2025-09-30",
+              "value": 3780.6
+            },
+            {
+              "month": "2025-10-31",
+              "value": 3808.96
+            },
+            {
+              "month": "2025-11-30",
+              "value": 3809.64
+            },
+            {
+              "month": "2025-12-31",
+              "value": 3819.43
+            },
+            {
+              "month": "2026-01-31",
+              "value": 3862.08
+            },
+            {
+              "month": "2026-02-28",
+              "value": 3935.07
+            },
+            {
+              "month": "2026-03-31",
+              "value": 4020.02
+            },
+            {
+              "month": "2026-04-30",
+              "value": 4119.23
+            },
+            {
+              "month": "2026-05-31",
+              "value": 4228.63
+            },
+            {
+              "month": "2026-06-30",
+              "value": 4375.22
+            },
+            {
+              "month": "2026-07-31",
+              "value": 4534.24
+            },
+            {
+              "month": "2026-08-31",
+              "value": 4682.5
+            }
+          ],
+          "region": {
+            "name": "San Francisco",
+            "region_id": "20330",
+            "size_rank": 17,
+            "state": "CA",
+            "type": "city"
+          },
+          "series": {
+            "file": "City_zori_uc_sfrcondomfr_sm_month.csv",
+            "geography": "city",
+            "id": "sfrcondomfr",
+            "label": "All homes (single-family, condo and multifamily)",
+            "seasonally_adjusted": false,
+            "smoothed": true,
+            "unit": "USD per month"
+          },
+          "source_last_modified": "Wed, 16 Sep 2026 02:11:22 GMT",
+          "source_url": "https://files.zillowstatic.com/research/public_csvs/zori/City_zori_uc_sfrcondomfr_sm_month.csv",
+          "yoy_change": {
+            "absolute": 943,
+            "percent": 25.22
+          }
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "zillow-com",
+        "capability": "properties/zori"
+      }
+    }
+  ]
+}

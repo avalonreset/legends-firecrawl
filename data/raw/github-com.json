@@ -1,0 +1,1535 @@
+{
+  "id": "github-com",
+  "provider": "github-com",
+  "name": "GitHub",
+  "description": "Public GitHub repositories, releases, issues, labels and contributors.",
+  "toolCount": 8,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "github-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "github-com/repositories/contributors",
+      "provider": "github-com",
+      "capability": "repositories/contributors",
+      "name": "Contributors",
+      "description": "One page of a repository's contributors ordered by commit count on the default branch, with login, account type and contribution count. Anonymous (email-only) contributors are not listed. GitHub refuses this listing for repositories with very large histories (for example torvalds/linux), which surfaces as an error naming the reason.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page; has_next in the response says whether page+1 exists.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Records per page.",
+          "default": 30,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "repo",
+          "type": "string",
+          "in": "body",
+          "about": "Repository as `owner/name`, for example `firecrawl/firecrawl`. Provide exactly one of repo or url. Pattern: ^@?/?[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]{1,100}(?:\\.git)?/?$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS github.com/{owner}/{name} URL; deeper paths (issues, tree, ...) are accepted and reduced to the repository. Provide exactly one of repo or url. Pattern: ^(?:https?://)?(?:www\\.)?github\\.com/[A-Za-z0-9-]{1,39}/[A-Za-z0-9._-]{1,100}(?:[/?#].*)?$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "repo",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One page of a repository's contributors ordered by commit count on the default branch, with login, account type and contribution count. Anonymous (email-only) contributors are not listed. GitHub refuses this listing for repositories with very large histories (for example torvalds/linux), which surfaces as an error naming the reason.",
+        "key": "contributors",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "avatar_url",
+            "type": "string"
+          },
+          {
+            "name": "contributions",
+            "type": "number",
+            "about": "Commits on the default branch attributed to this account."
+          },
+          {
+            "name": "html_url",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "login",
+            "type": "string"
+          },
+          {
+            "name": "site_admin",
+            "type": "boolean"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "per_page": 3,
+          "repo": "firecrawl/firecrawl"
+        },
+        "response": {
+          "contributors": [
+            {
+              "avatar_url": "https://avatars.githubusercontent.com/u/20311743?v=4",
+              "contributions": 1892,
+              "html_url": "https://github.com/nickscamara",
+              "id": 20311743,
+              "login": "nickscamara",
+              "site_admin": false,
+              "type": "User"
+            },
+            {
+              "avatar_url": "https://avatars.githubusercontent.com/u/66118807?v=4",
+              "contributions": 1668,
+              "html_url": "https://github.com/mogery",
+              "id": 66118807,
+              "login": "mogery",
+              "site_admin": false,
+              "type": "User"
+            },
+            {
+              "avatar_url": "https://avatars.githubusercontent.com/u/150964962?v=4",
+              "contributions": 596,
+              "html_url": "https://github.com/rafaelsideguide",
+              "id": 150964962,
+              "login": "rafaelsideguide",
+              "site_admin": false,
+              "type": "User"
+            }
+          ],
+          "count": 3,
+          "has_next": true,
+          "next_page": 2,
+          "observed_at_ms": 1789441359473,
+          "page": 1,
+          "per_page": 3,
+          "repo": "firecrawl/firecrawl",
+          "source_url": "https://github.com/firecrawl/firecrawl/graphs/contributors",
+          "upstream_requests": 1
+        },
+        "recordedAt": "2026-09-15T03:02:39.473562+00:00"
+      },
+      "execute": {
+        "provider": "github-com",
+        "capability": "repositories/contributors"
+      }
+    },
+    {
+      "id": "github-com/repositories/issue_counts",
+      "provider": "github-com",
+      "capability": "repositories/issue_counts",
+      "name": "Issue counts",
+      "description": "Exact issue counts for a repository (pull requests excluded, unlike the repository's open_issues_count): the total for the given state plus one count per requested label, from GitHub's issue search. Makes 1 + labels.length search requests; at most 5 labels per call because GitHub allows 10 keyless searches per minute per IP.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "labels",
+          "type": "string[]",
+          "in": "body",
+          "about": "Labels to count separately, one search each."
+        },
+        {
+          "name": "repo",
+          "type": "string",
+          "in": "body",
+          "about": "Repository as `owner/name`, for example `firecrawl/firecrawl`. Provide exactly one of repo or url. Pattern: ^@?/?[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]{1,100}(?:\\.git)?/?$."
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "in": "body",
+          "about": "Issue state to match.",
+          "default": "open",
+          "oneOf": [
+            "open",
+            "closed",
+            "all"
+          ]
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS github.com/{owner}/{name} URL; deeper paths (issues, tree, ...) are accepted and reduced to the repository. Provide exactly one of repo or url. Pattern: ^(?:https?://)?(?:www\\.)?github\\.com/[A-Za-z0-9-]{1,39}/[A-Za-z0-9._-]{1,100}(?:[/?#].*)?$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "repo",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Exact issue counts for a repository (pull requests excluded, unlike the repository's open_issues_count): the total for the given state plus one count per requested label, from GitHub's issue search. Makes 1 + labels.length search requests; at most 5 labels per call because GitHub allows 10 keyless searches per minute per IP.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "by_label",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "When the workflow read GitHub, Unix milliseconds."
+          },
+          {
+            "name": "repo",
+            "type": "string",
+            "about": "Normalized owner/name the call resolved to."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The github.com page a human would read for the same answer."
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number",
+            "about": "Issues (not PRs) in the given state."
+          },
+          {
+            "name": "total_incomplete_results",
+            "type": "boolean",
+            "about": "GitHub's incomplete_results flag: true when the search timed out and the count is a lower bound."
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number",
+            "about": "GitHub API requests this call made."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "repo": "firecrawl/firecrawl"
+        },
+        "response": {
+          "by_label": [],
+          "observed_at_ms": 1789441358757,
+          "repo": "firecrawl/firecrawl",
+          "source_url": "https://github.com/firecrawl/firecrawl/issues?q=is%3Aissue+is%3Aopen",
+          "state": "open",
+          "total": 81,
+          "total_incomplete_results": false,
+          "upstream_requests": 1
+        },
+        "recordedAt": "2026-09-15T03:02:38.757127+00:00"
+      },
+      "execute": {
+        "provider": "github-com",
+        "capability": "repositories/issue_counts"
+      }
+    },
+    {
+      "id": "github-com/repositories/issues",
+      "provider": "github-com",
+      "capability": "repositories/issues",
+      "name": "Issues",
+      "description": "One page of a repository's issues filtered by state and labels (all given labels must match), sorted by created/updated/comments. Pull requests are excluded unless include_pull_requests is true, so a page may hold fewer than per_page records; pull_requests_excluded says how many were dropped. Each record carries title, state, labels, assignees, milestone, comment and reaction counts, body and timestamps.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "direction",
+          "type": "string",
+          "in": "body",
+          "about": "direction",
+          "default": "desc",
+          "oneOf": [
+            "asc",
+            "desc"
+          ]
+        },
+        {
+          "name": "include_pull_requests",
+          "type": "boolean",
+          "in": "body",
+          "about": "Keep pull requests, which GitHub lists on the same endpoint."
+        },
+        {
+          "name": "labels",
+          "type": "string[]",
+          "in": "body",
+          "about": "Label names an issue must all carry (AND). Case-insensitive on GitHub's side."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page; has_next in the response says whether page+1 exists.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Records per page.",
+          "default": 30,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "repo",
+          "type": "string",
+          "in": "body",
+          "about": "Repository as `owner/name`, for example `firecrawl/firecrawl`. Provide exactly one of repo or url. Pattern: ^@?/?[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]{1,100}(?:\\.git)?/?$."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "sort",
+          "default": "created",
+          "oneOf": [
+            "created",
+            "updated",
+            "comments"
+          ]
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "in": "body",
+          "about": "Issue state to match.",
+          "default": "open",
+          "oneOf": [
+            "open",
+            "closed",
+            "all"
+          ]
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS github.com/{owner}/{name} URL; deeper paths (issues, tree, ...) are accepted and reduced to the repository. Provide exactly one of repo or url. Pattern: ^(?:https?://)?(?:www\\.)?github\\.com/[A-Za-z0-9-]{1,39}/[A-Za-z0-9._-]{1,100}(?:[/?#].*)?$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "repo",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One page of a repository's issues filtered by state and labels (all given labels must match), sorted by created/updated/comments. Pull requests are excluded unless include_pull_requests is true, so a page may hold fewer than per_page records; pull_requests_excluded says how many were dropped. Each record carries title, state, labels, assignees, milestone, comment and reaction counts, body and timestamps.",
+        "key": "issues",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "assignees",
+            "type": "string[]",
+            "about": "Assignee logins."
+          },
+          {
+            "name": "author_association",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "type": "string",
+            "about": "Issue body Markdown as authored; null when empty."
+          },
+          {
+            "name": "closed_at",
+            "type": "string"
+          },
+          {
+            "name": "comments",
+            "type": "number"
+          },
+          {
+            "name": "created_at",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "is_pull_request",
+            "type": "boolean",
+            "about": "True only when include_pull_requests was set; GitHub lists PRs on the issues endpoint."
+          },
+          {
+            "name": "labels",
+            "type": "object[]"
+          },
+          {
+            "name": "locked",
+            "type": "boolean"
+          },
+          {
+            "name": "milestone",
+            "type": "object"
+          },
+          {
+            "name": "number",
+            "type": "number"
+          },
+          {
+            "name": "reactions_total",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "https://github.com/{owner}/{name}/issues/{number}"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "state_reason",
+            "type": "string",
+            "about": "completed, not_planned, reopened, duplicate or null."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "type": "object"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "include_pull_requests": true,
+          "per_page": 3,
+          "repo": "firecrawl/firecrawl"
+        },
+        "response": {
+          "count": 3,
+          "filter": {
+            "direction": "desc",
+            "include_pull_requests": true,
+            "labels": [],
+            "sort": "created",
+            "state": "open"
+          },
+          "has_next": true,
+          "issues": [
+            {
+              "assignees": [],
+              "author_association": "MEMBER",
+              "body": "## Why\n\n#4630 (and #4628 on `alexandria`) removed the `exchangeRetrieve` rollout flag from `/exchange/discover`, Alexandria search, and provider execution. Authentication, billing, provider terms and ZDR still apply on every call.\n\n`/v2/agent` still refused any run with `exchange.enabled !== false` from a team without the flag (`agent.ts`, `exchange_not_enabled`). The comment justified it as \"the agent service would reject every call anyway\", which is no longer true: the agent's `/exchange/retrieve` calls now succeed and bill for any authenticated team. This removes that last check so agent runs inherit the open-catalogue billing path.\n\n## What\n\nOne block deleted in `apps/api/src/controllers/v2/agent.ts`. `exchange_not_enabled` stays in the error code taxonomy (`lib/error.ts`, `error-serde.ts`) since it is part of the transportable error contract.\n\n## Companion\n\nThe web side (`firecrawl-web`, `firecrawl-exchange` branch) drops its email-allowlist gate on the agent's Exchange toolkit in the same change set; until this lands, non-flagged teams see this 403 as \"This option is not enabled for this team.\" in the composer.\n\n## Validation\n\nTypecheck, prettier and knip clean on the changed file (local tsc noise limited to uninstalled otel/pubsub/native deps, unrelated).\n\nMade with [Cursor](https://cursor.com)\n\n<!-- This is an auto-generated description by cubic. -->\n---\n## Summary by cubic\nRemoves the last `exchangeRetrieve` rollout gate from `/v2/agent` so agent runs use the same open exchange catalogue, billing, and authentication path as every other caller. Previously a team without the flag got a 403 before its request row existed; now the agent service's `/exchange/retrieve` calls succeed and bill normally.\n\n- Deletes the controller-side `exchange_not_enabled` check; auth, billing, provider terms, and ZDR still apply on each call.\n- Keeps `exchange_not_enabled` in the error taxonomy (`lib/error.ts`, `error-serde.ts`) since it's part of the transportable error contract.\n\n<sup>Written for commit a93460382b00cc93d227e6caccad966e3766e3c0. Summary will update on new commits.</sup>\n\n<a href=\"https://cubic.dev/pr/firecrawl/firecrawl/pull/4636?utm_source=github\" target=\"_blank\" rel=\"noopener noreferrer\" data-no-image-dialog=\"true\"><picture><source media=\"(prefers-color-scheme: dark)\" srcset=\"https://www.cubic.dev/buttons/review-in-cubic-dark.svg\"><source media=\"(prefers-color-scheme: light)\" srcset=\"https://www.cubic.dev/buttons/review-in-cubic-light.svg\"><img alt=\"Review in cubic\" src=\"https://www.cubic.dev/buttons/review-in-cubic-dark.svg\"></picture></a>\n\n<!-- End of auto-generated description by cubic. -->\n\n",
+              "closed_at": null,
+              "comments": 0,
+              "created_at": "2026-09-14T15:03:15Z",
+              "id": 5451026384,
+              "is_pull_request": true,
+              "labels": [],
+              "locked": false,
+              "milestone": null,
+              "number": 4636,
+              "reactions_total": 0,
+              "source_url": "https://github.com/firecrawl/firecrawl/pull/4636",
+              "state": "open",
+              "state_reason": null,
+              "title": "feat(api): drop the exchangeRetrieve gate from /v2/agent",
+              "updated_at": "2026-09-14T15:05:31Z",
+              "user": {
+                "avatar_url": "https://avatars.githubusercontent.com/u/20311743?v=4",
+                "html_url": "https://github.com/nickscamara",
+                "id": 20311743,
+                "login": "nickscamara",
+                "type": "User"
+              }
+            },
+            {
+              "assignees": [],
+              "author_association": "NONE",
+              "body": "## Summary\n\n- expose the API's `recordSession` option in the JavaScript browser-session method\n- expose `record_session` in the synchronous and asynchronous Python clients\n- serialise the Python option as the API's top-level `recordSession` field\n- document that recording defaults to enabled when the option is omitted\n- add JavaScript and Python regression tests for `recordSession: false`\n\nThis allows SDK users to disable browser session recording without bypassing the SDK and calling `POST /v2/browser` directly.\n\n## Validation\n\n```bash\nNODE_OPTIONS=--experimental-vm-modules pnpm exec jest --verbose \\\n  src/__tests__/unit/v2/browser.unit.test.ts --runInBand\n```\n\nResult: 1 JavaScript test passed.\n\n```bash\nuv run --with pytest --with pytest-asyncio pytest \\\n  firecrawl/__tests__/unit/v2/methods/test_browser_request_preparation.py -q\n```\n\nResult: 2 Python tests passed.\n\nFixes #4589\n\n<!-- This is an auto-generated description by cubic. -->\n---\n## Summary by cubic\nFixes #4589 by exposing the `recordSession` browser option in the JS and Python SDKs, so SDK users can disable session recording without calling `POST /v2/browser` directly. Recording still defaults to enabled when the option is omitted.\n\n- Adds `recordSession` to the JS browser method and `record_session` to the sync and async Python clients.\n- Serializes the Python option to the API's top-level `recordSession` field.\n- Adds JS and Python regression tests for `recordSession: false`.\n\n<sup>Written for commit fcdbc1533dc83a4700e9634acbf0a588d97e624f. Summary will update on new commits.</sup>\n\n<a href=\"https://cubic.dev/pr/firecrawl/firecrawl/pull/4633?utm_source=github\" target=\"_blank\" rel=\"noopener noreferrer\" data-no-image-dialog=\"true\"><picture><source media=\"(prefers-color-scheme: dark)\" srcset=\"https://www.cubic.dev/buttons/review-in-cubic-dark.svg\"><source media=\"(prefers-color-scheme: light)\" srcset=\"https://www.cubic.dev/buttons/review-in-cubic-light.svg\"><img alt=\"Review in cubic\" src=\"https://www.cubic.dev/buttons/review-in-cubic-dark.svg\"></picture></a>\n\n<!-- End of auto-generated description by cubic. -->\n\n",
+              "closed_at": null,
+              "comments": 0,
+              "created_at": "2026-09-14T08:13:30Z",
+              "id": 5446883208,
+              "is_pull_request": true,
+              "labels": [],
+              "locked": false,
+              "milestone": null,
+              "number": 4633,
+              "reactions_total": 0,
+              "source_url": "https://github.com/firecrawl/firecrawl/pull/4633",
+              "state": "open",
+              "state_reason": null,
+              "title": "fix(sdks): expose browser session recording control",
+              "updated_at": "2026-09-14T08:16:04Z",
+              "user": {
+                "avatar_url": "https://avatars.githubusercontent.com/u/54760103?v=4",
+                "html_url": "https://github.com/arunimshukla",
+                "id": 54760103,
+                "login": "arunimshukla",
+                "type": "User"
+              }
+            },
+            {
+              "assignees": [],
+              "author_association": "NONE",
+              "body": "## Summary\n\n- add `zeroDataRetention` to the JavaScript SDK's direct `ScrapeCallOptions`\n- preserve the existing top-level API payload shape\n- add a regression test proving that `scrape()` accepts and serialises the option without a type cast\n\nThis brings direct scrapes in line with the v2 API and with the SDK's existing crawl and batch-scrape support.\n\n## Validation\n\n```bash\nNODE_OPTIONS=--experimental-vm-modules pnpm exec jest --verbose \\\n  src/__tests__/unit/v2/zero-data-retention.unit.test.ts --runInBand\n```\n\nResult: 1 test passed.\n\nA repository-wide `tsc --noEmit` run still reports existing errors in `feedback.ts`, `monitor.ts`, and `validation.ts`; this change introduces no additional TypeScript error.\n\nFixes #4593\n\n<!-- This is an auto-generated description by cubic. -->\n---\n## Summary by cubic\nFixes #4593 by adding `zeroDataRetention` support to the JS SDK's direct `scrape()` calls, matching the v2 API and existing crawl/batch-scrape behavior.\n\n- `ScrapeCallOptions` now includes `zeroDataRetention` and sends it to `/v2/scrape` without changing the top-level payload shape.\n- Adds a regression test proving `scrape()` accepts and serializes the option without a type cast.\n\n<sup>Written for commit 42679e1ceb5af9a56f0dfdc6f884df6b1f1e844a. Summary will update on new commits.</sup>\n\n<a href=\"https://cubic.dev/pr/firecrawl/firecrawl/pull/4632?utm_source=github\" target=\"_blank\" rel=\"noopener noreferrer\" data-no-image-dialog=\"true\"><picture><source media=\"(prefers-color-scheme: dark)\" srcset=\"https://www.cubic.dev/buttons/review-in-cubic-dark.svg\"><source media=\"(prefers-color-scheme: light)\" srcset=\"https://www.cubic.dev/buttons/review-in-cubic-light.svg\"><img alt=\"Review in cubic\" src=\"https://www.cubic.dev/buttons/review-in-cubic-dark.svg\"></picture></a>\n\n<!-- End of auto-generated description by cubic. -->\n\n",
+              "closed_at": null,
+              "comments": 0,
+              "created_at": "2026-09-14T08:13:22Z",
+              "id": 5446881860,
+              "is_pull_request": true,
+              "labels": [],
+              "locked": false,
+              "milestone": null,
+              "number": 4632,
+              "reactions_total": 0,
+              "source_url": "https://github.com/firecrawl/firecrawl/pull/4632",
+              "state": "open",
+              "state_reason": null,
+              "title": "fix(js-sdk): support zeroDataRetention in scrape",
+              "updated_at": "2026-09-14T08:15:29Z",
+              "user": {
+                "avatar_url": "https://avatars.githubusercontent.com/u/54760103?v=4",
+                "html_url": "https://github.com/arunimshukla",
+                "id": 54760103,
+                "login": "arunimshukla",
+                "type": "User"
+              }
+            }
+          ],
+          "next_page": 2,
+          "observed_at_ms": 1789441358225,
+          "page": 1,
+          "per_page": 3,
+          "pull_requests_excluded": 0,
+          "repo": "firecrawl/firecrawl",
+          "source_url": "https://github.com/firecrawl/firecrawl/issues?q=is%3Aopen",
+          "upstream_requests": 1
+        },
+        "recordedAt": "2026-09-15T03:02:38.225643+00:00"
+      },
+      "execute": {
+        "provider": "github-com",
+        "capability": "repositories/issues"
+      }
+    },
+    {
+      "id": "github-com/repositories/labels",
+      "provider": "github-com",
+      "capability": "repositories/labels",
+      "name": "Labels",
+      "description": "The labels defined in a repository (name, color, description, whether GitHub-default), one page of up to 100. Use the names with issues and issue_counts.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page; has_next in the response says whether page+1 exists.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Records per page.",
+          "default": 100,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "repo",
+          "type": "string",
+          "in": "body",
+          "about": "Repository as `owner/name`, for example `firecrawl/firecrawl`. Provide exactly one of repo or url. Pattern: ^@?/?[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]{1,100}(?:\\.git)?/?$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS github.com/{owner}/{name} URL; deeper paths (issues, tree, ...) are accepted and reduced to the repository. Provide exactly one of repo or url. Pattern: ^(?:https?://)?(?:www\\.)?github\\.com/[A-Za-z0-9-]{1,39}/[A-Za-z0-9._-]{1,100}(?:[/?#].*)?$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "repo",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "The labels defined in a repository (name, color, description, whether GitHub-default), one page of up to 100. Use the names with issues and issue_counts.",
+        "key": "labels",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "color",
+            "type": "string",
+            "about": "Hex without #."
+          },
+          {
+            "name": "default",
+            "type": "boolean"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "per_page": 3,
+          "repo": "firecrawl/firecrawl"
+        },
+        "response": {
+          "count": 3,
+          "has_next": true,
+          "labels": [
+            {
+              "color": "f2c94c",
+              "default": false,
+              "description": null,
+              "id": 9916384425,
+              "name": "/map"
+            },
+            {
+              "color": "f2c94c",
+              "default": false,
+              "description": null,
+              "id": 9750447226,
+              "name": "/scrape"
+            },
+            {
+              "color": "8bfe82",
+              "default": false,
+              "description": "",
+              "id": 9301447387,
+              "name": "$100"
+            }
+          ],
+          "next_page": 2,
+          "observed_at_ms": 1789441359075,
+          "page": 1,
+          "per_page": 3,
+          "repo": "firecrawl/firecrawl",
+          "source_url": "https://github.com/firecrawl/firecrawl/labels",
+          "upstream_requests": 1
+        },
+        "recordedAt": "2026-09-15T03:02:39.075937+00:00"
+      },
+      "execute": {
+        "provider": "github-com",
+        "capability": "repositories/labels"
+      }
+    },
+    {
+      "id": "github-com/repositories/latest_release",
+      "provider": "github-com",
+      "capability": "repositories/latest_release",
+      "name": "Latest release",
+      "description": "The latest published, non-prerelease, non-draft release of a repository with its release notes (Markdown body), tag, publish date, author and downloadable assets. found=false with release=null when the repository exists but has no published release.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "repo",
+          "type": "string",
+          "in": "body",
+          "about": "Repository as `owner/name`, for example `firecrawl/firecrawl`. Provide exactly one of repo or url. Pattern: ^@?/?[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]{1,100}(?:\\.git)?/?$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS github.com/{owner}/{name} URL; deeper paths (issues, tree, ...) are accepted and reduced to the repository. Provide exactly one of repo or url. Pattern: ^(?:https?://)?(?:www\\.)?github\\.com/[A-Za-z0-9-]{1,39}/[A-Za-z0-9._-]{1,100}(?:[/?#].*)?$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "repo",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "The latest published, non-prerelease, non-draft release of a repository with its release notes (Markdown body), tag, publish date, author and downloadable assets. found=false with release=null when the repository exists but has no published release.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "found",
+            "type": "boolean",
+            "about": "Whether GitHub has a latest release for this repository."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "When the workflow read GitHub, Unix milliseconds."
+          },
+          {
+            "name": "release",
+            "type": "object"
+          },
+          {
+            "name": "repo",
+            "type": "string",
+            "about": "Normalized owner/name the call resolved to."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The github.com page a human would read for the same answer."
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number",
+            "about": "GitHub API requests this call made."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "repo": "firecrawl/firecrawl"
+        },
+        "response": {
+          "found": true,
+          "observed_at_ms": 1789441357342,
+          "release": {
+            "assets": [],
+            "assets_count": 0,
+            "author": {
+              "avatar_url": "https://avatars.githubusercontent.com/u/257320934?v=4",
+              "html_url": "https://github.com/rhys-firecrawl",
+              "id": 257320934,
+              "login": "rhys-firecrawl",
+              "type": "User"
+            },
+            "body": "# Firecrawl v2.11.0\r\n \r\n## Improvements\r\n \r\n- **Firecrawl Research Index** - Added a specialized index for agentic AI/ML research: search across 3M+ arXiv papers and the GitHub code behind them (issues, merged PRs, and READMEs, refreshed daily), fetch a paper's details or related work, and check claims against full text. It has state-of-the-art recall on arXivQA, outperforming the next best provider by 18% at comparable cost. Available via the API, SDKs, MCP, and CLI.\r\n- **Keyless access for core endpoints** - Use `/scrape`, `/search`, `/interact`, and `/parse` without an API key from official MCP, CLI, and SDK clients.\r\n- **Automatic PII redaction** - Added a `redactPII` option that strips personal and sensitive data like names, emails, phone numbers, addresses, and secrets out of scraped content before it's returned.\r\n- **`deterministicJson` format** - Added a format that returns structured JSON without running an LLM on every request. Firecrawl generates a reusable extractor for your schema and caches it per site, so repeat scrapes are cheaper and return consistent results.\r\n- **Video discovery on any page** - Expanded the `video` format to find videos on any page, not just supported providers like YouTube, returning each video's URL, title, thumbnail, duration, and more.\r\n- **Attach your own browser automation** - Added a CDP WebSocket URL (`cdpUrl`) to browser session responses, so you can drive a live Firecrawl browser session directly with Playwright, Puppeteer, or any other CDP client.\r\n- **Smarter monitor alerts** - Added a `goal` to monitors so an LLM judges each detected change as meaningful or noise against what you actually care about, cutting alert spam and surfacing the changes that matter first in summary emails.\r\n- **Field-level JSON diffs for monitors** - Monitors that scrape in JSON mode now compare the actual field values between runs instead of the rendered page, so you see exactly which fields changed rather than noise from layout shifts.\r\n- **Monitor email confirmation** - Added an opt-in confirmation flow with one-click unsubscribe for external monitor recipients; team members are auto-confirmed, and `Monitor` responses now report each recipient's subscription status.\r\n- **AM/PM monitor schedules** - Added support for 12-hour schedule inputs like `daily at 9am` and `daily at 5:30pm`, converted to the correct UTC cron expression.\r\n- **Monitor webhook delivery status** - Added delivery status to each monitor check, so you can see whether its webhook was attempted, delivered, or failed - and why.\r\n- **Steadier monitor checks** - Monitors now wait for pages to finish rendering before diffing, cutting false alerts caused by partially-loaded pages.\r\n- **PDF size cap** - Raised the PDF download and scrape size cap from 30 MB to 50 MB.\r\n- **Python SDK `crawl()` scrape kwargs** - Added direct scrape kwargs (`formats`, `headers`, `include_tags`, `exclude_tags`, etc.) to `crawl()` and `start_crawl()`, removing the need to wrap them in `ScrapeOptions(...)`.\r\n- **Clearer `.data` errors** - Improved the error raised when accessing `.data` on a search result to point at `.web`, `.news`, and `.images` with their counts, instead of returning a silent `None`.\r\n- **Python format defaults** - Removed the required `type=` argument on `JsonFormat` and `ChangeTrackingFormat`, defaulting it like `ScreenshotFormat`.\r\n- **`ChangeTrackingFormat` casing** - Added acceptance of both `change_tracking` and `changeTracking` for the format `type` so payloads round-trip between snake_case and camelCase clients.\r\n## Fixes\r\n \r\n- Resolved security advisories across the API and SDKs by upgrading `axios`, `esbuild`, `ws`, `openssl`, and other dependencies.\r\n- Fixed scrape workers stalling for tens of seconds on very large LLM-extractor inputs, which previously caused dropped jobs and worker restarts.\r\n- Fixed Wikipedia scrapes missing `metadata.ogImage` on roughly half of Wikimedia URLs.\r\n- Fixed crawl and batch cancellation not draining the per-team concurrency backlog and reporting stale state; queued jobs are now removed and `status` reports `cancelled` immediately.\r\n- Fixed monitor checks being charged when the credit lock was denied; denied locks now mark the check `skipped_no_credits` and stop the run.\r\n- Fixed JSON-mode monitor diffs returning spurious `changed` verdicts when field values were identical but reordered; diffs now use order-insensitive equality.\r\n- Fixed JSON-mode monitors treating an empty-string scrape as missing input and reporting `changed` on every run.\r\n- Fixed monitor webhooks being dispatched twice for the same check.\r\n- Fixed monitor webhooks being dropped as malformed by wrapping `monitor.page` and `monitor.check.completed` payloads in an array to match the crawl/batch shape.\r\n- Fixed the monitor judge fabricating before/after text and losing context on long pages; it now receives the full unified diff as its only evidence.\r\n- Fixed corrupt or unexpected stored artifacts breaking `GET /v2/monitor/:id/checks/:checkId`; bad data now surfaces as no diff.\r\n- Fixed HTML tables losing their header row when the first row used `td` cells; the markdown converter now promotes it to a header so column labels survive into `document.markdown`.\r\n- Fixed the PDF size cap being bypassed on certain scrape paths so oversized PDFs are now rejected consistently.\r\n- Fixed `ChangeTrackingFormat` options (`modes`, `prompt`, and related fields) being dropped through Python SDK serialization round-trips.\r\n## API\r\n \r\n- Replaced the experimental `pii` format with `redactPII` (`boolean` or `{ mode?, entities?, replaceStyle? }`) on `POST /v2/scrape`, `/v2/batch/scrape`, `/v2/crawl`, `/v2/parse`, and `/v2/extract`; when enabled, `document.markdown` returns redacted text (defaults `mode: \"accurate\"`, `replaceStyle: \"tag\"`). The old `pii` format and `document.pii` block are removed, and requests including `\"pii\"` in `formats` are now rejected.\r\n- Added the `deterministicJson` format (`{ type: \"deterministicJson\", schema?, prompt? }`) to `POST /v2/scrape`, `/v2/batch/scrape`, `/v2/crawl`, `/v2/parse`, and `/v2/extract`, populating `document.json`. Cannot be combined with the `json` format.\r\n- Added `document.videos: VideoItem[]` (with `url`, `sourceURL`, `source`, and optional `title`, `thumbnail`, `duration`, dimensions, and more) to `POST /v2/scrape` and the endpoints sharing its options when the `video` format is requested. The legacy `document.video` string remains for supported providers.\r\n- Added `createdAt`, `completedAt`, and `duration` (seconds) to `GET /v2/crawl/{id}` and `GET /v2/batch/scrape/{id}`; `completedAt` is present only on terminal states.\r\n- Added the `/v2/search/research` proxy - `GET /v2/search/research/papers`, `/papers/:id`, `/papers/:id/similar`, and `/github` - billed against `SEARCH_CREDITS` at 2 credits per 10 results (10 per 10 for ZDR teams). The legacy `/v2/research/*` mount is kept as a deprecated alias.\r\n- Added `POST`/`GET /interact`, `POST /interact/:sessionId/execute`, and `DELETE /interact/:sessionId` as full aliases for the `/v2/browser` session endpoints; behavior, rate limits, and the 2-credit session-create charge are identical.\r\n- Added `cdpUrl` (Python: `cdp_url`) to the `POST /v2/scrape/:jobId/interact` and `/v2/browser` execute responses, exposing the raw CDP WebSocket URL alongside the existing live-view URLs.\r\n- Added `POST /v2/feedback` covering search, scrape, parse, and map jobs with shared recording and refund logic; the legacy `POST /v2/search/:jobId/feedback` keeps working and writes to the same store.\r\n- Added keyless access to `POST /v2/parse`, matching scrape and search, and tightened keyless credit accounting so concurrent requests stay within the per-IP daily cap.\r\n- Added a `WWW-Authenticate: Bearer realm=\"firecrawl\"` header to all `401` responses across `/v0`, `/v1`, and `/v2` so agent clients can discover the credential scheme.\r\n- Added `searchZDR` values `\"forced-zdr\"` and `\"forced-anon\"` and deprecated `\"forced\"` (now an alias for `\"forced-zdr\"`); the resolved mode drives both billing and routing.\r\n- Added `goal` and `judgeEnabled` to `POST /v2/monitor` and `PATCH /v2/monitor/:id`; `judgeEnabled` defaults to `true` when `goal` is set, and `goal: null` clears it.\r\n- Added `judgment`, `meaningfulChange` (with a per-change `reason`), `meaningfulChanges[]`, a structured `diff` object (`text` and/or `json`), and a `snapshot` field to monitor check pages; JSON-mode checks return field-level diffs plus a current-value snapshot.\r\n- Added unauthenticated `POST /v2/monitor/email/confirm` and `POST /v2/monitor/email/unsubscribe` (token accepted in the request body only), plus an `emailRecipientSubscriptions` array on `Monitor` responses reporting each recipient's `email`, `status` (`pending`/`confirmed`/`unsubscribed`), `source`, and `confirmationEmailSent`.\r\n- Added `origin` to monitor create/update bodies, matching the other v2 endpoints.\r\n- Added stricter validation on `delay` for `POST /v2/crawl` and `POST /v1/crawl`; non-numeric, negative, or values over `86400` are now rejected with a schema error instead of being silently applied.\r\n- Added `include_domains` and `exclude_domains` to the Python SDK's sync `Firecrawl.search()`, matching the async client and the `/v2/search` payload.\r\n- Added V1-compatible method aliases (`scrape_url`/`scrapeUrl`, `crawl_url`/`crawlUrl`, `batch_scrape_urls`, `map_url`, etc.) on the V2 Python and JS clients; aliases emit a `DeprecationWarning`.\r\n- Changed the monitor webhook payload to wrap `data` in an array; `monitor.page` now includes `isMeaningful`, `judgment`, and a `diff` object.\r\n- Normalized monitor `scrapeOptions.formats` so `changeTracking` json mode is rewritten to `json`, and the mixed `[\"json\", \"git-diff\"]` form now runs both diffs instead of silently falling back to one.\r\n---\r\n \r\n**Full Changelog**: https://github.com/firecrawl/firecrawl/compare/v2.10...v2.11.0",
+            "created_at": "2026-06-18T17:30:07Z",
+            "draft": false,
+            "id": 342004247,
+            "name": "Firecrawl v2.11.0",
+            "prerelease": false,
+            "published_at": "2026-06-19T15:09:30Z",
+            "source_url": "https://github.com/firecrawl/firecrawl/releases/tag/v2.11.0",
+            "tag_name": "v2.11.0",
+            "tarball_url": "https://api.github.com/repos/firecrawl/firecrawl/tarball/v2.11.0",
+            "target_commitish": "main",
+            "zipball_url": "https://api.github.com/repos/firecrawl/firecrawl/zipball/v2.11.0"
+          },
+          "repo": "firecrawl/firecrawl",
+          "source_url": "https://github.com/firecrawl/firecrawl/releases/latest",
+          "upstream_requests": 1
+        },
+        "recordedAt": "2026-09-15T03:02:37.342973+00:00"
+      },
+      "execute": {
+        "provider": "github-com",
+        "capability": "repositories/latest_release"
+      }
+    },
+    {
+      "id": "github-com/repositories/releases",
+      "provider": "github-com",
+      "capability": "repositories/releases",
+      "name": "Releases",
+      "description": "One page of a repository's releases, newest first, including pre-releases and drafts visible to the public, each with tag, name, notes body, publish date and assets. Paginate with page/per_page; has_next says whether another page exists.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page; has_next in the response says whether page+1 exists.",
+          "default": 1,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Records per page.",
+          "default": 30,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "repo",
+          "type": "string",
+          "in": "body",
+          "about": "Repository as `owner/name`, for example `firecrawl/firecrawl`. Provide exactly one of repo or url. Pattern: ^@?/?[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]{1,100}(?:\\.git)?/?$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS github.com/{owner}/{name} URL; deeper paths (issues, tree, ...) are accepted and reduced to the repository. Provide exactly one of repo or url. Pattern: ^(?:https?://)?(?:www\\.)?github\\.com/[A-Za-z0-9-]{1,39}/[A-Za-z0-9._-]{1,100}(?:[/?#].*)?$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "repo",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One page of a repository's releases, newest first, including pre-releases and drafts visible to the public, each with tag, name, notes body, publish date and assets. Paginate with page/per_page; has_next says whether another page exists.",
+        "key": "releases",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "assets",
+            "type": "object[]"
+          },
+          {
+            "name": "assets_count",
+            "type": "number"
+          },
+          {
+            "name": "author",
+            "type": "object"
+          },
+          {
+            "name": "body",
+            "type": "string",
+            "about": "Release notes as authored, GitHub-flavoured Markdown; null when the release has none."
+          },
+          {
+            "name": "created_at",
+            "type": "string"
+          },
+          {
+            "name": "draft",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "prerelease",
+            "type": "boolean"
+          },
+          {
+            "name": "published_at",
+            "type": "string",
+            "about": "RFC 3339 UTC"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "https://github.com/{owner}/{name}/releases/tag/{tag}"
+          },
+          {
+            "name": "tag_name",
+            "type": "string"
+          },
+          {
+            "name": "tarball_url",
+            "type": "string"
+          },
+          {
+            "name": "target_commitish",
+            "type": "string"
+          },
+          {
+            "name": "zipball_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "per_page": 3,
+          "repo": "firecrawl/firecrawl"
+        },
+        "response": {
+          "count": 3,
+          "has_next": true,
+          "next_page": 2,
+          "observed_at_ms": 1789441357759,
+          "page": 1,
+          "per_page": 3,
+          "releases": [
+            {
+              "assets": [],
+              "assets_count": 0,
+              "author": {
+                "avatar_url": "https://avatars.githubusercontent.com/u/257320934?v=4",
+                "html_url": "https://github.com/rhys-firecrawl",
+                "id": 257320934,
+                "login": "rhys-firecrawl",
+                "type": "User"
+              },
+              "body": "# Firecrawl v2.11.0\r\n \r\n## Improvements\r\n \r\n- **Firecrawl Research Index** - Added a specialized index for agentic AI/ML research: search across 3M+ arXiv papers and the GitHub code behind them (issues, merged PRs, and READMEs, refreshed daily), fetch a paper's details or related work, and check claims against full text. It has state-of-the-art recall on arXivQA, outperforming the next best provider by 18% at comparable cost. Available via the API, SDKs, MCP, and CLI.\r\n- **Keyless access for core endpoints** - Use `/scrape`, `/search`, `/interact`, and `/parse` without an API key from official MCP, CLI, and SDK clients.\r\n- **Automatic PII redaction** - Added a `redactPII` option that strips personal and sensitive data like names, emails, phone numbers, addresses, and secrets out of scraped content before it's returned.\r\n- **`deterministicJson` format** - Added a format that returns structured JSON without running an LLM on every request. Firecrawl generates a reusable extractor for your schema and caches it per site, so repeat scrapes are cheaper and return consistent results.\r\n- **Video discovery on any page** - Expanded the `video` format to find videos on any page, not just supported providers like YouTube, returning each video's URL, title, thumbnail, duration, and more.\r\n- **Attach your own browser automation** - Added a CDP WebSocket URL (`cdpUrl`) to browser session responses, so you can drive a live Firecrawl browser session directly with Playwright, Puppeteer, or any other CDP client.\r\n- **Smarter monitor alerts** - Added a `goal` to monitors so an LLM judges each detected change as meaningful or noise against what you actually care about, cutting alert spam and surfacing the changes that matter first in summary emails.\r\n- **Field-level JSON diffs for monitors** - Monitors that scrape in JSON mode now compare the actual field values between runs instead of the rendered page, so you see exactly which fields changed rather than noise from layout shifts.\r\n- **Monitor email confirmation** - Added an opt-in confirmation flow with one-click unsubscribe for external monitor recipients; team members are auto-confirmed, and `Monitor` responses now report each recipient's subscription status.\r\n- **AM/PM monitor schedules** - Added support for 12-hour schedule inputs like `daily at 9am` and `daily at 5:30pm`, converted to the correct UTC cron expression.\r\n- **Monitor webhook delivery status** - Added delivery status to each monitor check, so you can see whether its webhook was attempted, delivered, or failed - and why.\r\n- **Steadier monitor checks** - Monitors now wait for pages to finish rendering before diffing, cutting false alerts caused by partially-loaded pages.\r\n- **PDF size cap** - Raised the PDF download and scrape size cap from 30 MB to 50 MB.\r\n- **Python SDK `crawl()` scrape kwargs** - Added direct scrape kwargs (`formats`, `headers`, `include_tags`, `exclude_tags`, etc.) to `crawl()` and `start_crawl()`, removing the need to wrap them in `ScrapeOptions(...)`.\r\n- **Clearer `.data` errors** - Improved the error raised when accessing `.data` on a search result to point at `.web`, `.news`, and `.images` with their counts, instead of returning a silent `None`.\r\n- **Python format defaults** - Removed the required `type=` argument on `JsonFormat` and `ChangeTrackingFormat`, defaulting it like `ScreenshotFormat`.\r\n- **`ChangeTrackingFormat` casing** - Added acceptance of both `change_tracking` and `changeTracking` for the format `type` so payloads round-trip between snake_case and camelCase clients.\r\n## Fixes\r\n \r\n- Resolved security advisories across the API and SDKs by upgrading `axios`, `esbuild`, `ws`, `openssl`, and other dependencies.\r\n- Fixed scrape workers stalling for tens of seconds on very large LLM-extractor inputs, which previously caused dropped jobs and worker restarts.\r\n- Fixed Wikipedia scrapes missing `metadata.ogImage` on roughly half of Wikimedia URLs.\r\n- Fixed crawl and batch cancellation not draining the per-team concurrency backlog and reporting stale state; queued jobs are now removed and `status` reports `cancelled` immediately.\r\n- Fixed monitor checks being charged when the credit lock was denied; denied locks now mark the check `skipped_no_credits` and stop the run.\r\n- Fixed JSON-mode monitor diffs returning spurious `changed` verdicts when field values were identical but reordered; diffs now use order-insensitive equality.\r\n- Fixed JSON-mode monitors treating an empty-string scrape as missing input and reporting `changed` on every run.\r\n- Fixed monitor webhooks being dispatched twice for the same check.\r\n- Fixed monitor webhooks being dropped as malformed by wrapping `monitor.page` and `monitor.check.completed` payloads in an array to match the crawl/batch shape.\r\n- Fixed the monitor judge fabricating before/after text and losing context on long pages; it now receives the full unified diff as its only evidence.\r\n- Fixed corrupt or unexpected stored artifacts breaking `GET /v2/monitor/:id/checks/:checkId`; bad data now surfaces as no diff.\r\n- Fixed HTML tables losing their header row when the first row used `td` cells; the markdown converter now promotes it to a header so column labels survive into `document.markdown`.\r\n- Fixed the PDF size cap being bypassed on certain scrape paths so oversized PDFs are now rejected consistently.\r\n- Fixed `ChangeTrackingFormat` options (`modes`, `prompt`, and related fields) being dropped through Python SDK serialization round-trips.\r\n## API\r\n \r\n- Replaced the experimental `pii` format with `redactPII` (`boolean` or `{ mode?, entities?, replaceStyle? }`) on `POST /v2/scrape`, `/v2/batch/scrape`, `/v2/crawl`, `/v2/parse`, and `/v2/extract`; when enabled, `document.markdown` returns redacted text (defaults `mode: \"accurate\"`, `replaceStyle: \"tag\"`). The old `pii` format and `document.pii` block are removed, and requests including `\"pii\"` in `formats` are now rejected.\r\n- Added the `deterministicJson` format (`{ type: \"deterministicJson\", schema?, prompt? }`) to `POST /v2/scrape`, `/v2/batch/scrape`, `/v2/crawl`, `/v2/parse`, and `/v2/extract`, populating `document.json`. Cannot be combined with the `json` format.\r\n- Added `document.videos: VideoItem[]` (with `url`, `sourceURL`, `source`, and optional `title`, `thumbnail`, `duration`, dimensions, and more) to `POST /v2/scrape` and the endpoints sharing its options when the `video` format is requested. The legacy `document.video` string remains for supported providers.\r\n- Added `createdAt`, `completedAt`, and `duration` (seconds) to `GET /v2/crawl/{id}` and `GET /v2/batch/scrape/{id}`; `completedAt` is present only on terminal states.\r\n- Added the `/v2/search/research` proxy - `GET /v2/search/research/papers`, `/papers/:id`, `/papers/:id/similar`, and `/github` - billed against `SEARCH_CREDITS` at 2 credits per 10 results (10 per 10 for ZDR teams). The legacy `/v2/research/*` mount is kept as a deprecated alias.\r\n- Added `POST`/`GET /interact`, `POST /interact/:sessionId/execute`, and `DELETE /interact/:sessionId` as full aliases for the `/v2/browser` session endpoints; behavior, rate limits, and the 2-credit session-create charge are identical.\r\n- Added `cdpUrl` (Python: `cdp_url`) to the `POST /v2/scrape/:jobId/interact` and `/v2/browser` execute responses, exposing the raw CDP WebSocket URL alongside the existing live-view URLs.\r\n- Added `POST /v2/feedback` covering search, scrape, parse, and map jobs with shared recording and refund logic; the legacy `POST /v2/search/:jobId/feedback` keeps working and writes to the same store.\r\n- Added keyless access to `POST /v2/parse`, matching scrape and search, and tightened keyless credit accounting so concurrent requests stay within the per-IP daily cap.\r\n- Added a `WWW-Authenticate: Bearer realm=\"firecrawl\"` header to all `401` responses across `/v0`, `/v1`, and `/v2` so agent clients can discover the credential scheme.\r\n- Added `searchZDR` values `\"forced-zdr\"` and `\"forced-anon\"` and deprecated `\"forced\"` (now an alias for `\"forced-zdr\"`); the resolved mode drives both billing and routing.\r\n- Added `goal` and `judgeEnabled` to `POST /v2/monitor` and `PATCH /v2/monitor/:id`; `judgeEnabled` defaults to `true` when `goal` is set, and `goal: null` clears it.\r\n- Added `judgment`, `meaningfulChange` (with a per-change `reason`), `meaningfulChanges[]`, a structured `diff` object (`text` and/or `json`), and a `snapshot` field to monitor check pages; JSON-mode checks return field-level diffs plus a current-value snapshot.\r\n- Added unauthenticated `POST /v2/monitor/email/confirm` and `POST /v2/monitor/email/unsubscribe` (token accepted in the request body only), plus an `emailRecipientSubscriptions` array on `Monitor` responses reporting each recipient's `email`, `status` (`pending`/`confirmed`/`unsubscribed`), `source`, and `confirmationEmailSent`.\r\n- Added `origin` to monitor create/update bodies, matching the other v2 endpoints.\r\n- Added stricter validation on `delay` for `POST /v2/crawl` and `POST /v1/crawl`; non-numeric, negative, or values over `86400` are now rejected with a schema error instead of being silently applied.\r\n- Added `include_domains` and `exclude_domains` to the Python SDK's sync `Firecrawl.search()`, matching the async client and the `/v2/search` payload.\r\n- Added V1-compatible method aliases (`scrape_url`/`scrapeUrl`, `crawl_url`/`crawlUrl`, `batch_scrape_urls`, `map_url`, etc.) on the V2 Python and JS clients; aliases emit a `DeprecationWarning`.\r\n- Changed the monitor webhook payload to wrap `data` in an array; `monitor.page` now includes `isMeaningful`, `judgment`, and a `diff` object.\r\n- Normalized monitor `scrapeOptions.formats` so `changeTracking` json mode is rewritten to `json`, and the mixed `[\"json\", \"git-diff\"]` form now runs both diffs instead of silently falling back to one.\r\n---\r\n \r\n**Full Changelog**: https://github.com/firecrawl/firecrawl/compare/v2.10...v2.11.0",
+              "created_at": "2026-06-18T17:30:07Z",
+              "draft": false,
+              "id": 342004247,
+              "name": "Firecrawl v2.11.0",
+              "prerelease": false,
+              "published_at": "2026-06-19T15:09:30Z",
+              "source_url": "https://github.com/firecrawl/firecrawl/releases/tag/v2.11.0",
+              "tag_name": "v2.11.0",
+              "tarball_url": "https://api.github.com/repos/firecrawl/firecrawl/tarball/v2.11.0",
+              "target_commitish": "main",
+              "zipball_url": "https://api.github.com/repos/firecrawl/firecrawl/zipball/v2.11.0"
+            },
+            {
+              "assets": [],
+              "assets_count": 0,
+              "author": {
+                "avatar_url": "https://avatars.githubusercontent.com/u/257320934?v=4",
+                "html_url": "https://github.com/rhys-firecrawl",
+                "id": 257320934,
+                "login": "rhys-firecrawl",
+                "type": "User"
+              },
+              "body": "# Firecrawl v2.10\r\n\r\n## Improvements\r\n\r\n- **`/parse` endpoint** - Upload local files (PDF, DOCX, DOC, ODT, RTF, XLSX, XLS, HTML) up to 50 MB and get back clean, LLM-ready Markdown, JSON, or a summary. Tables and reading order are preserved, with full Zero Data Retention support for enterprise plans. Available in JS, Python, Go, Rust, Java, .NET, PHP, Ruby, and Elixir SDKs.\r\n- **Lockdown Mode** - Set `lockdown: true` on `/scrape` to serve results exclusively from Firecrawl's index with zero outbound requests and zero data retention by default. Gated outbound paths include HTTP fetches, robots.txt, audio downloads, and media. Available in every SDK, the CLI (`--lockdown`), and MCP.\r\n- **`question` format** - Pass a natural-language prompt to `/scrape` and get a grounded, hallucination-free answer back in `data.question`. Runs on a managed model chain with automatic fallback, prompt-injection isolation via XML tagging and zero-width-space escaping, and up to 100x fewer tokens per call.\r\n- **`highlights` format** - Returns the exact sentences, code blocks, and table rows on a page that match your query. Consecutive sentences re-join into paragraphs, code lines wrap in fenced blocks with their original language, and table rows rebuild into Markdown tables with headers - all from the source page, using up to 100x fewer tokens per call.\r\n- **`video` format** - Added `video` to scrape formats. Returns a signed downloadable video URL for supported sites (e.g. YouTube), with cookie forwarding for authenticated downloads and explicit Lockdown gating.\r\n- **`/search` domain filters** - Added `includeDomains` and `excludeDomains` parameters to `/search` for scoping results to a specific set of sites.\r\n- **`/search` feedback endpoint** - Submit a rating on a search result with `POST /v2/search/:jobId/feedback`. Each accepted submission refunds 1 credit, capped per UTC day, with idempotent retries.\r\n- **Custom robots.txt user agent** - Added `robotsUserAgent` to crawl requests to evaluate robots.txt rules and crawl delays against a custom agent string, and a separate `customRobotsAgent` org flag independent from `ignoreRobots`. Available in JS, Python, and Java SDKs.\r\n- **Official Go SDK** - Added a first-party Go SDK for the v2 API, replacing the community module. Includes context-aware retry backoff and proper `MapData.Links` typing.\r\n- **Ruby SDK** - Added the official Firecrawl Ruby SDK v2 with full endpoint coverage and v2-native typing.\r\n- **PHP SDK** - Added the official PHP SDK with Laravel support, scrape/search/crawl/map/parse coverage, and a published `firecrawl/firecrawl-sdk` Composer package.\r\n- **.NET SDK** - Added the official .NET SDK with v2 API support, parse, and an `firecrawl-sdk` NuGet package.\r\n- **Rust SDK v2** - The Rust SDK has been promoted to the official v2 SDK with parity across scrape, search, crawl, map, agent, and parse.\r\n- **`/interact` suggestion** - Calls to `/scrape` that pass an `actions` array now return a warning suggesting `/interact` for stateful browser automation.\r\n- **PDF size cap** - Raised the PDF upload size limit from 10 MB to 30 MB.\r\n- **PDF page-processed billing** - Updated PDF billing to reflect pages processed instead of raw page count.\r\n- **Docker harness** - Exposed `HARNESS_STARTUP_TIMEOUT_MS` through `docker-compose` for self-hosted users who need longer startup windows.\r\n- **Elixir SDK** - Added `parse_file/3` to the Elixir SDK for the `/parse` endpoint.\r\n- **JS SDK request timeout** - Added an explicit request timeout option to the JS SDK to prevent hanging requests.\r\n\r\n## Fixes\r\n\r\n- Resolved multiple CVEs across the API and SDKs including `axios`, `postcss`, `fast-xml-parser`, `protobufjs`, `follow-redirects`, `langsmith`, `lodash`, `fast-uri`, and `fast-xml-builder`.\r\n- Fixed branding `colors.secondary` being incorrectly populated when the LLM omitted a value - `secondary` is now optional and is no longer applied as a default.\r\n- Fixed the Playwright service ignoring the caller's `User-Agent` request header.\r\n- Fixed `screenshot` signed URLs returning stale results from cache by forcing a cache miss when the signed URL has expired.\r\n- Fixed Lockdown requests being billed twice for ZDR by treating Lockdown as zero data retention by default.\r\n- Fixed proxy billing for cached scrapes incorrectly charging proxy credits when no proxy egress occurred.\r\n- Fixed YouTube transcript scripts running on audio-only scrapes and audio downloads not receiving CDP cookies.\r\n- Fixed `html-to-md` conversion service ignoring zero data retention.\r\n- Fixed a stack overflow in `marked.parse` when handling certain PDF outputs.\r\n- Fixed `robotsUserAgent` not being honored by the native link filter and not being included in JS SDK crawl payloads.\r\n- Fixed `/v1` status endpoints returning 500 on non-UUID job IDs - now returns a proper 400.\r\n- Fixed empty `actions: []` arrays being treated as actions in feature flags.\r\n- Fixed JS SDK watcher emitting duplicate events, leaking timeouts, and hanging `start()` on watcher timeouts.\r\n- Fixed Ruby SDK unwrapping of `credit_usage` data fields and defaulted `skipTlsVerification` to `false`.\r\n- Fixed missing negative-limit validation in Python, Java, and Go SDKs.\r\n- Fixed Java SDK accepting empty API keys and missing async lifecycle methods.\r\n- Fixed billing period timestamps, subscription lookups, and plan credit reporting.\r\n- Fixed crawl-backlog timeouts being unbounded - now capped at 48h.\r\n\r\n## API\r\n\r\n- Added `POST /v2/parse` for multipart file uploads up to 50 MB. Returns a standard Document. Disallowed scrape options on parse: `changeTracking`, `screenshot`, `branding`, `actions`, `waitFor`, `location`, `mobile`; `proxy` is restricted to `auto` or `basic`. Errors with `PARSE_UNSUPPORTED_OPTIONS` on disallowed input.\r\n- Added `lockdown: boolean` to `/scrape`. Cache misses return `404` with `SCRAPE_LOCKDOWN_CACHE_MISS`. Billing: +4 credits when `lockdown` is enabled, 1 credit on cache miss. Available across all SDKs.\r\n- Added `question` and `highlights` to `/scrape` formats, returning `data.question` and `data.highlights` respectively.\r\n- Added `video` to `/scrape` formats. Returns `document.video` as a signed URL. +4 credits per request. Unsupported URLs raise `SCRAPE_VIDEO_UNSUPPORTED_URL`; `parse` rejects the `video` format client- and server-side.\r\n- Added `includeDomains` and `excludeDomains` arrays on `/v2/search` for scoping results to specific domains.\r\n- Added `POST /v2/search/:jobId/feedback` for rating search results. Each accepted submission refunds 1 credit, capped per UTC day via `SEARCH_FEEDBACK_DAILY_CAP_CREDITS`, with idempotent retries returning `alreadySubmitted: true`. Feedback submissions older than `SEARCH_FEEDBACK_MAX_AGE_SEC` (default 120s) are rejected. Search billing is now `ceil(results/10) * 2` credits, surfaced in responses.\r\n- Added `robotsUserAgent` to `/v2/crawl` `crawlerOptions` for custom-agent robots.txt evaluation. Gated behind the `ignoreRobots` org flag.\r\n- Added a separate `customRobotsAgent` org flag independent from `ignoreRobots`, so teams can ship custom user-agents without disabling robots.txt enforcement.\r\n- Migrated the `ignoreRobots` org flag from a boolean to a `disabled` / `allowed` / `forced` pattern. The legacy `ignoreRobots: boolean` request shape has been removed - clients must use the new flag values.\r\n- Deprecated `/v0/scrape`, `/v0/crawl`, `/v0/crawl/status/:jobId`, `DELETE /v0/crawl/cancel/:jobId`, `/v0/search`, `/v1/extract`, `/v1/extract/:jobId`, `/v2/extract`, `/v2/extract/:jobId`, `/v1/deep-research`, `/v1/deep-research/:jobId`, `/v1/llmstxt`, and `/v1/llmstxt/:jobId`. Deprecated endpoints emit `Deprecation: true`, `Warning: 299 - \"<message>\"`, `Link; rel=\"successor-version\"`, and (when configured) `Sunset` headers, plus `warnings[]` and `replacement` in the JSON body. JS and Python SDKs surface these to clients.\r\n\r\n---\r\n\r\n**Full Changelog**: https://github.com/firecrawl/firecrawl/compare/v2.9.0...v2.10",
+              "created_at": "2026-05-15T16:20:33Z",
+              "draft": false,
+              "id": 323392066,
+              "name": "Firecrawl v2.10",
+              "prerelease": false,
+              "published_at": "2026-05-15T17:34:45Z",
+              "source_url": "https://github.com/firecrawl/firecrawl/releases/tag/v2.10",
+              "tag_name": "v2.10",
+              "tarball_url": "https://api.github.com/repos/firecrawl/firecrawl/tarball/v2.10",
+              "target_commitish": "main",
+              "zipball_url": "https://api.github.com/repos/firecrawl/firecrawl/zipball/v2.10"
+            },
+            {
+              "assets": [],
+              "assets_count": 0,
+              "author": {
+                "avatar_url": "https://avatars.githubusercontent.com/in/2652220?v=4",
+                "html_url": "https://github.com/apps/firecrawl-spring",
+                "id": 254786068,
+                "login": "firecrawl-spring[bot]",
+                "type": "Bot"
+              },
+              "body": "# Firecrawl v2.9.0\r\n\r\n## Improvements\r\n\r\n- **Browser Interaction via `/interact` endpoint** - Scrape a page, then call `/interact` to take actions on it - click buttons, fill forms, navigate deeper, or extract dynamic content. Describe what you want in natural language via `prompt`, or write Playwright code (Node.js, Python) and Bash (`agent-browser`) for full control. Sessions persist across calls, with live view and interactive live view URLs for real-time browser streaming. Persistent profiles let you save and reuse browser state (cookies, localStorage) across scrapes. Available in JS, Python, Java, and Rust SDKs.\r\n- **`query` format** - Added `query` format to the `/scrape` endpoint - pass a natural-language prompt and get a direct answer back in `data.answer`.\r\n- **`audio` format** - Added `audio` format option to scrape responses, returning audio output as a field on the document.\r\n- **`onlyCleanContent` parameter** - Added `onlyCleanContent` parameter to the `/scrape` endpoint, which strips navigation, ads, cookie banners, and other non-semantic content from markdown output.\r\n- **PDF parsing modes** - Added PDF parsing modes (`fast`, `auto`, `ocr`) and a `maxPages` option to control extraction depth and OCR behavior.\r\n- **Java and Elixir SDKs** - Added official Java and Elixir SDKs with full v2 API support.\r\n- **Legacy `.doc` file support** - Added support for parsing legacy `.doc` files.\r\n- **Wikimedia engine** - Added a dedicated engine for scraping Wikipedia and Wikimedia pages with improved output quality.\r\n- **`contentType` in scrape responses** - Added `contentType` to scrape responses for PDFs and documents.\r\n- **PDF pipeline improvements** - Improved PDF pipeline with better table detection, header/footer stripping, mixed PDF handling, inline image parsing, and magic byte detection.\r\n- **Branding extraction** - Improved branding extraction to skip hidden DOM elements for cleaner output.\r\n- **HTML-to-markdown performance** - Improved HTML-to-markdown conversion performance and fixed code blocks losing content during conversion.\r\n- **Concurrency queue** - New concurrency queue system with reconciler and backfill for more reliable job scheduling.\r\n- **Rust SDK v2** - Added v2 API namespace with agent support to the Rust SDK.\r\n- Fixed Python SDK parameters `timeout`, `max_retries`, and `backoff_factor` - these were previously accepted but silently ignored.\r\n- Capped job timeouts at 48 hours to prevent runaway jobs from consuming resources.\r\n- Added retry limits to prevent scrape loops.\r\n- Binary content types are now rejected early in the scrape pipeline to avoid wasted processing.\r\n\r\n## Fixes\r\n\r\n- Fixed empty responses when using the `o3-mini` model on extract jobs.\r\n- Fixed revoked API keys remaining valid for up to 10 minutes after deletion.\r\n- Fixed a race condition in extract jobs that caused \"Job not found\" crashes.\r\n- Fixed `time_taken` in `/v1/map` always returning ~0.\r\n- Fixed crawl status responses now surfacing a `failed` status with an error message and partial data when a crawl-level failure occurs.\r\n- Fixed `maxPages` not being passed to the PDF extractor - previously, full PDF content was returned while only charging for the limited page count.\r\n- Fixed free request credits being incorrectly consumed and billed on agent jobs exceeding the `maxCredits` threshold.\r\n- Fixed dashboard displaying incorrect concurrency limits due to stale reads.\r\n- Fixed branding `colors.secondary` not being populated.\r\n- Fixed `removeBase64Images` running after `deriveDiff` in the transformer pipeline, causing diff issues.\r\n- Fixed GCS fetch using wrong row index for cache info lookups.\r\n- Fixed unhandled `ZodError` in `/v1/search` controller.\r\n- Resolved multiple CVEs across dependencies including `handlebars`, `path-to-regexp`, `fast-xml-parser`, `rollup` (CVE-2026-27606), `undici`, and others.\r\n- Hardened the Playwright service against SSRF attacks.\r\n\r\n## API\r\n\r\n- Added `GET /v2/team/activity` endpoint for listing recent scrape, crawl, and extract jobs with cursor-based pagination (last 24 hours, up to 100 results per page, filterable by endpoint type).\r\n- Added `regexOnFullURL` parameter on crawl requests to apply `includePaths`/`excludePaths` filtering against the full URL including query parameters. Available in JS, Python, Java, and Elixir SDKs.\r\n- Added `deduplicateSimilarURLs` parameter on crawl requests. Available in JS, Python, Java, and Elixir SDKs.\r\n- Deprecated the `extract` endpoint - use the `/agent` endpoint instead. Existing `extract` methods in JS and Python SDKs are marked deprecated.\r\n- Renamed `persistentSession` to `profile` on browser/interact requests (`writeMode` is now `saveChanges`). The old parameter name remains functional but is no longer documented.\r\n\r\n---\r\n\r\n## New Contributors\r\n\r\n* @misza-one made their first contribution in https://github.com/firecrawl/firecrawl/pull/2660\r\n* @madmikeross made their first contribution in https://github.com/firecrawl/firecrawl/pull/2948\r\n* @rowinsg made their first contribution in https://github.com/firecrawl/firecrawl/pull/3065\r\n* @Bortlesboat made their first contribution in https://github.com/firecrawl/firecrawl/pull/3243\r\n* @dagecko made their first contribution in https://github.com/firecrawl/firecrawl/pull/3249\r\n* @cokemine made their first contribution in https://github.com/firecrawl/firecrawl/pull/3262\r\n* @paulonasc made their first contribution in https://github.com/firecrawl/firecrawl/pull/3275\r\n\r\n## Contributors\r\n\r\n* @nickscamara\r\n* @mogery\r\n* @amplitudesxd\r\n* @abimaelmartell\r\n* @ericciarla\r\n* @rafaelsideguide\r\n* @delong3\r\n* @devhims\r\n* @Chadha93\r\n* @tomsideguide\r\n* @charlietlamb\r\n* @developersdigest\r\n* @micahstairs\r\n* @rhys-firecrawl\r\n* @firecrawl-spring\r\n* @devin-ai-integration\r\n* @misza-one\r\n* @madmikeross\r\n* @rowinsg\r\n* @Bortlesboat\r\n* @dagecko\r\n* @cokemine\r\n* @paulonasc\r\n\r\n---\r\n\r\n**Full Changelog**: https://github.com/firecrawl/firecrawl/compare/v2.8.0...v2.9.0",
+              "created_at": "2026-04-10T13:39:18Z",
+              "draft": false,
+              "id": 307271312,
+              "name": "v2.9.0",
+              "prerelease": false,
+              "published_at": "2026-04-10T16:36:16Z",
+              "source_url": "https://github.com/firecrawl/firecrawl/releases/tag/v2.9.0",
+              "tag_name": "v2.9.0",
+              "tarball_url": "https://api.github.com/repos/firecrawl/firecrawl/tarball/v2.9.0",
+              "target_commitish": "main",
+              "zipball_url": "https://api.github.com/repos/firecrawl/firecrawl/zipball/v2.9.0"
+            }
+          ],
+          "repo": "firecrawl/firecrawl",
+          "source_url": "https://github.com/firecrawl/firecrawl/releases?page=1",
+          "upstream_requests": 1
+        },
+        "recordedAt": "2026-09-15T03:02:37.759710+00:00"
+      },
+      "execute": {
+        "provider": "github-com",
+        "capability": "repositories/releases"
+      }
+    },
+    {
+      "id": "github-com/repositories/repo",
+      "provider": "github-com",
+      "capability": "repositories/repo",
+      "name": "Repo",
+      "description": "One GitHub repository by owner/name or URL: stars, forks, watchers, open issue+PR count, creation/last-push dates, primary language, topics, license, default branch, homepage and flags (archived, fork, template). One request to GET /repos/{owner}/{name}; an unknown repository is an error.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "repo",
+          "type": "string",
+          "in": "body",
+          "about": "Repository as `owner/name`, for example `firecrawl/firecrawl`. Provide exactly one of repo or url. Pattern: ^@?/?[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]{1,100}(?:\\.git)?/?$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS github.com/{owner}/{name} URL; deeper paths (issues, tree, ...) are accepted and reduced to the repository. Provide exactly one of repo or url. Pattern: ^(?:https?://)?(?:www\\.)?github\\.com/[A-Za-z0-9-]{1,39}/[A-Za-z0-9._-]{1,100}(?:[/?#].*)?$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "repo",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One GitHub repository by owner/name or URL: stars, forks, watchers, open issue+PR count, creation/last-push dates, primary language, topics, license, default branch, homepage and flags (archived, fork, template). One request to GET /repos/{owner}/{name}; an unknown repository is an error.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "When the workflow read GitHub, Unix milliseconds."
+          },
+          {
+            "name": "repo",
+            "type": "string",
+            "about": "Normalized owner/name the call resolved to."
+          },
+          {
+            "name": "repository",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The github.com page a human would read for the same answer."
+          },
+          {
+            "name": "upstream_requests",
+            "type": "number",
+            "about": "GitHub API requests this call made."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "repo": "firecrawl/firecrawl"
+        },
+        "response": {
+          "observed_at_ms": 1789441356972,
+          "repo": "firecrawl/firecrawl",
+          "repository": {
+            "archived": false,
+            "created_at": "2024-04-15T21:02:29Z",
+            "default_branch": "main",
+            "description": "The context API to search, scrape, and interact with the web at scale. 🔥",
+            "disabled": false,
+            "forks": 9791,
+            "full_name": "firecrawl/firecrawl",
+            "has_discussions": true,
+            "has_issues": true,
+            "has_pages": false,
+            "has_wiki": false,
+            "homepage": "https://firecrawl.dev",
+            "id": 787076358,
+            "is_fork": false,
+            "is_template": false,
+            "language": "TypeScript",
+            "license": {
+              "key": "agpl-3.0",
+              "name": "GNU Affero General Public License v3.0",
+              "spdx_id": "AGPL-3.0",
+              "url": "https://api.github.com/licenses/agpl-3.0"
+            },
+            "name": "firecrawl",
+            "open_issues_and_prs": 628,
+            "owner": {
+              "avatar_url": "https://avatars.githubusercontent.com/u/135057108?v=4",
+              "html_url": "https://github.com/firecrawl",
+              "id": 135057108,
+              "login": "firecrawl",
+              "type": "Organization"
+            },
+            "parent_full_name": null,
+            "pushed_at": "2026-09-15T02:24:10Z",
+            "size_kb": 179466,
+            "source_url": "https://github.com/firecrawl/firecrawl",
+            "stars": 180475,
+            "topics": [
+              "ai",
+              "ai-agents",
+              "ai-crawler",
+              "ai-scraping",
+              "ai-search",
+              "crawler",
+              "data-extraction",
+              "html-to-markdown",
+              "llm",
+              "markdown",
+              "scraper",
+              "scraping",
+              "web-crawler",
+              "web-data",
+              "web-data-extraction",
+              "web-scraper",
+              "web-scraping",
+              "web-search",
+              "webscraping"
+            ],
+            "updated_at": "2026-09-15T03:02:33Z",
+            "visibility": "public",
+            "watchers": 467
+          },
+          "source_url": "https://github.com/firecrawl/firecrawl",
+          "upstream_requests": 1
+        },
+        "recordedAt": "2026-09-15T03:02:36.972327+00:00"
+      },
+      "execute": {
+        "provider": "github-com",
+        "capability": "repositories/repo"
+      }
+    },
+    {
+      "id": "github-com/repositories/search_repos",
+      "provider": "github-com",
+      "capability": "repositories/search_repos",
+      "name": "Search repos",
+      "description": "Search public GitHub repositories with GitHub's search syntax (free text plus qualifiers such as language:rust, stars:>1000, topic:llm, org:firecrawl, created:>2025-01-01), sorted by best match, stars, forks, help-wanted issues or last update. Returns one page of repository records with stars, forks and dates; total_count is GitHub's overall match count, capped at 1000 reachable results (page * per_page <= 1000). Keyless search is limited to 10 requests per minute per IP.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "order",
+          "type": "string",
+          "in": "body",
+          "about": "order",
+          "default": "desc",
+          "oneOf": [
+            "asc",
+            "desc"
+          ]
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "per_page",
+          "default": 10,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "GitHub repository search query.",
+          "required": true
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "sort",
+          "default": "best_match",
+          "oneOf": [
+            "best_match",
+            "stars",
+            "forks",
+            "help_wanted_issues",
+            "updated"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Search public GitHub repositories with GitHub's search syntax (free text plus qualifiers such as language:rust, stars:>1000, topic:llm, org:firecrawl, created:>2025-01-01), sorted by best match, stars, forks, help-wanted issues or last update. Returns one page of repository records with stars, forks and dates; total_count is GitHub's overall match count, capped at 1000 reachable results (page * per_page <= 1000). Keyless search is limited to 10 requests per minute per IP.",
+        "key": "repositories",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "archived",
+            "type": "boolean"
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "RFC 3339 UTC"
+          },
+          {
+            "name": "default_branch",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "disabled",
+            "type": "boolean"
+          },
+          {
+            "name": "forks",
+            "type": "number",
+            "about": "forks_count"
+          },
+          {
+            "name": "full_name",
+            "type": "string",
+            "about": "owner/name as GitHub spells it."
+          },
+          {
+            "name": "has_discussions",
+            "type": "boolean"
+          },
+          {
+            "name": "has_issues",
+            "type": "boolean"
+          },
+          {
+            "name": "has_pages",
+            "type": "boolean"
+          },
+          {
+            "name": "has_wiki",
+            "type": "boolean"
+          },
+          {
+            "name": "homepage",
+            "type": "string",
+            "about": "Project website; null when unset or blank."
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "is_fork",
+            "type": "boolean"
+          },
+          {
+            "name": "is_template",
+            "type": "boolean"
+          },
+          {
+            "name": "language",
+            "type": "string",
+            "about": "Primary language as GitHub detects it."
+          },
+          {
+            "name": "license",
+            "type": "object"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "open_issues_and_prs",
+            "type": "number",
+            "about": "GitHub's open_issues_count, which includes open pull requests. Use issue_counts for issues only."
+          },
+          {
+            "name": "owner",
+            "type": "object"
+          },
+          {
+            "name": "parent_full_name",
+            "type": "string",
+            "about": "For a fork, the repository it was forked from; null otherwise or in search results."
+          },
+          {
+            "name": "pushed_at",
+            "type": "string"
+          },
+          {
+            "name": "size_kb",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "https://github.com/{owner}/{name}"
+          },
+          {
+            "name": "stars",
+            "type": "number",
+            "about": "stargazers_count"
+          },
+          {
+            "name": "topics",
+            "type": "string[]"
+          },
+          {
+            "name": "updated_at",
+            "type": "string"
+          },
+          {
+            "name": "visibility",
+            "type": "string"
+          },
+          {
+            "name": "watchers",
+            "type": "number",
+            "about": "subscribers_count (people watching). Null in search results, which do not carry it."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "per_page": 3,
+          "query": "web scraping",
+          "sort": "stars"
+        },
+        "response": {
+          "count": 3,
+          "has_next": true,
+          "incomplete_results": false,
+          "next_page": 2,
+          "observed_at_ms": 1789441359778,
+          "order": "desc",
+          "page": 1,
+          "per_page": 3,
+          "query": "web scraping",
+          "repositories": [
+            {
+              "archived": false,
+              "created_at": "2024-04-15T21:02:29Z",
+              "default_branch": "main",
+              "description": "The context API to search, scrape, and interact with the web at scale. 🔥",
+              "disabled": false,
+              "forks": 9791,
+              "full_name": "firecrawl/firecrawl",
+              "has_discussions": true,
+              "has_issues": true,
+              "has_pages": false,
+              "has_wiki": false,
+              "homepage": "https://firecrawl.dev",
+              "id": 787076358,
+              "is_fork": false,
+              "is_template": false,
+              "language": "TypeScript",
+              "license": {
+                "key": "agpl-3.0",
+                "name": "GNU Affero General Public License v3.0",
+                "spdx_id": "AGPL-3.0",
+                "url": "https://api.github.com/licenses/agpl-3.0"
+              },
+              "name": "firecrawl",
+              "open_issues_and_prs": 628,
+              "owner": {
+                "avatar_url": "https://avatars.githubusercontent.com/u/135057108?v=4",
+                "html_url": "https://github.com/firecrawl",
+                "id": 135057108,
+                "login": "firecrawl",
+                "type": "Organization"
+              },
+              "parent_full_name": null,
+              "pushed_at": "2026-09-15T02:24:10Z",
+              "size_kb": 179466,
+              "source_url": "https://github.com/firecrawl/firecrawl",
+              "stars": 180475,
+              "topics": [
+                "ai",
+                "ai-agents",
+                "ai-crawler",
+                "ai-scraping",
+                "ai-search",
+                "crawler",
+                "data-extraction",
+                "html-to-markdown",
+                "llm",
+                "markdown",
+                "scraper",
+                "scraping",
+                "web-crawler",
+                "web-data",
+                "web-data-extraction",
+                "web-scraper",
+                "web-scraping",
+                "web-search",
+                "webscraping"
+              ],
+              "updated_at": "2026-09-15T03:02:33Z",
+              "visibility": "public",
+              "watchers": null
+            },
+            {
+              "archived": false,
+              "created_at": "2024-10-13T20:29:53Z",
+              "default_branch": "main",
+              "description": "🕷️ An adaptive Web Scraping framework that handles everything from a single request to a full-scale crawl! Don't be shy, join here: https://discord.gg/EMgGbDceNQ",
+              "disabled": false,
+              "forks": 8175,
+              "full_name": "D4Vinci/Scrapling",
+              "has_discussions": true,
+              "has_issues": true,
+              "has_pages": false,
+              "has_wiki": true,
+              "homepage": "https://scrapling.readthedocs.io/en/latest/",
+              "id": 872119017,
+              "is_fork": false,
+              "is_template": false,
+              "language": "Python",
+              "license": {
+                "key": "bsd-3-clause",
+                "name": "BSD 3-Clause \"New\" or \"Revised\" License",
+                "spdx_id": "BSD-3-Clause",
+                "url": "https://api.github.com/licenses/bsd-3-clause"
+              },
+              "name": "Scrapling",
+              "open_issues_and_prs": 6,
+              "owner": {
+                "avatar_url": "https://avatars.githubusercontent.com/u/20604835?v=4",
+                "html_url": "https://github.com/D4Vinci",
+                "id": 20604835,
+                "login": "D4Vinci",
+                "type": "User"
+              },
+              "parent_full_name": null,
+              "pushed_at": "2026-09-14T19:47:52Z",
+              "size_kb": 10036,
+              "source_url": "https://github.com/D4Vinci/Scrapling",
+              "stars": 80976,
+              "topics": [
+                "ai",
+                "ai-scraping",
+                "automation",
+                "crawler",
+                "crawling",
+                "crawling-python",
+                "data",
+                "data-extraction",
+                "mcp",
+                "mcp-server",
+                "playwright",
+                "python",
+                "scraping",
+                "selectors",
+                "stealth",
+                "web-scraper",
+                "web-scraping",
+                "web-scraping-python",
+                "webscraping",
+                "xpath"
+              ],
+              "updated_at": "2026-09-15T02:59:00Z",
+              "visibility": "public",
+              "watchers": null
+            },
+            {
+              "archived": false,
+              "created_at": "2010-02-22T02:01:14Z",
+              "default_branch": "master",
+              "description": "Scrapy, a fast high-level web crawling & scraping framework for Python.",
+              "disabled": false,
+              "forks": 11961,
+              "full_name": "scrapy/scrapy",
+              "has_discussions": true,
+              "has_issues": true,
+              "has_pages": false,
+              "has_wiki": true,
+              "homepage": "https://scrapy.org",
+              "id": 529502,
+              "is_fork": false,
+              "is_template": false,
+              "language": "Python",
+              "license": {
+                "key": "bsd-3-clause",
+                "name": "BSD 3-Clause \"New\" or \"Revised\" License",
+                "spdx_id": "BSD-3-Clause",
+                "url": "https://api.github.com/licenses/bsd-3-clause"
+              },
+              "name": "scrapy",
+              "open_issues_and_prs": 394,
+              "owner": {
+                "avatar_url": "https://avatars.githubusercontent.com/u/733635?v=4",
+                "html_url": "https://github.com/scrapy",
+                "id": 733635,
+                "login": "scrapy",
+                "type": "Organization"
+              },
+              "parent_full_name": null,
+              "pushed_at": "2026-09-14T14:43:54Z",
+              "size_kb": 32299,
+              "source_url": "https://github.com/scrapy/scrapy",
+              "stars": 64350,
+              "topics": [
+                "crawler",
+                "crawling",
+                "framework",
+                "hacktoberfest",
+                "python",
+                "scraping",
+                "web-scraping",
+                "web-scraping-python"
+              ],
+              "updated_at": "2026-09-15T02:27:23Z",
+              "visibility": "public",
+              "watchers": null
+            }
+          ],
+          "sort": "stars",
+          "source_url": "https://github.com/search?type=repositories&q=web%20scraping",
+          "total_count": 137789,
+          "upstream_requests": 1
+        },
+        "recordedAt": "2026-09-15T03:02:39.778492+00:00"
+      },
+      "execute": {
+        "provider": "github-com",
+        "capability": "repositories/search_repos"
+      }
+    }
+  ]
+}

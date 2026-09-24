@@ -1,0 +1,1528 @@
+{
+  "id": "indeed-com",
+  "provider": "indeed-com",
+  "name": "Indeed US",
+  "description": "Indeed US job search, full job postings and employer profiles (rating, review category scores, size, revenue, industry, addresses, CEO, links) from Indeed's own GraphQL API, with the public company page as fallback and salary and location normalised.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "indeed-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "indeed-com/jobs/employer",
+      "provider": "indeed-com",
+      "capability": "jobs/employer",
+      "name": "Employer",
+      "description": "Employer research after search or job returned an employer key or url. Prefer employer_key (solver-free, one GraphQL call); unknown keys and slugs return not_found.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "company",
+          "type": "string",
+          "in": "body",
+          "about": "Company page slug as it appears after /cmp/, e.g. Apple or Charles-Schwab."
+        },
+        {
+          "name": "employer_key",
+          "type": "string",
+          "in": "body",
+          "about": "Indeed's employer key as returned in employer.key on search and job results, e.g. e3a48f8a4a788271. Pattern: ^[0-9a-fA-F]{16}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted indeed.com company URL, e.g. https://www.indeed.com/cmp/Apple."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "employer_key",
+          "company",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One Indeed employer profile by employer key (the 16-hex employer.key on every job), by company page slug (the name after /cmp/) or by a pasted indeed.com/cmp URL: name, overall rating and review count, review category scores (work-life balance, compensation, job security, management, culture), description, industry (code plus label), employee and revenue ranges (code plus label), addresses, website and social links, CEO name, logo and header image URLs. Read from Indeed's GraphQL employer dossier; a slug is resolved to its key through a company: job search. Only when the company has no current US posting is the public company page read instead, which additionally exposes founded year, headquarters, Work Happiness score, ratings by year, top locations, open job count and CEO approval; data_source names the path taken.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "addresses",
+            "type": "string[]",
+            "about": "Addresses as listed in the employer dossier; empty from the company page."
+          },
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "ceo",
+            "type": "object"
+          },
+          {
+            "name": "company_key",
+            "type": "string",
+            "about": "Indeed's encrypted company id (encodedFccId); matches employer.key on jobs."
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "data_source",
+            "type": "string",
+            "about": "Which Indeed surface produced this record: the GraphQL employer dossier or the public company page fallback."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "employee_range",
+            "type": "string",
+            "about": "Decoded from employee_range_code, e.g. \"10,000+\"; null when the code is unknown."
+          },
+          {
+            "name": "employee_range_code",
+            "type": "string",
+            "about": "Indeed's raw code, e.g. ERv1_10000_PLUS."
+          },
+          {
+            "name": "founded_year",
+            "type": "number"
+          },
+          {
+            "name": "happiness",
+            "type": "object"
+          },
+          {
+            "name": "header_image_url",
+            "type": "string"
+          },
+          {
+            "name": "headquarters",
+            "type": "string"
+          },
+          {
+            "name": "industry",
+            "type": "string"
+          },
+          {
+            "name": "industry_code",
+            "type": "string",
+            "about": "Indeed's raw industry code, e.g. Iv1_INTERNET_AND_SOFTWARE (GraphQL path only; null from the company page)."
+          },
+          {
+            "name": "jobs_url",
+            "type": "string"
+          },
+          {
+            "name": "locations",
+            "type": "object[]"
+          },
+          {
+            "name": "logo_url",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "open_job_count",
+            "type": "number"
+          },
+          {
+            "name": "profile_claimed",
+            "type": "boolean"
+          },
+          {
+            "name": "rating",
+            "type": "number",
+            "about": "Overall review rating out of 5."
+          },
+          {
+            "name": "ratings_by_year",
+            "type": "object[]"
+          },
+          {
+            "name": "revenue_range",
+            "type": "string",
+            "about": "Decoded from revenue_range_code, USD, e.g. \"more than $10B (USD)\"."
+          },
+          {
+            "name": "revenue_range_code",
+            "type": "string",
+            "about": "Indeed's raw code, e.g. RRv1_OVER_10B."
+          },
+          {
+            "name": "review_categories",
+            "type": "object"
+          },
+          {
+            "name": "review_count",
+            "type": "number"
+          },
+          {
+            "name": "reviews_url",
+            "type": "string"
+          },
+          {
+            "name": "sectors",
+            "type": "string[]"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "social_links",
+            "type": "object",
+            "about": "Employer-provided social profile URLs (GraphQL path); null from the company page."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "employer_key": "e3a48f8a4a788271"
+        },
+        "response": {
+          "addresses": [
+            "One Microsoft Way Redmond, Washington 98052-6399"
+          ],
+          "attribution": "Source: Indeed (indeed.com)",
+          "ceo": {
+            "approval_percent": null,
+            "name": "Satya Nadella"
+          },
+          "company_key": "e3a48f8a4a788271",
+          "country": "US",
+          "data_source": "graphql",
+          "description": "Our mission is to empower every person and every organization on the planet to achieve more.",
+          "employee_range": "10,000+",
+          "employee_range_code": "ERv1_10000_PLUS",
+          "founded_year": null,
+          "happiness": null,
+          "header_image_url": "https://d2q79iu7y748jz.cloudfront.net/s/_headerimage/1960x400/7461d01cfaa2be8b173212be5e85f01a",
+          "headquarters": null,
+          "industry": "Internet and software",
+          "industry_code": "Iv1_INTERNET_AND_SOFTWARE",
+          "jobs_url": "https://www.indeed.com/cmp/Microsoft/jobs",
+          "locations": [],
+          "logo_url": "https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/88813b3f866a5b58c9685073e3b87e05",
+          "name": "Microsoft",
+          "observed_at_ms": 1789477200000,
+          "open_job_count": null,
+          "profile_claimed": null,
+          "rating": 4.2,
+          "ratings_by_year": [],
+          "revenue_range": "more than $10B (USD)",
+          "revenue_range_code": "RRv1_OVER_10B",
+          "review_categories": {
+            "compensation_benefits": 4.1,
+            "culture": 4,
+            "job_security_advancement": 3.5,
+            "management": 3.6,
+            "work_life_balance": 3.9
+          },
+          "review_count": 8974,
+          "reviews_url": "https://www.indeed.com/cmp/Microsoft/reviews",
+          "sectors": [],
+          "slug": "Microsoft",
+          "social_links": {
+            "facebook": "https://www.facebook.com/Microsoft",
+            "instagram": "https://www.instagram.com/microsoft",
+            "twitter": "https://twitter.com/microsoft"
+          },
+          "source_url": "https://www.indeed.com/cmp/Microsoft",
+          "website": "http://www.microsoft.com/"
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "indeed-com",
+        "capability": "jobs/employer"
+      }
+    },
+    {
+      "id": "indeed-com/jobs/job",
+      "provider": "indeed-com",
+      "capability": "jobs/job",
+      "name": "Job",
+      "description": "After search, or when you hold a viewjob?jk= or rc/clk?jk= URL. Removed postings return not_found.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "job_key",
+          "type": "string",
+          "in": "body",
+          "about": "Indeed job key, e.g. d6adfa9517df46fc. Pattern: ^[0-9a-fA-F]{16}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted indeed.com job URL containing jk=, e.g. https://www.indeed.com/viewjob?jk=d6adfa9517df46fc."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "job_key",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One Indeed job posting by job key (the 16-hex jk) or a pasted indeed.com job URL: title, employer, normalised location and salary, attributes, description as HTML and text, posted/listed timestamps, repost flag, expiry flag and outbound apply URL.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "apply_url",
+            "type": "string"
+          },
+          {
+            "name": "attributes",
+            "type": "object[]",
+            "about": "Indeed's taxonomy tags for the posting, as Indeed returns them: skills, benefits, schedule, seniority, job type and, when tagged, the workplace type. The workplace type (key DSQF7 \"Remote\", PAXZC \"Hybrid work\", SWG7T \"In-person\", N83EH \"Work from home\") is optional: it is present only on postings Indeed tagged with it, so its absence does not mean on-site. Order is Indeed's; the list may be empty."
+          },
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "description_html",
+            "type": "string"
+          },
+          {
+            "name": "description_text",
+            "type": "string"
+          },
+          {
+            "name": "employer",
+            "type": "object"
+          },
+          {
+            "name": "expired",
+            "type": "boolean"
+          },
+          {
+            "name": "job_key",
+            "type": "string"
+          },
+          {
+            "name": "language",
+            "type": "string"
+          },
+          {
+            "name": "listed_at",
+            "type": "string",
+            "about": "RFC3339 UTC; Indeed's dateOnIndeed, when the posting was listed on Indeed."
+          },
+          {
+            "name": "location",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "posted_at",
+            "type": "string",
+            "about": "RFC3339 UTC; Indeed's datePublished, the posting date the employer's listing carries. For a reposted posting this is the repost date, not the original one."
+          },
+          {
+            "name": "reposted",
+            "type": "boolean",
+            "about": "Indeed's isRepost: true when Indeed marks the posting as a repost of an earlier one, false when not, null when Indeed does not say."
+          },
+          {
+            "name": "salary",
+            "type": "object"
+          },
+          {
+            "name": "source_name",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "job_key": "d6adfa9517df46fc"
+        },
+        "response": {
+          "apply_url": "https://jsv3.recruitics.com/redirect?rx_cid=3427&rx_jobId=200679992-0157&rx_url=https%3A%2F%2Fjobs.apple.com%2Fen-us%2Fdetails%2F200679992-0157%2Fsoftware-engineer%3Fboard_id%3DJB001%26rx_a%3D0%26rx_c%3D%26rx_ch%3Djobp4p%26rx_group%3D122365%26rx_id%3Db45f6fa9-a42b-11f1-a826-dba8509b74a6%26rx_job%3D200679992-0157%26rx_medium%3Dcpc%26rx_r%3Dnone%26rx_source%3Dindeed%26rx_ts%3D20260919T180406Z%26rx_vp%3Dcpc%26team%3DSFTWR",
+          "attributes": [
+            {
+              "key": "47KNR",
+              "label": "Performance tuning"
+            },
+            {
+              "key": "4E4WW",
+              "label": "Computer science"
+            },
+            {
+              "key": "4R4AM",
+              "label": "Software engineering"
+            },
+            {
+              "key": "6UE7Y",
+              "label": "Adtech"
+            },
+            {
+              "key": "6XNCP",
+              "label": "Computer Science"
+            },
+            {
+              "key": "9B3V2",
+              "label": "Relational databases"
+            },
+            {
+              "key": "AV9NF",
+              "label": "Employee stock purchase plan"
+            },
+            {
+              "key": "AWSY6",
+              "label": "Spark"
+            },
+            {
+              "key": "B8ZQD",
+              "label": "System performance optimization"
+            },
+            {
+              "key": "CH5MX",
+              "label": "NoSQL"
+            },
+            {
+              "key": "DFGFY",
+              "label": "Public Cloud"
+            },
+            {
+              "key": "DP9CS",
+              "label": "Scalable systems"
+            },
+            {
+              "key": "EVPJU",
+              "label": "Java"
+            },
+            {
+              "key": "EXSNN",
+              "label": "Master's degree"
+            },
+            {
+              "key": "EY33Q",
+              "label": "Health insurance"
+            },
+            {
+              "key": "FADZP",
+              "label": "Microservices"
+            },
+            {
+              "key": "FQJ2X",
+              "label": "Dental insurance"
+            },
+            {
+              "key": "GEYN2",
+              "label": "Collaboration with product development teams"
+            },
+            {
+              "key": "GFRKJ",
+              "label": "AWS"
+            },
+            {
+              "key": "GQ755",
+              "label": "Spark implementation"
+            },
+            {
+              "key": "HCRPT",
+              "label": "RSU"
+            },
+            {
+              "key": "HFDVW",
+              "label": "Bachelor's degree"
+            },
+            {
+              "key": "JT9DE",
+              "label": "Product management"
+            },
+            {
+              "key": "PP4CH",
+              "label": "APIs"
+            },
+            {
+              "key": "PYTWK",
+              "label": "Scalability"
+            },
+            {
+              "key": "Q3QNF",
+              "label": "Developing and maintaining backend systems"
+            },
+            {
+              "key": "SH9RX",
+              "label": "Cloud solution engineering"
+            },
+            {
+              "key": "SKFS2",
+              "label": "Kafka"
+            },
+            {
+              "key": "TV7WS",
+              "label": "Distributed computing"
+            },
+            {
+              "key": "U5EA6",
+              "label": "Real-time data processing implementation"
+            },
+            {
+              "key": "UB6KM",
+              "label": "System tuning"
+            },
+            {
+              "key": "UB7SC",
+              "label": "Senior level"
+            },
+            {
+              "key": "UBQUH",
+              "label": "Data performance optimization"
+            },
+            {
+              "key": "VBXYJ",
+              "label": "Bachelor's degree in computer science"
+            },
+            {
+              "key": "W6GUJ",
+              "label": "2 years"
+            },
+            {
+              "key": "Y72YJ",
+              "label": "Debugging"
+            },
+            {
+              "key": "Y8657",
+              "label": "Cross-functional communication"
+            },
+            {
+              "key": "YBYSM",
+              "label": "Technology infrastructure engineering"
+            },
+            {
+              "key": "YQ98H",
+              "label": "Retirement plan"
+            }
+          ],
+          "attribution": "Source: Indeed (indeed.com)",
+          "description_html": "<p>At Apple, we focus deeply on our customers&rsquo; experience. Apple Ads brings this same approach to advertising, helping people find exactly what they&rsquo;re looking for and helping advertisers grow their businesses. Our technology powers ads and sponsorships across Apple Services, including the App Store, Apple News, and MLS Season Pass. Everything we do is designed for trust, connection, and impact: We respect user privacy, integrate advertising thoughtfully into the experience, and deliver value for advertisers of all sizes-from small app developers to big, global brands. Because when advertising is done right, it benefits everyone.<br>\n<br>\n<b>Description</b><br>\n<br>\nAds Engineering builds ad tech the Apple way-privacy-preserving, user-centric, and built to scale. Our infrastructure supports massive real-time demand with low latency, precision, and global reach. Our work spans distributed systems, large-scale data infrastructure, LLMs, and Generative AI. We design and build best of breed systems for dealing with our complex and ever-growing platform needs that help deliver highly optimized advertising content to consumers.&quot;,&quot;responsibilities&quot;:&quot;Build the foundational pieces of the next generation of Apple Ad&rsquo;s systems<br>\n<br>\nImplement low latency, highly - available, high volume internal and external facing services in a cloud environment.<br>\n<br>\nDesign and implement performant services created with the right principles to support rapid growth with minimal operational overheads<br>\n<br>\nCollaborate with cross functional teams including Product Management, Data, SRE, etc. to design and implement systems that can handle a variety of Ads use cases.<br>\n<br>\n<b>Preferred Qualifications</b><br>\n<br>\nMaster's degree preferred<br>\n<br>\n5+ years of experience in software engineering<br>\n<br>\nProficiency in Java<br>\n<br>\nPrior experience in advertising industry is a plus<br>\n<br>\n<b>Minimum Qualifications</b><br>\n<br>\n2 or more years of industry experience building scalable micro services or data driven platforms<br>\n<br>\nStrong computer science fundamentals<br>\n<br>\nPrior experience with OOPS programming (eg., Java/C++ or equivalent)<br>\n<br>\nFamiliarity with cloud paradigms ( e.g AWS or GCP )<br>\n<br>\nExpertise in building backend distributed systems<br>\n<br>\nExperience with creating solutions using public cloud technologies and APIs<br>\n<br>\nStrong understanding of Micro-service design and high-scale performance tuning<br>\n<br>\nExpertise in relational and non relational datastore<br>\n<br>\nProficiency in data processing technologies (e.g Kafka, Spark, Flink )<br>\n<br>\nStrong problem solving and debugging skills<br>\n<br>\nA desire to work in a fast-paced work environment<br>\n<br>\nBachelor's degree in Computer Science/Engineering discipline or equivalent<br>\n<br>\n<b>Pay &amp; Benefits</b><br>\n<br>\nAt Apple, base pay is one part of our total compensation package and is determined within a range. This provides the opportunity to progress as you grow and develop within a role. The base pay range for this role is between $129,300 and $225,300, and your base pay will depend on your skills, qualifications, experience, and location.<br>\n<br>\nApple employees also have the opportunity to become an Apple shareholder through participation in Apple's discretionary employee stock programs. Apple employees are eligible for discretionary restricted stock unit awards, and can purchase Apple stock at a discount if voluntarily participating in Apple's Employee Stock Purchase Plan. You'll also receive benefits including: Comprehensive medical and dental coverage, retirement benefits, a range of discounted products and free services, and for formal education related to advancing your career at Apple, reimbursement for certain educational expenses - including tuition. Additionally, this role might be eligible for discretionary bonuses or commission payments as well as relocation. Learn more about Apple Benefits<br>\n<br>\nNote: Apple benefit, compensation and employee stock programs are subject to eligibility requirements and other terms of the applicable plan or program.</p>",
+          "description_text": "At Apple, we focus deeply on our customers’ experience. Apple Ads brings this same approach to advertising, helping people find exactly what they’re looking for and helping advertisers grow their businesses. Our technology powers ads and sponsorships across Apple Services, including the App Store, Apple News, and MLS Season Pass. Everything we do is designed for trust, connection, and impact: We respect user privacy, integrate advertising thoughtfully into the experience, and deliver value for advertisers of all sizes-from small app developers to big, global brands. Because when advertising is done right, it benefits everyone.\n\nDescription\n\nAds Engineering builds ad tech the Apple way-privacy-preserving, user-centric, and built to scale. Our infrastructure supports massive real-time demand with low latency, precision, and global reach. Our work spans distributed systems, large-scale data infrastructure, LLMs, and Generative AI. We design and build best of breed systems for dealing with our complex and ever-growing platform needs that help deliver highly optimized advertising content to consumers.\",\"responsibilities\":\"Build the foundational pieces of the next generation of Apple Ad’s systems\n\nImplement low latency, highly - available, high volume internal and external facing services in a cloud environment.\n\nDesign and implement performant services created with the right principles to support rapid growth with minimal operational overheads\n\nCollaborate with cross functional teams including Product Management, Data, SRE, etc. to design and implement systems that can handle a variety of Ads use cases.\n\nPreferred Qualifications\n\nMaster's degree preferred\n\n5+ years of experience in software engineering\n\nProficiency in Java\n\nPrior experience in advertising industry is a plus\n\nMinimum Qualifications\n\n2 or more years of industry experience building scalable micro services or data driven platforms\n\nStrong computer science fundamentals\n\nPrior experience with OOPS programming (eg., Java/C++ or equivalent)\n\nFamiliarity with cloud paradigms ( e.g AWS or GCP )\n\nExpertise in building backend distributed systems\n\nExperience with creating solutions using public cloud technologies and APIs\n\nStrong understanding of Micro-service design and high-scale performance tuning\n\nExpertise in relational and non relational datastore\n\nProficiency in data processing technologies (e.g Kafka, Spark, Flink )\n\nStrong problem solving and debugging skills\n\nA desire to work in a fast-paced work environment\n\nBachelor's degree in Computer Science/Engineering discipline or equivalent\n\nPay & Benefits\n\nAt Apple, base pay is one part of our total compensation package and is determined within a range. This provides the opportunity to progress as you grow and develop within a role. The base pay range for this role is between $129,300 and $225,300, and your base pay will depend on your skills, qualifications, experience, and location.\n\nApple employees also have the opportunity to become an Apple shareholder through participation in Apple's discretionary employee stock programs. Apple employees are eligible for discretionary restricted stock unit awards, and can purchase Apple stock at a discount if voluntarily participating in Apple's Employee Stock Purchase Plan. You'll also receive benefits including: Comprehensive medical and dental coverage, retirement benefits, a range of discounted products and free services, and for formal education related to advancing your career at Apple, reimbursement for certain educational expenses - including tuition. Additionally, this role might be eligible for discretionary bonuses or commission payments as well as relocation. Learn more about Apple Benefits\n\nNote: Apple benefit, compensation and employee stock programs are subject to eligibility requirements and other terms of the applicable plan or program.",
+          "employer": {
+            "key": "6e7b40121fbb5e2f",
+            "name": "Apple",
+            "url": "https://www.indeed.com/cmp/Apple"
+          },
+          "expired": false,
+          "job_key": "d6adfa9517df46fc",
+          "language": "en",
+          "listed_at": "2026-08-30T12:05:14Z",
+          "location": {
+            "city": "Austin",
+            "country_code": "US",
+            "formatted": "Austin, TX",
+            "latitude": 30.26715,
+            "longitude": -97.74306,
+            "postal_code": null,
+            "region_code": "TX"
+          },
+          "observed_at_ms": 1789842927537,
+          "posted_at": "2026-08-26T05:00:00Z",
+          "reposted": false,
+          "salary": {
+            "currency": "USD",
+            "formatted": "$129,300 - $225,300 a year",
+            "kind": "posted",
+            "max": 225300,
+            "min": 129300,
+            "period": "year"
+          },
+          "source_name": "Apple",
+          "source_url": "https://www.indeed.com/viewjob?jk=d6adfa9517df46fc",
+          "title": "Software Engineer"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "indeed-com",
+        "capability": "jobs/job"
+      }
+    },
+    {
+      "id": "indeed-com/jobs/search",
+      "provider": "indeed-com",
+      "capability": "jobs/search",
+      "name": "Search",
+      "description": "Start here to find job_key values; pass the same filters plus next_cursor to page. No total count is exposed by Indeed; next_cursor=null is the end.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page; send it with the same query, location and filters."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Page size; Indeed's maximum is 100.",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "in": "body",
+          "about": "City and state, ZIP code, state, or \"Remote\" (Indeed's \"where\" box). At least one of query/location is required."
+        },
+        {
+          "name": "posted_within_days",
+          "type": "number",
+          "in": "body",
+          "about": "Only cards Indeed listed within the last N days, i.e. on listed_at (Indeed's dateOnIndeed, the only field its date filter accepts). posted_at is not filtered: it can be older than N days, and for a reposted card it is the repost date. Check reposted and posted_at on each card.",
+          "min": 1,
+          "max": 30
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Job title, keywords or company name (Indeed's \"what\" box)."
+        },
+        {
+          "name": "radius_miles",
+          "type": "number",
+          "in": "body",
+          "about": "Search radius around the location in miles.",
+          "default": 25,
+          "min": 0,
+          "max": 100
+        },
+        {
+          "name": "remote",
+          "type": "boolean",
+          "in": "body",
+          "about": "true restricts to jobs carrying Indeed's Remote attribute."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Result order: \"relevance\" (Indeed's default ranking) or \"date\" (most recently listed first). No other order is offered by Indeed.",
+          "default": "relevance",
+          "oneOf": [
+            "relevance",
+            "date"
+          ]
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "query",
+          "location"
+        ]
+      ],
+      "response": {
+        "about": "Search Indeed US job postings by keywords and/or location (city/state, ZIP or \"Remote\"), with radius, newest-first sort, posted-within-days and remote filters. Returns one page of up to 100 job cards with normalised salary (min/max, currency, period, posted vs estimated), location, employer, attributes, Indeed's own posted/listed timestamps and repost flag, plus next_cursor. posted_within_days filters on listed_at (when Indeed listed the card), the only date Indeed's filter accepts; a card's posted_at can be weeks older, and for reposted=true it is the repost date, not the original posting date.",
+        "key": "jobs",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "apply_url",
+            "type": "string",
+            "about": "Indeed's outbound apply URL, when present."
+          },
+          {
+            "name": "attributes",
+            "type": "object[]",
+            "about": "Indeed's taxonomy tags for the posting, as Indeed returns them: skills, benefits, schedule, seniority, job type and, when tagged, the workplace type. The workplace type (key DSQF7 \"Remote\", PAXZC \"Hybrid work\", SWG7T \"In-person\", N83EH \"Work from home\") is optional: it is present only on postings Indeed tagged with it and absent on many cards, so its absence does not mean on-site. Order is Indeed's; the list may be empty."
+          },
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "employer",
+            "type": "object"
+          },
+          {
+            "name": "expired",
+            "type": "boolean"
+          },
+          {
+            "name": "job_key",
+            "type": "string",
+            "about": "Indeed's stable job key (jk)."
+          },
+          {
+            "name": "language",
+            "type": "string"
+          },
+          {
+            "name": "listed_at",
+            "type": "string",
+            "about": "RFC3339 UTC; Indeed's dateOnIndeed, when this card was listed on Indeed. The field posted_within_days filters on."
+          },
+          {
+            "name": "location",
+            "type": "object"
+          },
+          {
+            "name": "posted_at",
+            "type": "string",
+            "about": "RFC3339 UTC; Indeed's datePublished, the posting date the employer's listing carries. For a reposted card this is the repost date, not the original one; it is not what posted_within_days filters on."
+          },
+          {
+            "name": "reposted",
+            "type": "boolean",
+            "about": "Indeed's isRepost: true when Indeed marks the posting as a repost of an earlier one (posted_at is then the repost date), false when it does not, null when Indeed does not say. Read from Indeed's jobData for the page, since the search surface leaves it null."
+          },
+          {
+            "name": "salary",
+            "type": "object"
+          },
+          {
+            "name": "snippet",
+            "type": "string",
+            "about": "First 300 characters of the description text."
+          },
+          {
+            "name": "source_name",
+            "type": "string",
+            "about": "The board or employer Indeed sourced the posting from."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "https://www.indeed.com/viewjob?jk=<job_key>"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 3,
+          "location": "Austin, TX",
+          "query": "software engineer"
+        },
+        "response": {
+          "attribution": "Source: Indeed (indeed.com)",
+          "count": 3,
+          "country": "US",
+          "jobs": [
+            {
+              "apply_url": "https://careers.newscorp.com/austin-tx/staff-software-engineer/0C6A1BA22FB44209A4168AA8AF71F219/job/",
+              "attributes": [
+                {
+                  "key": "38T52",
+                  "label": "Regression testing implementation"
+                },
+                {
+                  "key": "3AA7T",
+                  "label": "Website activity analysis"
+                },
+                {
+                  "key": "4E4WW",
+                  "label": "Computer science"
+                },
+                {
+                  "key": "4R4AM",
+                  "label": "Software engineering"
+                },
+                {
+                  "key": "5GUGE",
+                  "label": "8 hour shift"
+                },
+                {
+                  "key": "6XNCP",
+                  "label": "Computer Science"
+                },
+                {
+                  "key": "7GRMV",
+                  "label": "Continuous Delivery (CD) implementation"
+                },
+                {
+                  "key": "7HYQD",
+                  "label": "Engineering development testing"
+                },
+                {
+                  "key": "93YM8",
+                  "label": "Tooling"
+                },
+                {
+                  "key": "9CXGM",
+                  "label": "Team leadership"
+                },
+                {
+                  "key": "AWHEP",
+                  "label": "Paid holidays"
+                },
+                {
+                  "key": "CA8R9",
+                  "label": "Leading organic search traffic initiatives"
+                },
+                {
+                  "key": "D5G3V",
+                  "label": "SEO error detection and correction"
+                },
+                {
+                  "key": "DN85V",
+                  "label": "Office"
+                },
+                {
+                  "key": "DQU6U",
+                  "label": "Incident Escalation"
+                },
+                {
+                  "key": "EXR73",
+                  "label": "Content delivery networks"
+                },
+                {
+                  "key": "EY33Q",
+                  "label": "Health insurance"
+                },
+                {
+                  "key": "F7KCW",
+                  "label": "8 years"
+                },
+                {
+                  "key": "FGY89",
+                  "label": "SQL"
+                },
+                {
+                  "key": "FQJ2X",
+                  "label": "Dental insurance"
+                },
+                {
+                  "key": "FX3TW",
+                  "label": "Team development"
+                },
+                {
+                  "key": "G9RC5",
+                  "label": "Key Performance Indicators"
+                },
+                {
+                  "key": "GDT8N",
+                  "label": "Production systems"
+                },
+                {
+                  "key": "GEYN2",
+                  "label": "Collaboration with product development teams"
+                },
+                {
+                  "key": "GGXEU",
+                  "label": "Analysis skills"
+                },
+                {
+                  "key": "GTCJF",
+                  "label": "WAF"
+                },
+                {
+                  "key": "HCXZ9",
+                  "label": "Software quality assurance"
+                },
+                {
+                  "key": "HFDVW",
+                  "label": "Bachelor's degree"
+                },
+                {
+                  "key": "HJUWZ",
+                  "label": "Tuition reimbursement"
+                },
+                {
+                  "key": "HW4J4",
+                  "label": "Paid time off"
+                },
+                {
+                  "key": "HWH88",
+                  "label": "Attribution modeling"
+                },
+                {
+                  "key": "J86KV",
+                  "label": "Cloud development"
+                },
+                {
+                  "key": "K6KAH",
+                  "label": "Incident management operations support"
+                },
+                {
+                  "key": "KGFFM",
+                  "label": "Next.js"
+                },
+                {
+                  "key": "KS96P",
+                  "label": "SDKs"
+                },
+                {
+                  "key": "MGSEB",
+                  "label": "Mentoring"
+                },
+                {
+                  "key": "NREM3",
+                  "label": "Data pipelines"
+                },
+                {
+                  "key": "NWQM9",
+                  "label": "Snacks provided"
+                },
+                {
+                  "key": "P2W6Q",
+                  "label": "Leading team collaboration initiatives"
+                },
+                {
+                  "key": "Q3QNF",
+                  "label": "Developing and maintaining backend systems"
+                },
+                {
+                  "key": "QDUY5",
+                  "label": "Experience equivalent to degree accepted"
+                },
+                {
+                  "key": "QRFXZ",
+                  "label": "GraphQL APIs"
+                },
+                {
+                  "key": "RZAT2",
+                  "label": "Vision insurance"
+                },
+                {
+                  "key": "RZWSA",
+                  "label": "Website analysis"
+                },
+                {
+                  "key": "T5AZJ",
+                  "label": "GraphQL"
+                },
+                {
+                  "key": "TVJXW",
+                  "label": "DevOps automation"
+                },
+                {
+                  "key": "TX6QF",
+                  "label": "AI-driven automation"
+                },
+                {
+                  "key": "UB7SC",
+                  "label": "Senior level"
+                },
+                {
+                  "key": "UD264",
+                  "label": "Rendering"
+                },
+                {
+                  "key": "UT5AD",
+                  "label": "Log analysis"
+                },
+                {
+                  "key": "VBXYJ",
+                  "label": "Bachelor's degree in computer science"
+                },
+                {
+                  "key": "VGCMH",
+                  "label": "Volunteer time off"
+                },
+                {
+                  "key": "VN528",
+                  "label": "Escalation handling"
+                },
+                {
+                  "key": "VZD9Q",
+                  "label": "On call"
+                },
+                {
+                  "key": "WD7PP",
+                  "label": "TypeScript"
+                },
+                {
+                  "key": "WYQ93",
+                  "label": "Data warehouse"
+                },
+                {
+                  "key": "X62BT",
+                  "label": "Python"
+                },
+                {
+                  "key": "Y8657",
+                  "label": "Cross-functional communication"
+                },
+                {
+                  "key": "ZCS6Z",
+                  "label": "Staff development"
+                },
+                {
+                  "key": "ZXGV9",
+                  "label": "Database software proficiency"
+                }
+              ],
+              "attribution": "Source: Indeed (indeed.com)",
+              "employer": {
+                "key": "e25078dbf9e7159e",
+                "name": "News Corp",
+                "url": "https://www.indeed.com/cmp/News-Corp-1"
+              },
+              "expired": false,
+              "job_key": "b8855db9ed615af9",
+              "language": "en",
+              "listed_at": "2026-09-18T00:47:47Z",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "formatted": "Austin, TX 78702",
+                "latitude": 30.279993,
+                "longitude": -97.718864,
+                "postal_code": "78702",
+                "region_code": "TX"
+              },
+              "posted_at": "2026-09-17T05:00:00Z",
+              "reposted": false,
+              "salary": null,
+              "snippet": "Recognized as the No. 1 site trusted by real estate professionals, Realtor.com® has been at the forefront of online real estate for over 25 years, connecting buyers, sellers, and renters with trusted insights and expert guidance to find their perfect home. Through its robust suite of tools, Realt...",
+              "source_name": "News Corp",
+              "source_url": "https://www.indeed.com/viewjob?jk=b8855db9ed615af9",
+              "title": "Staff Software Engineer"
+            },
+            {
+              "apply_url": "https://careers.newscorp.com/austin-tx/sr-software-engineer-content-industry-services/D26F98ED303E47A7B72DD4927BC56471/job/",
+              "attributes": [
+                {
+                  "key": "2PT82",
+                  "label": "Data integrity assurance"
+                },
+                {
+                  "key": "4E4WW",
+                  "label": "Computer science"
+                },
+                {
+                  "key": "4R4AM",
+                  "label": "Software engineering"
+                },
+                {
+                  "key": "5395N",
+                  "label": "Performance improvement leadership"
+                },
+                {
+                  "key": "5GUGE",
+                  "label": "8 hour shift"
+                },
+                {
+                  "key": "5ZMCH",
+                  "label": "Data Integration (Data management)"
+                },
+                {
+                  "key": "6ETQT",
+                  "label": "Go"
+                },
+                {
+                  "key": "6XNCP",
+                  "label": "Computer Science"
+                },
+                {
+                  "key": "8DY77",
+                  "label": "Kubernetes"
+                },
+                {
+                  "key": "8J6QV",
+                  "label": "Data validation techniques"
+                },
+                {
+                  "key": "8PVNG",
+                  "label": "Managing projects in an engineering role"
+                },
+                {
+                  "key": "93YM8",
+                  "label": "Tooling"
+                },
+                {
+                  "key": "9PQEB",
+                  "label": "5 years"
+                },
+                {
+                  "key": "AAQAJ",
+                  "label": "Improving system uptime or availability"
+                },
+                {
+                  "key": "ACKRZ",
+                  "label": "Coaching"
+                },
+                {
+                  "key": "AJY84",
+                  "label": "Data structures"
+                },
+                {
+                  "key": "ARTW9",
+                  "label": "IT system monitoring"
+                },
+                {
+                  "key": "AWHEP",
+                  "label": "Paid holidays"
+                },
+                {
+                  "key": "C5C2F",
+                  "label": "System design"
+                },
+                {
+                  "key": "CCQ9J",
+                  "label": "Engineering process optimization"
+                },
+                {
+                  "key": "DP9CS",
+                  "label": "Scalable systems"
+                },
+                {
+                  "key": "E9NRT",
+                  "label": "Schema design"
+                },
+                {
+                  "key": "EUPT5",
+                  "label": "JavaScript frameworks"
+                },
+                {
+                  "key": "EXSNN",
+                  "label": "Master's degree"
+                },
+                {
+                  "key": "EY33Q",
+                  "label": "Health insurance"
+                },
+                {
+                  "key": "F4XN4",
+                  "label": "Infrastructure architecture design"
+                },
+                {
+                  "key": "F6443",
+                  "label": "Maintaining data pipelines"
+                },
+                {
+                  "key": "FQJ2X",
+                  "label": "Dental insurance"
+                },
+                {
+                  "key": "FX3TW",
+                  "label": "Team development"
+                },
+                {
+                  "key": "GD782",
+                  "label": "Data Architecture Design (Architecture design skills)"
+                },
+                {
+                  "key": "GDT8N",
+                  "label": "Production systems"
+                },
+                {
+                  "key": "GEYN2",
+                  "label": "Collaboration with product development teams"
+                },
+                {
+                  "key": "GVEBJ",
+                  "label": "UX implementation"
+                },
+                {
+                  "key": "H2YKN",
+                  "label": "Bachelor's degree in engineering"
+                },
+                {
+                  "key": "H3JGP",
+                  "label": "Cloud database architecture"
+                },
+                {
+                  "key": "H99VT",
+                  "label": "Professional development support"
+                },
+                {
+                  "key": "HJUWZ",
+                  "label": "Tuition reimbursement"
+                },
+                {
+                  "key": "HW4J4",
+                  "label": "Paid time off"
+                },
+                {
+                  "key": "JCEB8",
+                  "label": "Application design"
+                },
+                {
+                  "key": "JVBWV",
+                  "label": "Data quality monitoring"
+                },
+                {
+                  "key": "M5YE9",
+                  "label": "Algorithm design"
+                },
+                {
+                  "key": "MGSEB",
+                  "label": "Mentoring"
+                },
+                {
+                  "key": "NWQM9",
+                  "label": "Snacks provided"
+                },
+                {
+                  "key": "P2W6Q",
+                  "label": "Leading team collaboration initiatives"
+                },
+                {
+                  "key": "PT4BW",
+                  "label": "Developing automated testing protocols"
+                },
+                {
+                  "key": "PYTWK",
+                  "label": "Scalability"
+                },
+                {
+                  "key": "Q3QNF",
+                  "label": "Developing and maintaining backend systems"
+                },
+                {
+                  "key": "QGH34",
+                  "label": "Engineering product development"
+                },
+                {
+                  "key": "QRFXZ",
+                  "label": "GraphQL APIs"
+                },
+                {
+                  "key": "QWGDE",
+                  "label": "Agile software development"
+                },
+                {
+                  "key": "QXQ2T",
+                  "label": "Managing projects"
+                },
+                {
+                  "key": "QZ8A4",
+                  "label": "S3"
+                },
+                {
+                  "key": "R58GB",
+                  "label": "System deployment"
+                },
+                {
+                  "key": "RZAT2",
+                  "label": "Vision insurance"
+                },
+                {
+                  "key": "S4RC9",
+                  "label": "CircleCI"
+                },
+                {
+                  "key": "S4XVV",
+                  "label": "Cloud automation"
+                },
+                {
+                  "key": "SKFS2",
+                  "label": "Kafka"
+                },
+                {
+                  "key": "T5AZJ",
+                  "label": "GraphQL"
+                },
+                {
+                  "key": "TV7WS",
+                  "label": "Distributed computing"
+                },
+                {
+                  "key": "TVJXW",
+                  "label": "DevOps automation"
+                },
+                {
+                  "key": "TX6QF",
+                  "label": "AI-driven automation"
+                },
+                {
+                  "key": "UB7SC",
+                  "label": "Senior level"
+                },
+                {
+                  "key": "UQTB7",
+                  "label": "Cloud monitoring"
+                },
+                {
+                  "key": "V9QRZ",
+                  "label": "RDS database"
+                },
+                {
+                  "key": "VBXYJ",
+                  "label": "Bachelor's degree in computer science"
+                },
+                {
+                  "key": "VGCMH",
+                  "label": "Volunteer time off"
+                },
+                {
+                  "key": "YWHMD",
+                  "label": "Agile planning"
+                },
+                {
+                  "key": "ZGV6W",
+                  "label": "User-facing feature development"
+                },
+                {
+                  "key": "ZQFQM",
+                  "label": "System performance monitoring"
+                }
+              ],
+              "attribution": "Source: Indeed (indeed.com)",
+              "employer": {
+                "key": "e25078dbf9e7159e",
+                "name": "News Corp",
+                "url": "https://www.indeed.com/cmp/News-Corp-1"
+              },
+              "expired": false,
+              "job_key": "a060c5efd2a7cdff",
+              "language": "en",
+              "listed_at": "2026-09-18T00:46:17Z",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "formatted": "Austin, TX 78702",
+                "latitude": 30.279993,
+                "longitude": -97.718864,
+                "postal_code": "78702",
+                "region_code": "TX"
+              },
+              "posted_at": "2026-09-17T05:00:00Z",
+              "reposted": true,
+              "salary": null,
+              "snippet": "Recognized as the No. 1 site trusted by real estate professionals, Realtor.com® has been at the forefront of online real estate for over 25 years, connecting buyers, sellers, and renters with trusted insights and expert guidance to find their perfect home. Through its robust suite of tools, Realt...",
+              "source_name": "News Corp",
+              "source_url": "https://www.indeed.com/viewjob?jk=a060c5efd2a7cdff",
+              "title": "Sr Software Engineer - Content & Industry Services"
+            },
+            {
+              "apply_url": "https://digitalcareers.infosys.com/global-careers/company-job/description/reqid/152623BR?Codes=Indeed",
+              "attributes": [
+                {
+                  "key": "2QCZF",
+                  "label": "Application Integration"
+                },
+                {
+                  "key": "4MZ9H",
+                  "label": "Systems integration"
+                },
+                {
+                  "key": "4R4AM",
+                  "label": "Software engineering"
+                },
+                {
+                  "key": "74PBF",
+                  "label": "Requirements specification"
+                },
+                {
+                  "key": "7BTK9",
+                  "label": "Engineering phase involvement"
+                },
+                {
+                  "key": "7HYQD",
+                  "label": "Engineering development testing"
+                },
+                {
+                  "key": "7JQEZ",
+                  "label": "Requirements design"
+                },
+                {
+                  "key": "AAQAJ",
+                  "label": "Improving system uptime or availability"
+                },
+                {
+                  "key": "AHSXR",
+                  "label": "IT quality control"
+                },
+                {
+                  "key": "BR8PK",
+                  "label": "Software implementation"
+                },
+                {
+                  "key": "C4D5Z",
+                  "label": "Generative models"
+                },
+                {
+                  "key": "DN563",
+                  "label": "Mid-level"
+                },
+                {
+                  "key": "EC9V5",
+                  "label": "Quality assurance experience within IT"
+                },
+                {
+                  "key": "EFBQ3",
+                  "label": "User training (technical support)"
+                },
+                {
+                  "key": "EVPJU",
+                  "label": "Java"
+                },
+                {
+                  "key": "FADZP",
+                  "label": "Microservices"
+                },
+                {
+                  "key": "FHQYB",
+                  "label": "Maintenance activity documentation"
+                },
+                {
+                  "key": "FNWKU",
+                  "label": "System design for system development"
+                },
+                {
+                  "key": "KDK2N",
+                  "label": "Implementation (software development lifecycle)"
+                },
+                {
+                  "key": "NES6S",
+                  "label": "Software documentation"
+                },
+                {
+                  "key": "PERR8",
+                  "label": "Developing new training programs"
+                },
+                {
+                  "key": "RFBH2",
+                  "label": "Application Maintenance"
+                },
+                {
+                  "key": "SCESP",
+                  "label": "Technical troubleshooting support"
+                },
+                {
+                  "key": "TCC5V",
+                  "label": "Analysis (software development lifecycle)"
+                },
+                {
+                  "key": "UB6AC",
+                  "label": "Functional quality evaluation testing"
+                },
+                {
+                  "key": "UJF52",
+                  "label": "AI"
+                },
+                {
+                  "key": "UN5V2",
+                  "label": "Cross-functional collaboration"
+                },
+                {
+                  "key": "WSBNK",
+                  "label": "Communication skills"
+                },
+                {
+                  "key": "XA6CW",
+                  "label": "Design (software development lifecycle)"
+                },
+                {
+                  "key": "XTDKP",
+                  "label": "Product design documentation"
+                },
+                {
+                  "key": "Y54VV",
+                  "label": "Professional development training"
+                },
+                {
+                  "key": "Y6B2U",
+                  "label": "Generative AI"
+                },
+                {
+                  "key": "Y8657",
+                  "label": "Cross-functional communication"
+                },
+                {
+                  "key": "YGHDP",
+                  "label": "Test Planning (Quality assurance practices)"
+                },
+                {
+                  "key": "Z4F5N",
+                  "label": "Providing code feedback"
+                },
+                {
+                  "key": "ZAWNY",
+                  "label": "Production troubleshooting"
+                }
+              ],
+              "attribution": "Source: Indeed (indeed.com)",
+              "employer": {
+                "key": "d98878d9ca05a86e",
+                "name": "Infosys",
+                "url": "https://www.indeed.com/cmp/Infosys"
+              },
+              "expired": false,
+              "job_key": "44ae3fc9ea1e4434",
+              "language": "en",
+              "listed_at": "2026-09-18T00:37:23Z",
+              "location": {
+                "city": "Austin",
+                "country_code": "US",
+                "formatted": "Austin, TX 78746",
+                "latitude": 30.257555,
+                "longitude": -97.80794,
+                "postal_code": "78746",
+                "region_code": "TX"
+              },
+              "posted_at": "2026-09-17T05:00:00Z",
+              "reposted": true,
+              "salary": null,
+              "snippet": "In the assigned Job Role of Technology Consultant 2, your Area Of Responsibility will be as below: Contribute to the requirements elicitation process by documenting assigned parts of business requirements, in line with guidance provided Facilitate software application design discussions, and docu...",
+              "source_name": "Infosys",
+              "source_url": "https://www.indeed.com/viewjob?jk=44ae3fc9ea1e4434",
+              "title": "JAVA Microservices Developer with Generative AI"
+            }
+          ],
+          "location": "Austin, TX",
+          "next_cursor": "AAMAAQADAAAAAAAAAAAAAAACY/iIfQEAAIwVrLirDC2yTko=",
+          "observed_at_ms": 1789842974980,
+          "posted_within_days": null,
+          "query": "software engineer",
+          "radius_miles": 25,
+          "remote": false,
+          "sort": "relevance",
+          "source_url": "https://www.indeed.com/jobs?q=software+engineer&l=Austin%2C+TX&radius=25"
+        },
+        "recordedAt": "2026-09-19"
+      },
+      "execute": {
+        "provider": "indeed-com",
+        "capability": "jobs/search"
+      }
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "id": "firecrawl-gov-index",
+  "provider": "firecrawl-gov-index",
+  "name": "Government Index",
+  "description": "About 16 million pages from US federal, state, county and city government sites: statutes and code sections, regulations, zoning and municipal ordinances, permits, licences and fee schedules, court filings, tax forms, procurement and agency guidance, searched as one index.",
+  "toolCount": 1,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "firecrawl-gov-index"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "firecrawl-gov-index/search",
+      "provider": "firecrawl-gov-index",
+      "capability": "search",
+      "name": "Search government pages",
+      "description": "Use first for any US government, legal, tax, court, permit, statute, regulation, grant or procurement question, before web search: what a city's zoning or planning code allows at an address, which business licence, permit, inspection or fee a city or county requires to open a shop, restaurant, food truck or mobile service, the text of a state code section or municipal ordinance, or the official page for a form or program. One call searches about 16 million official pages and returns URLs to cite or scrape. For the structured record behind a page (a SAM.gov notice, a Federal Register document, a bill) use that source's own provider.",
+      "creditsCost": 2,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "What to find, in plain words or the words a page would use: 'form 1040 instructions 2025', 'Travis County food truck permit'. Name the agency, state or city when the caller does.",
+          "in": "body",
+          "name": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "about": "Pages to return, 1 to 10. Default 10.",
+          "default": 10,
+          "in": "body",
+          "max": 10,
+          "min": 1,
+          "name": "top_k",
+          "type": "number"
+        },
+        {
+          "about": "Restrict results to one site, for example irs.gov or texas.gov.",
+          "in": "body",
+          "name": "domain",
+          "type": "string"
+        },
+        {
+          "about": "Also return each page's main text as content. Default false. Tens of kilobytes per page; enable only when the pages will be read rather than cited.",
+          "default": false,
+          "in": "body",
+          "name": "full_content",
+          "type": "boolean"
+        }
+      ],
+      "response": {
+        "about": "Matching government pages, best first, each with its URL, title and a snippet around the match.",
+        "fields": [
+          {
+            "about": "Page URL to cite or scrape.",
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "about": "Page title.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Text around the match.",
+            "name": "snippet",
+            "type": "string"
+          },
+          {
+            "about": "When the page last changed, Unix timestamp.",
+            "name": "updated_at",
+            "type": "number"
+          },
+          {
+            "about": "ISO 639-1 language of the page.",
+            "name": "lang",
+            "type": "string"
+          },
+          {
+            "about": "Main text of the page. Only when full_content is true.",
+            "name": "content",
+            "type": "string"
+          }
+        ],
+        "key": "data",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "firecrawl-gov-index",
+        "capability": "search"
+      }
+    }
+  ]
+}

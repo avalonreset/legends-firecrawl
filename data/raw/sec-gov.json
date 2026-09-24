@@ -1,0 +1,3980 @@
+{
+  "id": "sec-gov",
+  "provider": "sec-gov",
+  "name": "SEC EDGAR",
+  "description": "Official SEC company profiles, filings, filing sections, 13F holdings and XBRL concept facts.",
+  "toolCount": 7,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "sec-gov"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "sec-gov/filings/company",
+      "provider": "sec-gov",
+      "capability": "filings/company",
+      "name": "Company",
+      "description": "Resolve a ticker, CIK or company name to its EDGAR filer profile: CIK, name, tickers, exchanges, SIC, filer category, state of incorporation, fiscal year end, addresses, former names and filing counts. Start here to get the CIK the other functions accept.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cik",
+          "type": "number",
+          "in": "body",
+          "about": "SEC Central Index Key, with or without leading zeros."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "in": "body",
+          "about": "Filer name; the best EDGAR typeahead match is used."
+        },
+        {
+          "name": "ticker",
+          "type": "string",
+          "in": "body",
+          "about": "Exchange ticker as EDGAR lists it (BRK-B or BRK.B both work). Pattern: ^[A-Za-z0-9.\\-]{1,12}$."
+        }
+      ],
+      "response": {
+        "about": "Resolve a ticker, CIK or company name to its EDGAR filer profile: CIK, name, tickers, exchanges, SIC, filer category, state of incorporation, fiscal year end, addresses, former names and filing counts. Start here to get the CIK the other functions accept.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "business_address",
+            "type": "object"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "cik",
+            "type": "string"
+          },
+          {
+            "name": "ein",
+            "type": "string"
+          },
+          {
+            "name": "entity_type",
+            "type": "string"
+          },
+          {
+            "name": "exchanges",
+            "type": "string[]"
+          },
+          {
+            "name": "filing_count",
+            "type": "number"
+          },
+          {
+            "name": "fiscal_year_end",
+            "type": "string",
+            "about": "MMDD"
+          },
+          {
+            "name": "former_names",
+            "type": "object[]"
+          },
+          {
+            "name": "investor_website",
+            "type": "string"
+          },
+          {
+            "name": "latest_filing_date",
+            "type": "string"
+          },
+          {
+            "name": "lei",
+            "type": "string"
+          },
+          {
+            "name": "mailing_address",
+            "type": "object"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "sic",
+            "type": "string"
+          },
+          {
+            "name": "sic_description",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "state_of_incorporation",
+            "type": "string"
+          },
+          {
+            "name": "submissions_url",
+            "type": "string"
+          },
+          {
+            "name": "tickers",
+            "type": "string[]"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "cik": "0000320193"
+        },
+        "response": {
+          "business_address": {
+            "city": "CUPERTINO",
+            "state_or_country": "CA",
+            "state_or_country_description": "CA",
+            "street1": "ONE APPLE PARK WAY",
+            "street2": null,
+            "zip_code": "95014"
+          },
+          "category": "Large accelerated filer",
+          "cik": "0000320193",
+          "ein": "942404110",
+          "entity_type": "operating",
+          "exchanges": [
+            "Nasdaq"
+          ],
+          "filing_count": 2246,
+          "fiscal_year_end": "0926",
+          "former_names": [
+            {
+              "from": "2007-01-10T05:00:00.000Z",
+              "name": "APPLE INC",
+              "to": "2019-08-05T04:00:00.000Z"
+            },
+            {
+              "from": "1994-01-26T05:00:00.000Z",
+              "name": "APPLE COMPUTER INC",
+              "to": "2007-01-04T05:00:00.000Z"
+            },
+            {
+              "from": "1997-07-28T04:00:00.000Z",
+              "name": "APPLE COMPUTER INC/ FA",
+              "to": "1997-07-28T04:00:00.000Z"
+            }
+          ],
+          "investor_website": null,
+          "latest_filing_date": "2026-09-03",
+          "lei": null,
+          "mailing_address": {
+            "city": "CUPERTINO",
+            "state_or_country": "CA",
+            "state_or_country_description": "CA",
+            "street1": "ONE APPLE PARK WAY",
+            "street2": null,
+            "zip_code": "95014"
+          },
+          "name": "Apple Inc.",
+          "observed_at_ms": 1788900000000,
+          "phone": "(408) 996-1010",
+          "sic": "3571",
+          "sic_description": "Electronic Computers",
+          "source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193",
+          "state_of_incorporation": "CA",
+          "submissions_url": "https://data.sec.gov/submissions/CIK0000320193.json",
+          "tickers": [
+            "AAPL"
+          ],
+          "website": null
+        },
+        "recordedAt": "2026-09-09T00:00:00Z"
+      },
+      "execute": {
+        "provider": "sec-gov",
+        "capability": "filings/company"
+      }
+    },
+    {
+      "id": "sec-gov/filings/concept",
+      "provider": "sec-gov",
+      "capability": "filings/concept",
+      "name": "Concept",
+      "description": "Every reported value of one XBRL concept for a filer (Revenues, NetIncomeLoss, Assets, EarningsPerShareDiluted ...) straight from the SEC's companyconcept API: value, period, unit, fiscal year and period, the form and accession it came from. Newest period first.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cik",
+          "type": "number",
+          "in": "body",
+          "about": "SEC Central Index Key, with or without leading zeros."
+        },
+        {
+          "name": "concept",
+          "type": "string",
+          "in": "body",
+          "about": "XBRL element name. Pattern: ^[A-Za-z0-9_]{1,200}$.",
+          "required": true
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "in": "body",
+          "about": "Keep facts from one form, e.g. 10-K."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 200,
+          "min": 1,
+          "max": 5000
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "in": "body",
+          "about": "Filer name; the best EDGAR typeahead match is used."
+        },
+        {
+          "name": "taxonomy",
+          "type": "string",
+          "in": "body",
+          "about": "taxonomy",
+          "default": "us-gaap",
+          "oneOf": [
+            "us-gaap",
+            "dei",
+            "ifrs-full",
+            "srt"
+          ]
+        },
+        {
+          "name": "ticker",
+          "type": "string",
+          "in": "body",
+          "about": "Exchange ticker as EDGAR lists it (BRK-B or BRK.B both work). Pattern: ^[A-Za-z0-9.\\-]{1,12}$."
+        },
+        {
+          "name": "unit",
+          "type": "string",
+          "in": "body",
+          "about": "Keep one unit, e.g. USD, shares, USD/shares."
+        }
+      ],
+      "response": {
+        "about": "Every reported value of one XBRL concept for a filer (Revenues, NetIncomeLoss, Assets, EarningsPerShareDiluted ...) straight from the SEC's companyconcept API: value, period, unit, fiscal year and period, the form and accession it came from. Newest period first.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "cik",
+            "type": "string"
+          },
+          {
+            "name": "concept",
+            "type": "string"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "entity_name",
+            "type": "string"
+          },
+          {
+            "name": "facts",
+            "type": "object[]"
+          },
+          {
+            "name": "label",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "taxonomy",
+            "type": "string"
+          },
+          {
+            "name": "total_facts",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "cik": "0000320193",
+          "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "form": "10-K",
+          "limit": 200,
+          "unit": "USD"
+        },
+        "response": {
+          "cik": "0000320193",
+          "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "count": 37,
+          "description": "Amount, excluding tax collected from customer, of revenue from satisfaction of performance obligation by transferring promised good or service to customer. Tax collected from customer is tax assessed by governmental authority that is both imposed on and concurrent with specific revenue-producing transaction, including, but not limited to, sales, use, value added and excise.",
+          "entity_name": "Apple Inc.",
+          "facts": [
+            {
+              "accession_number": "0000320193-25-000079",
+              "end": "2025-09-27",
+              "filed": "2025-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2025,
+              "form": "10-K",
+              "frame": "CY2025",
+              "start": "2024-09-29",
+              "unit": "USD",
+              "value": 416161000000
+            },
+            {
+              "accession_number": "0000320193-25-000079",
+              "end": "2024-09-28",
+              "filed": "2025-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2025,
+              "form": "10-K",
+              "frame": "CY2024",
+              "start": "2023-10-01",
+              "unit": "USD",
+              "value": 391035000000
+            },
+            {
+              "accession_number": "0000320193-24-000123",
+              "end": "2024-09-28",
+              "filed": "2024-11-01",
+              "fiscal_period": "FY",
+              "fiscal_year": 2024,
+              "form": "10-K",
+              "frame": null,
+              "start": "2023-10-01",
+              "unit": "USD",
+              "value": 391035000000
+            },
+            {
+              "accession_number": "0000320193-25-000079",
+              "end": "2023-09-30",
+              "filed": "2025-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2025,
+              "form": "10-K",
+              "frame": "CY2023",
+              "start": "2022-09-25",
+              "unit": "USD",
+              "value": 383285000000
+            },
+            {
+              "accession_number": "0000320193-24-000123",
+              "end": "2023-09-30",
+              "filed": "2024-11-01",
+              "fiscal_period": "FY",
+              "fiscal_year": 2024,
+              "form": "10-K",
+              "frame": null,
+              "start": "2022-09-25",
+              "unit": "USD",
+              "value": 383285000000
+            },
+            {
+              "accession_number": "0000320193-23-000106",
+              "end": "2023-09-30",
+              "filed": "2023-11-03",
+              "fiscal_period": "FY",
+              "fiscal_year": 2023,
+              "form": "10-K",
+              "frame": null,
+              "start": "2022-09-25",
+              "unit": "USD",
+              "value": 383285000000
+            },
+            {
+              "accession_number": "0000320193-24-000123",
+              "end": "2022-09-24",
+              "filed": "2024-11-01",
+              "fiscal_period": "FY",
+              "fiscal_year": 2024,
+              "form": "10-K",
+              "frame": "CY2022",
+              "start": "2021-09-26",
+              "unit": "USD",
+              "value": 394328000000
+            },
+            {
+              "accession_number": "0000320193-23-000106",
+              "end": "2022-09-24",
+              "filed": "2023-11-03",
+              "fiscal_period": "FY",
+              "fiscal_year": 2023,
+              "form": "10-K",
+              "frame": null,
+              "start": "2021-09-26",
+              "unit": "USD",
+              "value": 394328000000
+            },
+            {
+              "accession_number": "0000320193-22-000108",
+              "end": "2022-09-24",
+              "filed": "2022-10-28",
+              "fiscal_period": "FY",
+              "fiscal_year": 2022,
+              "form": "10-K",
+              "frame": null,
+              "start": "2021-09-26",
+              "unit": "USD",
+              "value": 394328000000
+            },
+            {
+              "accession_number": "0000320193-23-000106",
+              "end": "2021-09-25",
+              "filed": "2023-11-03",
+              "fiscal_period": "FY",
+              "fiscal_year": 2023,
+              "form": "10-K",
+              "frame": "CY2021",
+              "start": "2020-09-27",
+              "unit": "USD",
+              "value": 365817000000
+            },
+            {
+              "accession_number": "0000320193-22-000108",
+              "end": "2021-09-25",
+              "filed": "2022-10-28",
+              "fiscal_period": "FY",
+              "fiscal_year": 2022,
+              "form": "10-K",
+              "frame": null,
+              "start": "2020-09-27",
+              "unit": "USD",
+              "value": 365817000000
+            },
+            {
+              "accession_number": "0000320193-21-000105",
+              "end": "2021-09-25",
+              "filed": "2021-10-29",
+              "fiscal_period": "FY",
+              "fiscal_year": 2021,
+              "form": "10-K",
+              "frame": null,
+              "start": "2020-09-27",
+              "unit": "USD",
+              "value": 365817000000
+            },
+            {
+              "accession_number": "0000320193-22-000108",
+              "end": "2020-09-26",
+              "filed": "2022-10-28",
+              "fiscal_period": "FY",
+              "fiscal_year": 2022,
+              "form": "10-K",
+              "frame": "CY2020",
+              "start": "2019-09-29",
+              "unit": "USD",
+              "value": 274515000000
+            },
+            {
+              "accession_number": "0000320193-21-000105",
+              "end": "2020-09-26",
+              "filed": "2021-10-29",
+              "fiscal_period": "FY",
+              "fiscal_year": 2021,
+              "form": "10-K",
+              "frame": null,
+              "start": "2019-09-29",
+              "unit": "USD",
+              "value": 274515000000
+            },
+            {
+              "accession_number": "0000320193-20-000096",
+              "end": "2020-09-26",
+              "filed": "2020-10-30",
+              "fiscal_period": "FY",
+              "fiscal_year": 2020,
+              "form": "10-K",
+              "frame": null,
+              "start": "2019-09-29",
+              "unit": "USD",
+              "value": 274515000000
+            },
+            {
+              "accession_number": "0000320193-20-000096",
+              "end": "2020-09-26",
+              "filed": "2020-10-30",
+              "fiscal_period": "FY",
+              "fiscal_year": 2020,
+              "form": "10-K",
+              "frame": "CY2020Q3",
+              "start": "2020-06-28",
+              "unit": "USD",
+              "value": 64698000000
+            },
+            {
+              "accession_number": "0000320193-20-000096",
+              "end": "2020-06-27",
+              "filed": "2020-10-30",
+              "fiscal_period": "FY",
+              "fiscal_year": 2020,
+              "form": "10-K",
+              "frame": null,
+              "start": "2020-03-29",
+              "unit": "USD",
+              "value": 59685000000
+            },
+            {
+              "accession_number": "0000320193-20-000096",
+              "end": "2020-03-28",
+              "filed": "2020-10-30",
+              "fiscal_period": "FY",
+              "fiscal_year": 2020,
+              "form": "10-K",
+              "frame": null,
+              "start": "2019-12-29",
+              "unit": "USD",
+              "value": 58313000000
+            },
+            {
+              "accession_number": "0000320193-20-000096",
+              "end": "2019-12-28",
+              "filed": "2020-10-30",
+              "fiscal_period": "FY",
+              "fiscal_year": 2020,
+              "form": "10-K",
+              "frame": null,
+              "start": "2019-09-29",
+              "unit": "USD",
+              "value": 91819000000
+            },
+            {
+              "accession_number": "0000320193-21-000105",
+              "end": "2019-09-28",
+              "filed": "2021-10-29",
+              "fiscal_period": "FY",
+              "fiscal_year": 2021,
+              "form": "10-K",
+              "frame": "CY2019",
+              "start": "2018-09-30",
+              "unit": "USD",
+              "value": 260174000000
+            },
+            {
+              "accession_number": "0000320193-20-000096",
+              "end": "2019-09-28",
+              "filed": "2020-10-30",
+              "fiscal_period": "FY",
+              "fiscal_year": 2020,
+              "form": "10-K",
+              "frame": null,
+              "start": "2018-09-30",
+              "unit": "USD",
+              "value": 260174000000
+            },
+            {
+              "accession_number": "0000320193-20-000096",
+              "end": "2019-09-28",
+              "filed": "2020-10-30",
+              "fiscal_period": "FY",
+              "fiscal_year": 2020,
+              "form": "10-K",
+              "frame": "CY2019Q3",
+              "start": "2019-06-30",
+              "unit": "USD",
+              "value": 64040000000
+            },
+            {
+              "accession_number": "0000320193-19-000119",
+              "end": "2019-09-28",
+              "filed": "2019-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2019,
+              "form": "10-K",
+              "frame": null,
+              "start": "2018-09-30",
+              "unit": "USD",
+              "value": 260174000000
+            },
+            {
+              "accession_number": "0000320193-19-000119",
+              "end": "2019-09-28",
+              "filed": "2019-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2019,
+              "form": "10-K",
+              "frame": null,
+              "start": "2019-06-30",
+              "unit": "USD",
+              "value": 64040000000
+            },
+            {
+              "accession_number": "0000320193-20-000096",
+              "end": "2019-06-29",
+              "filed": "2020-10-30",
+              "fiscal_period": "FY",
+              "fiscal_year": 2020,
+              "form": "10-K",
+              "frame": "CY2019Q2",
+              "start": "2019-03-31",
+              "unit": "USD",
+              "value": 53809000000
+            },
+            {
+              "accession_number": "0000320193-19-000119",
+              "end": "2019-06-29",
+              "filed": "2019-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2019,
+              "form": "10-K",
+              "frame": null,
+              "start": "2019-03-31",
+              "unit": "USD",
+              "value": 53809000000
+            },
+            {
+              "accession_number": "0000320193-20-000096",
+              "end": "2019-03-30",
+              "filed": "2020-10-30",
+              "fiscal_period": "FY",
+              "fiscal_year": 2020,
+              "form": "10-K",
+              "frame": "CY2019Q1",
+              "start": "2018-12-30",
+              "unit": "USD",
+              "value": 58015000000
+            },
+            {
+              "accession_number": "0000320193-19-000119",
+              "end": "2019-03-30",
+              "filed": "2019-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2019,
+              "form": "10-K",
+              "frame": null,
+              "start": "2018-12-30",
+              "unit": "USD",
+              "value": 58015000000
+            },
+            {
+              "accession_number": "0000320193-20-000096",
+              "end": "2018-12-29",
+              "filed": "2020-10-30",
+              "fiscal_period": "FY",
+              "fiscal_year": 2020,
+              "form": "10-K",
+              "frame": "CY2018Q4",
+              "start": "2018-09-30",
+              "unit": "USD",
+              "value": 84310000000
+            },
+            {
+              "accession_number": "0000320193-19-000119",
+              "end": "2018-12-29",
+              "filed": "2019-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2019,
+              "form": "10-K",
+              "frame": null,
+              "start": "2018-09-30",
+              "unit": "USD",
+              "value": 84310000000
+            },
+            {
+              "accession_number": "0000320193-20-000096",
+              "end": "2018-09-29",
+              "filed": "2020-10-30",
+              "fiscal_period": "FY",
+              "fiscal_year": 2020,
+              "form": "10-K",
+              "frame": "CY2018",
+              "start": "2017-10-01",
+              "unit": "USD",
+              "value": 265595000000
+            },
+            {
+              "accession_number": "0000320193-19-000119",
+              "end": "2018-09-29",
+              "filed": "2019-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2019,
+              "form": "10-K",
+              "frame": null,
+              "start": "2017-10-01",
+              "unit": "USD",
+              "value": 265595000000
+            },
+            {
+              "accession_number": "0000320193-19-000119",
+              "end": "2018-09-29",
+              "filed": "2019-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2019,
+              "form": "10-K",
+              "frame": "CY2018Q3",
+              "start": "2018-07-01",
+              "unit": "USD",
+              "value": 62900000000
+            },
+            {
+              "accession_number": "0000320193-19-000119",
+              "end": "2018-06-30",
+              "filed": "2019-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2019,
+              "form": "10-K",
+              "frame": "CY2018Q2",
+              "start": "2018-04-01",
+              "unit": "USD",
+              "value": 53265000000
+            },
+            {
+              "accession_number": "0000320193-19-000119",
+              "end": "2018-03-31",
+              "filed": "2019-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2019,
+              "form": "10-K",
+              "frame": "CY2018Q1",
+              "start": "2017-12-31",
+              "unit": "USD",
+              "value": 61137000000
+            },
+            {
+              "accession_number": "0000320193-19-000119",
+              "end": "2017-12-30",
+              "filed": "2019-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2019,
+              "form": "10-K",
+              "frame": "CY2017Q4",
+              "start": "2017-10-01",
+              "unit": "USD",
+              "value": 88293000000
+            },
+            {
+              "accession_number": "0000320193-19-000119",
+              "end": "2017-09-30",
+              "filed": "2019-10-31",
+              "fiscal_period": "FY",
+              "fiscal_year": 2019,
+              "form": "10-K",
+              "frame": "CY2017",
+              "start": "2016-09-25",
+              "unit": "USD",
+              "value": 229234000000
+            }
+          ],
+          "label": "Revenue from Contract with Customer, Excluding Assessed Tax",
+          "observed_at_ms": 1788900000000,
+          "query": {
+            "form": "10-K",
+            "limit": 200,
+            "unit": "USD"
+          },
+          "source_url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/RevenueFromContractWithCustomerExcludingAssessedTax.json",
+          "taxonomy": "us-gaap",
+          "total_facts": 37
+        },
+        "recordedAt": "2026-09-09T00:00:00Z"
+      },
+      "execute": {
+        "provider": "sec-gov",
+        "capability": "filings/concept"
+      }
+    },
+    {
+      "id": "sec-gov/filings/filing",
+      "provider": "sec-gov",
+      "capability": "filings/filing",
+      "name": "Filing",
+      "description": "One filing by accession number: its submission metadata (form, dates, 8-K items) and every document in the filing folder with size and direct URL (primary document, exhibits, XBRL instance, full submission text).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "accession_number",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{10}-[0-9]{2}-[0-9]{6}$.",
+          "required": true
+        },
+        {
+          "name": "cik",
+          "type": "number",
+          "in": "body",
+          "about": "SEC Central Index Key, with or without leading zeros."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "in": "body",
+          "about": "Filer name; the best EDGAR typeahead match is used."
+        },
+        {
+          "name": "ticker",
+          "type": "string",
+          "in": "body",
+          "about": "Exchange ticker as EDGAR lists it (BRK-B or BRK.B both work). Pattern: ^[A-Za-z0-9.\\-]{1,12}$."
+        }
+      ],
+      "response": {
+        "about": "One filing by accession number: its submission metadata (form, dates, 8-K items) and every document in the filing folder with size and direct URL (primary document, exhibits, XBRL instance, full submission text).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "accession_number",
+            "type": "string"
+          },
+          {
+            "name": "company",
+            "type": "object"
+          },
+          {
+            "name": "document_count",
+            "type": "number"
+          },
+          {
+            "name": "documents",
+            "type": "object[]"
+          },
+          {
+            "name": "filing",
+            "type": "object"
+          },
+          {
+            "name": "filing_index_url",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "accession_number": "0001193125-26-352200",
+          "cik": "0001067983"
+        },
+        "response": {
+          "accession_number": "0001193125-26-352200",
+          "company": {
+            "cik": "0001067983",
+            "name": "BERKSHIRE HATHAWAY INC",
+            "tickers": [
+              "BRK-B",
+              "BRK-A"
+            ]
+          },
+          "document_count": 5,
+          "documents": [
+            {
+              "last_modified": "2026-08-14 16:05:04",
+              "name": "0001193125-26-352200-index-headers.html",
+              "size_bytes": null,
+              "url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/0001193125-26-352200-index-headers.html"
+            },
+            {
+              "last_modified": "2026-08-14 16:05:04",
+              "name": "0001193125-26-352200-index.html",
+              "size_bytes": null,
+              "url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/0001193125-26-352200-index.html"
+            },
+            {
+              "last_modified": "2026-08-14 16:05:04",
+              "name": "0001193125-26-352200.txt",
+              "size_bytes": null,
+              "url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/0001193125-26-352200.txt"
+            },
+            {
+              "last_modified": "2026-08-14 16:05:04",
+              "name": "56757.xml",
+              "size_bytes": 44724,
+              "url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/56757.xml"
+            },
+            {
+              "last_modified": "2026-08-14 16:05:04",
+              "name": "primary_doc.xml",
+              "size_bytes": 5555,
+              "url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/primary_doc.xml"
+            }
+          ],
+          "filing": {
+            "acceptance_datetime": "2026-08-14T20:05:04.000Z",
+            "accession_number": "0001193125-26-352200",
+            "act": "34",
+            "cik": "0001067983",
+            "file_number": "028-04545",
+            "filing_date": "2026-08-14",
+            "filing_index_url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/0001193125-26-352200-index.htm",
+            "film_number": "261281164",
+            "form": "13F-HR",
+            "is_inline_xbrl": false,
+            "is_xbrl": false,
+            "items": [],
+            "primary_document": "xslForm13F_X02/primary_doc.xml",
+            "primary_document_description": null,
+            "primary_document_url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/xslForm13F_X02/primary_doc.xml",
+            "report_date": "2026-06-30",
+            "size_bytes": 51654,
+            "source_url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/0001193125-26-352200-index.htm"
+          },
+          "filing_index_url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/0001193125-26-352200-index.htm",
+          "observed_at_ms": 1788900000000,
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/0001193125-26-352200-index.htm"
+        },
+        "recordedAt": "2026-09-09T00:00:00Z"
+      },
+      "execute": {
+        "provider": "sec-gov",
+        "capability": "filings/filing"
+      }
+    },
+    {
+      "id": "sec-gov/filings/filings",
+      "provider": "sec-gov",
+      "capability": "filings/filings",
+      "name": "Filings",
+      "description": "List a filer's EDGAR filings newest first, filtered by form type (10-K, 10-Q, 8-K, S-1, 13F-HR, 4, DEF 14A ...) and filing date. Each record carries accession number, dates, 8-K item codes with captions, XBRL flags and direct document URLs. Reaches into older submission pages when `from` predates the recent window.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cik",
+          "type": "number",
+          "in": "body",
+          "about": "SEC Central Index Key, with or without leading zeros."
+        },
+        {
+          "name": "forms",
+          "type": "string[]",
+          "in": "body",
+          "about": "Form types to keep, exact match (case-insensitive). Empty keeps every form."
+        },
+        {
+          "name": "from",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "include_amendments",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also keep /A amendments of the requested forms."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 25,
+          "min": 1,
+          "max": 200
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "in": "body",
+          "about": "Filer name; the best EDGAR typeahead match is used."
+        },
+        {
+          "name": "ticker",
+          "type": "string",
+          "in": "body",
+          "about": "Exchange ticker as EDGAR lists it (BRK-B or BRK.B both work). Pattern: ^[A-Za-z0-9.\\-]{1,12}$."
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "List a filer's EDGAR filings newest first, filtered by form type (10-K, 10-Q, 8-K, S-1, 13F-HR, 4, DEF 14A ...) and filing date. Each record carries accession number, dates, 8-K item codes with captions, XBRL flags and direct document URLs. Reaches into older submission pages when `from` predates the recent window.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "company",
+            "type": "object"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "filings",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "cik": "0000320193",
+          "forms": [
+            "10-K"
+          ],
+          "limit": 25
+        },
+        "response": {
+          "company": {
+            "cik": "0000320193",
+            "name": "Apple Inc.",
+            "tickers": [
+              "AAPL"
+            ]
+          },
+          "count": 11,
+          "filings": [
+            {
+              "acceptance_datetime": "2025-10-31T10:01:26.000Z",
+              "accession_number": "0000320193-25-000079",
+              "act": "34",
+              "cik": "0000320193",
+              "file_number": "001-36743",
+              "filing_date": "2025-10-31",
+              "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+              "film_number": "251437791",
+              "form": "10-K",
+              "is_inline_xbrl": true,
+              "is_xbrl": true,
+              "items": [],
+              "primary_document": "aapl-20250927.htm",
+              "primary_document_description": "10-K",
+              "primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+              "report_date": "2025-09-27",
+              "size_bytes": 9392337,
+              "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm"
+            },
+            {
+              "acceptance_datetime": "2024-11-01T10:01:36.000Z",
+              "accession_number": "0000320193-24-000123",
+              "act": "34",
+              "cik": "0000320193",
+              "file_number": "001-36743",
+              "filing_date": "2024-11-01",
+              "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm",
+              "film_number": "241416806",
+              "form": "10-K",
+              "is_inline_xbrl": true,
+              "is_xbrl": true,
+              "items": [],
+              "primary_document": "aapl-20240928.htm",
+              "primary_document_description": "10-K",
+              "primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/aapl-20240928.htm",
+              "report_date": "2024-09-28",
+              "size_bytes": 9759333,
+              "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019324000123/0000320193-24-000123-index.htm"
+            },
+            {
+              "acceptance_datetime": "2023-11-02T22:08:27.000Z",
+              "accession_number": "0000320193-23-000106",
+              "act": "34",
+              "cik": "0000320193",
+              "file_number": "001-36743",
+              "filing_date": "2023-11-03",
+              "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm",
+              "film_number": "231373899",
+              "form": "10-K",
+              "is_inline_xbrl": true,
+              "is_xbrl": true,
+              "items": [],
+              "primary_document": "aapl-20230930.htm",
+              "primary_document_description": "10-K",
+              "primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm",
+              "report_date": "2023-09-30",
+              "size_bytes": 9569569,
+              "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/0000320193-23-000106-index.htm"
+            },
+            {
+              "acceptance_datetime": "2022-10-27T22:01:14.000Z",
+              "accession_number": "0000320193-22-000108",
+              "act": "34",
+              "cik": "0000320193",
+              "file_number": "001-36743",
+              "filing_date": "2022-10-28",
+              "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/0000320193-22-000108-index.htm",
+              "film_number": "221338448",
+              "form": "10-K",
+              "is_inline_xbrl": true,
+              "is_xbrl": true,
+              "items": [],
+              "primary_document": "aapl-20220924.htm",
+              "primary_document_description": "10-K",
+              "primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/aapl-20220924.htm",
+              "report_date": "2022-09-24",
+              "size_bytes": 10332356,
+              "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019322000108/0000320193-22-000108-index.htm"
+            },
+            {
+              "acceptance_datetime": "2021-10-28T22:04:28.000Z",
+              "accession_number": "0000320193-21-000105",
+              "act": "34",
+              "cik": "0000320193",
+              "file_number": "001-36743",
+              "filing_date": "2021-10-29",
+              "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019321000105/0000320193-21-000105-index.htm",
+              "film_number": "211359752",
+              "form": "10-K",
+              "is_inline_xbrl": true,
+              "is_xbrl": true,
+              "items": [],
+              "primary_document": "aapl-20210925.htm",
+              "primary_document_description": "10-K",
+              "primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019321000105/aapl-20210925.htm",
+              "report_date": "2021-09-25",
+              "size_bytes": 10502096,
+              "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019321000105/0000320193-21-000105-index.htm"
+            },
+            {
+              "acceptance_datetime": "2020-10-29T22:06:25.000Z",
+              "accession_number": "0000320193-20-000096",
+              "act": "34",
+              "cik": "0000320193",
+              "file_number": "001-36743",
+              "filing_date": "2020-10-30",
+              "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019320000096/0000320193-20-000096-index.htm",
+              "film_number": "201273977",
+              "form": "10-K",
+              "is_inline_xbrl": true,
+              "is_xbrl": true,
+              "items": [],
+              "primary_document": "aapl-20200926.htm",
+              "primary_document_description": "10-K",
+              "primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019320000096/aapl-20200926.htm",
+              "report_date": "2020-09-26",
+              "size_bytes": 12502600,
+              "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019320000096/0000320193-20-000096-index.htm"
+            },
+            {
+              "acceptance_datetime": "2019-10-30T22:12:36.000Z",
+              "accession_number": "0000320193-19-000119",
+              "act": "34",
+              "cik": "0000320193",
+              "file_number": "001-36743",
+              "filing_date": "2019-10-31",
+              "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019319000119/0000320193-19-000119-index.htm",
+              "film_number": "191181423",
+              "form": "10-K",
+              "is_inline_xbrl": true,
+              "is_xbrl": true,
+              "items": [],
+              "primary_document": "a10-k20199282019.htm",
+              "primary_document_description": "10-K",
+              "primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019319000119/a10-k20199282019.htm",
+              "report_date": "2019-09-28",
+              "size_bytes": 12861616,
+              "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019319000119/0000320193-19-000119-index.htm"
+            },
+            {
+              "acceptance_datetime": "2018-11-05T13:01:40.000Z",
+              "accession_number": "0000320193-18-000145",
+              "act": "34",
+              "cik": "0000320193",
+              "file_number": "001-36743",
+              "filing_date": "2018-11-05",
+              "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019318000145/0000320193-18-000145-index.htm",
+              "film_number": "181158788",
+              "form": "10-K",
+              "is_inline_xbrl": false,
+              "is_xbrl": true,
+              "items": [],
+              "primary_document": "a10-k20189292018.htm",
+              "primary_document_description": "10-K",
+              "primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019318000145/a10-k20189292018.htm",
+              "report_date": "2018-09-29",
+              "size_bytes": 12275572,
+              "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019318000145/0000320193-18-000145-index.htm"
+            },
+            {
+              "acceptance_datetime": "2017-11-03T12:01:37.000Z",
+              "accession_number": "0000320193-17-000070",
+              "act": "34",
+              "cik": "0000320193",
+              "file_number": "001-36743",
+              "filing_date": "2017-11-03",
+              "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019317000070/0000320193-17-000070-index.htm",
+              "film_number": "171174673",
+              "form": "10-K",
+              "is_inline_xbrl": false,
+              "is_xbrl": true,
+              "items": [],
+              "primary_document": "a10-k20179302017.htm",
+              "primary_document_description": "10-K",
+              "primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019317000070/a10-k20179302017.htm",
+              "report_date": "2017-09-30",
+              "size_bytes": 14071062,
+              "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019317000070/0000320193-17-000070-index.htm"
+            },
+            {
+              "acceptance_datetime": "2016-10-26T20:42:16.000Z",
+              "accession_number": "0001628280-16-020309",
+              "act": "34",
+              "cik": "0000320193",
+              "file_number": "001-36743",
+              "filing_date": "2016-10-26",
+              "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000162828016020309/0001628280-16-020309-index.htm",
+              "film_number": "161953070",
+              "form": "10-K",
+              "is_inline_xbrl": false,
+              "is_xbrl": true,
+              "items": [],
+              "primary_document": "a201610-k9242016.htm",
+              "primary_document_description": "10-K",
+              "primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000162828016020309/a201610-k9242016.htm",
+              "report_date": "2016-09-24",
+              "size_bytes": 13277662,
+              "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000162828016020309/0001628280-16-020309-index.htm"
+            },
+            {
+              "acceptance_datetime": "2015-10-28T20:31:09.000Z",
+              "accession_number": "0001193125-15-356351",
+              "act": "34",
+              "cik": "0000320193",
+              "file_number": "001-36743",
+              "filing_date": "2015-10-28",
+              "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000119312515356351/0001193125-15-356351-index.htm",
+              "film_number": "151180619",
+              "form": "10-K",
+              "is_inline_xbrl": false,
+              "is_xbrl": true,
+              "items": [],
+              "primary_document": "d17062d10k.htm",
+              "primary_document_description": "FORM 10-K",
+              "primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000119312515356351/d17062d10k.htm",
+              "report_date": "2015-09-26",
+              "size_bytes": 9594425,
+              "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000119312515356351/0001193125-15-356351-index.htm"
+            }
+          ],
+          "observed_at_ms": 1788900000000,
+          "query": {
+            "forms": [
+              "10-K"
+            ],
+            "from": null,
+            "include_amendments": false,
+            "limit": 25,
+            "to": null
+          },
+          "source_url": "https://data.sec.gov/submissions/CIK0000320193.json"
+        },
+        "recordedAt": "2026-09-09T00:00:00Z"
+      },
+      "execute": {
+        "provider": "sec-gov",
+        "capability": "filings/filings"
+      }
+    },
+    {
+      "id": "sec-gov/filings/holdings_13f",
+      "provider": "sec-gov",
+      "capability": "filings/holdings_13f",
+      "name": "Holdings 13f",
+      "description": "Form 13F-HR holdings of an institutional investment manager: every position from the XML information table (issuer, class, CUSIP, value, shares or principal, put/call, discretion, voting authority). Defaults to the latest 13F-HR; pick a quarter with report_date or a filing with accession_number. Values are whole USD for filings since 2023-01-03 and thousands before.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "accession_number",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{10}-[0-9]{2}-[0-9]{6}$."
+        },
+        {
+          "name": "cik",
+          "type": "number",
+          "in": "body",
+          "about": "SEC Central Index Key, with or without leading zeros."
+        },
+        {
+          "name": "include_amendments",
+          "type": "boolean",
+          "in": "body",
+          "about": "include_amendments"
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 1000,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "in": "body",
+          "about": "Filer name; the best EDGAR typeahead match is used."
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "offset",
+          "default": 0,
+          "min": 0,
+          "max": 100000
+        },
+        {
+          "name": "report_date",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "ticker",
+          "type": "string",
+          "in": "body",
+          "about": "Exchange ticker as EDGAR lists it (BRK-B or BRK.B both work). Pattern: ^[A-Za-z0-9.\\-]{1,12}$."
+        }
+      ],
+      "response": {
+        "about": "Form 13F-HR holdings of an institutional investment manager: every position from the XML information table (issuer, class, CUSIP, value, shares or principal, put/call, discretion, voting authority). Defaults to the latest 13F-HR; pick a quarter with report_date or a filing with accession_number. Values are whole USD for filings since 2023-01-03 and thousands before.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "filing",
+            "type": "object"
+          },
+          {
+            "name": "has_more",
+            "type": "boolean"
+          },
+          {
+            "name": "holdings",
+            "type": "object[]"
+          },
+          {
+            "name": "information_table_url",
+            "type": "string"
+          },
+          {
+            "name": "manager",
+            "type": "object"
+          },
+          {
+            "name": "next_offset",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "offset",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_holdings",
+            "type": "number"
+          },
+          {
+            "name": "total_value",
+            "type": "number"
+          },
+          {
+            "name": "value_unit",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "accession_number": "0001193125-26-352200",
+          "cik": "0001067983",
+          "limit": 1000
+        },
+        "response": {
+          "count": 89,
+          "filing": {
+            "acceptance_datetime": "2026-08-14T20:05:04.000Z",
+            "accession_number": "0001193125-26-352200",
+            "act": "34",
+            "cik": "0001067983",
+            "file_number": "028-04545",
+            "filing_date": "2026-08-14",
+            "filing_index_url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/0001193125-26-352200-index.htm",
+            "film_number": "261281164",
+            "form": "13F-HR",
+            "is_inline_xbrl": false,
+            "is_xbrl": false,
+            "items": [],
+            "primary_document": "xslForm13F_X02/primary_doc.xml",
+            "primary_document_description": null,
+            "primary_document_url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/xslForm13F_X02/primary_doc.xml",
+            "report_date": "2026-06-30",
+            "size_bytes": 51654,
+            "source_url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/0001193125-26-352200-index.htm"
+          },
+          "has_more": false,
+          "holdings": [
+            {
+              "class": "COM",
+              "cusip": "02005N100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "ALLY FINL INC",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 12561737,
+              "shares_or_principal_type": "SH",
+              "value": 577211815,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 12561737
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "02005N100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "ALLY FINL INC",
+              "other_managers": [
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 2803875,
+              "shares_or_principal_type": "SH",
+              "value": 128838056,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 2803875
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "02005N100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "ALLY FINL INC",
+              "other_managers": [
+                "4",
+                "5"
+              ],
+              "put_call": null,
+              "shares_or_principal": 4228200,
+              "shares_or_principal_type": "SH",
+              "value": 194285790,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 4228200
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "02005N100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "ALLY FINL INC",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1707580,
+              "shares_or_principal_type": "SH",
+              "value": 78463301,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1707580
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "02005N100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "ALLY FINL INC",
+              "other_managers": [
+                "4",
+                "10"
+              ],
+              "put_call": null,
+              "shares_or_principal": 4423608,
+              "shares_or_principal_type": "SH",
+              "value": 203264788,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 4423608
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "02005N100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "ALLY FINL INC",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1275000,
+              "shares_or_principal_type": "SH",
+              "value": 58586250,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1275000
+              }
+            },
+            {
+              "class": "CAP STK CL C",
+              "cusip": "02079K107",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "ALPHABET INC",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 27188433,
+              "shares_or_principal_type": "SH",
+              "value": 9606489032,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 27188433
+              }
+            },
+            {
+              "class": "CAP STK CL A",
+              "cusip": "02079K305",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "ALPHABET INC",
+              "other_managers": [
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 16700,
+              "shares_or_principal_type": "SH",
+              "value": 5968079,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 16700
+              }
+            },
+            {
+              "class": "CAP STK CL A",
+              "cusip": "02079K305",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "ALPHABET INC",
+              "other_managers": [
+                "4",
+                "5"
+              ],
+              "put_call": null,
+              "shares_or_principal": 6700000,
+              "shares_or_principal_type": "SH",
+              "value": 2394379000,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 6700000
+              }
+            },
+            {
+              "class": "CAP STK CL A",
+              "cusip": "02079K305",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "ALPHABET INC",
+              "other_managers": [
+                "4",
+                "10"
+              ],
+              "put_call": null,
+              "shares_or_principal": 6250000,
+              "shares_or_principal_type": "SH",
+              "value": 2233562500,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 6250000
+              }
+            },
+            {
+              "class": "CAP STK CL A",
+              "cusip": "02079K305",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "ALPHABET INC",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 65824467,
+              "shares_or_principal_type": "SH",
+              "value": 23523689772,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 65824467
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "025816109",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "AMERICAN EXPRESS CO",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1149942,
+              "shares_or_principal_type": "SH",
+              "value": 388967882,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1149942
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "025816109",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "AMERICAN EXPRESS CO",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 149061045,
+              "shares_or_principal_type": "SH",
+              "value": 50419898471,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 149061045
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "025816109",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "AMERICAN EXPRESS CO",
+              "other_managers": [
+                "4",
+                "13"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1399713,
+              "shares_or_principal_type": "SH",
+              "value": 473452922,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1399713
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "037833100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "APPLE INC",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 692000,
+              "shares_or_principal_type": "SH",
+              "value": 200237120,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 692000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "037833100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "APPLE INC",
+              "other_managers": [
+                "1",
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 3840000,
+              "shares_or_principal_type": "SH",
+              "value": 1111142400,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 3840000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "037833100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "APPLE INC",
+              "other_managers": [
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 34000,
+              "shares_or_principal_type": "SH",
+              "value": 9838240,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 34000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "037833100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "APPLE INC",
+              "other_managers": [
+                "4",
+                "5"
+              ],
+              "put_call": null,
+              "shares_or_principal": 34724000,
+              "shares_or_principal_type": "SH",
+              "value": 10047736640,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 34724000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "037833100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "APPLE INC",
+              "other_managers": [
+                "4",
+                "6"
+              ],
+              "put_call": null,
+              "shares_or_principal": 2724000,
+              "shares_or_principal_type": "SH",
+              "value": 788216640,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 2724000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "037833100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "APPLE INC",
+              "other_managers": [
+                "4",
+                "7"
+              ],
+              "put_call": null,
+              "shares_or_principal": 15532000,
+              "shares_or_principal_type": "SH",
+              "value": 4494339520,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 15532000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "037833100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "APPLE INC",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 61542988,
+              "shares_or_principal_type": "SH",
+              "value": 17808079008,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 61542988
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "037833100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "APPLE INC",
+              "other_managers": [
+                "4",
+                "5",
+                "9"
+              ],
+              "put_call": null,
+              "shares_or_principal": 7204000,
+              "shares_or_principal_type": "SH",
+              "value": 2084549440,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 7204000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "037833100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "APPLE INC",
+              "other_managers": [
+                "4",
+                "10"
+              ],
+              "put_call": null,
+              "shares_or_principal": 14472000,
+              "shares_or_principal_type": "SH",
+              "value": 4187617920,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 14472000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "037833100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "APPLE INC",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 80664820,
+              "shares_or_principal_type": "SH",
+              "value": 23341172315,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 80664820
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "037833100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "APPLE INC",
+              "other_managers": [
+                "4",
+                "12"
+              ],
+              "put_call": null,
+              "shares_or_principal": 2712000,
+              "shares_or_principal_type": "SH",
+              "value": 784744320,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 2712000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "037833100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "APPLE INC",
+              "other_managers": [
+                "4",
+                "14"
+              ],
+              "put_call": null,
+              "shares_or_principal": 3776000,
+              "shares_or_principal_type": "SH",
+              "value": 1092623360,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 3776000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "060505104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "BANK OF AMER CORP",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 3920000,
+              "shares_or_principal_type": "SH",
+              "value": 223361600,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 3920000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "060505104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "BANK OF AMER CORP",
+              "other_managers": [
+                "1",
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 11900000,
+              "shares_or_principal_type": "SH",
+              "value": 678062000,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 11900000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "060505104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "BANK OF AMER CORP",
+              "other_managers": [
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 145500,
+              "shares_or_principal_type": "SH",
+              "value": 8290590,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 145500
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "060505104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "BANK OF AMER CORP",
+              "other_managers": [
+                "4",
+                "6"
+              ],
+              "put_call": null,
+              "shares_or_principal": 2100000,
+              "shares_or_principal_type": "SH",
+              "value": 119658000,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 2100000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "060505104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "BANK OF AMER CORP",
+              "other_managers": [
+                "4",
+                "7"
+              ],
+              "put_call": null,
+              "shares_or_principal": 21000000,
+              "shares_or_principal_type": "SH",
+              "value": 1196580000,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 21000000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "060505104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "BANK OF AMER CORP",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 308808515,
+              "shares_or_principal_type": "SH",
+              "value": 17595909185,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 308808515
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "060505104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "BANK OF AMER CORP",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 125720000,
+              "shares_or_principal_type": "SH",
+              "value": 7163525600,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 125720000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "060505104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "BANK OF AMER CORP",
+              "other_managers": [
+                "4",
+                "14"
+              ],
+              "put_call": null,
+              "shares_or_principal": 9800000,
+              "shares_or_principal_type": "SH",
+              "value": 558404000,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 9800000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "14040H105",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "CAPITAL ONE FINL CORP",
+              "other_managers": [
+                "4",
+                "5"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1138112,
+              "shares_or_principal_type": "SH",
+              "value": 228328029,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1138112
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "14040H105",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "CAPITAL ONE FINL CORP",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1861888,
+              "shares_or_principal_type": "SH",
+              "value": 373531971,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1861888
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "166764100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "CHEVRON CORPORATION",
+              "other_managers": [
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 3454258,
+              "shares_or_principal_type": "SH",
+              "value": 572577806,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 3454258
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "166764100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "CHEVRON CORPORATION",
+              "other_managers": [
+                "4",
+                "5"
+              ],
+              "put_call": null,
+              "shares_or_principal": 9192171,
+              "shares_or_principal_type": "SH",
+              "value": 1523694265,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 9192171
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "166764100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "CHEVRON CORPORATION",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 13477678,
+              "shares_or_principal_type": "SH",
+              "value": 2234059905,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 13477678
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "166764100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "CHEVRON CORPORATION",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 58251749,
+              "shares_or_principal_type": "SH",
+              "value": 9655809914,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 58251749
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "191216100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "COCA COLA CO",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 800000,
+              "shares_or_principal_type": "SH",
+              "value": 65016000,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 800000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "191216100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "COCA COLA CO",
+              "other_managers": [
+                "1",
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 371471,
+              "shares_or_principal_type": "SH",
+              "value": 30189448,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 371471
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "191216100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "COCA COLA CO",
+              "other_managers": [
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 85000,
+              "shares_or_principal_type": "SH",
+              "value": 6907950,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 85000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "191216100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "COCA COLA CO",
+              "other_managers": [
+                "4",
+                "5"
+              ],
+              "put_call": null,
+              "shares_or_principal": 80283200,
+              "shares_or_principal_type": "SH",
+              "value": 6524615664,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 80283200
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "191216100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "COCA COLA CO",
+              "other_managers": [
+                "4",
+                "6"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1824000,
+              "shares_or_principal_type": "SH",
+              "value": 148236480,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1824000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "191216100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "COCA COLA CO",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 14411200,
+              "shares_or_principal_type": "SH",
+              "value": 1171198224,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 14411200
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "191216100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "COCA COLA CO",
+              "other_managers": [
+                "4",
+                "10"
+              ],
+              "put_call": null,
+              "shares_or_principal": 14990400,
+              "shares_or_principal_type": "SH",
+              "value": 1218269808,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 14990400
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "191216100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "COCA COLA CO",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 282722729,
+              "shares_or_principal_type": "SH",
+              "value": 22976876186,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 282722729
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "191216100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "COCA COLA CO",
+              "other_managers": [
+                "4",
+                "12"
+              ],
+              "put_call": null,
+              "shares_or_principal": 3552000,
+              "shares_or_principal_type": "SH",
+              "value": 288671040,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 3552000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "191216100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "COCA COLA CO",
+              "other_managers": [
+                "4",
+                "13"
+              ],
+              "put_call": null,
+              "shares_or_principal": 960000,
+              "shares_or_principal_type": "SH",
+              "value": 78019200,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 960000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "23331A109",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "D R HORTON INC",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 3564,
+              "shares_or_principal_type": "SH",
+              "value": 580504,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 3564
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "23918K108",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "DAVITA INC",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 14973608,
+              "shares_or_principal_type": "SH",
+              "value": 3331328308,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 14973608
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "23918K108",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "DAVITA INC",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 13906601,
+              "shares_or_principal_type": "SH",
+              "value": 3093940590,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 13906601
+              }
+            },
+            {
+              "class": "COM NEW",
+              "cusip": "247361702",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "DELTA AIR LINES INC",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 57320000,
+              "shares_or_principal_type": "SH",
+              "value": 5368591200,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 57320000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "47233W109",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "JEFFERIES FINANCIAL GROUP IN",
+              "other_managers": [
+                "4",
+                "10"
+              ],
+              "put_call": null,
+              "shares_or_principal": 433558,
+              "shares_or_principal_type": "SH",
+              "value": 21669229,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 433558
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "500754106",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "KRAFT HEINZ CO",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 325634818,
+              "shares_or_principal_type": "SH",
+              "value": 7691494401,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 325634818
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "501044101",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "KROGER CO",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 5607090,
+              "shares_or_principal_type": "SH",
+              "value": 311361708,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 5607090
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "501044101",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "KROGER CO",
+              "other_managers": [
+                "1",
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 768531,
+              "shares_or_principal_type": "SH",
+              "value": 42676526,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 768531
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "501044101",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "KROGER CO",
+              "other_managers": [
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 5367119,
+              "shares_or_principal_type": "SH",
+              "value": 298036118,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 5367119
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "501044101",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "KROGER CO",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 27257260,
+              "shares_or_principal_type": "SH",
+              "value": 1513595648,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 27257260
+              }
+            },
+            {
+              "class": "CL A",
+              "cusip": "526057104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LENNAR CORP",
+              "other_managers": [
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 745392,
+              "shares_or_principal_type": "SH",
+              "value": 67450522,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 745392
+              }
+            },
+            {
+              "class": "CL A",
+              "cusip": "526057104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LENNAR CORP",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 12366349,
+              "shares_or_principal_type": "SH",
+              "value": 1119030921,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 12366349
+              }
+            },
+            {
+              "class": "CL B",
+              "cusip": "526057302",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LENNAR CORP",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 298117,
+              "shares_or_principal_type": "SH",
+              "value": 26445959,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 298117
+              }
+            },
+            {
+              "class": "COM SER A",
+              "cusip": "530909100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LIBERTY LIVE HOLDINGS INC",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1011698,
+              "shares_or_principal_type": "SH",
+              "value": 102444539,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1011698
+              }
+            },
+            {
+              "class": "COM SER A",
+              "cusip": "530909100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LIBERTY LIVE HOLDINGS INC",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 3284775,
+              "shares_or_principal_type": "SH",
+              "value": 332616317,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 3284775
+              }
+            },
+            {
+              "class": "COM SER A",
+              "cusip": "530909100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LIBERTY LIVE HOLDINGS INC",
+              "other_managers": [
+                "4",
+                "10"
+              ],
+              "put_call": null,
+              "shares_or_principal": 233347,
+              "shares_or_principal_type": "SH",
+              "value": 23628717,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 233347
+              }
+            },
+            {
+              "class": "COM SER A",
+              "cusip": "530909100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LIBERTY LIVE HOLDINGS INC",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 456768,
+              "shares_or_principal_type": "SH",
+              "value": 46252328,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 456768
+              }
+            },
+            {
+              "class": "COM SHS SER C",
+              "cusip": "530909308",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LIBERTY LIVE HOLDINGS INC",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 3479651,
+              "shares_or_principal_type": "SH",
+              "value": 367590332,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 3479651
+              }
+            },
+            {
+              "class": "COM SHS SER C",
+              "cusip": "530909308",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LIBERTY LIVE HOLDINGS INC",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 5507583,
+              "shares_or_principal_type": "SH",
+              "value": 581821068,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 5507583
+              }
+            },
+            {
+              "class": "COM SHS SER C",
+              "cusip": "530909308",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LIBERTY LIVE HOLDINGS INC",
+              "other_managers": [
+                "4",
+                "10"
+              ],
+              "put_call": null,
+              "shares_or_principal": 162620,
+              "shares_or_principal_type": "SH",
+              "value": 17179177,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 162620
+              }
+            },
+            {
+              "class": "COM SHS SER C",
+              "cusip": "530909308",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LIBERTY LIVE HOLDINGS INC",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1437289,
+              "shares_or_principal_type": "SH",
+              "value": 151835210,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1437289
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "546347105",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LOUISIANA PAC CORP",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1319884,
+              "shares_or_principal_type": "SH",
+              "value": 103822075,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1319884
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "546347105",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "LOUISIANA PAC CORP",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 4344909,
+              "shares_or_principal_type": "SH",
+              "value": 341770542,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 4344909
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "55616P104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "MACYS INC",
+              "other_managers": [
+                "4",
+                "5"
+              ],
+              "put_call": null,
+              "shares_or_principal": 443799,
+              "shares_or_principal_type": "SH",
+              "value": 10451466,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 443799
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "55616P104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "MACYS INC",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1376226,
+              "shares_or_principal_type": "SH",
+              "value": 32410122,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1376226
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "55616P104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "MACYS INC",
+              "other_managers": [
+                "4",
+                "12"
+              ],
+              "put_call": null,
+              "shares_or_principal": 5527401,
+              "shares_or_principal_type": "SH",
+              "value": 130170294,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 5527401
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "615369105",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "MOODYS CORP",
+              "other_managers": [
+                "1",
+                "2",
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 72100,
+              "shares_or_principal_type": "SH",
+              "value": 32655532,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 72100
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "615369105",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "MOODYS CORP",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 11973928,
+              "shares_or_principal_type": "SH",
+              "value": 5423231470,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 11973928
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "615369105",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "MOODYS CORP",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 12623750,
+              "shares_or_principal_type": "SH",
+              "value": 5717548850,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 12623750
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "62944T105",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "NVR INC",
+              "other_managers": [
+                "4",
+                "5"
+              ],
+              "put_call": null,
+              "shares_or_principal": 11112,
+              "shares_or_principal_type": "SH",
+              "value": 75710501,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 11112
+              }
+            },
+            {
+              "class": "CL A",
+              "cusip": "650111107",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "NEW YORK TIMES CO MTN BE",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1400000,
+              "shares_or_principal_type": "SH",
+              "value": 97972000,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1400000
+              }
+            },
+            {
+              "class": "CL A",
+              "cusip": "650111107",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "NEW YORK TIMES CO MTN BE",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 14300000,
+              "shares_or_principal_type": "SH",
+              "value": 1000714000,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 14300000
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "670346105",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "NUCOR CORP",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 1857752,
+              "shares_or_principal_type": "SH",
+              "value": 413814258,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 1857752
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "674599105",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "OCCIDENTAL PETE CORP",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 264941431,
+              "shares_or_principal_type": "SH",
+              "value": 12868205304,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 264941431
+              }
+            },
+            {
+              "class": "COMMON STOCK",
+              "cusip": "829933100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "SIRIUSXM HOLDINGS INC",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 15984890,
+              "shares_or_principal_type": "SH",
+              "value": 472193651,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 15984890
+              }
+            },
+            {
+              "class": "COMMON STOCK",
+              "cusip": "829933100",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "SIRIUSXM HOLDINGS INC",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 108822227,
+              "shares_or_principal_type": "SH",
+              "value": 3214608586,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 108822227
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "92343E102",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "VERISIGN INC",
+              "other_managers": [
+                "4"
+              ],
+              "put_call": null,
+              "shares_or_principal": 972947,
+              "shares_or_principal_type": "SH",
+              "value": 244754547,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 972947
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "92343E102",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "VERISIGN INC",
+              "other_managers": [
+                "4",
+                "8",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 8016933,
+              "shares_or_principal_type": "SH",
+              "value": 2016739665,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 8016933
+              }
+            },
+            {
+              "class": "COM",
+              "cusip": "H1467J104",
+              "figi": null,
+              "investment_discretion": "DFND",
+              "issuer": "CHUBB LIMITED",
+              "other_managers": [
+                "4",
+                "11"
+              ],
+              "put_call": null,
+              "shares_or_principal": 34249183,
+              "shares_or_principal_type": "SH",
+              "value": 11670066615,
+              "voting_authority": {
+                "none": 0,
+                "shared": 0,
+                "sole": 34249183
+              }
+            }
+          ],
+          "information_table_url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/56757.xml",
+          "manager": {
+            "cik": "0001067983",
+            "name": "BERKSHIRE HATHAWAY INC",
+            "tickers": [
+              "BRK-B",
+              "BRK-A"
+            ]
+          },
+          "next_offset": null,
+          "observed_at_ms": 1788900000000,
+          "offset": 0,
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1067983/000119312526352200/56757.xml",
+          "total_holdings": 89,
+          "total_value": 299253556246,
+          "value_unit": "USD"
+        },
+        "recordedAt": "2026-09-09T00:00:00Z"
+      },
+      "execute": {
+        "provider": "sec-gov",
+        "capability": "filings/holdings_13f"
+      }
+    },
+    {
+      "id": "sec-gov/filings/search",
+      "provider": "sec-gov",
+      "capability": "filings/search",
+      "name": "Search",
+      "description": "EDGAR full-text search across every filer since 2001: filter by phrase, form types, filing-date range and CIK. Returns 100 hits per page with accession number, form, filer names and CIKs, 8-K item codes, period and direct document URLs. Use it for cross-company questions such as 8-K Item 2.02 filings this quarter. Pass `snippets` to also fetch the matched document of the first hits and return the sentences containing the query (EDGAR's index returns no highlights itself).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cik",
+          "type": "number",
+          "in": "body",
+          "about": "SEC Central Index Key, with or without leading zeros."
+        },
+        {
+          "name": "forms",
+          "type": "string[]",
+          "in": "body",
+          "about": "forms"
+        },
+        {
+          "name": "from",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Full-text query; wrap phrases in double quotes."
+        },
+        {
+          "name": "snippets",
+          "type": "object",
+          "in": "body",
+          "about": "Fetch the matched document of the first hits and return the sentences containing the query. Needs `query`. Off when omitted; the search output is then unchanged."
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "EDGAR full-text search across every filer since 2001: filter by phrase, form types, filing-date range and CIK. Returns 100 hits per page with accession number, form, filer names and CIKs, 8-K item codes, period and direct document URLs. Use it for cross-company questions such as 8-K Item 2.02 filings this quarter. Pass `snippets` to also fetch the matched document of the first hits and return the sentences containing the query (EDGAR's index returns no highlights itself).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "has_more",
+            "type": "boolean"
+          },
+          {
+            "name": "hits",
+            "type": "object[]"
+          },
+          {
+            "name": "next_page",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "page_size",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "total_relation",
+            "type": "string",
+            "about": "eq or gte"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "cik": "0000320193",
+          "forms": [
+            "10-K"
+          ],
+          "from": "2025-10-31",
+          "page": 1,
+          "to": "2025-10-31"
+        },
+        "response": {
+          "count": 1,
+          "has_more": false,
+          "hits": [
+            {
+              "accession_number": "0000320193-25-000079",
+              "business_locations": [
+                "Cupertino, CA"
+              ],
+              "document": "aapl-20250927.htm",
+              "document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+              "file_description": "10-K",
+              "file_numbers": [
+                "001-36743"
+              ],
+              "file_type": "10-K",
+              "filers": [
+                {
+                  "cik": "0000320193",
+                  "display_name": "Apple Inc.  (AAPL)  (CIK 0000320193)",
+                  "name": "Apple Inc."
+                }
+              ],
+              "filing_date": "2025-10-31",
+              "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+              "form": "10-K",
+              "incorporation_states": [
+                "CA"
+              ],
+              "items": [],
+              "period_ending": "2025-09-27",
+              "root_form": "10-K",
+              "score": null,
+              "sic_codes": [
+                "3571"
+              ],
+              "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm"
+            }
+          ],
+          "next_page": null,
+          "observed_at_ms": 1789446248913,
+          "page": 1,
+          "page_size": 100,
+          "query": {
+            "cik": "0000320193",
+            "forms": [
+              "10-K"
+            ],
+            "from": "2025-10-31",
+            "page": 1,
+            "query": null,
+            "to": "2025-10-31"
+          },
+          "source_url": "https://efts.sec.gov/LATEST/search-index?from=0&forms=10-K&dateRange=custom&startdt=2025-10-31&enddt=2025-10-31&ciks=0000320193",
+          "total": 1,
+          "total_relation": "eq"
+        },
+        "recordedAt": "2026-09-15T04:24:08.913772+00:00"
+      },
+      "execute": {
+        "provider": "sec-gov",
+        "capability": "filings/search"
+      }
+    },
+    {
+      "id": "sec-gov/filings/sections",
+      "provider": "sec-gov",
+      "capability": "filings/sections",
+      "name": "Sections",
+      "description": "Item sections of a 10-K or 10-Q as plain text: Item 1 Business, 1A Risk Factors, 7 MD&A, 8 Financial Statements and so on (10-Q items carry their Part). Defaults to the filer's latest 10-K; pass form=10-Q or an accession number for another report, and items to keep only some sections.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "accession_number",
+          "type": "string",
+          "in": "body",
+          "about": "Pattern: ^[0-9]{10}-[0-9]{2}-[0-9]{6}$."
+        },
+        {
+          "name": "cik",
+          "type": "number",
+          "in": "body",
+          "about": "SEC Central Index Key, with or without leading zeros."
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "in": "body",
+          "about": "form",
+          "default": "10-K",
+          "oneOf": [
+            "10-K",
+            "10-Q"
+          ]
+        },
+        {
+          "name": "items",
+          "type": "string[]",
+          "in": "body",
+          "about": "Item ids to return, e.g. [\"1A\", \"7\"]. Default: all detected."
+        },
+        {
+          "name": "max_chars",
+          "type": "number",
+          "in": "body",
+          "about": "Per-section text cap.",
+          "default": 60000,
+          "min": 100,
+          "max": 2000000
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "in": "body",
+          "about": "Filer name; the best EDGAR typeahead match is used."
+        },
+        {
+          "name": "ticker",
+          "type": "string",
+          "in": "body",
+          "about": "Exchange ticker as EDGAR lists it (BRK-B or BRK.B both work). Pattern: ^[A-Za-z0-9.\\-]{1,12}$."
+        }
+      ],
+      "response": {
+        "about": "Item sections of a 10-K or 10-Q as plain text: Item 1 Business, 1A Risk Factors, 7 MD&A, 8 Financial Statements and so on (10-Q items carry their Part). Defaults to the filer's latest 10-K; pass form=10-Q or an accession number for another report, and items to keep only some sections.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "company",
+            "type": "object"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "detected_items",
+            "type": "object[]"
+          },
+          {
+            "name": "document_chars",
+            "type": "number"
+          },
+          {
+            "name": "document_url",
+            "type": "string"
+          },
+          {
+            "name": "filing",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "sections",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "accession_number": "0000320193-25-000079",
+          "cik": "0000320193",
+          "max_chars": 1000
+        },
+        "response": {
+          "company": {
+            "cik": "0000320193",
+            "name": "Apple Inc.",
+            "tickers": [
+              "AAPL"
+            ]
+          },
+          "count": 23,
+          "detected_items": [
+            {
+              "char_count": 15978,
+              "item": "1",
+              "part": "I",
+              "title": "Business"
+            },
+            {
+              "char_count": 68020,
+              "item": "1A",
+              "part": "I",
+              "title": "Risk Factors"
+            },
+            {
+              "char_count": 5,
+              "item": "1B",
+              "part": "I",
+              "title": "Unresolved Staff Comments"
+            },
+            {
+              "char_count": 2675,
+              "item": "1C",
+              "part": "I",
+              "title": "Cybersecurity"
+            },
+            {
+              "char_count": 497,
+              "item": "2",
+              "part": "I",
+              "title": "Properties"
+            },
+            {
+              "char_count": 5372,
+              "item": "3",
+              "part": "I",
+              "title": "Legal Proceedings"
+            },
+            {
+              "char_count": 56,
+              "item": "4",
+              "part": "I",
+              "title": "Mine Safety Disclosures"
+            },
+            {
+              "char_count": 2539,
+              "item": "5",
+              "part": "II",
+              "title": "Market for Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities"
+            },
+            {
+              "char_count": 32,
+              "item": "6",
+              "part": "II",
+              "title": "[Reserved]"
+            },
+            {
+              "char_count": 17908,
+              "item": "7",
+              "part": "II",
+              "title": "Management’s Discussion and Analysis of Financial Condition and Results of Operations"
+            },
+            {
+              "char_count": 2952,
+              "item": "7A",
+              "part": "II",
+              "title": "Quantitative and Qualitative Disclosures About Market Risk"
+            },
+            {
+              "char_count": 60693,
+              "item": "8",
+              "part": "II",
+              "title": "Financial Statements and Supplementary Data"
+            },
+            {
+              "char_count": 5,
+              "item": "9",
+              "part": "II",
+              "title": "Changes in and Disagreements with Accountants on Accounting and Financial Disclosure"
+            },
+            {
+              "char_count": 4463,
+              "item": "9A",
+              "part": "II",
+              "title": "Controls and Procedures"
+            },
+            {
+              "char_count": 542,
+              "item": "9B",
+              "part": "II",
+              "title": "Other Information"
+            },
+            {
+              "char_count": 24,
+              "item": "9C",
+              "part": "II",
+              "title": "Disclosure Regarding Foreign Jurisdictions that Prevent Inspections"
+            },
+            {
+              "char_count": 333,
+              "item": "10",
+              "part": "III",
+              "title": "Directors, Executive Officers and Corporate Governance"
+            },
+            {
+              "char_count": 124,
+              "item": "11",
+              "part": "III",
+              "title": "Executive Compensation"
+            },
+            {
+              "char_count": 124,
+              "item": "12",
+              "part": "III",
+              "title": "Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters"
+            },
+            {
+              "char_count": 124,
+              "item": "13",
+              "part": "III",
+              "title": "Certain Relationships and Related Transactions, and Director Independence"
+            },
+            {
+              "char_count": 165,
+              "item": "14",
+              "part": "III",
+              "title": "Principal Accountant Fees and Services"
+            },
+            {
+              "char_count": 11713,
+              "item": "15",
+              "part": "IV",
+              "title": "Exhibit and Financial Statement Schedules"
+            },
+            {
+              "char_count": 2062,
+              "item": "16",
+              "part": "IV",
+              "title": "Form 10-K Summary"
+            }
+          ],
+          "document_chars": 206101,
+          "document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+          "filing": {
+            "acceptance_datetime": "2025-10-31T10:01:26.000Z",
+            "accession_number": "0000320193-25-000079",
+            "act": "34",
+            "cik": "0000320193",
+            "file_number": "001-36743",
+            "filing_date": "2025-10-31",
+            "filing_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm",
+            "film_number": "251437791",
+            "form": "10-K",
+            "is_inline_xbrl": true,
+            "is_xbrl": true,
+            "items": [],
+            "primary_document": "aapl-20250927.htm",
+            "primary_document_description": "10-K",
+            "primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+            "report_date": "2025-09-27",
+            "size_bytes": 9392337,
+            "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm"
+          },
+          "observed_at_ms": 1788900000000,
+          "sections": [
+            {
+              "canonical_title": "Business",
+              "char_count": 15978,
+              "item": "1",
+              "part": "I",
+              "text": "Company Background\nThe Company designs, manufactures and markets smartphones, personal computers, tablets, wearables and accessories, and sells a variety of related services. The Company’s fiscal year is the 52- or 53-week period that ends on the last Saturday of September.\nProducts\niPhone\niPhone® is the Company’s line of smartphones based on its iOS operating system. The iPhone line includes iPhone 17 Pro, iPhone Air™, iPhone 17, iPhone 16 and iPhone 16e.\nMac\nMac® is the Company’s line of personal computers based on its macOS® operating system. The Mac line includes laptops MacBook Air® and MacBook Pro®, as well as desktops iMac®, Mac mini®, Mac Studio® and Mac Pro®.\niPad\niPad® is the Company’s line of multipurpose tablets based on its iPadOS® operating system. The iPad line includes iPad Pro®, iPad Air®, iPad and iPad mini®.\nWearables, Home and Accessories\nWearables includes smartwatches, wireless headphones and spatial computers. The Company’s line of smartwatches, based on its watc",
+              "title": "Business",
+              "truncated": true
+            },
+            {
+              "canonical_title": "Risk Factors",
+              "char_count": 68020,
+              "item": "1A",
+              "part": "I",
+              "text": "The following summarizes factors that could have a material adverse effect on the Company’s business, reputation, results of operations, financial condition and stock price. The Company may not be able to accurately predict, control or mitigate these risks. Statements in this section are based on the Company’s beliefs and opinions regarding matters that could materially adversely affect the Company in the future and are not representations as to whether such matters have or have not occurred previously. The risks and uncertainties described below are not exhaustive and should not be considered a complete statement of all potential risks or uncertainties that the Company faces or may face in the future.\nThis section should be read in conjunction with Part II, Item 7, “Management’s Discussion and Analysis of Financial Condition and Results of Operations” and the consolidated financial statements and accompanying notes in Part II, Item 8, “Financial Statements and Supplementary Data” of t",
+              "title": "Risk Factors",
+              "truncated": true
+            },
+            {
+              "canonical_title": "Unresolved Staff Comments",
+              "char_count": 5,
+              "item": "1B",
+              "part": "I",
+              "text": "None.",
+              "title": "Unresolved Staff Comments",
+              "truncated": false
+            },
+            {
+              "canonical_title": "Cybersecurity",
+              "char_count": 2675,
+              "item": "1C",
+              "part": "I",
+              "text": "The Company’s management, led by its Head of Corporate Information Security, has overall responsibility for identifying, assessing and managing any material risks from cybersecurity threats. The Company’s Head of Corporate Information Security leads a dedicated Information Security team of highly skilled individuals with experience across industries that, among other things, develops and distributes information security policies, standards and procedures; engages in employee cybersecurity training; implements security controls; assesses security risk and compliance posture; monitors and responds to security events; and executes security testing and assessments. The Company’s Head of Corporate Information Security has extensive knowledge and skills gained from over 25 years of experience in the cybersecurity industry, including serving in leadership positions at other large technology companies and leading the Company’s Information Security team since 2016.\nThe Company’s Information Sec",
+              "title": "Cybersecurity",
+              "truncated": true
+            },
+            {
+              "canonical_title": "Properties",
+              "char_count": 497,
+              "item": "2",
+              "part": "I",
+              "text": "The Company’s headquarters is located in Cupertino, California. As of September 27, 2025, the Company owned or leased facilities and land for corporate functions, R&D, data centers, retail and other purposes at locations throughout the U.S. and in various places outside the U.S. The Company believes its existing facilities and equipment, which are used by all reportable segments, are in good operating condition and are suitable for the conduct of its business.\nApple Inc. | 2025 Form 10-K | 17",
+              "title": "Properties",
+              "truncated": false
+            },
+            {
+              "canonical_title": "Legal Proceedings",
+              "char_count": 5372,
+              "item": "3",
+              "part": "I",
+              "text": "Digital Markets Act Investigations\nOn March 25, 2024, the Commission announced that it had opened a formal noncompliance investigation against the Company under Article 5(4) of the EU DMA (“Article 5(4) Investigation”). The Article 5(4) Investigation relates to how developers may communicate and promote offers to end users for apps distributed through the App Store, as well as how developers may conclude contracts with those end users. On June 24, 2024, the Commission announced that it had opened an additional formal investigation against the Company regarding whether the Company’s new contractual requirements for third-party app developers and app marketplaces may violate the DMA (“Article 6(4) Investigation”). On April 23, 2025, the Commission fined the Company €500 million in the Article 5(4) Investigation and issued a cease and desist order requiring the Company to remove technical and commercial restrictions that prevent developers from steering users to alternative distribution c",
+              "title": "Legal Proceedings",
+              "truncated": true
+            },
+            {
+              "canonical_title": "Mine Safety Disclosures",
+              "char_count": 56,
+              "item": "4",
+              "part": "I",
+              "text": "Not applicable.\nApple Inc. | 2025 Form 10-K | 18\nPART II",
+              "title": "Mine Safety Disclosures",
+              "truncated": false
+            },
+            {
+              "canonical_title": "Market for Registrant's Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities",
+              "char_count": 2539,
+              "item": "5",
+              "part": "II",
+              "text": "The Company’s common stock is traded on The Nasdaq Stock Market LLC under the symbol AAPL.\nHolders\nAs of October 17, 2025, there were 22,429 shareholders of record.\nPurchases of Equity Securities by the Issuer and Affiliated Purchasers\nShare repurchase activity during the three months ended September 27, 2025, was as follows (in millions, except number of shares, which are reflected in thousands, and per-share amounts):\nPeriods Total Number\nof Shares Purchased Average Price\nPaid Per Share Total Number of Shares\nPurchased as Part of Publicly\nAnnounced Plans or Programs\nApproximate Dollar Value of\nShares That May Yet Be Purchased\nUnder the Plans or Programs (1)\nJune 29, 2025 to August 2, 2025:\nOpen market and privately negotiated purchases 33,265 $ 210.43 33,265\nAugust 3, 2025 to August 30, 2025:\nOpen market and privately negotiated purchases 28,986 $ 224.25 28,986\nAugust 31, 2025 to September 27, 2025:\nOpen market and privately negotiated purchases 27,247 $ 238.56 27,247\nTotal 89,498 $ ",
+              "title": "Market for Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities",
+              "truncated": true
+            },
+            {
+              "canonical_title": "[Reserved]",
+              "char_count": 32,
+              "item": "6",
+              "part": "II",
+              "text": "Apple Inc. | 2025 Form 10-K | 20",
+              "title": "[Reserved]",
+              "truncated": false
+            },
+            {
+              "canonical_title": "Management's Discussion and Analysis of Financial Condition and Results of Operations",
+              "char_count": 17908,
+              "item": "7",
+              "part": "II",
+              "text": "The following discussion should be read in conjunction with the consolidated financial statements and accompanying notes included in Part II, Item 8 of this Form 10-K. This Item generally discusses 2025 and 2024 items and year-to-year comparisons between 2025 and 2024. Discussions of 2023 items and year-to-year comparisons between 2024 and 2023 are not included, and can be found in “Management’s Discussion and Analysis of Financial Condition and Results of Operations” in Part II, Item 7 of the Company’s Annual Report on Form 10-K for the fiscal year ended September 28, 2024.\nProduct, Service and Software Announcements\nThe Company announces new product, service and software offerings at various times during the year. Significant announcements during fiscal year 2025 included the following:\nFirst Quarter 2025:\n•MacBook Pro\n•Mac mini\n•iMac\n•iPad mini\nSecond Quarter 2025:\n•iPhone 16e\n•iPad Air\n•iPad\n•MacBook Air\n•Mac Studio\nThird Quarter 2025:\n•iOS 26, macOS Tahoe 26, iPadOS 26, watchOS 26",
+              "title": "Management’s Discussion and Analysis of Financial Condition and Results of Operations",
+              "truncated": true
+            },
+            {
+              "canonical_title": "Quantitative and Qualitative Disclosures About Market Risk",
+              "char_count": 2952,
+              "item": "7A",
+              "part": "II",
+              "text": "The Company is exposed to economic risk from interest rates and foreign exchange rates. The Company uses various strategies to manage these risks; however, they may still impact the Company’s consolidated financial statements.\nInterest Rate Risk\nThe Company is primarily exposed to fluctuations in U.S. interest rates and their impact on the Company’s investment portfolio and term debt. Increases in interest rates will negatively affect the fair value of the Company’s investment portfolio and increase the interest expense on the Company’s term debt. To protect against interest rate risk, the Company may use derivative instruments, offset interest rate-sensitive assets and liabilities, or control duration of the investment and term debt portfolios.\nThe following table sets forth potential impacts on the Company’s investment portfolio and term debt, including the effects of any associated derivatives, that would result from a hypothetical increase in relevant interest rates as of September",
+              "title": "Quantitative and Qualitative Disclosures About Market Risk",
+              "truncated": true
+            },
+            {
+              "canonical_title": "Financial Statements and Supplementary Data",
+              "char_count": 60693,
+              "item": "8",
+              "part": "II",
+              "text": "Index to Consolidated Financial Statements Page\nConsolidated Statements of Operations for the years ended September 27, 2025, September 28, 2024 and September 30, 2023\n29\nConsolidated Statements of Comprehensive Income for the years ended September 27, 2025, September 28, 2024 and September 30, 2023\n30\nConsolidated Balance Sheets as of September 27, 2025 and September 28, 2024\n31\nConsolidated Statements of Shareholders’ Equity for the years ended September 27, 2025, September 28, 2024 and September 30, 2023\n32\nConsolidated Statements of Cash Flows for the years ended September 27, 2025, September 28, 2024 and September 30, 2023\n33\nNotes to Consolidated Financial Statements\n34\nReports of Independent Registered Public Accounting Firm\n49\nAll financial statement schedules have been omitted, since the required information is not applicable or is not present in amounts sufficient to require submission of the schedule, or because the information required is included in the consolidated financ",
+              "title": "Financial Statements and Supplementary Data",
+              "truncated": true
+            },
+            {
+              "canonical_title": "Changes in and Disagreements with Accountants on Accounting and Financial Disclosure",
+              "char_count": 5,
+              "item": "9",
+              "part": "II",
+              "text": "None.",
+              "title": "Changes in and Disagreements with Accountants on Accounting and Financial Disclosure",
+              "truncated": false
+            },
+            {
+              "canonical_title": "Controls and Procedures",
+              "char_count": 4463,
+              "item": "9A",
+              "part": "II",
+              "text": "Evaluation of Disclosure Controls and Procedures\nBased on an evaluation under the supervision and with the participation of the Company’s management, the Company’s principal executive officer and principal financial officer have concluded that the Company’s disclosure controls and procedures as defined in Rules 13a-15(e) and 15d-15(e) under the Exchange Act were effective as of September 27, 2025 to provide reasonable assurance that information required to be disclosed by the Company in reports that it files or submits under the Exchange Act is (i) recorded, processed, summarized and reported within the time periods specified in the SEC rules and forms and (ii) accumulated and communicated to the Company’s management, including its principal executive officer and principal financial officer, as appropriate to allow timely decisions regarding required disclosure.\nInherent Limitations over Internal Controls\nThe Company’s internal control over financial reporting is designed to provide re",
+              "title": "Controls and Procedures",
+              "truncated": true
+            },
+            {
+              "canonical_title": "Other Information",
+              "char_count": 542,
+              "item": "9B",
+              "part": "II",
+              "text": "On October 31, 2025, the Company announced that Chris Kondo, Senior Director of Corporate Accounting and Principal Accounting Officer, will transition from his role on January 1, 2026. Following the transition, Mr. Kondo will continue to work on other projects. Ben Borders, the Company’s Director of Technical Accounting, will become Senior Director of Corporate Accounting and assume the role of Principal Accounting Officer. Mr. Borders will report to Kevan Parekh, the Company’s Chief Financial Officer.\nInsider Trading Arrangements\nNone.",
+              "title": "Other Information",
+              "truncated": false
+            },
+            {
+              "canonical_title": "Disclosure Regarding Foreign Jurisdictions that Prevent Inspections",
+              "char_count": 24,
+              "item": "9C",
+              "part": "II",
+              "text": "Not applicable.\nPART III",
+              "title": "Disclosure Regarding Foreign Jurisdictions that Prevent Inspections",
+              "truncated": false
+            },
+            {
+              "canonical_title": "Directors, Executive Officers and Corporate Governance",
+              "char_count": 333,
+              "item": "10",
+              "part": "III",
+              "text": "The information required by this Item will be included in the Company’s definitive proxy statement to be filed with the SEC within 120 days after September 27, 2025, in connection with the solicitation of proxies for the Company’s 2026 annual meeting of shareholders (“2026 Proxy Statement”), and is incorporated herein by reference.",
+              "title": "Directors, Executive Officers and Corporate Governance",
+              "truncated": false
+            },
+            {
+              "canonical_title": "Executive Compensation",
+              "char_count": 124,
+              "item": "11",
+              "part": "III",
+              "text": "The information required by this Item will be included in the 2026 Proxy Statement, and is incorporated herein by reference.",
+              "title": "Executive Compensation",
+              "truncated": false
+            },
+            {
+              "canonical_title": "Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters",
+              "char_count": 124,
+              "item": "12",
+              "part": "III",
+              "text": "The information required by this Item will be included in the 2026 Proxy Statement, and is incorporated herein by reference.",
+              "title": "Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters",
+              "truncated": false
+            },
+            {
+              "canonical_title": "Certain Relationships and Related Transactions, and Director Independence",
+              "char_count": 124,
+              "item": "13",
+              "part": "III",
+              "text": "The information required by this Item will be included in the 2026 Proxy Statement, and is incorporated herein by reference.",
+              "title": "Certain Relationships and Related Transactions, and Director Independence",
+              "truncated": false
+            },
+            {
+              "canonical_title": "Principal Accountant Fees and Services",
+              "char_count": 165,
+              "item": "14",
+              "part": "III",
+              "text": "The information required by this Item will be included in the 2026 Proxy Statement, and is incorporated herein by reference.\nApple Inc. | 2025 Form 10-K | 53\nPART IV",
+              "title": "Principal Accountant Fees and Services",
+              "truncated": false
+            },
+            {
+              "canonical_title": "Exhibits and Financial Statement Schedules",
+              "char_count": 11713,
+              "item": "15",
+              "part": "IV",
+              "text": "(a)Documents filed as part of this report\n(1)All financial statements\nIndex to Consolidated Financial Statements Page\nConsolidated Statements of Operations for the years ended September 27, 2025, September 28, 2024 and September 30, 2023\n29\nConsolidated Statements of Comprehensive Income for the years ended September 27, 2025, September 28, 2024 and September 30, 2023\n30\nConsolidated Balance Sheets as of September 27, 2025 and September 28, 2024\n31\nConsolidated Statements of Shareholders’ Equity for the years ended September 27, 2025, September 28, 2024 and September 30, 2023\n32\nConsolidated Statements of Cash Flows for the years ended September 27, 2025, September 28, 2024 and September 30, 2023\n33\nNotes to Consolidated Financial Statements\n34\nReports of Independent Registered Public Accounting Firm*\n49\n*Ernst & Young LLP, PCAOB Firm ID No. 00042.\n(2)Financial Statement Schedules\nAll financial statement schedules have been omitted, since the required information is not applicable or i",
+              "title": "Exhibit and Financial Statement Schedules",
+              "truncated": true
+            },
+            {
+              "canonical_title": "Form 10-K Summary",
+              "char_count": 2062,
+              "item": "16",
+              "part": "IV",
+              "text": "None.\nApple Inc. | 2025 Form 10-K | 57\nSIGNATURES\nPursuant to the requirements of Section 13 or 15(d) of the Securities Exchange Act of 1934, the Registrant has duly caused this report to be signed on its behalf by the undersigned, thereunto duly authorized.\nDate: October 31, 2025\nApple Inc.\nBy: /s/ Kevan Parekh\nKevan Parekh\nSenior Vice President,\nChief Financial Officer\nPower of Attorney\nKNOW ALL PERSONS BY THESE PRESENTS, that each person whose signature appears below constitutes and appoints Timothy D. Cook and Kevan Parekh, jointly and severally, his or her attorneys-in-fact, each with the power of substitution, for him or her in any and all capacities, to sign any amendments to this Annual Report on Form 10-K, and to file the same, with exhibits thereto and other documents in connection therewith, with the Securities and Exchange Commission, hereby ratifying and confirming all that each of said attorneys-in-fact, or his substitute or substitutes, may do or cause to be done by virt",
+              "title": "Form 10-K Summary",
+              "truncated": true
+            }
+          ],
+          "source_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm"
+        },
+        "recordedAt": "2026-09-09T00:00:00Z"
+      },
+      "execute": {
+        "provider": "sec-gov",
+        "capability": "filings/sections"
+      }
+    }
+  ]
+}

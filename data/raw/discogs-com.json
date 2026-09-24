@@ -1,0 +1,3804 @@
+{
+  "id": "discogs-com",
+  "provider": "discogs-com",
+  "name": "Discogs",
+  "description": "Public Discogs music releases, masters, artists and labels with search and paginated catalogs.",
+  "toolCount": 8,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "discogs-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "discogs-com/releases/artist",
+      "provider": "discogs-com",
+      "capability": "releases/artist",
+      "name": "Artist",
+      "description": "One Discogs artist or group by artist ID: name, real name, profile text, name variations, aliases, members (for groups) or groups (for people), external URLs and images.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "artist_id",
+          "type": "number",
+          "in": "body",
+          "about": "Discogs artist ID from search or a release's artists list, or from a discogs.com/artist/<id> URL.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One Discogs artist or group by artist ID: name, real name, profile text, name variations, aliases, members (for groups) or groups (for people), external URLs and images.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "aliases",
+            "type": "object[]"
+          },
+          {
+            "name": "data_quality",
+            "type": "string"
+          },
+          {
+            "name": "groups",
+            "type": "object[]"
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "images",
+            "type": "object[]"
+          },
+          {
+            "name": "members",
+            "type": "object[]"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "name_variations",
+            "type": "string[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the source answered."
+          },
+          {
+            "name": "profile",
+            "type": "string"
+          },
+          {
+            "name": "real_name",
+            "type": "string"
+          },
+          {
+            "name": "releases_url",
+            "type": "string"
+          },
+          {
+            "name": "resource_url",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The api.discogs.com URL that produced this result."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "urls",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "artist_id": 3840
+        },
+        "response": {
+          "aliases": [
+            {
+              "id": 449561,
+              "name": "TV Feet",
+              "resource_url": "https://api.discogs.com/artists/449561"
+            },
+            {
+              "id": 840842,
+              "name": "On A Friday",
+              "resource_url": "https://api.discogs.com/artists/840842"
+            },
+            {
+              "id": 1506477,
+              "name": "Shindig (2)",
+              "resource_url": "https://api.discogs.com/artists/1506477"
+            }
+          ],
+          "data_quality": "Needs Vote",
+          "groups": [],
+          "id": 3840,
+          "images": [
+            {
+              "height": 500,
+              "thumbnail_url": "https://i.discogs.com/0fBd_IuD_fCu9pjqKALt0Lg4fclIX9RjbBmkJ1urg9Y/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjI4NS04/ODIyLmpwZWc.jpeg",
+              "type": "primary",
+              "url": "https://i.discogs.com/eG3bUGOvNZSm8nRHMz3xf4tRfaxTz5sq9PpfsEMdTSY/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjI4NS04/ODIyLmpwZWc.jpeg",
+              "width": 500
+            },
+            {
+              "height": 806,
+              "thumbnail_url": "https://i.discogs.com/CkRUgew74o1pI0PKrW0gKYbadjLazsdgonRYDNvn87o/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTc2MTY5NDAxNy03/ODM0LnBuZw.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/QzQ6FuyVwCUb4vqxyknTG6ZyCyMC5hOQiclWb-J5U80/rs:fit/g:sm/q:90/h:806/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTc2MTY5NDAxNy03/ODM0LnBuZw.jpeg",
+              "width": 600
+            },
+            {
+              "height": 400,
+              "thumbnail_url": "https://i.discogs.com/CuzGRBzEI2UWbBSgSEuRjQr-9a28QlbjtaxCViAsJS8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTQ2Mjc4MTQxNi0y/NjE1LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/lt6BaRXbUOs6IH9gCxEJNFtjAXBDIYRwqmzaDQogWV8/rs:fit/g:sm/q:90/h:400/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTQ2Mjc4MTQxNi0y/NjE1LmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 808,
+              "thumbnail_url": "https://i.discogs.com/tLgfMgUmz7AtEk61HvnArksBTgkZ5AKUiuEwEzVa6BM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTQxMTcyNTA4OS01/OTMxLmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/d9ODcAW1ZVuP6mNjgdprRDY9jtHRSDEt9aFCx1s26Zw/rs:fit/g:sm/q:90/h:808/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTQxMTcyNTA4OS01/OTMxLmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 480,
+              "thumbnail_url": "https://i.discogs.com/hIWTguFSF2NUzfZEvLIF536fb4qCCjYwAo7q3KDfXpY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTQxMTcyNTQ1NS0z/NTg5LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/ZkyLDQVzajfdYLcvfyeMnZ1LBaIOSsZcbyKhMB8MSnw/rs:fit/g:sm/q:90/h:480/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTQxMTcyNTQ1NS0z/NTg5LmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 390,
+              "thumbnail_url": "https://i.discogs.com/0kTk1yqpcPS5qvnsyNV34U7A3hQkVE3TSmJawH13FqA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM2MzEwOTkyOC00/OTA0LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/bTtanCJTmUi9w-h6j3nqL_DReXoojryby3wGIVpkljg/rs:fit/g:sm/q:90/h:390/w:479/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM2MzEwOTkyOC00/OTA0LmpwZWc.jpeg",
+              "width": 479
+            },
+            {
+              "height": 781,
+              "thumbnail_url": "https://i.discogs.com/fixyGuOvWZ86E_22PU8gBE6N2nVdxL8za4k4vTVCGbU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3ODQzMC04/OTE0LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/aRewMlBntq5oqfxWFCgxE33N6cXuc8lhCp-pED5o56g/rs:fit/g:sm/q:90/h:781/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3ODQzMC04/OTE0LmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 337,
+              "thumbnail_url": "https://i.discogs.com/mAtVMe8STlDcHtTb5ELEbkYDIoJD8A35DcISNzRAXos/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTQ1MDQ0NDM3MC0x/NDA2LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/tDePBu7M4l6eVpadgQhM_Uc4kbjW9WM-sZ7-bDJt3xg/rs:fit/g:sm/q:90/h:337/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTQ1MDQ0NDM3MC0x/NDA2LmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 479,
+              "thumbnail_url": "https://i.discogs.com/6qFQRh4WlfU20UuQuyiH2lULZWxEE0pzbJBSwDYI9O4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3ODMwNC0x/NzU5LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/3XRQm9-4P8-9GealCNqh9GE4mWz360b0Fo-Dh_nt9bI/rs:fit/g:sm/q:90/h:479/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3ODMwNC0x/NzU5LmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 417,
+              "thumbnail_url": "https://i.discogs.com/WSexz3y-yhMx2XYRNQECTjR6B2DHO8uNPV5C9E487yU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3ODMwMi0y/ODM2LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/1O-wGiDx6kW2XJh94j5J3Nmy9HvPpwu3uA5Jg6YaSTA/rs:fit/g:sm/q:90/h:417/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3ODMwMi0y/ODM2LmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 508,
+              "thumbnail_url": "https://i.discogs.com/0V35vALY-YMrktXi8-38eR36NFZtk-CxPXkHzYAT5Qg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3ODMwMS02/OTU4LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/q1p9ZDqUqJGvjZ_pxEDMhW1yai4-_vGMXFJMCyg3ok0/rs:fit/g:sm/q:90/h:508/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3ODMwMS02/OTU4LmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 500,
+              "thumbnail_url": "https://i.discogs.com/emq3VWRSj1exjTeKBtqH7pINP5BGZveqF5_yrHxK0GE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjI5Mi00/MDMzLmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/_MROprPZMrQmmTxuTMyfHucv-ud8MJVfqg1A9b3P1Qg/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjI5Mi00/MDMzLmpwZWc.jpeg",
+              "width": 500
+            },
+            {
+              "height": 500,
+              "thumbnail_url": "https://i.discogs.com/CP1FqivZcBQx2EEigSFe7evaF53BnMLwYdYLB-o_rtI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjMzNC0z/NTU4LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/BGdi9KXDxr2O0w1w6PMSm0AE1w2C9_nT-dYjEhZwWZ4/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjMzNC0z/NTU4LmpwZWc.jpeg",
+              "width": 500
+            },
+            {
+              "height": 600,
+              "thumbnail_url": "https://i.discogs.com/FvQaytPq9_5YG756EKn_RnM-2kAq0bRRBryzjyt_kdQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3Nzc2Ny0x/MjI4LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/UCZBZFeeuD1MP9NH7Va6tiOC0K-HzKsARt4PJce4QVk/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3Nzc2Ny0x/MjI4LmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 500,
+              "thumbnail_url": "https://i.discogs.com/8JnS47umZWMev0icz_yReYn2NpU54ThXPf1TQQqehPQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjM0My04/ODQ0LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/hgzKrJxW13--s79EQ4fxH13A7Ht-7b2klTyoWK3ZMyM/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjM0My04/ODQ0LmpwZWc.jpeg",
+              "width": 500
+            },
+            {
+              "height": 500,
+              "thumbnail_url": "https://i.discogs.com/Xk3DfQ06rQJvPtotJ2jBhEtu8IwWa1HQ7ZPFKfm0JFc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjM1Ny01/NjY1LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/aSemYWQ_LFH1-8LtCYOvnVIa0TA40bcKp5mLg0X-xZA/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjM1Ny01/NjY1LmpwZWc.jpeg",
+              "width": 500
+            },
+            {
+              "height": 478,
+              "thumbnail_url": "https://i.discogs.com/EC07gIfT7K5AXPWL3CacvZ7lvTZ6edrihTbbhycdEs8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTQ1NzMxODAxMy02/ODkzLmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/0EpaZ399QlIVsyffBwtYaNNZmMn9ueiDEfSyEzNlugI/rs:fit/g:sm/q:90/h:478/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTQ1NzMxODAxMy02/ODkzLmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 500,
+              "thumbnail_url": "https://i.discogs.com/6kvesCMMKqRZN-o2CrhbH8NoKdBkeHfs_9RBstsSX-k/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjI1NS0x/NzYzLmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/xL6s7QnsqniKENBlcJFj3KuDIuyCNlmVay0TblkFlZQ/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjI1NS0x/NzYzLmpwZWc.jpeg",
+              "width": 500
+            },
+            {
+              "height": 500,
+              "thumbnail_url": "https://i.discogs.com/H0pLWX6mFJy9dzMC4ST1XDSJS6vqSHpngGN6qWT62YY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjMxMi03/NzI3LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/BPFci93b6DdD9q0ZkihedFhi6GrKRrcPkY7DDyvThos/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjMxMi03/NzI3LmpwZWc.jpeg",
+              "width": 500
+            },
+            {
+              "height": 500,
+              "thumbnail_url": "https://i.discogs.com/z8I_pjJFH6XN2CNpbkNvUJ-r75xTKfvVl9qudQoHZ0c/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjI3Mi0y/MTQ4LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/es5YVb4URqSH_z-BYneCpgEPE-x8LsMY031_oFLUAlg/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTM4NjM1MjI3Mi0y/MTQ4LmpwZWc.jpeg",
+              "width": 500
+            },
+            {
+              "height": 840,
+              "thumbnail_url": "https://i.discogs.com/G3W1M-CzHv2rX84OMe629AoK5BLmBF2WYKfkFhuOH5E/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3NzYzNy0y/NDk0LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/ozWiailRPQRi98m3PR014h40-ICj0rmpEB3SWCbOzgU/rs:fit/g:sm/q:90/h:840/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3NzYzNy0y/NDk0LmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 655,
+              "thumbnail_url": "https://i.discogs.com/sGzyR1ZApC4vYaNy1y--lD8cVmaXTIMnwgphw6DYd2U/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3NzYzOS00/NjQxLmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/gra3_q6symT8F2ySRKdBbUiq-9OSrY4zzF8U00vPnYM/rs:fit/g:sm/q:90/h:655/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4NDAt/MTcxODQ3NzYzOS00/NjQxLmpwZWc.jpeg",
+              "width": 600
+            }
+          ],
+          "members": [
+            {
+              "active": true,
+              "id": 4854,
+              "name": "Thom Yorke",
+              "resource_url": "https://api.discogs.com/artists/4854"
+            },
+            {
+              "active": true,
+              "id": 152377,
+              "name": "Jonny Greenwood",
+              "resource_url": "https://api.discogs.com/artists/152377"
+            },
+            {
+              "active": true,
+              "id": 365781,
+              "name": "Phil Selway",
+              "resource_url": "https://api.discogs.com/artists/365781"
+            },
+            {
+              "active": true,
+              "id": 365785,
+              "name": "Colin Greenwood",
+              "resource_url": "https://api.discogs.com/artists/365785"
+            },
+            {
+              "active": true,
+              "id": 365794,
+              "name": "Ed O'Brien",
+              "resource_url": "https://api.discogs.com/artists/365794"
+            }
+          ],
+          "name": "Radiohead",
+          "name_variations": [
+            "Radio Head",
+            "Radiohead (Samples)",
+            "Radioheads",
+            "radiohead",
+            "レディオヘッド",
+            "收音機頭樂隊",
+            "电台司令",
+            "電台司㠳合唱團",
+            "電台司令",
+            "電台司令合唱團",
+            "래디오헤드"
+          ],
+          "observed_at_ms": 1789442400000,
+          "profile": "Electronic and alternative rock (modern rock) band from Oxfordshire, England (United Kingdom).\r\n\r\nThe name Radiohead comes from the [a=Talking Heads] song, \"Radio Head\", from the \"[url=http://www.discogs.com/Talking-Heads-True-Stories/master/39386]True Stories[/url]\" album.\r\n\r\nFormed by school friends in 1985, Radiohead did not release their first single until 1992's \"[r=767600]\". The cathartic \"[url=http://www.discogs.com/Radiohead-Creep/master/21481]Creep[/url]\", from the debut album \"[url=http://www.discogs.com/Radiohead-Pablo-Honey/master/13344]Pablo Honey[/url]\" (1993), became a worldwide hit as grunge music dominated radio airwaves.\r\n\r\nRadiohead were initially branded as a one-hit wonder abroad, but caught on at home in the UK with their second album, \"[url=http://www.discogs.com/Radiohead-The-Bends/master/17008]The Bends[/url]\" (1995), earning fans with their dense guitar atmospheres and front man [a=Thom Yorke]'s expressive singing. The album featured the hits \"[url=http://www.discogs.com/Radiohead-High-Dry-Planet-Telex/release/199387]High & Dry[/url]\", \"[r=1463625]\" and \"[url=http://www.discogs.com/Radiohead-Fake-Plastic-Trees/master/21526]Fake Plastic Trees[/url]\".\r\n\r\nThe band's third album, \"[url=http://www.discogs.com/Radiohead-OK-Computer/master/21491]OK Computer[/url]\" (1997), propelled them to greater attention. Popular both for its expansive sound and themes of modern alienation, the album has been acclaimed by critics as a landmark record of the 1990s, some critics go as far to consider it one of the best of all time. \"[url=http://www.discogs.com/Radiohead-Kid-A/master/21501]Kid A[/url]\" (2000) marked further evolution, containing influences from experimental electronic music.\r\n\r\n\"[url=http://www.discogs.com/Radiohead-Hail-To-The-Thief/master/16962]Hail To The Thief[/url]\" (2003) was seen as a conventional return to the guitar and piano-led rock sound. After fulfilling their contract with EMI, Radiohead released \"[url=http://www.discogs.com/Radiohead-In-Rainbows/master/21520]In Rainbows[/url]\" (2007) famously via a pay-what-you-want model. Their latest album,  \"[url=https://www.discogs.com/Radiohead-A-Moon-Shaped-Pool/master/998252]A Moon Shaped Pool[/url]\", was released in May 2016.\r\n \r\nRadiohead's original influences were cited as alternative rock and post-punk bands like [url=http://www.discogs.com/artist/Smiths,+The]The Smiths[/url], [a=Pixies], [a=Magazine], [a=Joy Division] and [a=Siouxsie & The Banshees], who Thom Yorke claims inspired him to become a performer, and [a=R.E.M.] (with lead singer of the band, Thom Yorke, referring to himself as an 'R.E.M. groupie').\r\n\r\nBand members:\r\nThom Yorke - vocals, guitar, piano, keyboards, laptop (1985-present)\r\nColin Greenwood - bass guitar (1985-present)\r\nEd O'Brien - guitar, effects, backing vocals (1985-1990, 1990-present)\r\nPhilip Selway - drums, percussion (1985-present)\r\nJonny Greenwood - guitar, keyboards, ondes Martenot, glockenspiel, laptop, orchestral arrangements (1988-present)\r\n\r\nCurrent live members:\r\nClive Deamer - drums, percussion (2011-present)\r\n\r\nFormer members:\r\nRasmus \"Raz\" Peterson - tenor saxophone, alto saxophone (1985-1989)\r\nLiz Cotton - alto saxophone (1988-1989)\r\nCharlotte Cotton - alto saxophone (1988-1989)\r\nNigel Powell - drums (1990)\r\n\r\nPrevious names:\r\nOn a Friday (1985-1990, 1990-1991)\r\nShindig (1990)",
+          "real_name": null,
+          "releases_url": "https://api.discogs.com/artists/3840/releases",
+          "resource_url": "https://api.discogs.com/artists/3840",
+          "source_url": "https://api.discogs.com/artists/3840",
+          "url": "https://www.discogs.com/artist/3840-Radiohead",
+          "urls": [
+            "https://www.radiohead.com/",
+            "https://radiohead.bandcamp.com/",
+            "https://bsky.app/profile/radiohead.wastehq.social",
+            "https://www.facebook.com/radiohead",
+            "https://www.instagram.com/radiohead",
+            "https://myspace.com/radiohead",
+            "https://www.progarchives.com/artist.asp?id=1492",
+            "https://twitter.com/radiohead",
+            "https://www.whosampled.com/Radiohead/",
+            "https://en.wikipedia.org/wiki/Radiohead",
+            "https://www.youtube.com/user/radiohead",
+            "https://www.allmusic.com/artist/radiohead-mn0000326249"
+          ]
+        },
+        "recordedAt": "2026-09-15T03:37:00Z"
+      },
+      "execute": {
+        "provider": "discogs-com",
+        "capability": "releases/artist"
+      }
+    },
+    {
+      "id": "discogs-com/releases/artist_releases",
+      "provider": "discogs-com",
+      "capability": "releases/artist_releases",
+      "name": "Artist releases",
+      "description": "Releases by an artist (their discography as Discogs credits it), one page at a time: masters and standalone releases with role (Main, Remix, Appearance, ...), year, format and label, sortable by year, title or format.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "artist_id",
+          "type": "number",
+          "in": "body",
+          "about": "Discogs artist ID.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "Result page, 1-based.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page, 1 to 100.",
+          "default": 25,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Sort field.",
+          "oneOf": [
+            "year",
+            "title",
+            "format"
+          ]
+        },
+        {
+          "name": "sort_order",
+          "type": "string",
+          "in": "body",
+          "about": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Releases by an artist (their discography as Discogs credits it), one page at a time: masters and standalone releases with role (Main, Remix, Appearance, ...), year, format and label, sortable by year, title or format.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "artist_id",
+            "type": "number"
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the source answered."
+          },
+          {
+            "name": "pagination",
+            "type": "object"
+          },
+          {
+            "name": "releases",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The api.discogs.com URL that produced this result."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "artist_id": 3840,
+          "per_page": 5,
+          "sort": "year",
+          "sort_order": "asc"
+        },
+        "response": {
+          "artist_id": 3840,
+          "count": 5,
+          "observed_at_ms": 1789442400000,
+          "pagination": {
+            "next_page": 2,
+            "page": 1,
+            "pages": 652,
+            "per_page": 5,
+            "total": 3259
+          },
+          "releases": [
+            {
+              "artist": "Radiohead",
+              "community": {
+                "in_collection": 9,
+                "in_wantlist": 143
+              },
+              "format": "Cass, S/Sided, Promo",
+              "id": 12888486,
+              "label": "EMI",
+              "main_release_id": null,
+              "resource_url": "https://api.discogs.com/releases/12888486",
+              "role": "Main",
+              "status": "Accepted",
+              "thumbnail_url": null,
+              "title": "Radiohead",
+              "type": "release",
+              "url": "https://www.discogs.com/release/12888486",
+              "year": 1992
+            },
+            {
+              "artist": "Radiohead",
+              "community": {
+                "in_collection": 3,
+                "in_wantlist": 43
+              },
+              "format": "Cass, S/Sided, Promo",
+              "id": 26415710,
+              "label": "EMI",
+              "main_release_id": null,
+              "resource_url": "https://api.discogs.com/releases/26415710",
+              "role": "Main",
+              "status": "Accepted",
+              "thumbnail_url": null,
+              "title": "Radiohead",
+              "type": "release",
+              "url": "https://www.discogs.com/release/26415710",
+              "year": 1992
+            },
+            {
+              "artist": "Radiohead",
+              "community": {
+                "in_collection": 0,
+                "in_wantlist": 15
+              },
+              "format": "Cass, S/Sided",
+              "id": 36062413,
+              "label": "Parlophone",
+              "main_release_id": null,
+              "resource_url": "https://api.discogs.com/releases/36062413",
+              "role": "Main",
+              "status": "Accepted",
+              "thumbnail_url": null,
+              "title": "Prove Yourself",
+              "type": "release",
+              "url": "https://www.discogs.com/release/36062413",
+              "year": 1992
+            },
+            {
+              "artist": "Radiohead",
+              "community": {
+                "in_collection": 313,
+                "in_wantlist": 254
+              },
+              "format": null,
+              "id": 21481,
+              "label": null,
+              "main_release_id": 3642814,
+              "resource_url": "https://api.discogs.com/masters/21481",
+              "role": "Main",
+              "status": null,
+              "thumbnail_url": null,
+              "title": "Creep",
+              "type": "master",
+              "url": "https://www.discogs.com/master/21481",
+              "year": 1992
+            },
+            {
+              "artist": "Radiohead",
+              "community": {
+                "in_collection": 416,
+                "in_wantlist": 1057
+              },
+              "format": null,
+              "id": 73605,
+              "label": null,
+              "main_release_id": 767600,
+              "resource_url": "https://api.discogs.com/masters/73605",
+              "role": "Main",
+              "status": null,
+              "thumbnail_url": null,
+              "title": "Drill EP",
+              "type": "master",
+              "url": "https://www.discogs.com/master/73605",
+              "year": 1992
+            }
+          ],
+          "source_url": "https://api.discogs.com/artists/3840/releases?sort=year&sort_order=asc&page=1&per_page=5"
+        },
+        "recordedAt": "2026-09-15T03:37:00Z"
+      },
+      "execute": {
+        "provider": "discogs-com",
+        "capability": "releases/artist_releases"
+      }
+    },
+    {
+      "id": "discogs-com/releases/label",
+      "provider": "discogs-com",
+      "capability": "releases/label",
+      "name": "Label",
+      "description": "One Discogs label by label ID: name, profile, contact info, parent label, sublabels, external URLs and images.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "label_id",
+          "type": "number",
+          "in": "body",
+          "about": "Discogs label ID from search or a release's labels list, or from a discogs.com/label/<id> URL.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One Discogs label by label ID: name, profile, contact info, parent label, sublabels, external URLs and images.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "contact_info",
+            "type": "string"
+          },
+          {
+            "name": "data_quality",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "images",
+            "type": "object[]"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the source answered."
+          },
+          {
+            "name": "parent_label",
+            "type": "object"
+          },
+          {
+            "name": "profile",
+            "type": "string"
+          },
+          {
+            "name": "releases_url",
+            "type": "string"
+          },
+          {
+            "name": "resource_url",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The api.discogs.com URL that produced this result."
+          },
+          {
+            "name": "sublabels",
+            "type": "object[]"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "urls",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "label_id": 1
+        },
+        "response": {
+          "contact_info": "Planet E Communications\r\nP.O. Box 27218\r\nDetroit, Michigan, MI 48227\r\nUSA\r\n\r\nPhone: +1 313 874 8729\r\nFax: +1 313 874 8732\r\nEmail: info@Planet-e.net",
+          "data_quality": "Needs Vote",
+          "id": 1,
+          "images": [
+            {
+              "height": 24,
+              "thumbnail_url": "https://i.discogs.com/sbsdrlABsGkjRqHYlgNizr0OzUn1EYXY7gE-aADnj6w/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTEx/MTA1Mzg2NS5wbmc.jpeg",
+              "type": "primary",
+              "url": "https://i.discogs.com/51Fep2wRb9DP599gYx1U0bO68pvLELvmT4pDaRAa1rQ/rs:fit/g:sm/q:90/h:24/w:132/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTEx/MTA1Mzg2NS5wbmc.jpeg",
+              "width": 132
+            },
+            {
+              "height": 126,
+              "thumbnail_url": "https://i.discogs.com/FjFu-vCp5SZRivrwmV1iX7UxfBApI8V1wTLer4GZFlY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTEz/OTQwMzY1NC5naWY.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/_8-2SQX-MaRhqP4_P4CShH-_rXBvmOFlHoTP-HphkIA/rs:fit/g:sm/q:90/h:126/w:587/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTEz/OTQwMzY1NC5naWY.jpeg",
+              "width": 587
+            },
+            {
+              "height": 196,
+              "thumbnail_url": "https://i.discogs.com/3UwEy_dzbj4vBo4dTEmeIOTX6Ij655HcC-M_GL9eC7Y/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTIw/MDE2NTA3OC5naWY.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/CwdvjNgj9CwhoiLw9Jd4rMMOt7FcjHiKBMx4w86UXfw/rs:fit/g:sm/q:90/h:196/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTIw/MDE2NTA3OC5naWY.jpeg",
+              "width": 600
+            },
+            {
+              "height": 121,
+              "thumbnail_url": "https://i.discogs.com/gUM_FY14ixYget75JYIOfmRozTiPCV1imUyRWfdK0Do/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTI1/ODk5ODE2My5wbmc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/LLA2nG2GCQiSvu4ozHBOTpbt29TtXj_MBgFRbm8c5-o/rs:fit/g:sm/q:90/h:121/w:275/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTI1/ODk5ODE2My5wbmc.jpeg",
+              "width": 275
+            },
+            {
+              "height": 720,
+              "thumbnail_url": "https://i.discogs.com/DZrsglT0AwLqKbhX2xul9Lssb6ubHeAVTuvDvEQniI8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTM0/ODM1OTkwOC04OTcx/LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/SYMt8AxPqMkL1WGju7jU0RL_C5eflKuMpCpaCyhF_-o/rs:fit/g:sm/q:90/h:720/w:382/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTM0/ODM1OTkwOC04OTcx/LmpwZWc.jpeg",
+              "width": 382
+            },
+            {
+              "height": 398,
+              "thumbnail_url": "https://i.discogs.com/Qe8touHocrob-Np1q7uUlEX7cZE4_DdvTX1Jv5NVVrI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTQ0/Njc1NTEzOS02NTUx/LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/kRhN6mWenSYRTIqh8VLeA-tdwHUl2GIKM3MyErxwK_o/rs:fit/g:sm/q:90/h:398/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTQ0/Njc1NTEzOS02NTUx/LmpwZWc.jpeg",
+              "width": 500
+            },
+            {
+              "height": 189,
+              "thumbnail_url": "https://i.discogs.com/r0g8ETupMUNJSFqCOk1Jl85SXtKQBROZpXKtGtvB5Jw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTM2/MDEwMTU4My0zNjQz/LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/R95ZkBi5HO7cooveyd8PYg6llZEgK6RnmGUw1vgJ5ZM/rs:fit/g:sm/q:90/h:189/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEtMTM2/MDEwMTU4My0zNjQz/LmpwZWc.jpeg",
+              "width": 600
+            }
+          ],
+          "name": "Planet E",
+          "observed_at_ms": 1789442400000,
+          "parent_label": null,
+          "profile": "[a=Carl Craig]'s classic techno label founded in 1991.\r\n\r\nOn at least 1 release, Planet E is listed as publisher.",
+          "releases_url": "https://api.discogs.com/labels/1/releases",
+          "resource_url": "https://api.discogs.com/labels/1",
+          "source_url": "https://api.discogs.com/labels/1",
+          "sublabels": [
+            {
+              "id": 86537,
+              "name": "Antidote (4)",
+              "resource_url": "https://api.discogs.com/labels/86537"
+            },
+            {
+              "id": 41841,
+              "name": "Community Projects",
+              "resource_url": "https://api.discogs.com/labels/41841"
+            },
+            {
+              "id": 153760,
+              "name": "Guilty Pleasures",
+              "resource_url": "https://api.discogs.com/labels/153760"
+            },
+            {
+              "id": 31405,
+              "name": "I Ner Zon Sounds",
+              "resource_url": "https://api.discogs.com/labels/31405"
+            },
+            {
+              "id": 277579,
+              "name": "Planet E Communications",
+              "resource_url": "https://api.discogs.com/labels/277579"
+            },
+            {
+              "id": 294738,
+              "name": "Planet E Communications, Inc.",
+              "resource_url": "https://api.discogs.com/labels/294738"
+            },
+            {
+              "id": 1560615,
+              "name": "Planet E Productions",
+              "resource_url": "https://api.discogs.com/labels/1560615"
+            },
+            {
+              "id": 488315,
+              "name": "TWPENTY",
+              "resource_url": "https://api.discogs.com/labels/488315"
+            }
+          ],
+          "url": "https://www.discogs.com/label/1-Planet-E",
+          "urls": [
+            "http://planet-e.net",
+            "http://planetecommunications.bandcamp.com",
+            "http://www.facebook.com/planetedetroit",
+            "http://www.flickr.com/photos/planetedetroit",
+            "http://www.instagram.com/carlcraignet",
+            "http://myspace.com/planetecom",
+            "http://myspace.com/planetedetroit",
+            "http://soundcloud.com/planetedetroit",
+            "http://twitter.com/planetedetroit",
+            "http://vimeo.com/user1265384",
+            "http://en.wikipedia.org/wiki/Planet_E_Communications",
+            "http://www.youtube.com/user/planetedetroit"
+          ]
+        },
+        "recordedAt": "2026-09-15T03:37:00Z"
+      },
+      "execute": {
+        "provider": "discogs-com",
+        "capability": "releases/label"
+      }
+    },
+    {
+      "id": "discogs-com/releases/label_releases",
+      "provider": "discogs-com",
+      "capability": "releases/label_releases",
+      "name": "Label releases",
+      "description": "A label's catalog, one page at a time: every release on the label with its catalog number, artist, title, format and year, in Discogs' catalog-number order.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "label_id",
+          "type": "number",
+          "in": "body",
+          "about": "Discogs label ID.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "Result page, 1-based.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page, 1 to 100.",
+          "default": 25,
+          "min": 1,
+          "max": 100
+        }
+      ],
+      "response": {
+        "about": "A label's catalog, one page at a time: every release on the label with its catalog number, artist, title, format and year, in Discogs' catalog-number order.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "label_id",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the source answered."
+          },
+          {
+            "name": "pagination",
+            "type": "object"
+          },
+          {
+            "name": "releases",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The api.discogs.com URL that produced this result."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "label_id": 1,
+          "per_page": 5
+        },
+        "response": {
+          "count": 5,
+          "label_id": 1,
+          "observed_at_ms": 1789442400000,
+          "pagination": {
+            "next_page": 2,
+            "page": 1,
+            "pages": 120,
+            "per_page": 5,
+            "total": 596
+          },
+          "releases": [
+            {
+              "artist": "Dave Clarke",
+              "catno": "!K7067cd",
+              "format": "CD, Comp, Mixed",
+              "id": 1018,
+              "resource_url": "https://api.discogs.com/releases/1018",
+              "status": "Accepted",
+              "thumbnail_url": "https://i.discogs.com/V60lNnC3DxsCaNOabHjHbO5Xd6DIp6AnQHZCOPbra8w/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwMTgt/MTE3MTczMTgzMS5q/cGVn.jpeg",
+              "title": "Electro Boogie Vol 2 (The Throwdown)",
+              "url": "https://www.discogs.com/release/1018",
+              "year": 1998
+            },
+            {
+              "artist": "Various",
+              "catno": "FERLP4, ferlp4",
+              "format": "2x12\", Comp",
+              "id": 1033,
+              "resource_url": "https://api.discogs.com/releases/1033",
+              "status": "Accepted",
+              "thumbnail_url": "https://i.discogs.com/nS2J8Ll3gXEICkOvIumia6ILj4z-6sxkhG6xu2V5gnI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwMzMt/MTU0MTExMTg4NC02/NjM5LmpwZWc.jpeg",
+              "title": "Further Adventures In Techno Soul",
+              "url": "https://www.discogs.com/release/1033",
+              "year": 1998
+            },
+            {
+              "artist": "Andrea Parker",
+              "catno": "K7071CD, !K7071cd",
+              "format": "CD, Mixed, RP",
+              "id": 2801,
+              "resource_url": "https://api.discogs.com/releases/2801",
+              "status": "Accepted",
+              "thumbnail_url": "https://i.discogs.com/AW3gz3RTecljLNZ9mURNxsJbWUUwjr4cgUQzJ32DNb8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI4MDEt/MTMzNTQ3MzY5Mi5q/cGVn.jpeg",
+              "title": "DJ-Kicks",
+              "url": "https://www.discogs.com/release/2801",
+              "year": null
+            },
+            {
+              "artist": "Paperclip People",
+              "catno": "pepcp 2",
+              "format": "12\"",
+              "id": 4213,
+              "resource_url": "https://api.discogs.com/releases/4213",
+              "status": "Accepted",
+              "thumbnail_url": "https://i.discogs.com/qq5t6uslnM7OuQrZ8Rs8rkar5Py6yDQ6HchpieWjMfI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQyMTMt/MTUyMjAwODI2NC00/Mjc3LmpwZWc.jpeg",
+              "title": "Throw / Remake (Basic Reshape)",
+              "url": "https://www.discogs.com/release/4213",
+              "year": 1994
+            },
+            {
+              "artist": "69",
+              "catno": "PE69-1",
+              "format": "12\", EP",
+              "id": 4235,
+              "resource_url": "https://api.discogs.com/releases/4235",
+              "status": "Accepted",
+              "thumbnail_url": "https://i.discogs.com/dbJCu0C36espn6grfPlWepcOOUd_eN2k3mRcWvrYo84/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQyMzUt/MTE2NTkxODQ1My5q/cGVn.jpeg",
+              "title": "4 Jazz Funk Classics",
+              "url": "https://www.discogs.com/release/4235",
+              "year": 1991
+            }
+          ],
+          "source_url": "https://api.discogs.com/labels/1/releases?page=1&per_page=5"
+        },
+        "recordedAt": "2026-09-15T03:37:00Z"
+      },
+      "execute": {
+        "provider": "discogs-com",
+        "capability": "releases/label_releases"
+      }
+    },
+    {
+      "id": "discogs-com/releases/master",
+      "provider": "discogs-com",
+      "capability": "releases/master",
+      "name": "Master",
+      "description": "One Discogs master release (the grouping of all pressings of the same album or single) by master ID: title, artists, original year, main and most recent release IDs, genres, styles, canonical tracklist, images, videos and marketplace summary. Use master_versions to list its pressings.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "master_id",
+          "type": "number",
+          "in": "body",
+          "about": "Discogs master ID from search or artist_releases, or from a discogs.com/master/<id> URL.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One Discogs master release (the grouping of all pressings of the same album or single) by master ID: title, artists, original year, main and most recent release IDs, genres, styles, canonical tracklist, images, videos and marketplace summary. Use master_versions to list its pressings.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "artists",
+            "type": "object[]"
+          },
+          {
+            "name": "data_quality",
+            "type": "string"
+          },
+          {
+            "name": "genres",
+            "type": "string[]"
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "images",
+            "type": "object[]"
+          },
+          {
+            "name": "lowest_price",
+            "type": "number"
+          },
+          {
+            "name": "main_release_id",
+            "type": "number"
+          },
+          {
+            "name": "main_release_url",
+            "type": "string"
+          },
+          {
+            "name": "most_recent_release_id",
+            "type": "number"
+          },
+          {
+            "name": "most_recent_release_url",
+            "type": "string"
+          },
+          {
+            "name": "num_for_sale",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the source answered."
+          },
+          {
+            "name": "resource_url",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The api.discogs.com URL that produced this result."
+          },
+          {
+            "name": "styles",
+            "type": "string[]"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "tracklist",
+            "type": "object[]"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "versions_url",
+            "type": "string"
+          },
+          {
+            "name": "videos",
+            "type": "object[]"
+          },
+          {
+            "name": "year",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "master_id": 2507
+        },
+        "response": {
+          "artists": [
+            {
+              "id": 3840,
+              "join": null,
+              "name": "Radiohead",
+              "name_variation": null,
+              "resource_url": "https://api.discogs.com/artists/3840",
+              "role": null,
+              "tracks": null
+            }
+          ],
+          "data_quality": "Correct",
+          "genres": [
+            "Electronic",
+            "Rock"
+          ],
+          "id": 2507,
+          "images": [
+            {
+              "height": 575,
+              "thumbnail_url": "https://i.discogs.com/h1lS3kedGxWhTllOue40rS27cPI8-Rmy_CBoWvLCrOw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xMzg1Mjc3NzE1/LTI1NjkuanBlZw.jpeg",
+              "type": "primary",
+              "url": "https://i.discogs.com/rxXrWmyazLPh1vpv6kQ__GMwmFlqQyXcKTysfqm2Lbg/rs:fit/g:sm/q:90/h:575/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xMzg1Mjc3NzE1/LTI1NjkuanBlZw.jpeg",
+              "width": 600
+            },
+            {
+              "height": 301,
+              "thumbnail_url": "https://i.discogs.com/0g_RgI_pjm9KALtERWdFLj5kNHtXzwNvF-MOaZU6_Yw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xNDAxNDQyNDM0/LTQwMDAuanBlZw.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/CRZC3x0n5VU8Rbm3cbYRaWUO6whTMF4PA9VuCIprYWg/rs:fit/g:sm/q:90/h:301/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xNDAxNDQyNDM0/LTQwMDAuanBlZw.jpeg",
+              "width": 600
+            },
+            {
+              "height": 578,
+              "thumbnail_url": "https://i.discogs.com/T9gEVJ2YD5WBgViVx2Qs5ijZLZ1xmHIO2t4tk17XiKw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xMzg1Mjc3NzIw/LTM4NjguanBlZw.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/YLGiLOXg0chjB7LBeSIkEX9j4gvkXArWtUEPqgcSwtU/rs:fit/g:sm/q:90/h:578/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xMzg1Mjc3NzIw/LTM4NjguanBlZw.jpeg",
+              "width": 600
+            },
+            {
+              "height": 598,
+              "thumbnail_url": "https://i.discogs.com/YdQ0B3iPZ4To7-pIsafv0o6EzIXRzkY4Zq3U4LdJk70/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xMzg1Mjc3NzI1/LTkxMDMuanBlZw.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/_Uq0ddgzhNLqWCw7Teumo9siDiBxk4JF35Ajq0pGLmQ/rs:fit/g:sm/q:90/h:598/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xMzg1Mjc3NzI1/LTkxMDMuanBlZw.jpeg",
+              "width": 600
+            },
+            {
+              "height": 598,
+              "thumbnail_url": "https://i.discogs.com/Jz3saHfwMZadqK7yXqBxbXvpLufG8H0qxbtU1BrRxPQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xMzg1Mjc3NzMx/LTg4NjguanBlZw.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/ku8ug9ES8px7dYNMvoGIX2veWYAmxuxRq_X_-vowvTQ/rs:fit/g:sm/q:90/h:598/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xMzg1Mjc3NzMx/LTg4NjguanBlZw.jpeg",
+              "width": 600
+            },
+            {
+              "height": 600,
+              "thumbnail_url": "https://i.discogs.com/owiYn6txJBcfb7jZvl0MTTMIlpUdLv2rj2r_BEYyBXc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xMzg1Mjc3NzM2/LTYxOTIuanBlZw.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/hOT4U4A6c8L_KQYiFRl-lRxFzollXYvdCQfxm1137zE/rs:fit/g:sm/q:90/h:600/w:597/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xMzg1Mjc3NzM2/LTYxOTIuanBlZw.jpeg",
+              "width": 597
+            },
+            {
+              "height": 600,
+              "thumbnail_url": "https://i.discogs.com/PBU2wF7hRvEuGmP3vQlp0B1XJmhjgNQ8HwlAfo5JwhM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xMzg1Mjc3NzQy/LTg1ODguanBlZw.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/Cav03cqdZciE9g9twORG-YRK1si5NMQs3hdaGyxEnY8/rs:fit/g:sm/q:90/h:600/w:599/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xMzg1Mjc3NzQy/LTg1ODguanBlZw.jpeg",
+              "width": 599
+            },
+            {
+              "height": 588,
+              "thumbnail_url": "https://i.discogs.com/yyM8bYRaS6rHWVt3mgQ-0n8d4BjOib3Lugo9v4Z5Crw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xNDAxNDQyNDM0/LTU1MzYuanBlZw.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/j5CDORYpDqb55ZezdlE0njC6RVj0ix2ShhD3MkdxCcE/rs:fit/g:sm/q:90/h:588/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xNDAxNDQyNDM0/LTU1MzYuanBlZw.jpeg",
+              "width": 600
+            },
+            {
+              "height": 600,
+              "thumbnail_url": "https://i.discogs.com/FCKxZWq-GPWEDasPkgT4z1k7h5GOAVJOb_BYUINOhlI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xNDAxNDQyNDM0/LTI2NDEuanBlZw.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/BCygzRgqjaF9aNADLK9-JrWOjauLZu2Dbjgtjfwb9ZI/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xNDAxNDQyNDM0/LTI2NDEuanBlZw.jpeg",
+              "width": 600
+            },
+            {
+              "height": 600,
+              "thumbnail_url": "https://i.discogs.com/dPGHfqcptqxO9kTFo8v7Ft3hQMkI0M3DajUfJLPN3YY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xNDAxNDQyNDM0/LTY5NzAuanBlZw.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/bTnaHl7stGwLGGjmJ9YnZt-mKZBpOLoifovy2VNbqBA/rs:fit/g:sm/q:90/h:600/w:597/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xNDAxNDQyNDM0/LTY5NzAuanBlZw.jpeg",
+              "width": 597
+            },
+            {
+              "height": 597,
+              "thumbnail_url": "https://i.discogs.com/cr7L5dqATMgwWc1KTjD1TYrctmMC_K6Sm5_45oIhx_M/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xNDAxNDQyNDM0/LTgyNzYuanBlZw.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/p_XRVhjnKqNS9rRwi0FJgoJPH8K2oE1RaX_VzwSrLUY/rs:fit/g:sm/q:90/h:597/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xNDAxNDQyNDM0/LTgyNzYuanBlZw.jpeg",
+              "width": 600
+            },
+            {
+              "height": 450,
+              "thumbnail_url": "https://i.discogs.com/euf-FFM63Z5QwyiXHeye4EIVqQs0VCRGEfScPM78VjA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xNjA4NDkwNDk0/LTc0NzQuanBlZw.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/ZXgLUR4VEnlbvpZzrAQmP7GwINzI9r26sqeK6yUkNZY/rs:fit/g:sm/q:90/h:450/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3Mzk4/MC0xNjA4NDkwNDk0/LTc0NzQuanBlZw.jpeg",
+              "width": 600
+            }
+          ],
+          "lowest_price": 2,
+          "main_release_id": 173980,
+          "main_release_url": "https://api.discogs.com/releases/173980",
+          "most_recent_release_id": 37103766,
+          "most_recent_release_url": "https://api.discogs.com/releases/37103766",
+          "num_for_sale": 932,
+          "observed_at_ms": 1789442400000,
+          "resource_url": "https://api.discogs.com/masters/2507",
+          "source_url": "https://api.discogs.com/masters/2507",
+          "styles": [
+            "Alternative Rock",
+            "Experimental"
+          ],
+          "title": "Amnesiac",
+          "tracklist": [
+            {
+              "artists": [],
+              "duration": null,
+              "extra_artists": [],
+              "position": "A1",
+              "sub_tracks": [],
+              "title": "Packt Like Sardines In A Crushd Tin Box",
+              "type": "track"
+            },
+            {
+              "artists": [],
+              "duration": null,
+              "extra_artists": [],
+              "position": "A2",
+              "sub_tracks": [],
+              "title": "Pyramid Song",
+              "type": "track"
+            },
+            {
+              "artists": [],
+              "duration": null,
+              "extra_artists": [],
+              "position": "A3",
+              "sub_tracks": [],
+              "title": "Pulk/Pull Revolving Doors",
+              "type": "track"
+            },
+            {
+              "artists": [],
+              "duration": null,
+              "extra_artists": [],
+              "position": "B1",
+              "sub_tracks": [],
+              "title": "You And Whose Army?",
+              "type": "track"
+            },
+            {
+              "artists": [],
+              "duration": null,
+              "extra_artists": [],
+              "position": "B2",
+              "sub_tracks": [],
+              "title": "I Might Be Wrong",
+              "type": "track"
+            },
+            {
+              "artists": [],
+              "duration": null,
+              "extra_artists": [],
+              "position": "C1",
+              "sub_tracks": [],
+              "title": "Knives Out",
+              "type": "track"
+            },
+            {
+              "artists": [],
+              "duration": null,
+              "extra_artists": [],
+              "position": "C2",
+              "sub_tracks": [],
+              "title": "Morning Bell / Amnesiac",
+              "type": "track"
+            },
+            {
+              "artists": [],
+              "duration": null,
+              "extra_artists": [],
+              "position": "C3",
+              "sub_tracks": [],
+              "title": "Dollars And Cents",
+              "type": "track"
+            },
+            {
+              "artists": [],
+              "duration": null,
+              "extra_artists": [],
+              "position": "D1",
+              "sub_tracks": [],
+              "title": "Hunting Bears",
+              "type": "track"
+            },
+            {
+              "artists": [],
+              "duration": null,
+              "extra_artists": [],
+              "position": "D2",
+              "sub_tracks": [],
+              "title": "Like Spinning Plates",
+              "type": "track"
+            },
+            {
+              "artists": [],
+              "duration": null,
+              "extra_artists": [],
+              "position": "D3",
+              "sub_tracks": [],
+              "title": "Life In A Glasshouse",
+              "type": "track"
+            }
+          ],
+          "url": "https://www.discogs.com/master/2507-Radiohead-Amnesiac",
+          "versions_url": "https://api.discogs.com/masters/2507/versions",
+          "videos": [
+            {
+              "description": "Motion Picture House - KID A MNESIA the movie and art installation by Radiohead - is making its first four stops in Brooklyn, Chicago, Ciudad de México, and San Francisco.\n\nNow on sale https://kida-mnesia.com\n--\n\n'Pyramid Song' is taken from Amnesiac out ",
+              "duration_seconds": 297,
+              "embeddable": true,
+              "title": "Radiohead - Pyramid Song",
+              "url": "https://www.youtube.com/watch?v=3M_Gg1xAHE4"
+            },
+            {
+              "description": "Motion Picture House - KID A MNESIA the movie and art installation by Radiohead - is making its first four stops in Brooklyn, Chicago, Ciudad de México, and San Francisco.\n\nNow on sale https://kida-mnesia.com\n--\n\n'I Might Be Wrong' is taken from Amnesiac ",
+              "duration_seconds": 292,
+              "embeddable": true,
+              "title": "Radiohead - I Might Be Wrong",
+              "url": "https://www.youtube.com/watch?v=vOa--Dhu11M"
+            },
+            {
+              "description": "Motion Picture House - KID A MNESIA the movie and art installation by Radiohead - is making its first four stops in Brooklyn, Chicago, Ciudad de México, and San Francisco.\n\nNow on sale https://kida-mnesia.com\n--\n\n'Knives Out' is taken from Amnesiac out on",
+              "duration_seconds": 255,
+              "embeddable": true,
+              "title": "Radiohead - Knives Out",
+              "url": "https://www.youtube.com/watch?v=2Lpw3yMCWro"
+            },
+            {
+              "description": "Provided to YouTube by Beggars Group Digital Ltd.\n\nPackt Like Sardines In a Crushd Tin Box · Radiohead\n\nAmnesiac\n\n℗ 2001 XL Recordings Ltd\n\nReleased on: 2001-03-12\n\nAssociated  Performer, Producer: Thom Yorke\nAssociated  Performer, Producer: Colin Greenwo",
+              "duration_seconds": 241,
+              "embeddable": true,
+              "title": "Packt Like Sardines In a Crushd Tin Box",
+              "url": "https://www.youtube.com/watch?v=LwE4LNP8zsI"
+            },
+            {
+              "description": "Provided to YouTube by Beggars Group Digital Ltd.\n\nPyramid Song · Radiohead\n\nAmnesiac\n\n℗ 2001 XL Recordings Ltd\n\nReleased on: 2001-03-12\n\nAssociated  Performer, Producer: Thom Yorke\nAssociated  Performer, Producer: Colin Greenwood\nAssociated  Performer, P",
+              "duration_seconds": 289,
+              "embeddable": true,
+              "title": "Pyramid Song",
+              "url": "https://www.youtube.com/watch?v=2Agt3XfmccM"
+            },
+            {
+              "description": "Provided to YouTube by Beggars Group Digital Ltd.\n\nPulk/Pull Revolving Doors · Radiohead\n\nAmnesiac\n\n℗ 2001 XL Recordings Ltd\n\nReleased on: 2001-03-12\n\nAssociated  Performer, Producer: Thom Yorke\nAssociated  Performer, Producer: Colin Greenwood\nAssociated ",
+              "duration_seconds": 248,
+              "embeddable": true,
+              "title": "Pulk/Pull Revolving Doors",
+              "url": "https://www.youtube.com/watch?v=-fuhLeD594A"
+            },
+            {
+              "description": "Provided to YouTube by Beggars Group Digital Ltd.\n\nYou And Whose Army? · Radiohead\n\nAmnesiac\n\n℗ 2001 XL Recordings Ltd\n\nReleased on: 2001-03-12\n\nAssociated  Performer, Producer: Thom Yorke\nAssociated  Performer, Producer: Colin Greenwood\nAssociated  Perfo",
+              "duration_seconds": 191,
+              "embeddable": true,
+              "title": "You And Whose Army?",
+              "url": "https://www.youtube.com/watch?v=QQnc-hM80UQ"
+            },
+            {
+              "description": "Provided to YouTube by Beggars Group Digital Ltd.\n\nI Might Be Wrong · Radiohead\n\nAmnesiac\n\n℗ 2001 XL Recordings Ltd\n\nReleased on: 2001-03-12\n\nAssociated  Performer, Producer: Thom Yorke\nAssociated  Performer, Producer: Colin Greenwood\nAssociated  Performe",
+              "duration_seconds": 294,
+              "embeddable": true,
+              "title": "I Might Be Wrong",
+              "url": "https://www.youtube.com/watch?v=_Qvlh_dvmkk"
+            },
+            {
+              "description": "Provided to YouTube by Beggars Group Digital Ltd.\n\nKnives Out · Radiohead\n\nAmnesiac\n\n℗ 2001 XL Recordings Ltd\n\nReleased on: 2001-03-12\n\nAssociated  Performer: Thom Yorke\nAssociated  Performer, Producer: Colin Greenwood\nAssociated  Performer: Ed O'Brien\nEn",
+              "duration_seconds": 255,
+              "embeddable": true,
+              "title": "Knives Out",
+              "url": "https://www.youtube.com/watch?v=jhsyc81VcB4"
+            },
+            {
+              "description": "Provided to YouTube by Beggars Group Digital Ltd.\n\nMorning Bell/Amnesiac · Radiohead\n\nAmnesiac\n\n℗ 2001 XL Recordings Ltd\n\nReleased on: 2001-03-12\n\nAssociated  Performer, Producer: Thom Yorke\nAssociated  Performer, Producer: Colin Greenwood\nAssociated  Per",
+              "duration_seconds": 195,
+              "embeddable": true,
+              "title": "Morning Bell/Amnesiac",
+              "url": "https://www.youtube.com/watch?v=6LGS0S8Lh4A"
+            },
+            {
+              "description": "Provided to YouTube by Beggars Group Digital Ltd.\n\nDollars and Cents · Radiohead\n\nAmnesiac\n\n℗ 2001 XL Recordings Ltd\n\nReleased on: 2001-03-12\n\nAssociated  Performer, Producer: Thom Yorke\nAssociated  Performer, Producer: Colin Greenwood\nAssociated  Perform",
+              "duration_seconds": 292,
+              "embeddable": true,
+              "title": "Dollars and Cents",
+              "url": "https://www.youtube.com/watch?v=egUFlyfE1PY"
+            },
+            {
+              "description": "Provided to YouTube by Beggars Group Digital Ltd.\n\nHunting Bears · Radiohead\n\nAmnesiac\n\n℗ 2001 XL Recordings Ltd\n\nReleased on: 2001-03-12\n\nAssociated  Performer, Producer: Colin Greenwood\nAssociated  Performer, Producer: Ed O'Brien\nEngineer: Gerard Navarr",
+              "duration_seconds": 122,
+              "embeddable": true,
+              "title": "Hunting Bears",
+              "url": "https://www.youtube.com/watch?v=6AM0q_u7XNc"
+            },
+            {
+              "description": "Provided to YouTube by Beggars Group Digital Ltd.\n\nLike Spinning Plates · Radiohead\n\nAmnesiac\n\n℗ 2001 XL Recordings Ltd\n\nReleased on: 2001-03-12\n\nAssociated  Performer, Producer: Thom Yorke\nAssociated  Performer, Producer: Colin Greenwood\nAssociated  Perf",
+              "duration_seconds": 238,
+              "embeddable": true,
+              "title": "Like Spinning Plates",
+              "url": "https://www.youtube.com/watch?v=-UAElLsVOQI"
+            },
+            {
+              "description": "Provided to YouTube by Beggars Group Digital Ltd.\n\nLife In a Glasshouse · Radiohead\n\nAmnesiac\n\n℗ 2001 XL Recordings Ltd\n\nReleased on: 2001-03-12\n\nAssociated  Performer, Producer: Thom Yorke\nAssociated  Performer: Adrian Macintosh\nAssociated  Performer, Pr",
+              "duration_seconds": 277,
+              "embeddable": true,
+              "title": "Life In a Glasshouse",
+              "url": "https://www.youtube.com/watch?v=hKrAPSootn4"
+            }
+          ],
+          "year": 2001
+        },
+        "recordedAt": "2026-09-15T03:37:00Z"
+      },
+      "execute": {
+        "provider": "discogs-com",
+        "capability": "releases/master"
+      }
+    },
+    {
+      "id": "discogs-com/releases/master_versions",
+      "provider": "discogs-com",
+      "capability": "releases/master_versions",
+      "name": "Master versions",
+      "description": "Pressing variants of a master release: every release (country, label, catalog number, format, year) grouped under the master, one page at a time, with the filter facets Discogs offers (format, label, country, released) and optional filters and sort.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "country",
+          "type": "string",
+          "in": "body",
+          "about": "Filter by country facet value as Discogs spells it, e.g. `US`, `UK`, `Europe`, `Japan`."
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "in": "body",
+          "about": "Filter by format facet value, e.g. `Vinyl`, `CD`, `Cassette`."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "in": "body",
+          "about": "Filter by label facet value."
+        },
+        {
+          "name": "master_id",
+          "type": "number",
+          "in": "body",
+          "about": "Discogs master ID.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "Result page, 1-based.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page, 1 to 100.",
+          "default": 25,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "released",
+          "type": "string",
+          "in": "body",
+          "about": "Filter by release year facet value, e.g. `2001`."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Sort field.",
+          "oneOf": [
+            "released",
+            "title",
+            "format",
+            "label",
+            "catno",
+            "country"
+          ]
+        },
+        {
+          "name": "sort_order",
+          "type": "string",
+          "in": "body",
+          "about": "sort_order",
+          "oneOf": [
+            "asc",
+            "desc"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Pressing variants of a master release: every release (country, label, catalog number, format, year) grouped under the master, one page at a time, with the filter facets Discogs offers (format, label, country, released) and optional filters and sort.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "filter_facets",
+            "type": "object[]"
+          },
+          {
+            "name": "filters_applied",
+            "type": "object",
+            "about": "Source-defined Discogs metadata."
+          },
+          {
+            "name": "master_id",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the source answered."
+          },
+          {
+            "name": "pagination",
+            "type": "object"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The api.discogs.com URL that produced this result."
+          },
+          {
+            "name": "versions",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "master_id": 2507,
+          "per_page": 5
+        },
+        "response": {
+          "count": 5,
+          "filter_facets": [
+            {
+              "allows_multiple_values": true,
+              "id": "format",
+              "title": "Format",
+              "values": [
+                {
+                  "count": 141,
+                  "title": "Album",
+                  "value": "Album"
+                },
+                {
+                  "count": 99,
+                  "title": "CD",
+                  "value": "CD"
+                },
+                {
+                  "count": 49,
+                  "title": "Reissue",
+                  "value": "Reissue"
+                },
+                {
+                  "count": 23,
+                  "title": "Unofficial Release",
+                  "value": "Unofficial+Release"
+                },
+                {
+                  "count": 19,
+                  "title": "Promo",
+                  "value": "Promo"
+                },
+                {
+                  "count": 18,
+                  "title": "Cassette",
+                  "value": "Cassette"
+                },
+                {
+                  "count": 16,
+                  "title": "Vinyl",
+                  "value": "Vinyl"
+                },
+                {
+                  "count": 11,
+                  "title": "Limited Edition",
+                  "value": "Limited+Edition"
+                },
+                {
+                  "count": 10,
+                  "title": "Compilation",
+                  "value": "Compilation"
+                },
+                {
+                  "count": 8,
+                  "title": "10\"",
+                  "value": "10%22"
+                },
+                {
+                  "count": 8,
+                  "title": "12\"",
+                  "value": "12%22"
+                },
+                {
+                  "count": 8,
+                  "title": "45 RPM",
+                  "value": "45+RPM"
+                },
+                {
+                  "count": 7,
+                  "title": "CDr",
+                  "value": "CDr"
+                },
+                {
+                  "count": 6,
+                  "title": "DVD-Video",
+                  "value": "DVD-Video"
+                },
+                {
+                  "count": 6,
+                  "title": "Repress",
+                  "value": "Repress"
+                },
+                {
+                  "count": 6,
+                  "title": "Stereo",
+                  "value": "Stereo"
+                },
+                {
+                  "count": 5,
+                  "title": "33 ⅓ RPM",
+                  "value": "33+%E2%85%93+RPM"
+                },
+                {
+                  "count": 5,
+                  "title": "All Media",
+                  "value": "All+Media"
+                },
+                {
+                  "count": 5,
+                  "title": "DVD",
+                  "value": "DVD"
+                },
+                {
+                  "count": 4,
+                  "title": "Box Set",
+                  "value": "Box+Set"
+                },
+                {
+                  "count": 4,
+                  "title": "NTSC",
+                  "value": "NTSC"
+                },
+                {
+                  "count": 3,
+                  "title": "File",
+                  "value": "File"
+                },
+                {
+                  "count": 3,
+                  "title": "HDCD",
+                  "value": "HDCD"
+                },
+                {
+                  "count": 3,
+                  "title": "Special Edition",
+                  "value": "Special+Edition"
+                },
+                {
+                  "count": 2,
+                  "title": "LP",
+                  "value": "LP"
+                },
+                {
+                  "count": 1,
+                  "title": "AAC",
+                  "value": "AAC"
+                },
+                {
+                  "count": 1,
+                  "title": "Advance",
+                  "value": "Advance"
+                },
+                {
+                  "count": 1,
+                  "title": "Club Edition",
+                  "value": "Club+Edition"
+                },
+                {
+                  "count": 1,
+                  "title": "DVDr",
+                  "value": "DVDr"
+                },
+                {
+                  "count": 1,
+                  "title": "FLAC",
+                  "value": "FLAC"
+                },
+                {
+                  "count": 1,
+                  "title": "MP3",
+                  "value": "MP3"
+                },
+                {
+                  "count": 1,
+                  "title": "Misprint",
+                  "value": "Misprint"
+                },
+                {
+                  "count": 1,
+                  "title": "PAL",
+                  "value": "PAL"
+                }
+              ]
+            },
+            {
+              "allows_multiple_values": true,
+              "id": "label",
+              "title": "Label",
+              "values": [
+                {
+                  "count": 83,
+                  "title": "Parlophone",
+                  "value": "Parlophone"
+                },
+                {
+                  "count": 63,
+                  "title": "Emi Records Ltd.",
+                  "value": "Emi+Records+Ltd."
+                },
+                {
+                  "count": 53,
+                  "title": "Emi",
+                  "value": "Emi"
+                },
+                {
+                  "count": 49,
+                  "title": "Warner/Chappell Music Publishing Ltd.",
+                  "value": "Warner%2FChappell+Music+Publishing+Ltd."
+                },
+                {
+                  "count": 42,
+                  "title": "Dorchester Abbey",
+                  "value": "Dorchester+Abbey"
+                },
+                {
+                  "count": 20,
+                  "title": "Capitol Records",
+                  "value": "Capitol+Records"
+                },
+                {
+                  "count": 17,
+                  "title": "Xl Recordings",
+                  "value": "Xl+Recordings"
+                },
+                {
+                  "count": 11,
+                  "title": "Emi Uden",
+                  "value": "Emi+Uden"
+                },
+                {
+                  "count": 8,
+                  "title": "Optimal Media Gmbh",
+                  "value": "Optimal+Media+Gmbh"
+                },
+                {
+                  "count": 7,
+                  "title": "Emi 百代",
+                  "value": "Emi+%E7%99%BE%E4%BB%A3"
+                },
+                {
+                  "count": 5,
+                  "title": "Optimal Media Production",
+                  "value": "Optimal+Media+Production"
+                },
+                {
+                  "count": 5,
+                  "title": "Parlophone Records Ltd.",
+                  "value": "Parlophone+Records+Ltd."
+                },
+                {
+                  "count": 4,
+                  "title": "Canal+ Studios",
+                  "value": "Canal%2B+Studios"
+                },
+                {
+                  "count": 4,
+                  "title": "Capitol Records, Inc.",
+                  "value": "Capitol+Records%2C+Inc."
+                },
+                {
+                  "count": 4,
+                  "title": "China Record Corporation",
+                  "value": "China+Record+Corporation"
+                },
+                {
+                  "count": 4,
+                  "title": "Emi Mfg.",
+                  "value": "Emi+Mfg."
+                },
+                {
+                  "count": 4,
+                  "title": "Emi Music Mexico, S.A. De C.V.",
+                  "value": "Emi+Music+Mexico%2C+S.A.+De+C.V."
+                },
+                {
+                  "count": 4,
+                  "title": "Jingwen Records",
+                  "value": "Jingwen+Records"
+                },
+                {
+                  "count": 3,
+                  "title": "Abbey Road Studios",
+                  "value": "Abbey+Road+Studios"
+                },
+                {
+                  "count": 3,
+                  "title": "Not On Label (Radiohead)",
+                  "value": "Not+On+Label+%28Radiohead%29"
+                },
+                {
+                  "count": 3,
+                  "title": "Toshiba Emi Ltd",
+                  "value": "Toshiba+Emi+Ltd"
+                },
+                {
+                  "count": 3,
+                  "title": "Warner Chappell Music Publishing",
+                  "value": "Warner+Chappell+Music+Publishing"
+                },
+                {
+                  "count": 3,
+                  "title": "Xl Recordings Ltd.",
+                  "value": "Xl+Recordings+Ltd."
+                },
+                {
+                  "count": 2,
+                  "title": "Canal+",
+                  "value": "Canal%2B"
+                },
+                {
+                  "count": 2,
+                  "title": "Capitol Records, Llc",
+                  "value": "Capitol+Records%2C+Llc"
+                },
+                {
+                  "count": 2,
+                  "title": "Emi (Malaysia) Sdn Bhd",
+                  "value": "Emi+%28Malaysia%29+Sdn+Bhd"
+                },
+                {
+                  "count": 2,
+                  "title": "Emi Music Canada",
+                  "value": "Emi+Music+Canada"
+                },
+                {
+                  "count": 2,
+                  "title": "Emi Music De Venezuela, C.A.",
+                  "value": "Emi+Music+De+Venezuela%2C+C.A."
+                },
+                {
+                  "count": 2,
+                  "title": "Emi Music Group Australasia",
+                  "value": "Emi+Music+Group+Australasia"
+                },
+                {
+                  "count": 2,
+                  "title": "Emi Music Japan Inc",
+                  "value": "Emi+Music+Japan+Inc"
+                },
+                {
+                  "count": 2,
+                  "title": "Emi Music Korea Ltd.",
+                  "value": "Emi+Music+Korea+Ltd."
+                },
+                {
+                  "count": 2,
+                  "title": "Emi Odeon Chilena S.A.",
+                  "value": "Emi+Odeon+Chilena+S.A."
+                },
+                {
+                  "count": 2,
+                  "title": "Emi Uk",
+                  "value": "Emi+Uk"
+                },
+                {
+                  "count": 2,
+                  "title": "Emi-Odeon S.A.I.C.",
+                  "value": "Emi-Odeon+S.A.I.C."
+                },
+                {
+                  "count": 2,
+                  "title": "Epic",
+                  "value": "Epic"
+                },
+                {
+                  "count": 2,
+                  "title": "Forever Young",
+                  "value": "Forever+Young"
+                },
+                {
+                  "count": 2,
+                  "title": "Gala Records",
+                  "value": "Gala+Records"
+                },
+                {
+                  "count": 2,
+                  "title": "Gz Media",
+                  "value": "Gz+Media"
+                },
+                {
+                  "count": 2,
+                  "title": "Ims Manufacturing",
+                  "value": "Ims+Manufacturing"
+                },
+                {
+                  "count": 2,
+                  "title": "Mediamotion",
+                  "value": "Mediamotion"
+                },
+                {
+                  "count": 2,
+                  "title": "Pt Emi Indonesia",
+                  "value": "Pt+Emi+Indonesia"
+                },
+                {
+                  "count": 2,
+                  "title": "Pt. Aquarius Musikindo",
+                  "value": "Pt.+Aquarius+Musikindo"
+                },
+                {
+                  "count": 2,
+                  "title": "Regency Media",
+                  "value": "Regency+Media"
+                },
+                {
+                  "count": 2,
+                  "title": "Sony Dadc, Terre Haute",
+                  "value": "Sony+Dadc%2C+Terre+Haute"
+                },
+                {
+                  "count": 2,
+                  "title": "Warner Music Japan Inc.",
+                  "value": "Warner+Music+Japan+Inc."
+                },
+                {
+                  "count": 1,
+                  "title": "Arnoldo Mondadori Editore",
+                  "value": "Arnoldo+Mondadori+Editore"
+                },
+                {
+                  "count": 1,
+                  "title": "Barcode Music",
+                  "value": "Barcode+Music"
+                },
+                {
+                  "count": 1,
+                  "title": "Beat Records",
+                  "value": "Beat+Records"
+                },
+                {
+                  "count": 1,
+                  "title": "Bmg Direct",
+                  "value": "Bmg+Direct"
+                },
+                {
+                  "count": 1,
+                  "title": "Cd Systems De Colombia S.A.",
+                  "value": "Cd+Systems+De+Colombia+S.A."
+                },
+                {
+                  "count": 1,
+                  "title": "Cinram",
+                  "value": "Cinram"
+                },
+                {
+                  "count": 1,
+                  "title": "Cinram, Olyphant, Pa",
+                  "value": "Cinram%2C+Olyphant%2C+Pa"
+                },
+                {
+                  "count": 1,
+                  "title": "Cinram, Richmond, In",
+                  "value": "Cinram%2C+Richmond%2C+In"
+                },
+                {
+                  "count": 1,
+                  "title": "Comp Music Ltd.",
+                  "value": "Comp+Music+Ltd."
+                },
+                {
+                  "count": 1,
+                  "title": "Digital Audio Technologies Australia",
+                  "value": "Digital+Audio+Technologies+Australia"
+                },
+                {
+                  "count": 1,
+                  "title": "Digital Justice",
+                  "value": "Digital+Justice"
+                },
+                {
+                  "count": 1,
+                  "title": "Emi Electrola Gmbh",
+                  "value": "Emi+Electrola+Gmbh"
+                },
+                {
+                  "count": 1,
+                  "title": "Emi Great Artists",
+                  "value": "Emi+Great+Artists"
+                },
+                {
+                  "count": 1,
+                  "title": "Emi Music",
+                  "value": "Emi+Music"
+                },
+                {
+                  "count": 1,
+                  "title": "Emi Music Brasil Ltda.",
+                  "value": "Emi+Music+Brasil+Ltda."
+                },
+                {
+                  "count": 1,
+                  "title": "Emi Music Catalogue Marketing",
+                  "value": "Emi+Music+Catalogue+Marketing"
+                },
+                {
+                  "count": 1,
+                  "title": "Emi Music France",
+                  "value": "Emi+Music+France"
+                },
+                {
+                  "count": 1,
+                  "title": "Emi Music International",
+                  "value": "Emi+Music+International"
+                },
+                {
+                  "count": 1,
+                  "title": "Emi Music Ltd.",
+                  "value": "Emi+Music+Ltd."
+                },
+                {
+                  "count": 1,
+                  "title": "Emi Music Ltda.",
+                  "value": "Emi+Music+Ltda."
+                },
+                {
+                  "count": 1,
+                  "title": "Emi Music South Africa (Pty) Ltd.",
+                  "value": "Emi+Music+South+Africa+%28Pty%29+Ltd."
+                },
+                {
+                  "count": 1,
+                  "title": "Emi, Caronno Pertusella",
+                  "value": "Emi%2C+Caronno+Pertusella"
+                },
+                {
+                  "count": 1,
+                  "title": "Flower Records",
+                  "value": "Flower+Records"
+                },
+                {
+                  "count": 1,
+                  "title": "From The Capitol Vaults",
+                  "value": "From+The+Capitol+Vaults"
+                },
+                {
+                  "count": 1,
+                  "title": "Great 100 1500",
+                  "value": "Great+100+1500"
+                },
+                {
+                  "count": 1,
+                  "title": "Great Rock 1500",
+                  "value": "Great+Rock+1500"
+                },
+                {
+                  "count": 1,
+                  "title": "Gruppo Arnoldo Mondadori Editore Spa",
+                  "value": "Gruppo+Arnoldo+Mondadori+Editore+Spa"
+                },
+                {
+                  "count": 1,
+                  "title": "Hansori Records Co., Ltd.",
+                  "value": "Hansori+Records+Co.%2C+Ltd."
+                },
+                {
+                  "count": 1,
+                  "title": "Ka Music",
+                  "value": "Ka+Music"
+                },
+                {
+                  "count": 1,
+                  "title": "Laser Disc Argentina",
+                  "value": "Laser+Disc+Argentina"
+                },
+                {
+                  "count": 1,
+                  "title": "Mue Records",
+                  "value": "Mue+Records"
+                },
+                {
+                  "count": 1,
+                  "title": "Neorecords",
+                  "value": "Neorecords"
+                },
+                {
+                  "count": 1,
+                  "title": "Not On Label",
+                  "value": "Not+On+Label"
+                },
+                {
+                  "count": 1,
+                  "title": "Priarity Records",
+                  "value": "Priarity+Records"
+                },
+                {
+                  "count": 1,
+                  "title": "Rainbo Records",
+                  "value": "Rainbo+Records"
+                },
+                {
+                  "count": 1,
+                  "title": "Record Industry",
+                  "value": "Record+Industry"
+                },
+                {
+                  "count": 1,
+                  "title": "Rock Uk/Us",
+                  "value": "Rock+Uk%2FUs"
+                },
+                {
+                  "count": 1,
+                  "title": "S.B.A./Gala Records, Inc.",
+                  "value": "S.B.A.%2FGala+Records%2C+Inc."
+                },
+                {
+                  "count": 1,
+                  "title": "Skc",
+                  "value": "Skc"
+                },
+                {
+                  "count": 1,
+                  "title": "Sm",
+                  "value": "Sm"
+                },
+                {
+                  "count": 1,
+                  "title": "Sonopress",
+                  "value": "Sonopress"
+                },
+                {
+                  "count": 1,
+                  "title": "Sonopress Brasil",
+                  "value": "Sonopress+Brasil"
+                },
+                {
+                  "count": 1,
+                  "title": "Sonopress-Rimo Indústria E Comércio Fonográfica Ltda.",
+                  "value": "Sonopress-Rimo+Ind%C3%BAstria+E+Com%C3%A9rcio+Fonogr%C3%A1fica+Ltda."
+                },
+                {
+                  "count": 1,
+                  "title": "Sony Dadc, Pitman",
+                  "value": "Sony+Dadc%2C+Pitman"
+                },
+                {
+                  "count": 1,
+                  "title": "Sony Music México",
+                  "value": "Sony+Music+M%C3%A9xico"
+                },
+                {
+                  "count": 1,
+                  "title": "Takt",
+                  "value": "Takt"
+                },
+                {
+                  "count": 1,
+                  "title": "Teltron",
+                  "value": "Teltron"
+                },
+                {
+                  "count": 1,
+                  "title": "The Ads Group",
+                  "value": "The+Ads+Group"
+                },
+                {
+                  "count": 1,
+                  "title": "Trutone Mastering Labs",
+                  "value": "Trutone+Mastering+Labs"
+                },
+                {
+                  "count": 1,
+                  "title": "Tusk Music Publishing",
+                  "value": "Tusk+Music+Publishing"
+                },
+                {
+                  "count": 1,
+                  "title": "Universal",
+                  "value": "Universal"
+                },
+                {
+                  "count": 1,
+                  "title": "Universal Music",
+                  "value": "Universal+Music"
+                },
+                {
+                  "count": 1,
+                  "title": "Unknown (Fcd)",
+                  "value": "Unknown+%28Fcd%29"
+                },
+                {
+                  "count": 1,
+                  "title": "Unknown (Or)",
+                  "value": "Unknown+%28Or%29"
+                },
+                {
+                  "count": 1,
+                  "title": "Vanilla (Uae) Ltd.",
+                  "value": "Vanilla+%28Uae%29+Ltd."
+                },
+                {
+                  "count": 1,
+                  "title": "Videolar",
+                  "value": "Videolar"
+                },
+                {
+                  "count": 1,
+                  "title": "Videolar S.A.",
+                  "value": "Videolar+S.A."
+                },
+                {
+                  "count": 1,
+                  "title": "Vigin",
+                  "value": "Vigin"
+                },
+                {
+                  "count": 1,
+                  "title": "Virgin Recordings Ltd.",
+                  "value": "Virgin+Recordings+Ltd."
+                },
+                {
+                  "count": 1,
+                  "title": "Virgin Records Plc",
+                  "value": "Virgin+Records+Plc"
+                },
+                {
+                  "count": 1,
+                  "title": "Virgin Records Pls.",
+                  "value": "Virgin+Records+Pls."
+                },
+                {
+                  "count": 1,
+                  "title": "W.A.S.T.E.",
+                  "value": "W.A.S.T.E."
+                },
+                {
+                  "count": 1,
+                  "title": "Warner Chappell Music Publishing Limited",
+                  "value": "Warner+Chappell+Music+Publishing+Limited"
+                },
+                {
+                  "count": 1,
+                  "title": "Warner Music Argentina S.A.",
+                  "value": "Warner+Music+Argentina+S.A."
+                },
+                {
+                  "count": 1,
+                  "title": "Warner Music Australia",
+                  "value": "Warner+Music+Australia"
+                },
+                {
+                  "count": 1,
+                  "title": "Warner Music Australia Pty. Limited",
+                  "value": "Warner+Music+Australia+Pty.+Limited"
+                },
+                {
+                  "count": 1,
+                  "title": "Warner Music Group",
+                  "value": "Warner+Music+Group"
+                },
+                {
+                  "count": 1,
+                  "title": "Видеосервис",
+                  "value": "%D0%92%D0%B8%D0%B4%D0%B5%D0%BE%D1%81%D0%B5%D1%80%D0%B2%D0%B8%D1%81"
+                },
+                {
+                  "count": 1,
+                  "title": "另立X世代",
+                  "value": "%E5%8F%A6%E7%AB%8BX%E4%B8%96%E4%BB%A3"
+                },
+                {
+                  "count": 1,
+                  "title": "科藝百代股份有限公司",
+                  "value": "%E7%A7%91%E8%97%9D%E7%99%BE%E4%BB%A3%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8"
+                }
+              ]
+            },
+            {
+              "allows_multiple_values": true,
+              "id": "country",
+              "title": "Country",
+              "values": [
+                {
+                  "count": 27,
+                  "title": "Europe",
+                  "value": "Europe"
+                },
+                {
+                  "count": 19,
+                  "title": "US",
+                  "value": "US"
+                },
+                {
+                  "count": 15,
+                  "title": "Japan",
+                  "value": "Japan"
+                },
+                {
+                  "count": 10,
+                  "title": "China",
+                  "value": "China"
+                },
+                {
+                  "count": 8,
+                  "title": "Russia",
+                  "value": "Russia"
+                },
+                {
+                  "count": 6,
+                  "title": "Unknown",
+                  "value": "Unknown"
+                },
+                {
+                  "count": 5,
+                  "title": "Mexico",
+                  "value": "Mexico"
+                },
+                {
+                  "count": 4,
+                  "title": "Argentina",
+                  "value": "Argentina"
+                },
+                {
+                  "count": 4,
+                  "title": "Canada",
+                  "value": "Canada"
+                },
+                {
+                  "count": 4,
+                  "title": "Thailand",
+                  "value": "Thailand"
+                },
+                {
+                  "count": 4,
+                  "title": "UK",
+                  "value": "UK"
+                },
+                {
+                  "count": 3,
+                  "title": "Australia",
+                  "value": "Australia"
+                },
+                {
+                  "count": 3,
+                  "title": "Malaysia",
+                  "value": "Malaysia"
+                },
+                {
+                  "count": 3,
+                  "title": "Ukraine",
+                  "value": "Ukraine"
+                },
+                {
+                  "count": 2,
+                  "title": "Brazil",
+                  "value": "Brazil"
+                },
+                {
+                  "count": 2,
+                  "title": "Chile",
+                  "value": "Chile"
+                },
+                {
+                  "count": 2,
+                  "title": "Indonesia",
+                  "value": "Indonesia"
+                },
+                {
+                  "count": 2,
+                  "title": "South Korea",
+                  "value": "South+Korea"
+                },
+                {
+                  "count": 2,
+                  "title": "UK & Europe",
+                  "value": "UK+%26+Europe"
+                },
+                {
+                  "count": 2,
+                  "title": "Venezuela",
+                  "value": "Venezuela"
+                },
+                {
+                  "count": 1,
+                  "title": "Bulgaria",
+                  "value": "Bulgaria"
+                },
+                {
+                  "count": 1,
+                  "title": "Colombia",
+                  "value": "Colombia"
+                },
+                {
+                  "count": 1,
+                  "title": "France",
+                  "value": "France"
+                },
+                {
+                  "count": 1,
+                  "title": "India",
+                  "value": "India"
+                },
+                {
+                  "count": 1,
+                  "title": "Italy",
+                  "value": "Italy"
+                },
+                {
+                  "count": 1,
+                  "title": "Lebanon",
+                  "value": "Lebanon"
+                },
+                {
+                  "count": 1,
+                  "title": "North America (inc Mexico)",
+                  "value": "North+America+%28inc+Mexico%29"
+                },
+                {
+                  "count": 1,
+                  "title": "Philippines",
+                  "value": "Philippines"
+                },
+                {
+                  "count": 1,
+                  "title": "Poland",
+                  "value": "Poland"
+                },
+                {
+                  "count": 1,
+                  "title": "South Africa",
+                  "value": "South+Africa"
+                },
+                {
+                  "count": 1,
+                  "title": "Taiwan",
+                  "value": "Taiwan"
+                },
+                {
+                  "count": 1,
+                  "title": "USA & Canada",
+                  "value": "USA+%26+Canada"
+                },
+                {
+                  "count": 1,
+                  "title": "USA, Canada & Europe",
+                  "value": "USA%2C+Canada+%26+Europe"
+                },
+                {
+                  "count": 1,
+                  "title": "United Arab Emirates",
+                  "value": "United+Arab+Emirates"
+                },
+                {
+                  "count": 1,
+                  "title": "Worldwide",
+                  "value": "Worldwide"
+                },
+                {
+                  "count": 1,
+                  "title": "Yugoslavia",
+                  "value": "Yugoslavia"
+                }
+              ]
+            },
+            {
+              "allows_multiple_values": false,
+              "id": "released",
+              "title": "Released",
+              "values": [
+                {
+                  "count": 76,
+                  "title": "2001",
+                  "value": "2001"
+                },
+                {
+                  "count": 2,
+                  "title": "2002",
+                  "value": "2002"
+                },
+                {
+                  "count": 1,
+                  "title": "2003",
+                  "value": "2003"
+                },
+                {
+                  "count": 4,
+                  "title": "2006",
+                  "value": "2006"
+                },
+                {
+                  "count": 1,
+                  "title": "2007",
+                  "value": "2007"
+                },
+                {
+                  "count": 3,
+                  "title": "2008",
+                  "value": "2008"
+                },
+                {
+                  "count": 12,
+                  "title": "2009",
+                  "value": "2009"
+                },
+                {
+                  "count": 2,
+                  "title": "2014",
+                  "value": "2014"
+                },
+                {
+                  "count": 7,
+                  "title": "2016",
+                  "value": "2016"
+                },
+                {
+                  "count": 2,
+                  "title": "2017",
+                  "value": "2017"
+                },
+                {
+                  "count": 3,
+                  "title": "2023",
+                  "value": "2023"
+                },
+                {
+                  "count": 1,
+                  "title": "2024",
+                  "value": "2024"
+                },
+                {
+                  "count": 1,
+                  "title": "2026",
+                  "value": "2026"
+                }
+              ]
+            }
+          ],
+          "filters_applied": {},
+          "master_id": 2507,
+          "observed_at_ms": 1789442400000,
+          "pagination": {
+            "next_page": 2,
+            "page": 1,
+            "pages": 29,
+            "per_page": 5,
+            "total": 143
+          },
+          "source_url": "https://api.discogs.com/masters/2507/versions?page=1&per_page=5",
+          "versions": [
+            {
+              "catno": "7243 532767 2 0",
+              "community": {
+                "in_collection": 3408,
+                "in_wantlist": 691
+              },
+              "country": "Europe",
+              "format": "Album, Limited Edition",
+              "id": 835328,
+              "label": "Parlophone",
+              "major_formats": [
+                "CD"
+              ],
+              "released": "2001",
+              "resource_url": "https://api.discogs.com/releases/835328",
+              "status": "Accepted",
+              "thumbnail_url": "https://i.discogs.com/6VyD21ACrVKIj79Lx6HIrV5mMjzZHy1A9RwqfiNwcLQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgzNTMy/OC0xMTYzNjQ0OTQx/LmpwZWc.jpeg",
+              "title": "Amnesiac",
+              "url": "https://www.discogs.com/release/835328"
+            },
+            {
+              "catno": "EKPD-0927",
+              "community": {
+                "in_collection": 91,
+                "in_wantlist": 278
+              },
+              "country": "South Korea",
+              "format": "Album",
+              "id": 10544636,
+              "label": "Parlophone",
+              "major_formats": [
+                "CD"
+              ],
+              "released": "2001",
+              "resource_url": "https://api.discogs.com/releases/10544636",
+              "status": "Accepted",
+              "thumbnail_url": "https://i.discogs.com/kBj-EdqpitQOX45qmygaNmWrYL44OQtUooqHKtlcZAY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwNTQ0/NjM2LTE0OTk2MDY1/NjMtODk3NS5qcGVn.jpeg",
+              "title": "Amnesiac",
+              "url": "https://www.discogs.com/release/10544636"
+            },
+            {
+              "catno": "2001-172",
+              "community": {
+                "in_collection": 11,
+                "in_wantlist": 183
+              },
+              "country": "Malaysia",
+              "format": "Album, Special Edition, Unofficial Release",
+              "id": 16556265,
+              "label": "Priarity Records",
+              "major_formats": [
+                "CD"
+              ],
+              "released": "2001",
+              "resource_url": "https://api.discogs.com/releases/16556265",
+              "status": "Accepted",
+              "thumbnail_url": "https://i.discogs.com/z_b5eyOQEGGiusIuS9K8P9Ds_-YZBUcI8cwzn4lqZrQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2NTU2/MjY1LTE2MDg0NzIx/NzItNzAzNi5qcGVn.jpeg",
+              "title": "Amnesiac",
+              "url": "https://www.discogs.com/release/16556265"
+            },
+            {
+              "catno": "EL-051A",
+              "community": {
+                "in_collection": 8,
+                "in_wantlist": 223
+              },
+              "country": "China",
+              "format": "Album",
+              "id": 12883754,
+              "label": "EMI 百代",
+              "major_formats": [
+                "Cassette"
+              ],
+              "released": "2001",
+              "resource_url": "https://api.discogs.com/releases/12883754",
+              "status": "Accepted",
+              "thumbnail_url": "https://i.discogs.com/lGCI1vBwDnfdrStH_6YseMnO4cULONRQoHD3DulXGYY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyODgz/NzU0LTE1NDM3OTQ4/NzktNzE1Ny5qcGVn.jpeg",
+              "title": "Amnesiac = 失忆",
+              "url": "https://www.discogs.com/release/12883754"
+            },
+            {
+              "catno": "7243 4 957332 2 4",
+              "community": {
+                "in_collection": 7,
+                "in_wantlist": 220
+              },
+              "country": "Ukraine",
+              "format": "Album, Unofficial Release",
+              "id": 14360539,
+              "label": "Flower Records (7)",
+              "major_formats": [
+                "CD"
+              ],
+              "released": "2001",
+              "resource_url": "https://api.discogs.com/releases/14360539",
+              "status": "Accepted",
+              "thumbnail_url": "https://i.discogs.com/PAl8kmC0Ux-QJVlQir9LQvVuC2BbINew-LmWkEW3bx4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MzYw/NTM5LTE1NzI5ODMz/NTItOTg0MC5qcGVn.jpeg",
+              "title": "Amnesiac +7 Bonus",
+              "url": "https://www.discogs.com/release/14360539"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-15T03:37:00Z"
+      },
+      "execute": {
+        "provider": "discogs-com",
+        "capability": "releases/master_versions"
+      }
+    },
+    {
+      "id": "discogs-com/releases/release",
+      "provider": "discogs-com",
+      "capability": "releases/release",
+      "name": "Release",
+      "description": "One Discogs release (a specific pressing or edition) by release ID: artists, labels with catalog numbers, companies and pressing plants, formats and their descriptions, identifiers (barcodes, matrix/runout etchings, label codes), tracklist, notes, images, videos, marketplace count and lowest price, community have/want and rating.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "release_id",
+          "type": "number",
+          "in": "body",
+          "about": "Discogs release ID from search, master_versions, artist_releases or label_releases, or from a discogs.com/release/<id> URL.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One Discogs release (a specific pressing or edition) by release ID: artists, labels with catalog numbers, companies and pressing plants, formats and their descriptions, identifiers (barcodes, matrix/runout etchings, label codes), tracklist, notes, images, videos, marketplace count and lowest price, community have/want and rating.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "artists",
+            "type": "object[]"
+          },
+          {
+            "name": "artists_sort",
+            "type": "string"
+          },
+          {
+            "name": "community",
+            "type": "object"
+          },
+          {
+            "name": "companies",
+            "type": "object[]"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "data_quality",
+            "type": "string"
+          },
+          {
+            "name": "date_added",
+            "type": "string"
+          },
+          {
+            "name": "date_changed",
+            "type": "string"
+          },
+          {
+            "name": "estimated_weight_grams",
+            "type": "number"
+          },
+          {
+            "name": "extra_artists",
+            "type": "object[]"
+          },
+          {
+            "name": "format_quantity",
+            "type": "number"
+          },
+          {
+            "name": "formats",
+            "type": "object[]"
+          },
+          {
+            "name": "genres",
+            "type": "string[]"
+          },
+          {
+            "name": "id",
+            "type": "number"
+          },
+          {
+            "name": "identifiers",
+            "type": "object[]"
+          },
+          {
+            "name": "images",
+            "type": "object[]"
+          },
+          {
+            "name": "labels",
+            "type": "object[]"
+          },
+          {
+            "name": "lowest_price",
+            "type": "number"
+          },
+          {
+            "name": "master_id",
+            "type": "number"
+          },
+          {
+            "name": "master_url",
+            "type": "string"
+          },
+          {
+            "name": "notes",
+            "type": "string"
+          },
+          {
+            "name": "num_for_sale",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the source answered."
+          },
+          {
+            "name": "released",
+            "type": "string"
+          },
+          {
+            "name": "released_formatted",
+            "type": "string"
+          },
+          {
+            "name": "resource_url",
+            "type": "string"
+          },
+          {
+            "name": "series",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The api.discogs.com URL that produced this result."
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "styles",
+            "type": "string[]"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "tracklist",
+            "type": "object[]"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "videos",
+            "type": "object[]"
+          },
+          {
+            "name": "year",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "release_id": 249504
+        },
+        "response": {
+          "artists": [
+            {
+              "id": 72872,
+              "join": null,
+              "name": "Rick Astley",
+              "name_variation": null,
+              "resource_url": "https://api.discogs.com/artists/72872",
+              "role": null,
+              "tracks": null
+            }
+          ],
+          "artists_sort": "Rick Astley",
+          "community": {
+            "have": 4119,
+            "rating_average": 3.86,
+            "rating_count": 241,
+            "want": 587
+          },
+          "companies": [
+            {
+              "catno": null,
+              "entity_type": "13",
+              "entity_type_name": "Phonographic Copyright (p)",
+              "id": 82835,
+              "name": "BMG Records (UK) Ltd.",
+              "resource_url": "https://api.discogs.com/labels/82835"
+            },
+            {
+              "catno": null,
+              "entity_type": "14",
+              "entity_type_name": "Copyright (c)",
+              "id": 82835,
+              "name": "BMG Records (UK) Ltd.",
+              "resource_url": "https://api.discogs.com/labels/82835"
+            },
+            {
+              "catno": null,
+              "entity_type": "13",
+              "entity_type_name": "Phonographic Copyright (p)",
+              "id": 301937,
+              "name": "Pete Waterman Ltd.",
+              "resource_url": "https://api.discogs.com/labels/301937"
+            },
+            {
+              "catno": null,
+              "entity_type": "21",
+              "entity_type_name": "Published By",
+              "id": 273945,
+              "name": "All Boys Music Ltd.",
+              "resource_url": "https://api.discogs.com/labels/273945"
+            },
+            {
+              "catno": null,
+              "entity_type": "9",
+              "entity_type_name": "Distributed By",
+              "id": 26385,
+              "name": "BMG Records",
+              "resource_url": "https://api.discogs.com/labels/26385"
+            },
+            {
+              "catno": null,
+              "entity_type": "9",
+              "entity_type_name": "Distributed By",
+              "id": 33652,
+              "name": "BMG Ariola",
+              "resource_url": "https://api.discogs.com/labels/33652"
+            },
+            {
+              "catno": null,
+              "entity_type": "8",
+              "entity_type_name": "Marketed By",
+              "id": 29656,
+              "name": "RCA Records",
+              "resource_url": "https://api.discogs.com/labels/29656"
+            },
+            {
+              "catno": null,
+              "entity_type": "30",
+              "entity_type_name": "Lacquer Cut At",
+              "id": 266218,
+              "name": "Utopia Studios",
+              "resource_url": "https://api.discogs.com/labels/266218"
+            },
+            {
+              "catno": null,
+              "entity_type": "5",
+              "entity_type_name": "Licensed To",
+              "id": 82835,
+              "name": "BMG Records (UK) Ltd.",
+              "resource_url": "https://api.discogs.com/labels/82835"
+            },
+            {
+              "catno": null,
+              "entity_type": "4",
+              "entity_type_name": "Record Company",
+              "id": 30024,
+              "name": "PWL",
+              "resource_url": "https://api.discogs.com/labels/30024"
+            },
+            {
+              "catno": null,
+              "entity_type": "17",
+              "entity_type_name": "Pressed By",
+              "id": 553982,
+              "name": "CBS Pressing Plant, Aston Clinton",
+              "resource_url": "https://api.discogs.com/labels/553982"
+            }
+          ],
+          "country": "UK",
+          "data_quality": "Correct",
+          "date_added": "2004-04-30T08:10:05-07:00",
+          "date_changed": "2022-08-03T03:03:28-07:00",
+          "estimated_weight_grams": 230,
+          "extra_artists": [
+            {
+              "id": 547352,
+              "join": null,
+              "name": "Me Company",
+              "name_variation": "Me Co",
+              "resource_url": "https://api.discogs.com/artists/547352",
+              "role": "Design",
+              "tracks": null
+            },
+            {
+              "id": 78275,
+              "join": null,
+              "name": "Mark McGuire",
+              "name_variation": null,
+              "resource_url": "https://api.discogs.com/artists/78275",
+              "role": "Engineer",
+              "tracks": null
+            },
+            {
+              "id": 95941,
+              "join": null,
+              "name": "Mike Duffy",
+              "name_variation": null,
+              "resource_url": "https://api.discogs.com/artists/95941",
+              "role": "Engineer",
+              "tracks": null
+            },
+            {
+              "id": 383408,
+              "join": null,
+              "name": "Miles Showell",
+              "name_variation": "MS",
+              "resource_url": "https://api.discogs.com/artists/383408",
+              "role": "Lacquer Cut By",
+              "tracks": null
+            },
+            {
+              "id": 34067,
+              "join": null,
+              "name": "Pete Hammond",
+              "name_variation": "Mixmaster Pete Hammond",
+              "resource_url": "https://api.discogs.com/artists/34067",
+              "role": "Mixed By",
+              "tracks": null
+            },
+            {
+              "id": 20942,
+              "join": null,
+              "name": "Stock, Aitken & Waterman",
+              "name_variation": "Stock / Aitken / Waterman",
+              "resource_url": "https://api.discogs.com/artists/20942",
+              "role": "Producer, Written-By",
+              "tracks": null
+            }
+          ],
+          "format_quantity": 1,
+          "formats": [
+            {
+              "descriptions": [
+                "7\"",
+                "45 RPM",
+                "Single",
+                "Stereo"
+              ],
+              "name": "Vinyl",
+              "qty": 1,
+              "text": null
+            }
+          ],
+          "genres": [
+            "Electronic",
+            "Pop"
+          ],
+          "id": 249504,
+          "identifiers": [
+            {
+              "description": null,
+              "type": "Barcode",
+              "value": "5012394144777"
+            },
+            {
+              "description": null,
+              "type": "Label Code",
+              "value": "LC 0316"
+            },
+            {
+              "description": "D:",
+              "type": "Price Code",
+              "value": "AC"
+            },
+            {
+              "description": "F:",
+              "type": "Price Code",
+              "value": "RC110"
+            },
+            {
+              "description": "UK:",
+              "type": "Price Code",
+              "value": "AA"
+            },
+            {
+              "description": "A side label",
+              "type": "Matrix / Runout",
+              "value": "PB 41447 A‡"
+            },
+            {
+              "description": "B side label",
+              "type": "Matrix / Runout",
+              "value": "PB 41447 B‡"
+            },
+            {
+              "description": "A side runout, variant 1",
+              "type": "Matrix / Runout",
+              "value": "PB 41447 A2 UTOPIA MS"
+            },
+            {
+              "description": "B side runout, variant 1",
+              "type": "Matrix / Runout",
+              "value": "PB 41447-B.2 UTOPIA MS"
+            },
+            {
+              "description": "A side runout, variant 2",
+              "type": "Matrix / Runout",
+              "value": "PB 41447 A4 UTOPIA MS."
+            },
+            {
+              "description": "B side runout, variant 2",
+              "type": "Matrix / Runout",
+              "value": "PB 41447 B4 UTOPIA MS ♥ RD."
+            },
+            {
+              "description": "A side runout, variant 3",
+              "type": "Matrix / Runout",
+              "value": "PB 41447 A2 UTOPIA MS B"
+            },
+            {
+              "description": "B side runout, variant 3",
+              "type": "Matrix / Runout",
+              "value": "PB 41447-B.2 B UTOPIA MS"
+            }
+          ],
+          "images": [
+            {
+              "height": 600,
+              "thumbnail_url": "https://i.discogs.com/HG2xChKN-rIHHSfgL53W9z2vJWeFknfevpOMwSHtIaM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjEy/LmpwZWc.jpeg",
+              "type": "primary",
+              "url": "https://i.discogs.com/-DPFA5hKT8i91jnjn4rLB1zSiuUBFTrGWspu1TpLV30/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjEy/LmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 600,
+              "thumbnail_url": "https://i.discogs.com/tAcGENSjy6SkScrHuPEu3rdOb_9S2zR-ubeaHj5dxRI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjI4/LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/OWpTvsxMTH_LKyKfVm9VwnejWED-PDaweQLLpP85sw0/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjI4/LmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 600,
+              "thumbnail_url": "https://i.discogs.com/2Bas-uaVWd9S3JTUhGREpiYSG-MCNc0ntgi_oPjJXds/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjMz/LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/GQJ67saFtqGZWcuPGvRldpsQ8QdiSDcob9yeLnyvfzo/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjMz/LmpwZWc.jpeg",
+              "width": 600
+            },
+            {
+              "height": 600,
+              "thumbnail_url": "https://i.discogs.com/Ai9QPh87GFSS2DNSJ3JRdKaLXtxT4NrnN1LyrMX3Qi0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjM4/LmpwZWc.jpeg",
+              "type": "secondary",
+              "url": "https://i.discogs.com/cMqrTKVAQriVfa4UGEXjTFD9pdCo_isHBs1KANNc6KE/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjM4/LmpwZWc.jpeg",
+              "width": 600
+            }
+          ],
+          "labels": [
+            {
+              "catno": "PB 41447",
+              "entity_type": "1",
+              "entity_type_name": "Label",
+              "id": 895,
+              "name": "RCA",
+              "resource_url": "https://api.discogs.com/labels/895"
+            }
+          ],
+          "lowest_price": 0.91,
+          "master_id": 96559,
+          "master_url": "https://api.discogs.com/masters/96559",
+          "notes": "UK Release has a black label with the text \"Manufactured In England\" printed on it.\n\nSleeve:\n℗ 1987 • BMG Records (UK) Ltd. © 1987 • BMG Records (UK) Ltd.\nDistributed in the UK by BMG Records •  Distribué en Europe par BMG/Ariola • Vertrieb en Europa dürch BMG/Ariola.\n\nCenter labels:\n℗ 1987 Pete Waterman Ltd.\nOriginal Sound Recording made by PWL.\nBMG Records (UK) Ltd. are the exclusive licensees for the world.\n\nDurations do not appear on the release.\n\nRunouts are etched, except 'B' stamp in variant '3. 'MS' is encircled. ",
+          "num_for_sale": 123,
+          "observed_at_ms": 1789442400000,
+          "released": "1987-07-00",
+          "released_formatted": "Jul 1987",
+          "resource_url": "https://api.discogs.com/releases/249504",
+          "series": [],
+          "source_url": "https://api.discogs.com/releases/249504",
+          "status": "Accepted",
+          "styles": [
+            "Euro-Disco"
+          ],
+          "title": "Never Gonna Give You Up",
+          "tracklist": [
+            {
+              "artists": [],
+              "duration": "3:32",
+              "extra_artists": [],
+              "position": "A",
+              "sub_tracks": [],
+              "title": "Never Gonna Give You Up",
+              "type": "track"
+            },
+            {
+              "artists": [],
+              "duration": "3:30",
+              "extra_artists": [],
+              "position": "B",
+              "sub_tracks": [],
+              "title": "Never Gonna Give You Up (Instrumental)",
+              "type": "track"
+            }
+          ],
+          "url": "https://www.discogs.com/release/249504-Rick-Astley-Never-Gonna-Give-You-Up",
+          "videos": [
+            {
+              "description": "The official video for “Never Gonna Give You Up” by Rick Astley. \n\nNever: The Autobiography 📚 OUT NOW! \nFollow this link to get your copy and listen to Rick’s ‘Never’ playlist ❤️ #RickAstleyNever\nhttps://linktr.ee/rickastleynever\n\n“Never Gonna Give You Up",
+              "duration_seconds": 214,
+              "embeddable": true,
+              "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+              "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            },
+            {
+              "description": "Rick Astley performs Never Gonna Give You Up at Glastonbury 2023. \n\nWatch more highlights on BBC iPlayer: https://www.bbc.co.uk/iplayer/episodes/b007r6vx/glastonbury\nListen to sets and highlights on BBC Sounds: https://www.bbc.co.uk/sounds/curation/m001n9",
+              "duration_seconds": 560,
+              "embeddable": true,
+              "title": "Rick Astley - Never Gonna Give You Up | Glastonbury 2023",
+              "url": "https://www.youtube.com/watch?v=nsCIeklgp1M"
+            },
+            {
+              "description": "#RickAstley #NeverGonnaGiveYouUp #OfficialMusicVideo\nThe official video for “Never Gonna Give You Up” by Rick Astley. \n\nThe new album 'Are We There Yet?' is out now: https://RickAstley.lnk.to/AreWeThereY...\n\n“Never Gonna Give You Up” was a global smash on",
+              "duration_seconds": 213,
+              "embeddable": true,
+              "title": "Rick Astley - Never Gonna Give You Up (Official Music Video) (1987)",
+              "url": "https://www.youtube.com/watch?v=5SZYz7lZRRI"
+            },
+            {
+              "description": "Rick Astley - Never Gonna Give You Up\nGet:\n\nLyrics:\n\n[Intro]\nDesert you\nOoh-ooh-ooh-ooh\nHurt you\n\n[Verse 1]\nWe're no strangers to love\nYou know the rules and so do I (Do I)\nA full commitment's what I'm thinking of\nYou wouldn't get this from any other guy\n",
+              "duration_seconds": 214,
+              "embeddable": true,
+              "title": "Rick Astley - Never Gonna Give You Up",
+              "url": "https://www.youtube.com/watch?v=7FwDP17XPlk"
+            },
+            {
+              "description": null,
+              "duration_seconds": 348,
+              "embeddable": true,
+              "title": "Rick Astley - Never Gonna Give You Up (Extended)",
+              "url": "https://www.youtube.com/watch?v=OWGRrOo7l5E"
+            },
+            {
+              "description": null,
+              "duration_seconds": 0,
+              "embeddable": true,
+              "title": "Rick Astley - Never Gonna Give You Up (Extended Re-Mix 1987)",
+              "url": "https://www.youtube.com/watch?v=9-t0P3dqRD0"
+            },
+            {
+              "description": "6.9 mb",
+              "duration_seconds": 440,
+              "embeddable": true,
+              "title": "Rick Astley - Never Gonna Give You Up (Extended Mix)",
+              "url": "https://www.youtube.com/watch?v=hIWRq2SJUmg"
+            },
+            {
+              "description": "Provided to YouTube by BMG Rights Management (UK) Ltd.\n\nNever Gonna Give You Up (Cake Mix) · Rick Astley\n\nWhenever You Need Somebody\n\n℗ 1987 BMG Rights Management (UK) Limited\n\nReleased on: 2022-05-20\n\nPerformer: Rick Astley\nComposer: Mike Stock\nComposer:",
+              "duration_seconds": 348,
+              "embeddable": true,
+              "title": "Never Gonna Give You Up (Cake Mix)",
+              "url": "https://www.youtube.com/watch?v=n3jMY98KIEw"
+            },
+            {
+              "description": "Label: RCA Victor ‎- 6784-1-RD\nFormat: Vinyl, 12\", 33 ⅓ RPM, Maxi-Single\nLand: US\nVeröffentlicht: 1987\nGenre: Electronic\nStil: House",
+              "duration_seconds": 419,
+              "embeddable": true,
+              "title": "Rick Astley - Never Gonna Give You Up (Escape To New York Mix)",
+              "url": "https://www.youtube.com/watch?v=ENVqkACcR0c"
+            },
+            {
+              "description": "Provided to YouTube by BMG Rights Management (UK) Ltd.\n\nNever Gonna Give You Up (Escape to New York Mix) · Rick Astley\n\nWhenever You Need Somebody\n\n℗ 1987 BMG Rights Management (UK) Limited\n\nReleased on: 2022-05-20\n\nKeyboards, Producer: Mike Stock\nGuitar,",
+              "duration_seconds": 423,
+              "embeddable": true,
+              "title": "Never Gonna Give You Up (Escape to New York Mix)",
+              "url": "https://www.youtube.com/watch?v=_QSx57P9gwE"
+            },
+            {
+              "description": "Provided to YouTube by USM Media\n\nNever Gonna Give You Up (Escape to NY Mix) · Rick Astley\n\nThe Hit Factory Ultimate Collection\n\n℗ 1987 BMG Rights Management (UK) Limited\n\nReleased on: 2017-11-03\n\nPerformer: Rick Astley\nComposer: Mike Stock\nComposer: Matt",
+              "duration_seconds": 422,
+              "embeddable": true,
+              "title": "Never Gonna Give You Up (Escape to NY Mix)",
+              "url": "https://www.youtube.com/watch?v=BnoMXGVDC4w"
+            },
+            {
+              "description": "Label & Year: RCA (P) 1987",
+              "duration_seconds": 387,
+              "embeddable": true,
+              "title": "Rick Astley - Never Gonna Give You Up (Escape From Newton Mix)",
+              "url": "https://www.youtube.com/watch?v=vAj-LkH8o1U"
+            },
+            {
+              "description": "Mixed by Mixmaster Pete Hammond [U.S. label switched credits]\n\n\nMy specs:\n\nRecorded using Audio-Technica AT-LP120-USB turntable with internal preamp removed and an AT120E cart. All records are cleaned on a VPI 16.5. I use Adobe Audition 3.0 for recording ",
+              "duration_seconds": 387,
+              "embeddable": true,
+              "title": "Never Gonna Give You Up (Escape From Newton Mix) - Rick Astley",
+              "url": "https://www.youtube.com/watch?v=iPm1ltTM5-w"
+            },
+            {
+              "description": null,
+              "duration_seconds": 419,
+              "embeddable": true,
+              "title": "Rick Astley  / Never Gonna Give You Up  / Escape To New York Mix",
+              "url": "https://www.youtube.com/watch?v=6EWB1ObTbD4"
+            },
+            {
+              "description": "🎵 *Rick Astley - Never Gonna Give You Up*\n\nEdición mostrada en el vídeo: maxi-single de 12\" a 45 RPM en vinilo publicado en España en 1987 por el sello RCA (RCA Records / BMG Ariola), con referencia PT-41448. Compuesto y producido íntegramente por el lege",
+              "duration_seconds": 354,
+              "embeddable": true,
+              "title": "👉📀 Rick Astley - Never Gonna Give You Up (Cake Mix) | 12'' Maxi Single Vinyl 1987",
+              "url": "https://www.youtube.com/watch?v=DVInNB5sKDc"
+            },
+            {
+              "description": "🎵 *Rick Astley - Never Gonna Give You Up*\n\nEdición mostrada en el vídeo: maxi-single de 12\" a 45 RPM en vinilo publicado en España en 1987 por el sello RCA (RCA Records / BMG Ariola), con referencia PT-41448. Compuesto y producido íntegramente por el lege",
+              "duration_seconds": 393,
+              "embeddable": true,
+              "title": "👉📀 Rick Astley - Never Gonna Give You Up (Instrumental) | 12'' Maxi Single Vinyl Rip 1987",
+              "url": "https://www.youtube.com/watch?v=R0aslmKzi90"
+            },
+            {
+              "description": "🎵 *Rick Astley - Never Gonna Give You Up*\n\nEdición mostrada en el vídeo: maxi-single de 12\" a 45 RPM en vinilo publicado en España en 1987 por el sello RCA (RCA Records / BMG Ariola), con referencia PT-41448. Compuesto y producido íntegramente por el lege",
+              "duration_seconds": 213,
+              "embeddable": true,
+              "title": "👉📀 Rick Astley - Never Gonna Give You Up | 12'' Maxi Single Vinyl Rip 1987",
+              "url": "https://www.youtube.com/watch?v=xlZS9Rr6Hfc"
+            }
+          ],
+          "year": 1987
+        },
+        "recordedAt": "2026-09-15T03:37:00Z"
+      },
+      "execute": {
+        "provider": "discogs-com",
+        "capability": "releases/release"
+      }
+    },
+    {
+      "id": "discogs-com/releases/search",
+      "provider": "discogs-com",
+      "capability": "releases/search",
+      "name": "Search",
+      "description": "Search the Discogs database for releases, masters, artists or labels by free text, artist, release title, track, label, catalog number or barcode, optionally narrowed by year, format, country, genre and style. Returns one page of matches with type, title, year, country, formats, labels, catalog number, barcodes and IDs to pass to the detail functions.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "artist",
+          "type": "string",
+          "in": "body",
+          "about": "Artist name."
+        },
+        {
+          "name": "barcode",
+          "type": "string",
+          "in": "body",
+          "about": "Barcode digits, e.g. `724355295323`."
+        },
+        {
+          "name": "catno",
+          "type": "string",
+          "in": "body",
+          "about": "Catalog number as printed, e.g. `PB 41447` or `WARPLP92`."
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "in": "body",
+          "about": "Country as Discogs spells it, e.g. `US`, `UK`, `Germany`, `Japan`."
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "in": "body",
+          "about": "Format name, e.g. `Vinyl`, `CD`, `Cassette`, `LP`, `7\"`."
+        },
+        {
+          "name": "genre",
+          "type": "string",
+          "in": "body",
+          "about": "Genre, e.g. `Electronic`, `Rock`, `Jazz`."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "in": "body",
+          "about": "Label name."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "Result page, 1-based.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page, 1 to 100.",
+          "default": 25,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text query matched against artist, title, label and catalog number."
+        },
+        {
+          "name": "release_title",
+          "type": "string",
+          "in": "body",
+          "about": "Release title."
+        },
+        {
+          "name": "style",
+          "type": "string",
+          "in": "body",
+          "about": "Style, e.g. `Techno`, `Alternative Rock`."
+        },
+        {
+          "name": "track",
+          "type": "string",
+          "in": "body",
+          "about": "Track title."
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict results to one record type. Omit for all types.",
+          "oneOf": [
+            "release",
+            "master",
+            "artist",
+            "label"
+          ]
+        },
+        {
+          "name": "year",
+          "type": "number",
+          "in": "body",
+          "about": "Release year."
+        }
+      ],
+      "response": {
+        "about": "Search the Discogs database for releases, masters, artists or labels by free text, artist, release title, track, label, catalog number or barcode, optionally narrowed by year, format, country, genre and style. Returns one page of matches with type, title, year, country, formats, labels, catalog number, barcodes and IDs to pass to the detail functions.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when the source answered."
+          },
+          {
+            "name": "pagination",
+            "type": "object"
+          },
+          {
+            "name": "query",
+            "type": "object"
+          },
+          {
+            "name": "results",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The api.discogs.com URL that produced this result."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "artist": "Radiohead",
+          "per_page": 5,
+          "type": "release"
+        },
+        "response": {
+          "count": 5,
+          "observed_at_ms": 1789442400000,
+          "pagination": {
+            "next_page": 2,
+            "page": 1,
+            "pages": 602,
+            "per_page": 5,
+            "total": 3006
+          },
+          "query": {
+            "artist": "Radiohead",
+            "barcode": null,
+            "catno": null,
+            "country": null,
+            "format": null,
+            "genre": null,
+            "label": null,
+            "query": null,
+            "release_title": null,
+            "style": null,
+            "track": null,
+            "type": "release",
+            "year": null
+          },
+          "results": [
+            {
+              "barcodes": [
+                "4 988006 847453",
+                "JASRAC",
+                "TOCP-65800 1",
+                "IFPI L153",
+                "IFPI 28A2"
+              ],
+              "catno": "TOCP-53858",
+              "community": {
+                "have": 53,
+                "want": 306
+              },
+              "country": "Japan",
+              "cover_image_url": null,
+              "format_details": [
+                {
+                  "descriptions": [
+                    "Album",
+                    "Limited Edition",
+                    "Reissue"
+                  ],
+                  "name": "CD",
+                  "qty": 1,
+                  "text": null
+                }
+              ],
+              "formats": [
+                "CD",
+                "Album",
+                "Limited Edition",
+                "Reissue"
+              ],
+              "genres": [
+                "Electronic",
+                "Rock"
+              ],
+              "id": 1371143,
+              "labels": [
+                "EMI",
+                "Parlophone",
+                "EMI Music Japan Inc",
+                "Great 100 1500"
+              ],
+              "master_id": 2507,
+              "master_url": "https://api.discogs.com/masters/2507",
+              "resource_url": "https://api.discogs.com/releases/1371143",
+              "styles": [
+                "Alternative Rock",
+                "Leftfield",
+                "Experimental"
+              ],
+              "thumbnail_url": null,
+              "title": "Radiohead = レディオヘッド* - Amnesiac = アムニージアック",
+              "type": "release",
+              "url": "https://www.discogs.com/release/1371143-Radiohead-%E3%83%AC%E3%83%87%E3%82%A3%E3%82%AA%E3%83%98%E3%83%83%E3%83%89-Amnesiac-%E3%82%A2%E3%83%A0%E3%83%8B%E3%83%BC%E3%82%B8%E3%82%A2%E3%83%83%E3%82%AF",
+              "year": 2006
+            },
+            {
+              "barcodes": [
+                "4988006753327",
+                "4 988006 753327",
+                "[98•6•24]Ⓨ  (再)2000•6•23まで",
+                "定価2,548円  (本体2,427円)",
+                "JASRAC",
+                "JP: B000007UZ8",
+                "TOCP-50605 4 A1",
+                "IFPI L154",
+                "IFPI 28A4",
+                "TOCP-50605 4 A1",
+                "IFPI L154",
+                "IFPI 28R1",
+                "TOCP-50605 6",
+                "IFPI L153",
+                "IFPI 28A6",
+                "TOCP-50605 3 A1",
+                "IFPI L152",
+                "ifpi 28R2"
+              ],
+              "catno": "TOCP-50605",
+              "community": {
+                "have": 388,
+                "want": 320
+              },
+              "country": "Japan",
+              "cover_image_url": null,
+              "format_details": [
+                {
+                  "descriptions": [
+                    "Album",
+                    "Reissue"
+                  ],
+                  "name": "CD",
+                  "qty": 1,
+                  "text": null
+                }
+              ],
+              "formats": [
+                "CD",
+                "Album",
+                "Reissue"
+              ],
+              "genres": [
+                "Rock"
+              ],
+              "id": 1328685,
+              "labels": [
+                "EMI",
+                "EMI",
+                "Toshiba EMI Ltd",
+                "Manor Mobile",
+                "EMI Records Ltd.",
+                "EMI Records Ltd.",
+                "Warner Chappell Music Ltd.",
+                "Chipping Norton Recording Studios",
+                "Courtyard Studio",
+                "The Town And Country Club, London",
+                "Fort Apache South",
+                "Abbey Road Studios"
+              ],
+              "master_id": 13344,
+              "master_url": "https://api.discogs.com/masters/13344",
+              "resource_url": "https://api.discogs.com/releases/1328685",
+              "styles": [
+                "Alternative Rock"
+              ],
+              "thumbnail_url": null,
+              "title": "Radiohead = レディオヘッド* - Pablo Honey = パブロ・ハニー",
+              "type": "release",
+              "url": "https://www.discogs.com/release/1328685-Radiohead-%E3%83%AC%E3%83%87%E3%82%A3%E3%82%AA%E3%83%98%E3%83%83%E3%83%89-Pablo-Honey-%E3%83%91%E3%83%96%E3%83%AD%E3%83%8F%E3%83%8B%E3%83%BC",
+              "year": 1998
+            },
+            {
+              "barcodes": [
+                "5 052498 595327"
+              ],
+              "catno": "5249859532",
+              "community": {
+                "have": 11,
+                "want": 179
+              },
+              "country": "Taiwan",
+              "cover_image_url": null,
+              "format_details": [
+                {
+                  "descriptions": [
+                    "Album"
+                  ],
+                  "name": "CD",
+                  "qty": 1,
+                  "text": null
+                }
+              ],
+              "formats": [
+                "CD",
+                "Album"
+              ],
+              "genres": [
+                "Electronic",
+                "Rock"
+              ],
+              "id": 12922328,
+              "labels": [
+                "Warner Music Taiwan",
+                "Ticker Tape Ltd.",
+                "Hostess Entertainment Unlimited",
+                "Ticker Tape Ltd.",
+                "Ticker Tape Ltd.",
+                "Ticker Tape Ltd.",
+                "Gateway Mastering"
+              ],
+              "master_id": 311832,
+              "master_url": "https://api.discogs.com/masters/311832",
+              "resource_url": "https://api.discogs.com/releases/12922328",
+              "styles": [
+                "Abstract",
+                "Experimental",
+                "Downtempo"
+              ],
+              "thumbnail_url": null,
+              "title": "Radiohead = 電台司令* - The King Of Limbs = 肢解樹王",
+              "type": "release",
+              "url": "https://www.discogs.com/release/12922328-Radiohead-%E9%9B%BB%E5%8F%B0%E5%8F%B8%E4%BB%A4-The-King-Of-Limbs-%E8%82%A2%E8%A7%A3%E6%A8%B9%E7%8E%8B",
+              "year": 2011
+            },
+            {
+              "barcodes": [
+                "4 988006 811188",
+                "4988006811188",
+                "IFPI L154   TOCP-66185   1   A6",
+                "A6",
+                "IFPI L154",
+                "IFPI 28A8",
+                "TOCP 66185-1 A3",
+                "IFPI L154",
+                "IFPI 28T3",
+                "JP: B00008SKP3",
+                "JASRAC",
+                "[03•6•2(03•6•2)] ⓎⓍ",
+                "定価2,548円"
+              ],
+              "catno": "TOCP-66185",
+              "community": {
+                "have": 327,
+                "want": 331
+              },
+              "country": "Japan",
+              "cover_image_url": null,
+              "format_details": [
+                {
+                  "descriptions": [
+                    "Album",
+                    "Copy Protected"
+                  ],
+                  "name": "CD",
+                  "qty": 1,
+                  "text": null
+                }
+              ],
+              "formats": [
+                "CD",
+                "Album",
+                "Copy Protected"
+              ],
+              "genres": [
+                "Electronic",
+                "Rock"
+              ],
+              "id": 1366019,
+              "labels": [
+                "Parlophone",
+                "Parlophone",
+                "Toshiba EMI Ltd",
+                "EMI Records Ltd.",
+                "EMI Records Ltd.",
+                "Warner/Chappell Music Publishing Ltd.",
+                "Ocean Way Recording",
+                "Radiohead's Own Studio"
+              ],
+              "master_id": 16962,
+              "master_url": "https://api.discogs.com/masters/16962",
+              "resource_url": "https://api.discogs.com/releases/1366019",
+              "styles": [
+                "Alternative Rock",
+                "Experimental"
+              ],
+              "thumbnail_url": null,
+              "title": "Radiohead = レディオヘッド* - Hail To The Thief = ヘイル・トゥ・ザ・シーフ",
+              "type": "release",
+              "url": "https://www.discogs.com/release/1366019-Radiohead-%E3%83%AC%E3%83%87%E3%82%A3%E3%82%AA%E3%83%98%E3%83%83%E3%83%89-Hail-To-The-Thief-%E3%83%98%E3%82%A4%E3%83%AB%E3%83%88%E3%82%A5%E3%82%B6%E3%82%B7%E3%83%BC%E3%83%95",
+              "year": 2003
+            },
+            {
+              "barcodes": [
+                "4 988006 873148",
+                "4 988006 873148",
+                "JASRAC"
+              ],
+              "catno": "TOCP-70731-32",
+              "community": {
+                "have": 42,
+                "want": 375
+              },
+              "country": "Japan",
+              "cover_image_url": null,
+              "format_details": [
+                {
+                  "descriptions": [
+                    "Album",
+                    "Limited Edition"
+                  ],
+                  "name": "CD",
+                  "qty": 2,
+                  "text": null
+                },
+                {
+                  "descriptions": [
+                    "DVD-Video",
+                    "NTSC",
+                    "Limited Edition"
+                  ],
+                  "name": "DVD",
+                  "qty": 1,
+                  "text": null
+                }
+              ],
+              "formats": [
+                "CD",
+                "Album",
+                "Limited Edition",
+                "DVD",
+                "DVD-Video",
+                "NTSC",
+                "Limited Edition"
+              ],
+              "genres": [
+                "Electronic",
+                "Rock"
+              ],
+              "id": 6064795,
+              "labels": [
+                "EMI",
+                "Parlophone",
+                "EMI Records Ltd.",
+                "EMI Records Ltd.",
+                "Dorchester Abbey",
+                "Warner/Chappell Music Publishing Ltd.",
+                "EMI",
+                "EMI",
+                "EMI Uden"
+              ],
+              "master_id": 2507,
+              "master_url": "https://api.discogs.com/masters/2507",
+              "resource_url": "https://api.discogs.com/releases/6064795",
+              "styles": [
+                "Alternative Rock",
+                "Experimental"
+              ],
+              "thumbnail_url": null,
+              "title": "Radiohead = レディオヘッド* - Amnesiac = アムニージアック",
+              "type": "release",
+              "url": "https://www.discogs.com/release/6064795-Radiohead-%E3%83%AC%E3%83%87%E3%82%A3%E3%82%AA%E3%83%98%E3%83%83%E3%83%89-Amnesiac-%E3%82%A2%E3%83%A0%E3%83%8B%E3%83%BC%E3%82%B8%E3%82%A2%E3%83%83%E3%82%AF",
+              "year": 2009
+            }
+          ],
+          "source_url": "https://api.discogs.com/database/search?artist=Radiohead&type=release&page=1&per_page=5"
+        },
+        "recordedAt": "2026-09-15T03:37:00Z"
+      },
+      "execute": {
+        "provider": "discogs-com",
+        "capability": "releases/search"
+      }
+    }
+  ]
+}

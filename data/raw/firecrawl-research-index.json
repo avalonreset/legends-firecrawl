@@ -1,0 +1,262 @@
+{
+  "id": "firecrawl-research-index",
+  "provider": "firecrawl-research-index",
+  "name": "Research Index",
+  "description": "Find scientific papers, inspect metadata, read relevant passages and follow citation relationships.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "firecrawl-research-index"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "firecrawl-research-index/inspect",
+      "provider": "firecrawl-research-index",
+      "capability": "inspect",
+      "name": "Inspect paper",
+      "description": "Read a paper's metadata and abstract without retrieving full text.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "paperId",
+          "type": "string",
+          "in": "path",
+          "required": true,
+          "about": "Indexed paperId returned by search. web: IDs cannot be inspected or read."
+        }
+      ],
+      "response": {
+        "key": "paper",
+        "paginated": false,
+        "about": "Canonical paper metadata.",
+        "fields": [
+          {
+            "name": "paperId",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "abstract",
+            "type": "string"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "firecrawl-research-index",
+        "capability": "inspect"
+      }
+    },
+    {
+      "id": "firecrawl-research-index/read",
+      "provider": "firecrawl-research-index",
+      "capability": "read",
+      "name": "Read paper passages",
+      "description": "Retrieve paper passages relevant to a question. Empty passages do not mean the full paper was read.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "paperId",
+          "type": "string",
+          "in": "path",
+          "required": true,
+          "about": "Indexed paperId returned by search. web: IDs cannot be inspected or read."
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "required": true,
+          "about": "Question or search phrase."
+        },
+        {
+          "name": "k",
+          "type": "number",
+          "min": 1,
+          "max": 50,
+          "default": 4,
+          "about": "Maximum results to return."
+        }
+      ],
+      "response": {
+        "key": "passages",
+        "paginated": true,
+        "about": "Relevant full-text passages with paper metadata in the envelope.",
+        "fields": [
+          {
+            "name": "text",
+            "type": "string"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "firecrawl-research-index",
+        "capability": "read"
+      }
+    },
+    {
+      "id": "firecrawl-research-index/related",
+      "provider": "firecrawl-research-index",
+      "capability": "related",
+      "name": "Find related papers",
+      "description": "Find similar work, papers citing a seed or its references, ranked for your research question.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "paperId",
+          "type": "string",
+          "in": "path",
+          "required": true,
+          "about": "Indexed paperId returned by search. web: IDs cannot be inspected or read."
+        },
+        {
+          "name": "intent",
+          "type": "string",
+          "required": true,
+          "about": "Question to rank related papers against."
+        },
+        {
+          "name": "k",
+          "type": "number",
+          "min": 1,
+          "max": 500,
+          "default": 40,
+          "about": "Maximum results to return."
+        },
+        {
+          "name": "mode",
+          "type": "string",
+          "oneOf": [
+            "similar",
+            "citers",
+            "references"
+          ],
+          "about": "Citation relationship. Defaults to similar."
+        },
+        {
+          "name": "anchor",
+          "type": "string[]",
+          "min": 1,
+          "max": 9,
+          "about": "Additional indexed paper IDs."
+        },
+        {
+          "name": "rerank",
+          "type": "boolean",
+          "about": "Apply additional reranking."
+        }
+      ],
+      "response": {
+        "key": "results",
+        "paginated": true,
+        "about": "Ranked papers. Preserve paperId for follow-up calls; web: IDs are link-only results. Partial and pool metadata remain in the envelope.",
+        "fields": [
+          {
+            "name": "paperId",
+            "type": "string"
+          },
+          {
+            "name": "primaryId",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "abstract",
+            "type": "string"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "firecrawl-research-index",
+        "capability": "related"
+      }
+    },
+    {
+      "id": "firecrawl-research-index/search",
+      "provider": "firecrawl-research-index",
+      "capability": "search",
+      "name": "Search papers",
+      "description": "Find scientific papers about a research question, then use indexed paperIds for follow-up calls.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "query",
+          "type": "string",
+          "required": true,
+          "about": "Question or search phrase."
+        },
+        {
+          "name": "k",
+          "type": "number",
+          "min": 1,
+          "max": 500,
+          "default": 40,
+          "about": "Maximum results to return."
+        },
+        {
+          "name": "authors",
+          "type": "string[]",
+          "about": "Author filters."
+        },
+        {
+          "name": "categories",
+          "type": "string[]",
+          "about": "Paper categories."
+        },
+        {
+          "name": "from",
+          "type": "string",
+          "about": "Inclusive start date, YYYY-MM-DD."
+        },
+        {
+          "name": "to",
+          "type": "string",
+          "about": "Inclusive end date, YYYY-MM-DD."
+        }
+      ],
+      "response": {
+        "key": "results",
+        "paginated": true,
+        "about": "Ranked papers. Preserve paperId for follow-up calls; web: IDs are link-only results. Partial and pool metadata remain in the envelope.",
+        "fields": [
+          {
+            "name": "paperId",
+            "type": "string"
+          },
+          {
+            "name": "primaryId",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "abstract",
+            "type": "string"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "firecrawl-research-index",
+        "capability": "search"
+      }
+    }
+  ]
+}

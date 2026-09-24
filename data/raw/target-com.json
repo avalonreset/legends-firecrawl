@@ -1,0 +1,902 @@
+{
+  "id": "target-com",
+  "provider": "target-com",
+  "name": "Target",
+  "description": "Discover featured Target US products and inspect product specifications and child variant options. No search, price or inventory coverage.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "target-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "target-com/products/featured",
+      "provider": "target-com",
+      "capability": "products/featured",
+      "name": "Featured",
+      "description": "Discover the limited set of product links featured on the Target US homepage; not a searchable or exhaustive catalog.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [],
+      "response": {
+        "about": "Discover the limited set of product links featured on the Target US homepage; not a searchable or exhaustive catalog.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {},
+        "response": {
+          "complete": false,
+          "observed_at_ms": 1789507067000,
+          "records": [
+            {
+              "id": "1013556561",
+              "url": "https://www.target.com/p/apple-watch-series-12/-/A-1013556561"
+            }
+          ],
+          "source_url": "https://www.target.com/",
+          "warnings": [
+            "US public product data only. Homepage discovery is partial. Prices and availability are unknown; variants are catalog options, not available inventory. Product-parent specifications can describe a representative variant. Return-policy text is informational, not an eligibility guarantee."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:17:47Z"
+      },
+      "execute": {
+        "provider": "target-com",
+        "capability": "products/featured"
+      }
+    },
+    {
+      "id": "target-com/products/product",
+      "provider": "target-com",
+      "capability": "products/product",
+      "name": "Product",
+      "description": "Read a known Target product URL: brand, descriptive specifications, highlights, image and published return-policy text. Price and availability are unknown.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS www.target.com product URL ending /-/A-<numeric TCIN>, without query or fragment. Pattern: ^https://www\\.target\\.com/p/[a-zA-Z0-9_-]+/-/A-[0-9]{6,12}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Read a known Target product URL: brand, descriptive specifications, highlights, image and published return-policy text. Price and availability are unknown.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "availability",
+            "type": "object",
+            "about": "Unknown; no store or delivery inventory fetched."
+          },
+          {
+            "name": "brand",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "highlights",
+            "type": "string[]"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "options",
+            "type": "object[]"
+          },
+          {
+            "name": "price",
+            "type": "object",
+            "about": "Unknown; pricing is not fetched."
+          },
+          {
+            "name": "return_policy",
+            "type": "string"
+          },
+          {
+            "name": "specifications",
+            "type": "string[]"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.target.com/p/apple-watch-series-12/-/A-1013556561"
+        },
+        "response": {
+          "complete": false,
+          "observed_at_ms": 1789507799000,
+          "records": [
+            {
+              "availability": null,
+              "brand": "Apple",
+              "description": null,
+              "highlights": [],
+              "id": "1013556561",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_1af73482-1028-4868-aa7e-771a131c8c0b",
+              "options": [],
+              "price": null,
+              "return_policy": "This item must be returned within 14 days of the date it was purchased in store, delivered to the guest, delivered by a Shipt shopper, or picked up by the guest.",
+              "specifications": [
+                "Features: Olive Green (band)",
+                "Weight: 32.9 Grams",
+                "Product Model: Apple Watch Series 12",
+                "Water Resistance: Water-Resistant",
+                "Electronics Condition: New",
+                "Electronics Features: Built-In GPS",
+                "Connection Type: No Wired Connection Ports",
+                "Material: Watch Band: Fluoroelastomer",
+                "Includes: Charging Cable",
+                "Operating System Compatibility: Watch OS",
+                "Wireless Technology: Bluetooth",
+                "Screen Size: 42 Millimeter",
+                "Activities tracked: Hand Washing, Custom Activity Tracking, Climbing, Daily Workout Memory, Basketball",
+                "Maximum Battery Charge Life: 24 Hours",
+                "Metrics Measured: Sleep Duration, Heart Rate, Heart Rhythm (ECG), Calories Burned, Active Minutes, Daily Distance",
+                "Band Size: M/L",
+                "Material: Aluminum",
+                "Battery: 1 Non-Universal Lithium Ion, Required, Installed",
+                "Warranty: 1 Year Limited Warranty. To obtain a copy of the manufacturer's or supplier's warranty for this item prior to purchasing the item, please call Target Guest Services at 1-800-591-3869"
+              ],
+              "title": "Apple Watch Series 12",
+              "url": "https://www.target.com/p/apple-watch-series-12/-/A-1013556561"
+            }
+          ],
+          "source_url": "https://www.target.com/p/apple-watch-series-12/-/A-1013556561",
+          "warnings": [
+            "US public product data only. Homepage discovery is partial. Prices and availability are unknown; variants are catalog options, not available inventory. Product-parent specifications can describe a representative variant. Return-policy text is informational, not an eligibility guarantee."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:29:59Z"
+      },
+      "execute": {
+        "provider": "target-com",
+        "capability": "products/product"
+      }
+    },
+    {
+      "id": "target-com/products/variants",
+      "provider": "target-com",
+      "capability": "products/variants",
+      "name": "Variants",
+      "description": "List child product identifiers, option combinations and images from a Target parent product page. Follow child URLs for specifications. Catalog variants do not imply purchasable inventory.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "HTTPS www.target.com product URL ending /-/A-<numeric TCIN>, without query or fragment. Pattern: ^https://www\\.target\\.com/p/[a-zA-Z0-9_-]+/-/A-[0-9]{6,12}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "List child product identifiers, option combinations and images from a Target parent product page. Follow child URLs for specifications. Catalog variants do not imply purchasable inventory.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "availability",
+            "type": "object",
+            "about": "Unknown; no store or delivery inventory fetched."
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "options",
+            "type": "object[]"
+          },
+          {
+            "name": "price",
+            "type": "object",
+            "about": "Unknown; pricing is not fetched."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.target.com/p/apple-watch-series-12/-/A-1013556561"
+        },
+        "response": {
+          "complete": false,
+          "observed_at_ms": 1789507799000,
+          "records": [
+            {
+              "availability": null,
+              "id": "91122649",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_1af73482-1028-4868-aa7e-771a131c8c0b",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Dark Bronze"
+                },
+                {
+                  "name": "Size",
+                  "value": "42mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "S/M"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 42mm Dark Bronze Aluminum Case with Olive Sport Band - S/M",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-42mm-dark-bronze-aluminum-case-with-olive-sport-band-s-m/-/A-91122649"
+            },
+            {
+              "availability": null,
+              "id": "91122502",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_1af73482-1028-4868-aa7e-771a131c8c0b",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Dark Bronze"
+                },
+                {
+                  "name": "Size",
+                  "value": "42mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "S/M"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS + Cellular"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS + Cellular 42mm Dark Bronze Aluminum Case with Olive Sport Band - S/M",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-cellular-42mm-dark-bronze-aluminum-case-with-olive-sport-band-s-m/-/A-91122502"
+            },
+            {
+              "availability": null,
+              "id": "91122539",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_1af73482-1028-4868-aa7e-771a131c8c0b",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Dark Bronze"
+                },
+                {
+                  "name": "Size",
+                  "value": "42mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "M/L"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 42mm Dark Bronze Aluminum Case with Olive Sport Band - M/L",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-42mm-dark-bronze-aluminum-case-with-olive-sport-band-m-l/-/A-91122539"
+            },
+            {
+              "availability": null,
+              "id": "91122547",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_2d35a35b-066c-4c27-8061-7fca4030fda1",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Dark Bronze"
+                },
+                {
+                  "name": "Size",
+                  "value": "46mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "S/M"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 46mm Dark Bronze Aluminum Case with Olive Sport Band - S/M",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-46mm-dark-bronze-aluminum-case-with-olive-sport-band-s-m/-/A-91122547"
+            },
+            {
+              "availability": null,
+              "id": "91122585",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_2d35a35b-066c-4c27-8061-7fca4030fda1",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Dark Bronze"
+                },
+                {
+                  "name": "Size",
+                  "value": "46mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "M/L"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 46mm Dark Bronze Aluminum Case with Olive Sport Band - M/L",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-46mm-dark-bronze-aluminum-case-with-olive-sport-band-m-l/-/A-91122585"
+            },
+            {
+              "availability": null,
+              "id": "91122673",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_7e2f7bba-d745-4c60-950f-95bc93712723",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Black"
+                },
+                {
+                  "name": "Size",
+                  "value": "42mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "S/M"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 42mm Black Aluminum Case with Black Sport Band - S/M",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-42mm-black-aluminum-case-with-black-sport-band-s-m/-/A-91122673"
+            },
+            {
+              "availability": null,
+              "id": "91122644",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_7e2f7bba-d745-4c60-950f-95bc93712723",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Black"
+                },
+                {
+                  "name": "Size",
+                  "value": "42mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "M/L"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 42mm Black Aluminum Case with Black Sport Band - M/L",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-42mm-black-aluminum-case-with-black-sport-band-m-l/-/A-91122644"
+            },
+            {
+              "availability": null,
+              "id": "91122550",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_e82060ef-e351-43f3-b39b-1ee27691d6b5",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Black"
+                },
+                {
+                  "name": "Size",
+                  "value": "46mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "S/M"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 46mm Black Aluminum Case with Black Sport Band - S/M",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-46mm-black-aluminum-case-with-black-sport-band-s-m/-/A-91122550"
+            },
+            {
+              "availability": null,
+              "id": "91122631",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_e82060ef-e351-43f3-b39b-1ee27691d6b5",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Black"
+                },
+                {
+                  "name": "Size",
+                  "value": "46mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "M/L"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 46mm Black Aluminum Case with Black Sport Band - M/L",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-46mm-black-aluminum-case-with-black-sport-band-m-l/-/A-91122631"
+            },
+            {
+              "availability": null,
+              "id": "91122535",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_e82060ef-e351-43f3-b39b-1ee27691d6b5",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Black"
+                },
+                {
+                  "name": "Size",
+                  "value": "46mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "M/L"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS + Cellular"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS + Cellular 46mm Black Aluminum Case with Black Sport Band - M/L",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-cellular-46mm-black-aluminum-case-with-black-sport-band-m-l/-/A-91122535"
+            },
+            {
+              "availability": null,
+              "id": "91122626",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_55c2e55e-5950-457f-8640-35b59db118cd",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Light Gold"
+                },
+                {
+                  "name": "Size",
+                  "value": "42mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "S/M"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 42mm Light Gold Aluminum Case with Sand Sport Band - S/M",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-42mm-light-gold-aluminum-case-with-sand-sport-band-s-m/-/A-91122626"
+            },
+            {
+              "availability": null,
+              "id": "91122587",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_55c2e55e-5950-457f-8640-35b59db118cd",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Light Gold"
+                },
+                {
+                  "name": "Size",
+                  "value": "42mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "M/L"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 42mm Light Gold Aluminum Case with Sand Sport Band - M/L",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-42mm-light-gold-aluminum-case-with-sand-sport-band-m-l/-/A-91122587"
+            },
+            {
+              "availability": null,
+              "id": "91122520",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_5159f878-b4e9-437e-a821-3960ec599b22",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Light Gold"
+                },
+                {
+                  "name": "Size",
+                  "value": "46mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "S/M"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 46mm Light Gold Aluminum Case with Sand Sport Band - S/M",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-46mm-light-gold-aluminum-case-with-sand-sport-band-s-m/-/A-91122520"
+            },
+            {
+              "availability": null,
+              "id": "91122565",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_5159f878-b4e9-437e-a821-3960ec599b22",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Light Gold"
+                },
+                {
+                  "name": "Size",
+                  "value": "46mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "M/L"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 46mm Light Gold Aluminum Case with Sand Sport Band - M/L",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-46mm-light-gold-aluminum-case-with-sand-sport-band-m-l/-/A-91122565"
+            },
+            {
+              "availability": null,
+              "id": "1013270329",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_d8b78141-2a7b-47f4-8db2-20c6a16e9356",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Ceramic"
+                },
+                {
+                  "name": "Color",
+                  "value": "Night Blue"
+                },
+                {
+                  "name": "Size",
+                  "value": "46mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "M/L"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS + Cellular"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS + Cellular 46mm Night Blue Ceramic Case with Navy Blue Sport Band - M/L",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-cellular-46mm-night-blue-ceramic-case-with-navy-blue-sport-band-m-l/-/A-1013270329"
+            },
+            {
+              "availability": null,
+              "id": "1013270341",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_e4bd4a00-a438-4a4e-ac31-fbf4d28b713b",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Ceramic"
+                },
+                {
+                  "name": "Color",
+                  "value": "Pearl White"
+                },
+                {
+                  "name": "Size",
+                  "value": "42mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "S/M"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS + Cellular"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS + Cellular 42mm Pearl White Ceramic Case with Sand Sport Band - S/M",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-cellular-42mm-pearl-white-ceramic-case-with-sand-sport-band-s-m/-/A-1013270341"
+            },
+            {
+              "availability": null,
+              "id": "1013270313",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_fdaebd74-db92-4c8b-af46-2fd63c198b78",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Ceramic"
+                },
+                {
+                  "name": "Color",
+                  "value": "Pearl White"
+                },
+                {
+                  "name": "Size",
+                  "value": "46mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "M/L"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS + Cellular"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS + Cellular 46mm Pearl White Ceramic Case with Sand Sport Band - M/L",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-cellular-46mm-pearl-white-ceramic-case-with-sand-sport-band-m-l/-/A-1013270313"
+            },
+            {
+              "availability": null,
+              "id": "91122656",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_390d0797-80d8-438b-97e1-296000d7a30b",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Space Gray"
+                },
+                {
+                  "name": "Size",
+                  "value": "42mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "S/M"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 42mm Space Gray Aluminum Case with Navy Blue Sport Band - S/M",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-42mm-space-gray-aluminum-case-with-navy-blue-sport-band-s-m/-/A-91122656"
+            },
+            {
+              "availability": null,
+              "id": "91122560",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_390d0797-80d8-438b-97e1-296000d7a30b",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Space Gray"
+                },
+                {
+                  "name": "Size",
+                  "value": "42mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "M/L"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 42mm Space Gray Aluminum Case with Navy Blue Sport Band - M/L",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-42mm-space-gray-aluminum-case-with-navy-blue-sport-band-m-l/-/A-91122560"
+            },
+            {
+              "availability": null,
+              "id": "91122517",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_0b968434-fce5-4a57-8ea1-6e6607f72377",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Space Gray"
+                },
+                {
+                  "name": "Size",
+                  "value": "46mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "S/M"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 46mm Space Gray Aluminum Case with Navy Blue Sport Band - S/M",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-46mm-space-gray-aluminum-case-with-navy-blue-sport-band-s-m/-/A-91122517"
+            },
+            {
+              "availability": null,
+              "id": "91122519",
+              "image_url": "https://target.scene7.com/is/image/Target/GUEST_0b968434-fce5-4a57-8ea1-6e6607f72377",
+              "options": [
+                {
+                  "name": "Material",
+                  "value": "Aluminum"
+                },
+                {
+                  "name": "Color",
+                  "value": "Space Gray"
+                },
+                {
+                  "name": "Size",
+                  "value": "46mm"
+                },
+                {
+                  "name": "Size Group",
+                  "value": "M/L"
+                },
+                {
+                  "name": "Wireless Technology",
+                  "value": "GPS"
+                }
+              ],
+              "price": null,
+              "title": "Apple Watch Series 12 GPS 46mm Space Gray Aluminum Case with Navy Blue Sport Band - M/L",
+              "url": "https://www.target.com/p/apple-watch-series-12-gps-46mm-space-gray-aluminum-case-with-navy-blue-sport-band-m-l/-/A-91122519"
+            }
+          ],
+          "source_url": "https://www.target.com/p/apple-watch-series-12/-/A-1013556561",
+          "warnings": [
+            "US public product data only. Homepage discovery is partial. Prices and availability are unknown; variants are catalog options, not available inventory. Product-parent specifications can describe a representative variant. Return-policy text is informational, not an eligibility guarantee."
+          ]
+        },
+        "recordedAt": "2026-09-15T21:29:59Z"
+      },
+      "execute": {
+        "provider": "target-com",
+        "capability": "products/variants"
+      }
+    }
+  ]
+}

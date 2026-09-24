@@ -1,0 +1,789 @@
+{
+  "id": "bing-com",
+  "provider": "bing-com",
+  "name": "Bing Maps",
+  "description": "Public Bing Maps local business search and structured business details.",
+  "toolCount": 2,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "bing-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "bing-com/businesses/business",
+      "provider": "bing-com",
+      "capability": "businesses/business",
+      "name": "Business",
+      "description": "One local business by its Bing ypid (from `search`): name, structured address, display and E.164 phone, website, coordinates, categories, aggregate rating with review count and source, current open-status sentence, and structured weekly opening hours (per day, 24h HH:MM ranges, all-day flag, closed days). Missing values are null; hours are null when Bing publishes none.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "ypid",
+          "type": "string",
+          "in": "body",
+          "about": "Bing business id returned by search, e.g. \"YNB7EDF204457059FB\". Pattern: ^(ypid:)?YN[0-9A-Fa-f]{4,38}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One local business by its Bing ypid (from `search`): name, structured address, display and E.164 phone, website, coordinates, categories, aggregate rating with review count and source, current open-status sentence, and structured weekly opening hours (per day, 24h HH:MM ranges, all-day flag, closed days). Missing values are null; hours are null when Bing publishes none.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "action",
+            "type": "object"
+          },
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "average_stay_minutes",
+            "type": "number"
+          },
+          {
+            "name": "categories",
+            "type": "string[]"
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "category_path",
+            "type": "string"
+          },
+          {
+            "name": "hours",
+            "type": "object"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "maps_url",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "open_status_text",
+            "type": "string",
+            "about": "e.g. \"Closed. Opens tomorrow 11 AM\" or \"Open 24 hours\"."
+          },
+          {
+            "name": "phone",
+            "type": "string",
+            "about": "Phone as Bing prints it, e.g. \"+1 512-653-1187\"."
+          },
+          {
+            "name": "phone_e164",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "object",
+            "about": "Bing PriceInfo when published, otherwise null."
+          },
+          {
+            "name": "rating",
+            "type": "number",
+            "about": "Rating exactly as Bing reports it; scale depends on rating_source (for example Yelp versus ZocDoc)."
+          },
+          {
+            "name": "rating_count",
+            "type": "number"
+          },
+          {
+            "name": "rating_source",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "style_category",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "name": "ypid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "ypid": "YNB7EDF204457059FB"
+        },
+        "response": {
+          "action": {
+            "name": "Menu",
+            "url": "https://franklinbarbecue.com/menu"
+          },
+          "address": {
+            "city": "Austin",
+            "country": "US",
+            "full": "900 E 11th St, Austin, TX 78702",
+            "line": "900 E 11th St",
+            "neighborhood": null,
+            "postal_code": "78702",
+            "state": "TX"
+          },
+          "average_stay_minutes": 60,
+          "categories": [
+            "Barbecue"
+          ],
+          "category": "Barbecue",
+          "category_path": "30000.30949.30963",
+          "hours": {
+            "closed_days": [
+              "Mon"
+            ],
+            "days": [
+              {
+                "closed": false,
+                "day": "Tue",
+                "holiday_hours": false,
+                "ranges": [
+                  {
+                    "all_day": false,
+                    "close": "15:00",
+                    "open": "11:00"
+                  }
+                ]
+              },
+              {
+                "closed": false,
+                "day": "Wed",
+                "holiday_hours": false,
+                "ranges": [
+                  {
+                    "all_day": false,
+                    "close": "15:00",
+                    "open": "11:00"
+                  }
+                ]
+              },
+              {
+                "closed": false,
+                "day": "Thu",
+                "holiday_hours": false,
+                "ranges": [
+                  {
+                    "all_day": false,
+                    "close": "15:00",
+                    "open": "11:00"
+                  }
+                ]
+              },
+              {
+                "closed": false,
+                "day": "Fri",
+                "holiday_hours": false,
+                "ranges": [
+                  {
+                    "all_day": false,
+                    "close": "15:00",
+                    "open": "11:00"
+                  }
+                ]
+              },
+              {
+                "closed": false,
+                "day": "Sat",
+                "holiday_hours": false,
+                "ranges": [
+                  {
+                    "all_day": false,
+                    "close": "15:00",
+                    "open": "11:00"
+                  }
+                ]
+              },
+              {
+                "closed": false,
+                "day": "Sun",
+                "holiday_hours": false,
+                "ranges": [
+                  {
+                    "all_day": false,
+                    "close": "15:00",
+                    "open": "11:00"
+                  }
+                ]
+              },
+              {
+                "closed": true,
+                "day": "Mon",
+                "holiday_hours": false,
+                "ranges": []
+              }
+            ]
+          },
+          "image_url": "https://www.bing.com/th/id/OLC.xiaJJiTR0OQAhA480x360?w=50&h=50&c=7&rs=1&qlt=80&cdv=1&pid=Local",
+          "latitude": 30.270132064819336,
+          "longitude": -97.73126220703125,
+          "maps_url": "https://www.bing.com/maps?ss=ypid.YNB7EDF204457059FB",
+          "name": "Franklin Barbecue",
+          "observed_at_ms": 1789435668169,
+          "open_status_text": "Closed. Opens tomorrow 11 AM",
+          "phone": "+1 512-653-1187",
+          "phone_e164": "+15126531187",
+          "price": null,
+          "rating": 4.5,
+          "rating_count": 6477,
+          "rating_source": "Yelp",
+          "source_url": "https://www.bing.com/maps/overlaybfpr?q=&filters=local_ypid%3A%22YNB7EDF204457059FB%22&count=1&first=0&setlang=en-US&cc=US",
+          "style_category": "Restaurant",
+          "website": "https://franklinbarbecue.com/",
+          "ypid": "YNB7EDF204457059FB"
+        },
+        "recordedAt": "2026-09-10"
+      },
+      "execute": {
+        "provider": "bing-com",
+        "capability": "businesses/business"
+      }
+    },
+    {
+      "id": "bing-com/businesses/search",
+      "provider": "bing-com",
+      "capability": "businesses/search",
+      "name": "Search",
+      "description": "Local businesses matching a category or a business name near a street address, city/state or postal code (US and other Bing Maps markets). One page of up to 30 results with Bing ypid, name, street address, phone, website, coordinates, category, aggregate rating with review count and source (Yelp/Tripadvisor/...), and current open status. Use the ypid with `business` for structured weekly hours.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "count",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page.",
+          "default": 18,
+          "min": 1,
+          "max": 30
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "Optional map centre latitude; provide together with longitude to bias results when no location text is given.",
+          "min": -90,
+          "max": 90
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "in": "body",
+          "about": "Where to look: a street address (\"1600 Pennsylvania Ave NW, Washington, DC\"), \"City, ST\" or a postal code. Sent to Bing as \"<query> near <location>\". Optional when query already names the place."
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "Optional map centre longitude; provide together with latitude.",
+          "min": -180,
+          "max": 180
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "Result page; page N skips (N-1)*count results.",
+          "default": 1,
+          "min": 1,
+          "max": 5
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "What to find: a category such as \"restaurants\", \"pharmacies\", \"plumbers\", or a business name such as \"Franklin Barbecue\".",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Local businesses matching a category or a business name near a street address, city/state or postal code (US and other Bing Maps markets). One page of up to 30 results with Bing ypid, name, street address, phone, website, coordinates, category, aggregate rating with review count and source (Yelp/Tripadvisor/...), and current open status. Use the ypid with `business` for structured weekly hours.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address",
+            "type": "string",
+            "about": "Single-line street address as Bing prints it."
+          },
+          {
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "name": "category_path",
+            "type": "string"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "maps_url",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "open_hours_text",
+            "type": "string",
+            "about": "e.g. \"Closed now, opens at 11 AM\" or \"Open 24 hours\"."
+          },
+          {
+            "name": "open_status",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "type": "string",
+            "about": "Display phone, e.g. \"(202) 638-2570\"."
+          },
+          {
+            "name": "rating",
+            "type": "number",
+            "about": "Rating exactly as Bing reports it; scale depends on rating_source (for example Yelp versus ZocDoc)."
+          },
+          {
+            "name": "rating_count",
+            "type": "number"
+          },
+          {
+            "name": "rating_source",
+            "type": "string",
+            "about": "Yelp, Tripadvisor, Foursquare, ... as shown by Bing."
+          },
+          {
+            "name": "style_category",
+            "type": "string"
+          },
+          {
+            "name": "website",
+            "type": "string"
+          },
+          {
+            "name": "ypid",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "location": "1600 Pennsylvania Ave NW, Washington, DC",
+          "query": "restaurants"
+        },
+        "response": {
+          "count": 18,
+          "has_more": true,
+          "location": "1600 Pennsylvania Ave NW, Washington, DC",
+          "next_page": 2,
+          "observed_at_ms": 1789435668166,
+          "page": 1,
+          "query": "restaurants",
+          "resolved_query": {
+            "chain_id": null,
+            "corrected_query": "restaurants near 1600 Pennsylvania Ave NW, Washington, DC",
+            "keyword": "restaurants",
+            "location": "Washington, DC"
+          },
+          "results": [
+            {
+              "address": "800 16th St NW, Washington, DC 20006",
+              "category": "Restaurant",
+              "category_path": "30000.30949",
+              "image_url": "https://www.bing.com/th?id=OLC.ws1oQkyuc+Jyaw480x360&pid=Local",
+              "latitude": 38.900508880615234,
+              "longitude": -77.03695678710938,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YN5B609F6EC24BDBC8",
+              "name": "The Lafayette",
+              "open_hours_text": "Closed now, opens at 6:30 AM",
+              "open_status": "Closed",
+              "phone": "(202) 638-2570",
+              "rating": 4.5,
+              "rating_count": 175,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "https://www.hayadams.com/dining/the-lafayette",
+              "ypid": "YN5B609F6EC24BDBC8"
+            },
+            {
+              "address": "1331 Pennsylvania Ave NW, Washington, DC 20004",
+              "category": "American restaurant",
+              "category_path": "30000.30949.31314",
+              "image_url": "https://www.bing.com/th?id=OLC.bSchrDoxMkGb4g480x360&pid=Local",
+              "latitude": 38.89632797241211,
+              "longitude": -77.03115844726562,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YN22379E8A5726B4D2",
+              "name": "Avenue Grill",
+              "open_hours_text": null,
+              "open_status": "Closed",
+              "phone": "(202) 626-6970",
+              "rating": 3,
+              "rating_count": 87,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "https://www.marriott.com/en-us/hotels/wasjw-jw-marriott-washington-dc/dining/?scid=feed67b0-9a2f-4de1-8df6-114544116108",
+              "ypid": "YN22379E8A5726B4D2"
+            },
+            {
+              "address": "801 9th St NW, Washington, DC 20001",
+              "category": "Cuban restaurant",
+              "category_path": "30000.30949.30996",
+              "image_url": "https://www.bing.com/th?id=OLC.cHsq2p/B/jrW/w480x360&pid=Local",
+              "latitude": 38.90011215209961,
+              "longitude": -77.02363586425781,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YN5324A34C8347FB45",
+              "name": "Cuba Libre Restaurant & Rum Bar",
+              "open_hours_text": "Closed now, opens at 4 PM",
+              "open_status": "Closed",
+              "phone": "(202) 408-1600",
+              "rating": 4,
+              "rating_count": 1152,
+              "rating_source": "Tripadvisor",
+              "style_category": "Restaurant",
+              "website": "https://www.cubalibrerestaurant.com/en/washington",
+              "ypid": "YN5324A34C8347FB45"
+            },
+            {
+              "address": "1734 N St NW, Washington, DC 20036",
+              "category": "Mediterranean restaurant",
+              "category_path": "30000.30949.31051",
+              "image_url": "https://www.bing.com/th?id=OLC.UKQRqLFImQ8oWg480x360&pid=Local",
+              "latitude": 38.90702438354492,
+              "longitude": -77.03984832763672,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YN525F7C05D4A448E1",
+              "name": "Iron Gate Restaurant",
+              "open_hours_text": "Closed now, opens at 11:30 AM",
+              "open_status": "Closed",
+              "phone": "(202) 524-5202",
+              "rating": 4,
+              "rating_count": 835,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "https://www.irongaterestaurantdc.com/",
+              "ypid": "YN525F7C05D4A448E1"
+            },
+            {
+              "address": "701 9th St NW, Washington, DC 20001",
+              "category": "Mediterranean restaurant",
+              "category_path": "30000.30949.31051",
+              "image_url": "https://www.bing.com/th?id=OLC.LlOJN+ULZGMwkw480x360&pid=Local",
+              "latitude": 38.898860931396484,
+              "longitude": -77.023681640625,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YNEE9D01416998B76F",
+              "name": "Zaytinya",
+              "open_hours_text": "Closed now, opens at 11:30 AM",
+              "open_status": "Closed",
+              "phone": "(202) 638-0800",
+              "rating": 4,
+              "rating_count": 6302,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "https://www.zaytinya.com/location/washington-dc/",
+              "ypid": "YNEE9D01416998B76F"
+            },
+            {
+              "address": "600 Massachusetts Ave NW, Washington, DC 20001",
+              "category": "American restaurant",
+              "category_path": "30000.30949.31314",
+              "image_url": "https://www.bing.com/th?id=OLC.y/YIupPivTzuLA480x360&pid=Local",
+              "latitude": 38.901248931884766,
+              "longitude": -77.02034759521484,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YN992607AA8B60166",
+              "name": "Founding Farmers & Distillers",
+              "open_hours_text": "Closed now, opens at 7 AM",
+              "open_status": "Closed",
+              "phone": "(202) 464-3001",
+              "rating": 3.5,
+              "rating_count": 2822,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "https://www.wearefoundingfarmers.com/location/founding-farmers-distillers/",
+              "ypid": "YN992607AA8B60166"
+            },
+            {
+              "address": "650 K St NW, Washington, DC 20001",
+              "category": "Italian restaurant",
+              "category_path": "30000.30949.31030",
+              "image_url": "https://www.bing.com/th?id=OLC.7wDgxkBmBUrHAQ480x360&pid=Local",
+              "latitude": 38.90226364135742,
+              "longitude": -77.02129364013672,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YN486F4E18317EA430",
+              "name": "RPM Italian",
+              "open_hours_text": "Closed now, opens at 12 PM",
+              "open_status": "Closed",
+              "phone": "(202) 204-4480",
+              "rating": 4,
+              "rating_count": 1912,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "https://www.rpmrestaurants.com/rpm-italian-d-c/",
+              "ypid": "YN486F4E18317EA430"
+            },
+            {
+              "address": "600 14th St NW, Washington, DC 20005",
+              "category": "American restaurant",
+              "category_path": "30000.30949.31314",
+              "image_url": "https://www.bing.com/th?id=OLC.TRcU41qfaBQ74Q480x360&pid=Local",
+              "latitude": 38.89752197265625,
+              "longitude": -77.03219604492188,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YNBB4F234D4A16B6BE",
+              "name": "The Hamilton",
+              "open_hours_text": "Closed now, opens at 11 AM",
+              "open_status": "Closed",
+              "phone": "(202) 787-1000",
+              "rating": 4,
+              "rating_count": 4054,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "https://www.thehamiltondc.com/",
+              "ypid": "YNBB4F234D4A16B6BE"
+            },
+            {
+              "address": "1924 Pennsylvania Ave NW #3607, Washington, DC 20006",
+              "category": "American restaurant",
+              "category_path": "30000.30949.31314",
+              "image_url": "https://www.bing.com/th?id=OLC.VtLVVrbWVBCRgQ480x360&pid=Local",
+              "latitude": 38.90028381347656,
+              "longitude": -77.04450225830078,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YND17C3E81A52D1EBA",
+              "name": "Founding Farmers DC",
+              "open_hours_text": "Closed now, opens at 7 AM",
+              "open_status": "Closed",
+              "phone": "(202) 822-8783",
+              "rating": 4,
+              "rating_count": 18570,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "https://www.wearefoundingfarmers.com/location/dc/",
+              "ypid": "YND17C3E81A52D1EBA"
+            },
+            {
+              "address": "425 7th St NW, Washington, DC 20004",
+              "category": "Italian restaurant",
+              "category_path": "30000.30949.31030",
+              "image_url": "https://www.bing.com/th?id=OLC.WC822LMXgNBk7Q480x360&pid=Local",
+              "latitude": 38.895660400390625,
+              "longitude": -77.02167510986328,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YN662C8E46C59C6E84",
+              "name": "Carmine's Italian Restaurant - Washington D.C.",
+              "open_hours_text": "Closed now, opens at 11:30 AM",
+              "open_status": "Closed",
+              "phone": "(202) 737-7770",
+              "rating": 3.5,
+              "rating_count": 1875,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "http://www.carminesnyc.com/",
+              "ypid": "YN662C8E46C59C6E84"
+            },
+            {
+              "address": "601 Pennsylvania Ave NW, Washington, DC 20004",
+              "category": "Italian restaurant",
+              "category_path": "30000.30949.31030",
+              "image_url": "https://www.bing.com/th?id=OLC.f8zM6D1/SgVn1Q480x360&pid=Local",
+              "latitude": 38.89392852783203,
+              "longitude": -77.0207290649414,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YND96509A30C3FA2D0",
+              "name": "Fiola",
+              "open_hours_text": null,
+              "open_status": null,
+              "phone": "(202) 628-2888",
+              "rating": 4,
+              "rating_count": 877,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "http://www.fioladc.com/",
+              "ypid": "YND96509A30C3FA2D0"
+            },
+            {
+              "address": "2525 M St NW, Washington, DC 20037",
+              "category": "Restaurant",
+              "category_path": "30000.30949",
+              "image_url": "https://www.bing.com/th?id=OLC.d3l1vbNjepKW0w480x360&pid=Local",
+              "latitude": 38.90556716918945,
+              "longitude": -77.0540542602539,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YN61D1D7E2798EB1BE",
+              "name": "Nobu Washington D.C.",
+              "open_hours_text": "Closed now, opens at 5 PM",
+              "open_status": "Closed",
+              "phone": "(202) 871-6565",
+              "rating": 3.5,
+              "rating_count": 630,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "https://www.noburestaurants.com/washingtondc/home/",
+              "ypid": "YN61D1D7E2798EB1BE"
+            },
+            {
+              "address": "1601 14th St NW, Washington, DC 20009",
+              "category": "Restaurant",
+              "category_path": "30000.30949",
+              "image_url": "https://www.bing.com/th?id=OLC.peioRSViQj778w480x360&pid=Local",
+              "latitude": 38.91139221191406,
+              "longitude": -77.0315170288086,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YND3C1400F458E3792",
+              "name": "Le Diplomate",
+              "open_hours_text": "Closed now, opens at 11:30 AM",
+              "open_status": "Closed",
+              "phone": "(202) 332-3333",
+              "rating": 4.5,
+              "rating_count": 5818,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "http://lediplomatedc.com/",
+              "ypid": "YND3C1400F458E3792"
+            },
+            {
+              "address": "1600 Pennsylvania Ave NW, Washington, DC 20500",
+              "category": "Federal government offices",
+              "category_path": "30000.30928.35269",
+              "image_url": "https://www.bing.com/th?id=OLC.iAOrzXtWmSChJw480x360&pid=Local",
+              "latitude": 38.89766311645508,
+              "longitude": -77.03655242919922,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YNBBF4FDC507FFE6C6",
+              "name": "The White House",
+              "open_hours_text": null,
+              "open_status": null,
+              "phone": "(202) 456-7041",
+              "rating": 4,
+              "rating_count": 766,
+              "rating_source": "Yelp",
+              "style_category": "GovernmentAndCommunity",
+              "website": "https://www.whitehouse.gov/",
+              "ypid": "YNBBF4FDC507FFE6C6"
+            },
+            {
+              "address": "3000 K St NW, Washington, DC 20007",
+              "category": "American restaurant",
+              "category_path": "30000.30949.31314",
+              "image_url": "https://www.bing.com/th?id=OLC.FnodHOQeRExyyg480x360&pid=Local",
+              "latitude": 38.90177917480469,
+              "longitude": -77.05960845947266,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YNB03521F0111DC49A",
+              "name": "Founding Farmers Fishers & Bakers",
+              "open_hours_text": "Closed now, opens at 8 AM",
+              "open_status": "Closed",
+              "phone": "(202) 298-8783",
+              "rating": 4,
+              "rating_count": 5197,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "https://www.wearefoundingfarmers.com/location/founding-farmers-fishers-bakers/",
+              "ypid": "YNB03521F0111DC49A"
+            },
+            {
+              "address": "2021 14th St NW, Washington, DC 20009",
+              "category": "American restaurant",
+              "category_path": "30000.30949.31314",
+              "image_url": "https://www.bing.com/th?id=OLC.aZXMxrdd/Rts/g480x360&pid=Local",
+              "latitude": 38.91789627075195,
+              "longitude": -77.03144073486328,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YNB4975B066B8E0CB9",
+              "name": "Busboys and Poets",
+              "open_hours_text": "Closed now, opens at 8 AM",
+              "open_status": "Closed",
+              "phone": "(202) 387-7638",
+              "rating": 4,
+              "rating_count": 2964,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "http://www.busboysandpoets.com/",
+              "ypid": "YNB4975B066B8E0CB9"
+            },
+            {
+              "address": "1063 Wisconsin Ave NW, Washington, DC 20007",
+              "category": "Italian restaurant",
+              "category_path": "30000.30949.31030",
+              "image_url": "https://www.bing.com/th?id=OLC.mp6XSbPyxnlrAg480x360&pid=Local",
+              "latitude": 38.90439224243164,
+              "longitude": -77.06246185302734,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YNB17DF6D06544138",
+              "name": "Filomena Ristorante",
+              "open_hours_text": "Closed now, opens at 11:30 AM",
+              "open_status": "Closed",
+              "phone": "(202) 338-8800",
+              "rating": 4,
+              "rating_count": 3861,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "http://www.filomena.com/",
+              "ypid": "YNB17DF6D06544138"
+            },
+            {
+              "address": "88 District Square SW, Washington, DC 20024",
+              "category": "Mediterranean restaurant",
+              "category_path": "30000.30949.31051",
+              "image_url": "https://www.bing.com/th?id=OLC.DGLn7HGQyull4g480x360&pid=Local",
+              "latitude": 38.87998962402344,
+              "longitude": -77.02570343017578,
+              "maps_url": "https://www.bing.com/maps?ss=ypid.YN3AF4F1E1700B3304",
+              "name": "La Vie",
+              "open_hours_text": "Closed now, opens at 5 PM",
+              "open_status": "Closed",
+              "phone": "(202) 991-4655",
+              "rating": 4,
+              "rating_count": 1432,
+              "rating_source": "Yelp",
+              "style_category": "Restaurant",
+              "website": "https://lavie-dc.com/",
+              "ypid": "YN3AF4F1E1700B3304"
+            }
+          ],
+          "returned": 18,
+          "source_url": "https://www.bing.com/maps/overlaybfpr?q=restaurants+near+1600+Pennsylvania+Ave+NW%2C+Washington%2C+DC&count=18&first=0&setlang=en-US&cc=US"
+        },
+        "recordedAt": "2026-09-10"
+      },
+      "execute": {
+        "provider": "bing-com",
+        "capability": "businesses/search"
+      }
+    }
+  ]
+}

@@ -1,0 +1,371 @@
+{
+  "id": "apollo",
+  "provider": "apollo",
+  "name": "Apollo",
+  "description": "Person and company enrichment: find people by title and company, resolve them to verified work emails, and enrich companies from a domain with funding, headcount and technologies.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "apollo"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "apollo/companies/enrich",
+      "provider": "apollo",
+      "capability": "companies/enrich",
+      "name": "Company enrichment",
+      "description": "Use when you have a domain and need the company behind it. For a company you can only name, search first: this takes a domain and nothing else.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Company domain, for example firecrawl.dev. The reliable key: names collide.",
+          "name": "domain",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "response": {
+        "about": "One company: firmographics, funding, headcount, industry and the technologies it runs. A miss is not billed.",
+        "fields": [
+          {
+            "about": "Apollo organization id.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Company name.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Primary domain.",
+            "name": "website_url",
+            "type": "string"
+          },
+          {
+            "about": "Employee count.",
+            "name": "estimated_num_employees",
+            "type": "number"
+          },
+          {
+            "about": "Industry.",
+            "name": "industry",
+            "type": "string"
+          },
+          {
+            "about": "Total funding raised.",
+            "name": "total_funding",
+            "type": "number"
+          },
+          {
+            "about": "Most recent funding round.",
+            "name": "latest_funding_stage",
+            "type": "string"
+          },
+          {
+            "about": "Technologies detected in use.",
+            "name": "technology_names",
+            "type": "string[]"
+          }
+        ],
+        "key": "organization"
+      },
+      "execute": {
+        "provider": "apollo",
+        "capability": "companies/enrich"
+      }
+    },
+    {
+      "id": "apollo/companies/search",
+      "provider": "apollo",
+      "capability": "companies/search",
+      "name": "Company search",
+      "description": "Use to build a list from a shape: size, location, industry, technology. It bills per page, so ask for the page size you need rather than paging through the whole market.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Free text matched against company names and descriptions.",
+          "in": "body",
+          "name": "q_organization_name",
+          "type": "string"
+        },
+        {
+          "about": "Employee-count bands, for example [\"1,10\", \"11,50\"].",
+          "in": "body",
+          "name": "organization_num_employees_ranges",
+          "type": "string[]"
+        },
+        {
+          "about": "Locations to restrict to, for example \"San Francisco, US\".",
+          "in": "body",
+          "name": "organization_locations",
+          "type": "string[]"
+        },
+        {
+          "about": "Technologies the company must use, for example [\"Stripe\"].",
+          "in": "body",
+          "name": "currently_using_any_of_technology_uids",
+          "type": "string[]"
+        },
+        {
+          "about": "Page of results, from 1.",
+          "default": 1,
+          "in": "body",
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Results per page, maximum 100.",
+          "default": 25,
+          "in": "body",
+          "max": 100,
+          "name": "per_page",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Companies matching the shape asked for, one page at a time.",
+        "fields": [
+          {
+            "about": "Apollo organization id.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Company name.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Primary domain, the key companies/enrich takes.",
+            "name": "primary_domain",
+            "type": "string"
+          },
+          {
+            "about": "Employee count.",
+            "name": "estimated_num_employees",
+            "type": "number"
+          },
+          {
+            "about": "Industry.",
+            "name": "industry",
+            "type": "string"
+          }
+        ],
+        "key": "organizations",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "apollo",
+        "capability": "companies/search"
+      }
+    },
+    {
+      "id": "apollo/people/match",
+      "provider": "apollo",
+      "capability": "people/match",
+      "name": "Person match",
+      "description": "Use to resolve one person you have already found. Prefer the id from people/search, then a LinkedIn URL, then email; a bare name needs a domain beside it or it will match the wrong person.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Apollo person id from people/search. The most reliable input by far.",
+          "in": "body",
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "about": "LinkedIn profile URL. Resolves even when the slug is stale.",
+          "in": "body",
+          "name": "linkedin_url",
+          "type": "string"
+        },
+        {
+          "about": "Known email address.",
+          "in": "body",
+          "name": "email",
+          "type": "string"
+        },
+        {
+          "about": "Full name, used with a company domain.",
+          "in": "body",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "about": "Company domain, used with a name to disambiguate.",
+          "in": "body",
+          "name": "domain",
+          "type": "string"
+        },
+        {
+          "about": "Reveal a personal email as well as the work one. Bills extra and is a different consent question: ask for it only when the caller asked for it.",
+          "in": "body",
+          "name": "reveal_personal_emails",
+          "type": "boolean"
+        },
+        {
+          "about": "Reveal a phone number. Substantially more expensive than the base match.",
+          "in": "body",
+          "name": "reveal_phone_number",
+          "type": "boolean"
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "id",
+          "linkedin_url",
+          "email",
+          "name"
+        ]
+      ],
+      "response": {
+        "about": "One resolved person: identity, title, employment history and contact details. A miss returns no person and is not billed.",
+        "fields": [
+          {
+            "about": "Apollo person id.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "Full name.",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "about": "Job title.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "Work email, when one was found.",
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "about": "LinkedIn profile URL.",
+            "name": "linkedin_url",
+            "type": "string"
+          },
+          {
+            "about": "Their current company.",
+            "name": "organization",
+            "type": "object"
+          },
+          {
+            "about": "Employment history.",
+            "name": "employment_history",
+            "type": "object[]"
+          }
+        ],
+        "key": "person"
+      },
+      "execute": {
+        "provider": "apollo",
+        "capability": "people/match"
+      }
+    },
+    {
+      "id": "apollo/people/search",
+      "provider": "apollo",
+      "capability": "people/search",
+      "name": "Person search",
+      "description": "Always start here. It is free and it tells you who exists before anything is spent. Never match a list of guesses: search, read the previews, then match only the people worth revealing.",
+      "creditsCost": 0,
+      "perRecord": false,
+      "options": [
+        {
+          "about": "Job titles to match, for example \"VP of Sales\". Several titles widen the net.",
+          "in": "body",
+          "name": "person_titles",
+          "type": "string[]"
+        },
+        {
+          "about": "Free text matched across the person and their company.",
+          "in": "body",
+          "name": "q_keywords",
+          "type": "string"
+        },
+        {
+          "about": "Company domains to restrict to, for example firecrawl.dev.",
+          "in": "body",
+          "name": "q_organization_domains_list",
+          "type": "string[]"
+        },
+        {
+          "about": "Locations to restrict to, for example \"San Francisco, US\".",
+          "in": "body",
+          "name": "person_locations",
+          "type": "string[]"
+        },
+        {
+          "about": "Page of results, from 1.",
+          "default": 1,
+          "in": "body",
+          "name": "page",
+          "type": "number"
+        },
+        {
+          "about": "Results per page, maximum 100.",
+          "default": 25,
+          "in": "body",
+          "max": 100,
+          "name": "per_page",
+          "type": "number"
+        }
+      ],
+      "response": {
+        "about": "Preview records: first name, a masked surname, title, company, and flags for whether an email or phone exists. Each carries an Apollo id, which is what people/match takes.",
+        "fields": [
+          {
+            "about": "Apollo person id, the input to people/match.",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "about": "First name, unmasked.",
+            "name": "first_name",
+            "type": "string"
+          },
+          {
+            "about": "Surname, masked in previews.",
+            "name": "last_name",
+            "type": "string"
+          },
+          {
+            "about": "Job title.",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "about": "The company they work at.",
+            "name": "organization",
+            "type": "object"
+          },
+          {
+            "about": "Whether an email exists to reveal.",
+            "name": "has_email",
+            "type": "boolean"
+          }
+        ],
+        "key": "people",
+        "paginated": true
+      },
+      "execute": {
+        "provider": "apollo",
+        "capability": "people/search"
+      }
+    }
+  ]
+}

@@ -1,0 +1,2187 @@
+{
+  "id": "data-worldbank-org",
+  "provider": "data-worldbank-org",
+  "name": "World Bank Data",
+  "description": "World Bank Indicators API v2: database catalog, indicator discovery, economies and aggregates, reference lists, observations (classic and dimension paths including International Debt Statistics) and extended series/economy metadata. Keyless public API.",
+  "toolCount": 11,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "data-worldbank-org"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "data-worldbank-org/indicators/concept_values",
+      "provider": "data-worldbank-org",
+      "capability": "indicators/concept_values",
+      "name": "Concept values",
+      "description": "Enumerate what a source can be queried by, e.g. IDS creditor codes for `source_data`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "concept",
+          "type": "string",
+          "in": "body",
+          "about": "Concept id from `source_concepts`, case-insensitive: country, series, time, counterpart-area. Pattern: ^[A-Za-z-]{2,32}$.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number; pass `next_page` from the previous output to continue.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (upstream `per_page`).",
+          "default": 50,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "source_id",
+          "type": "string",
+          "in": "body",
+          "about": "World Bank database (source) id as a string, exactly as the API returns it: 2 = World Development Indicators, 6 = International Debt Statistics, 15 = Global Economic Monitor, 40 = Population estimates and projections. Pattern: ^[0-9]{1,5}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "The values of one dimension of a database, paged: the series of IDS (source 6), the counterpart areas (creditors) of IDS, the countries of a source, or its time periods.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "concept": "series",
+          "per_page": 20,
+          "source_id": "6"
+        },
+        "response": {
+          "concept": "series",
+          "next_page": 2,
+          "observed_at_ms": 1789999459549,
+          "page": 1,
+          "pages": 29,
+          "per_page": 20,
+          "records": [
+            {
+              "id": "BM.GSR.TOTL.CD",
+              "name": "Imports of goods, services and primary income (current US$)"
+            },
+            {
+              "id": "BN.CAB.XOKA.CD",
+              "name": "Current account balance (current US$)"
+            },
+            {
+              "id": "BX.GRT.EXTA.CD.DT",
+              "name": "Grants, excluding technical cooperation (current US$)"
+            },
+            {
+              "id": "BX.GRT.TECH.CD.DT",
+              "name": "Technical cooperation grants (current US$)"
+            },
+            {
+              "id": "BX.GSR.TOTL.CD",
+              "name": "Exports of goods, services and primary income (current US$)"
+            },
+            {
+              "id": "BX.KLT.DINV.CD.DT",
+              "name": "Foreign direct investment, net inflows in reporting economy (DRS, current US$)"
+            },
+            {
+              "id": "BX.KLT.DREM.CD.DT",
+              "name": "Primary income on FDI (current US$)"
+            },
+            {
+              "id": "BX.PEF.TOTL.CD.DT",
+              "name": "Portfolio investment, equity (DRS, current US$)"
+            },
+            {
+              "id": "BX.TRF.PWKR.CD.DT",
+              "name": "Personal transfers and compensation of employees, received (current US$)"
+            },
+            {
+              "id": "DT.AMT.BLAT.CB.CD",
+              "name": "CB, bilateral (AMT, current US$)"
+            },
+            {
+              "id": "DT.AMT.BLAT.CD",
+              "name": "PPG, bilateral (AMT, current US$)"
+            },
+            {
+              "id": "DT.AMT.BLAT.GG.CD",
+              "name": "GG, bilateral (AMT, current US$)"
+            },
+            {
+              "id": "DT.AMT.BLAT.OPS.CD",
+              "name": "OPS, bilateral (AMT, current US$)"
+            },
+            {
+              "id": "DT.AMT.BLAT.PRVG.CD",
+              "name": "PRVG, bilateral (AMT, current US$)"
+            },
+            {
+              "id": "DT.AMT.BLAT.PS.CD",
+              "name": "PS, bilateral (AMT, current US$)"
+            },
+            {
+              "id": "DT.AMT.BLTC.CB.CD",
+              "name": "CB, bilateral concessional (AMT, current US$)"
+            },
+            {
+              "id": "DT.AMT.BLTC.CD",
+              "name": "PPG, bilateral concessional (AMT, current US$)"
+            },
+            {
+              "id": "DT.AMT.BLTC.GG.CD",
+              "name": "GG, bilateral concessional (AMT, current US$)"
+            },
+            {
+              "id": "DT.AMT.BLTC.OPS.CD",
+              "name": "OPS, bilateral concessional (AMT, current US$)"
+            },
+            {
+              "id": "DT.AMT.BLTC.PRVG.CD",
+              "name": "PRVG, bilateral concessional (AMT, current US$)"
+            }
+          ],
+          "source_id": "6",
+          "source_name": "International Debt Statistics",
+          "source_url": "https://api.worldbank.org/v2/sources/6/series?format=json&per_page=20&page=1",
+          "total": 577,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "data-worldbank-org",
+        "capability": "indicators/concept_values"
+      }
+    },
+    {
+      "id": "data-worldbank-org/indicators/countries",
+      "provider": "data-worldbank-org",
+      "capability": "indicators/countries",
+      "name": "Countries",
+      "description": "Resolve country codes for `data`, or enumerate the members of a region or income group.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "include_aggregates",
+          "type": "boolean",
+          "in": "body",
+          "about": "include_aggregates"
+        },
+        {
+          "name": "income_level",
+          "type": "string",
+          "in": "body",
+          "about": "Income level id: LIC, LMC, UMC, HIC, ... Pattern: ^[A-Za-z]{2,3}$."
+        },
+        {
+          "name": "lending_type",
+          "type": "string",
+          "in": "body",
+          "about": "Lending type id: IBD, IDB, IDX, LNX. Pattern: ^[A-Za-z]{2,3}$."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number; pass `next_page` from the previous output to continue.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (upstream `per_page`).",
+          "default": 300,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "in": "body",
+          "about": "Region code, e.g. SSF, LCN, EAS. Pattern: ^[A-Za-z0-9]{2,3}$."
+        }
+      ],
+      "response": {
+        "about": "List economies and aggregates with ISO codes, region, admin region, income level, lending type, capital and coordinates. Filters `region`, `income_level` and `lending_type` (codes from `reference`) combine. `include_aggregates: false` drops regional and income groupings (region NA) from the page after fetching it.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "admin_region",
+            "type": "object",
+            "about": "A coded reference (region, admin region, income level, lending type). Null when upstream leaves the code empty, which it does for aggregates' admin region and for economies without a lending classification."
+          },
+          {
+            "name": "capital_city",
+            "type": "string"
+          },
+          {
+            "name": "country_id",
+            "type": "string",
+            "about": "ISO3 code for economies (BRA) or the aggregate code (WLD, HIC); the value the `data` and `country` functions take."
+          },
+          {
+            "name": "income_level",
+            "type": "object",
+            "about": "A coded reference (region, admin region, income level, lending type). Null when upstream leaves the code empty, which it does for aggregates' admin region and for economies without a lending classification."
+          },
+          {
+            "name": "is_aggregate",
+            "type": "boolean",
+            "about": "True when upstream files the row under region `NA` (Aggregates): regions, income groups and other groupings rather than economies."
+          },
+          {
+            "name": "iso2_code",
+            "type": "string",
+            "about": "Two-letter code upstream uses in observation rows (BR, 1W)."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "lending_type",
+            "type": "object",
+            "about": "A coded reference (region, admin region, income level, lending type). Null when upstream leaves the code empty, which it does for aggregates' admin region and for economies without a lending classification."
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "region",
+            "type": "object",
+            "about": "A coded reference (region, admin region, income level, lending type). Null when upstream leaves the code empty, which it does for aggregates' admin region and for economies without a lending classification."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "income_level": "LIC",
+          "region": "SSF"
+        },
+        "response": {
+          "aggregates_excluded": 0,
+          "next_page": null,
+          "observed_at_ms": 1789999351501,
+          "page": 1,
+          "pages": 1,
+          "per_page": 300,
+          "records": [
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Bujumbura",
+              "country_id": "BDI",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "BI",
+              "latitude": -3.3784,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 29.3639,
+              "name": "Burundi",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Ouagadougou",
+              "country_id": "BFA",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "BF",
+              "latitude": 12.3605,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": -1.53395,
+              "name": "Burkina Faso",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Bangui",
+              "country_id": "CAF",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "CF",
+              "latitude": 5.63056,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 21.6407,
+              "name": "Central African Republic",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Kinshasa",
+              "country_id": "COD",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "CD",
+              "latitude": -4.325,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 15.3222,
+              "name": "Congo, Dem. Rep.",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Asmara",
+              "country_id": "ERI",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "ER",
+              "latitude": 15.3315,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 38.9183,
+              "name": "Eritrea",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Addis Ababa",
+              "country_id": "ETH",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "ET",
+              "latitude": 9.02274,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 38.7468,
+              "name": "Ethiopia",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Banjul",
+              "country_id": "GMB",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "GM",
+              "latitude": 13.4495,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": -16.5885,
+              "name": "Gambia, The",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Bissau",
+              "country_id": "GNB",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "GW",
+              "latitude": 11.8037,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": -15.1804,
+              "name": "Guinea-Bissau",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Monrovia",
+              "country_id": "LBR",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "LR",
+              "latitude": 6.30039,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": -10.7957,
+              "name": "Liberia",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Antananarivo",
+              "country_id": "MDG",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "MG",
+              "latitude": -20.4667,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 45.7167,
+              "name": "Madagascar",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Bamako",
+              "country_id": "MLI",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "ML",
+              "latitude": 13.5667,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": -7.50034,
+              "name": "Mali",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Maputo",
+              "country_id": "MOZ",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "MZ",
+              "latitude": -25.9664,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 32.5713,
+              "name": "Mozambique",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Lilongwe",
+              "country_id": "MWI",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "MW",
+              "latitude": -13.9899,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 33.7703,
+              "name": "Malawi",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Niamey",
+              "country_id": "NER",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "NE",
+              "latitude": 13.514,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 2.1073,
+              "name": "Niger",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Kigali",
+              "country_id": "RWA",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "RW",
+              "latitude": -1.95325,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 30.0587,
+              "name": "Rwanda",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Khartoum",
+              "country_id": "SDN",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "SD",
+              "latitude": 15.5932,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 32.5363,
+              "name": "Sudan",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Freetown",
+              "country_id": "SLE",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "SL",
+              "latitude": 8.4821,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": -13.2134,
+              "name": "Sierra Leone",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Mogadishu",
+              "country_id": "SOM",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "SO",
+              "latitude": 2.07515,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 45.3254,
+              "name": "Somalia, Fed. Rep.",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Juba",
+              "country_id": "SSD",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "SS",
+              "latitude": 4.85,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 31.6,
+              "name": "South Sudan",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "N'Djamena",
+              "country_id": "TCD",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "TD",
+              "latitude": 12.1048,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 15.0445,
+              "name": "Chad",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            },
+            {
+              "admin_region": {
+                "id": "SSA",
+                "iso2_code": "ZF",
+                "name": "Sub-Saharan Africa (excluding high income)"
+              },
+              "capital_city": "Kampala",
+              "country_id": "UGA",
+              "income_level": {
+                "id": "LIC",
+                "iso2_code": "XM",
+                "name": "Low income"
+              },
+              "is_aggregate": false,
+              "iso2_code": "UG",
+              "latitude": 0.314269,
+              "lending_type": {
+                "id": "IDX",
+                "iso2_code": "XI",
+                "name": "IDA"
+              },
+              "longitude": 32.5729,
+              "name": "Uganda",
+              "region": {
+                "id": "SSF",
+                "iso2_code": "ZG",
+                "name": "Sub-Saharan Africa"
+              }
+            }
+          ],
+          "source_url": "https://api.worldbank.org/v2/country?format=json&per_page=300&page=1&region=SSF&incomeLevel=LIC",
+          "total": 21,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "data-worldbank-org",
+        "capability": "indicators/countries"
+      }
+    },
+    {
+      "id": "data-worldbank-org/indicators/country",
+      "provider": "data-worldbank-org",
+      "capability": "indicators/country",
+      "name": "Country",
+      "description": "Confirm a code and read its region, income level and lending type before querying data.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "country_code",
+          "type": "string",
+          "in": "body",
+          "about": "ISO3 (BRA), ISO2 (BR) or aggregate code (WLD). Pattern: ^[A-Za-z0-9]{2,3}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One economy or aggregate by ISO3, ISO2 or aggregate code (BRA, BR, WLD, HIC).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "country",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when this result was fetched."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The upstream API URL this result was shaped from."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "country_code": "BRA"
+        },
+        "response": {
+          "country": {
+            "admin_region": {
+              "id": "LAC",
+              "iso2_code": "XJ",
+              "name": "Latin America & Caribbean (excluding high income)"
+            },
+            "capital_city": "Brasilia",
+            "country_id": "BRA",
+            "income_level": {
+              "id": "UMC",
+              "iso2_code": "XT",
+              "name": "Upper middle income"
+            },
+            "is_aggregate": false,
+            "iso2_code": "BR",
+            "latitude": -15.7801,
+            "lending_type": {
+              "id": "IBD",
+              "iso2_code": "XF",
+              "name": "IBRD"
+            },
+            "longitude": -47.9292,
+            "name": "Brazil",
+            "region": {
+              "id": "LCN",
+              "iso2_code": "ZJ",
+              "name": "Latin America & Caribbean"
+            }
+          },
+          "observed_at_ms": 1789999355384,
+          "source_url": "https://api.worldbank.org/v2/country/BRA?format=json"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "data-worldbank-org",
+        "capability": "indicators/country"
+      }
+    },
+    {
+      "id": "data-worldbank-org/indicators/data",
+      "provider": "data-worldbank-org",
+      "capability": "indicators/data",
+      "name": "Data",
+      "description": "Fetch the actual numbers once you know the indicator id(s) and country code(s).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "country_codes",
+          "type": "string[]",
+          "in": "body",
+          "about": "ISO3/ISO2 or aggregate codes, or the single value `all`."
+        },
+        {
+          "name": "date",
+          "type": "string",
+          "in": "body",
+          "about": "A period or `start:end` range; both ends in the same frequency. Exclusive with `mrv`. Pattern: ^[0-9]{4}(Q[1-4]|M(0[1-9]|1[0-2]))?(:[0-9]{4}(Q[1-4]|M(0[1-9]|1[0-2]))?)?$."
+        },
+        {
+          "name": "footnote",
+          "type": "boolean",
+          "in": "body",
+          "about": "Ask upstream for per-observation footnotes."
+        },
+        {
+          "name": "gapfill",
+          "type": "boolean",
+          "in": "body",
+          "about": "With `mrv`: carry the latest earlier value into periods with no value."
+        },
+        {
+          "name": "indicator_ids",
+          "type": "string[]",
+          "in": "body",
+          "about": "One or more indicator codes from one database.",
+          "required": true
+        },
+        {
+          "name": "mrv",
+          "type": "number",
+          "in": "body",
+          "about": "Most recent N periods with a value per series. Exclusive with `date`.",
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number; pass `next_page` from the previous output to continue.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (upstream `per_page`).",
+          "default": 50,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "source_id",
+          "type": "string",
+          "in": "body",
+          "about": "World Bank database (source) id as a string, exactly as the API returns it: 2 = World Development Indicators, 6 = International Debt Statistics, 15 = Global Economic Monitor, 40 = Population estimates and projections. Pattern: ^[0-9]{1,5}$."
+        }
+      ],
+      "response": {
+        "about": "Observations for one or more indicators and economies through the classic `country/{codes}/indicator/{ids}` path. `date` is a period or range in upstream syntax (2015:2024, 2023, 2023Q1:2024Q4, 2024M01:2024M06; quarterly and monthly periods exist only on sources such as 15 GEM). `mrv` returns the N most recent periods with a value instead (optional `gapfill`). Several indicators need `source_id`. Numbers are upstream's; `value` null means the period is listed without a value. A selection with no rows at all is a successful empty page with a warning. International Debt Statistics (source 6) series need `source_data`; upstream refuses them here.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "country_id",
+            "type": "string",
+            "about": "Upstream `country.id`: ISO2 for WDI economies (BR), ISO3 on some sources (USA on GEM), aggregate codes (1W, XD)."
+          },
+          {
+            "name": "country_iso3",
+            "type": "string",
+            "about": "ISO3 code; null where upstream leaves `countryiso3code` empty (aggregates, GEM rows)."
+          },
+          {
+            "name": "country_name",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string",
+            "about": "Period as upstream states it: 2024, 2024Q1 or 2024M01."
+          },
+          {
+            "name": "decimal",
+            "type": "number"
+          },
+          {
+            "name": "footnote",
+            "type": "string",
+            "about": "Only populated when `footnote` was requested and upstream carries one."
+          },
+          {
+            "name": "indicator_id",
+            "type": "string"
+          },
+          {
+            "name": "indicator_name",
+            "type": "string"
+          },
+          {
+            "name": "obs_status",
+            "type": "string"
+          },
+          {
+            "name": "unit",
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "about": "Null means the period is listed but no value was reported."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "country_codes": [
+            "BRA"
+          ],
+          "date": "2015:2024",
+          "indicator_ids": [
+            "NY.GDP.MKTP.CD"
+          ]
+        },
+        "response": {
+          "last_updated": "2026-07-13",
+          "next_page": null,
+          "observed_at_ms": 1789999364434,
+          "page": 1,
+          "pages": 1,
+          "per_page": 50,
+          "records": [
+            {
+              "country_id": "BR",
+              "country_iso3": "BRA",
+              "country_name": "Brazil",
+              "date": "2024",
+              "decimal": 0,
+              "footnote": null,
+              "indicator_id": "NY.GDP.MKTP.CD",
+              "indicator_name": "GDP (current US$)",
+              "obs_status": null,
+              "unit": null,
+              "value": 2185821610689.31
+            },
+            {
+              "country_id": "BR",
+              "country_iso3": "BRA",
+              "country_name": "Brazil",
+              "date": "2023",
+              "decimal": 0,
+              "footnote": null,
+              "indicator_id": "NY.GDP.MKTP.CD",
+              "indicator_name": "GDP (current US$)",
+              "obs_status": null,
+              "unit": null,
+              "value": 2191131765684.63
+            },
+            {
+              "country_id": "BR",
+              "country_iso3": "BRA",
+              "country_name": "Brazil",
+              "date": "2022",
+              "decimal": 0,
+              "footnote": null,
+              "indicator_id": "NY.GDP.MKTP.CD",
+              "indicator_name": "GDP (current US$)",
+              "obs_status": null,
+              "unit": null,
+              "value": 1951923942083.32
+            },
+            {
+              "country_id": "BR",
+              "country_iso3": "BRA",
+              "country_name": "Brazil",
+              "date": "2021",
+              "decimal": 0,
+              "footnote": null,
+              "indicator_id": "NY.GDP.MKTP.CD",
+              "indicator_name": "GDP (current US$)",
+              "obs_status": null,
+              "unit": null,
+              "value": 1670647398904.9
+            },
+            {
+              "country_id": "BR",
+              "country_iso3": "BRA",
+              "country_name": "Brazil",
+              "date": "2020",
+              "decimal": 0,
+              "footnote": null,
+              "indicator_id": "NY.GDP.MKTP.CD",
+              "indicator_name": "GDP (current US$)",
+              "obs_status": null,
+              "unit": null,
+              "value": 1476107231310.49
+            },
+            {
+              "country_id": "BR",
+              "country_iso3": "BRA",
+              "country_name": "Brazil",
+              "date": "2019",
+              "decimal": 0,
+              "footnote": null,
+              "indicator_id": "NY.GDP.MKTP.CD",
+              "indicator_name": "GDP (current US$)",
+              "obs_status": null,
+              "unit": null,
+              "value": 1873288205059.69
+            },
+            {
+              "country_id": "BR",
+              "country_iso3": "BRA",
+              "country_name": "Brazil",
+              "date": "2018",
+              "decimal": 0,
+              "footnote": null,
+              "indicator_id": "NY.GDP.MKTP.CD",
+              "indicator_name": "GDP (current US$)",
+              "obs_status": null,
+              "unit": null,
+              "value": 1916933898010.99
+            },
+            {
+              "country_id": "BR",
+              "country_iso3": "BRA",
+              "country_name": "Brazil",
+              "date": "2017",
+              "decimal": 0,
+              "footnote": null,
+              "indicator_id": "NY.GDP.MKTP.CD",
+              "indicator_name": "GDP (current US$)",
+              "obs_status": null,
+              "unit": null,
+              "value": 2063514977365.65
+            },
+            {
+              "country_id": "BR",
+              "country_iso3": "BRA",
+              "country_name": "Brazil",
+              "date": "2016",
+              "decimal": 0,
+              "footnote": null,
+              "indicator_id": "NY.GDP.MKTP.CD",
+              "indicator_name": "GDP (current US$)",
+              "obs_status": null,
+              "unit": null,
+              "value": 1795693482853.01
+            },
+            {
+              "country_id": "BR",
+              "country_iso3": "BRA",
+              "country_name": "Brazil",
+              "date": "2015",
+              "decimal": 0,
+              "footnote": null,
+              "indicator_id": "NY.GDP.MKTP.CD",
+              "indicator_name": "GDP (current US$)",
+              "obs_status": null,
+              "unit": null,
+              "value": 1802212206814.5
+            }
+          ],
+          "source_id": "2",
+          "source_url": "https://api.worldbank.org/v2/country/BRA/indicator/NY.GDP.MKTP.CD?format=json&per_page=50&page=1&date=2015:2024",
+          "total": 10,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "data-worldbank-org",
+        "capability": "indicators/data"
+      }
+    },
+    {
+      "id": "data-worldbank-org/indicators/indicator",
+      "provider": "data-worldbank-org",
+      "capability": "indicators/indicator",
+      "name": "Indicator",
+      "description": "You have an indicator id and need its definition or its source before calling `data`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "indicator_id",
+          "type": "string",
+          "in": "body",
+          "about": "Indicator code, e.g. NY.GDP.MKTP.CD. Pattern: ^[A-Za-z0-9._-]+$.",
+          "required": true
+        },
+        {
+          "name": "source_id",
+          "type": "string",
+          "in": "body",
+          "about": "World Bank database (source) id as a string, exactly as the API returns it: 2 = World Development Indicators, 6 = International Debt Statistics, 15 = Global Economic Monitor, 40 = Population estimates and projections. Pattern: ^[0-9]{1,5}$."
+        }
+      ],
+      "response": {
+        "about": "One indicator's metadata: name, unit, source, source note (definition), source organization and topics. Pass `source_id` when the code exists in several databases (SP.POP.TOTL is in 2 and 40).",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "indicator",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when this result was fetched."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The upstream API URL this result was shaped from."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "indicator_id": "NY.GDP.MKTP.CD"
+        },
+        "response": {
+          "indicator": {
+            "indicator_id": "NY.GDP.MKTP.CD",
+            "name": "GDP (current US$)",
+            "source_id": "2",
+            "source_name": "World Development Indicators",
+            "source_note": "Gross domestic product is the total income earned through the production of goods and services in an economic territory during an accounting period. It can be measured in three different ways: using either the expenditure approach, the income approach, or the production approach. This indicator is expressed in current prices, meaning no adjustment has been made to account for price changes over time. This indicator is expressed in United States dollars.",
+            "source_organization": "Country official statistics, National Statistical Organizations and/or Central Banks;\nNational Accounts data files, Organisation for Economic Co-operation and Development (OECD);\nStaff estimates, World Bank (WB)",
+            "source_url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CD",
+            "topics": [
+              {
+                "name": "Economy & Growth",
+                "topic_id": "3"
+              }
+            ],
+            "unit": null
+          },
+          "observed_at_ms": 1789999347413,
+          "source_url": "https://api.worldbank.org/v2/indicator/NY.GDP.MKTP.CD?format=json"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "data-worldbank-org",
+        "capability": "indicators/indicator"
+      }
+    },
+    {
+      "id": "data-worldbank-org/indicators/indicators",
+      "provider": "data-worldbank-org",
+      "capability": "indicators/indicators",
+      "name": "Indicators",
+      "description": "Discover indicator ids for `indicator` and `data`; browse a topic (see `reference` kind topic) or a database.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number; pass `next_page` from the previous output to continue.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (upstream `per_page`).",
+          "default": 50,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Words that must all appear in the indicator id or name. Omit or leave empty to list the scope."
+        },
+        {
+          "name": "source_id",
+          "type": "string",
+          "in": "body",
+          "about": "World Bank database (source) id as a string, exactly as the API returns it: 2 = World Development Indicators, 6 = International Debt Statistics, 15 = Global Economic Monitor, 40 = Population estimates and projections. Pattern: ^[0-9]{1,5}$."
+        },
+        {
+          "name": "topic_id",
+          "type": "string",
+          "in": "body",
+          "about": "Topic id from `reference` (kind topic), e.g. 3 = Economy & Growth, 8 = Health. When given, `source_id` further restricts the topic's indicators to that database. Pattern: ^[0-9]{1,4}$."
+        }
+      ],
+      "response": {
+        "about": "List or search indicators (series) in one database or one topic. Without `query` the upstream page is returned as is (server-side `page`/`per_page`). With `query` the whole scope is fetched once (up to 20,000 rows) and filtered client-side, because the API has no keyword search: every whitespace-separated word must appear in the indicator id or name, case-insensitively; paging then applies to the filtered list. Defaults to World Development Indicators (source 2) when neither `source_id` nor `topic_id` is given.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "indicator_id",
+            "type": "string",
+            "about": "Indicator code exactly as upstream states it, e.g. NY.GDP.MKTP.CD or the compact GEM form NYGDPMKTPSAKD."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "source_id",
+            "type": "string"
+          },
+          {
+            "name": "source_name",
+            "type": "string"
+          },
+          {
+            "name": "source_note",
+            "type": "string"
+          },
+          {
+            "name": "source_organization",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Public page for the indicator on data.worldbank.org."
+          },
+          {
+            "name": "topics",
+            "type": "object[]"
+          },
+          {
+            "name": "unit",
+            "type": "string",
+            "about": "Null when upstream leaves `unit` empty (most WDI series carry the unit in the name)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "per_page": 5,
+          "topic_id": "3"
+        },
+        "response": {
+          "next_page": 2,
+          "observed_at_ms": 1789999343328,
+          "page": 1,
+          "pages": 62,
+          "per_page": 5,
+          "query": null,
+          "records": [
+            {
+              "indicator_id": "5.0.AMeanIncGr.All",
+              "name": "Annualized Mean Income Growth (2004-2014)",
+              "source_id": "37",
+              "source_name": "LAC Equity Lab",
+              "source_note": "The official indicator to monitor shared prosperity is the growth in real per capita income (or consumption) of the bottom 40 percent of the income (or consumption) distribution in a country.",
+              "source_organization": "LAC Equity Lab tabulations of SEDLAC (CEDLAS and the World Bank) and World Development Indicators",
+              "source_url": "https://data.worldbank.org/indicator/5.0.AMeanIncGr.All",
+              "topics": [
+                {
+                  "name": "Economy & Growth",
+                  "topic_id": "3"
+                }
+              ],
+              "unit": null
+            },
+            {
+              "indicator_id": "5.0.AMeanIncGr.B40",
+              "name": "Annualized Mean Income Growth Bottom 40 Percent (2004-2014)",
+              "source_id": "37",
+              "source_name": "LAC Equity Lab",
+              "source_note": "The indicator to monitor shared prosperity is the growth in real per capita income (or consumption) of the bottom 40 percent of the income (or consumption) distribution in a country.",
+              "source_organization": "LAC Equity Lab tabulations of SEDLAC (CEDLAS and the World Bank) and World Development Indicators",
+              "source_url": "https://data.worldbank.org/indicator/5.0.AMeanIncGr.B40",
+              "topics": [
+                {
+                  "name": "Economy & Growth",
+                  "topic_id": "3"
+                }
+              ],
+              "unit": null
+            },
+            {
+              "indicator_id": "5.1.AMeanIncGr.All",
+              "name": "Annualized Mean Income Growth (2004-2009)",
+              "source_id": "37",
+              "source_name": "LAC Equity Lab",
+              "source_note": "The indicator to monitor shared prosperity is the growth in real per capita income (or consumption) of the bottom 40 percent of the income (or consumption) distribution in a country.",
+              "source_organization": "LAC Equity Lab tabulations of SEDLAC (CEDLAS and the World Bank) and World Development Indicators",
+              "source_url": "https://data.worldbank.org/indicator/5.1.AMeanIncGr.All",
+              "topics": [
+                {
+                  "name": "Economy & Growth",
+                  "topic_id": "3"
+                }
+              ],
+              "unit": null
+            },
+            {
+              "indicator_id": "5.1.AMeanIncGr.B40",
+              "name": "Annualized Mean Income Growth Bottom 40 Percent (2004-2009)",
+              "source_id": "37",
+              "source_name": "LAC Equity Lab",
+              "source_note": "The indicator to monitor shared prosperity is the growth in real per capita income (or consumption) of the bottom 40 percent of the income (or consumption) distribution in a country.",
+              "source_organization": "LAC Equity Lab tabulations of SEDLAC (CEDLAS and the World Bank) and World Development Indicators",
+              "source_url": "https://data.worldbank.org/indicator/5.1.AMeanIncGr.B40",
+              "topics": [
+                {
+                  "name": "Economy & Growth",
+                  "topic_id": "3"
+                }
+              ],
+              "unit": null
+            },
+            {
+              "indicator_id": "5.2.AMeanIncGr.All",
+              "name": "Annualized Mean Income Growth (2009-2014)",
+              "source_id": "37",
+              "source_name": "LAC Equity Lab",
+              "source_note": "The indicator to monitor shared prosperity is the growth in real per capita income (or consumption) of the bottom 40 percent of the income (or consumption) distribution in a country.",
+              "source_organization": "LAC Equity Lab tabulations of SEDLAC (CEDLAS and the World Bank) and World Development Indicators",
+              "source_url": "https://data.worldbank.org/indicator/5.2.AMeanIncGr.All",
+              "topics": [
+                {
+                  "name": "Economy & Growth",
+                  "topic_id": "3"
+                }
+              ],
+              "unit": null
+            }
+          ],
+          "scope": "topic 3",
+          "source_url": "https://api.worldbank.org/v2/topic/3/indicator?format=json&per_page=5&page=1",
+          "total": 306,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "data-worldbank-org",
+        "capability": "indicators/indicators"
+      }
+    },
+    {
+      "id": "data-worldbank-org/indicators/metadata",
+      "provider": "data-worldbank-org",
+      "capability": "indicators/metadata",
+      "name": "Metadata",
+      "description": "Read the definition, license or methodology notes behind a series, or an economy's statistical profile.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "concept",
+          "type": "string",
+          "in": "body",
+          "about": "Which dimension the id belongs to.",
+          "required": true,
+          "oneOf": [
+            "series",
+            "country"
+          ]
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "in": "body",
+          "about": "Series code (NY.GDP.MKTP.CD) or economy code (BRA). Pattern: ^[A-Za-z0-9._-]+$.",
+          "required": true
+        },
+        {
+          "name": "source_id",
+          "type": "string",
+          "in": "body",
+          "about": "World Bank database (source) id as a string, exactly as the API returns it: 2 = World Development Indicators, 6 = International Debt Statistics, 15 = Global Economic Monitor, 40 = Population estimates and projections. Pattern: ^[0-9]{1,5}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Extended metadata attributes for one series (definition, aggregation method, periodicity, license type, statistical concept, ...) or one economy (currency, income group, national accounts base year, census years, ...) within a database. Attribute ids are upstream's `metatype` ids.",
+        "key": "attributes",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "concept": "series",
+          "id": "NY.GDP.MKTP.CD",
+          "source_id": "2"
+        },
+        "response": {
+          "attributes": [
+            {
+              "id": "Aggregationmethod",
+              "value": "Gap-filled total"
+            },
+            {
+              "id": "Dataset",
+              "value": "WB_WDI"
+            },
+            {
+              "id": "Developmentrelevance",
+              "value": "This indicator is related to the national accounts, which are critical for understanding and managing a country's economy. They provide a framework for the analysis of economic performance. National accounts are the basis for estimating the Gross Domestic Product (GDP) and Gross National Income (GNI), which are the most widely used indicator of economic performance. They are essential for government policymakers, providing the data needed to design and assess fiscal and monetary policies; and are also used by businesses and investors to assess the economic climate and make investment decisions. NAS enable comparison between economies, which is crucial for international trade, investment decisions, and economic competitiveness. More specifically, this indicator is related to national accounts aggregates. Gross Domestic Product (GDP), Gross National Income (GNI), and other aggregates provide a snapshot of the size and health of an economy by measuring the total economic activity within a country. They can thus be used by policymakers to design and implement economic policies, as they reflect the overall economic performance and can indicate the need for intervention in certain areas. Aggregates also allow for comparisons between different economies, which can be useful for trade negotiations, investment decisions, and economic benchmarking. By examining aggregates over time, economists and analysts can identify trends, cycles, and potential areas of concern within an economy, and investors can use national accounts aggregates to assess the potential risks and returns of investing in a particular country. Overall, national accounts aggregates are fundamental tools for economic analysis, policy formulation, and decision-making at both the national and international levels."
+            },
+            {
+              "id": "IndicatorName",
+              "value": "GDP (current US$)"
+            },
+            {
+              "id": "License_Type",
+              "value": "CC BY-4.0"
+            },
+            {
+              "id": "License_URL",
+              "value": "https://datacatalog.worldbank.org/int/public-licenses#cc-by"
+            },
+            {
+              "id": "Limitationsandexceptions",
+              "value": "Gross domestic product (GDP), though widely tracked, may not always be the most relevant summary of aggregated economic performance for all economies, especially when production occurs at the expense of consuming capital stock.\n\n\n\n\n\n\n\n\n\nWhile GDP estimates based on the production approach are generally more reliable than estimates compiled from the income or expenditure side, different countries use different definitions, methods, and reporting standards. World Bank staff review the quality of national accounts data and sometimes make adjustments to improve consistency with international guidelines. Nevertheless, significant discrepancies remain between international standards and actual practice. Many statistical offices, especially those in developing countries, face severe limitations in the resources, time, training, and budgets required to produce reliable and comprehensive series of national accounts statistics.\n\n\n\n\n\n\n\n\n\nAmong the difficulties faced by compilers of national accounts is the extent of unreported economic activity in the informal or secondary economy. In developing countries a large share of agricultural output is either not exchanged (because it is consumed within the household) or not exchanged for money."
+            },
+            {
+              "id": "Longdefinition",
+              "value": "Gross domestic product is the total income earned through the production of goods and services in an economic territory during an accounting period. It can be measured in three different ways: using either the expenditure approach, the income approach, or the production approach. This indicator is expressed in current prices, meaning no adjustment has been made to account for price changes over time. This indicator is expressed in United States dollars."
+            },
+            {
+              "id": "Periodicity",
+              "value": "Annual"
+            },
+            {
+              "id": "Referenceperiod",
+              "value": "1960-2025"
+            },
+            {
+              "id": "Source",
+              "value": "Country official statistics, National Statistical Organizations and/or Central Banks;\nNational Accounts data files, Organisation for Economic Co-operation and Development (OECD);\nStaff estimates, World Bank (WB)"
+            },
+            {
+              "id": "Statisticalconceptandmethodology",
+              "value": "Methodology: National accounts are compiled in accordance with international standards: System of National Accounts, 2008 or 1993 versions. Specific information on how countries compile their national accounts can be found on the IMF website: https://dsbb.imf.org/\nStatistical concept(s): The conceptual elements of the SNA (System of National Accounts) measure what takes place in the economy, between which agents, and for what purpose. At the heart of the SNA is the production of goods and services. These may be used for consumption in the period to which the accounts relate or may be accumulated for use in a later period. In simple terms, the amount of value added generated by production represents GDP. The income corresponding to GDP is distributed to the various agents or groups of agents as income and it is the process of distributing and redistributing income that allows one agent to consume the goods and services produced by another agent or to acquire goods and services for later consumption. The way in which the SNA captures this pattern of economic flows is to identify the activities concerned by recognizing the institutional units in the economy and by specifying the structure of accounts capturing the transactions relevant to one stage or another of the process by which goods and services are produced and ultimately consumed."
+            },
+            {
+              "id": "Topic",
+              "value": "Economic Policy & Debt: National accounts: US$ at current prices: Aggregate indicators"
+            },
+            {
+              "id": "Unitofmeasure",
+              "value": "current US$"
+            }
+          ],
+          "concept": "Series",
+          "id": "NY.GDP.MKTP.CD",
+          "observed_at_ms": 1789999469425,
+          "source_id": "2",
+          "source_name": "World Development Indicators",
+          "source_url": "https://api.worldbank.org/v2/sources/2/series/NY.GDP.MKTP.CD/metadata?format=json"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "data-worldbank-org",
+        "capability": "indicators/metadata"
+      }
+    },
+    {
+      "id": "data-worldbank-org/indicators/reference",
+      "provider": "data-worldbank-org",
+      "capability": "indicators/reference",
+      "name": "Reference",
+      "description": "Find valid `topic_id`, `region`, `income_level` or `lending_type` codes.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "code",
+          "type": "string",
+          "in": "body",
+          "about": "One item: topic id (3), region code (SSF), income level (LIC) or lending type (IDX). Pattern: ^[A-Za-z0-9]{1,4}$."
+        },
+        {
+          "name": "kind",
+          "type": "string",
+          "in": "body",
+          "about": "kind",
+          "required": true,
+          "oneOf": [
+            "topic",
+            "region",
+            "income_level",
+            "lending_type"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Reference lists that other inputs take codes from: topics (21), regions (43), income levels (7) and lending types (4). Pass `code` to look one up.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Topic `sourceNote`; null for the other kinds, which carry none."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "The code other functions accept: topic id (3), region code (SSF), income level id (LIC), lending type id (IDX)."
+          },
+          {
+            "name": "iso2_code",
+            "type": "string",
+            "about": "Two-letter code of the aggregate that carries this group's data; null for topics."
+          },
+          {
+            "name": "kind",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "kind": "income_level"
+        },
+        "response": {
+          "kind": "income_level",
+          "next_page": null,
+          "observed_at_ms": 1789999359317,
+          "page": 1,
+          "pages": 1,
+          "per_page": 500,
+          "records": [
+            {
+              "description": null,
+              "id": "HIC",
+              "iso2_code": "XD",
+              "kind": "income_level",
+              "name": "High income"
+            },
+            {
+              "description": null,
+              "id": "INX",
+              "iso2_code": "XY",
+              "kind": "income_level",
+              "name": "Not classified"
+            },
+            {
+              "description": null,
+              "id": "LIC",
+              "iso2_code": "XM",
+              "kind": "income_level",
+              "name": "Low income"
+            },
+            {
+              "description": null,
+              "id": "LMC",
+              "iso2_code": "XN",
+              "kind": "income_level",
+              "name": "Lower middle income"
+            },
+            {
+              "description": null,
+              "id": "LMY",
+              "iso2_code": "XO",
+              "kind": "income_level",
+              "name": "Low & middle income"
+            },
+            {
+              "description": null,
+              "id": "MIC",
+              "iso2_code": "XP",
+              "kind": "income_level",
+              "name": "Middle income"
+            },
+            {
+              "description": null,
+              "id": "UMC",
+              "iso2_code": "XT",
+              "kind": "income_level",
+              "name": "Upper middle income"
+            }
+          ],
+          "source_url": "https://api.worldbank.org/v2/incomeLevel?format=json&per_page=500",
+          "total": 7,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "data-worldbank-org",
+        "capability": "indicators/reference"
+      }
+    },
+    {
+      "id": "data-worldbank-org/indicators/source_concepts",
+      "provider": "data-worldbank-org",
+      "capability": "indicators/source_concepts",
+      "name": "Source concepts",
+      "description": "Before `concept_values` or `source_data` on an unfamiliar source.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "source_id",
+          "type": "string",
+          "in": "body",
+          "about": "World Bank database (source) id as a string, exactly as the API returns it: 2 = World Development Indicators, 6 = International Debt Statistics, 15 = Global Economic Monitor, 40 = Population estimates and projections. Pattern: ^[0-9]{1,5}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "The dimensions (concepts) of one database: Country, Series and Time for most sources; International Debt Statistics adds Counterpart-Area. Concept ids are the values `concept_values` and `metadata` take.",
+        "key": "concepts",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "source_id": "6"
+        },
+        "response": {
+          "concepts": [
+            {
+              "id": "Country",
+              "name": "Country"
+            },
+            {
+              "id": "Series",
+              "name": "Series"
+            },
+            {
+              "id": "Time",
+              "name": "Time"
+            },
+            {
+              "id": "Counterpart-Area",
+              "name": "Counterpart-Area"
+            }
+          ],
+          "observed_at_ms": 1789999372501,
+          "source_id": "6",
+          "source_name": "International Debt Statistics",
+          "source_url": "https://api.worldbank.org/v2/sources/6/concepts?format=json"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "data-worldbank-org",
+        "capability": "indicators/source_concepts"
+      }
+    },
+    {
+      "id": "data-worldbank-org/indicators/source_data",
+      "provider": "data-worldbank-org",
+      "capability": "indicators/source_data",
+      "name": "Source data",
+      "description": "Use for IDS (source 6) series, or when you want the dimension-keyed form of a series from any source.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "counterpart_area",
+          "type": "string",
+          "in": "body",
+          "about": "Counterpart-Area dimension value for IDS (source 6): WLD for all creditors, or a creditor code from `concept_values` (concept counterpart-area). Pattern: ^[A-Za-z0-9]{2,3}$."
+        },
+        {
+          "name": "country_codes",
+          "type": "string[]",
+          "in": "body",
+          "about": "ISO3 or aggregate codes, or `all`."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page number; pass `next_page` from the previous output to continue.",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "per_page",
+          "type": "number",
+          "in": "body",
+          "about": "Rows per page (upstream `per_page`).",
+          "default": 50,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "name": "series_ids",
+          "type": "string[]",
+          "in": "body",
+          "about": "Series (indicator) codes within the source.",
+          "required": true
+        },
+        {
+          "name": "source_id",
+          "type": "string",
+          "in": "body",
+          "about": "World Bank database (source) id as a string, exactly as the API returns it: 2 = World Development Indicators, 6 = International Debt Statistics, 15 = Global Economic Monitor, 40 = Population estimates and projections. Pattern: ^[0-9]{1,5}$.",
+          "required": true
+        },
+        {
+          "name": "time_ids",
+          "type": "string[]",
+          "in": "body",
+          "about": "Time dimension ids (YR2022) or `all`."
+        }
+      ],
+      "response": {
+        "about": "Observations through the dimension path `sources/{source_id}/country/{c}/series/{s}[/counterpart-area/{x}]/time/{t}/data`, which serves every database including International Debt Statistics (source 6, which needs `counterpart_area`, e.g. WLD for all creditors). Time ids use upstream's dimension form (YR2022) or `all`. Each row carries every dimension value upstream lists plus the numeric value.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "counterpart_area_id",
+            "type": "string"
+          },
+          {
+            "name": "country_id",
+            "type": "string"
+          },
+          {
+            "name": "dimensions",
+            "type": "object[]"
+          },
+          {
+            "name": "series_id",
+            "type": "string"
+          },
+          {
+            "name": "time_id",
+            "type": "string",
+            "about": "Upstream time id, e.g. YR2022."
+          },
+          {
+            "name": "value",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "counterpart_area": "WLD",
+          "country_codes": [
+            "BRA"
+          ],
+          "series_ids": [
+            "DT.DOD.DECT.CD"
+          ],
+          "source_id": "6",
+          "time_ids": [
+            "YR2022",
+            "YR2023"
+          ]
+        },
+        "response": {
+          "last_updated": "2025-12-03",
+          "next_page": null,
+          "observed_at_ms": 1789999368521,
+          "page": 1,
+          "pages": 1,
+          "per_page": 50,
+          "records": [
+            {
+              "counterpart_area_id": "WLD",
+              "country_id": "BRA",
+              "dimensions": [
+                {
+                  "concept": "Country",
+                  "id": "BRA",
+                  "name": "Brazil"
+                },
+                {
+                  "concept": "Time",
+                  "id": "YR2022",
+                  "name": "2022"
+                },
+                {
+                  "concept": "Series",
+                  "id": "DT.DOD.DECT.CD",
+                  "name": "External debt stocks, total (DOD, current US$)"
+                },
+                {
+                  "concept": "Counterpart-Area",
+                  "id": "WLD",
+                  "name": "World"
+                }
+              ],
+              "series_id": "DT.DOD.DECT.CD",
+              "time_id": "YR2022",
+              "value": 579257850288.2
+            },
+            {
+              "counterpart_area_id": "WLD",
+              "country_id": "BRA",
+              "dimensions": [
+                {
+                  "concept": "Country",
+                  "id": "BRA",
+                  "name": "Brazil"
+                },
+                {
+                  "concept": "Time",
+                  "id": "YR2023",
+                  "name": "2023"
+                },
+                {
+                  "concept": "Series",
+                  "id": "DT.DOD.DECT.CD",
+                  "name": "External debt stocks, total (DOD, current US$)"
+                },
+                {
+                  "concept": "Counterpart-Area",
+                  "id": "WLD",
+                  "name": "World"
+                }
+              ],
+              "series_id": "DT.DOD.DECT.CD",
+              "time_id": "YR2023",
+              "value": 607387151485.1
+            }
+          ],
+          "source_id": "6",
+          "source_name": "International Debt Statistics",
+          "source_url": "https://api.worldbank.org/v2/sources/6/country/BRA/series/DT.DOD.DECT.CD/counterpart-area/WLD/time/YR2022;YR2023/data?format=json&per_page=50&page=1",
+          "total": 2,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "data-worldbank-org",
+        "capability": "indicators/source_data"
+      }
+    },
+    {
+      "id": "data-worldbank-org/indicators/sources",
+      "provider": "data-worldbank-org",
+      "capability": "indicators/sources",
+      "name": "Sources",
+      "description": "Start here to find the source id of a database (2 WDI, 6 IDS, 15 GEM) or to read its vintage.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "source_id",
+          "type": "string",
+          "in": "body",
+          "about": "World Bank database (source) id as a string, exactly as the API returns it: 2 = World Development Indicators, 6 = International Debt Statistics, 15 = Global Economic Monitor, 40 = Population estimates and projections. Pattern: ^[0-9]{1,5}$."
+        }
+      ],
+      "response": {
+        "about": "List the databases (sources) the World Bank Indicators API publishes, with code, vintage (`last_updated`) and whether data and metadata are available, or look one up by `source_id`. Source ids scope `indicators`, `data`, `source_data`, `source_concepts`, `concept_values` and `metadata`.",
+        "key": "records",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "code",
+            "type": "string",
+            "about": "Short code such as WDI, IDS, GEM; null when upstream leaves it empty."
+          },
+          {
+            "name": "concepts",
+            "type": "number",
+            "about": "Number of dimensions (concepts) the source has; see source_concepts."
+          },
+          {
+            "name": "data_availability",
+            "type": "boolean",
+            "about": "Upstream `dataavailability` Y/N: whether observations can be queried for this source."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "last_updated",
+            "type": "string",
+            "about": "Database vintage as upstream states it (YYYY-MM-DD)."
+          },
+          {
+            "name": "metadata_availability",
+            "type": "boolean"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "source_id",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "source_id": "2"
+        },
+        "response": {
+          "next_page": null,
+          "observed_at_ms": 1789999322168,
+          "page": 1,
+          "pages": 1,
+          "per_page": 50,
+          "records": [
+            {
+              "code": "WDI",
+              "concepts": 3,
+              "data_availability": true,
+              "description": null,
+              "last_updated": "2026-07-13",
+              "metadata_availability": true,
+              "name": "World Development Indicators",
+              "source_id": "2",
+              "url": null
+            }
+          ],
+          "source_url": "https://api.worldbank.org/v2/sources/2?format=json",
+          "total": 1,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "data-worldbank-org",
+        "capability": "indicators/sources"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1380 @@
+{
+  "id": "uhaul-com",
+  "provider": "uhaul-com",
+  "name": "U-Haul",
+  "description": "uhaul.com truck rental quotes and availability: search in-town (local) and one-way truck rates for a pickup location, optional drop-off location and pickup date, read the per-model rate basis (rental rate, mileage rate, extra day/mile, allowed days and distance, environmental fee) and the site's own availability text; autosuggest pickup/drop-off place names; list U-Haul locations in a city, read one location's profile (address, phone, hours, rating, base in-town rates) and its customer reviews. Read-only: no reservations, holds or checkout.",
+  "toolCount": 5,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "uhaul-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "uhaul-com/truck-rentals/get_location",
+      "provider": "uhaul-com",
+      "capability": "truck-rentals/get_location",
+      "name": "Get location",
+      "description": "You have an `entity_id` from `list_locations` (or a pasted uhaul.com/Locations/.../{id}/ URL) and need the location's profile.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "entity_id",
+          "type": "string",
+          "in": "body",
+          "about": "Numeric U-Haul location id, padded (`002131`) or not (`2131`). Pattern: ^[0-9]{1,9}$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One U-Haul rental location by entity id: name, dealer type, address, phone, coordinates, opening hours, aggregate customer rating, other rental lines offered and the advertised in-town base rate per truck model, from the location page's LocalBusiness structured data.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "address",
+            "type": "object",
+            "about": "Postal address from the page's LocalBusiness data."
+          },
+          {
+            "name": "currencies_accepted",
+            "type": "string"
+          },
+          {
+            "name": "dealer_type",
+            "type": "string",
+            "about": "`U-Haul Neighborhood Dealer`, `U-Haul Moving & Storage`, ... as shown under the name."
+          },
+          {
+            "name": "departments",
+            "type": "object[]",
+            "about": "Other rental lines at this location (trailers, storage, ...)."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "entity_id",
+            "type": "string",
+            "about": "Six-digit zero-padded U-Haul location id."
+          },
+          {
+            "name": "google_maps_url",
+            "type": "string"
+          },
+          {
+            "name": "in_town_base_rates",
+            "type": "object[]",
+            "about": "Advertised in-town base rates per model from the page's structured data; not a dated quote."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "opening_hours",
+            "type": "string[]"
+          },
+          {
+            "name": "payment_accepted",
+            "type": "string[]"
+          },
+          {
+            "name": "photo_url",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "object",
+            "about": "Aggregate customer rating; null when the site publishes none."
+          },
+          {
+            "name": "reviews_url",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "telephone",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Canonical location page."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "entity_id": "002131"
+        },
+        "response": {
+          "address": {
+            "city": "Phoenix",
+            "country": "US",
+            "postal_code": "85043",
+            "region": "AZ",
+            "street": "6403 W Van Buren St"
+          },
+          "currencies_accepted": "USD",
+          "dealer_type": "U-Haul Neighborhood Dealer",
+          "departments": [
+            {
+              "name": "U-Haul: Moving Truck Rental in Phoenix, AZ at Westside Rentals Inc",
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Phoenix-AZ-85043/002131/"
+            },
+            {
+              "name": "U-Haul Trailer & Towing Rentals at Westside Rentals Inc",
+              "url": "https://www.uhaul.com/Locations/Trailer-Rentals-near-Phoenix-AZ-85043/002131/"
+            }
+          ],
+          "description": "Reserve a moving truck rental, cargo van or pickup truck in Phoenix, AZ. Your truck rental reservation is guaranteed on all rental trucks. Rent a moving truck in Phoenix, AZ today.",
+          "entity_id": "002131",
+          "google_maps_url": "https://maps.google.com/maps?cid=16864758874241064044",
+          "in_town_base_rates": [
+            {
+              "availability": "https://schema.org/InStock",
+              "body_type": "Pickup Truck",
+              "currency": "USD",
+              "model_code": "BP",
+              "name": "Pickup Truck Rental",
+              "offer_url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Phoenix-AZ-85043/002131/",
+              "price": 19.95,
+              "price_valid_until": "2027-10-05",
+              "url": "https://www.uhaul.com/Truck-Rentals/Pickup-Truck/"
+            },
+            {
+              "availability": "https://schema.org/InStock",
+              "body_type": "Cargo Van",
+              "currency": "USD",
+              "model_code": "BE",
+              "name": "Cargo Van Rental",
+              "offer_url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Phoenix-AZ-85043/002131/",
+              "price": 19.95,
+              "price_valid_until": "2027-10-05",
+              "url": "https://www.uhaul.com/Truck-Rentals/Cargo-Van/"
+            },
+            {
+              "availability": "https://schema.org/InStock",
+              "body_type": "Box Truck",
+              "currency": "USD",
+              "model_code": "TM",
+              "name": "10ft Moving Truck Rental",
+              "offer_url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Phoenix-AZ-85043/002131/",
+              "price": 19.95,
+              "price_valid_until": "2027-10-05",
+              "url": "https://www.uhaul.com/Truck-Rentals/10ft-Moving-Truck/"
+            },
+            {
+              "availability": "https://schema.org/InStock",
+              "body_type": "Box Truck",
+              "currency": "USD",
+              "model_code": "DC",
+              "name": "15ft Moving Truck Rental",
+              "offer_url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Phoenix-AZ-85043/002131/",
+              "price": 19.95,
+              "price_valid_until": "2027-10-05",
+              "url": "https://www.uhaul.com/Truck-Rentals/15ft-Moving-Truck/"
+            },
+            {
+              "availability": "https://schema.org/InStock",
+              "body_type": "Box Truck",
+              "currency": "USD",
+              "model_code": "TT",
+              "name": "20ft Moving Truck Rental",
+              "offer_url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Phoenix-AZ-85043/002131/",
+              "price": 39.95,
+              "price_valid_until": "2027-10-05",
+              "url": "https://www.uhaul.com/Truck-Rentals/20ft-Moving-Truck/"
+            },
+            {
+              "availability": "https://schema.org/InStock",
+              "body_type": "Box Truck",
+              "currency": "USD",
+              "model_code": "JH",
+              "name": "26ft Moving Truck Rental",
+              "offer_url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Phoenix-AZ-85043/002131/",
+              "price": 39.95,
+              "price_valid_until": "2027-10-05",
+              "url": "https://www.uhaul.com/Truck-Rentals/26ft-Moving-Truck/"
+            }
+          ],
+          "latitude": 33.45144615,
+          "longitude": -112.19734428,
+          "name": "Westside Rentals Inc",
+          "observed_at_ms": 1790023297810,
+          "opening_hours": [
+            "Mon - Fri: 9 am - 4 pm",
+            "Sat - Sun: Closed"
+          ],
+          "payment_accepted": [
+            "Cash",
+            "Credit Card"
+          ],
+          "photo_url": "https://www.uhaul.com/Locations/GetPhoto.ashx?id=1066714&size=5",
+          "rating": {
+            "count": 169,
+            "value": 2.5
+          },
+          "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-location/002131/",
+          "source_url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Phoenix-AZ-85043/002131/",
+          "telephone": "+16239361029",
+          "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Phoenix-AZ-85043/002131/"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "uhaul-com",
+        "capability": "truck-rentals/get_location"
+      }
+    },
+    {
+      "id": "uhaul-com/truck-rentals/get_location_reviews",
+      "provider": "uhaul-com",
+      "capability": "truck-rentals/get_location_reviews",
+      "name": "Get location reviews",
+      "description": "You have a location `entity_id` and want its customer feedback.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "entity_id",
+          "type": "string",
+          "in": "body",
+          "about": "Numeric U-Haul location id, padded (`002131`) or not (`2131`). Pattern: ^[0-9]{1,9}$.",
+          "required": true
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "Reviews per page.",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "Index of the first review to return.",
+          "default": 0,
+          "min": 0
+        }
+      ],
+      "response": {
+        "about": "Customer reviews of one U-Haul location: aggregate rating and the reviews the reviews page embeds (up to 100, newest first) with author, date, text and star rating, paged by offset/limit.",
+        "key": "reviews",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "author",
+            "type": "string",
+            "about": "Reviewer name as the site publishes it (first name and initial)."
+          },
+          {
+            "name": "best_rating",
+            "type": "number"
+          },
+          {
+            "name": "body",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "type": "string",
+            "about": "ISO date."
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "entity_id": "002131",
+          "limit": 5
+        },
+        "response": {
+          "count": 5,
+          "entity_id": "002131",
+          "inline_total": 100,
+          "name": "Westside Rentals Inc",
+          "next_offset": 5,
+          "observed_at_ms": 1790023443156,
+          "offset": 0,
+          "rating": {
+            "count": 169,
+            "value": 2.5
+          },
+          "reviews": [
+            {
+              "author": "JOAQUINA R",
+              "best_rating": 5,
+              "body": "I think what needs to be improved is pricing that $19.95 is literally a scam, I paid $130 and an extra $22 for gas just for a couple of miles to move some furniture… smh",
+              "date": "2026-09-09",
+              "rating": 1
+            },
+            {
+              "author": "Lamont H",
+              "best_rating": 5,
+              "body": "The drop-off was closed and the location is off property. Had to leave equipment outside",
+              "date": "2026-06-01",
+              "rating": 2
+            },
+            {
+              "author": "Nathan K",
+              "best_rating": 5,
+              "body": "I recently used your service for the first time, and unfortunately, it was a very disappointing experience. The truck was returned with less than a quarter tank of fuel and was not clean. Additionally, when I contacted customer service, I was told that a discount would be provided, but I never received it. Overall, I feel that I was told what I wanted to hear, but there was no follow-through. I would appreciate it if someone could look into this and provide a resolution",
+              "date": "2026-04-22",
+              "rating": 1
+            },
+            {
+              "author": "Gilbert B",
+              "best_rating": 5,
+              "body": "Increase parking space at this location",
+              "date": "2026-04-06",
+              "rating": 4
+            },
+            {
+              "author": "JAMES P",
+              "best_rating": 5,
+              "body": null,
+              "date": "2026-01-22",
+              "rating": 2
+            }
+          ],
+          "source_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Location/002131/",
+          "url": "https://www.uhaul.com/Locations/Customer-reviews-for-Location/002131/"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "uhaul-com",
+        "capability": "truck-rentals/get_location_reviews"
+      }
+    },
+    {
+      "id": "uhaul-com/truck-rentals/list_locations",
+      "provider": "uhaul-com",
+      "capability": "truck-rentals/list_locations",
+      "name": "List locations",
+      "description": "Find location `entity_id`s in a place before `get_location` / `get_location_reviews`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "city",
+          "type": "string",
+          "in": "body",
+          "about": "City name, e.g. `Tucson`.",
+          "required": true
+        },
+        {
+          "name": "postal_code",
+          "type": "string",
+          "in": "body",
+          "about": "Optional zip / postal code to narrow the listing."
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "in": "body",
+          "about": "Two-letter US state or Canadian province code.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "U-Haul truck rental locations in a city (optionally narrowed to a postal code) from the city results page: entity id, name, dealer type, address, coordinates, distance, rating and review count, hours and services. One server-rendered page per city; the site offers no further pages.",
+        "key": "locations",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "address_lines",
+            "type": "string[]",
+            "about": "Street line then `City, ST zip` as printed."
+          },
+          {
+            "name": "dealer_type",
+            "type": "string"
+          },
+          {
+            "name": "distance_text",
+            "type": "string",
+            "about": "Distance from the city centre as printed, e.g. `1.3 MI`."
+          },
+          {
+            "name": "entity_id",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "opening_hours",
+            "type": "string[]"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "review_count",
+            "type": "number"
+          },
+          {
+            "name": "reviews_url",
+            "type": "string"
+          },
+          {
+            "name": "services",
+            "type": "string[]"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Location detail page."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "city": "Tucson",
+          "state": "AZ"
+        },
+        "response": {
+          "count": 18,
+          "locations": [
+            {
+              "address_lines": [
+                "450 N Freeway",
+                "Tucson, AZ 85701"
+              ],
+              "dealer_type": null,
+              "distance_text": "0.6 MI",
+              "entity_id": "828074",
+              "latitude": 32.22714098,
+              "longitude": -110.97991713,
+              "name": "U-Haul Moving & Storage of Downtown Tucson",
+              "opening_hours": [
+                "Mon-Thur: 7 am - 7 pm",
+                "Fri: 7 am - 8 pm",
+                "Sat: 7 am - 7 pm",
+                "Sun: 9 am - 5 pm"
+              ],
+              "rating": 4.5,
+              "review_count": 4715,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-UHaul-Moving-and-Storage-of-Downtown-Tucson/828074/Trucks/",
+              "services": [
+                "24 hour customer return",
+                "Free towing inspection",
+                "Propane exchange"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85701/828074/"
+            },
+            {
+              "address_lines": [
+                "777 E 22nd St",
+                "Tucson, AZ 85713"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "1.3 MI",
+              "entity_id": "054470",
+              "latitude": 32.20712457,
+              "longitude": -110.95815904,
+              "name": "Express Tune Up & Lube",
+              "opening_hours": [
+                "Mon-Fri: 8 am - 5 pm"
+              ],
+              "rating": 4,
+              "review_count": 22,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Express-Tune-Up-and-Lube/054470/Trucks/",
+              "services": [
+                "24 hour customer return"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85713/054470/"
+            },
+            {
+              "address_lines": [
+                "1700 S 6th Ave",
+                "South Tucson, AZ 85713"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "1.4 MI",
+              "entity_id": "034209",
+              "latitude": 32.201315,
+              "longitude": -110.969244,
+              "name": "Auto MD Motorsports LLC",
+              "opening_hours": [
+                "Mon-Fri: 8 am - 5 pm"
+              ],
+              "rating": 4,
+              "review_count": 28,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Auto-MD-Motorsports-LLC/034209/Trucks/",
+              "services": [],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-South-Tucson-AZ-85713/034209/"
+            },
+            {
+              "address_lines": [
+                "1750 N Stone Ave",
+                "Tucson, AZ 85705"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "1.5 MI",
+              "entity_id": "002437",
+              "latitude": 32.24361879,
+              "longitude": -110.97167429,
+              "name": "Ambassador Auto Care",
+              "opening_hours": [
+                "Mon-Fri: 8:30 am - 5:30 pm",
+                "Sat: 9 am - 2 pm"
+              ],
+              "rating": 4,
+              "review_count": 231,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Ambassador-Auto-Care/002437/Trucks/",
+              "services": [
+                "24 hour customer return"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85705/002437/"
+            },
+            {
+              "address_lines": [
+                "1830 N 7th Ave",
+                "Tucson, AZ 85705"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "1.6 MI",
+              "entity_id": "031592",
+              "latitude": 32.24462644,
+              "longitude": -110.97021897,
+              "name": "Tucson Lock Storage",
+              "opening_hours": [
+                "Tue-Sat: 9 am - 5 pm"
+              ],
+              "rating": 3.5,
+              "review_count": 29,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Tucson-Lock-Storage/031592/Trucks/",
+              "services": [
+                "24 hour customer return"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85705/031592/"
+            },
+            {
+              "address_lines": [
+                "1310 W Speedway Blvd",
+                "Tucson, AZ 85745"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "1.6 MI",
+              "entity_id": "002162",
+              "latitude": 32.23604,
+              "longitude": -110.993025,
+              "name": "Westside Liquor",
+              "opening_hours": [
+                "Mon-Sun: 10:30 am - 8 pm"
+              ],
+              "rating": 4,
+              "review_count": 47,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Westside-Liquor/002162/Trucks/",
+              "services": [],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85745/002162/"
+            },
+            {
+              "address_lines": [
+                "2208 N Stone Ave",
+                "Tucson, AZ 85705"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "1.8 MI",
+              "entity_id": "029463",
+              "latitude": 32.24823281,
+              "longitude": -110.97153597,
+              "name": "Tire Up LLC",
+              "opening_hours": [
+                "Mon-Fri: 9 am - 5 pm"
+              ],
+              "rating": 4,
+              "review_count": 97,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Tire-Up-LLC/029463/Trucks/",
+              "services": [],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85705/029463/"
+            },
+            {
+              "address_lines": [
+                "210 S Plumer Ave",
+                "Tucson, AZ 85719"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "1.8 MI",
+              "entity_id": "006754",
+              "latitude": 32.21995401,
+              "longitude": -110.93969912,
+              "name": "Tucson Optical Research",
+              "opening_hours": [
+                "Mon-Fri: 8 am - 5 pm"
+              ],
+              "rating": 4.5,
+              "review_count": 83,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Tucson-Optical-Research/006754/Trucks/",
+              "services": [
+                "24 hour customer return"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85719/006754/"
+            },
+            {
+              "address_lines": [
+                "337 E Grant Rd",
+                "Tucson, AZ 85705"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "2.0 MI",
+              "entity_id": "055102",
+              "latitude": 32.25056834,
+              "longitude": -110.96642984,
+              "name": "Boost Mobile",
+              "opening_hours": [
+                "Mon-Fri: 10:30 am - 6 pm"
+              ],
+              "rating": 3.5,
+              "review_count": 14,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Boost-Mobile/055102/Trucks/",
+              "services": [
+                "24 hour customer return"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85705/055102/"
+            },
+            {
+              "address_lines": [
+                "30 E Alturas St",
+                "Tucson, AZ 85705"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "2.1 MI",
+              "entity_id": "055412",
+              "latitude": 32.25210764,
+              "longitude": -110.97122767,
+              "name": "Mooreperformance",
+              "opening_hours": [
+                "Mon-Fri: 8 am - 5 pm"
+              ],
+              "rating": 3.5,
+              "review_count": 137,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Mooreperformance/055412/Trucks/",
+              "services": [
+                "24 hour customer return"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85705/055412/"
+            },
+            {
+              "address_lines": [
+                "805 E 36th St",
+                "Tucson, AZ 85713"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "2.1 MI",
+              "entity_id": "046301",
+              "latitude": 32.192647,
+              "longitude": -110.958754,
+              "name": "Jerrys Market",
+              "opening_hours": [
+                "Mon-Sat: 9 am - 9 pm"
+              ],
+              "rating": 3,
+              "review_count": 31,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Jerrys-Market/046301/Trucks/",
+              "services": [
+                "24 hour customer return",
+                "habla español"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85713/046301/"
+            },
+            {
+              "address_lines": [
+                "2640 N Stone Ave",
+                "Tucson, AZ 85705"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "2.3 MI",
+              "entity_id": "031348",
+              "latitude": 32.25540265,
+              "longitude": -110.97146492,
+              "name": "Carson Trailer",
+              "opening_hours": [
+                "Mon-Sat: 8 am - 5 pm"
+              ],
+              "rating": 4.5,
+              "review_count": 6,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Carson-Trailer/031348/Trucks/",
+              "services": [],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85705/031348/"
+            },
+            {
+              "address_lines": [
+                "1570 W Grant Rd Unit 2",
+                "Tucson, AZ 85745"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "2.6 MI",
+              "entity_id": "019134",
+              "latitude": 32.25068016,
+              "longitude": -110.9998545,
+              "name": "Ervs Automotive",
+              "opening_hours": [
+                "Mon-Fri: 8 am - 5 pm",
+                "Sat: 8 am - 12 pm"
+              ],
+              "rating": 4,
+              "review_count": 362,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Ervs-Automotive/019134/Trucks/",
+              "services": [
+                "24 hour customer return"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85745/019134/"
+            },
+            {
+              "address_lines": [
+                "2844 N 1st Ave",
+                "Tucson, AZ 85719"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "2.6 MI",
+              "entity_id": "047727",
+              "latitude": 32.25885541,
+              "longitude": -110.96076213,
+              "name": "Bubbas Motorcycle Shop",
+              "opening_hours": [
+                "Tue-Fri: 10 am - 6 pm",
+                "Sat: 10 am - 3 pm"
+              ],
+              "rating": 4,
+              "review_count": 34,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Bubbas-Motorcycle-Shop/047727/Trucks/",
+              "services": [
+                "24 hour customer return"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85719/047727/"
+            },
+            {
+              "address_lines": [
+                "3032 N Stone Ave",
+                "Tucson, AZ 85705"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "2.8 MI",
+              "entity_id": "044613",
+              "latitude": 32.26222801,
+              "longitude": -110.97182691,
+              "name": "TirePros & Auto",
+              "opening_hours": [
+                "Tue-Sat: 10 am - 6 pm"
+              ],
+              "rating": 3.5,
+              "review_count": 74,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-TirePros-and-Auto/044613/Trucks/",
+              "services": [
+                "24 hour customer return"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85705/044613/"
+            },
+            {
+              "address_lines": [
+                "3100 N Stone Ave Ste 212",
+                "Tucson, AZ 85705"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "2.9 MI",
+              "entity_id": "046042",
+              "latitude": 32.26329573,
+              "longitude": -110.97118566,
+              "name": "M&T Auto Restore",
+              "opening_hours": [
+                "Mon-Fri: 9:30 am - 4 pm",
+                "Sat: 10 am - 2 pm"
+              ],
+              "rating": 3,
+              "review_count": 14,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-MandT-Auto-Restore/046042/Trucks/",
+              "services": [
+                "24 hour customer return"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85705/046042/"
+            },
+            {
+              "address_lines": [
+                "2475 E Grant Rd",
+                "Tucson, AZ 85719"
+              ],
+              "dealer_type": "U-Haul Neighborhood Dealer",
+              "distance_text": "2.9 MI",
+              "entity_id": "033518",
+              "latitude": 32.25070937,
+              "longitude": -110.93587343,
+              "name": "Grant Rd Chevron",
+              "opening_hours": [
+                "Mon-Sat: 6 am - 10 pm",
+                "Sun: 7 am - 9 pm"
+              ],
+              "rating": 4,
+              "review_count": 20,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-Grant-Rd-Chevron/033518/Trucks/",
+              "services": [
+                "24 hour customer return"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85719/033518/"
+            },
+            {
+              "address_lines": [
+                "1265 E Benson Hwy",
+                "Tucson, AZ 85713"
+              ],
+              "dealer_type": null,
+              "distance_text": "3.2 MI",
+              "entity_id": "943073",
+              "latitude": 32.178472,
+              "longitude": -110.952393,
+              "name": "U-Haul Moving & Storage of Bravo Park",
+              "opening_hours": [
+                "Mon-Thur: 7 am - 7 pm",
+                "Fri: 7 am - 8 pm",
+                "Sat: 7 am - 7 pm",
+                "Sun: 9 am - 5 pm"
+              ],
+              "rating": 4,
+              "review_count": 2189,
+              "reviews_url": "https://www.uhaul.com/Locations/Customer-reviews-for-UHaul-Moving-and-Storage-of-Bravo-Park/943073/Trucks/",
+              "services": [
+                "24 hour customer return",
+                "Free towing inspection",
+                "Propane pay at pump",
+                "habla español"
+              ],
+              "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ-85713/943073/"
+            }
+          ],
+          "observed_at_ms": 1790023333369,
+          "source_url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ/Results/",
+          "title": "Moving Truck Rentals in Tucson, AZ",
+          "url": "https://www.uhaul.com/Locations/Truck-Rentals-near-Tucson-AZ/Results/"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "uhaul-com",
+        "capability": "truck-rentals/list_locations"
+      }
+    },
+    {
+      "id": "uhaul-com/truck-rentals/search_truck_rates",
+      "provider": "uhaul-com",
+      "capability": "truck-rentals/search_truck_rates",
+      "name": "Search truck rates",
+      "description": "The caller wants truck sizes, prices or availability for a move between two places or around one place on a date. Use `suggest_locations` first when the place name is ambiguous.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "dropoff_location",
+          "type": "string",
+          "in": "body",
+          "about": "Drop-off place for a one-way move. Omit for an in-town rental returned to the pickup location."
+        },
+        {
+          "name": "pickup_date",
+          "type": "string",
+          "in": "body",
+          "about": "Pickup date, `YYYY-MM-DD`, from today to about eleven months out. Defaults to 30 days from today when omitted. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "pickup_location",
+          "type": "string",
+          "in": "body",
+          "about": "`City, ST`, a US zip / Canadian postal code, or a street address, as U-Haul's form accepts.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Quote U-Haul truck rentals for a pickup location, optional drop-off location and pickup date: the site's own per-model availability flag and rate basis (base rate, rental period, mileage rate, extra day/distance charges, allowed days and distance for one-way), disclosed environmental fees and add-on rates. `rental_type` tells a one-way move from an in-town (return to origin) rental. Prices are a snapshot at quote time in the origin market's currency; taxes and optional coverages are not included. No reservation is made.",
+        "key": "models",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "availability_text",
+            "type": "string",
+            "about": "The site's availability wording when it gives one."
+          },
+          {
+            "name": "availability_type",
+            "type": "number"
+          },
+          {
+            "name": "best_rate",
+            "type": "number"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "fees",
+            "type": "object[]",
+            "about": "Fees the site discloses per model (environmental fee). Taxes and optional coverages are not included."
+          },
+          {
+            "name": "has_better_rate",
+            "type": "boolean"
+          },
+          {
+            "name": "hours_available",
+            "type": "number"
+          },
+          {
+            "name": "is_available",
+            "type": "boolean",
+            "about": "The site's own availability flag for this pickup location and date; a quote snapshot, not a hold or guarantee."
+          },
+          {
+            "name": "model_code",
+            "type": "string",
+            "about": "Two-letter U-Haul equipment code (TM 10' truck, DC 15', EL 17', TT 20', JH 26', EM 29', BP pickup, BE cargo van, MP crew-cab pickup)."
+          },
+          {
+            "name": "model_type",
+            "type": "number"
+          },
+          {
+            "name": "rate",
+            "type": "number",
+            "about": "The quoted rate; null when the site does not offer the model on this move (it writes 0 there)."
+          },
+          {
+            "name": "rate_basis",
+            "type": "object",
+            "about": "The site's selected rate for the model; null when it offers none."
+          },
+          {
+            "name": "savings",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "dropoff_location": "Tucson, AZ",
+          "pickup_location": "Phoenix, AZ"
+        },
+        "response": {
+          "add_ons": [
+            {
+              "code": "KO",
+              "description": "Appliance Dolly",
+              "rate": 15
+            },
+            {
+              "code": "PO",
+              "description": "Furniture Pads",
+              "rate": 12
+            },
+            {
+              "code": "UD",
+              "description": "Utility Dolly",
+              "rate": 12
+            },
+            {
+              "code": "FD",
+              "description": "Furniture Dolly",
+              "rate": 12
+            }
+          ],
+          "allowed_days": 2,
+          "allowed_distance": 144,
+          "available_count": 5,
+          "currency": "USD",
+          "destination": {
+            "city": "Tucson",
+            "district": "15",
+            "mco": "828",
+            "region": "AZ"
+          },
+          "distance_unit": "mile",
+          "dropoff_location": "Tucson, AZ",
+          "environmental_fee_in_town_per_rental_period": 1,
+          "environmental_fee_one_way": 5,
+          "expected_arrival_date": "2026-10-23T00:00:00",
+          "model_count": 8,
+          "models": [
+            {
+              "availability_text": null,
+              "availability_type": 0,
+              "best_rate": 0,
+              "description": "Small Crew Cab Pickup",
+              "fees": [],
+              "has_better_rate": false,
+              "hours_available": 0,
+              "is_available": false,
+              "model_code": "MP",
+              "model_type": 36,
+              "rate": null,
+              "rate_basis": {
+                "discount_description": null,
+                "distance_unit": "mile",
+                "extra_day_rate": 0,
+                "extra_mile_rate": 0,
+                "has_discount": false,
+                "mileage_rate": 0,
+                "rate_before_discount": 0,
+                "rate_type": 1,
+                "rental_period_hours": 24,
+                "rental_rate": 0,
+                "weekend_mileage_rate": 0
+              },
+              "savings": 0
+            },
+            {
+              "availability_text": null,
+              "availability_type": 0,
+              "best_rate": 0,
+              "description": "8' Pickup Truck",
+              "fees": [],
+              "has_better_rate": false,
+              "hours_available": 0,
+              "is_available": false,
+              "model_code": "BP",
+              "model_type": 1,
+              "rate": null,
+              "rate_basis": {
+                "discount_description": null,
+                "distance_unit": "mile",
+                "extra_day_rate": 0,
+                "extra_mile_rate": 0,
+                "has_discount": false,
+                "mileage_rate": 0,
+                "rate_before_discount": 0,
+                "rate_type": 1,
+                "rental_period_hours": 24,
+                "rental_rate": 0,
+                "weekend_mileage_rate": 0
+              },
+              "savings": 0
+            },
+            {
+              "availability_text": null,
+              "availability_type": 0,
+              "best_rate": 0,
+              "description": "9' Cargo Van",
+              "fees": [],
+              "has_better_rate": false,
+              "hours_available": 0,
+              "is_available": false,
+              "model_code": "BE",
+              "model_type": 2,
+              "rate": null,
+              "rate_basis": {
+                "discount_description": null,
+                "distance_unit": "mile",
+                "extra_day_rate": 0,
+                "extra_mile_rate": 0,
+                "has_discount": false,
+                "mileage_rate": 0,
+                "rate_before_discount": 0,
+                "rate_type": 1,
+                "rental_period_hours": 24,
+                "rental_rate": 0,
+                "weekend_mileage_rate": 0
+              },
+              "savings": 0
+            },
+            {
+              "availability_text": null,
+              "availability_type": 0,
+              "best_rate": 135,
+              "description": "10' Truck",
+              "fees": [
+                {
+                  "amount": 5,
+                  "description": "Environmental",
+                  "taxable": null,
+                  "type_code": 5
+                }
+              ],
+              "has_better_rate": false,
+              "hours_available": 0,
+              "is_available": true,
+              "model_code": "TM",
+              "model_type": 3,
+              "rate": 135,
+              "rate_basis": {
+                "discount_description": null,
+                "distance_unit": "mile",
+                "extra_day_rate": 40,
+                "extra_mile_rate": 1,
+                "has_discount": false,
+                "mileage_rate": 0,
+                "rate_before_discount": 0,
+                "rate_type": 1,
+                "rental_period_hours": 24,
+                "rental_rate": 135,
+                "weekend_mileage_rate": 0
+              },
+              "savings": 0
+            },
+            {
+              "availability_text": null,
+              "availability_type": 0,
+              "best_rate": 142,
+              "description": "15' Truck",
+              "fees": [
+                {
+                  "amount": 5,
+                  "description": "Environmental",
+                  "taxable": null,
+                  "type_code": 5
+                }
+              ],
+              "has_better_rate": false,
+              "hours_available": 0,
+              "is_available": true,
+              "model_code": "DC",
+              "model_type": 4,
+              "rate": 142,
+              "rate_basis": {
+                "discount_description": null,
+                "distance_unit": "mile",
+                "extra_day_rate": 40,
+                "extra_mile_rate": 1,
+                "has_discount": false,
+                "mileage_rate": 0,
+                "rate_before_discount": 0,
+                "rate_type": 1,
+                "rental_period_hours": 24,
+                "rental_rate": 142,
+                "weekend_mileage_rate": 0
+              },
+              "savings": 0
+            },
+            {
+              "availability_text": null,
+              "availability_type": 0,
+              "best_rate": 178,
+              "description": "20' Truck",
+              "fees": [
+                {
+                  "amount": 5,
+                  "description": "Environmental",
+                  "taxable": null,
+                  "type_code": 5
+                }
+              ],
+              "has_better_rate": false,
+              "hours_available": 0,
+              "is_available": true,
+              "model_code": "TT",
+              "model_type": 6,
+              "rate": 178,
+              "rate_basis": {
+                "discount_description": null,
+                "distance_unit": "mile",
+                "extra_day_rate": 40,
+                "extra_mile_rate": 1,
+                "has_discount": false,
+                "mileage_rate": 0,
+                "rate_before_discount": 0,
+                "rate_type": 1,
+                "rental_period_hours": 24,
+                "rental_rate": 178,
+                "weekend_mileage_rate": 0
+              },
+              "savings": 0
+            },
+            {
+              "availability_text": null,
+              "availability_type": 0,
+              "best_rate": 213,
+              "description": "26' Truck",
+              "fees": [
+                {
+                  "amount": 5,
+                  "description": "Environmental",
+                  "taxable": null,
+                  "type_code": 5
+                }
+              ],
+              "has_better_rate": false,
+              "hours_available": 0,
+              "is_available": true,
+              "model_code": "JH",
+              "model_type": 8,
+              "rate": 213,
+              "rate_basis": {
+                "discount_description": null,
+                "distance_unit": "mile",
+                "extra_day_rate": 40,
+                "extra_mile_rate": 1,
+                "has_discount": false,
+                "mileage_rate": 0,
+                "rate_before_discount": 0,
+                "rate_type": 1,
+                "rental_period_hours": 24,
+                "rental_rate": 213,
+                "weekend_mileage_rate": 0
+              },
+              "savings": 0
+            },
+            {
+              "availability_text": null,
+              "availability_type": 0,
+              "best_rate": 249,
+              "description": "29' Truck",
+              "fees": [
+                {
+                  "amount": 5,
+                  "description": "Environmental",
+                  "taxable": null,
+                  "type_code": 5
+                }
+              ],
+              "has_better_rate": false,
+              "hours_available": 0,
+              "is_available": true,
+              "model_code": "EM",
+              "model_type": 37,
+              "rate": 249,
+              "rate_basis": {
+                "discount_description": null,
+                "distance_unit": "mile",
+                "extra_day_rate": 40,
+                "extra_mile_rate": 1,
+                "has_discount": false,
+                "mileage_rate": 0,
+                "rate_before_discount": 0,
+                "rate_type": 1,
+                "rental_period_hours": 24,
+                "rental_rate": 249,
+                "weekend_mileage_rate": 0
+              },
+              "savings": 0
+            }
+          ],
+          "observed_at_ms": 1790023249066,
+          "origin": {
+            "city": "Phoenix",
+            "district": "37",
+            "mco": "721",
+            "region": "AZ"
+          },
+          "pickup_date": "2026-10-21",
+          "pickup_location": "Phoenix, AZ",
+          "quote_created_at": "2026-09-21T13:40:47.5547007-07:00",
+          "rental_type": "one_way",
+          "source_url": "https://www.uhaul.com/Reservations/RatesTrucks/",
+          "taxes": "not_stated",
+          "use_weekend_mileage_rate": null
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "uhaul-com",
+        "capability": "truck-rentals/search_truck_rates"
+      }
+    },
+    {
+      "id": "uhaul-com/truck-rentals/suggest_locations",
+      "provider": "uhaul-com",
+      "capability": "truck-rentals/suggest_locations",
+      "name": "Suggest locations",
+      "description": "Normalise a free-text place into the exact `pickup_location` / `dropoff_location` string before calling `search_truck_rates`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "max_results",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum suggestions to ask for (the site form uses 15).",
+          "default": 15,
+          "min": 1,
+          "max": 15
+        },
+        {
+          "name": "term",
+          "type": "string",
+          "in": "body",
+          "about": "Partial or full place name or postal code, e.g. `Phoen` or `Phoenix, AZ`.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "U-Haul's geo autosuggest for a partial city, state or postal code: the canonical `City, ST` labels the truck search form accepts as pickup or drop-off location. An unknown term returns an empty list.",
+        "key": "suggestions",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "label",
+            "type": "string",
+            "about": "Display label, e.g. `Phoenix, AZ`."
+          },
+          {
+            "name": "value",
+            "type": "string",
+            "about": "The value to pass as `pickup_location` / `dropoff_location`."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "term": "Phoenix, AZ"
+        },
+        "response": {
+          "count": 1,
+          "observed_at_ms": 1790023278328,
+          "source_url": "https://www.uhaul.com/suggest.axd?maxResults=15&type=geo-all&term=Phoenix%2C+AZ",
+          "suggestions": [
+            {
+              "label": "Phoenix, AZ",
+              "value": "Phoenix, AZ"
+            }
+          ],
+          "term": "Phoenix, AZ"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "uhaul-com",
+        "capability": "truck-rentals/suggest_locations"
+      }
+    }
+  ]
+}

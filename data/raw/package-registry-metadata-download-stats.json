@@ -1,0 +1,446 @@
+{
+  "id": "package-registry-metadata-download-stats",
+  "provider": "package-registry-metadata-download-stats",
+  "name": "Package registries",
+  "description": "npm, PyPI, crates.io and Maven Central package metadata: latest version, license, links, version history, weekly and monthly downloads and dependent counts.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "package-registry-metadata-download-stats"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "package-registry-metadata-download-stats/packages/dependents",
+      "provider": "package-registry-metadata-download-stats",
+      "capability": "packages/dependents",
+      "name": "Dependents",
+      "description": "How many packages depend on one version of a package (deps.dev total/direct/indirect; the default version unless one is named). For crates also crates.io's package-wide reverse-dependency count and a named sample.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "registry",
+          "in": "body",
+          "type": "string",
+          "about": "Which registry the name belongs to: npm (registry.npmjs.org), pypi (pypi.org), crates (crates.io) or maven (Maven Central).",
+          "required": true,
+          "oneOf": [
+            "npm",
+            "pypi",
+            "crates",
+            "maven"
+          ]
+        },
+        {
+          "name": "name",
+          "in": "body",
+          "type": "string",
+          "about": "Package name as the registry knows it: npm `express` or `@types/node`; PyPI `requests` (any PEP 503 spelling); crate `serde`; Maven `groupId:artifactId` such as `com.google.guava:guava`.",
+          "required": true
+        },
+        {
+          "name": "version",
+          "in": "body",
+          "type": "string",
+          "about": "Exact version to count dependents for, e.g. 5.1.0 or 33.4.8-jre. Default: the registry's default (latest) version."
+        },
+        {
+          "name": "sample",
+          "in": "body",
+          "type": "number",
+          "about": "crates only: how many dependent crates to list by name (0 to 100).",
+          "min": 0,
+          "max": 100,
+          "default": 20
+        }
+      ],
+      "response": {
+        "about": "How many packages depend on one version of a package (deps.dev total/direct/indirect; the default version unless one is named). For crates also crates.io's package-wide reverse-dependency count and a named sample.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "registry",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "type": "string",
+            "about": "The version the counts are for."
+          },
+          {
+            "name": "count",
+            "type": "number",
+            "about": "deps.dev: packages whose resolved graph includes this version, or null."
+          },
+          {
+            "name": "direct",
+            "type": "number"
+          },
+          {
+            "name": "indirect",
+            "type": "number"
+          },
+          {
+            "name": "scope",
+            "type": "string",
+            "about": "Always version."
+          },
+          {
+            "name": "package_dependents",
+            "type": "object",
+            "about": "crates only: {count, scope: package, source: crates.io, source_url}; null elsewhere."
+          },
+          {
+            "name": "sample",
+            "type": "object[]",
+            "about": "crates only: dependent crates, each {name, version, requirement, kind, optional, downloads}."
+          },
+          {
+            "name": "sources",
+            "type": "string[]"
+          },
+          {
+            "name": "registry_url",
+            "type": "string",
+            "about": "Human page for the package on its registry."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The primary API URL that answered."
+          },
+          {
+            "name": "warnings",
+            "type": "string[]",
+            "about": "Secondary sources that failed or caveats on the numbers."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when fetched."
+          }
+        ]
+      },
+      "execute": {
+        "provider": "package-registry-metadata-download-stats",
+        "capability": "packages/dependents"
+      }
+    },
+    {
+      "id": "package-registry-metadata-download-stats/packages/downloads",
+      "provider": "package-registry-metadata-download-stats",
+      "capability": "packages/downloads",
+      "name": "Daily downloads",
+      "description": "Daily download counts for one npm, PyPI or crates.io package as a series with 1/7/30-day sums; last-week, last-month or last-year (capped by what the source keeps). Maven Central has no download statistics.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "registry",
+          "in": "body",
+          "type": "string",
+          "about": "npm, pypi or crates. Maven Central publishes no download statistics, so maven is refused here.",
+          "required": true,
+          "oneOf": [
+            "npm",
+            "pypi",
+            "crates"
+          ]
+        },
+        {
+          "name": "name",
+          "in": "body",
+          "type": "string",
+          "about": "Package name as the registry knows it: npm `express` or `@types/node`; PyPI `requests` (any PEP 503 spelling); crate `serde`; Maven `groupId:artifactId` such as `com.google.guava:guava`.",
+          "required": true
+        },
+        {
+          "name": "period",
+          "in": "body",
+          "type": "string",
+          "about": "How many trailing days to return: last-week (7), last-month (30) or last-year (365, capped by what the source keeps: pypistats ~180 days, crates.io 90).",
+          "default": "last-month",
+          "oneOf": [
+            "last-week",
+            "last-month",
+            "last-year"
+          ]
+        }
+      ],
+      "response": {
+        "about": "Daily download counts for one npm, PyPI or crates.io package as a series with 1/7/30-day sums; last-week, last-month or last-year (capped by what the source keeps). Maven Central has no download statistics.",
+        "key": "series",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "date",
+            "type": "string",
+            "about": "YYYY-MM-DD."
+          },
+          {
+            "name": "downloads",
+            "type": "number"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "package-registry-metadata-download-stats",
+        "capability": "packages/downloads"
+      }
+    },
+    {
+      "id": "package-registry-metadata-download-stats/packages/package",
+      "provider": "package-registry-metadata-download-stats",
+      "capability": "packages/package",
+      "name": "Package record",
+      "description": "One package's current record: latest version and publish time, description, license, homepage/repository/issues links, keywords, version count, a download summary (npm and PyPI last week/month; crates.io last week/month/90 days/total; Maven Central publishes none) and a dependent count.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "registry",
+          "in": "body",
+          "type": "string",
+          "about": "Which registry the name belongs to: npm (registry.npmjs.org), pypi (pypi.org), crates (crates.io) or maven (Maven Central).",
+          "required": true,
+          "oneOf": [
+            "npm",
+            "pypi",
+            "crates",
+            "maven"
+          ]
+        },
+        {
+          "name": "name",
+          "in": "body",
+          "type": "string",
+          "about": "Package name as the registry knows it: npm `express` or `@types/node`; PyPI `requests` (any PEP 503 spelling); crate `serde`; Maven `groupId:artifactId` such as `com.google.guava:guava`.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One package's current record: latest version and publish time, description, license, homepage/repository/issues links, keywords, version count, a download summary (npm and PyPI last week/month; crates.io last week/month/90 days/total; Maven Central publishes none) and a dependent count.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "registry",
+            "type": "string",
+            "about": "npm, pypi, crates or maven."
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Normalised name (PyPI PEP 503 normalised, npm lowercased, Maven groupId:artifactId)."
+          },
+          {
+            "name": "display_name",
+            "type": "string",
+            "about": "The registry's own spelling or Maven project name; null when none."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "latest_version",
+            "type": "string",
+            "about": "The registry's current default version."
+          },
+          {
+            "name": "latest_published_at",
+            "type": "string",
+            "about": "ISO 8601 publish time of latest_version, or null."
+          },
+          {
+            "name": "license",
+            "type": "string",
+            "about": "Primary licence identifier or name as published, or null."
+          },
+          {
+            "name": "licenses",
+            "type": "string[]",
+            "about": "Every licence named by the registry or deps.dev."
+          },
+          {
+            "name": "homepage",
+            "type": "string"
+          },
+          {
+            "name": "repository",
+            "type": "string"
+          },
+          {
+            "name": "documentation",
+            "type": "string"
+          },
+          {
+            "name": "issues",
+            "type": "string"
+          },
+          {
+            "name": "keywords",
+            "type": "string[]"
+          },
+          {
+            "name": "version_count",
+            "type": "number",
+            "about": "Published versions, or null."
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "First publish time known to the source, or null."
+          },
+          {
+            "name": "updated_at",
+            "type": "string",
+            "about": "Most recent publish or update time, or null."
+          },
+          {
+            "name": "deprecated",
+            "type": "boolean",
+            "about": "npm: whether latest is deprecated; null elsewhere."
+          },
+          {
+            "name": "yanked",
+            "type": "boolean",
+            "about": "PyPI/crates: whether latest is yanked; null elsewhere."
+          },
+          {
+            "name": "downloads",
+            "type": "object",
+            "about": "{available, last_day, last_week, last_month, last_90_days, total, window_end, source_url}. npm: last week/month (api.npmjs.org); PyPI: last day/week/month (pypistats.org); crates: last day/week/month, 90 days and all-time; Maven: available=false, all null."
+          },
+          {
+            "name": "dependents",
+            "type": "object",
+            "about": "{count, direct, indirect, scope, version, source, source_url} or null. deps.dev per-version counts (scope=version) for npm, PyPI and Maven; crates.io package-wide reverse dependencies (scope=package) for crates."
+          },
+          {
+            "name": "sources",
+            "type": "string[]",
+            "about": "Every upstream URL that contributed."
+          },
+          {
+            "name": "registry_url",
+            "type": "string",
+            "about": "Human page for the package on its registry."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The primary API URL that answered."
+          },
+          {
+            "name": "warnings",
+            "type": "string[]",
+            "about": "Secondary sources that failed or caveats on the numbers."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix milliseconds when fetched."
+          }
+        ]
+      },
+      "execute": {
+        "provider": "package-registry-metadata-download-stats",
+        "capability": "packages/package"
+      }
+    },
+    {
+      "id": "package-registry-metadata-download-stats/packages/versions",
+      "provider": "package-registry-metadata-download-stats",
+      "capability": "packages/versions",
+      "name": "Version history",
+      "description": "A package's version history from deps.dev, newest first, with publish time, default flag and deprecation; paged with offset and limit. All four registries.",
+      "creditsCost": 1,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "registry",
+          "in": "body",
+          "type": "string",
+          "about": "Which registry the name belongs to: npm (registry.npmjs.org), pypi (pypi.org), crates (crates.io) or maven (Maven Central).",
+          "required": true,
+          "oneOf": [
+            "npm",
+            "pypi",
+            "crates",
+            "maven"
+          ]
+        },
+        {
+          "name": "name",
+          "in": "body",
+          "type": "string",
+          "about": "Package name as the registry knows it: npm `express` or `@types/node`; PyPI `requests` (any PEP 503 spelling); crate `serde`; Maven `groupId:artifactId` such as `com.google.guava:guava`.",
+          "required": true
+        },
+        {
+          "name": "offset",
+          "in": "body",
+          "type": "number",
+          "about": "Versions to skip, newest first. Page by passing the previous response's next_offset.",
+          "min": 0,
+          "max": 100000,
+          "default": 0
+        },
+        {
+          "name": "limit",
+          "in": "body",
+          "type": "number",
+          "about": "Versions per page, 1 to 200.",
+          "min": 1,
+          "max": 200,
+          "default": 50
+        }
+      ],
+      "response": {
+        "about": "A package's version history from deps.dev, newest first, with publish time, default flag and deprecation; paged with offset and limit. All four registries.",
+        "key": "versions",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "version",
+            "type": "string"
+          },
+          {
+            "name": "published_at",
+            "type": "string"
+          },
+          {
+            "name": "is_default",
+            "type": "boolean"
+          },
+          {
+            "name": "is_deprecated",
+            "type": "boolean"
+          },
+          {
+            "name": "deprecated_reason",
+            "type": "string"
+          }
+        ]
+      },
+      "execute": {
+        "provider": "package-registry-metadata-download-stats",
+        "capability": "packages/versions"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1675 @@
+{
+  "id": "openrouter-ai",
+  "provider": "openrouter-ai",
+  "name": "OpenRouter",
+  "description": "OpenRouter model catalog and marketplace data: search models by modality, author, provider and price; per-model provider endpoints with pricing, limits, data policy and uptime; effective and listed price history; usage and availability stats; the provider directory; author lineups; and documentation pages such as the Decisions API reference and the Jev decision-model guide. Anonymous public endpoints only; no inference.",
+  "toolCount": 8,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "openrouter-ai"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "openrouter-ai/model-marketplace/get_docs_page",
+      "provider": "openrouter-ai",
+      "capability": "model-marketplace/get_docs_page",
+      "name": "Get docs page",
+      "description": "To read the typed Decisions API contract, confidence interpretation or any other OpenRouter guide without an API key. The index of all pages is `llms.txt`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "max_chars",
+          "type": "number",
+          "in": "body",
+          "about": "Truncate `content` to this many characters (recorded examples use it; the full page is returned when omitted).",
+          "min": 200,
+          "max": 2000000
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "in": "body",
+          "about": "Docs path without the `/docs/` prefix or `.md` suffix, e.g. `guides/community/jev`, `api/api-reference/alphadecisions/submit-a-decisions-request`, `llms.txt`. Pattern: ^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)*$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Alternatively a docs page URL, e.g. https://openrouter.ai/docs/guides/community/jev. Pattern: ^https?://."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "path",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One page of the OpenRouter documentation as Markdown (`GET /docs/{path}.md`, the docs site's machine-readable rendering), e.g. the Decisions API reference (`api/api-reference/alphadecisions/submit-a-decisions-request`, request/response schema and error codes) or the Jev guide (`guides/community/jev`, question types and confidence semantics). Returns title, summary and the full Markdown, truncated at `max_chars` when set. Unknown paths are `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "chars",
+            "type": "number",
+            "about": "Length of the full page in characters before truncation."
+          },
+          {
+            "name": "content",
+            "type": "string",
+            "about": "Markdown as served (Mintlify MDX components such as <Card> appear verbatim)."
+          },
+          {
+            "name": "markdown_url",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Observation time, Unix milliseconds."
+          },
+          {
+            "name": "path",
+            "type": "string"
+          },
+          {
+            "name": "summary",
+            "type": "string",
+            "about": "The page's lead blockquote under the title, when present."
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "about": "First level-1 heading."
+          },
+          {
+            "name": "truncated",
+            "type": "boolean"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Human-readable page https://openrouter.ai/docs/{path}."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "path": "guides/community/jev"
+        },
+        "response": {
+          "chars": 9298,
+          "content": "> ## Documentation Index\n> Fetch the complete documentation index at: https://openrouter.ai/docs/llms.txt\n> Use this file to discover all available pages before exploring further.\n\n# Jev Documentation: Using the TypeSafe Decision Model on OpenRouter\n\n> The OpenRouter hub for Jev, the TypeSafe decision model. What Jev is, how to get access, the Decisions API, TypeScript and Python SDKs, cookbooks, pricing, and demos\n\n## Jev on OpenRouter\n\nJev is a structured decision model from [TypeSafe](https://docs.typesafe.ai), and the first of its System One models. Send it application state and one or more typed questions, and get back a typed answer with probabilities instead of generated text. `typesafe/jev-1.13` (or the `~typesafe/jev-latest` alias) is available to anyone with an [OpenRouter API key](https://openrouter.ai/settings/keys), and billed to your OpenRouter account.\n\nThis is the index for every Jev resource on OpenRouter, and your entry point to the upstream TypeSafe documentation.\n\n<CardGroup cols={2}>\n  <Card title=\"Jev Tutorial\" icon=\"bolt\" href=\"/docs/guides/community/jev-tutorial\">\n    Step-by-step quickstart. Make your first Choice, Noul, and Score call with curl, TypeScript, or Python.\n  </Card>\n\n  <Card title=\"Jev model page\" icon=\"cube\" href=\"https://openrouter.ai/typesafe/jev-1.13\">\n    Current pricing, context length, provider, and data policy.\n  </Card>\n\n  <Card title=\"Decisions API reference\" icon=\"code\" href=\"/docs/api/api-reference/alphadecisions/submit-a-decisions-questions-and-answers-request\">\n    Full request and response schema for `POST /api/alpha/decisions`.\n  </Card>\n\n  <Card title=\"Jev SDK for TypeScript and Python\" icon=\"puzzle-piece\" href=\"/docs/guides/community/typesafe-sdk\">\n    Point the official TypeSafe SDK at OpenRouter with a one-line base URL change.\n  </Card>\n</CardGroup>\n\n### What Jev is\n\nJev is a [System One](https://docs.typesafe.ai/concepts/system-one) model. System One models make fast, structured decisions for software. They are suited for any routing, classification, verification, ranking, or other decision point in your app where a predictable typed answer matters more than generated prose.\n\nJev answers three kinds of question, called primitives:\n\n| Primitive                                            | Question it answers                       | What comes back                                                                       |\n| ---------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------- |\n| [Choice](https://docs.typesafe.ai/primitives/choice) | Which one of these options?               | The selected option, a probability for each option, and a confidence value            |\n| [Noul](https://docs.typesafe.ai/primitives/noul)     | Does this condition hold?                 | The probability of yes                                                                |\n| [Score](https://docs.typesafe.ai/primitives/score)   | Where does this fall on an ordered scale? | A probability-weighted position, a probability for each level, and a confidence value |\n\nBecause the output is typed, code branches on it directly. Jev does not produce reasoning traces, explanations, or free-form text. It is not a drop-in replacement for a chat model. It replaces the prompt-and-parse step where you were asking an LLM a narrow question and extracting a label from its answer.\n\nBelow are the key facts, current as of the [Jev model page](https://openrouter.ai/typesafe/jev-1.13):\n\n* **Model ID:** `typesafe/jev-1.13`. The `~typesafe/jev-latest` alias tracks the newest release.\n* **Input:** text, as a `state` object plus your `questions`. Context length is 32,000 tokens.\n* **Output:** typed decisions. Output tokens are free. You pay per input token at the price on the model page.\n* **Provider:** TypeSafe, routed through OpenRouter.\n\n### Get access to Jev\n\nThere's no waitlist or separate TypeSafe account. Just create an [OpenRouter API key](https://openrouter.ai/settings/keys), and then follow the [Jev tutorial](/docs/guides/community/jev-tutorial). Your first call takes under five minutes.\n\n### Two ways to call Jev\n\nJev is exposed via two OpenRouter API surfaces, the Decisions API and the System One API. Both surfaces require the same OpenRouter API key and are billed to the same OpenRouter account.\n\n| Surface        | Endpoint                                         | Use it when                                                                                                                                                                                                                                           |\n| -------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |\n| Decisions API  | `POST https://openrouter.ai/api/alpha/decisions` | You are calling Jev from any language with plain HTTP, or through the OpenRouter [TypeScript](/docs/client-sdks/typescript/sdks/decisions/README), [Python](/docs/client-sdks/python/sdks/decisions/README), or [Go](/docs/client-sdks/go/sdks/decisions/README) SDK |\n| System One API | `POST https://openrouter.ai/api/v1/systemone`    | You already use the TypeSafe JavaScript or Python SDK and want to switch it to OpenRouter by changing the base URL                                                                                                                                    |\n\nThe [Jev SDK guide](/docs/guides/community/typesafe-sdk) documents the System One path. The [Decisions API reference](/docs/api/api-reference/alphadecisions/submit-a-decisions-questions-and-answers-request) covers the Decisions path.\n\n### Cookbooks\n\nStep-by-step recipes with runnable code:\n\n* [Gate Agent Tool Calls with Jev](/docs/cookbook/building-agents/gate-tool-calls-with-jev) checks each risky agent tool call against the user's request so safe calls run, unsupported calls are refused, and only ambiguous calls pause for a human.\n* [Cut LLM Cost with a Jev-Verified Cascade](/docs/cookbook/evaluate-and-optimize/jev-verified-cascade) drafts with a cheap model, verifies the draft against retrieved context with Jev, and escalates to a stronger model only when the check fails.\n\n### Interactive demos\n\n[Jev Lab](https://openrouter.ai/labs/jev) runs Jev live in the browser across several patterns, including [ticket triage](https://openrouter.ai/labs/jev/triage), [agent oversight](https://openrouter.ai/labs/jev/overseer), and [structured extraction](https://openrouter.ai/labs/jev/extract). Each demo shows you the state, the questions, and the raw probabilities Jev returns.\n\n### TypeSafe documentation\n\nTypeSafe maintains the concept, prompting, and SDK documentation for Jev. These are the pages to read when designing questions and thresholds:\n\n* [System One](https://docs.typesafe.ai/concepts/system-one) explains the model family and how it differs from generative models.\n* [How to build with System One](https://docs.typesafe.ai/concepts/how-to-build-with-system-one) covers decomposing a workflow into judgments.\n* [State](https://docs.typesafe.ai/concepts/state) covers what to send as context and how to reference nested fields.\n* [Primitives](https://docs.typesafe.ai/primitives) covers Choice, Noul, and Score in detail.\n* [Confidence](https://docs.typesafe.ai/confidence) covers reading probabilities and choosing thresholds.\n* [JavaScript SDK](https://docs.typesafe.ai/sdk/javascript) and [Python SDK](https://docs.typesafe.ai/sdk/python) are the official client references.\n\n### Frequently asked questions\n\n**Is Jev an LLM?**\nNo. Jev is a System One decision model. It returns typed answers, with probabilities associated with them. Jev doesn't return text, reasoning, or explanations. When you need prose, use a chat model. When you need a decision that your code can act on, use Jev.\n\n**Who makes Jev?**\nTypeSafe. OpenRouter routes your request to TypeSafe, then bills it to your OpenRouter account.\n\n**How much does Jev cost?**\nJev charges for input tokens, and output tokens are free. To find the current input token price, see the [Jev model page](https://openrouter.ai/typesafe/jev-1.13). Every Jev response includes a `usage.cost` field that tells you the cost of the response in USD.\n\n**What is Jev's context window?**\n32,000 tokens. That's the `state` you send plus the questions.\n\n**Do I need a TypeSafe account or API key?**\nNo, an OpenRouter API key authenticates both the Decisions API and the TypeSafe SDK pointed at OpenRouter.\n\n**Can Jev explain its answers?**\nNo, Jev doesn't return the reasoning it goes through to make its decision. It returns probabilities. If you need a written justification for the decision, you can use Jev to make the decision, then use a chat model to explain it, or if the confidence is low, you can route that case to a human.\n\n**Where are the Jev docs?**\nIt's all here on OpenRouter. Once you're in, use the [TypeSafe documentation](https://docs.typesafe.ai) to dig deeper into the concepts and for the SDK reference.\n",
+          "markdown_url": "https://openrouter.ai/docs/guides/community/jev.md",
+          "observed_at_ms": 1790125652483,
+          "path": "guides/community/jev",
+          "summary": "The OpenRouter hub for Jev, the TypeSafe decision model. What Jev is, how to get access, the Decisions API, TypeScript and Python SDKs, cookbooks, pricing, and demos",
+          "title": "Jev Documentation: Using the TypeSafe Decision Model on OpenRouter",
+          "truncated": false,
+          "url": "https://openrouter.ai/docs/guides/community/jev"
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "openrouter-ai",
+        "capability": "model-marketplace/get_docs_page"
+      }
+    },
+    {
+      "id": "openrouter-ai/model-marketplace/get_model",
+      "provider": "openrouter-ai",
+      "capability": "model-marketplace/get_model",
+      "name": "Get model",
+      "description": "Verify that a model exists and see which providers serve it at what price; take `canonical_slug` from here into the permaslug-keyed functions.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "model",
+          "type": "string",
+          "in": "body",
+          "about": "Model slug `author/name`, e.g. `typesafe/jev-1.13`; a variant suffix (`openai/gpt-6-luna:batch`) or a router alias like `~typesafe/jev-latest` is accepted. Pattern: ^~?[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*(:[a-z0-9-]+)?$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Alternatively the model page URL, e.g. https://openrouter.ai/typesafe/jev-1.13. Pattern: ^https?://."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "model",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One model by slug: the public catalog record (`GET /api/v1/model/{author}/{slug}`: permaslug, modalities, context, list pricing, supported parameters, router alias target) plus every provider endpoint serving it (`GET /api/v1/models/{author}/{slug}/endpoints`: provider, pricing, context, max tokens, quantization, tool support, status and recent uptime/latency/throughput). Unknown slugs are `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "endpoint_count",
+            "type": "number"
+          },
+          {
+            "name": "endpoints",
+            "type": "object[]"
+          },
+          {
+            "name": "model",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Observation time, Unix milliseconds."
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The upstream request this result came from."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "model": "typesafe/jev-1.13"
+        },
+        "response": {
+          "endpoint_count": 1,
+          "endpoints": [
+            {
+              "context_length": 32000,
+              "latency_last_30m": null,
+              "max_completion_tokens": 28800,
+              "max_prompt_tokens": null,
+              "name": "TypeSafe | typesafe/jev-1.13-20260917",
+              "pricing": {
+                "completion": "0",
+                "discount": 0,
+                "prompt": "0.000000042"
+              },
+              "provider_name": "TypeSafe",
+              "provider_slug": "typesafe",
+              "quantization": "unknown",
+              "status": 0,
+              "supported_parameters": [],
+              "supports_implicit_caching": false,
+              "supports_tool_choice": {
+                "auto": true,
+                "function": true,
+                "none": true,
+                "required": true
+              },
+              "throughput_last_30m": null,
+              "uptime_last_1d": 100,
+              "uptime_last_30m": 100,
+              "uptime_last_5m": 100
+            }
+          ],
+          "model": {
+            "alias_target": null,
+            "canonical_slug": "typesafe/jev-1.13-20260917",
+            "context_length": 32000,
+            "created": 1789689684,
+            "default_parameters": {},
+            "description": "Jev is a structured decision model from TypeSafe, and the first of its System One models. System One models make fast, structured decisions for software, returning a typed choice rather...",
+            "endpoints_url": "https://openrouter.ai/api/v1/models/typesafe/jev-1.13-20260917/endpoints",
+            "expiration_date": null,
+            "hugging_face_id": null,
+            "id": "typesafe/jev-1.13",
+            "input_modalities": [
+              "text"
+            ],
+            "instruct_type": null,
+            "knowledge_cutoff": null,
+            "modality": "text->decisions",
+            "name": "TypeSafe: Jev 1.13",
+            "output_modalities": [
+              "decisions"
+            ],
+            "per_request_limits": null,
+            "pricing": {
+              "completion": "0",
+              "prompt": "0.000000042"
+            },
+            "reasoning": null,
+            "supported_parameters": [],
+            "tokenizer": "Other",
+            "top_provider": {
+              "context_length": 32000,
+              "is_moderated": false,
+              "max_completion_tokens": 28800
+            },
+            "url": "https://openrouter.ai/typesafe/jev-1.13"
+          },
+          "observed_at_ms": 1790125616301,
+          "source_url": "https://openrouter.ai/api/v1/model/typesafe/jev-1.13"
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "openrouter-ai",
+        "capability": "model-marketplace/get_model"
+      }
+    },
+    {
+      "id": "openrouter-ai/model-marketplace/get_model_endpoints",
+      "provider": "openrouter-ai",
+      "capability": "model-marketplace/get_model_endpoints",
+      "name": "Get model endpoints",
+      "description": "After get_model, when you need endpoint UUIDs, rate limits, data policy or latency percentiles per provider.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "permaslug",
+          "type": "string",
+          "in": "body",
+          "about": "Versioned model permaslug (`canonical_slug` from `search_models`/`get_model`, or `permaslug` from `list_author_models`), e.g. `typesafe/jev-1.13-20260917`. Routers use `~author/name`. Pattern: ^~?[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*$.",
+          "required": true
+        },
+        {
+          "name": "variant",
+          "type": "string",
+          "in": "body",
+          "about": "Endpoint variant, `standard` unless the model page shows another (`free`, `thinking`, `beta`, ...). Pattern: ^[a-z][a-z0-9-]*$.",
+          "default": "standard"
+        }
+      ],
+      "response": {
+        "about": "Full provider-endpoint records for one model variant from the model page's data API (`GET /api/frontend/v1/stats/endpoint`): endpoint UUID, provider identifiers and base URL, display pricing per million tokens, data policy (training, retention, publishing), rate limits (`limit_rpm`, `limit_rpd`), capability flags, deprecation date and the recent latency/throughput percentiles. Empty for an unknown permaslug or variant, reported as `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "endpoints",
+            "type": "object[]"
+          },
+          {
+            "name": "model",
+            "type": "object"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Observation time, Unix milliseconds."
+          },
+          {
+            "name": "permaslug",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The upstream request this result came from."
+          },
+          {
+            "name": "variant",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "permaslug": "typesafe/jev-1.13-20260917"
+        },
+        "response": {
+          "count": 1,
+          "endpoints": [
+            {
+              "capacity_tpm": null,
+              "context_length": 32000,
+              "created_at": "2026-09-17T23:46:59.824Z",
+              "data_policy": {
+                "can_publish": false,
+                "privacy_policy_url": "https://typesafe.ai/legal/privacy-policy",
+                "requires_user_ids": null,
+                "retains_prompts": false,
+                "retention_days": null,
+                "terms_of_service_url": "https://typesafe.ai/legal/terms",
+                "training": false,
+                "training_openrouter": false
+              },
+              "deprecation_date": null,
+              "display_pricing": [
+                {
+                  "display_multiplier": 1000000,
+                  "kind": "token",
+                  "price": "4.2e-8",
+                  "sku_label": "Input Price",
+                  "unit_label": "/M tokens"
+                },
+                {
+                  "display_multiplier": 1000000,
+                  "kind": "token",
+                  "price": "0",
+                  "sku_label": "Output Price",
+                  "unit_label": "/M tokens"
+                }
+              ],
+              "has_chat_completions": true,
+              "has_completions": false,
+              "id": "2db56e7f-853c-44db-9dff-3eaacfa59122",
+              "is_byok": false,
+              "is_byok_only": false,
+              "is_deranked": false,
+              "is_disabled": false,
+              "is_free": false,
+              "is_hidden": false,
+              "is_hipaa_eligible": false,
+              "limit_rpd": null,
+              "limit_rpm": 2000,
+              "max_completion_tokens": null,
+              "max_prompt_tokens": null,
+              "moderation_required": false,
+              "name": "TypeSafe | typesafe/jev-1.13-20260917",
+              "pricing": {
+                "completion": "0",
+                "discount": 0,
+                "display_pricing": [
+                  {
+                    "displayMultiplier": 1000000,
+                    "kind": "token",
+                    "price": "4.2e-8",
+                    "sku_label": "Input Price",
+                    "unitLabel": "/M tokens"
+                  },
+                  {
+                    "displayMultiplier": 1000000,
+                    "kind": "token",
+                    "price": "0",
+                    "sku_label": "Output Price",
+                    "unitLabel": "/M tokens"
+                  }
+                ],
+                "prompt": "0.000000042"
+              },
+              "provider_base_url": "https://api.typesafe.ai/v1",
+              "provider_display_name": "TypeSafe",
+              "provider_model_id": "jev-1.13.0",
+              "provider_name": "TypeSafe",
+              "provider_region": null,
+              "provider_slug": "typesafe",
+              "provider_status_page_url": null,
+              "provider_url": "https://openrouter.ai/provider/typesafe",
+              "quantization": "unknown",
+              "stats": {
+                "latency_metric": "latency",
+                "p50_latency": 275,
+                "p50_throughput": null,
+                "p75_latency": 322,
+                "p75_throughput": null,
+                "p90_latency": 377,
+                "p90_throughput": null,
+                "p95_latency": 433,
+                "p95_throughput": null,
+                "p99_latency": 654.0900000000001,
+                "p99_throughput": null,
+                "request_count": 1667116,
+                "window_minutes": 30
+              },
+              "status": 0,
+              "supported_parameters": [],
+              "supports_multipart": true,
+              "supports_reasoning": false,
+              "supports_tool_parameters": false,
+              "variant": "standard"
+            }
+          ],
+          "model": {
+            "author": "typesafe",
+            "author_display_name": "Typesafe",
+            "context_length": 32000,
+            "created_at": "2026-09-18T00:01:24.945+00:00",
+            "description": "Jev is a structured decision model from TypeSafe, and the first of its System One models. System One models make fast, structured decisions for software, returning a typed choice rather than free-form text. It is suited for routing, classification, and other decision points inside an application where a fast, predictable answer matters more than generated prose.\n\nLearn more in TypeSafe's docs: https://docs.typesafe.ai/concepts/system-one",
+            "group": "Other",
+            "hidden": false,
+            "hugging_face_id": null,
+            "input_modalities": [
+              "text"
+            ],
+            "name": "TypeSafe: Jev 1.13",
+            "output_modalities": [
+              "decisions"
+            ],
+            "permaslug": "typesafe/jev-1.13-20260917",
+            "short_name": "Jev 1.13",
+            "slug": "typesafe/jev-1.13",
+            "supports_reasoning": false,
+            "updated_at": "2026-09-18T00:01:24.989399+00:00",
+            "url": "https://openrouter.ai/typesafe/jev-1.13",
+            "warning_message": null
+          },
+          "observed_at_ms": 1790125621016,
+          "permaslug": "typesafe/jev-1.13-20260917",
+          "source_url": "https://openrouter.ai/api/frontend/v1/stats/endpoint?permaslug=typesafe%2Fjev-1.13-20260917&variant=standard",
+          "variant": "standard"
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "openrouter-ai",
+        "capability": "model-marketplace/get_model_endpoints"
+      }
+    },
+    {
+      "id": "openrouter-ai/model-marketplace/get_model_pricing",
+      "provider": "openrouter-ai",
+      "capability": "model-marketplace/get_model_pricing",
+      "name": "Get model pricing",
+      "description": "To answer 'what does this model cost today and has it changed' for a permaslug from search_models/get_model.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "permaslug",
+          "type": "string",
+          "in": "body",
+          "about": "Versioned model permaslug (`canonical_slug` from `search_models`/`get_model`, or `permaslug` from `list_author_models`), e.g. `typesafe/jev-1.13-20260917`. Routers use `~author/name`. Pattern: ^~?[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*$.",
+          "required": true
+        },
+        {
+          "name": "range",
+          "type": "string",
+          "in": "body",
+          "about": "History window the model page offers.",
+          "default": "3m",
+          "oneOf": [
+            "3m"
+          ]
+        },
+        {
+          "name": "variant",
+          "type": "string",
+          "in": "body",
+          "about": "Endpoint variant, `standard` unless the model page shows another (`free`, `thinking`, `beta`, ...). Pattern: ^[a-z][a-z0-9-]*$.",
+          "default": "standard"
+        }
+      ],
+      "response": {
+        "about": "Current and historical pricing for one model variant: traffic-weighted effective input/output prices and per-provider summaries with token volume (`GET /api/frontend/v1/stats/effective-pricing`), the daily effective price series, and each provider endpoint's listed price change history for input, output, cache read/write and discount (`GET /api/frontend/v1/stats/listed-pricing`). Prices are USD per million tokens. A permaslug with no priced endpoint is `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "effective_daily",
+            "type": "object[]"
+          },
+          {
+            "name": "listed",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Observation time, Unix milliseconds."
+          },
+          {
+            "name": "permaslug",
+            "type": "string"
+          },
+          {
+            "name": "providers",
+            "type": "object[]"
+          },
+          {
+            "name": "range",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The upstream request this result came from."
+          },
+          {
+            "name": "unit",
+            "type": "string"
+          },
+          {
+            "name": "variant",
+            "type": "string"
+          },
+          {
+            "name": "weighted_cache_hit_rate",
+            "type": "number"
+          },
+          {
+            "name": "weighted_input_price",
+            "type": "number",
+            "about": "Traffic-weighted effective prompt price across providers."
+          },
+          {
+            "name": "weighted_output_price",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "permaslug": "typesafe/jev-1.13-20260917"
+        },
+        "response": {
+          "effective_daily": [
+            {
+              "date": "2026-09-17 00:00:00",
+              "endpoint_id": "2db56e7f-853c-44db-9dff-3eaacfa59122",
+              "input_price": 0.04189735303541345,
+              "output_price": 0
+            },
+            {
+              "date": "2026-09-18 00:00:00",
+              "endpoint_id": "2db56e7f-853c-44db-9dff-3eaacfa59122",
+              "input_price": 0.04180751638903483,
+              "output_price": 0
+            },
+            {
+              "date": "2026-09-19 00:00:00",
+              "endpoint_id": "2db56e7f-853c-44db-9dff-3eaacfa59122",
+              "input_price": 0.041812784634751146,
+              "output_price": 0
+            },
+            {
+              "date": "2026-09-20 00:00:00",
+              "endpoint_id": "2db56e7f-853c-44db-9dff-3eaacfa59122",
+              "input_price": 0.041835015130264504,
+              "output_price": 0
+            },
+            {
+              "date": "2026-09-21 00:00:00",
+              "endpoint_id": "2db56e7f-853c-44db-9dff-3eaacfa59122",
+              "input_price": 0.04183958391869453,
+              "output_price": 0
+            },
+            {
+              "date": "2026-09-22 00:00:00",
+              "endpoint_id": "2db56e7f-853c-44db-9dff-3eaacfa59122",
+              "input_price": 0.04182968245339482,
+              "output_price": 0
+            },
+            {
+              "date": "2026-09-23 00:00:00",
+              "endpoint_id": "2db56e7f-853c-44db-9dff-3eaacfa59122",
+              "input_price": 0.04181782193967027,
+              "output_price": 0
+            }
+          ],
+          "listed": [
+            {
+              "cache_read": [],
+              "cache_write": [],
+              "discount": [
+                {
+                  "at": "2026-09-17T23:48:08.219Z",
+                  "value": 0
+                }
+              ],
+              "endpoint_id": "2db56e7f-853c-44db-9dff-3eaacfa59122",
+              "input": [
+                {
+                  "at": "2026-09-17T23:48:08.219Z",
+                  "value": 0.042
+                }
+              ],
+              "output": [
+                {
+                  "at": "2026-09-17T23:48:08.219Z",
+                  "value": 0
+                }
+              ],
+              "provider_name": "TypeSafe",
+              "provider_slug": "typesafe"
+            }
+          ],
+          "observed_at_ms": 1790125625728,
+          "permaslug": "typesafe/jev-1.13-20260917",
+          "providers": [
+            {
+              "cache_hit_rate": 0,
+              "effective_input_price": 0.04181782193967027,
+              "effective_output_price": 0,
+              "endpoint_id": "2db56e7f-853c-44db-9dff-3eaacfa59122",
+              "provider_name": "TypeSafe",
+              "provider_slug": "typesafe",
+              "total_tokens": 11440519917
+            }
+          ],
+          "range": "3m",
+          "source_url": "https://openrouter.ai/api/frontend/v1/stats/effective-pricing?permaslug=typesafe%2Fjev-1.13-20260917&shape=v7&variant=standard",
+          "unit": "USD per million tokens",
+          "variant": "standard",
+          "weighted_cache_hit_rate": 0,
+          "weighted_input_price": 0.04181782193967027,
+          "weighted_output_price": 0
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "openrouter-ai",
+        "capability": "model-marketplace/get_model_pricing"
+      }
+    },
+    {
+      "id": "openrouter-ai/model-marketplace/get_model_stats",
+      "provider": "openrouter-ai",
+      "capability": "model-marketplace/get_model_stats",
+      "name": "Get model stats",
+      "description": "To judge whether a model is actively used and reliably available before building on it.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "permaslug",
+          "type": "string",
+          "in": "body",
+          "about": "Versioned model permaslug (`canonical_slug` from `search_models`/`get_model`, or `permaslug` from `list_author_models`), e.g. `typesafe/jev-1.13-20260917`. Routers use `~author/name`. Pattern: ^~?[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*$.",
+          "required": true
+        },
+        {
+          "name": "variant",
+          "type": "string",
+          "in": "body",
+          "about": "Endpoint variant, `standard` unless the model page shows another (`free`, `thinking`, `beta`, ...). Pattern: ^[a-z][a-z0-9-]*$.",
+          "default": "standard"
+        }
+      ],
+      "response": {
+        "about": "Recent usage and availability for one model variant: daily request counts, prompt/completion/reasoning/cached tokens, tool calls, media counts and spend (`GET /api/frontend/v1/stats/model-activity`), plus daily uptime per provider endpoint and for OpenRouter's routing overall (`GET /api/frontend/v1/stats/uptime-recent`). A permaslug with no activity and no uptime rows is `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "activity",
+            "type": "object[]",
+            "about": "Newest day first, as the site orders it."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Observation time, Unix milliseconds."
+          },
+          {
+            "name": "permaslug",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The upstream request this result came from."
+          },
+          {
+            "name": "uptime",
+            "type": "object[]"
+          },
+          {
+            "name": "variant",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "permaslug": "typesafe/jev-1.13-20260917"
+        },
+        "response": {
+          "activity": [
+            {
+              "audio_prompt": 0,
+              "byok_completion_tokens": 35104532,
+              "byok_prompt_tokens": 347923280,
+              "cached_tokens": 0,
+              "completion_tokens": 28905391121,
+              "date": "2026-09-22 00:00:00",
+              "image_output_requests": 0,
+              "media_completion": 0,
+              "media_prompt": 0,
+              "prompt_tokens": 237287414193,
+              "reasoning_tokens": 0,
+              "requests": 80000607,
+              "requests_with_tool_call_errors": 0,
+              "rerank_documents": 0,
+              "stt_transcript_characters": 0,
+              "tool_calls": 0,
+              "total_usage_usd": 9911.755178,
+              "video_output_seconds": 0,
+              "video_prompt": 0
+            },
+            {
+              "audio_prompt": 0,
+              "byok_completion_tokens": 11459678,
+              "byok_prompt_tokens": 176024718,
+              "cached_tokens": 0,
+              "completion_tokens": 31434098750,
+              "date": "2026-09-21 00:00:00",
+              "image_output_requests": 0,
+              "media_completion": 0,
+              "media_prompt": 0,
+              "prompt_tokens": 256458121712,
+              "reasoning_tokens": 0,
+              "requests": 82379677,
+              "requests_with_tool_call_errors": 0,
+              "rerank_documents": 0,
+              "stt_transcript_characters": 0,
+              "tool_calls": 0,
+              "total_usage_usd": 10722.779212,
+              "video_output_seconds": 0,
+              "video_prompt": 0
+            },
+            {
+              "audio_prompt": 0,
+              "byok_completion_tokens": 13566357,
+              "byok_prompt_tokens": 305860981,
+              "cached_tokens": 0,
+              "completion_tokens": 23334305458,
+              "date": "2026-09-20 00:00:00",
+              "image_output_requests": 0,
+              "media_completion": 0,
+              "media_prompt": 0,
+              "prompt_tokens": 195534045405,
+              "reasoning_tokens": 0,
+              "requests": 64434110,
+              "requests_with_tool_call_errors": 0,
+              "rerank_documents": 0,
+              "stt_transcript_characters": 0,
+              "tool_calls": 0,
+              "total_usage_usd": 8168.85246,
+              "video_output_seconds": 0,
+              "video_prompt": 0
+            },
+            {
+              "audio_prompt": 0,
+              "byok_completion_tokens": 20196320,
+              "byok_prompt_tokens": 265229540,
+              "cached_tokens": 0,
+              "completion_tokens": 19960865808,
+              "date": "2026-09-19 00:00:00",
+              "image_output_requests": 0,
+              "media_completion": 0,
+              "media_prompt": 0,
+              "prompt_tokens": 140173957683,
+              "reasoning_tokens": 0,
+              "requests": 52641640,
+              "requests_with_tool_call_errors": 0,
+              "rerank_documents": 0,
+              "stt_transcript_characters": 0,
+              "tool_calls": 0,
+              "total_usage_usd": 5852.247812,
+              "video_output_seconds": 0,
+              "video_prompt": 0
+            },
+            {
+              "audio_prompt": 0,
+              "byok_completion_tokens": 4233765,
+              "byok_prompt_tokens": 36783479,
+              "cached_tokens": 0,
+              "completion_tokens": 11361067810,
+              "date": "2026-09-18 00:00:00",
+              "image_output_requests": 0,
+              "media_completion": 0,
+              "media_prompt": 0,
+              "prompt_tokens": 73446895157,
+              "reasoning_tokens": 0,
+              "requests": 28243338,
+              "requests_with_tool_call_errors": 0,
+              "rerank_documents": 0,
+              "stt_transcript_characters": 0,
+              "tool_calls": 0,
+              "total_usage_usd": 3069.289148,
+              "video_output_seconds": 0,
+              "video_prompt": 0
+            },
+            {
+              "audio_prompt": 0,
+              "byok_completion_tokens": 0,
+              "byok_prompt_tokens": 0,
+              "cached_tokens": 0,
+              "completion_tokens": 332201,
+              "date": "2026-09-17 00:00:00",
+              "image_output_requests": 0,
+              "media_completion": 0,
+              "media_prompt": 0,
+              "prompt_tokens": 2322056,
+              "reasoning_tokens": 0,
+              "requests": 458,
+              "requests_with_tool_call_errors": 0,
+              "rerank_documents": 0,
+              "stt_transcript_characters": 0,
+              "tool_calls": 0,
+              "total_usage_usd": 0.097288,
+              "video_output_seconds": 0,
+              "video_prompt": 0
+            }
+          ],
+          "observed_at_ms": 1790125637974,
+          "permaslug": "typesafe/jev-1.13-20260917",
+          "source_url": "https://openrouter.ai/api/frontend/v1/stats/model-activity?permaslug=typesafe%2Fjev-1.13-20260917&variant=standard",
+          "uptime": [
+            {
+              "daily": [
+                {
+                  "date": "2026-09-23 00:00:00",
+                  "judged_minutes": 48,
+                  "uptime_percent": 100
+                },
+                {
+                  "date": "2026-09-22 00:00:00",
+                  "judged_minutes": 1440,
+                  "uptime_percent": 100
+                },
+                {
+                  "date": "2026-09-21 00:00:00",
+                  "judged_minutes": 1440,
+                  "uptime_percent": 98.68055555555556
+                }
+              ],
+              "endpoint_id": "2db56e7f-853c-44db-9dff-3eaacfa59122"
+            },
+            {
+              "daily": [
+                {
+                  "date": "2026-09-23 00:00:00",
+                  "judged_minutes": 48,
+                  "uptime_percent": 100
+                },
+                {
+                  "date": "2026-09-22 00:00:00",
+                  "judged_minutes": 1440,
+                  "uptime_percent": 100
+                },
+                {
+                  "date": "2026-09-21 00:00:00",
+                  "judged_minutes": 1440,
+                  "uptime_percent": 98.68055555555556
+                }
+              ],
+              "endpoint_id": "openrouter"
+            }
+          ],
+          "variant": "standard"
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "openrouter-ai",
+        "capability": "model-marketplace/get_model_stats"
+      }
+    },
+    {
+      "id": "openrouter-ai/model-marketplace/list_author_models",
+      "provider": "openrouter-ai",
+      "capability": "model-marketplace/list_author_models",
+      "name": "List author models",
+      "description": "To enumerate a vendor's whole lineup (e.g. everything by `typesafe` or `openai`) with permaslugs for the stats functions.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "author",
+          "type": "string",
+          "in": "body",
+          "about": "Author slug as in model slugs, e.g. `typesafe`, `openai`, `anthropic`. Pattern: ^[A-Za-z0-9][A-Za-z0-9._-]*$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "All models published under one author/organization slug with each model's primary endpoint (`GET /api/frontend/v1/author-models`): slug, permaslug, modalities, context, group, and the primary endpoint's provider, pricing, limits and data policy. Router aliases (`~author/name`) appear with a null endpoint. Unknown authors are `not_found`.",
+        "key": "models",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "author",
+            "type": "string",
+            "about": "Author slug, e.g. `typesafe`."
+          },
+          {
+            "name": "author_display_name",
+            "type": "string"
+          },
+          {
+            "name": "context_length",
+            "type": "number"
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "endpoint",
+            "type": "object",
+            "about": "The model's primary endpoint on the author page; null for routers and models without a live endpoint."
+          },
+          {
+            "name": "group",
+            "type": "string",
+            "about": "OpenRouter model group (`GPT`, `Claude`, `Router`, `Other`, ...)."
+          },
+          {
+            "name": "hidden",
+            "type": "boolean"
+          },
+          {
+            "name": "hugging_face_id",
+            "type": "string"
+          },
+          {
+            "name": "input_modalities",
+            "type": "string[]"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "output_modalities",
+            "type": "string[]"
+          },
+          {
+            "name": "permaslug",
+            "type": "string"
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "supports_reasoning",
+            "type": "boolean"
+          },
+          {
+            "name": "updated_at",
+            "type": "string",
+            "about": "ISO 8601."
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "warning_message",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "author": "typesafe"
+        },
+        "response": {
+          "author": {
+            "name": "Typesafe",
+            "slug": "typesafe",
+            "url": "https://openrouter.ai/typesafe"
+          },
+          "count": 2,
+          "models": [
+            {
+              "author": "typesafe",
+              "author_display_name": "Typesafe",
+              "context_length": 32000,
+              "created_at": "2026-09-18T00:01:25.621Z",
+              "description": "This model always redirects to the latest model in the Jev family.",
+              "endpoint": null,
+              "group": "Router",
+              "hidden": false,
+              "hugging_face_id": null,
+              "input_modalities": [
+                "text"
+              ],
+              "name": "TypeSafe: Jev Latest",
+              "output_modalities": [
+                "decisions"
+              ],
+              "permaslug": "~typesafe/jev-latest",
+              "short_name": "Jev Latest",
+              "slug": "~typesafe/jev-latest",
+              "supports_reasoning": false,
+              "updated_at": "2026-09-18T00:01:25.676Z",
+              "url": "https://openrouter.ai/~typesafe/jev-latest",
+              "warning_message": null
+            },
+            {
+              "author": "typesafe",
+              "author_display_name": "Typesafe",
+              "context_length": 32000,
+              "created_at": "2026-09-18T00:01:24.945Z",
+              "description": "Jev is a structured decision model from TypeSafe, and the first of its System One models. System One models make fast, structured decisions for software, returning a typed choice rather than free-form text. It is suited for routing, classification, and other decision points inside an application where a fast, predictable answer matters more than generated prose.\n\nLearn more in TypeSafe's docs: https://docs.typesafe.ai/concepts/system-one",
+              "endpoint": {
+                "capacity_tpm": null,
+                "context_length": 32000,
+                "created_at": "2026-09-17T23:46:59.824Z",
+                "data_policy": {
+                  "can_publish": false,
+                  "privacy_policy_url": "https://typesafe.ai/legal/privacy-policy",
+                  "requires_user_ids": null,
+                  "retains_prompts": false,
+                  "retention_days": null,
+                  "terms_of_service_url": "https://typesafe.ai/legal/terms",
+                  "training": false,
+                  "training_openrouter": false
+                },
+                "deprecation_date": null,
+                "display_pricing": [
+                  {
+                    "display_multiplier": 1000000,
+                    "kind": "token",
+                    "price": "4.2e-8",
+                    "sku_label": "Input Price",
+                    "unit_label": "/M tokens"
+                  },
+                  {
+                    "display_multiplier": 1000000,
+                    "kind": "token",
+                    "price": "0",
+                    "sku_label": "Output Price",
+                    "unit_label": "/M tokens"
+                  }
+                ],
+                "has_chat_completions": true,
+                "has_completions": false,
+                "id": "2db56e7f-853c-44db-9dff-3eaacfa59122",
+                "is_byok": false,
+                "is_byok_only": false,
+                "is_deranked": false,
+                "is_disabled": false,
+                "is_free": false,
+                "is_hidden": false,
+                "is_hipaa_eligible": false,
+                "limit_rpd": null,
+                "limit_rpm": 2000,
+                "max_completion_tokens": null,
+                "max_prompt_tokens": null,
+                "moderation_required": false,
+                "name": "TypeSafe | typesafe/jev-1.13-20260917",
+                "pricing": {
+                  "completion": "0",
+                  "discount": 0,
+                  "display_pricing": [
+                    {
+                      "displayMultiplier": 1000000,
+                      "kind": "token",
+                      "price": "4.2e-8",
+                      "sku_label": "Input Price",
+                      "unitLabel": "/M tokens"
+                    },
+                    {
+                      "displayMultiplier": 1000000,
+                      "kind": "token",
+                      "price": "0",
+                      "sku_label": "Output Price",
+                      "unitLabel": "/M tokens"
+                    }
+                  ],
+                  "prompt": "0.000000042"
+                },
+                "provider_base_url": "https://api.typesafe.ai/v1",
+                "provider_display_name": "TypeSafe",
+                "provider_model_id": "jev-1.13.0",
+                "provider_name": "TypeSafe",
+                "provider_region": null,
+                "provider_slug": "typesafe",
+                "provider_status_page_url": null,
+                "provider_url": "https://openrouter.ai/provider/typesafe",
+                "quantization": "unknown",
+                "status": 0,
+                "supported_parameters": [],
+                "supports_multipart": true,
+                "supports_reasoning": false,
+                "supports_tool_parameters": false,
+                "variant": "standard"
+              },
+              "group": "Other",
+              "hidden": false,
+              "hugging_face_id": null,
+              "input_modalities": [
+                "text"
+              ],
+              "name": "TypeSafe: Jev 1.13",
+              "output_modalities": [
+                "decisions"
+              ],
+              "permaslug": "typesafe/jev-1.13-20260917",
+              "short_name": "Jev 1.13",
+              "slug": "typesafe/jev-1.13",
+              "supports_reasoning": false,
+              "updated_at": "2026-09-18T00:01:24.989Z",
+              "url": "https://openrouter.ai/typesafe/jev-1.13",
+              "warning_message": null
+            }
+          ],
+          "observed_at_ms": 1790125647618,
+          "source_url": "https://openrouter.ai/api/frontend/v1/author-models?authorSlug=typesafe"
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "openrouter-ai",
+        "capability": "model-marketplace/list_author_models"
+      }
+    },
+    {
+      "id": "openrouter-ai/model-marketplace/list_providers",
+      "provider": "openrouter-ai",
+      "capability": "model-marketplace/list_providers",
+      "name": "List providers",
+      "description": "To resolve a provider slug for search_models `providers=` or to review data policies across providers.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "q",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive substring of the provider slug or name."
+        }
+      ],
+      "response": {
+        "about": "Directory of every inference provider OpenRouter routes to (`GET /api/frontend/v1/all-providers`): slug, name, API base URL, headquarters, data policy (training, prompt retention, publishing, terms and privacy URLs), status page, BYOK and capability flags. Optional `q` filters by slug or name client-side; the result is the full list otherwise.",
+        "key": "providers",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "base_url",
+            "type": "string",
+            "about": "The provider's API base URL OpenRouter routes to."
+          },
+          {
+            "name": "byok_enabled",
+            "type": "boolean"
+          },
+          {
+            "name": "data_policy",
+            "type": "object"
+          },
+          {
+            "name": "datacenters",
+            "type": "string[]"
+          },
+          {
+            "name": "display_name",
+            "type": "string"
+          },
+          {
+            "name": "has_chat_completions",
+            "type": "boolean"
+          },
+          {
+            "name": "has_completions",
+            "type": "boolean"
+          },
+          {
+            "name": "headquarters",
+            "type": "string",
+            "about": "Country code."
+          },
+          {
+            "name": "is_abortable",
+            "type": "boolean"
+          },
+          {
+            "name": "moderation_required",
+            "type": "boolean"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "pricing_strategy",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "status_page_url",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public provider page https://openrouter.ai/provider/{slug}."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "q": "typesafe"
+        },
+        "response": {
+          "count": 1,
+          "observed_at_ms": 1790125642736,
+          "providers": [
+            {
+              "base_url": "https://api.typesafe.ai/v1",
+              "byok_enabled": true,
+              "data_policy": {
+                "can_publish": false,
+                "privacy_policy_url": "https://typesafe.ai/legal/privacy-policy",
+                "requires_user_ids": false,
+                "retains_prompts": false,
+                "retention_days": null,
+                "terms_of_service_url": "https://typesafe.ai/legal/terms",
+                "training": false,
+                "training_openrouter": false
+              },
+              "datacenters": null,
+              "display_name": "TypeSafe",
+              "has_chat_completions": true,
+              "has_completions": false,
+              "headquarters": null,
+              "is_abortable": false,
+              "moderation_required": false,
+              "name": "TypeSafe",
+              "pricing_strategy": "openai_extended",
+              "slug": "typesafe",
+              "status_page_url": null,
+              "url": "https://openrouter.ai/provider/typesafe"
+            }
+          ],
+          "q": "typesafe",
+          "source_url": "https://openrouter.ai/api/frontend/v1/all-providers",
+          "total": 88
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "openrouter-ai",
+        "capability": "model-marketplace/list_providers"
+      }
+    },
+    {
+      "id": "openrouter-ai/model-marketplace/search_models",
+      "provider": "openrouter-ai",
+      "capability": "model-marketplace/search_models",
+      "name": "Search models",
+      "description": "Start here to find a model slug and permaslug, e.g. `q=jev, output_modalities=decisions` to check whether the TypeSafe Jev decision model is listed; then call get_model / get_model_endpoints / get_model_pricing.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "arch",
+          "type": "string",
+          "in": "body",
+          "about": "Model family filter, e.g. `GPT`, `Claude`, `Llama`."
+        },
+        {
+          "name": "category",
+          "type": "string",
+          "in": "body",
+          "about": "Use-case category filter. Cannot be combined with `supported_parameters` (the API rejects that pair).",
+          "oneOf": [
+            "programming",
+            "roleplay",
+            "marketing",
+            "marketing/seo",
+            "technology",
+            "science",
+            "translation",
+            "legal",
+            "finance",
+            "health",
+            "trivia",
+            "academia"
+          ]
+        },
+        {
+          "name": "input_modalities",
+          "type": "string",
+          "in": "body",
+          "about": "Comma-separated input modalities: text, image, audio, file. Pattern: ^(all|[a-z]+(,[a-z]+)*)$."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 25,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "max_price",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum prompt price in USD per million tokens (0 lists free models).",
+          "min": 0
+        },
+        {
+          "name": "min_context",
+          "type": "number",
+          "in": "body",
+          "about": "Minimum context length in tokens.",
+          "min": 1
+        },
+        {
+          "name": "min_price",
+          "type": "number",
+          "in": "body",
+          "about": "Minimum prompt price in USD per million tokens.",
+          "min": 0
+        },
+        {
+          "name": "model_authors",
+          "type": "string",
+          "in": "body",
+          "about": "Comma-separated author slugs, e.g. `typesafe`, `openai`. Pattern: ^[a-z0-9-]+(,[a-z0-9-]+)*$."
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "in": "body",
+          "about": "Records to skip; use `next_offset` from the previous page.",
+          "default": 0,
+          "min": 0
+        },
+        {
+          "name": "output_modalities",
+          "type": "string",
+          "in": "body",
+          "about": "Comma-separated output modalities (text, image, embeddings, audio, video, rerank, decisions, speech, transcription) or `all`. The API defaults to `text`. Pattern: ^(all|[a-z]+(,[a-z]+)*)$."
+        },
+        {
+          "name": "providers",
+          "type": "string",
+          "in": "body",
+          "about": "Comma-separated hosting provider slugs, e.g. `typesafe`, `openai,azure`. Pattern: ^[a-z0-9-]+(,[a-z0-9-]+)*$."
+        },
+        {
+          "name": "q",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text match on model name or slug."
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "in": "body",
+          "about": "Only models with endpoints in this data region.",
+          "oneOf": [
+            "eu",
+            "us"
+          ]
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Server-side order.",
+          "oneOf": [
+            "most-popular",
+            "newest",
+            "top-weekly",
+            "pricing-low-to-high",
+            "pricing-high-to-low",
+            "context-high-to-low",
+            "throughput-high-to-low",
+            "latency-low-to-high",
+            "intelligence-high-to-low",
+            "coding-high-to-low",
+            "agentic-high-to-low",
+            "design-arena-elo-high-to-low"
+          ]
+        },
+        {
+          "name": "supported_parameters",
+          "type": "string[]",
+          "in": "body",
+          "about": "Only models whose endpoints support every listed parameter, e.g. `tools`, `structured_outputs`."
+        },
+        {
+          "name": "zdr",
+          "type": "boolean",
+          "in": "body",
+          "about": "Only models with a zero-data-retention endpoint."
+        }
+      ],
+      "response": {
+        "about": "Search and list the OpenRouter model catalog (documented public API `GET /api/v1/models`) by free text, output/input modality, author, hosting provider, use-case category, supported parameters, price, context and data region, sorted server-side; offset-paginated. Each model carries its slug, versioned permaslug, modalities, context length, list pricing and the top provider's limits. Note the API defaults to text-output models: pass `output_modalities` (e.g. `decisions`, `image`, `all`) to see others.",
+        "key": "models",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "alias_target",
+            "type": "object",
+            "about": "For router aliases such as `~typesafe/jev-latest`: the model the alias resolves to today."
+          },
+          {
+            "name": "canonical_slug",
+            "type": "string",
+            "about": "Versioned permaslug, e.g. `typesafe/jev-1.13-20260917`; the key every `get_model_*` stats function takes."
+          },
+          {
+            "name": "context_length",
+            "type": "number"
+          },
+          {
+            "name": "created",
+            "type": "number",
+            "about": "Unix seconds when the model was listed."
+          },
+          {
+            "name": "default_parameters",
+            "type": "object",
+            "about": "Default sampling parameters as OpenRouter reports them (values may be null)."
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "endpoints_url",
+            "type": "string",
+            "about": "Public API URL listing this model's provider endpoints (from `links.details`)."
+          },
+          {
+            "name": "expiration_date",
+            "type": "string"
+          },
+          {
+            "name": "hugging_face_id",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Model slug `author/name` as the public API reports it, e.g. `typesafe/jev-1.13`."
+          },
+          {
+            "name": "input_modalities",
+            "type": "string[]"
+          },
+          {
+            "name": "instruct_type",
+            "type": "string"
+          },
+          {
+            "name": "knowledge_cutoff",
+            "type": "string"
+          },
+          {
+            "name": "modality",
+            "type": "string",
+            "about": "OpenRouter architecture string such as `text->decisions`."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "output_modalities",
+            "type": "string[]"
+          },
+          {
+            "name": "per_request_limits",
+            "type": "object",
+            "about": "Per-request limits as OpenRouter reports them; null on every model observed."
+          },
+          {
+            "name": "pricing",
+            "type": "object",
+            "about": "Per-unit USD prices as decimal strings, keyed as OpenRouter names them (`prompt` and `completion` per token, plus `request`, `image`, `audio`, `web_search`, `internal_reasoning`, `input_cache_read`, `input_cache_write`, `discount` when the model has them; `overrides` is an array of tiered prices keyed by `min_prompt_tokens`). Passed through unchanged."
+          },
+          {
+            "name": "reasoning",
+            "type": "object",
+            "about": "Reasoning configuration for reasoning models (`mandatory`, `default_enabled`, `supported_efforts`, `default_effort`); null when absent."
+          },
+          {
+            "name": "supported_parameters",
+            "type": "string[]"
+          },
+          {
+            "name": "tokenizer",
+            "type": "string"
+          },
+          {
+            "name": "top_provider",
+            "type": "object"
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public model page https://openrouter.ai/{id}."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "output_modalities": "decisions",
+          "q": "jev"
+        },
+        "response": {
+          "count": 2,
+          "models": [
+            {
+              "alias_target": {
+                "name": "TypeSafe: Jev 1.13",
+                "slug": "typesafe/jev-1.13"
+              },
+              "canonical_slug": "~typesafe/jev-latest",
+              "context_length": 32000,
+              "created": 1789689685,
+              "default_parameters": {},
+              "description": "This model always redirects to the latest model in the Jev family.",
+              "endpoints_url": "https://openrouter.ai/api/v1/models/~typesafe/jev-latest/endpoints",
+              "expiration_date": null,
+              "hugging_face_id": null,
+              "id": "~typesafe/jev-latest",
+              "input_modalities": [
+                "text"
+              ],
+              "instruct_type": null,
+              "knowledge_cutoff": null,
+              "modality": "text->decisions",
+              "name": "TypeSafe: Jev Latest",
+              "output_modalities": [
+                "decisions"
+              ],
+              "per_request_limits": null,
+              "pricing": {
+                "completion": "0",
+                "prompt": "0.000000042"
+              },
+              "reasoning": null,
+              "supported_parameters": [],
+              "tokenizer": "Router",
+              "top_provider": {
+                "context_length": 32000,
+                "is_moderated": false,
+                "max_completion_tokens": 28800
+              },
+              "url": "https://openrouter.ai/~typesafe/jev-latest"
+            },
+            {
+              "alias_target": null,
+              "canonical_slug": "typesafe/jev-1.13-20260917",
+              "context_length": 32000,
+              "created": 1789689684,
+              "default_parameters": {},
+              "description": "Jev is a structured decision model from TypeSafe, and the first of its System One models. System One models make fast, structured decisions for software, returning a typed choice rather...",
+              "endpoints_url": "https://openrouter.ai/api/v1/models/typesafe/jev-1.13-20260917/endpoints",
+              "expiration_date": null,
+              "hugging_face_id": null,
+              "id": "typesafe/jev-1.13",
+              "input_modalities": [
+                "text"
+              ],
+              "instruct_type": null,
+              "knowledge_cutoff": null,
+              "modality": "text->decisions",
+              "name": "TypeSafe: Jev 1.13",
+              "output_modalities": [
+                "decisions"
+              ],
+              "per_request_limits": null,
+              "pricing": {
+                "completion": "0",
+                "prompt": "0.000000042"
+              },
+              "reasoning": null,
+              "supported_parameters": [],
+              "tokenizer": "Other",
+              "top_provider": {
+                "context_length": 32000,
+                "is_moderated": false,
+                "max_completion_tokens": 28800
+              },
+              "url": "https://openrouter.ai/typesafe/jev-1.13"
+            }
+          ],
+          "next_offset": null,
+          "observed_at_ms": 1790125609389,
+          "query": {
+            "arch": null,
+            "category": null,
+            "input_modalities": null,
+            "limit": 25,
+            "max_price": null,
+            "min_context": null,
+            "min_price": null,
+            "model_authors": null,
+            "offset": 0,
+            "output_modalities": "decisions",
+            "providers": null,
+            "q": "jev",
+            "region": null,
+            "sort": null,
+            "supported_parameters": null,
+            "zdr": null
+          },
+          "source_url": "https://openrouter.ai/api/v1/models?q=jev&output_modalities=decisions&limit=25&offset=0",
+          "total_count": 2
+        },
+        "recordedAt": "2026-09-23"
+      },
+      "execute": {
+        "provider": "openrouter-ai",
+        "capability": "model-marketplace/search_models"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1179 @@
+{
+  "id": "bbb-org",
+  "provider": "bbb-org",
+  "name": "Better Business Bureau",
+  "description": "bbb.org business directory: search businesses by name/category and location across the US and Canada with rating and accreditation filters; read a full business profile with BBB letter grade, accreditation status and dates, complaint and review summaries, alerts and licences; list published complaints with business responses; resolve a pasted bbb.org URL or id to its canonical identity. Reads the server-rendered page state live on every call; bbb.org sits behind a Cloudflare managed challenge which the runner's solver clears.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "bbb-org"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "bbb-org/businesses/complaints",
+      "provider": "bbb-org",
+      "capability": "businesses/complaints",
+      "name": "Complaints",
+      "description": "You need the complaint detail behind a business's complaint counts, filtered by status (answered, resolved, unanswered) or type.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "complaint_type",
+          "type": "string",
+          "in": "body",
+          "about": "bbb.org complaint type slug (see `available_filters.type` of a previous page).",
+          "oneOf": [
+            "productissues",
+            "serviceorrepair",
+            "delivery",
+            "billingissues",
+            "customerservice",
+            "salesadvertising",
+            "order",
+            "guarantee",
+            "other"
+          ]
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "in": "body",
+          "about": "BBB identity `<bbbId>-<businessId>` as it appears at the end of the profile URL (e.g. 0825-1000223803). Pattern: ^[0-9]{4}-[0-9]{1,12}$."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page of 10 complaints, newest first.",
+          "default": 1,
+          "min": 1,
+          "max": 200
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "in": "body",
+          "about": "bbb.org complaint status filter.",
+          "oneOf": [
+            "answered",
+            "resolved",
+            "unanswered"
+          ]
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted bbb.org business profile URL, or any of its sub pages (/complaints, /customer-reviews, /leave-a-review). Exactly one of `id` or `url`."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Published customer complaints for one business from its bbb.org complaints tab, newest first, 10 per page, with complaint type, status, date, text and the business/consumer response thread, plus the status/type filter counts bbb.org offers and the profile's closed-complaint summary.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "date",
+            "type": "string",
+            "about": "YYYY-MM-DD or null."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "bbb.org complaint id `<bbbId>_<businessId>_<complaintId>`."
+          },
+          {
+            "name": "responses",
+            "type": "object[]"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "type": "string",
+            "about": "Consumer's complaint text as published (bbb.org masks personal data with asterisks)."
+          },
+          {
+            "name": "type",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "id": "1296-7039385"
+        },
+        "response": {
+          "attribution": "Better Business Bureau (bbb.org)",
+          "available_filters": {
+            "status": [
+              {
+                "count": 48783,
+                "slug": "answered"
+              },
+              {
+                "count": 11967,
+                "slug": "resolved"
+              }
+            ],
+            "type": [
+              {
+                "count": 26090,
+                "slug": "productissues"
+              },
+              {
+                "count": 13768,
+                "slug": "serviceorrepair"
+              },
+              {
+                "count": 9375,
+                "slug": "delivery"
+              }
+            ]
+          },
+          "bbb_id": "1296",
+          "business_id": "7039385",
+          "complaints_summary": {
+            "closed_last_12_months": 18470,
+            "closed_last_3_years": 60750,
+            "total_displayed": 10000,
+            "unit": "complaints"
+          },
+          "count": 10,
+          "hidden_count": 1156,
+          "id": "1296-7039385",
+          "items": [
+            {
+              "date": "2026-09-10",
+              "id": "1296_7039385_25260612",
+              "responses": [
+                {
+                  "author": "business",
+                  "date": "2026-09-12",
+                  "id": "1296_7039385_25260612_0",
+                  "text_html": "Hello,<br><br>I'm Naveen from Amazon.com. I'm writing in response to a complaint filed on your behalf by the Better Business Bureau BBB - I've provided the BBB with a copy of this message.<br><br>I'm very sorry to hear about the frustrating experience that you've had recently with our team regarding your order ID # *******************. I can certainly understand your request and upon checking, I see that refund of $32.06 was issued on September 11, 2026.<br><br>Thanks for your patience and understanding in this regard."
+                },
+                {
+                  "author": "consumer",
+                  "date": "2026-09-12",
+                  "id": "1296_7039385_25260612_1",
+                  "text_html": "<b>&nbsp;</b><br>Hi BBB,&nbsp;<br><br>I'm satisfied with the business's resolution to complaint ID ********. &nbsp;<br><br>Thank you.<br><br>******* ****"
+                }
+              ],
+              "status": "Resolved",
+              "text": "Hello,I'm reaching out to escalate a ridiculous runaround I've been getting regarding a $32.06 refund credit that was explicitly promised to me for order #***-4226310-7460223.Two different Amazon support agents put their commitment in writing and confirmed the credit. But instead of honoring what your staff promised, your social media and email teams have completely ignored the proof, claimed it's a \"misunderstanding,\" and started spamming me with blind, automated scripts asking for info I've already provided multiple times.  One of the agents even told me that the refund was issued and sent a confirmation email but it never arrived into my account balance.I have attached the screenshots proving the promised credit, the agent saying they issued the credit, and me being denied the refund I was promised.  Please issue the $32.06 refund that was promised to my account gift card balance.",
+              "type": "Product Issues"
+            },
+            {
+              "date": "2026-09-10",
+              "id": "1296_7039385_25258985",
+              "responses": [
+                {
+                  "author": "business",
+                  "date": "2026-09-11",
+                  "id": "1296_7039385_25258985_0",
+                  "text_html": "<p>Hello,<br><br>I'm ********* from Amazon.com. I'm writing in response to a complaint filed on your behalf by the Better Business Bureau BBB - I've provided the BBB with a copy of this message.<br><br>I'm sorry for the inconvenience you've experienced with regard to order refund.<br><br>Upon review, we see a refund has been issued on the order for $49.38 to your Amazon Gift Card balance on September 10, 2026. You can view your balance and usage history in Your Account here:<br><br>*************************************************<br><br>Thank you for your patience and understanding in this regard.</p><p>Regards,</p><p>*********</p>"
+                },
+                {
+                  "author": "consumer",
+                  "date": "2026-09-11",
+                  "id": "1296_7039385_25258985_1",
+                  "text_html": "<b>&nbsp;</b><br>Hi BBB,&nbsp;<br><br>I'm satisfied with the business's resolution to complaint ID ********.&nbsp; However, they would not do anything without BBB's intervention so to say business these days are infringing on consumer rights and they are pushing their limits. Thank you for being around to help.<br><br>Thank you.<br>PL"
+                }
+              ],
+              "status": "Resolved",
+              "text": "I am filing this complaint regarding an unresolved refund for a returned item that Amazon's own tracking system confirms they received on September 4, 2026. Despite multiple contacts, I have not received my refund, and I have been given ***eated, inconsistent timelines with no resolution.Details:Order number: [111-3424847-0901051 Item: ******* Pro Rubber Hot Water Garden Hose  5/8\" x 50'Reason for return: The item was defective  it broke after approximately 2 days of normal use. Connector crimp was not proper so connector become broken after initial ******** item was returned: Sept 1st, 2026 Date Amazon confirms receipt: September 4, 2026 (per Amazon's own tracking/system status)Refund status as of today: Not issued Contact history:I have contacted Amazon customer service 4 times regarding this issue with no resolution:Aug 27  Chat session. Representative requested photos of damaged item, I updated it. They initiated refund on my behalf, ***orted quality issue Sep 4  Chat session. Chat session whent idle and I disconnected Sep 4  Phone call. Was told 5 - 7 days for refund Sep 10  Phone call. Told to wait for refund to process, *** disconnected the call dispite requested for further support.Each contact has resulted in the same response  a request to wait an additional 5-7 days  despite the fact that Amazon's system already confirms receipt of the returned item. I am well within, and in fact past, the timeframe I was originally quoted.What I am requesting:I am requesting that Amazon process my refund of $49.38 immediately, given that they have had the returned item in their possession since September 4, 2026, and I have already fulfilled my obligation as a customer by returning the defective item promptly.",
+              "type": "Product Issues"
+            },
+            {
+              "date": "2026-09-09",
+              "id": "1296_7039385_25257842",
+              "responses": [
+                {
+                  "author": "business",
+                  "date": "2026-09-11",
+                  "id": "1296_7039385_25257842_0",
+                  "text_html": "Hello *****,<br><br>I'm ******* from Amazon.com and I'm writing in response to a complaint filed on your behalf by the Better Business Bureau BBB - I've provided the BBB with a copy of this message.<br><br>I understand you're looking for prepaid label to return the damaged printer.<br><br>As the order is shipped and sold by third party seller, KOMHOW DTF Printer, we do not have option to provide prepaid label. Hence, in this case, as informed by the Guarantee team. <br><br>Please return the order to the seller at the following address:<br>-- Return merchandise authorization (RMA) number, if applicable<br>-- Return address *****-KRESTRICTED:PHONE_NUMBER , *******************************************<br>****************, ** RESTRICTED:PHONE_NUMBER US<br><br>We recommend following these best practices to be sure that the seller receives your package:<br>-- Include the order number and any return authorization number on or inside the package.<br>-- Insure the package.<br>-- Use signature confirmation.<br>-- Provide your return tracking number and ship receipt to the seller.<br>-- Ship items via **** when the seller's return address is a PO Box.<br><br>Return shipping will be refunded for damaged or defective items and may be covered for other reasons once the return is delivered to the seller. Please share the ship receipt of your return to get a refund for your return costs. To learn more about return shipping, go to \"A-to-z Guarantee\":<br>************************************************************************************************************<br><br>We appreciate your understanding.<br><br>Regards,<br>*******<br>Amazon.com<br>*****************************"
+                },
+                {
+                  "author": "consumer",
+                  "date": "2026-09-11",
+                  "id": "1296_7039385_25257842_1",
+                  "text_html": "<b>I don't have 1500 to sell it back, I paid almost two thousand dollars for this thing. If they're gonna supposedly reimburse me, they can pay for a prepaid label. If I knew what was going to be like this, I wouldn't even let any robotic. But, I mean, I can send you pictures of everything that it does. That is, you know I won't do, but I don't have that kind of money just to send it back.<br></b><div><br></div>"
+                }
+              ],
+              "status": "Answered",
+              "text": "I got this in July, 2026. It is damaged it wont go to my computer right. we did a print test gives me nothing but ink on paper. make a lound sound. It dosent work right. **** wont it a prepaid lable to send it back and get my money back. Thats all iv been asking for been alot of game playing with them.",
+              "type": "Service or Repair Issues"
+            }
+          ],
+          "name": "Amazon.com",
+          "next_page": 2,
+          "observed_at_ms": 1789483200000,
+          "page": 1,
+          "page_size": 10,
+          "profile_url": "https://www.bbb.org/us/wa/seattle/profile/ecommerce/amazoncom-1296-7039385",
+          "source_url": "https://www.bbb.org/us/wa/seattle/profile/ecommerce/amazoncom-1296-7039385/complaints?page=1",
+          "status_filter": null,
+          "terms_url": "https://www.bbb.org/terms-of-use",
+          "total_found": 10000,
+          "total_found_note": "bbb.org caps numFound at 10000; use complaints_summary for exact closed counts",
+          "type_filter": null
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "bbb-org",
+        "capability": "businesses/complaints"
+      }
+    },
+    {
+      "id": "bbb-org/businesses/profile",
+      "provider": "bbb-org",
+      "capability": "businesses/profile",
+      "name": "Profile",
+      "description": "You have a BBB `id` (from search or resolve) or a pasted bbb.org profile URL and need ratings, accreditation and complaint summary figures.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "id",
+          "type": "string",
+          "in": "body",
+          "about": "BBB identity `<bbbId>-<businessId>` as it appears at the end of the profile URL (e.g. 0825-1000223803). Pattern: ^[0-9]{4}-[0-9]{1,12}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted bbb.org business profile URL, or any of its sub pages (/complaints, /customer-reviews, /leave-a-review). Exactly one of `id` or `url`."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "The full bbb.org business profile for one business: names, website and phone, categories, BBB letter grade with reasons, accreditation status and dates, file-opened / started / incorporated dates, address and coordinates, entity type, years in business, complaint counts (closed in the last 3 years and 12 months), review count and average stars, alerts such as government actions, licences and management.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "accreditation",
+            "type": "object"
+          },
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "alerts",
+            "type": "object[]",
+            "about": "Government actions, advertising reviews and other BBB alerts, verbatim HTML."
+          },
+          {
+            "name": "alt_names",
+            "type": "string[]"
+          },
+          {
+            "name": "attribution",
+            "type": "string",
+            "about": "Attribution string to display with the data."
+          },
+          {
+            "name": "bbb_id",
+            "type": "string",
+            "about": "Four-digit id of the local BBB that holds the file."
+          },
+          {
+            "name": "business_id",
+            "type": "string",
+            "about": "Numeric business id assigned by BBB."
+          },
+          {
+            "name": "categories",
+            "type": "object[]"
+          },
+          {
+            "name": "complaints_summary",
+            "type": "object",
+            "about": "Complaint counts as bbb.org shows them; null when the page omits a figure."
+          },
+          {
+            "name": "complaints_url",
+            "type": "string"
+          },
+          {
+            "name": "dates",
+            "type": "object"
+          },
+          {
+            "name": "employees",
+            "type": "number",
+            "about": "Employee count when bbb.org shows a positive number; null otherwise (0 means unknown on the site)."
+          },
+          {
+            "name": "entity_type",
+            "type": "string"
+          },
+          {
+            "name": "has_high_risk_category",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Stable bbb.org identity `<bbbId>-<businessId>`, the trailing part of every profile URL."
+          },
+          {
+            "name": "is_multi_location",
+            "type": "boolean"
+          },
+          {
+            "name": "is_out_of_business",
+            "type": "boolean"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "licenses",
+            "type": "object[]"
+          },
+          {
+            "name": "local_bbb",
+            "type": "object"
+          },
+          {
+            "name": "logo_url",
+            "type": "string"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "management",
+            "type": "object[]",
+            "about": "Business management / principal contacts as bbb.org lists them (names and titles only)."
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds (UTC) when this program read the page. Live read on every call, no cache."
+          },
+          {
+            "name": "phone",
+            "type": "string",
+            "about": "Primary business phone as listed."
+          },
+          {
+            "name": "primary_category",
+            "type": "object"
+          },
+          {
+            "name": "rating",
+            "type": "object"
+          },
+          {
+            "name": "reviews_summary",
+            "type": "object"
+          },
+          {
+            "name": "reviews_url",
+            "type": "string"
+          },
+          {
+            "name": "service_area",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Canonical bbb.org profile URL."
+          },
+          {
+            "name": "terms_url",
+            "type": "string",
+            "about": "bbb.org terms of use governing this public data."
+          },
+          {
+            "name": "website",
+            "type": "string",
+            "about": "Business website as listed."
+          },
+          {
+            "name": "years_in_business",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "id": "0825-1000223803"
+        },
+        "response": {
+          "accreditation": {
+            "accredited_since": "2024-01-16",
+            "is_accredited": true,
+            "revoked_at": null,
+            "status_code": 0,
+            "texts": []
+          },
+          "address": {
+            "city": "Austin",
+            "country_code": 2,
+            "formatted": "8410 Georgian Dr # B, Austin, TX 78753-6003",
+            "is_us_based": true,
+            "postal_code": "78753-6003",
+            "state": "TX",
+            "street": "8410 Georgian Dr # B",
+            "street2": null
+          },
+          "alerts": [],
+          "alt_names": [
+            "Calixto Plumbing, LLC"
+          ],
+          "attribution": "Better Business Bureau (bbb.org)",
+          "bbb_id": "0825",
+          "business_id": "1000223803",
+          "categories": [
+            {
+              "name": "Plumber",
+              "url": "https://www.bbb.org/us/tx/austin/category/plumber"
+            },
+            {
+              "name": "Plumbing Renovation",
+              "url": "https://www.bbb.org/us/tx/austin/category/plumbing-renovation"
+            },
+            {
+              "name": "Commercial Plumber",
+              "url": "https://www.bbb.org/us/tx/austin/category/commercial-plumber"
+            }
+          ],
+          "complaints_summary": {
+            "closed_last_12_months": 0,
+            "closed_last_3_years": 0,
+            "total_displayed": 0,
+            "unit": "complaints"
+          },
+          "complaints_url": "https://www.bbb.org/us/tx/austin/profile/plumber/calixto-plumbing-0825-1000223803/complaints",
+          "dates": {
+            "bbb_file_opened": "2024-01-16",
+            "business_started": "2023-03-14",
+            "business_started_locally": null,
+            "incorporated": "2023-03-14",
+            "new_owner": null
+          },
+          "employees": null,
+          "entity_type": "Limited Liability Company (LLC)",
+          "has_high_risk_category": false,
+          "id": "0825-1000223803",
+          "is_multi_location": false,
+          "is_out_of_business": false,
+          "latitude": 30.3,
+          "licenses": [
+            {
+              "agency": "Texas State Board of Plumbing Examiners",
+              "agency_state": "TX",
+              "expiration_date": "2026-11-30",
+              "notes": null,
+              "number": "44648"
+            }
+          ],
+          "local_bbb": {
+            "id": "0825",
+            "name": "BBB Heart of Texas",
+            "url": "https://www.bbb.org/local-bbb/bbb-serving-the-heart-of-texas"
+          },
+          "logo_url": "https://m.bbb.org/prod/ProfileImages/2024/1f7a8bd4-fdd2-45ca-8963-5c246e1d3b85.png",
+          "longitude": -97.76,
+          "management": [
+            {
+              "is_principal": true,
+              "name": "Mr. Omar Calixto Cordoba",
+              "title": "Owner/Manager"
+            }
+          ],
+          "name": "Calixto Plumbing",
+          "observed_at_ms": 1789483200000,
+          "phone": "(512) 945-3143",
+          "primary_category": {
+            "id": "10113-000",
+            "name": "Plumber"
+          },
+          "rating": {
+            "grade": "A+",
+            "methodology_url": "https://www.bbb.org/all/overview-of-ratings",
+            "not_rated_reason": null,
+            "reasons": [
+              "Customer Reviews are not used in the calculation of the BBB Letter Grade Rating."
+            ],
+            "scale": "BBB letter grade A+ to F; NR = not rated"
+          },
+          "reviews_summary": {
+            "average_star_rating": 1,
+            "scale": "stars_1_to_5",
+            "suppressed": false,
+            "total": 1
+          },
+          "reviews_url": "https://www.bbb.org/us/tx/austin/profile/plumber/calixto-plumbing-0825-1000223803/customer-reviews",
+          "service_area": null,
+          "source_url": "https://www.bbb.org/us/tx/austin/profile/plumber/calixto-plumbing-0825-1000223803",
+          "terms_url": "https://www.bbb.org/terms-of-use",
+          "website": "https://calixtoplumbing.com/",
+          "years_in_business": 3
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "bbb-org",
+        "capability": "businesses/profile"
+      }
+    },
+    {
+      "id": "bbb-org/businesses/resolve",
+      "provider": "bbb-org",
+      "capability": "businesses/resolve",
+      "name": "Resolve",
+      "description": "Normalise a bbb.org link an agent found elsewhere, or confirm an `id` exists, before calling profile or complaints.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "id",
+          "type": "string",
+          "in": "body",
+          "about": "BBB identity `<bbbId>-<businessId>` as it appears at the end of the profile URL (e.g. 0825-1000223803). Pattern: ^[0-9]{4}-[0-9]{1,12}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted bbb.org business profile URL, or any of its sub pages (/complaints, /customer-reviews, /leave-a-review). Exactly one of `id` or `url`."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Resolve a pasted bbb.org URL (profile or any sub page) or a BBB `id` to the canonical identity: `id`, local BBB id, business id, primary and alternate names, canonical profile / complaints / reviews URLs, city and state, letter grade, accreditation flag and complaints closed in the last 3 years.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "alt_names",
+            "type": "string[]"
+          },
+          {
+            "name": "attribution",
+            "type": "string",
+            "about": "Attribution string to display with the data."
+          },
+          {
+            "name": "bbb_id",
+            "type": "string",
+            "about": "Four-digit id of the local BBB that holds the file."
+          },
+          {
+            "name": "business_id",
+            "type": "string",
+            "about": "Numeric business id assigned by BBB."
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "complaints_closed_last_3_years",
+            "type": "number"
+          },
+          {
+            "name": "complaints_url",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Stable bbb.org identity `<bbbId>-<businessId>`, the trailing part of every profile URL."
+          },
+          {
+            "name": "input_url",
+            "type": "string",
+            "about": "The `url` that was passed, or null when `id` was used."
+          },
+          {
+            "name": "is_accredited",
+            "type": "boolean"
+          },
+          {
+            "name": "is_out_of_business",
+            "type": "boolean"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Unix epoch milliseconds (UTC) when this program read the page. Live read on every call, no cache."
+          },
+          {
+            "name": "rating",
+            "type": "string",
+            "about": "BBB letter grade as shown (A+ … F, or NR); null when the page shows none."
+          },
+          {
+            "name": "reviews_url",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Canonical bbb.org profile URL."
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "terms_url",
+            "type": "string",
+            "about": "bbb.org terms of use governing this public data."
+          },
+          {
+            "name": "website",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "url": "https://www.bbb.org/us/tx/austin/profile/plumber/calixto-plumbing-0825-1000223803/customer-reviews"
+        },
+        "response": {
+          "alt_names": [
+            "Calixto Plumbing, LLC"
+          ],
+          "attribution": "Better Business Bureau (bbb.org)",
+          "bbb_id": "0825",
+          "business_id": "1000223803",
+          "city": "Austin",
+          "complaints_closed_last_3_years": 0,
+          "complaints_url": "https://www.bbb.org/us/tx/austin/profile/plumber/calixto-plumbing-0825-1000223803/complaints",
+          "id": "0825-1000223803",
+          "input_url": "https://www.bbb.org/us/tx/austin/profile/plumber/calixto-plumbing-0825-1000223803/customer-reviews",
+          "is_accredited": true,
+          "is_out_of_business": false,
+          "name": "Calixto Plumbing",
+          "observed_at_ms": 1789483200000,
+          "rating": "A+",
+          "reviews_url": "https://www.bbb.org/us/tx/austin/profile/plumber/calixto-plumbing-0825-1000223803/customer-reviews",
+          "source_url": "https://www.bbb.org/us/tx/austin/profile/plumber/calixto-plumbing-0825-1000223803",
+          "state": "TX",
+          "terms_url": "https://www.bbb.org/terms-of-use",
+          "website": "https://calixtoplumbing.com/"
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "bbb-org",
+        "capability": "businesses/resolve"
+      }
+    },
+    {
+      "id": "bbb-org/businesses/search",
+      "provider": "bbb-org",
+      "capability": "businesses/search",
+      "name": "Search",
+      "description": "Start here to find a business and its `id` for profile / complaints / resolve, or to list businesses in a category and place.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "accredited_only",
+          "type": "boolean",
+          "in": "body",
+          "about": "Only BBB Accredited Businesses (`filter_accredited`)."
+        },
+        {
+          "name": "category_id",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict to one BBB type-of-business id (`filter_category`), taken from a previous search's `filters.categories`. Pattern: ^[0-9]{5}-[0-9]{3}$."
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "in": "body",
+          "about": "Market to search: bbb.org serves the United States and Canada.",
+          "default": "USA",
+          "oneOf": [
+            "USA",
+            "CAN"
+          ]
+        },
+        {
+          "name": "distance_miles",
+          "type": "number",
+          "in": "body",
+          "about": "Radius around `location` (`filter_distance`); requires `location`.",
+          "oneOf": [
+            "5",
+            "10",
+            "25",
+            "50",
+            "100"
+          ]
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "in": "body",
+          "about": "City and state/province (`Austin, TX`), or a ZIP / postal code (bbb.org `find_loc`). Omit for a nationwide search."
+        },
+        {
+          "name": "min_rating",
+          "type": "string",
+          "in": "body",
+          "about": "Minimum BBB letter grade (`filter_ratings`): A means A and above.",
+          "oneOf": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "F"
+          ]
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based result page of 15 items; bbb.org exposes at most 15 pages per query.",
+          "default": 1,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Business name or category words (bbb.org `find_text`). Required unless `category_id` is given."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "bbb.org sort order. Distance requires `location`.",
+          "default": "Relevance",
+          "oneOf": [
+            "Relevance",
+            "Distance",
+            "Rating",
+            "AToZ",
+            "ZToA"
+          ]
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict to one state/province code (`filter_state`). Pattern: ^[A-Z]{2}$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "query",
+          "category_id"
+        ]
+      ],
+      "response": {
+        "about": "Find businesses on bbb.org by name or category words and an optional city/state or postal code, with the site's own filters (accredited only, minimum letter grade, category id, state, radius) and sort. Returns 15 items per page with BBB identity, canonical profile URL, letter grade, accreditation flag, categories, address, phones and service areas, plus the filter values bbb.org offers.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "accreditation_status",
+            "type": "string",
+            "about": "bbb.org's accreditation status text when present (e.g. revoked)."
+          },
+          {
+            "name": "accredited_charity",
+            "type": "boolean"
+          },
+          {
+            "name": "address",
+            "type": "object"
+          },
+          {
+            "name": "address_id",
+            "type": "string",
+            "about": "The location (address) id component of `result_id`."
+          },
+          {
+            "name": "bbb_id",
+            "type": "string",
+            "about": "Four-digit id of the local BBB that holds the file."
+          },
+          {
+            "name": "business_id",
+            "type": "string",
+            "about": "Numeric business id assigned by BBB."
+          },
+          {
+            "name": "categories",
+            "type": "object[]"
+          },
+          {
+            "name": "distance_miles",
+            "type": "number",
+            "about": "Distance from the searched location in miles when bbb.org computes it; null otherwise."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Stable bbb.org identity `<bbbId>-<businessId>`, the trailing part of every profile URL."
+          },
+          {
+            "name": "is_accredited",
+            "type": "boolean",
+            "about": "bbb.org `bbbMember`: BBB Accredited Business."
+          },
+          {
+            "name": "is_charity",
+            "type": "boolean"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "local_bbb",
+            "type": "object"
+          },
+          {
+            "name": "location_url",
+            "type": "string",
+            "about": "bbb.org page for this specific address of a multi-location business, when the row is a secondary location."
+          },
+          {
+            "name": "logo_url",
+            "type": "string",
+            "about": "Logo image URL on m.bbb.org (URL only, never stored)."
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Business name with bbb.org's <em> highlight markup removed."
+          },
+          {
+            "name": "out_of_business_status",
+            "type": "string",
+            "about": "bbb.org's out-of-business status when present; numeric source codes are preserved as strings without inferring their meaning."
+          },
+          {
+            "name": "phones",
+            "type": "string[]",
+            "about": "Business phone numbers as displayed."
+          },
+          {
+            "name": "primary_category",
+            "type": "object"
+          },
+          {
+            "name": "rating",
+            "type": "string",
+            "about": "BBB letter grade as shown (A+ … F, or NR); null when the page shows none."
+          },
+          {
+            "name": "rating_score",
+            "type": "number",
+            "about": "bbb.org's internal numeric rating score (0-100 scale) when exposed; null otherwise."
+          },
+          {
+            "name": "result_id",
+            "type": "string",
+            "about": "bbb.org's per-row id `<bbbId>_<businessId>_<addressId>`; unique within a result. A multi-location business appears once per address with the same `id`."
+          },
+          {
+            "name": "service_areas",
+            "type": "string[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Canonical bbb.org profile URL."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "location": "Austin, TX",
+          "query": "plumber"
+        },
+        "response": {
+          "accredited_only": false,
+          "attribution": "Better Business Bureau (bbb.org)",
+          "count": 15,
+          "filters": {
+            "categories": [
+              {
+                "label": "Plumber",
+                "value": "10113-000"
+              },
+              {
+                "label": "Commercial Plumber",
+                "value": "10113-100"
+              },
+              {
+                "label": "Plumbing Renovation",
+                "value": "10113-300"
+              }
+            ],
+            "states": [
+              {
+                "label": "MA",
+                "value": "MA"
+              },
+              {
+                "label": "TX",
+                "value": "TX"
+              },
+              {
+                "label": "VA",
+                "value": "VA"
+              }
+            ]
+          },
+          "items": [
+            {
+              "accreditation_status": null,
+              "accredited_charity": true,
+              "address": {
+                "city": "Austin",
+                "postal_code": "78753-6003",
+                "state": "TX",
+                "street": "8410 Georgian Dr # B"
+              },
+              "address_id": "405686",
+              "bbb_id": "0825",
+              "business_id": "1000223803",
+              "categories": [
+                {
+                  "id": "10113-000",
+                  "name": "Plumber"
+                },
+                {
+                  "id": "10113-300",
+                  "name": "Plumbing Renovation"
+                },
+                {
+                  "id": "10113-100",
+                  "name": "Commercial Plumber"
+                }
+              ],
+              "distance_miles": null,
+              "id": "0825-1000223803",
+              "is_accredited": true,
+              "is_charity": false,
+              "latitude": 30.3,
+              "local_bbb": {
+                "id": "0825",
+                "name": "BBB Heart of Texas"
+              },
+              "location_url": null,
+              "logo_url": "https://m.bbb.org/prod/ProfileImages/2024/1f7a8bd4-fdd2-45ca-8963-5c246e1d3b85.png",
+              "longitude": -97.76,
+              "name": "Calixto Plumbing",
+              "out_of_business_status": null,
+              "phones": [
+                "(512) 945-3143"
+              ],
+              "primary_category": {
+                "id": "10113-000",
+                "name": "Plumber"
+              },
+              "rating": "A+",
+              "rating_score": 98.49,
+              "result_id": "0825_1000223803_405686",
+              "service_areas": [
+                "Bell County,  TX",
+                "Burnet County,  TX",
+                "Lee County,  TX"
+              ],
+              "source_url": "https://www.bbb.org/us/tx/austin/profile/plumber/calixto-plumbing-0825-1000223803"
+            },
+            {
+              "accreditation_status": null,
+              "accredited_charity": true,
+              "address": {
+                "city": "Austin",
+                "postal_code": "78748-1448",
+                "state": "TX",
+                "street": "10415 Old Manchaca Rd Ste 205 # Suit"
+              },
+              "address_id": "432144",
+              "bbb_id": "0825",
+              "business_id": "1000194310",
+              "categories": [
+                {
+                  "id": "10113-000",
+                  "name": "Plumber"
+                }
+              ],
+              "distance_miles": null,
+              "id": "0825-1000194310",
+              "is_accredited": true,
+              "is_charity": false,
+              "latitude": 30.3,
+              "local_bbb": {
+                "id": "0825",
+                "name": "BBB Heart of Texas"
+              },
+              "location_url": null,
+              "logo_url": "https://m.bbb.org/prod/ProfileImages/2025/983b8958-9f7f-4b1d-b15c-fd154b889909.jpg",
+              "longitude": -97.76,
+              "name": "Al Mac Plumbing & Gas, LLC",
+              "out_of_business_status": null,
+              "phones": [
+                "(512) 645-8578"
+              ],
+              "primary_category": {
+                "id": "10113-000",
+                "name": "Plumber"
+              },
+              "rating": "A+",
+              "rating_score": 100,
+              "result_id": "0825_1000194310_432144",
+              "service_areas": [
+                "78730",
+                "78731",
+                "78732"
+              ],
+              "source_url": "https://www.bbb.org/us/tx/austin/profile/plumber/al-mac-plumbing-gas-llc-0825-1000194310"
+            },
+            {
+              "accreditation_status": null,
+              "accredited_charity": true,
+              "address": {
+                "city": "Austin",
+                "postal_code": "78704-0012",
+                "state": "TX",
+                "street": "PO Box 40698"
+              },
+              "address_id": "445822",
+              "bbb_id": "0825",
+              "business_id": "1000237688",
+              "categories": [
+                {
+                  "id": "10113-000",
+                  "name": "Plumber"
+                }
+              ],
+              "distance_miles": null,
+              "id": "0825-1000237688",
+              "is_accredited": true,
+              "is_charity": false,
+              "latitude": 30.3,
+              "local_bbb": {
+                "id": "0825",
+                "name": "BBB Heart of Texas"
+              },
+              "location_url": null,
+              "logo_url": "https://m.bbb.org/prod/ProfileImages/2025/604bb2ed-4a9c-46d3-b9f6-22c33a19671f.png",
+              "longitude": -97.76,
+              "name": "Abundant Plumbing LLC",
+              "out_of_business_status": null,
+              "phones": [
+                "(512) 201-9978"
+              ],
+              "primary_category": {
+                "id": "10113-000",
+                "name": "Plumber"
+              },
+              "rating": "A",
+              "rating_score": 94,
+              "result_id": "0825_1000237688_445822",
+              "service_areas": [
+                "Hays County,  TX",
+                "Travis County,  TX",
+                "Williamson County,  TX"
+              ],
+              "source_url": "https://www.bbb.org/us/tx/austin/profile/plumber/abundant-plumbing-llc-0825-1000237688"
+            }
+          ],
+          "location": "Austin, TX",
+          "next_page": 2,
+          "observed_at_ms": 1789483200000,
+          "page": 1,
+          "page_size": 15,
+          "query": "plumber",
+          "related_categories": [
+            {
+              "name": "Plumber",
+              "url": "https://www.bbb.org/us/tx/austin/category/plumber"
+            },
+            {
+              "name": "Commercial Plumber",
+              "url": "https://www.bbb.org/us/tx/austin/category/commercial-plumber"
+            },
+            {
+              "name": "Plumbing Renovation",
+              "url": "https://www.bbb.org/us/tx/austin/category/plumbing-renovation"
+            }
+          ],
+          "resolved_location": {
+            "city": "Austin",
+            "country": "US",
+            "display_text": "Austin, TX",
+            "lat_lng": "30.314613,-97.793745",
+            "postal_code": "78732",
+            "state": "TX"
+          },
+          "sort": "Relevance",
+          "source_url": "https://www.bbb.org/search?find_country=USA&find_text=plumber&find_loc=Austin%2C+TX&page=1",
+          "terms_url": "https://www.bbb.org/terms-of-use",
+          "total_pages": 15,
+          "total_results": 2540
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "bbb-org",
+        "capability": "businesses/search"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1908 @@
+{
+  "id": "huggingface-co",
+  "provider": "huggingface-co",
+  "name": "Hugging Face",
+  "description": "Search Hugging Face models and datasets, inspect repository metadata, and read public model and dataset cards.",
+  "toolCount": 5,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "huggingface-co"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "huggingface-co/hub/card",
+      "provider": "huggingface-co",
+      "capability": "hub/card",
+      "name": "Card",
+      "description": "The README model or dataset card of one repository at a revision: raw YAML front matter, markdown body, section headings, word count and the Hub's parsed card data, plus license and gating. Works for gated repositories; `has_card` is false when the repository has no README.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "repo_id",
+          "type": "string",
+          "in": "body",
+          "about": "Hub repository id `owner/name` (e.g. `meta-llama/Llama-3.1-8B-Instruct`) or a legacy top-level name (e.g. `bert-base-uncased`, redirected to its canonical id). Pattern: ^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)?$.",
+          "required": true
+        },
+        {
+          "name": "repo_type",
+          "type": "string",
+          "in": "body",
+          "about": "repo_type",
+          "default": "model",
+          "oneOf": [
+            "model",
+            "dataset"
+          ]
+        },
+        {
+          "name": "revision",
+          "type": "string",
+          "in": "body",
+          "about": "Branch, tag or commit sha.",
+          "default": "main"
+        }
+      ],
+      "response": {
+        "about": "The README model or dataset card of one repository at a revision: raw YAML front matter, markdown body, section headings, word count and the Hub's parsed card data, plus license and gating. Works for gated repositories; `has_card` is false when the repository has no README.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "body",
+            "type": "string",
+            "about": "Markdown after the front matter."
+          },
+          {
+            "name": "card_data",
+            "type": "object",
+            "about": "Front matter as parsed by the Hub."
+          },
+          {
+            "name": "front_matter",
+            "type": "string",
+            "about": "Raw YAML between the leading `---` fences."
+          },
+          {
+            "name": "gated",
+            "type": "boolean"
+          },
+          {
+            "name": "gated_mode",
+            "type": "string"
+          },
+          {
+            "name": "has_card",
+            "type": "boolean",
+            "about": "False when the repository has no README at that revision."
+          },
+          {
+            "name": "last_modified",
+            "type": "string"
+          },
+          {
+            "name": "license",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "repo_id",
+            "type": "string"
+          },
+          {
+            "name": "repo_type",
+            "type": "string"
+          },
+          {
+            "name": "requested_repo_id",
+            "type": "string"
+          },
+          {
+            "name": "revision",
+            "type": "string"
+          },
+          {
+            "name": "sections",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "word_count",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "repo_id": "google-bert/bert-base-uncased"
+        },
+        "response": {
+          "body": "# BERT base model (uncased)\n\nPretrained model on English language using a masked language modeling (MLM) objective. It was introduced in\n[this paper](https://arxiv.org/abs/1810.04805) and first released in\n[this repository](https://github.com/google-research/bert). This model is uncased: it does not make a difference\nbetween english and English.\n\nDisclaimer: The team releasing BERT did not write a model card for this model so this model card has been written by\nthe Hugging Face team.\n\n## Model description\n\nBERT is a transformers model pretrained on a large corpus of English data in a self-supervised fashion. This means it\nwas pretrained on the raw texts only, with no humans labeling them in any way (which is why it can use lots of\npublicly available data) with an automatic process to generate inputs and labels from those texts. More precisely, it\nwas pretrained with two objectives:\n\n- Masked language modeling (MLM): taking a sentence, the model randomly masks 15% of the words in the input then run\n  the entire masked sentence through the model and has to predict the masked words. This is different from traditional\n  recurrent neural networks (RNNs) that usually see the words one after the other, or from autoregressive models like\n  GPT which internally masks the future tokens. It allows the model to learn a bidirectional representation of the\n  sentence.\n- Next sentence prediction (NSP): the models concatenates two masked sentences as inputs during pretraining. Sometimes\n  they correspond to sentences that were next to each other in the original text, sometimes not. The model then has to\n  predict if the two sentences were following each other or not.\n\nThis way, the model learns an inner representation of the English language that can then be used to extract features\nuseful for downstream tasks: if you have a dataset of labeled sentences, for instance, you can train a standard\nclassifier using the features produced by the BERT model as inputs.\n\n## Model variations\n\nBERT has originally been released in base and large variations, for cased and uncased input text. The uncased models also strips out an accent markers.  \nChinese and multilingual uncased and cased versions followed shortly after.  \nModified preprocessing with whole word masking has replaced subpiece masking in a following work, with the release of two models.  \nOther 24 smaller models are released afterward.  \n\nThe detailed release history can be found on the [google-research/bert readme](https://github.com/google-research/bert/blob/master/README.md) on github.\n\n| Model | #params | Language |\n|------------------------|--------------------------------|-------|\n| [`bert-base-uncased`](https://huggingface.co/bert-base-uncased) | 110M   | English |\n| [`bert-large-uncased`](https://huggingface.co/bert-large-uncased)              | 340M    | English | sub \n| [`bert-base-cased`](https://huggingface.co/bert-base-cased)        | 110M    | English |\n| [`bert-large-cased`](https://huggingface.co/bert-large-cased) | 340M    |  English |\n| [`bert-base-chinese`](https://huggingface.co/bert-base-chinese) | 110M    | Chinese |\n| [`bert-base-multilingual-cased`](https://huggingface.co/bert-base-multilingual-cased) | 110M | Multiple |\n| [`bert-large-uncased-whole-word-masking`](https://huggingface.co/bert-large-uncased-whole-word-masking) | 340M | English |\n| [`bert-large-cased-whole-word-masking`](https://huggingface.co/bert-large-cased-whole-word-masking) | 340M | English |\n\n## Intended uses & limitations\n\nYou can use the raw model for either masked language modeling or next sentence prediction, but it's mostly intended to\nbe fine-tuned on a downstream task. See the [model hub](https://huggingface.co/models?filter=bert) to look for\nfine-tuned versions of a task that interests you.\n\nNote that this model is primarily aimed at being fine-tuned on tasks that use the whole sentence (potentially masked)\nto make decisions, such as sequence classification, token classification or question answering. For tasks such as text\ngeneration you should look at model like GPT2.\n\n### How to use\n\nYou can use this model directly with a pipeline for masked language modeling:\n\n```python\n>>> from transformers import pipeline\n>>> unmasker = pipeline('fill-mask', model='bert-base-uncased')\n>>> unmasker(\"Hello I'm a [MASK] model.\")\n\n[{'sequence': \"[CLS] hello i'm a fashion model. [SEP]\",\n  'score': 0.1073106899857521,\n  'token': 4827,\n  'token_str': 'fashion'},\n {'sequence': \"[CLS] hello i'm a role model. [SEP]\",\n  'score': 0.08774490654468536,\n  'token': 2535,\n  'token_str': 'role'},\n {'sequence': \"[CLS] hello i'm a new model. [SEP]\",\n  'score': 0.05338378623127937,\n  'token': 2047,\n  'token_str': 'new'},\n {'sequence': \"[CLS] hello i'm a super model. [SEP]\",\n  'score': 0.04667217284440994,\n  'token': 3565,\n  'token_str': 'super'},\n {'sequence': \"[CLS] hello i'm a fine model. [SEP]\",\n  'score': 0.027095865458250046,\n  'token': 2986,\n  'token_str': 'fine'}]\n```\n\nHere is how to use this model to get the features of a given text in PyTorch:\n\n```python\nfrom transformers import BertTokenizer, BertModel\ntokenizer = BertTokenizer.from_pretrained('bert-base-uncased')\nmodel = BertModel.from_pretrained(\"bert-base-uncased\")\ntext = \"Replace me by any text you'd like.\"\nencoded_input = tokenizer(text, return_tensors='pt')\noutput = model(**encoded_input)\n```\n\nand in TensorFlow:\n\n```python\nfrom transformers import BertTokenizer, TFBertModel\ntokenizer = BertTokenizer.from_pretrained('bert-base-uncased')\nmodel = TFBertModel.from_pretrained(\"bert-base-uncased\")\ntext = \"Replace me by any text you'd like.\"\nencoded_input = tokenizer(text, return_tensors='tf')\noutput = model(encoded_input)\n```\n\n### Limitations and bias\n\nEven if the training data used for this model could be characterized as fairly neutral, this model can have biased\npredictions:\n\n```python\n>>> from transformers import pipeline\n>>> unmasker = pipeline('fill-mask', model='bert-base-uncased')\n>>> unmasker(\"The man worked as a [MASK].\")\n\n[{'sequence': '[CLS] the man worked as a carpenter. [SEP]',\n  'score': 0.09747550636529922,\n  'token': 10533,\n  'token_str': 'carpenter'},\n {'sequence': '[CLS] the man worked as a waiter. [SEP]',\n  'score': 0.0523831807076931,\n  'token': 15610,\n  'token_str': 'waiter'},\n {'sequence': '[CLS] the man worked as a barber. [SEP]',\n  'score': 0.04962705448269844,\n  'token': 13362,\n  'token_str': 'barber'},\n {'sequence': '[CLS] the man worked as a mechanic. [SEP]',\n  'score': 0.03788609802722931,\n  'token': 15893,\n  'token_str': 'mechanic'},\n {'sequence': '[CLS] the man worked as a salesman. [SEP]',\n  'score': 0.037680890411138535,\n  'token': 18968,\n  'token_str': 'salesman'}]\n\n>>> unmasker(\"The woman worked as a [MASK].\")\n\n[{'sequence': '[CLS] the woman worked as a nurse. [SEP]',\n  'score': 0.21981462836265564,\n  'token': 6821,\n  'token_str': 'nurse'},\n {'sequence': '[CLS] the woman worked as a waitress. [SEP]',\n  'score': 0.1597415804862976,\n  'token': 13877,\n  'token_str': 'waitress'},\n {'sequence': '[CLS] the woman worked as a maid. [SEP]',\n  'score': 0.1154729500412941,\n  'token': 10850,\n  'token_str': 'maid'},\n {'sequence': '[CLS] the woman worked as a prostitute. [SEP]',\n  'score': 0.037968918681144714,\n  'token': 19215,\n  'token_str': 'prostitute'},\n {'sequence': '[CLS] the woman worked as a cook. [SEP]',\n  'score': 0.03042375110089779,\n  'token': 5660,\n  'token_str': 'cook'}]\n```\n\nThis bias will also affect all fine-tuned versions of this model.\n\n## Training data\n\nThe BERT model was pretrained on [BookCorpus](https://yknzhu.wixsite.com/mbweb), a dataset consisting of 11,038\nunpublished books and [English Wikipedia](https://en.wikipedia.org/wiki/English_Wikipedia) (excluding lists, tables and\nheaders).\n\n## Training procedure\n\n### Preprocessing\n\nThe texts are lowercased and tokenized using WordPiece and a vocabulary size of 30,000. The inputs of the model are\nthen of the form:\n\n```\n[CLS] Sentence A [SEP] Sentence B [SEP]\n```\n\nWith probability 0.5, sentence A and sentence B correspond to two consecutive sentences in the original corpus, and in\nthe other cases, it's another random sentence in the corpus. Note that what is considered a sentence here is a\nconsecutive span of text usually longer than a single sentence. The only constrain is that the result with the two\n\"sentences\" has a combined length of less than 512 tokens.\n\nThe details of the masking procedure for each sentence are the following:\n- 15% of the tokens are masked.\n- In 80% of the cases, the masked tokens are replaced by `[MASK]`.\n- In 10% of the cases, the masked tokens are replaced by a random token (different) from the one they replace.\n- In the 10% remaining cases, the masked tokens are left as is.\n\n### Pretraining\n\nThe model was trained on 4 cloud TPUs in Pod configuration (16 TPU chips total) for one million steps with a batch size\nof 256. The sequence length was limited to 128 tokens for 90% of the steps and 512 for the remaining 10%. The optimizer\nused is Adam with a learning rate of 1e-4, \\\\(\\beta_{1} = 0.9\\\\) and \\\\(\\beta_{2} = 0.999\\\\), a weight decay of 0.01,\nlearning rate warmup for 10,000 steps and linear decay of the learning rate after.\n\n## Evaluation results\n\nWhen fine-tuned on downstream tasks, this model achieves the following results:\n\nGlue test results:\n\n| Task | MNLI-(m/mm) | QQP  | QNLI | SST-2 | CoLA | STS-B | MRPC | RTE  | Average |\n|:----:|:-----------:|:----:|:----:|:-----:|:----:|:-----:|:----:|:----:|:-------:|\n|      | 84.6/83.4   | 71.2 | 90.5 | 93.5  | 52.1 | 85.8  | 88.9 | 66.4 | 79.6    |\n\n\n### BibTeX entry and citation info\n\n```bibtex\n@article{DBLP:journals/corr/abs-1810-04805,\n  author    = {Jacob Devlin and\n               Ming{-}Wei Chang and\n               Kenton Lee and\n               Kristina Toutanova},\n  title     = {{BERT:} Pre-training of Deep Bidirectional Transformers for Language\n               Understanding},\n  journal   = {CoRR},\n  volume    = {abs/1810.04805},\n  year      = {2018},\n  url       = {http://arxiv.org/abs/1810.04805},\n  archivePrefix = {arXiv},\n  eprint    = {1810.04805},\n  timestamp = {Tue, 30 Oct 2018 20:39:56 +0100},\n  biburl    = {https://dblp.org/rec/journals/corr/abs-1810-04805.bib},\n  bibsource = {dblp computer science bibliography, https://dblp.org}\n}\n```\n\n<a href=\"https://huggingface.co/exbert/?model=bert-base-uncased\">\n\t<img width=\"300px\" src=\"https://cdn-media.huggingface.co/exbert/button.png\">\n</a>\n",
+          "card_data": {
+            "datasets": [
+              "bookcorpus",
+              "wikipedia"
+            ],
+            "language": "en",
+            "license": "apache-2.0",
+            "tags": [
+              "exbert"
+            ]
+          },
+          "front_matter": "language: en\ntags:\n- exbert\nlicense: apache-2.0\ndatasets:\n- bookcorpus\n- wikipedia",
+          "gated": false,
+          "gated_mode": null,
+          "has_card": true,
+          "last_modified": "2024-02-19T11:06:12.000Z",
+          "license": "apache-2.0",
+          "observed_at_ms": 1789431352194,
+          "repo_id": "google-bert/bert-base-uncased",
+          "repo_type": "model",
+          "requested_repo_id": "google-bert/bert-base-uncased",
+          "revision": "main",
+          "sections": [
+            {
+              "level": 1,
+              "title": "BERT base model (uncased)"
+            },
+            {
+              "level": 2,
+              "title": "Model description"
+            },
+            {
+              "level": 2,
+              "title": "Model variations"
+            },
+            {
+              "level": 2,
+              "title": "Intended uses & limitations"
+            },
+            {
+              "level": 3,
+              "title": "How to use"
+            },
+            {
+              "level": 3,
+              "title": "Limitations and bias"
+            },
+            {
+              "level": 2,
+              "title": "Training data"
+            },
+            {
+              "level": 2,
+              "title": "Training procedure"
+            },
+            {
+              "level": 3,
+              "title": "Preprocessing"
+            },
+            {
+              "level": 3,
+              "title": "Pretraining"
+            },
+            {
+              "level": 2,
+              "title": "Evaluation results"
+            },
+            {
+              "level": 3,
+              "title": "BibTeX entry and citation info"
+            }
+          ],
+          "source_url": "https://huggingface.co/google-bert/bert-base-uncased/resolve/main/README.md",
+          "url": "https://huggingface.co/google-bert/bert-base-uncased",
+          "word_count": 1357
+        },
+        "recordedAt": "2026-09-15T00:15:52.194785+00:00"
+      },
+      "execute": {
+        "provider": "huggingface-co",
+        "capability": "hub/card"
+      }
+    },
+    {
+      "id": "huggingface-co/hub/dataset",
+      "provider": "huggingface-co",
+      "capability": "hub/dataset",
+      "name": "Dataset",
+      "description": "One dataset repository: canonical id, author, license(s), task categories, languages, size categories, 30-day and all-time downloads, likes, gating, tags, description, citation, file list, configs, dataset_info (features and splits) and the parsed dataset-card front matter.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "repo_id",
+          "type": "string",
+          "in": "body",
+          "about": "Hub repository id `owner/name` (e.g. `meta-llama/Llama-3.1-8B-Instruct`) or a legacy top-level name (e.g. `bert-base-uncased`, redirected to its canonical id). Pattern: ^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)?$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One dataset repository: canonical id, author, license(s), task categories, languages, size categories, 30-day and all-time downloads, likes, gating, tags, description, citation, file list, configs, dataset_info (features and splits) and the parsed dataset-card front matter.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "author",
+            "type": "string",
+            "about": "Owner (user or organization) of the repository."
+          },
+          {
+            "name": "card_data",
+            "type": "object",
+            "about": "Upstream metadata with keys defined by Hugging Face or the repository author."
+          },
+          {
+            "name": "citation",
+            "type": "string"
+          },
+          {
+            "name": "configs",
+            "type": "object[]",
+            "about": "Card `configs`: name and data_files."
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601 creation timestamp."
+          },
+          {
+            "name": "dataset_info",
+            "type": "object[]",
+            "about": "Card `dataset_info` (features, splits, sizes) verbatim."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Dataset description as indexed by the Hub."
+          },
+          {
+            "name": "disabled",
+            "type": "boolean"
+          },
+          {
+            "name": "downloads_30d",
+            "type": "number",
+            "about": "Downloads in the trailing 30 days (the Hub's `downloads`)."
+          },
+          {
+            "name": "downloads_all_time",
+            "type": "number",
+            "about": "Cumulative downloads (the Hub's `downloadsAllTime`)."
+          },
+          {
+            "name": "file_count",
+            "type": "number"
+          },
+          {
+            "name": "files",
+            "type": "string[]"
+          },
+          {
+            "name": "formats",
+            "type": "string[]",
+            "about": "From `format:` tags, e.g. `parquet`."
+          },
+          {
+            "name": "gated",
+            "type": "boolean",
+            "about": "Whether access requires accepting the repository's terms."
+          },
+          {
+            "name": "gated_mode",
+            "type": "string",
+            "about": "`auto`, `manual` or null when not gated."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Canonical repository id as the Hub reports it."
+          },
+          {
+            "name": "languages",
+            "type": "string[]",
+            "about": "Card `language` entries."
+          },
+          {
+            "name": "last_modified",
+            "type": "string",
+            "about": "ISO 8601 timestamp of the last commit."
+          },
+          {
+            "name": "license",
+            "type": "string",
+            "about": "First declared license identifier (card `license`, else `license:` tag); null when none is declared."
+          },
+          {
+            "name": "license_link",
+            "type": "string",
+            "about": "Card `license_link` for `license: other`."
+          },
+          {
+            "name": "license_name",
+            "type": "string",
+            "about": "Card `license_name` for `license: other`."
+          },
+          {
+            "name": "licenses",
+            "type": "string[]",
+            "about": "All declared license identifiers."
+          },
+          {
+            "name": "likes",
+            "type": "number",
+            "about": "Likes on the Hub."
+          },
+          {
+            "name": "modalities",
+            "type": "string[]",
+            "about": "From `modality:` tags."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "paperswithcode_id",
+            "type": "string"
+          },
+          {
+            "name": "pretty_name",
+            "type": "string"
+          },
+          {
+            "name": "private",
+            "type": "boolean"
+          },
+          {
+            "name": "requested_repo_id",
+            "type": "string"
+          },
+          {
+            "name": "sha",
+            "type": "string"
+          },
+          {
+            "name": "size_categories",
+            "type": "string[]",
+            "about": "e.g. `10K<n<100K`."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "string[]",
+            "about": "Hub tags including `license:`, `arxiv:`, `base_model:` and `region:` prefixes."
+          },
+          {
+            "name": "task_categories",
+            "type": "string[]",
+            "about": "Card `task_categories` (fallback: `task_categories:` tags)."
+          },
+          {
+            "name": "task_ids",
+            "type": "string[]"
+          },
+          {
+            "name": "trending_score",
+            "type": "number",
+            "about": "Hub trending score at observation time."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public page on huggingface.co."
+          },
+          {
+            "name": "used_storage_bytes",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "repo_id": "rajpurkar/squad"
+        },
+        "response": {
+          "author": "rajpurkar",
+          "card_data": {
+            "annotations_creators": [
+              "crowdsourced"
+            ],
+            "configs": [
+              {
+                "config_name": "plain_text",
+                "data_files": [
+                  {
+                    "path": "plain_text/train-*",
+                    "split": "train"
+                  },
+                  {
+                    "path": "plain_text/validation-*",
+                    "split": "validation"
+                  }
+                ],
+                "default": true
+              }
+            ],
+            "dataset_info": {
+              "config_name": "plain_text",
+              "dataset_size": 89819092,
+              "download_size": 16278203,
+              "features": [
+                {
+                  "dtype": "string",
+                  "name": "id"
+                },
+                {
+                  "dtype": "string",
+                  "name": "title"
+                },
+                {
+                  "dtype": "string",
+                  "name": "context"
+                },
+                {
+                  "dtype": "string",
+                  "name": "question"
+                },
+                {
+                  "name": "answers",
+                  "sequence": [
+                    {
+                      "dtype": "string",
+                      "name": "text"
+                    },
+                    {
+                      "dtype": "int32",
+                      "name": "answer_start"
+                    }
+                  ]
+                }
+              ],
+              "splits": [
+                {
+                  "name": "train",
+                  "num_bytes": 79346108,
+                  "num_examples": 87599
+                },
+                {
+                  "name": "validation",
+                  "num_bytes": 10472984,
+                  "num_examples": 10570
+                }
+              ]
+            },
+            "language": [
+              "en"
+            ],
+            "language_creators": [
+              "crowdsourced",
+              "found"
+            ],
+            "license": "cc-by-sa-4.0",
+            "multilinguality": [
+              "monolingual"
+            ],
+            "paperswithcode_id": "squad",
+            "pretty_name": "SQuAD",
+            "size_categories": [
+              "10K<n<100K"
+            ],
+            "source_datasets": [
+              "extended|wikipedia"
+            ],
+            "task_categories": [
+              "question-answering"
+            ],
+            "task_ids": [
+              "extractive-qa"
+            ],
+            "train-eval-index": [
+              {
+                "col_mapping": {
+                  "answers": {
+                    "answer_start": "answer_start",
+                    "text": "text"
+                  },
+                  "context": "context",
+                  "question": "question"
+                },
+                "config": "plain_text",
+                "metrics": [
+                  {
+                    "name": "SQuAD",
+                    "type": "squad"
+                  }
+                ],
+                "splits": {
+                  "eval_split": "validation",
+                  "train_split": "train"
+                },
+                "task": "question-answering",
+                "task_id": "extractive_question_answering"
+              }
+            ]
+          },
+          "citation": null,
+          "configs": [
+            {
+              "data_files": [
+                {
+                  "path": "plain_text/train-*",
+                  "split": "train"
+                },
+                {
+                  "path": "plain_text/validation-*",
+                  "split": "validation"
+                }
+              ],
+              "name": "plain_text"
+            }
+          ],
+          "created_at": "2022-03-02T23:29:22.000Z",
+          "dataset_info": {
+            "config_name": "plain_text",
+            "dataset_size": 89819092,
+            "download_size": 16278203,
+            "features": [
+              {
+                "dtype": "string",
+                "name": "id"
+              },
+              {
+                "dtype": "string",
+                "name": "title"
+              },
+              {
+                "dtype": "string",
+                "name": "context"
+              },
+              {
+                "dtype": "string",
+                "name": "question"
+              },
+              {
+                "name": "answers",
+                "sequence": [
+                  {
+                    "dtype": "string",
+                    "name": "text"
+                  },
+                  {
+                    "dtype": "int32",
+                    "name": "answer_start"
+                  }
+                ]
+              }
+            ],
+            "splits": [
+              {
+                "name": "train",
+                "num_bytes": 79346108,
+                "num_examples": 87599
+              },
+              {
+                "name": "validation",
+                "num_bytes": 10472984,
+                "num_examples": 10570
+              }
+            ]
+          },
+          "description": "\n\t\n\t\t\n\t\n\t\n\t\tDataset Card for SQuAD\n\t\n\n\n\t\n\t\t\n\t\n\t\n\t\tDataset Summary\n\t\n\nStanford Question Answering Dataset (SQuAD) is a reading comprehension dataset, consisting of questions posed by crowdworkers on a set of Wikipedia articles, where the answer to every question is a segment of text, or span, from the corresponding reading passage, or the question might be unanswerable.\nSQuAD 1.1 contains 100,000+ question-answer pairs on 500+ articles.\n\n\t\n\t\t\n\t\n\t\n\t\tSupported Tasks and Leaderboards\n\t\n\nQuestion… See the full description on the dataset page: https://huggingface.co/datasets/rajpurkar/squad.",
+          "disabled": false,
+          "downloads_30d": 254152,
+          "downloads_all_time": 7965198,
+          "file_count": 4,
+          "files": [
+            ".gitattributes",
+            "README.md",
+            "plain_text/train-00000-of-00001.parquet",
+            "plain_text/validation-00000-of-00001.parquet"
+          ],
+          "formats": [
+            "parquet"
+          ],
+          "gated": false,
+          "gated_mode": null,
+          "id": "rajpurkar/squad",
+          "languages": [
+            "en"
+          ],
+          "last_modified": "2024-03-04T13:54:37.000Z",
+          "license": "cc-by-sa-4.0",
+          "license_link": null,
+          "license_name": null,
+          "licenses": [
+            "cc-by-sa-4.0"
+          ],
+          "likes": 984,
+          "modalities": [
+            "text"
+          ],
+          "observed_at_ms": 1789431350865,
+          "paperswithcode_id": "squad",
+          "pretty_name": "SQuAD",
+          "private": false,
+          "requested_repo_id": "rajpurkar/squad",
+          "sha": "7b6d24c440a36b6815f21b70d25016731768db1f",
+          "size_categories": [
+            "10K<n<100K"
+          ],
+          "source_url": "https://huggingface.co/datasets/rajpurkar/squad",
+          "tags": [
+            "task_categories:question-answering",
+            "task_ids:extractive-qa",
+            "annotations_creators:crowdsourced",
+            "language_creators:crowdsourced",
+            "language_creators:found",
+            "multilinguality:monolingual",
+            "source_datasets:extended|wikipedia",
+            "language:en",
+            "license:cc-by-sa-4.0",
+            "size_categories:10K<n<100K",
+            "format:parquet",
+            "modality:text",
+            "library:datasets",
+            "library:pandas",
+            "library:polars",
+            "library:mlcroissant",
+            "arxiv:1606.05250",
+            "region:us"
+          ],
+          "task_categories": [
+            "question-answering"
+          ],
+          "task_ids": [
+            "extractive-qa"
+          ],
+          "trending_score": 152,
+          "url": "https://huggingface.co/datasets/rajpurkar/squad",
+          "used_storage_bytes": 16279705
+        },
+        "recordedAt": "2026-09-15T00:15:50.865228+00:00"
+      },
+      "execute": {
+        "provider": "huggingface-co",
+        "capability": "hub/dataset"
+      }
+    },
+    {
+      "id": "huggingface-co/hub/datasets",
+      "provider": "huggingface-co",
+      "capability": "hub/datasets",
+      "name": "Datasets",
+      "description": "Search and list datasets by free text, author, task category, language, license, size category and tags, sorted by downloads, likes, trending, last modified or created; up to 100 per page with an opaque cursor. Each result carries license, downloads, likes, task categories, size and gating.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "author",
+          "type": "string",
+          "in": "body",
+          "about": "Owner user or organization, e.g. `openai`."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Opaque `next_cursor` from the previous page."
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "in": "body",
+          "about": "Language code tag, e.g. `en`, `fr`."
+        },
+        {
+          "name": "license",
+          "type": "string",
+          "in": "body",
+          "about": "License identifier, e.g. `apache-2.0`, `mit`, `llama3.1`."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "search",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text match on the repository id."
+        },
+        {
+          "name": "size_category",
+          "type": "string",
+          "in": "body",
+          "about": "Size bucket, e.g. `10K<n<100K`, `1M<n<10M`."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Sort key; always descending.",
+          "default": "downloads",
+          "oneOf": [
+            "downloads",
+            "likes",
+            "trending",
+            "last_modified",
+            "created"
+          ]
+        },
+        {
+          "name": "tags",
+          "type": "string[]",
+          "in": "body",
+          "about": "Additional Hub tag filters, e.g. `arxiv:2312.15503`."
+        },
+        {
+          "name": "task",
+          "type": "string",
+          "in": "body",
+          "about": "Task category, e.g. `question-answering`, `text-classification`, `image-classification`."
+        }
+      ],
+      "response": {
+        "about": "Search and list datasets by free text, author, task category, language, license, size category and tags, sorted by downloads, likes, trending, last modified or created; up to 100 per page with an opaque cursor. Each result carries license, downloads, likes, task categories, size and gating.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "author",
+            "type": "string",
+            "about": "Owner (user or organization) of the repository."
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601 creation timestamp."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Dataset description as indexed by the Hub."
+          },
+          {
+            "name": "downloads_30d",
+            "type": "number",
+            "about": "Downloads in the trailing 30 days (the Hub's `downloads`)."
+          },
+          {
+            "name": "downloads_all_time",
+            "type": "number",
+            "about": "Cumulative downloads (the Hub's `downloadsAllTime`)."
+          },
+          {
+            "name": "formats",
+            "type": "string[]",
+            "about": "From `format:` tags, e.g. `parquet`."
+          },
+          {
+            "name": "gated",
+            "type": "boolean",
+            "about": "Whether access requires accepting the repository's terms."
+          },
+          {
+            "name": "gated_mode",
+            "type": "string",
+            "about": "`auto`, `manual` or null when not gated."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Canonical repository id as the Hub reports it."
+          },
+          {
+            "name": "languages",
+            "type": "string[]",
+            "about": "Card `language` entries."
+          },
+          {
+            "name": "last_modified",
+            "type": "string",
+            "about": "ISO 8601 timestamp of the last commit."
+          },
+          {
+            "name": "license",
+            "type": "string",
+            "about": "First declared license identifier (card `license`, else `license:` tag); null when none is declared."
+          },
+          {
+            "name": "license_link",
+            "type": "string",
+            "about": "Card `license_link` for `license: other`."
+          },
+          {
+            "name": "license_name",
+            "type": "string",
+            "about": "Card `license_name` for `license: other`."
+          },
+          {
+            "name": "licenses",
+            "type": "string[]",
+            "about": "All declared license identifiers."
+          },
+          {
+            "name": "likes",
+            "type": "number",
+            "about": "Likes on the Hub."
+          },
+          {
+            "name": "modalities",
+            "type": "string[]",
+            "about": "From `modality:` tags."
+          },
+          {
+            "name": "pretty_name",
+            "type": "string"
+          },
+          {
+            "name": "private",
+            "type": "boolean"
+          },
+          {
+            "name": "size_categories",
+            "type": "string[]",
+            "about": "e.g. `10K<n<100K`."
+          },
+          {
+            "name": "tags",
+            "type": "string[]",
+            "about": "Hub tags including `license:`, `arxiv:`, `base_model:` and `region:` prefixes."
+          },
+          {
+            "name": "task_categories",
+            "type": "string[]",
+            "about": "Card `task_categories` (fallback: `task_categories:` tags)."
+          },
+          {
+            "name": "task_ids",
+            "type": "string[]"
+          },
+          {
+            "name": "trending_score",
+            "type": "number",
+            "about": "Hub trending score at observation time."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public page on huggingface.co."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 2,
+          "search": "squad"
+        },
+        "response": {
+          "count": 2,
+          "has_more": true,
+          "next_cursor": "eyIkb3IiOlt7ImRvd25sb2FkcyI6OTI4NTksIl9pZCI6eyIkZ3QiOiI2MjFmZmRkMjM2NDY4ZDcwOWYxODFmOWMifX0seyJkb3dubG9hZHMiOnsiJGx0Ijo5Mjg1OX19LHsiZG93bmxvYWRzIjpudWxsfV19",
+          "observed_at_ms": 1789431351325,
+          "query": {
+            "author": null,
+            "cursor": null,
+            "language": null,
+            "library": null,
+            "license": null,
+            "limit": 2,
+            "search": "squad",
+            "size_category": null,
+            "sort": "downloads",
+            "tags": null,
+            "task": null
+          },
+          "results": [
+            {
+              "author": "rajpurkar",
+              "created_at": "2022-03-02T23:29:22.000Z",
+              "description": "\n\t\n\t\t\n\t\n\t\n\t\tDataset Card for SQuAD\n\t\n\n\n\t\n\t\t\n\t\n\t\n\t\tDataset Summary\n\t\n\nStanford Question Answering Dataset (SQuAD) is a reading comprehension dataset, consisting of questions posed by crowdworkers on a set of Wikipedia articles, where the answer to every question is a segment of text, or span, from the corresponding reading passage, or the question might be unanswerable.\nSQuAD 1.1 contains 100,000+ question-answer pairs on 500+ articles.\n\n\t\n\t\t\n\t\n\t\n\t\tSupported Tasks and Leaderboards\n\t\n\nQuestion… See the full description on the dataset page: https://huggingface.co/datasets/rajpurkar/squad.",
+              "downloads_30d": 254152,
+              "downloads_all_time": 7965198,
+              "formats": [
+                "parquet"
+              ],
+              "gated": false,
+              "gated_mode": null,
+              "id": "rajpurkar/squad",
+              "languages": [
+                "en"
+              ],
+              "last_modified": "2024-03-04T13:54:37.000Z",
+              "license": "cc-by-sa-4.0",
+              "license_link": null,
+              "license_name": null,
+              "licenses": [
+                "cc-by-sa-4.0"
+              ],
+              "likes": 984,
+              "modalities": [
+                "text"
+              ],
+              "pretty_name": "SQuAD",
+              "private": false,
+              "size_categories": [
+                "10K<n<100K"
+              ],
+              "tags": [
+                "task_categories:question-answering",
+                "task_ids:extractive-qa",
+                "annotations_creators:crowdsourced",
+                "language_creators:crowdsourced",
+                "language_creators:found",
+                "multilinguality:monolingual",
+                "source_datasets:extended|wikipedia",
+                "language:en",
+                "license:cc-by-sa-4.0",
+                "size_categories:10K<n<100K",
+                "format:parquet",
+                "modality:text",
+                "library:datasets",
+                "library:pandas",
+                "library:polars",
+                "library:mlcroissant",
+                "arxiv:1606.05250",
+                "region:us"
+              ],
+              "task_categories": [
+                "question-answering"
+              ],
+              "task_ids": [
+                "extractive-qa"
+              ],
+              "trending_score": 152,
+              "url": "https://huggingface.co/datasets/rajpurkar/squad"
+            },
+            {
+              "author": "rajpurkar",
+              "created_at": "2022-03-02T23:29:22.000Z",
+              "description": "\n\t\n\t\t\n\t\tDataset Card for SQuAD 2.0\n\t\n\n\n\t\n\t\t\n\t\tDataset Summary\n\t\n\nStanford Question Answering Dataset (SQuAD) is a reading comprehension dataset, consisting of questions posed by crowdworkers on a set of Wikipedia articles, where the answer to every question is a segment of text, or span, from the corresponding reading passage, or the question might be unanswerable.\nSQuAD 2.0 combines the 100,000 questions in SQuAD1.1 with over 50,000 unanswerable questions written adversarially by crowdworkers… See the full description on the dataset page: https://huggingface.co/datasets/rajpurkar/squad_v2.",
+              "downloads_30d": 92859,
+              "downloads_all_time": 34678780,
+              "formats": [
+                "parquet"
+              ],
+              "gated": false,
+              "gated_mode": null,
+              "id": "rajpurkar/squad_v2",
+              "languages": [
+                "en"
+              ],
+              "last_modified": "2024-03-04T13:55:27.000Z",
+              "license": "cc-by-sa-4.0",
+              "license_link": null,
+              "license_name": null,
+              "licenses": [
+                "cc-by-sa-4.0"
+              ],
+              "likes": 262,
+              "modalities": [
+                "text"
+              ],
+              "pretty_name": "SQuAD2.0",
+              "private": false,
+              "size_categories": [
+                "100K<n<1M"
+              ],
+              "tags": [
+                "task_categories:question-answering",
+                "task_ids:open-domain-qa",
+                "task_ids:extractive-qa",
+                "annotations_creators:crowdsourced",
+                "language_creators:crowdsourced",
+                "multilinguality:monolingual",
+                "source_datasets:original",
+                "language:en",
+                "license:cc-by-sa-4.0",
+                "size_categories:100K<n<1M",
+                "format:parquet",
+                "modality:text",
+                "library:datasets",
+                "library:pandas",
+                "library:mlcroissant",
+                "library:polars",
+                "arxiv:1806.03822",
+                "arxiv:1606.05250",
+                "region:us"
+              ],
+              "task_categories": [
+                "question-answering"
+              ],
+              "task_ids": [
+                "open-domain-qa",
+                "extractive-qa"
+              ],
+              "trending_score": 2,
+              "url": "https://huggingface.co/datasets/rajpurkar/squad_v2"
+            }
+          ],
+          "source_url": "https://huggingface.co/api/datasets?search=squad&sort=downloads&direction=-1&limit=2&expand=downloads&expand=downloadsAllTime&expand=likes&expand=cardData&expand=tags&expand=gated&expand=private&expand=lastModified&expand=createdAt&expand=author&expand=description&expand=trendingScore"
+        },
+        "recordedAt": "2026-09-15T00:15:51.325670+00:00"
+      },
+      "execute": {
+        "provider": "huggingface-co",
+        "capability": "hub/datasets"
+      }
+    },
+    {
+      "id": "huggingface-co/hub/model",
+      "provider": "huggingface-co",
+      "capability": "hub/model",
+      "name": "Model",
+      "description": "One model repository: canonical id, author, license(s), pipeline tag, library, 30-day and all-time downloads, likes, trending score, gating, tags, languages, base models, training datasets, file list, safetensors parameter counts, config architecture, inference providers and the parsed model-card front matter.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "repo_id",
+          "type": "string",
+          "in": "body",
+          "about": "Hub repository id `owner/name` (e.g. `meta-llama/Llama-3.1-8B-Instruct`) or a legacy top-level name (e.g. `bert-base-uncased`, redirected to its canonical id). Pattern: ^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)?$.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One model repository: canonical id, author, license(s), pipeline tag, library, 30-day and all-time downloads, likes, trending score, gating, tags, languages, base models, training datasets, file list, safetensors parameter counts, config architecture, inference providers and the parsed model-card front matter.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "architectures",
+            "type": "string[]",
+            "about": "`config.json` architectures."
+          },
+          {
+            "name": "author",
+            "type": "string",
+            "about": "Owner (user or organization) of the repository."
+          },
+          {
+            "name": "base_models",
+            "type": "string[]",
+            "about": "Card `base_model` ids (fallback: `base_model:` tags)."
+          },
+          {
+            "name": "card_data",
+            "type": "object",
+            "about": "Parsed YAML front matter of the model card, verbatim."
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601 creation timestamp."
+          },
+          {
+            "name": "datasets",
+            "type": "string[]",
+            "about": "Card `datasets` the model declares it was trained on."
+          },
+          {
+            "name": "disabled",
+            "type": "boolean"
+          },
+          {
+            "name": "downloads_30d",
+            "type": "number",
+            "about": "Downloads in the trailing 30 days (the Hub's `downloads`)."
+          },
+          {
+            "name": "downloads_all_time",
+            "type": "number",
+            "about": "Cumulative downloads (the Hub's `downloadsAllTime`)."
+          },
+          {
+            "name": "file_count",
+            "type": "number"
+          },
+          {
+            "name": "files",
+            "type": "string[]",
+            "about": "Repository file paths (siblings)."
+          },
+          {
+            "name": "gated",
+            "type": "boolean",
+            "about": "Whether access requires accepting the repository's terms."
+          },
+          {
+            "name": "gated_mode",
+            "type": "string",
+            "about": "`auto`, `manual` or null when not gated."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Canonical repository id as the Hub reports it."
+          },
+          {
+            "name": "inference_providers",
+            "type": "object[]",
+            "about": "Inference providers serving this model: provider, status, task, provider_model_id."
+          },
+          {
+            "name": "languages",
+            "type": "string[]",
+            "about": "Card `language` entries."
+          },
+          {
+            "name": "last_modified",
+            "type": "string",
+            "about": "ISO 8601 timestamp of the last commit."
+          },
+          {
+            "name": "library_name",
+            "type": "string",
+            "about": "Primary library, e.g. `transformers`."
+          },
+          {
+            "name": "license",
+            "type": "string",
+            "about": "First declared license identifier (card `license`, else `license:` tag); null when none is declared."
+          },
+          {
+            "name": "license_link",
+            "type": "string",
+            "about": "Card `license_link` for `license: other`."
+          },
+          {
+            "name": "license_name",
+            "type": "string",
+            "about": "Card `license_name` for `license: other`."
+          },
+          {
+            "name": "licenses",
+            "type": "string[]",
+            "about": "All declared license identifiers."
+          },
+          {
+            "name": "likes",
+            "type": "number",
+            "about": "Likes on the Hub."
+          },
+          {
+            "name": "model_type",
+            "type": "string",
+            "about": "`config.json` model_type."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "pipeline_tag",
+            "type": "string",
+            "about": "Task the model serves, e.g. `text-generation`."
+          },
+          {
+            "name": "private",
+            "type": "boolean"
+          },
+          {
+            "name": "requested_repo_id",
+            "type": "string"
+          },
+          {
+            "name": "safetensors",
+            "type": "object",
+            "about": "`total_parameters` and `parameters_by_dtype` when safetensors metadata is indexed."
+          },
+          {
+            "name": "sha",
+            "type": "string",
+            "about": "Commit sha of the revision described."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "type": "string[]",
+            "about": "Hub tags including `license:`, `arxiv:`, `base_model:` and `region:` prefixes."
+          },
+          {
+            "name": "transformers_info",
+            "type": "object",
+            "about": "Upstream metadata with keys defined by Hugging Face or the repository author."
+          },
+          {
+            "name": "trending_score",
+            "type": "number",
+            "about": "Hub trending score at observation time."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public page on huggingface.co."
+          },
+          {
+            "name": "used_storage_bytes",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "repo_id": "google-bert/bert-base-uncased"
+        },
+        "response": {
+          "architectures": [
+            "BertForMaskedLM"
+          ],
+          "author": "google-bert",
+          "base_models": [],
+          "card_data": {
+            "datasets": [
+              "bookcorpus",
+              "wikipedia"
+            ],
+            "language": "en",
+            "license": "apache-2.0",
+            "tags": [
+              "exbert"
+            ]
+          },
+          "created_at": "2022-03-02T23:29:04.000Z",
+          "datasets": [
+            "bookcorpus",
+            "wikipedia"
+          ],
+          "disabled": false,
+          "downloads_30d": 46435111,
+          "downloads_all_time": 3226212301,
+          "file_count": 16,
+          "files": [
+            ".gitattributes",
+            "LICENSE",
+            "README.md",
+            "config.json",
+            "coreml/fill-mask/float32_model.mlpackage/Data/com.apple.CoreML/model.mlmodel",
+            "coreml/fill-mask/float32_model.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+            "coreml/fill-mask/float32_model.mlpackage/Manifest.json",
+            "flax_model.msgpack",
+            "model.onnx",
+            "model.safetensors",
+            "pytorch_model.bin",
+            "rust_model.ot",
+            "tf_model.h5",
+            "tokenizer.json",
+            "tokenizer_config.json",
+            "vocab.txt"
+          ],
+          "gated": false,
+          "gated_mode": null,
+          "id": "google-bert/bert-base-uncased",
+          "inference_providers": [
+            {
+              "provider": "hf-inference",
+              "provider_model_id": "google-bert/bert-base-uncased",
+              "status": "live",
+              "task": "fill-mask"
+            }
+          ],
+          "languages": [
+            "en"
+          ],
+          "last_modified": "2024-02-19T11:06:12.000Z",
+          "library_name": "transformers",
+          "license": "apache-2.0",
+          "license_link": null,
+          "license_name": null,
+          "licenses": [
+            "apache-2.0"
+          ],
+          "likes": 3337,
+          "model_type": "bert",
+          "observed_at_ms": 1789431350661,
+          "pipeline_tag": "fill-mask",
+          "private": false,
+          "requested_repo_id": "google-bert/bert-base-uncased",
+          "safetensors": {
+            "parameters_by_dtype": {
+              "F32": 110106428
+            },
+            "total_parameters": 110106428
+          },
+          "sha": "86b5e0934494bd15c9632b12f734a8a67f723594",
+          "source_url": "https://huggingface.co/google-bert/bert-base-uncased",
+          "tags": [
+            "transformers",
+            "pytorch",
+            "tf",
+            "jax",
+            "rust",
+            "coreml",
+            "onnx",
+            "safetensors",
+            "bert",
+            "fill-mask",
+            "exbert",
+            "en",
+            "dataset:bookcorpus",
+            "dataset:wikipedia",
+            "arxiv:1810.04805",
+            "license:apache-2.0",
+            "endpoints_compatible",
+            "deploy:sagemaker",
+            "deploy:azure",
+            "region:us"
+          ],
+          "transformers_info": {
+            "auto_model": "AutoModelForMaskedLM",
+            "pipeline_tag": "fill-mask",
+            "processor": "AutoTokenizer"
+          },
+          "trending_score": 190,
+          "url": "https://huggingface.co/google-bert/bert-base-uncased",
+          "used_storage_bytes": 6722260570
+        },
+        "recordedAt": "2026-09-15T00:15:50.661938+00:00"
+      },
+      "execute": {
+        "provider": "huggingface-co",
+        "capability": "hub/model"
+      }
+    },
+    {
+      "id": "huggingface-co/hub/models",
+      "provider": "huggingface-co",
+      "capability": "hub/models",
+      "name": "Models",
+      "description": "Search and list models by free text, author, task (pipeline tag), library, language, license and tags, sorted by downloads, likes, trending, last modified or created; up to 100 per page with an opaque cursor for the next page. Each result carries license, downloads, likes, gating and tags.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "author",
+          "type": "string",
+          "in": "body",
+          "about": "Owner user or organization, e.g. `openai`."
+        },
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Opaque `next_cursor` from the previous page."
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "in": "body",
+          "about": "Language code tag, e.g. `en`, `fr`."
+        },
+        {
+          "name": "library",
+          "type": "string",
+          "in": "body",
+          "about": "Library tag, e.g. `transformers`, `diffusers`, `sentence-transformers`."
+        },
+        {
+          "name": "license",
+          "type": "string",
+          "in": "body",
+          "about": "License identifier, e.g. `apache-2.0`, `mit`, `llama3.1`."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "search",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text match on the repository id."
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Sort key; always descending.",
+          "default": "downloads",
+          "oneOf": [
+            "downloads",
+            "likes",
+            "trending",
+            "last_modified",
+            "created"
+          ]
+        },
+        {
+          "name": "tags",
+          "type": "string[]",
+          "in": "body",
+          "about": "Additional Hub tag filters, e.g. `arxiv:2312.15503`."
+        },
+        {
+          "name": "task",
+          "type": "string",
+          "in": "body",
+          "about": "Pipeline tag, e.g. `text-generation`, `text-classification`, `automatic-speech-recognition`."
+        }
+      ],
+      "response": {
+        "about": "Search and list models by free text, author, task (pipeline tag), library, language, license and tags, sorted by downloads, likes, trending, last modified or created; up to 100 per page with an opaque cursor for the next page. Each result carries license, downloads, likes, gating and tags.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "author",
+            "type": "string",
+            "about": "Owner (user or organization) of the repository."
+          },
+          {
+            "name": "base_models",
+            "type": "string[]",
+            "about": "Card `base_model` ids (fallback: `base_model:` tags)."
+          },
+          {
+            "name": "created_at",
+            "type": "string",
+            "about": "ISO 8601 creation timestamp."
+          },
+          {
+            "name": "datasets",
+            "type": "string[]",
+            "about": "Card `datasets` the model declares it was trained on."
+          },
+          {
+            "name": "downloads_30d",
+            "type": "number",
+            "about": "Downloads in the trailing 30 days (the Hub's `downloads`)."
+          },
+          {
+            "name": "downloads_all_time",
+            "type": "number",
+            "about": "Cumulative downloads (the Hub's `downloadsAllTime`)."
+          },
+          {
+            "name": "gated",
+            "type": "boolean",
+            "about": "Whether access requires accepting the repository's terms."
+          },
+          {
+            "name": "gated_mode",
+            "type": "string",
+            "about": "`auto`, `manual` or null when not gated."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Canonical repository id as the Hub reports it."
+          },
+          {
+            "name": "languages",
+            "type": "string[]",
+            "about": "Card `language` entries."
+          },
+          {
+            "name": "last_modified",
+            "type": "string",
+            "about": "ISO 8601 timestamp of the last commit."
+          },
+          {
+            "name": "library_name",
+            "type": "string",
+            "about": "Primary library, e.g. `transformers`."
+          },
+          {
+            "name": "license",
+            "type": "string",
+            "about": "First declared license identifier (card `license`, else `license:` tag); null when none is declared."
+          },
+          {
+            "name": "license_link",
+            "type": "string",
+            "about": "Card `license_link` for `license: other`."
+          },
+          {
+            "name": "license_name",
+            "type": "string",
+            "about": "Card `license_name` for `license: other`."
+          },
+          {
+            "name": "licenses",
+            "type": "string[]",
+            "about": "All declared license identifiers."
+          },
+          {
+            "name": "likes",
+            "type": "number",
+            "about": "Likes on the Hub."
+          },
+          {
+            "name": "pipeline_tag",
+            "type": "string",
+            "about": "Task the model serves, e.g. `text-generation`."
+          },
+          {
+            "name": "private",
+            "type": "boolean"
+          },
+          {
+            "name": "tags",
+            "type": "string[]",
+            "about": "Hub tags including `license:`, `arxiv:`, `base_model:` and `region:` prefixes."
+          },
+          {
+            "name": "trending_score",
+            "type": "number",
+            "about": "Hub trending score at observation time."
+          },
+          {
+            "name": "url",
+            "type": "string",
+            "about": "Public page on huggingface.co."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "limit": 2,
+          "search": "bert"
+        },
+        "response": {
+          "count": 2,
+          "has_more": true,
+          "next_cursor": "eyIkb3IiOlt7ImRvd25sb2FkcyI6NDAzOTk5NiwiX2lkIjp7IiRndCI6IjYyMWZmZGMwMzY0NjhkNzA5ZjE3NDMzNyJ9fSx7ImRvd25sb2FkcyI6eyIkbHQiOjQwMzk5OTZ9fSx7ImRvd25sb2FkcyI6bnVsbH1dLCJzZWFyY2hTZXF1ZW5jZVRva2VuIjoiQ0xmVWxRSWFDU0VBQUFBQW50Sk9RUm9PV2d4aUgvM0FOa2FOY0o4WFF6Y2lEbG9NWWgvOXdEWkdqWENmRjBNMyJ9",
+          "observed_at_ms": 1789431351035,
+          "query": {
+            "author": null,
+            "cursor": null,
+            "language": null,
+            "library": null,
+            "license": null,
+            "limit": 2,
+            "search": "bert",
+            "size_category": null,
+            "sort": "downloads",
+            "tags": null,
+            "task": null
+          },
+          "results": [
+            {
+              "author": "google-bert",
+              "base_models": [],
+              "created_at": "2022-03-02T23:29:04.000Z",
+              "datasets": [
+                "bookcorpus",
+                "wikipedia"
+              ],
+              "downloads_30d": 46435111,
+              "downloads_all_time": 3226212301,
+              "gated": false,
+              "gated_mode": null,
+              "id": "google-bert/bert-base-uncased",
+              "languages": [
+                "en"
+              ],
+              "last_modified": "2024-02-19T11:06:12.000Z",
+              "library_name": "transformers",
+              "license": "apache-2.0",
+              "license_link": null,
+              "license_name": null,
+              "licenses": [
+                "apache-2.0"
+              ],
+              "likes": 3337,
+              "pipeline_tag": "fill-mask",
+              "private": false,
+              "tags": [
+                "transformers",
+                "pytorch",
+                "tf",
+                "jax",
+                "rust",
+                "coreml",
+                "onnx",
+                "safetensors",
+                "bert",
+                "fill-mask",
+                "exbert",
+                "en",
+                "dataset:bookcorpus",
+                "dataset:wikipedia",
+                "arxiv:1810.04805",
+                "license:apache-2.0",
+                "endpoints_compatible",
+                "deploy:sagemaker",
+                "deploy:azure",
+                "region:us"
+              ],
+              "trending_score": 190,
+              "url": "https://huggingface.co/google-bert/bert-base-uncased"
+            },
+            {
+              "author": "google-bert",
+              "base_models": [],
+              "created_at": "2022-03-02T23:29:04.000Z",
+              "datasets": [
+                "wikipedia"
+              ],
+              "downloads_30d": 4039996,
+              "downloads_all_time": 120070383,
+              "gated": false,
+              "gated_mode": null,
+              "id": "google-bert/bert-base-multilingual-uncased",
+              "languages": [
+                "multilingual",
+                "af",
+                "sq",
+                "ar",
+                "an",
+                "hy",
+                "ast",
+                "az",
+                "ba",
+                "eu",
+                "bar",
+                "be",
+                "bn",
+                "inc",
+                "bs",
+                "br",
+                "bg",
+                "my",
+                "ca",
+                "ceb",
+                "ce",
+                "zh",
+                "cv",
+                "hr",
+                "cs",
+                "da",
+                "nl",
+                "en",
+                "et",
+                "fi",
+                "fr",
+                "gl",
+                "ka",
+                "de",
+                "el",
+                "gu",
+                "ht",
+                "he",
+                "hi",
+                "hu",
+                "is",
+                "io",
+                "id",
+                "ga",
+                "it",
+                "ja",
+                "jv",
+                "kn",
+                "kk",
+                "ky",
+                "ko",
+                "la",
+                "lv",
+                "lt",
+                "roa",
+                "nds",
+                "lm",
+                "mk",
+                "mg",
+                "ms",
+                "ml",
+                "mr",
+                "min",
+                "ne",
+                "new",
+                "nb",
+                "nn",
+                "oc",
+                "fa",
+                "pms",
+                "pl",
+                "pt",
+                "pa",
+                "ro",
+                "ru",
+                "sco",
+                "sr",
+                "hr",
+                "scn",
+                "sk",
+                "sl",
+                "aze",
+                "es",
+                "su",
+                "sw",
+                "sv",
+                "tl",
+                "tg",
+                "ta",
+                "tt",
+                "te",
+                "tr",
+                "uk",
+                "ud",
+                "uz",
+                "vi",
+                "vo",
+                "war",
+                "cy",
+                "fry",
+                "pnb",
+                "yo"
+              ],
+              "last_modified": "2024-02-19T11:06:00.000Z",
+              "library_name": "transformers",
+              "license": "apache-2.0",
+              "license_link": null,
+              "license_name": null,
+              "licenses": [
+                "apache-2.0"
+              ],
+              "likes": 160,
+              "pipeline_tag": "fill-mask",
+              "private": false,
+              "tags": [
+                "transformers",
+                "pytorch",
+                "tf",
+                "jax",
+                "safetensors",
+                "bert",
+                "fill-mask",
+                "multilingual",
+                "af",
+                "sq",
+                "ar",
+                "an",
+                "hy",
+                "ast",
+                "az",
+                "ba",
+                "eu",
+                "bar",
+                "be",
+                "bn",
+                "inc",
+                "bs",
+                "br",
+                "bg",
+                "my",
+                "ca",
+                "ceb",
+                "ce",
+                "zh",
+                "cv",
+                "hr",
+                "cs",
+                "da",
+                "nl",
+                "en",
+                "et",
+                "fi",
+                "fr",
+                "gl",
+                "ka",
+                "de",
+                "el",
+                "gu",
+                "ht",
+                "he",
+                "hi",
+                "hu",
+                "is",
+                "io",
+                "id",
+                "ga",
+                "it",
+                "ja",
+                "jv",
+                "kn",
+                "kk",
+                "ky",
+                "ko",
+                "la",
+                "lv",
+                "lt",
+                "roa",
+                "nds",
+                "lm",
+                "mk",
+                "mg",
+                "ms",
+                "ml",
+                "mr",
+                "min",
+                "ne",
+                "new",
+                "nb",
+                "nn",
+                "oc",
+                "fa",
+                "pms",
+                "pl",
+                "pt",
+                "pa",
+                "ro",
+                "ru",
+                "sco",
+                "sr",
+                "scn",
+                "sk",
+                "sl",
+                "aze",
+                "es",
+                "su",
+                "sw",
+                "sv",
+                "tl",
+                "tg",
+                "ta",
+                "tt",
+                "te",
+                "tr",
+                "uk",
+                "ud",
+                "uz",
+                "vi",
+                "vo",
+                "war",
+                "cy",
+                "fry",
+                "pnb",
+                "yo",
+                "dataset:wikipedia",
+                "arxiv:1810.04805",
+                "license:apache-2.0",
+                "endpoints_compatible",
+                "region:us",
+                "deploy:sagemaker",
+                "deploy:azure"
+              ],
+              "trending_score": 0,
+              "url": "https://huggingface.co/google-bert/bert-base-multilingual-uncased"
+            }
+          ],
+          "source_url": "https://huggingface.co/api/models?search=bert&sort=downloads&direction=-1&limit=2&expand=downloads&expand=downloadsAllTime&expand=likes&expand=cardData&expand=tags&expand=pipeline_tag&expand=library_name&expand=gated&expand=private&expand=lastModified&expand=createdAt&expand=author&expand=trendingScore"
+        },
+        "recordedAt": "2026-09-15T00:15:51.035827+00:00"
+      },
+      "execute": {
+        "provider": "huggingface-co",
+        "capability": "hub/models"
+      }
+    }
+  ]
+}

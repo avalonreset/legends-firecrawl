@@ -1,0 +1,3072 @@
+{
+  "id": "recreation-gov",
+  "provider": "recreation-gov",
+  "name": "Recreation.gov",
+  "description": "Recreation.gov (US federal recreation reservations) read-only: search campgrounds, rec areas and permits by text, place or coordinates and stay dates; campground detail with rules, booking windows, rates and ratings; month availability grids; campsite listings and detail with open nights; visitor reviews; daily permit quota availability. Public anonymous JSON API of www.recreation.gov; availability and prices are snapshots, base fees only.",
+  "toolCount": 8,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "recreation-gov"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "recreation-gov/camping-availability/campground",
+      "provider": "recreation-gov",
+      "capability": "camping-availability/campground",
+      "name": "Campground",
+      "description": "Details, rules and prices for a campground_id from `search`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "campground_id",
+          "type": "string",
+          "in": "body",
+          "about": "Recreation.gov campground id (digits), e.g. from `search`, or a pasted https://www.recreation.gov/camping/campgrounds/{id} URL.",
+          "required": true
+        },
+        {
+          "name": "include_rates",
+          "type": "boolean",
+          "in": "body",
+          "about": "Also fetch the seasonal rate table (one extra request)."
+        },
+        {
+          "name": "next_available_from",
+          "type": "string",
+          "in": "body",
+          "about": "Also list the next available stay windows on or after this date (one extra request). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "One campground (facility) from the camps service: name, agency, location, time zone, description sections, amenities, activities, notices, addresses, links, reservation rules (booking window, stay limits), the current and next booking-window release, the aggregate visitor rating and, by default, the seasonal base rates per site type. Optionally the next available stay windows from a date. Unknown id is `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "activities",
+            "type": "string[]"
+          },
+          {
+            "name": "ada_access",
+            "type": "string"
+          },
+          {
+            "name": "addresses",
+            "type": "object[]"
+          },
+          {
+            "name": "alternate_names",
+            "type": "string"
+          },
+          {
+            "name": "amenities",
+            "type": "string[]"
+          },
+          {
+            "name": "booking_windows",
+            "type": "object",
+            "about": "Booking-window releases from the releases endpoint."
+          },
+          {
+            "name": "campground_id",
+            "type": "string"
+          },
+          {
+            "name": "cancellation_policy",
+            "type": "string"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "currency",
+            "type": "string"
+          },
+          {
+            "name": "descriptions",
+            "type": "object[]"
+          },
+          {
+            "name": "directions",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "facility_type",
+            "type": "string"
+          },
+          {
+            "name": "fees_note",
+            "type": "string",
+            "about": "What the amounts cover: Recreation.gov publishes base use fees; the per-reservation fee and any taxes are unknown and not included."
+          },
+          {
+            "name": "is_commercially_managed",
+            "type": "boolean"
+          },
+          {
+            "name": "is_deactivated",
+            "type": "boolean"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "links",
+            "type": "object[]"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "next_available_dates",
+            "type": "object[]",
+            "about": "Present when `next_available_from` was given."
+          },
+          {
+            "name": "notices",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Observation time, milliseconds since the Unix epoch. Availability and prices are snapshots."
+          },
+          {
+            "name": "org_code",
+            "type": "string"
+          },
+          {
+            "name": "org_id",
+            "type": "string"
+          },
+          {
+            "name": "parent_id",
+            "type": "string",
+            "about": "Rec area id."
+          },
+          {
+            "name": "phone",
+            "type": "string"
+          },
+          {
+            "name": "rates",
+            "type": "object[]",
+            "about": "Seasonal base rates per site type for seasons that have not ended (present when include_rates)."
+          },
+          {
+            "name": "rating",
+            "type": "object",
+            "about": "Aggregate campground rating; null when nobody has rated it."
+          },
+          {
+            "name": "rules",
+            "type": "object[]",
+            "about": "Reservation rules as the site configures them (e.g. reservationWindow months, maxStay days, reservationCutOff)."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "stay_limit",
+            "type": "string"
+          },
+          {
+            "name": "time_zone",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "campground_id": "232447"
+        },
+        "response": {
+          "activities": [
+            "Camping"
+          ],
+          "ada_access": "N",
+          "addresses": [
+            {
+              "city": "Yosemite National Park",
+              "country": "USA",
+              "postal_code": "95389",
+              "state": "CA",
+              "street": [
+                "PO BOX 577"
+              ],
+              "type": "mailing_address"
+            },
+            {
+              "city": "Yosemite National Park",
+              "country": null,
+              "postal_code": "95389",
+              "state": "CA",
+              "street": [
+                "9024 Southside Drive"
+              ],
+              "type": "physical_address"
+            }
+          ],
+          "alternate_names": "Yosemite National Park,The Valley",
+          "amenities": [
+            "Accessible Campsites",
+            "Accessible Drinking Water",
+            "Accessible Flush Toilets",
+            "Food Storage Locker",
+            "Host",
+            "Pets Allowed",
+            "Picnic Tables",
+            "Shuttle Bus Service"
+          ],
+          "booking_windows": {
+            "current_release": {
+              "bookable_through": "2027-02-14",
+              "group_bookable_through": "2027-09-14",
+              "group_release_time": "2026-09-21T15:00:00-04:00",
+              "release_time": "2026-09-21T15:00:00-04:00",
+              "sliding_through": "2027-02-28"
+            },
+            "next_release": {
+              "bookable_through": "2027-03-14",
+              "group_bookable_through": "2027-10-14",
+              "group_release_time": "2026-10-15T10:00:00-04:00",
+              "release_time": "2026-10-15T10:00:00-04:00",
+              "sliding_through": "2027-03-28"
+            }
+          },
+          "campground_id": "232447",
+          "cancellation_policy": " Cancellations more than 48 hours in advance of arrival date only incur a $10 transaction fee.  Within 48 hours, $10 and the first night's fee are charged (Exception: 1 night reservations do not incur an additional $10 fee, but do not receive a refund).  No-shows will be assessed a $20 service fee along with the loss of the first night's fee.",
+          "city": "Yosemite National Park",
+          "currency": "USD",
+          "descriptions": [
+            {
+              "html": "For facility specific information, please call (209) 372-8502.",
+              "title": "Contact Info"
+            },
+            {
+              "html": "<p>Upper Pines Campground is the largest of the three reservation campgrounds in Yosemite Valley. It offers paved roads and parking spurs, flush toilets, and drinking water. Each campsite contains a picnic table, fire ring, and a food storage locker.  <br>Yosemite's free shuttle bus stops at the campground entrance. Nearby, historic Curry Village offers showers (for a fee), a general store, restaurants and bar, amphitheater and a tour and activities desk.</p>\n",
+              "title": "Facilities"
+            },
+            {
+              "html": "Yosemite Valley is forested with a diverse mix of California black oak, Ponderosa pine, incense-cedar, White fir, and Whiteleaf Manzanita, which offers a pleasant combination of sun and shade. Through the trees, Yosemite's telltale granite cliffs peek through, and the gentle, refreshing Merced River flows nearby.",
+              "title": "Natural Features"
+            },
+            {
+              "html": "Glacier Point offers sweeping views of Yosemite Valley, Little Yosemite Valley, Half Dome, Vernal and Nevada Falls, and Clouds Rest, among other notable landmarks. <br/><br/>\nThe Tioga Road offers a 39-mile scenic drive past forests, meadows, lakes and granite domes. Beautiful Hetch Hetchy Reservoir is home to spectacular scenery and numerous wilderness trailheads.",
+              "title": "Nearby Attractions"
+            },
+            {
+              "html": "<p>Upper Pines campsites are available to reserve up to five months in advance on the 15th of each month at 7:00 a.m. PST. For example, on January 15, <strong>arrival</strong> dates for the period May 15 to June 14 become available to reserve, and therefore, the full <strong>arrival</strong> date window would be from January 15 to June 14. </p>\n<p><strong>Reservation Tips! </strong>Campsites in Yosemite are extremely popular and typically sell out in minutes. Login to your account or create a new account before the 7:00 a.m. (PST) release time. You may only add reservations to your cart and proceed with your reservation if you are logged into your account. The recreation.gov call center does NOT have access to additional sites or additional information beyond what is published on recreation.gov. </p>\n<p>Upper Pines Campground is located in breathtaking Yosemite National Park in Central California's rugged Sierra Nevada Mountain Range at an elevation of 4,000 feet. The site is situated in the heart of Yosemite Valley, an awe-inspiring landscape containing many of the famous features for which Yosemite National Park is known.  Within Yosemite, visitors can gaze upon waterfalls, sheer granite cliffs, deep valleys, grand meadows, ancient giant sequoias, vast wilderness areas and much more. </p>\n<p><br><a href=\"https://recreationonestopprod.servicenowservices.com/external?id=kb_article&sys_id=72fff607dbe8a30022f970c08c961990&table=\" rel=\"nofollow\">Yosemite National Park Campground Reservation Dates</a> </p>\n<p>For additional park information, call (209)372-0200 or visit <a href=\"http://www.nps.gov/yose\" rel=\"nofollow\">www.nps.gov/yose</a> </p>\n",
+              "title": "Overview"
+            },
+            {
+              "html": "Yosemite's trails, cliffs, roads and rivers provide endless recreational activities for any kind of visitor. Hiking, biking, rock climbing, fishing, horseback riding, rafting, auto touring, cross-country skiing and photography are all very popular activities within the park. <br/><br/>\nHiking trails range from the easy paved, two-mile roundtrip walk to Mirror Lake/Meadow, to the grueling but rewarding 14- to 16-mile trek to Half Dome (permit required). Both of these trails begin near the Pines Campgrounds, and there are many additional trailheads within Yosemite Valley. <br/><br/>\nRafting the Merced River is a fun way to cool down on a summer day when water levels are sufficient. Yosemite Valley also offers numerous guided bus tours, educational programs, museums, ranger-led activities and an art center with workshops.",
+              "title": "Recreation"
+            }
+          ],
+          "directions": "Take Highway 41 north from Fresno, Highway 140 east from Merced, or Highway 120 east from Manteca into Yosemite National Park. Follow signs to Yosemite Valley and the campgrounds.",
+          "email": null,
+          "facility_type": "STANDARD",
+          "fees_note": "Base use fees published by Recreation.gov, USD. The per-reservation fee and any taxes are unknown and not included.",
+          "is_commercially_managed": false,
+          "is_deactivated": false,
+          "latitude": 37.7361111,
+          "links": [
+            {
+              "description": "Yosemite Park Lodging",
+              "title": "National Park Services Concessionaire",
+              "type": "Other",
+              "url": "http://www.yosemitepark.com/"
+            },
+            {
+              "description": "California State Tourism",
+              "title": "California State Tourism",
+              "type": "Other",
+              "url": "http://gocalif.ca.gov/AM/Template.cfm?Section=Home"
+            },
+            {
+              "description": "California State Road Conditions",
+              "title": "California State Road Conditions",
+              "type": "Other",
+              "url": "http://www.dot.ca.gov"
+            }
+          ],
+          "longitude": -119.5625,
+          "name": "Upper Pines Campground",
+          "notices": [
+            {
+              "text": "<p><strong>You are responsible</strong> for reading the site alerts and booking a site that will accommodate your equipment.</p>\n",
+              "type": "warning"
+            },
+            {
+              "text": "<p><strong>If arriving one or more days late</strong>, call (209) 372-8502; your reservation will be cancelled if we do not hear from you within 24 hours of your arrival date.</p>",
+              "type": "warning"
+            },
+            {
+              "text": "<p><strong>You must check-in at the campground kiosk upon arrival</strong>. After-hours arrivals must sign-in and return to the kiosk to complete check-in the following morning or your reservation may be cancelled.</p>",
+              "type": "warning"
+            },
+            {
+              "text": "<p><strong>Bears and other wildlife live here! Food and toiletries must be properly stored 24 hours/day.  </strong></p><ul><li><p>Food storage lockers are provided in all campsites (35 inches deep x 43 inches wide x 28 inches high). </p></li><li><p>Absolutely no food stored in vehicles. </p></li><li><p>Dispose of garbage immediately in bear-proof dumpsters.</p></li></ul>",
+              "type": "warning"
+            },
+            {
+              "text": "<p>There are no electric, water or sewer hook-ups available at individual campsites. A free dump station is located on-site along with potable water.</p>\n",
+              "type": "warning"
+            },
+            {
+              "text": "<p><strong>Your camping reservation does NOT get you into Yosemite for free.</strong> You must pay an additional fee per vehicle at the park entrance or <a href=\"https://www.recreation.gov/sitepass/74296\" rel=\"nofollow\">buy a pass ahead of time on recreation.gov.</a></p>",
+              "type": "warning"
+            },
+            {
+              "text": "<p>Road conditions can change at any time; before arrival, please call (209) 372-0200 for road and weather conditions inside Yosemite, and 1-800-427-ROAD for conditions outside the park. For additional park information, call (209) 372-0200 or visit <a href=\"https://www.nps.gov/yose\" rel=\"nofollow\">www.nps.gov/yose</a></p>",
+              "type": "warning"
+            },
+            {
+              "text": "<p>Don't Move Firewood: Help protect our forests! Prevent the spread of tree-killing pests by obtaining firewood at or near your destination and burning it on-site. Moving firewood is illegal in some states. Visit <a href=\"http://dontmovefirewood.org\" rel=\"nofollow\">dontmovefirewood.org</a> to learn more. </p>",
+              "type": "warning"
+            },
+            {
+              "text": "<p>Help Yosemite be a Zero Landfill park! Leave excess packaging at home. Use refillable propane bottles, water bottles, food containers and travel mugs. Place all of your recyclable waste in designated recycling containers. For more information go to: <a href=\"https://www.nps.gov/yose/getinvolved/zlf.htm\" rel=\"nofollow\">https://www.nps.gov/yose/getinvolved/zlf.htm</a> </p>",
+              "type": "warning"
+            },
+            {
+              "text": "<p>Resale or auction of advance reservations is prohibited.</p>",
+              "type": "warning"
+            }
+          ],
+          "observed_at_ms": 1790020049221,
+          "org_code": "NPS",
+          "org_id": "128",
+          "parent_id": "2991",
+          "phone": "(209)372-8502",
+          "rates": [
+            {
+              "season_end": "2026-12-31",
+              "season_name": "Peak Season",
+              "season_start": "2026-01-01",
+              "season_type": "Peak",
+              "site_types": [
+                {
+                  "deposit": 0,
+                  "holiday": 0,
+                  "per_night": 36,
+                  "per_person": 0,
+                  "site_type": "RV NONELECTRIC",
+                  "weekend": 0
+                },
+                {
+                  "deposit": 0,
+                  "holiday": 0,
+                  "per_night": 36,
+                  "per_person": 0,
+                  "site_type": "STANDARD NONELECTRIC",
+                  "weekend": 0
+                },
+                {
+                  "deposit": 0,
+                  "holiday": 0,
+                  "per_night": 36,
+                  "per_person": 0,
+                  "site_type": "TENT ONLY NONELECTRIC",
+                  "weekend": 0
+                }
+              ]
+            },
+            {
+              "season_end": "2027-12-31",
+              "season_name": "Peak Season",
+              "season_start": "2027-01-01",
+              "season_type": "Peak",
+              "site_types": [
+                {
+                  "deposit": 0,
+                  "holiday": 0,
+                  "per_night": 36,
+                  "per_person": 0,
+                  "site_type": "RV NONELECTRIC",
+                  "weekend": 0
+                },
+                {
+                  "deposit": 0,
+                  "holiday": 0,
+                  "per_night": 36,
+                  "per_person": 0,
+                  "site_type": "STANDARD NONELECTRIC",
+                  "weekend": 0
+                },
+                {
+                  "deposit": 0,
+                  "holiday": 0,
+                  "per_night": 36,
+                  "per_person": 0,
+                  "site_type": "TENT ONLY NONELECTRIC",
+                  "weekend": 0
+                }
+              ]
+            },
+            {
+              "season_end": "2028-12-31",
+              "season_name": "Peak Season",
+              "season_start": "2028-01-01",
+              "season_type": "Peak",
+              "site_types": [
+                {
+                  "deposit": 0,
+                  "holiday": 0,
+                  "per_night": 36,
+                  "per_person": 0,
+                  "site_type": "RV NONELECTRIC",
+                  "weekend": 0
+                },
+                {
+                  "deposit": 0,
+                  "holiday": 0,
+                  "per_night": 36,
+                  "per_person": 0,
+                  "site_type": "STANDARD NONELECTRIC",
+                  "weekend": 0
+                },
+                {
+                  "deposit": 0,
+                  "holiday": 0,
+                  "per_night": 36,
+                  "per_person": 0,
+                  "site_type": "TENT ONLY NONELECTRIC",
+                  "weekend": 0
+                }
+              ]
+            }
+          ],
+          "rating": {
+            "average_rating": 4.3870174575854435,
+            "number_of_ratings": 4067,
+            "star_counts": {
+              "1": 119,
+              "2": 158,
+              "3": 350,
+              "4": 843,
+              "5": 2597
+            }
+          },
+          "rules": [
+            {
+              "description": null,
+              "end_date": null,
+              "key": "allowMachineToken",
+              "secondary_value": null,
+              "start_date": null,
+              "units": null,
+              "value": 1
+            },
+            {
+              "description": "Blocks released on the 15th of each month",
+              "end_date": "2099-01-01",
+              "key": "blockReleaseDay",
+              "secondary_value": null,
+              "start_date": "2016-01-01",
+              "units": null,
+              "value": 15
+            },
+            {
+              "description": null,
+              "end_date": null,
+              "key": "maxChanges",
+              "secondary_value": null,
+              "start_date": null,
+              "units": "change(s) per reservation",
+              "value": 3
+            },
+            {
+              "description": null,
+              "end_date": null,
+              "key": "maxConcurrentStay",
+              "secondary_value": null,
+              "start_date": null,
+              "units": "campsite(s) held",
+              "value": 2
+            },
+            {
+              "description": null,
+              "end_date": "2026-09-15",
+              "key": "maxConsecutiveStay",
+              "secondary_value": null,
+              "start_date": "2026-05-01",
+              "units": "consecutive nights",
+              "value": 7
+            },
+            {
+              "description": null,
+              "end_date": null,
+              "key": "maxSimultaneousReservations",
+              "secondary_value": null,
+              "start_date": null,
+              "units": "reservations",
+              "value": 2
+            },
+            {
+              "description": null,
+              "end_date": "2026-09-15",
+              "key": "maxStay",
+              "secondary_value": "Selected Dates",
+              "start_date": "2026-05-01",
+              "units": "days",
+              "value": 7
+            },
+            {
+              "description": null,
+              "end_date": null,
+              "key": "maxTransactionReservations",
+              "secondary_value": null,
+              "start_date": null,
+              "units": "reservations per transaction",
+              "value": 2
+            },
+            {
+              "description": null,
+              "end_date": null,
+              "key": "noOccupantChange",
+              "secondary_value": null,
+              "start_date": null,
+              "units": null,
+              "value": 1
+            },
+            {
+              "description": null,
+              "end_date": null,
+              "key": "reservationCutOff",
+              "secondary_value": null,
+              "start_date": null,
+              "units": "Not Reservable",
+              "value": 0
+            },
+            {
+              "description": "5 months to be released at a time",
+              "end_date": "2099-01-01",
+              "key": "reservationWindow",
+              "secondary_value": null,
+              "start_date": "2016-01-01",
+              "units": null,
+              "value": 5
+            },
+            {
+              "description": null,
+              "end_date": null,
+              "key": "slidingWindow",
+              "secondary_value": null,
+              "start_date": null,
+              "units": "past the reservation window",
+              "value": 13
+            }
+          ],
+          "source_url": "https://www.recreation.gov/camping/campgrounds/232447",
+          "state": "California",
+          "stay_limit": null,
+          "time_zone": "America/Los_Angeles",
+          "updated_at": "2026-07-21T18:49:13.386786101Z"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "recreation-gov",
+        "capability": "camping-availability/campground"
+      }
+    },
+    {
+      "id": "recreation-gov/camping-availability/campground_availability",
+      "provider": "recreation-gov",
+      "capability": "camping-availability/campground_availability",
+      "name": "Campground availability",
+      "description": "Which nights and which sites are open at a campground in a given month; distinguish reserved from closed and not-yet-released.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "campground_id",
+          "type": "string",
+          "in": "body",
+          "about": "Recreation.gov campground id (digits), e.g. from `search`, or a pasted https://www.recreation.gov/camping/campgrounds/{id} URL.",
+          "required": true
+        },
+        {
+          "name": "campsite_ids",
+          "type": "string[]",
+          "in": "body",
+          "about": "Return only these campsite ids."
+        },
+        {
+          "name": "loop",
+          "type": "string",
+          "in": "body",
+          "about": "Return only campsites in this loop (exact, case-insensitive)."
+        },
+        {
+          "name": "month",
+          "type": "string",
+          "in": "body",
+          "about": "Month YYYY-MM (facility local calendar). Default: the current month (UTC). Pattern: ^[0-9]{4}-(0[1-9]|1[0-2])$."
+        }
+      ],
+      "response": {
+        "about": "The month availability grid for a campground: every campsite with its status for each calendar night of the month (Available, Reserved, Closed, Not Reservable, NYR = not yet released, Open = first-come first-served), plus per-day and per-site status counts. Optional filters by campsite id or loop. One request; a 200-site campground is about 0.5 MB upstream. Unknown id is `not_found`.",
+        "key": "campsites",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "availability",
+            "type": "object",
+            "about": "Calendar date (YYYY-MM-DD, in the facility's local time zone; the site encodes these as UTC-midnight timestamps) to the site's status string verbatim: Available, Reserved, Closed, Not Reservable, NYR (not yet released), Open (first-come first-served) or another value the site introduces."
+          },
+          {
+            "name": "campsite_id",
+            "type": "string"
+          },
+          {
+            "name": "campsite_type",
+            "type": "string"
+          },
+          {
+            "name": "capacity_rating",
+            "type": "string"
+          },
+          {
+            "name": "loop",
+            "type": "string"
+          },
+          {
+            "name": "max_people",
+            "type": "number"
+          },
+          {
+            "name": "min_people",
+            "type": "number"
+          },
+          {
+            "name": "reserve_type",
+            "type": "string"
+          },
+          {
+            "name": "site",
+            "type": "string",
+            "about": "Site label as posted, e.g. `001`."
+          },
+          {
+            "name": "status_counts",
+            "type": "object",
+            "about": "Number of campsites per availability status."
+          },
+          {
+            "name": "type_of_use",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "campground_id": "232447",
+          "campsite_ids": [
+            "105",
+            "106"
+          ]
+        },
+        "response": {
+          "campground_id": "232447",
+          "campsite_count": 235,
+          "campsites": [
+            {
+              "availability": {
+                "2026-09-01": "Reserved",
+                "2026-09-02": "Reserved",
+                "2026-09-03": "Reserved",
+                "2026-09-04": "Reserved",
+                "2026-09-05": "Reserved",
+                "2026-09-06": "Reserved",
+                "2026-09-07": "Reserved",
+                "2026-09-08": "Reserved",
+                "2026-09-09": "Reserved",
+                "2026-09-10": "Reserved",
+                "2026-09-11": "Reserved",
+                "2026-09-12": "Reserved",
+                "2026-09-13": "Reserved",
+                "2026-09-14": "Reserved",
+                "2026-09-15": "Reserved",
+                "2026-09-16": "Reserved",
+                "2026-09-17": "Reserved",
+                "2026-09-18": "Reserved",
+                "2026-09-19": "Reserved",
+                "2026-09-20": "Reserved",
+                "2026-09-21": "Reserved",
+                "2026-09-22": "Reserved",
+                "2026-09-23": "Reserved",
+                "2026-09-24": "Reserved",
+                "2026-09-25": "Reserved",
+                "2026-09-26": "Reserved",
+                "2026-09-27": "Reserved",
+                "2026-09-28": "Reserved",
+                "2026-09-29": "Reserved",
+                "2026-09-30": "Reserved"
+              },
+              "campsite_id": "105",
+              "campsite_type": "STANDARD NONELECTRIC",
+              "capacity_rating": "Single",
+              "loop": "Upper Pines",
+              "max_people": 6,
+              "min_people": 0,
+              "reserve_type": "Site-Specific",
+              "site": "001",
+              "status_counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 30
+              },
+              "type_of_use": "Overnight"
+            },
+            {
+              "availability": {
+                "2026-09-01": "Reserved",
+                "2026-09-02": "Reserved",
+                "2026-09-03": "Reserved",
+                "2026-09-04": "Reserved",
+                "2026-09-05": "Reserved",
+                "2026-09-06": "Reserved",
+                "2026-09-07": "Reserved",
+                "2026-09-08": "Reserved",
+                "2026-09-09": "Reserved",
+                "2026-09-10": "Reserved",
+                "2026-09-11": "Reserved",
+                "2026-09-12": "Reserved",
+                "2026-09-13": "Reserved",
+                "2026-09-14": "Reserved",
+                "2026-09-15": "Reserved",
+                "2026-09-16": "Reserved",
+                "2026-09-17": "Reserved",
+                "2026-09-18": "Reserved",
+                "2026-09-19": "Reserved",
+                "2026-09-20": "Reserved",
+                "2026-09-21": "Reserved",
+                "2026-09-22": "Reserved",
+                "2026-09-23": "Reserved",
+                "2026-09-24": "Reserved",
+                "2026-09-25": "Reserved",
+                "2026-09-26": "Reserved",
+                "2026-09-27": "Reserved",
+                "2026-09-28": "Reserved",
+                "2026-09-29": "Reserved",
+                "2026-09-30": "Reserved"
+              },
+              "campsite_id": "106",
+              "campsite_type": "STANDARD NONELECTRIC",
+              "capacity_rating": "Single",
+              "loop": "Upper Pines",
+              "max_people": 6,
+              "min_people": 0,
+              "reserve_type": "Site-Specific",
+              "site": "004",
+              "status_counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 30
+              },
+              "type_of_use": "Overnight"
+            }
+          ],
+          "daily_counts": [
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-01"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-02"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-03"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-04"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-05"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-06"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-07"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-08"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-09"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-10"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-11"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-12"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-13"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-14"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-15"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-16"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-17"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-18"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-19"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-20"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-21"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-22"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-23"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-24"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-25"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-26"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-27"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-28"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-29"
+            },
+            {
+              "counts": {
+                "available": 0,
+                "closed": 0,
+                "not_reservable": 0,
+                "not_yet_released": 0,
+                "open": 0,
+                "other": 0,
+                "reserved": 2
+              },
+              "date": "2026-09-30"
+            }
+          ],
+          "dates": [
+            "2026-09-01",
+            "2026-09-02",
+            "2026-09-03",
+            "2026-09-04",
+            "2026-09-05",
+            "2026-09-06",
+            "2026-09-07",
+            "2026-09-08",
+            "2026-09-09",
+            "2026-09-10",
+            "2026-09-11",
+            "2026-09-12",
+            "2026-09-13",
+            "2026-09-14",
+            "2026-09-15",
+            "2026-09-16",
+            "2026-09-17",
+            "2026-09-18",
+            "2026-09-19",
+            "2026-09-20",
+            "2026-09-21",
+            "2026-09-22",
+            "2026-09-23",
+            "2026-09-24",
+            "2026-09-25",
+            "2026-09-26",
+            "2026-09-27",
+            "2026-09-28",
+            "2026-09-29",
+            "2026-09-30"
+          ],
+          "month": "2026-09",
+          "observed_at_ms": 1790020079559,
+          "returned_count": 2,
+          "source_url": "https://www.recreation.gov/camping/campgrounds/232447"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "recreation-gov",
+        "capability": "camping-availability/campground_availability"
+      }
+    },
+    {
+      "id": "recreation-gov/camping-availability/campsite",
+      "provider": "recreation-gov",
+      "capability": "camping-availability/campsite",
+      "name": "Campsite",
+      "description": "Full detail and open nights for one campsite_id from `campsites` or `campground_availability`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "campsite_id",
+          "type": "string",
+          "in": "body",
+          "about": "Recreation.gov campsite id (digits), e.g. from `search`, or a pasted https://www.recreation.gov/camping/campsites/{id} URL.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "One campsite from the camps service: label, loop, type, status, coordinates, site details (capacity, check-in/out times, pets, campfire), equipment details, permitted equipment, notices, plus an availability summary over every night the site publishes (status counts, first/last night, the list of available nights). Unknown id is `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "availability_summary",
+            "type": "object",
+            "about": "Summary of the site's full published availability (the `all` endpoint)."
+          },
+          {
+            "name": "campground_id",
+            "type": "string"
+          },
+          {
+            "name": "campground_source_url",
+            "type": "string"
+          },
+          {
+            "name": "campsite_id",
+            "type": "string"
+          },
+          {
+            "name": "campsite_type",
+            "type": "string"
+          },
+          {
+            "name": "capacity_rating",
+            "type": "string"
+          },
+          {
+            "name": "equipment_details",
+            "type": "object[]"
+          },
+          {
+            "name": "is_accessible",
+            "type": "boolean"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "loop",
+            "type": "string"
+          },
+          {
+            "name": "max_people",
+            "type": "number"
+          },
+          {
+            "name": "min_people",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "notices",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Observation time, milliseconds since the Unix epoch. Availability and prices are snapshots."
+          },
+          {
+            "name": "permitted_equipment",
+            "type": "object[]"
+          },
+          {
+            "name": "reserve_type",
+            "type": "string"
+          },
+          {
+            "name": "site_details",
+            "type": "object[]"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "type_of_use",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "campsite_id": "105"
+        },
+        "response": {
+          "availability_summary": {
+            "available_dates": [
+              "2026-12-06",
+              "2026-12-07",
+              "2026-12-08",
+              "2026-12-09",
+              "2026-12-10",
+              "2026-12-13",
+              "2027-01-03",
+              "2027-01-04",
+              "2027-01-05",
+              "2027-01-06",
+              "2027-01-07",
+              "2027-01-11",
+              "2027-01-12",
+              "2027-01-13",
+              "2027-01-14",
+              "2027-01-18",
+              "2027-01-19",
+              "2027-01-20",
+              "2027-01-21",
+              "2027-01-22",
+              "2027-01-23",
+              "2027-01-24",
+              "2027-01-25",
+              "2027-01-26",
+              "2027-01-27",
+              "2027-01-28",
+              "2027-01-29",
+              "2027-01-30",
+              "2027-01-31",
+              "2027-02-01",
+              "2027-02-02",
+              "2027-02-03",
+              "2027-02-04",
+              "2027-02-07",
+              "2027-02-08",
+              "2027-02-09"
+            ],
+            "first_date": "2026-09-11",
+            "last_date": "2028-12-31",
+            "nights_published": 843,
+            "status_counts": {
+              "available": 36,
+              "closed": 0,
+              "not_reservable": 0,
+              "not_yet_released": 673,
+              "open": 6,
+              "other": 0,
+              "reserved": 128
+            }
+          },
+          "campground_id": "232447",
+          "campground_source_url": "https://www.recreation.gov/camping/campgrounds/232447",
+          "campsite_id": "105",
+          "campsite_type": "STANDARD NONELECTRIC",
+          "capacity_rating": "Single",
+          "equipment_details": [
+            {
+              "code": "driveway_entry",
+              "name": "Driveway Entry",
+              "value": "Back-in"
+            },
+            {
+              "code": "driveway_surface",
+              "name": "Driveway Surface",
+              "value": "Paved"
+            },
+            {
+              "code": "is_equip_mandatory",
+              "name": "Is Equipment Mandatory",
+              "value": "true"
+            },
+            {
+              "code": "max_num_vehicles",
+              "name": "Max Num of Vehicles",
+              "value": "2"
+            },
+            {
+              "code": "max_vehicle_length",
+              "name": "Max Vehicle Length",
+              "value": "24"
+            }
+          ],
+          "is_accessible": false,
+          "latitude": 37.73799345,
+          "longitude": -119.5643068,
+          "loop": "Upper Pines",
+          "max_people": 6,
+          "min_people": 0,
+          "name": "001",
+          "notices": [
+            {
+              "text": "<p><strong>If arriving one or more days late, call (209) 372-8502; your reservation will be cancelled if we do not hear from you by 12 PM (Noon) PST on the day following your arrival date.</strong></p>\n",
+              "type": "info"
+            }
+          ],
+          "observed_at_ms": 1790020140729,
+          "permitted_equipment": [
+            {
+              "max_length": 0,
+              "name": "Tent"
+            },
+            {
+              "max_length": 24,
+              "name": "RV"
+            },
+            {
+              "max_length": 24,
+              "name": "Pickup Camper"
+            },
+            {
+              "max_length": 24,
+              "name": "Caravan/Camper Van"
+            }
+          ],
+          "reserve_type": "Site-Specific",
+          "site_details": [
+            {
+              "code": "campfire_allowed",
+              "name": "Campfire Allowed",
+              "value": "Yes"
+            },
+            {
+              "code": "capacity_rating",
+              "name": "Capacity/Size Rating",
+              "value": "Single"
+            },
+            {
+              "code": "checkin_time",
+              "name": "Checkin Time",
+              "value": "12:00 PM"
+            },
+            {
+              "code": "checkout_time",
+              "name": "Checkout Time",
+              "value": "12:00 PM"
+            },
+            {
+              "code": "max_num_people",
+              "name": "Max Num of People",
+              "value": "6"
+            },
+            {
+              "code": "pets_allowed",
+              "name": "Pets Allowed",
+              "value": "Yes"
+            }
+          ],
+          "source_url": "https://www.recreation.gov/camping/campsites/105",
+          "status": "Open",
+          "type_of_use": "Overnight"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "recreation-gov",
+        "capability": "camping-availability/campsite"
+      }
+    },
+    {
+      "id": "recreation-gov/camping-availability/campsites",
+      "provider": "recreation-gov",
+      "capability": "camping-availability/campsites",
+      "name": "Campsites",
+      "description": "List the sites of a campground_id, optionally filtered to a stay; then `campsite` for one site's full detail.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "campground_id",
+          "type": "string",
+          "in": "body",
+          "about": "Recreation.gov campground id (digits), e.g. from `search`, or a pasted https://www.recreation.gov/camping/campgrounds/{id} URL.",
+          "required": true
+        },
+        {
+          "name": "end_date",
+          "type": "string",
+          "in": "body",
+          "about": "Departure date YYYY-MM-DD, after `start_date`. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "in": "body",
+          "about": "Sites per page (1-100).",
+          "default": 20,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "name": "start",
+          "type": "number",
+          "in": "body",
+          "about": "Offset; use `next_start` from the previous page.",
+          "default": 0,
+          "min": 0
+        },
+        {
+          "name": "start_date",
+          "type": "string",
+          "in": "body",
+          "about": "Arrival date YYYY-MM-DD; with `end_date`, adds per-site availability for the stay. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "Campsites of a campground from the search index, paginated (offset `start`, `size` up to 100): site label, loop, type, status, coordinates, attributes (capacity, driveway, pets, ...), permitted equipment, base price range, rating. With `start_date`/`end_date` each site also carries its availability for that stay. A campground with no indexed campsites (or an unknown id) is `not_found`.",
+        "key": "campsites",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "accessible",
+            "type": "boolean"
+          },
+          {
+            "name": "attributes",
+            "type": "object[]"
+          },
+          {
+            "name": "availability",
+            "type": "string",
+            "about": "Index availability for the requested stay (`available`, `reserved`, `not_available`, ...); null when no dates were given."
+          },
+          {
+            "name": "average_rating",
+            "type": "number"
+          },
+          {
+            "name": "campsite_id",
+            "type": "string"
+          },
+          {
+            "name": "campsite_type",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "loop",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "about": "Site label, e.g. `001`."
+          },
+          {
+            "name": "number_of_ratings",
+            "type": "number"
+          },
+          {
+            "name": "permitted_equipment",
+            "type": "object[]"
+          },
+          {
+            "name": "preview_image_url",
+            "type": "string"
+          },
+          {
+            "name": "price_range",
+            "type": "object",
+            "about": "Base rate range the search index publishes; null when the site lists none."
+          },
+          {
+            "name": "reservable",
+            "type": "boolean"
+          },
+          {
+            "name": "reserve_type",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "Site status, e.g. `Open`."
+          },
+          {
+            "name": "type_of_use",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "campground_id": "232447",
+          "size": 3
+        },
+        "response": {
+          "campground_id": "232447",
+          "campground_name": "Upper Pines Campground",
+          "campsites": [
+            {
+              "accessible": false,
+              "attributes": [
+                {
+                  "category": "site_details",
+                  "name": "Max Num of People",
+                  "value": "6"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Campfire Allowed",
+                  "value": "Yes"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Capacity/Size Rating",
+                  "value": "Single"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Checkout Time",
+                  "value": "12:00 PM"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Pets Allowed",
+                  "value": "Yes"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Checkin Time",
+                  "value": "12:00 PM"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Max Vehicle Length",
+                  "value": "24"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Is Equipment Mandatory",
+                  "value": "true"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Max Num of Vehicles",
+                  "value": "2"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Driveway Surface",
+                  "value": "Paved"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Driveway Entry",
+                  "value": "Back-in"
+                },
+                {
+                  "category": "amenities",
+                  "name": "Placed on Map",
+                  "value": "1"
+                },
+                {
+                  "category": "amenities",
+                  "name": "Map X Coordinate",
+                  "value": "239"
+                },
+                {
+                  "category": "amenities",
+                  "name": "Map Y Coordinate",
+                  "value": "198.090698242188"
+                }
+              ],
+              "availability": null,
+              "average_rating": 4.4583335,
+              "campsite_id": "105",
+              "campsite_type": "STANDARD NONELECTRIC",
+              "latitude": 37.73799345,
+              "longitude": -119.5643068,
+              "loop": "Upper Pines",
+              "name": "001",
+              "number_of_ratings": 24,
+              "permitted_equipment": [
+                {
+                  "max_length": 0,
+                  "name": "Tent"
+                },
+                {
+                  "max_length": 24,
+                  "name": "RV"
+                },
+                {
+                  "max_length": 24,
+                  "name": "Pickup Camper"
+                },
+                {
+                  "max_length": 24,
+                  "name": "Caravan/Camper Van"
+                }
+              ],
+              "preview_image_url": "https://cdn.recreation.gov/public/2021/01/14/18/31/105_7c8f70b8-12f9-4464-b65c-2e1da0e8328f_700.webp",
+              "price_range": {
+                "amount_max": 36,
+                "amount_min": 36,
+                "currency": "USD",
+                "note": null,
+                "per_unit": "night"
+              },
+              "reservable": true,
+              "reserve_type": "Site-Specific",
+              "source_url": "https://www.recreation.gov/camping/campsites/105",
+              "status": "Open",
+              "type_of_use": "Overnight"
+            },
+            {
+              "accessible": false,
+              "attributes": [
+                {
+                  "category": "site_details",
+                  "name": "Checkin Time",
+                  "value": "12:00 PM"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Campfire Allowed",
+                  "value": "Yes"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Max Num of People",
+                  "value": "6"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Capacity/Size Rating",
+                  "value": "Single"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Checkout Time",
+                  "value": "12:00 PM"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Pets Allowed",
+                  "value": "Yes"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Driveway Surface",
+                  "value": "Paved"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Driveway Entry",
+                  "value": "Back-In"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Max Vehicle Length",
+                  "value": "24"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Is Equipment Mandatory",
+                  "value": "true"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Max Num of Vehicles",
+                  "value": "2"
+                },
+                {
+                  "category": "amenities",
+                  "name": "Placed on Map",
+                  "value": "1"
+                },
+                {
+                  "category": "amenities",
+                  "name": "Map Y Coordinate",
+                  "value": "209.780349731445"
+                },
+                {
+                  "category": "amenities",
+                  "name": "Map X Coordinate",
+                  "value": "222.509643554688"
+                }
+              ],
+              "availability": null,
+              "average_rating": 4.3333335,
+              "campsite_id": "109",
+              "campsite_type": "STANDARD NONELECTRIC",
+              "latitude": 37.7379781,
+              "longitude": -119.5644332,
+              "loop": "Upper Pines",
+              "name": "002",
+              "number_of_ratings": 27,
+              "permitted_equipment": [
+                {
+                  "max_length": 0,
+                  "name": "Tent"
+                },
+                {
+                  "max_length": 24,
+                  "name": "RV"
+                },
+                {
+                  "max_length": 24,
+                  "name": "Pickup Camper"
+                },
+                {
+                  "max_length": 24,
+                  "name": "Caravan/Camper Van"
+                }
+              ],
+              "preview_image_url": "https://cdn.recreation.gov/public/2021/01/15/17/24/109_9349e474-b087-4984-b725-9981b258bbe7_700.webp",
+              "price_range": {
+                "amount_max": 36,
+                "amount_min": 36,
+                "currency": "USD",
+                "note": null,
+                "per_unit": "night"
+              },
+              "reservable": true,
+              "reserve_type": "Site-Specific",
+              "source_url": "https://www.recreation.gov/camping/campsites/109",
+              "status": "Open",
+              "type_of_use": "Overnight"
+            },
+            {
+              "accessible": false,
+              "attributes": [
+                {
+                  "category": "site_details",
+                  "name": "Campfire Allowed",
+                  "value": "Yes"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Capacity/Size Rating",
+                  "value": "Single"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Checkout Time",
+                  "value": "12:00 PM"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Pets Allowed",
+                  "value": "Yes"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Checkin Time",
+                  "value": "12:00 PM"
+                },
+                {
+                  "category": "site_details",
+                  "name": "Max Num of People",
+                  "value": "6"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Driveway Surface",
+                  "value": "Paved"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Driveway Entry",
+                  "value": "Back-In"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Is Equipment Mandatory",
+                  "value": "true"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Max Vehicle Length",
+                  "value": "35"
+                },
+                {
+                  "category": "equipment_details",
+                  "name": "Max Num of Vehicles",
+                  "value": "2"
+                },
+                {
+                  "category": "amenities",
+                  "name": "Map Y Coordinate",
+                  "value": "196.626129150391"
+                },
+                {
+                  "category": "amenities",
+                  "name": "Placed on Map",
+                  "value": "1"
+                },
+                {
+                  "category": "amenities",
+                  "name": "Map X Coordinate",
+                  "value": "192.036331176758"
+                }
+              ],
+              "availability": null,
+              "average_rating": 4.4583335,
+              "campsite_id": "205",
+              "campsite_type": "STANDARD NONELECTRIC",
+              "latitude": 37.73818532,
+              "longitude": -119.5646069,
+              "loop": "Upper Pines",
+              "name": "003",
+              "number_of_ratings": 24,
+              "permitted_equipment": [
+                {
+                  "max_length": 0,
+                  "name": "Tent"
+                },
+                {
+                  "max_length": 35,
+                  "name": "RV"
+                },
+                {
+                  "max_length": 24,
+                  "name": "Trailer"
+                },
+                {
+                  "max_length": 35,
+                  "name": "Pickup Camper"
+                },
+                {
+                  "max_length": 24,
+                  "name": "Pop up"
+                },
+                {
+                  "max_length": 24,
+                  "name": "Fifth Wheel"
+                },
+                {
+                  "max_length": 0,
+                  "name": "Large Tent Over 9X12`"
+                },
+                {
+                  "max_length": 35,
+                  "name": "Caravan/Camper Van"
+                }
+              ],
+              "preview_image_url": "https://cdn.recreation.gov/public/2021/01/15/17/49/205_a70f837f-09b1-4bb7-afe2-7a1846480e5e_700.webp",
+              "price_range": {
+                "amount_max": 36,
+                "amount_min": 36,
+                "currency": "USD",
+                "note": null,
+                "per_unit": "night"
+              },
+              "reservable": true,
+              "reserve_type": "Site-Specific",
+              "source_url": "https://www.recreation.gov/camping/campsites/205",
+              "status": "Open",
+              "type_of_use": "Overnight"
+            }
+          ],
+          "currency": "USD",
+          "end_date": null,
+          "fees_note": "Base use fees published by Recreation.gov, USD. The per-reservation fee and any taxes are unknown and not included.",
+          "next_start": 3,
+          "observed_at_ms": 1790020116049,
+          "size": 3,
+          "source_url": "https://www.recreation.gov/camping/campgrounds/232447",
+          "start": 0,
+          "start_date": null,
+          "total": 235
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "recreation-gov",
+        "capability": "camping-availability/campsites"
+      }
+    },
+    {
+      "id": "recreation-gov/camping-availability/permit_availability",
+      "provider": "recreation-gov",
+      "capability": "camping-availability/permit_availability",
+      "name": "Permit availability",
+      "description": "Remaining permit quota per entry point/zone and date for a permit_id from `search` (entity_type permit).",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "division_ids",
+          "type": "string[]",
+          "in": "body",
+          "about": "Return only these division ids (`{permit_id}{nn}`)."
+        },
+        {
+          "name": "month",
+          "type": "string",
+          "in": "body",
+          "about": "Month YYYY-MM (the site only answers whole months). Default: the current month (UTC), or the next month when the current one has no remaining published dates (quotas are published about three days ahead). The `month` field of the output says which month was read. A month of a 50-division permit is about 200 KB of output; filter with `division_ids`. Pattern: ^[0-9]{4}-(0[1-9]|1[0-2])$."
+        },
+        {
+          "name": "permit_id",
+          "type": "string",
+          "in": "body",
+          "about": "Recreation.gov permit id (digits), e.g. from `search`, or a pasted https://www.recreation.gov/permits/{id} URL.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Daily quota availability for a wilderness/land permit over one calendar month (the site's availability service only answers whole months): for each date and each permit division, the total and remaining daily quota, whether it is walk-up only, and whether the date is not yet released (with its release date). Optional filter to a set of division ids. Division names are not on this endpoint; they are on the site's permit page. Unknown permit id is `not_found`.",
+        "key": "days",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "date",
+            "type": "string"
+          },
+          {
+            "name": "divisions",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "division_ids": [
+            "44585902",
+            "44585903"
+          ],
+          "permit_id": "445859"
+        },
+        "response": {
+          "days": [
+            {
+              "date": "2026-09-24",
+              "divisions": [
+                {
+                  "division_id": "44585902",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 3,
+                  "quota_total": 3,
+                  "release_date": null
+                },
+                {
+                  "division_id": "44585903",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 25,
+                  "quota_total": 25,
+                  "release_date": null
+                }
+              ]
+            },
+            {
+              "date": "2026-09-25",
+              "divisions": [
+                {
+                  "division_id": "44585902",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 3,
+                  "quota_total": 3,
+                  "release_date": null
+                },
+                {
+                  "division_id": "44585903",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 25,
+                  "quota_total": 25,
+                  "release_date": null
+                }
+              ]
+            },
+            {
+              "date": "2026-09-26",
+              "divisions": [
+                {
+                  "division_id": "44585902",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 3,
+                  "quota_total": 3,
+                  "release_date": null
+                },
+                {
+                  "division_id": "44585903",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 25,
+                  "quota_total": 25,
+                  "release_date": null
+                }
+              ]
+            },
+            {
+              "date": "2026-09-27",
+              "divisions": [
+                {
+                  "division_id": "44585902",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 3,
+                  "quota_total": 3,
+                  "release_date": null
+                },
+                {
+                  "division_id": "44585903",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 25,
+                  "quota_total": 25,
+                  "release_date": null
+                }
+              ]
+            },
+            {
+              "date": "2026-09-28",
+              "divisions": [
+                {
+                  "division_id": "44585902",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 3,
+                  "quota_total": 3,
+                  "release_date": null
+                },
+                {
+                  "division_id": "44585903",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 25,
+                  "quota_total": 25,
+                  "release_date": null
+                }
+              ]
+            },
+            {
+              "date": "2026-09-29",
+              "divisions": [
+                {
+                  "division_id": "44585902",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 2,
+                  "quota_total": 2,
+                  "release_date": null
+                },
+                {
+                  "division_id": "44585903",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 15,
+                  "quota_total": 15,
+                  "release_date": null
+                }
+              ]
+            },
+            {
+              "date": "2026-09-30",
+              "divisions": [
+                {
+                  "division_id": "44585902",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 2,
+                  "quota_total": 2,
+                  "release_date": null
+                },
+                {
+                  "division_id": "44585903",
+                  "is_walkup": false,
+                  "not_yet_released": false,
+                  "quota_remaining": 15,
+                  "quota_total": 15,
+                  "release_date": null
+                }
+              ]
+            }
+          ],
+          "division_ids": [
+            "44585902",
+            "44585903"
+          ],
+          "end_date": "2026-09-30",
+          "month": "2026-09",
+          "observed_at_ms": 1790020154417,
+          "permit_id": "445859",
+          "source_url": "https://www.recreation.gov/permits/445859",
+          "start_date": "2026-09-01"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "recreation-gov",
+        "capability": "camping-availability/permit_availability"
+      }
+    },
+    {
+      "id": "recreation-gov/camping-availability/reviews",
+      "provider": "recreation-gov",
+      "capability": "camping-availability/reviews",
+      "name": "Reviews",
+      "description": "Read what visitors said about a campground_id or campsite_id.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "`next_cursor` from the previous page."
+        },
+        {
+          "name": "location_id",
+          "type": "string",
+          "in": "body",
+          "about": "Campground or campsite id (digits). Pattern: ^[0-9]{1,12}$.",
+          "required": true
+        },
+        {
+          "name": "location_type",
+          "type": "string",
+          "in": "body",
+          "about": "location_type",
+          "required": true,
+          "oneOf": [
+            "Campground",
+            "Campsite"
+          ]
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "Reviews per page (1-50).",
+          "default": 10,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "rating",
+          "type": "number",
+          "in": "body",
+          "about": "Only reviews with this star rating.",
+          "min": 1,
+          "max": 5
+        }
+      ],
+      "response": {
+        "about": "Public visitor reviews for a campground or a campsite, most recent first, cursor-paginated (`next_cursor` -> `cursor`), optionally filtered to one star rating. Reviewer names are not returned. An empty first page for an id the site does not know is `not_found`; a known location with no reviews returns an empty page.",
+        "key": "reviews",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "accessibility_rating",
+            "type": "number"
+          },
+          {
+            "name": "cell_coverage",
+            "type": "object[]"
+          },
+          {
+            "name": "created_at",
+            "type": "string"
+          },
+          {
+            "name": "helpful_votes",
+            "type": "number"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "location_description",
+            "type": "string"
+          },
+          {
+            "name": "location_id",
+            "type": "string"
+          },
+          {
+            "name": "location_type",
+            "type": "string"
+          },
+          {
+            "name": "not_helpful_votes",
+            "type": "number"
+          },
+          {
+            "name": "parent_location_id",
+            "type": "string"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "review",
+            "type": "string",
+            "about": "Review text; null when the visitor left a rating only."
+          },
+          {
+            "name": "stay",
+            "type": "object",
+            "about": "Dates of the reviewed stay when the site attaches them."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "location_id": "105",
+          "location_type": "Campsite",
+          "page_size": 3
+        },
+        "response": {
+          "location_id": "105",
+          "location_type": "Campsite",
+          "next_cursor": "eyJjcmVhdGVkX2F0Ijp7IlZhbHVlIjoiMjAyNi0wMy0yNFQwMzowNToxMS42MDAwNzY4ODZaIn0sImlkIjp7IlZhbHVlIjoiOTNjMTQyNDktNTE0YS00YTBkLTllZTMtYTIwOTA1NTJmYTJmIn0sImxvY2F0aW9uX2NvbXBvc2l0ZV9pZCI6eyJWYWx1ZSI6IjEwNS1DYW1wc2l0ZSJ9fQ==",
+          "observed_at_ms": 1790020147529,
+          "page_size": 3,
+          "reviews": [
+            {
+              "accessibility_rating": 5,
+              "cell_coverage": [
+                {
+                  "carrier": "T-Mobile",
+                  "rating": 2
+                }
+              ],
+              "created_at": "2026-05-04T00:12:12.443020607Z",
+              "helpful_votes": 0,
+              "id": "de9986bf-1447-4e13-a105-bdb1ba85db6f",
+              "location_description": "001, Upper Pines( STANDARD NONELECTRIC )",
+              "location_id": "105",
+              "location_type": "Campsite",
+              "not_helpful_votes": 0,
+              "parent_location_id": "232447",
+              "rating": 5,
+              "review": "Beautiful campsite! Did not have neighbors for most of our stay, and then bathrooms were very clean. There is also a drinking water station and a water waste disposal station. As others said, you are close to the dumpsters but I didn’t think it was a big problem or noisy. Would definitely stay here again (: ",
+              "stay": {
+                "end_date": "2026-04-27",
+                "start_date": "2026-04-23"
+              }
+            },
+            {
+              "accessibility_rating": null,
+              "cell_coverage": [],
+              "created_at": "2026-04-14T02:45:23.789807963Z",
+              "helpful_votes": 0,
+              "id": "1f14d624-26e3-4379-b722-a94a469f735f",
+              "location_description": "001, Upper Pines( STANDARD NONELECTRIC )",
+              "location_id": "105",
+              "location_type": "Campsite",
+              "not_helpful_votes": 0,
+              "parent_location_id": "232447",
+              "rating": 5,
+              "review": "great",
+              "stay": {
+                "end_date": "2026-04-07",
+                "start_date": "2026-04-06"
+              }
+            },
+            {
+              "accessibility_rating": 4,
+              "cell_coverage": [],
+              "created_at": "2026-03-24T03:05:11.600076886Z",
+              "helpful_votes": 0,
+              "id": "93c14249-514a-4a0d-9ee3-a2090552fa2f",
+              "location_description": "001, Upper Pines( STANDARD NONELECTRIC )",
+              "location_id": "105",
+              "location_type": "Campsite",
+              "not_helpful_votes": 0,
+              "parent_location_id": "232447",
+              "rating": 4,
+              "review": "We were in site 1 which has some pros and cons. The pros are no neighbors on one side and the camp hosts are really friendly. The cons are instead of neighbors you have dumpsters. That said, it doesn't matter because you are out seeing the valley all day not hanging in camp and the valley is AWESOME.",
+              "stay": {
+                "end_date": "2026-03-17",
+                "start_date": "2026-03-15"
+              }
+            }
+          ],
+          "source_url": "https://www.recreation.gov/camping/campsites/105"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "recreation-gov",
+        "capability": "camping-availability/reviews"
+      }
+    },
+    {
+      "id": "recreation-gov/camping-availability/search",
+      "provider": "recreation-gov",
+      "capability": "camping-availability/search",
+      "name": "Search",
+      "description": "Start here to find a campground_id / permit_id / rec area id by name or place; then call `campground`, `campsites`, `campground_availability` or `permit_availability`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "end_date",
+          "type": "string",
+          "in": "body",
+          "about": "Departure date YYYY-MM-DD, after `start_date`. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "entity_type",
+          "type": "string",
+          "in": "body",
+          "about": "Inventory type to return.",
+          "default": "campground",
+          "oneOf": [
+            "campground",
+            "recarea",
+            "permit",
+            "ticketfacility",
+            "tour",
+            "timedentry",
+            "vehiclepermit",
+            "venuereservations",
+            "treepermit",
+            "activitypass",
+            "facility",
+            "visitorcenter"
+          ]
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "in": "body",
+          "about": "Search centre latitude; requires `longitude`."
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "in": "body",
+          "about": "Search centre longitude; requires `latitude`."
+        },
+        {
+          "name": "parent_id",
+          "type": "string",
+          "in": "body",
+          "about": "Restrict to children of this rec area id (e.g. 2991 Yosemite National Park). Pattern: ^[0-9]{1,12}$."
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Free text: a park, forest, campground, or place name."
+        },
+        {
+          "name": "radius_miles",
+          "type": "number",
+          "in": "body",
+          "about": "Search radius around the centre, miles (default 50 when coordinates are given).",
+          "min": 1,
+          "max": 2000
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "in": "body",
+          "about": "Results per page (1-50).",
+          "default": 20,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "`available` puts entities with availability for the dates first (the site's default with dates); `score` is relevance.",
+          "oneOf": [
+            "available",
+            "score"
+          ]
+        },
+        {
+          "name": "start",
+          "type": "number",
+          "in": "body",
+          "about": "Offset of the first result; use `next_start` from the previous page.",
+          "default": 0,
+          "min": 0
+        },
+        {
+          "name": "start_date",
+          "type": "string",
+          "in": "body",
+          "about": "Arrival date YYYY-MM-DD (facility local calendar date). With `end_date` the index reports availability for that stay. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "state",
+          "type": "string",
+          "in": "body",
+          "about": "US state name as Recreation.gov spells it, e.g. `Utah`, `California`."
+        }
+      ],
+      "response": {
+        "about": "Search Recreation.gov's unified inventory index (campgrounds by default; also rec areas, permits, ticket facilities, tours, timed entry, vehicle permits, venues) by free text, place, or coordinates and radius, optionally for a stay (start/end dates), a US state or a parent rec area. Returns index cards with location, base price range, rating, campsite counts and date availability. Offset pagination through `start`/`next_start`.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "accessible_campsites_count",
+            "type": "number"
+          },
+          {
+            "name": "availability",
+            "type": "string",
+            "about": "Index availability for the requested dates (`available`, `unavailable`, ...); null when no dates were given or the index has no figure."
+          },
+          {
+            "name": "availability_counts",
+            "type": "object",
+            "about": "Site counts by index availability bucket (`available`, `unavailable`, ...) for the requested dates, as the index returns them."
+          },
+          {
+            "name": "available_dates",
+            "type": "object[]",
+            "about": "Stay windows the index reports available near the requested dates."
+          },
+          {
+            "name": "average_rating",
+            "type": "number"
+          },
+          {
+            "name": "campsite_equipment",
+            "type": "string[]"
+          },
+          {
+            "name": "campsite_reserve_type",
+            "type": "string[]"
+          },
+          {
+            "name": "campsite_type_of_use",
+            "type": "string[]"
+          },
+          {
+            "name": "campsites_count",
+            "type": "number"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Plain-text description."
+          },
+          {
+            "name": "distance_miles",
+            "type": "number",
+            "about": "Distance from the resolved search point, miles, as the index reports it."
+          },
+          {
+            "name": "entity_type",
+            "type": "string"
+          },
+          {
+            "name": "has_lottery",
+            "type": "boolean"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Entity id (campground, rec area, permit, ...); the identifier every other function takes."
+          },
+          {
+            "name": "index_id",
+            "type": "string",
+            "about": "Search-index document id, e.g. `232447_asset`."
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "number_of_ratings",
+            "type": "number"
+          },
+          {
+            "name": "org_id",
+            "type": "string"
+          },
+          {
+            "name": "org_name",
+            "type": "string"
+          },
+          {
+            "name": "parent_id",
+            "type": "string"
+          },
+          {
+            "name": "parent_name",
+            "type": "string"
+          },
+          {
+            "name": "parent_type",
+            "type": "string"
+          },
+          {
+            "name": "preview_image_url",
+            "type": "string"
+          },
+          {
+            "name": "price_range",
+            "type": "object",
+            "about": "Base rate range the search index publishes; null when the site lists none."
+          },
+          {
+            "name": "reservable",
+            "type": "boolean"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Public page for this entity; null for entity types without a known page pattern."
+          },
+          {
+            "name": "state",
+            "type": "string",
+            "about": "US state name as the index stores it, e.g. `California`."
+          },
+          {
+            "name": "time_zone",
+            "type": "string",
+            "about": "IANA time zone of the facility."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "Yosemite National Park",
+          "size": 3
+        },
+        "response": {
+          "end_date": null,
+          "entity_type": "campground",
+          "latitude": 37.848833,
+          "location": "Yosemite National Park, California",
+          "longitude": -119.557187,
+          "next_start": 3,
+          "observed_at_ms": 1790020035605,
+          "query": "Yosemite National Park",
+          "radius_miles": 400,
+          "results": [
+            {
+              "accessible_campsites_count": 2,
+              "availability": null,
+              "availability_counts": null,
+              "available_dates": [],
+              "average_rating": 4.08547,
+              "campsite_equipment": [
+                "Tent",
+                "Caravan/Camper Van",
+                "Pickup Camper"
+              ],
+              "campsite_reserve_type": [
+                "Site-Specific"
+              ],
+              "campsite_type_of_use": [
+                "Overnight"
+              ],
+              "campsites_count": 74,
+              "city": "Yosemite National Park",
+              "country": "United States",
+              "description": "Tucked away among the pines is the hidden gem of Yosemite Creek campground. Accessing this campground is an adventure down a rutted, 5-mile, single-lane dirt road.  Motorhomes and trailers are NOT allowed.Yosemite Creek campground is a primitive campground with vault toilets and  no drinking water . A seasonal creek runs through the campground but    water must be boiled and/or treated    before drinking. Do not rely on creek water being available;  bring water!  \nGranite boulders abound and the peaceful Yosemite Creek meanders through the campground on its way to Yosemite Valley. Bring your comfy chairs and hammocks and let the sounds of nature whisk you away from the busyness of day-to-day life. \nHead to Tuolumne Meadows for breathtaking views and a multitude of day hiking opportunities. Tenaya Lake is a great place to relax and swim or canoe. Yosemite Valley offers restaurants, museums, bike paths, day hikes and world-famous climbing. Don't forget about the Pioneer History center in Wawona, and of course, the Mariposa Grove of giant sequoias. Be prepared to make your own fun here-take delight in the quiet and give your screens a rest.  \nYour adventure awaits! Hiking, swimming, bouldering, napping (some of us are tired!), bird watching; the possibilities are as great as your imagination. Be sure to bring bug spray and sunscreen, plenty of water, and dress in layers as the weather can rapidly change at this elevation. \n",
+              "distance_miles": 4.39,
+              "entity_type": "campground",
+              "has_lottery": false,
+              "id": "10083840",
+              "index_id": "10083840_asset",
+              "latitude": 37.8263,
+              "longitude": -119.5983,
+              "name": "Yosemite Creek Campground",
+              "number_of_ratings": 117,
+              "org_id": "128",
+              "org_name": "National Park Service",
+              "parent_id": "2991",
+              "parent_name": "Yosemite National Park",
+              "parent_type": "recarea",
+              "preview_image_url": "https://cdn.recreation.gov/public/2022/02/28/23/28/10083840_e985580d-31e5-4d71-81d2-cc8d371602a2_1440.webp",
+              "price_range": null,
+              "reservable": true,
+              "source_url": "https://www.recreation.gov/camping/campgrounds/10083840",
+              "state": "California",
+              "time_zone": "America/Los_Angeles"
+            },
+            {
+              "accessible_campsites_count": 1,
+              "availability": null,
+              "availability_counts": null,
+              "available_dates": [],
+              "average_rating": 4.2760415,
+              "campsite_equipment": [
+                "Tent",
+                "RV",
+                "Caravan/Camper Van",
+                "Pickup Camper",
+                "Pop up"
+              ],
+              "campsite_reserve_type": [
+                "Site-Specific"
+              ],
+              "campsite_type_of_use": [
+                "Overnight"
+              ],
+              "campsites_count": 56,
+              "city": "Yosemite National Park",
+              "country": "United States",
+              "description": "Staying at Porcupine Flat Campground requires reservations. No first come, first serve sites are available.   The campground typically opens in late-June and closes mid-October. The opening date varies depending on the opening of the Tioga Road and related seasonal facility and road work.  Porcupine Flat Campground is located off the Tioga Road about 30 minutes west of Tuolumne Meadows and over an hour from Yosemite Valley. RVs and Trailers are not recommended for the narrow roads in this more primitive campground. At an elevation of 8,100 feet (2,500 m) elevation, the campground is near Porcupine Creek, which is the only water source (must be filtered, treated, or boiled). The Porcupine Creek Trailhead is nearby. There are no visitor services close to the campground.  For additional park information, call (209)372-0200 or visit www.nps.gov/yose Yosemite National Park covers nearly 1,200 square miles (3,100 square km) in the Sierra Nevada, with elevations ranging from about 2,000 feet (600 m) to 13,000 ft (4,000 m). Yosemite receives 95% of its precipitation between October and May (and over 75% between November and March). Most of Yosemite is blanketed in snow from about November through May. (The Valley can be rainy or snowy in any given winter storm.)  \n\n Porcupine Flat is situated along a seasonal creek which is it's only source of water. Creek water must be treated and/or boiled before consuming.  \nJust 25 miles away is Yosemite Valley, an awe-inspiring landscape containing many of the famous features for which Yosemite National Park is known. Hiking trails and bike paths are abundant in the valley. Rafting the Merced River is a fun way to cool down on a summer day when water levels are sufficient. Yosemite Valley also offers numerous guided bus tours, educational programs, museums, ranger-led activities, and an art center with workshops. \n The Tioga Road offers a 39-mile scenic drive past forests, meadows, lakes and granite domes. Tuolumne Meadows embodies the high-country of the Sierra Nevada, with its broad sub-alpine meadows and granite peaks. Several trailheads line the road offering hikes to beautiful, secluded areas that can only be accessed and enjoyed by foot. \n Beautiful Hetch Hetchy Reservoir, just 23 miles from Crane Flat, is home to spectacular scenery and numerous wilderness trailheads. \nYosemite's trails, cliffs, roads and rivers provide endless recreational activities for any kind of visitor. Hiking, biking, rock climbing, fishing, horseback riding, rafting, auto touring, and photography are all very popular activities within the park. The White Wolf area has hiking and backpacking opportunities that begin near the campground, such as Lukens Lake, Harden Lake and the Grand Canyon of the Tuolumne. The Crane Flat area, 23 miles west, offers many other hiking opportunities such as Tuolumne and Merced Groves of Giant Sequoias, both of which require a 2.5 to 3-mile roundtrip hike to view. Tuolumne Meadows and all it's High Sierra wonder lie 25 miles to the east, where many beautiful day and overnight excursions await. \n The Tioga Road offers a 39-mile scenic drive past forests, meadows, lakes, and granite domes. The road’s elevation ranges from 6,200 feet to just under 10,000 feet. Tuolumne Meadows embodies the high-country of the Sierra Nevada and is a good starting point for countless hikes. There is little to no cell service along the road. \nFor facility specific information, please call (209) 372-4025.Porcupine Flat is extremely primitive and has no connectivity or drinking water. Basic amenities include vault toilets, trash/recycling collection, food storage lockers, fire rings and picnic tables.  Wood and charcoal fires are permitted when the campground is open.  For a map of the campground, visit  https://www.nps.gov/yose/planyourvisit/porcupinecamp.htm  ",
+              "distance_miles": 4.58,
+              "entity_type": "campground",
+              "has_lottery": false,
+              "id": "10083831",
+              "index_id": "10083831_asset",
+              "latitude": 37.8082,
+              "longitude": -119.5657,
+              "name": "Porcupine Flat Campground",
+              "number_of_ratings": 192,
+              "org_id": "128",
+              "org_name": "National Park Service",
+              "parent_id": "2991",
+              "parent_name": "Yosemite National Park",
+              "parent_type": "recarea",
+              "preview_image_url": "https://cdn.recreation.gov/public/2023/06/20/23/48/10083831_00dacff0-5463-4c04-a7ce-5207e4a2fc75_700.webp",
+              "price_range": {
+                "amount_max": 24,
+                "amount_min": 24,
+                "currency": "USD",
+                "note": null,
+                "per_unit": "night"
+              },
+              "reservable": true,
+              "source_url": "https://www.recreation.gov/camping/campgrounds/10083831",
+              "state": "California",
+              "time_zone": "America/Los_Angeles"
+            },
+            {
+              "accessible_campsites_count": null,
+              "availability": null,
+              "availability_counts": null,
+              "available_dates": [],
+              "average_rating": 3.9603174,
+              "campsite_equipment": [
+                "Tent",
+                "RV",
+                "Trailer",
+                "Caravan/Camper Van",
+                "Pickup Camper",
+                "Fifth Wheel",
+                "Pop up"
+              ],
+              "campsite_reserve_type": [
+                "Site-Specific"
+              ],
+              "campsite_type_of_use": [
+                "Overnight"
+              ],
+              "campsites_count": 49,
+              "city": "Yosemite National Park",
+              "country": "United States",
+              "description": "There is no drinking water provided here. Restrooms are portable toilets.    Staying at White Wolf Campground requires reservations.   White Wolf typically opens mid-July and closes mid to late September, depending on the opening of the Tioga Road and related seasonal facility and road work.  White Wolf Campground is located off the Tioga Road between Tuolumne Meadows and Crane Flat, approximately an hour from Yosemite Valley at 8,000 feet (2,400 m). The campground is tucked into the forest about a mile from Tioga Road near White Wolf Lodge. Trailheads nearby lead to Lukens and Harden Lakes and the area is popular for those accessing other wilderness destinations. Minimal services may be available at White Wolf Lodge (if open). There are no other visitor services close to the campground.Yosemite's trails, cliffs, roads and rivers provide endless recreational activities for any kind of visitor. Hiking, biking, rock climbing, fishing, horseback riding, rafting, auto touring, and photography are all very popular activities within the park. The White Wolf area has hiking and backpacking opportunities that begin near the campground, such as Lukens Lake, Harden Lake and the Grand Canyon of the Tuolumne. The Crane Flat area, 23 miles west, offers many other hiking opportunities such as Tuolumne and Merced Groves of Giant Sequoias, both of which require a 2.5 to 3-mile roundtrip hike to view. Tuolumne Meadows and all it's High Sierra wonder lie 25 miles to the east, where many beautiful day and overnight excursions await. \nSeasonal facilities include potable water (not available in 2025), flush toilets (not available in 2025), trash/recycling collection, food storage lockers, fire rings, picnic tables, staff/host on-site, and an amphitheater.  NOTE: White Wolf is open but with portable toilets and NO DRINKING WATER.   Wood and charcoal fires are permitted when the campground is open.  There is no cell phone reception, no internet connectivity, no camp store, no ice or firewood for sale, no laundry facilities, no dump station and no showers.Yosemite National Park covers nearly 1,200 square miles (3,100 square km) in the Sierra Nevada, with elevations ranging from about 2,000 feet (600 m) to 13,000 ft (4,000 m). Yosemite receives 95% of its precipitation between October and May (and over 75% between November and March). Most of Yosemite is blanketed in snow from about November through May. The Valley can be rainy or snowy in any given winter storm. \nGroceries: Yosemite Valley, Crane Flat (a small convenience store in the gas station ) and Tuolumne Meadows ( convenience store and grill) or Lee Vining. \n Restaurants:  Yosemite Valley or Lee Vining. \n Post Office:  Yosemite Valley, Tuolumne Meadows \n Showers: Yosemite Valley at Curry Village and Housekeeping Camp \n Dump Station: Available all year in Yosemite Valley in Upper Pines Campground. \n",
+              "distance_miles": 8.35,
+              "entity_type": "campground",
+              "has_lottery": false,
+              "id": "10083567",
+              "index_id": "10083567_asset",
+              "latitude": 37.8703,
+              "longitude": -119.6483,
+              "name": "White Wolf Campground",
+              "number_of_ratings": 126,
+              "org_id": "128",
+              "org_name": "National Park Service",
+              "parent_id": "2991",
+              "parent_name": "Yosemite National Park",
+              "parent_type": "recarea",
+              "preview_image_url": "https://cdn.recreation.gov/public/2022/06/03/00/56/10083567_4af2cf9e-6129-48ca-a0bb-3272769f8ad9_700.webp",
+              "price_range": null,
+              "reservable": true,
+              "source_url": "https://www.recreation.gov/camping/campgrounds/10083567",
+              "state": "California",
+              "time_zone": "America/Los_Angeles"
+            }
+          ],
+          "size": 3,
+          "source_url": "https://www.recreation.gov/search?q=Yosemite+National+Park",
+          "spelling_autocorrected": false,
+          "start": 0,
+          "start_date": null,
+          "total": 526
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "recreation-gov",
+        "capability": "camping-availability/search"
+      }
+    },
+    {
+      "id": "recreation-gov/camping-availability/suggest",
+      "provider": "recreation-gov",
+      "capability": "camping-availability/suggest",
+      "name": "Suggest",
+      "description": "Resolve a partial or ambiguous name to an entity id or to coordinates before `search`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Partial name, 1-100 characters.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Typeahead suggestions for a partial name: inventory entities (rec areas, campgrounds, permits, ...) with ids and coordinates, and geocoded places.",
+        "key": "inventory",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "entity_type",
+            "type": "string",
+            "about": "Index type: `recarea`, `campground`, `permit`, ..."
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "latitude",
+            "type": "number"
+          },
+          {
+            "name": "longitude",
+            "type": "number"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "org_name",
+            "type": "string"
+          },
+          {
+            "name": "parent_name",
+            "type": "string"
+          },
+          {
+            "name": "preview_image_url",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "type_label",
+            "type": "string",
+            "about": "Human label, e.g. `Rec Area`."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "yell"
+        },
+        "response": {
+          "inventory": [
+            {
+              "city": "Yellowstone National Park",
+              "country": "United States",
+              "entity_type": "recarea",
+              "id": "2988",
+              "latitude": 44.598244,
+              "longitude": -110.547169,
+              "name": "Yellowstone National Park",
+              "org_name": "National Park Service",
+              "parent_name": null,
+              "preview_image_url": "https://cdn.recreation.gov/public/2021/05/20/15/48/2988_755010f2-b43d-4dd3-bd39-08712aa9a489_1440.webp",
+              "source_url": "https://www.recreation.gov/gateways/2988",
+              "state": "Wyoming",
+              "text": "Yellowstone National Park",
+              "type_label": "Rec Area"
+            },
+            {
+              "city": "Cascadia",
+              "country": "United States",
+              "entity_type": "activitypass",
+              "id": "ada451d5-a59d-11ec-9100-228a5ed15ebb",
+              "latitude": 44.588916,
+              "longitude": -122.373098,
+              "name": "Yellowbottom Recreation Site Day Pass",
+              "org_name": "Bureau of Land Management",
+              "parent_name": "Quartzville Creek Wild and Scenic River",
+              "preview_image_url": null,
+              "source_url": null,
+              "state": "Oregon",
+              "text": "Yellowbottom Recreation Site Day Pass",
+              "type_label": "Activity Pass"
+            },
+            {
+              "city": "Pollock Pines",
+              "country": "United States",
+              "entity_type": "activitypass",
+              "id": "AP24746",
+              "latitude": 38.8916667,
+              "longitude": -120.3916667,
+              "name": "Yellowjacket Recreation Area Day Use",
+              "org_name": "USDA Forest Service",
+              "parent_name": "Eldorado National Forest",
+              "preview_image_url": "https://cdn.recreation.gov/public/2025/08/22/22/01/AP24746_f2b8894f-ec00-46e8-9487-ff5707daf207_700.webp",
+              "source_url": null,
+              "state": "California",
+              "text": "Yellowjacket Recreation Area Day Use",
+              "type_label": "Activity Pass"
+            },
+            {
+              "city": "Big Sky",
+              "country": "United States",
+              "entity_type": "campground",
+              "id": "234326",
+              "latitude": 45.1847222,
+              "longitude": -111.4163889,
+              "name": "YELLOW MULE CABIN",
+              "org_name": "USDA Forest Service",
+              "parent_name": "Custer Gallatin National Forest",
+              "preview_image_url": "https://cdn.recreation.gov/public/images/72727_1440.webp",
+              "source_url": "https://www.recreation.gov/camping/campgrounds/234326",
+              "state": "Montana",
+              "text": "YELLOW MULE CABIN",
+              "type_label": "STANDARD"
+            },
+            {
+              "city": "Cascade",
+              "country": null,
+              "entity_type": "campground",
+              "id": "10351680",
+              "latitude": 44.95372,
+              "longitude": -115.49502,
+              "name": "Yellow Pine Campground",
+              "org_name": "USDA Forest Service",
+              "parent_name": "Boise National Forest",
+              "preview_image_url": null,
+              "source_url": "https://www.recreation.gov/camping/campgrounds/10351680",
+              "state": "Idaho",
+              "text": "Yellow Pine Campground",
+              "type_label": "STANDARD"
+            }
+          ],
+          "observed_at_ms": 1790020042298,
+          "places": [
+            {
+              "city": "Yellow Springs",
+              "country": "United States",
+              "latitude": 39.805674,
+              "longitude": -83.888945,
+              "name": "Yellow Springs",
+              "state": "Ohio",
+              "text": "Yellow Springs, Ohio"
+            },
+            {
+              "city": "Yellowstone National Park",
+              "country": "United States",
+              "latitude": 44.548992,
+              "longitude": -110.80627,
+              "name": "Yellowstone National Park",
+              "state": "Wyoming",
+              "text": "Yellowstone National Park, Wyoming"
+            },
+            {
+              "city": "Yellville",
+              "country": "United States",
+              "latitude": 36.226036,
+              "longitude": -92.684703,
+              "name": "Yellville",
+              "state": "Arkansas",
+              "text": "Yellville, Arkansas"
+            },
+            {
+              "city": "Yellow Creek Township",
+              "country": "United States",
+              "latitude": 40.61044,
+              "longitude": -80.66279,
+              "name": "Yellow Creek Township",
+              "state": "Ohio",
+              "text": "Yellow Creek Township, Ohio"
+            }
+          ],
+          "query": "yell"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "recreation-gov",
+        "capability": "camping-availability/suggest"
+      }
+    }
+  ]
+}

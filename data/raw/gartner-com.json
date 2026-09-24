@@ -1,0 +1,803 @@
+{
+  "id": "gartner-com",
+  "provider": "gartner-com",
+  "name": "Gartner",
+  "description": "Gartner's public marketing site: upcoming and on-demand webinars (listing servlet and detail pages with speakers, times and registration URL), the conference calendar, and public content lists (articles, newsroom press releases, experts). Anonymous, English (www.gartner.com/en).",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "gartner-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "gartner-com/events/conferences_list",
+      "provider": "gartner-com",
+      "capability": "events/conferences_list",
+      "name": "Conferences list",
+      "description": "Find Gartner conferences by region, audience or format, or get the detail URL and event code for a conference.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "presence",
+          "type": "string",
+          "in": "body",
+          "about": "presence",
+          "oneOf": [
+            "in-person",
+            "virtual"
+          ]
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "in": "body",
+          "about": "Region segment of the conference URL (/conferences/{region}/...).",
+          "oneOf": [
+            "na",
+            "emea",
+            "apac",
+            "la",
+            "global"
+          ]
+        },
+        {
+          "name": "role",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive substring of the primary audience role, e.g. Security, CIO, Data."
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive match on the tile's type, e.g. Summit, Symposium, Xpo."
+        }
+      ],
+      "response": {
+        "about": "List every conference on Gartner's public conference calendar (/en/conferences/calendar, one server-rendered page): code, title, date label and start date, location, type (Summit, Symposium, ...), in-person vs virtual, region, primary audience role, page language and detail URL. Optional filters on region, presence, type and role are applied to the parsed tiles.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "conferences",
+            "type": "object[]"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_count",
+            "type": "number",
+            "about": "Tiles on the calendar before filtering."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "region": "na",
+          "role": "security"
+        },
+        "response": {
+          "conferences": [
+            {
+              "code": "IAM21",
+              "date_label": "7 - 9 Dec 2026",
+              "group": "summit",
+              "language": "en",
+              "location": "Las Vegas, NV",
+              "presence": "in-person",
+              "primary_role": "Security & Risk Management",
+              "region": "Americas",
+              "region_code": "na",
+              "start_date": "2026-12-07",
+              "title": "Gartner Identity & Access Management Summit",
+              "type": "Summit",
+              "url": "https://www.gartner.com/en/conferences/na/identity-access-management-us"
+            },
+            {
+              "code": "SEC33",
+              "date_label": "14 - 16 Jun 2027",
+              "group": "summit",
+              "language": "en",
+              "location": "National Harbor, MD",
+              "presence": "in-person",
+              "primary_role": "Security & Risk Management",
+              "region": "Americas",
+              "region_code": "na",
+              "start_date": "2027-06-14",
+              "title": "Gartner Cybersecurity & Risk Management Summit",
+              "type": "Summit",
+              "url": "https://www.gartner.com/en/conferences/na/security-risk-management-us"
+            }
+          ],
+          "observed_at_ms": 1790098155118,
+          "source_url": "https://www.gartner.com/en/conferences/calendar",
+          "total_count": 56
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "gartner-com",
+        "capability": "events/conferences_list"
+      }
+    },
+    {
+      "id": "gartner-com/events/content_list",
+      "provider": "gartner-com",
+      "capability": "events/content_list",
+      "name": "Content list",
+      "description": "Browse Gartner's latest articles or press releases, or list Gartner analysts for a function such as cybersecurity.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "content_type",
+          "type": "string",
+          "in": "body",
+          "about": "content_type",
+          "required": true,
+          "oneOf": [
+            "articles",
+            "newsroom",
+            "experts"
+          ]
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 500
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 10,
+          "min": 1,
+          "max": 50
+        }
+      ],
+      "response": {
+        "about": "List public Gartner content through the dynamiccontent servlet (requestType=select-by-tags): articles (emt:page/content-type/articles), newsroom press releases (emt:page/content-type/newsroom) or experts (emt:page/type/expert), newest first, with page/page_size pagination. The servlet ignores its filters parameter for this request type (verified), so no topic filter is offered; filter on tag_ids client-side. Expert records omit e-mail addresses.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "content_type",
+            "type": "string"
+          },
+          {
+            "name": "items",
+            "type": "object[]"
+          },
+          {
+            "name": "next_page",
+            "type": "number"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "type": "number"
+          },
+          {
+            "name": "page_size",
+            "type": "number"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total_count",
+            "type": "number",
+            "about": "Upstream numFound."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "content_type": "experts",
+          "page_size": 5
+        },
+        "response": {
+          "content_type": "experts",
+          "items": [
+            {
+              "date_label": "September 07 2026",
+              "expert": {
+                "company": "US Gartner Inc",
+                "expert_id": "102463",
+                "expert_type": "Regular",
+                "headshot_url": "https://emt.gartnerweb.com/ngw/commonassets/images/headshots/experts/amy-abatangle.jpg",
+                "job_title": "VP Analyst",
+                "name": "Amy Abatangle"
+              },
+              "eyebrow": "Amy Abatangle",
+              "id": "/content/gartner/en/experts/amy-abatangle",
+              "image_url": "https://emt.gartnerweb.com/ngw/commonassets/images/headshots/experts/amy-abatangle.jpg",
+              "published_at": "2026-09-07T11:03:57.420Z",
+              "summary": null,
+              "tag_ids": [
+                "emt:page/expert/internal/amy-abatangle",
+                "emt:page/expert/internal",
+                "emt:page/type/expert",
+                "emt:page/function/marketing/perennial-priority/marketing-leadership-and-management",
+                "emt:page/function/marketing/key-initiative/marketing-leadership-and-strategy1"
+              ],
+              "tags": [
+                "Amy Abatangle",
+                "Internal",
+                "Expert",
+                "Marketing Leadership and Management",
+                "Marketing and Communications Leadership and Strategy"
+              ],
+              "title": "Amy Abatangle",
+              "url": "https://www.gartner.com/en/experts/amy-abatangle"
+            },
+            {
+              "date_label": "September 10 2026",
+              "expert": {
+                "company": "US Gartner Inc",
+                "expert_id": "87407",
+                "expert_type": "Regular",
+                "headshot_url": "https://emt.gartnerweb.com/ngw/commonassets/images/headshots/experts/fatima-ahmed.jpg",
+                "job_title": "Sr Principal Analyst",
+                "name": "Fatima Ahmed"
+              },
+              "eyebrow": "Expert",
+              "id": "/content/gartner/en/experts/fatima-ahmed",
+              "image_url": "https://emt.gartnerweb.com/ngw/commonassets/images/headshots/experts/fatima-ahmed.jpg",
+              "published_at": "2026-09-10T14:06:40.705Z",
+              "summary": null,
+              "tag_ids": [
+                "emt:page/type/expert",
+                "emt:page/expert/internal",
+                "emt:page/function/software-engineering",
+                "emt:page/expert/internal/fatima-ahmed"
+              ],
+              "tags": [
+                "Expert",
+                "Internal",
+                "Software Engineering",
+                "Fatima Ahmed"
+              ],
+              "title": "Fatima Ahmed",
+              "url": "https://www.gartner.com/en/experts/fatima-ahmed"
+            },
+            {
+              "date_label": "September 19 2026",
+              "expert": {
+                "company": "UK Gartner UK Limited",
+                "expert_id": "112220",
+                "expert_type": "Regular",
+                "headshot_url": "https://emt.gartnerweb.com/ngw/commonassets/images/headshots/experts/nabeeha-ahmed.jpg",
+                "job_title": "Director Analyst",
+                "name": "Nabeeha Ahmed"
+              },
+              "eyebrow": "Expert",
+              "id": "/content/gartner/en/experts/nabeeha-ahmed",
+              "image_url": "https://emt.gartnerweb.com/ngw/commonassets/images/headshots/experts/nabeeha-ahmed.jpg",
+              "published_at": "2026-09-19T09:00:04.346Z",
+              "summary": null,
+              "tag_ids": [
+                "emt:page/type/expert",
+                "emt:page/expert/internal/nabeeha-ahmed",
+                "emt:page/expert",
+                "emt:page/function/software-engineering"
+              ],
+              "tags": [
+                "Expert",
+                "Nabeeha Ahmed",
+                "Expert",
+                "Software Engineering"
+              ],
+              "title": "Nabeeha Ahmed",
+              "url": "https://www.gartner.com/en/experts/nabeeha-ahmed"
+            },
+            {
+              "date_label": "September 10 2026",
+              "expert": {
+                "company": "US Gartner Inc",
+                "expert_id": "36510",
+                "expert_type": "Regular",
+                "headshot_url": "https://emt.gartnerweb.com/ngw/commonassets/images/headshots/experts/greg-aimi.jpg",
+                "job_title": "VP, Team Manager",
+                "name": "Greg Aimi"
+              },
+              "eyebrow": "Expert",
+              "id": "/content/gartner/en/experts/greg-aimi",
+              "image_url": "https://emt.gartnerweb.com/ngw/commonassets/images/headshots/experts/greg-aimi.jpg",
+              "published_at": "2026-09-10T14:06:40.705Z",
+              "summary": null,
+              "tag_ids": [
+                "emt:page/type/expert",
+                "emt:page/function/supply-chain",
+                "emt:page/expert/internal/greg-aimi"
+              ],
+              "tags": [
+                "Expert",
+                "Supply Chain",
+                "Greg Aimi"
+              ],
+              "title": "Greg Aimi",
+              "url": "https://www.gartner.com/en/experts/greg-aimi"
+            },
+            {
+              "date_label": "August 06 2026",
+              "expert": {
+                "company": "US Gartner Inc",
+                "expert_id": "84376",
+                "expert_type": "Regular",
+                "headshot_url": "https://emt.gartnerweb.com/ngw/commonassets/images/headshots/experts/jane-alancheril.jpg",
+                "job_title": "Sr Director Analyst",
+                "name": "Jane Alancheril"
+              },
+              "eyebrow": "Expert",
+              "id": "/content/gartner/en/experts/jane-alancheril",
+              "image_url": "https://emt.gartnerweb.com/ngw/commonassets/images/headshots/experts/jane-alancheril.jpg",
+              "published_at": "2026-08-06T11:00:38.934Z",
+              "summary": null,
+              "tag_ids": [
+                "emt:page/type/expert",
+                "emt:page/function/human-resources",
+                "emt:page/expert/internal/jane-alancheril"
+              ],
+              "tags": [
+                "Expert",
+                "Human Resources",
+                "Jane Alancheril"
+              ],
+              "title": "Jane Alancheril",
+              "url": "https://www.gartner.com/en/experts/jane-alancheril"
+            }
+          ],
+          "next_page": 2,
+          "observed_at_ms": 1790098151395,
+          "page": 1,
+          "page_size": 5,
+          "source_url": "https://www.gartner.com/ngw/syspath-bin/gartner/dynamiccontent?requestType=select-by-tags&designType=expert&nPage=1&pageSize=5&languageCode=en&showLocalizedContent=false&showGcomDomainContent=false&filterCodes=&resourceType=emt%2Fcomponents%2Fcontent%2Fglobalsite%2Fdynamicexpertcontent&currentPagePath=https%3A%2F%2Fwww.gartner.com%2Fen%2Fexperts&tags=emt%3Apage%2Ftype%2Fexpert",
+          "total_count": 330
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "gartner-com",
+        "capability": "events/content_list"
+      }
+    },
+    {
+      "id": "gartner-com/events/webinar_detail",
+      "provider": "gartner-com",
+      "capability": "events/webinar_detail",
+      "name": "Webinar detail",
+      "description": "After webinars_search, to get speakers and the complete description for one webinar, or when a Gartner webinar URL is pasted.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "event_id",
+          "type": "string",
+          "in": "body",
+          "about": "Bizzabo event id (first path segment). Requires session_id. Pattern: ^[0-9]{1,12}$."
+        },
+        {
+          "name": "session_id",
+          "type": "string",
+          "in": "body",
+          "about": "Bizzabo session id (second path segment). Requires event_id. Pattern: ^[0-9]{1,12}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Webinar page URL, https://www.gartner.com/en/webinar/{event_id}/{session_id}-{slug}. Mutually exclusive with event_id/session_id."
+        }
+      ],
+      "response": {
+        "about": "Read one Gartner webinar page (/en/webinar/{event_id}/{session_id}-slug): title, full description, upcoming vs on-demand status, start and end instants (UTC, from the add-to-calendar link when the session is upcoming), the site's local date/time labels, duration, speakers with titles and expert profile links, taxonomy (function, role, theme, priorities) and the registration URL. Accepts the page URL or the id pair from webinars_search.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "calendar_url",
+            "type": "string",
+            "about": "Bizzabo iCal download link when the session is upcoming."
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "about": "Plain-text description from the page's schema.org Event."
+          },
+          {
+            "name": "duration_minutes",
+            "type": "number"
+          },
+          {
+            "name": "duration_text",
+            "type": "string"
+          },
+          {
+            "name": "end_at",
+            "type": "string"
+          },
+          {
+            "name": "event_id",
+            "type": "string"
+          },
+          {
+            "name": "function",
+            "type": "string",
+            "about": "Taxonomy path, e.g. function/cybersecurity."
+          },
+          {
+            "name": "is_on_demand",
+            "type": "boolean"
+          },
+          {
+            "name": "language",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "priorities",
+            "type": "string[]"
+          },
+          {
+            "name": "registration_url",
+            "type": "string",
+            "about": "Registration happens on the page itself through an Eloqua form; this is the page URL."
+          },
+          {
+            "name": "role",
+            "type": "string"
+          },
+          {
+            "name": "session_id",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Canonical page URL."
+          },
+          {
+            "name": "speakers",
+            "type": "object[]"
+          },
+          {
+            "name": "start_at",
+            "type": "string",
+            "about": "ISO 8601 UTC start from the add-to-calendar link; null on on-demand pages, which carry no calendar link."
+          },
+          {
+            "name": "start_date_label",
+            "type": "string",
+            "about": "Live session date or recording date as the site labels it."
+          },
+          {
+            "name": "start_time_label",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "name": "theme",
+            "type": "string"
+          },
+          {
+            "name": "timezone",
+            "type": "string",
+            "about": "IANA zone the page renders its time labels in (clientTimeZone)."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "event_id": "987802",
+          "session_id": "1972954"
+        },
+        "response": {
+          "calendar_url": null,
+          "description": "•Understand why context is a dynamic, situational capability rather than a static repository of enterprise data\n•Learn why semantic models, ontologies and conformed business metrics are critical for reliable AI reasoning\n•Explore how organizations can capture undocumented processes and institutional knowledge to reduce agent drift\n•Discover how context engineering helps improve AI reliability, governance and business value\n\n\n\nWhile enterprise AI investments continue to surge, most organizations struggle to derive significant business value from GenAI deployments due to inconsistent outputs, unpredictable agent behavior, and runaway token costs. These failures rarely stem from foundation model limitations, but rather from the lack of the contextual information needed to consistently apply organizational knowledge, policies and business logic.\n\n\n\n\nIn this webinar, we focus on bridging this operational gap by getting fully grounded in the core principles of context layers. Rather than relying on surface-level prompting, we will demystify what makes up an enterprise context layer, why it serves as the essential control plane for agentic systems, and how it connects static data to dynamic AI execution. Attendees will gain a clear, practical understanding of how a well-structured context layer supports higher quality reasoning and turns stateless models into trusted business assets.\n\n\n\n\nReturn to this web page to watch the webinar. Contact us at gartnerwebinars@gartner.com with questions about viewing this webinar.",
+          "duration_minutes": 60,
+          "duration_text": "1 hour",
+          "end_at": null,
+          "event_id": "987802",
+          "function": "function/data-analytics",
+          "is_on_demand": true,
+          "language": "en",
+          "observed_at_ms": 1790098142273,
+          "priorities": [
+            "function/data-analytics/perennial-priority/data-and-analytics-leadership-and-programs",
+            "function/data-analytics/perennial-priority/analytics-and-artificial-intelligence"
+          ],
+          "registration_url": "https://www.gartner.com/en/webinar/987802/1972954-why-enterprise-ai-success-depends-on-context-engineering",
+          "role": "function/data-analytics/role/chief-data-analytics-officer",
+          "session_id": "1972954",
+          "source_url": "https://www.gartner.com/en/webinar/987802/1972954-why-enterprise-ai-success-depends-on-context-engineering",
+          "speakers": [
+            {
+              "name": "Christopher Long",
+              "profile_url": "https://www.gartner.com/en/experts/christopher-long2",
+              "title": "Sr Director Analyst"
+            }
+          ],
+          "start_at": null,
+          "start_date_label": "September 22, 2026",
+          "start_time_label": "9:00 a.m. CDT",
+          "status": "on_demand",
+          "theme": "theme/artificial-intelligence",
+          "timezone": "America/Chicago",
+          "title": "Why Enterprise AI Success Depends on Context Engineering"
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "gartner-com",
+        "capability": "events/webinar_detail"
+      }
+    },
+    {
+      "id": "gartner-com/events/webinars_search",
+      "provider": "gartner-com",
+      "capability": "events/webinars_search",
+      "name": "Webinars search",
+      "description": "Find upcoming webinars on a topic or in a date range, or browse the on-demand library. Follow with webinar_detail for speakers and the full description.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "Continuation returned as next_cursor by the previous page (the servlet's start offset). Pattern: ^[0-9]{1,6}$."
+        },
+        {
+          "name": "function_tag",
+          "type": "string",
+          "in": "body",
+          "about": "Optional Gartner taxonomy tag passed to the servlet's filters parameter, e.g. emt:page/function/cybersecurity, emt:page/function/it, emt:page/theme/artificial-intelligence. Tag ids appear in every returned record's tag_ids. Pattern: ^emt:page/[A-Za-z0-9/_.-]+$."
+        },
+        {
+          "name": "session_type",
+          "type": "string",
+          "in": "body",
+          "about": "Which catalogue to list: upcoming live sessions (default) or the on-demand recordings library.",
+          "default": "upcoming",
+          "oneOf": [
+            "upcoming",
+            "on_demand"
+          ]
+        },
+        {
+          "name": "start_after",
+          "type": "string",
+          "in": "body",
+          "about": "Optional ISO date (YYYY-MM-DD, UTC). Keeps only webinars starting at or after 00:00 UTC on this day. Applied to the returned page, not upstream; paginate to cover the full window. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "start_before",
+          "type": "string",
+          "in": "body",
+          "about": "Optional ISO date (YYYY-MM-DD, UTC). Keeps only webinars starting before 00:00 UTC on the day after this date (inclusive day). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "List Gartner webinars from the public webinar catalogue servlet (dynamiccontent, requestType=select-webinars-by-session-type-tags): upcoming or on-demand sessions, optionally filtered by a Gartner taxonomy tag (e.g. emt:page/function/cybersecurity) and by a start-date window applied to the returned page. Each record carries the event and session ids that webinar_detail takes, the detail URL (which is also the registration page), start/end instants in UTC and the site's local time labels.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "function_tag",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "session_type",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "The servlet URL that produced this page."
+          },
+          {
+            "name": "total_count",
+            "type": "number",
+            "about": "Upstream total for the session type and tag filter (before any date filtering). The servlet omits it on continuation pages."
+          },
+          {
+            "name": "webinars",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "function_tag": "emt:page/function/cybersecurity",
+          "session_type": "upcoming"
+        },
+        "response": {
+          "function_tag": "emt:page/function/cybersecurity",
+          "next_cursor": null,
+          "observed_at_ms": 1790098111949,
+          "session_type": "upcoming",
+          "source_url": "https://www.gartner.com/ngw/syspath-bin/gartner/dynamiccontent?requestType=select-webinars-by-session-type-tags&designType=webinar&start=0&pageSize=10&languageCode=en&showLocalizedContent=false&showGcomDomainContent=false&filterCodes=958041294%2C529589780&resourceType=emt%2Fcomponents%2Fcontent%2Fglobalsite%2Fdynamicwebinarcontentnew&currentPagePath=https%3A%2F%2Fwww.gartner.com%2Fen%2Fwebinars&tags=emt%3Apage%2Fcontent-type%2Fwebinar&excludeFilterTags=emt%3Apage%2Fregion%2Fasia-pacific%2Fchina%2Cemt%3Apage%2Fregion%2Fasia-pacific%2Fjapan%2Cemt%3Apage%2Fregion%2Fasia-pacific&filters=emt%3Apage%2Ffunction%2Fcybersecurity&webinarType=upcoming-webinars&webinarSource=all-webinars",
+          "total_count": 4,
+          "webinars": [
+            {
+              "description": "Learn how data-centric security, zero trust and AI-driven controls can help build a more resilient security posture in this Gartner webinar.",
+              "duration_seconds": 3600,
+              "duration_text": "1 hour",
+              "end_at": "2026-09-29T15:00:00Z",
+              "event_id": "959171",
+              "eyebrow": "Cybersecurity",
+              "is_upcoming": true,
+              "language": "en",
+              "session_id": "1950161",
+              "start_at": "2026-09-29T14:00:00Z",
+              "start_date_label": "September 29, 2026",
+              "start_time_label": "9:00 a.m. CDT",
+              "tag_ids": [
+                "emt:page/function/cybersecurity",
+                "emt:page/function/cybersecurity/role/chief-information-security-officer",
+                "emt:page/function/cybersecurity/perennial-priority/cybersecurity-leadership",
+                "emt:page/function/cybersecurity/perennial-priority/security-of-applications-and-data",
+                "emt:page/theme/technology-for-business-leaders",
+                "emt:page/content-type/webinar",
+                "emt:page/type/webinar"
+              ],
+              "tags": [
+                "Cybersecurity",
+                "Chief Information Security Officer",
+                "Cybersecurity Leadership",
+                "Security of Applications and Data"
+              ],
+              "timezone": "America/New_York",
+              "title": "Outlook for Data Security: Going From Reactive to Resilient",
+              "url": "https://www.gartner.com/en/webinar/959171/1950161-outlook-for-data-security-going-from-reactive-to-resilient"
+            },
+            {
+              "description": "Learn what high-performing CIOs do differently to strengthen technology risk management, build executive confidence and improve resilience.",
+              "duration_seconds": 3600,
+              "duration_text": "1 hour",
+              "end_at": "2026-10-13T15:00:00Z",
+              "event_id": "979157",
+              "eyebrow": "Cybersecurity",
+              "is_upcoming": true,
+              "language": "en",
+              "session_id": "1966002",
+              "start_at": "2026-10-13T14:00:00Z",
+              "start_date_label": "October 13, 2026",
+              "start_time_label": "9:00 a.m. CDT",
+              "tag_ids": [
+                "emt:page/content-type/webinar",
+                "emt:page/type/webinar",
+                "emt:page/function/cybersecurity",
+                "emt:page/function/cybersecurity/role/chief-information-security-officer",
+                "emt:page/function/cybersecurity/perennial-priority/cyber-risk",
+                "emt:page/theme/technology-for-business-leaders"
+              ],
+              "tags": [
+                "Cybersecurity",
+                "Chief Information Security Officer",
+                "Cyber Risk"
+              ],
+              "timezone": "America/New_York",
+              "title": "Technology Risk Excellence: What High-Performing CIOs Do Differently",
+              "url": "https://www.gartner.com/en/webinar/979157/1966002-technology-risk-excellence-what-high-performing-cios-do-differently"
+            },
+            {
+              "description": "Cloud complexity can create security blind spots. Learn how to use Gartner's Cloud Security Reference Architecture to improve visibility, control and security.",
+              "duration_seconds": 3600,
+              "duration_text": "1 hour",
+              "end_at": "2026-10-15T16:00:00Z",
+              "event_id": "986745",
+              "eyebrow": "Cybersecurity",
+              "is_upcoming": true,
+              "language": "en",
+              "session_id": "1972172",
+              "start_at": "2026-10-15T15:00:00Z",
+              "start_date_label": "October 15, 2026",
+              "start_time_label": "10:00 a.m. CDT",
+              "tag_ids": [
+                "emt:page/type/webinar",
+                "emt:page/content-type/webinar",
+                "emt:page/function/cybersecurity",
+                "emt:page/function/it",
+                "emt:page/function/cybersecurity/role/chief-information-security-officer",
+                "emt:page/function/it/role/it-security-and-risk-management",
+                "emt:page/function/it/role/technical-professionals",
+                "emt:page/function/cybersecurity/perennial-priority/security-technology-and-infrastructure-for-technical-professionals",
+                "emt:page/theme/technology-for-business-leaders"
+              ],
+              "tags": [
+                "Cybersecurity",
+                "Information Technology",
+                "Chief Information Security Officer",
+                "IT Security and Risk Management",
+                "Technical Professionals",
+                "Security Technology and Infrastructure for Technical Professionals"
+              ],
+              "timezone": "America/New_York",
+              "title": "How to Improve Cloud Security With Gartner's Cloud Security Reference Architecture",
+              "url": "https://www.gartner.com/en/webinar/986745/1972172-how-to-improve-cloud-security-with-gartners-cloud-security-reference-architecture"
+            },
+            {
+              "description": "Turn AI adoption, cyber incidents and innovation investments into opportunities to strengthen resilience and drive cybersecurity success.",
+              "duration_seconds": 3600,
+              "duration_text": "1 hour",
+              "end_at": "2026-11-09T17:00:00Z",
+              "event_id": "999957",
+              "eyebrow": "Cybersecurity",
+              "is_upcoming": true,
+              "language": "en",
+              "session_id": "1982193",
+              "start_at": "2026-11-09T16:00:00Z",
+              "start_date_label": "November 09, 2026",
+              "start_time_label": "10:00 a.m. CST",
+              "tag_ids": [
+                "emt:page/content-type/webinar",
+                "emt:page/type/webinar",
+                "emt:page/function/cybersecurity",
+                "emt:page/function/cybersecurity/role/chief-information-security-officer",
+                "emt:page/function/cybersecurity/perennial-priority/cybersecurity-leadership",
+                "emt:page/theme/successful-leadership"
+              ],
+              "tags": [
+                "Cybersecurity",
+                "Chief Information Security Officer",
+                "Cybersecurity Leadership"
+              ],
+              "timezone": "America/New_York",
+              "title": "Seize the Moment: How CISOs Can Ensure Cybersecurity Success",
+              "url": "https://www.gartner.com/en/webinar/999957/1982193-seize-the-moment-how-cisos-can-ensure-cybersecurity-success"
+            }
+          ]
+        },
+        "recordedAt": "2026-09-22"
+      },
+      "execute": {
+        "provider": "gartner-com",
+        "capability": "events/webinars_search"
+      }
+    }
+  ]
+}

@@ -1,0 +1,760 @@
+{
+  "id": "icims-com",
+  "provider": "icims-com",
+  "name": "iCIMS",
+  "description": "Employer career portals hosted by iCIMS at <portal>.icims.com: search and paginate openings with the portal's own filters, read one posting with its header fields, body sections and JobPosting metadata, and describe a portal's categories, locations and position types.",
+  "toolCount": 3,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "icims-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "icims-com/jobs/job",
+      "provider": "icims-com",
+      "capability": "jobs/job",
+      "name": "Job",
+      "description": "When you have a posting id from search or a pasted https://<portal>.icims.com/jobs/<id>/... URL.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "job_id",
+          "type": "string",
+          "in": "body",
+          "about": "Numeric posting id from search items[].id or the URL path /jobs/<id>/. Pattern: ^[0-9]{1,12}$."
+        },
+        {
+          "name": "portal",
+          "type": "string",
+          "in": "body",
+          "about": "Subdomain of the employer's iCIMS career site, i.e. the <portal> in https://<portal>.icims.com/jobs/search (e.g. careers-primehealthcare, careers-usu, service-princeton). Pattern: ^[a-z0-9][a-z0-9_-]{0,62}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted posting URL https://<portal>.icims.com/jobs/<id>/<slug>/job. Exactly one of url or portal+job_id. Pattern: ^https?://[a-z0-9][a-z0-9_-]*\\.icims\\.com/jobs/[0-9]+."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "portal",
+          "job_id",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One posting as the portal shows it: title, displayed ID and location, header attributes, body sections, and the JobPosting metadata (posted date, validity, employment type, addresses, salary when published) with the apply link.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "apply_url",
+            "type": "string",
+            "about": "The portal's apply link; null when the posting is not open to direct application."
+          },
+          {
+            "name": "attributes",
+            "type": "object[]"
+          },
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "base_salary",
+            "type": "object"
+          },
+          {
+            "name": "date_posted",
+            "type": "string",
+            "about": "datePosted from the posting's JobPosting JSON-LD, RFC 3339 as published (iCIMS emits UTC midnight-anchored instants). Null when absent or when the portal emits a request-time placeholder for this date (see source_dates.placeholder)."
+          },
+          {
+            "name": "description_html",
+            "type": "string",
+            "about": "Full description HTML from the JSON-LD; null when the page carries none."
+          },
+          {
+            "name": "direct_apply",
+            "type": "boolean"
+          },
+          {
+            "name": "employer",
+            "type": "string"
+          },
+          {
+            "name": "employer_url",
+            "type": "string"
+          },
+          {
+            "name": "employment_type",
+            "type": "string",
+            "about": "schema.org employmentType code as published (FULL_TIME, PART_TIME, ...)."
+          },
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "job_locations",
+            "type": "object[]"
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "about": "Location as the portal displays it in the header field it labels Location / Job Location / Work Location / City (e.g. US-IL-Chicago); null when no such field is shown. Structured addresses are in job_locations."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Retrieval instant, Unix ms."
+          },
+          {
+            "name": "occupational_category",
+            "type": "string"
+          },
+          {
+            "name": "portal",
+            "type": "string"
+          },
+          {
+            "name": "portal_url",
+            "type": "string"
+          },
+          {
+            "name": "requisition_id",
+            "type": "string",
+            "about": "The portal's displayed ID, read from the header field the portal labels ID / Job ID / Requisition ID / Req # / Competition Number / System ID (e.g. 2026-280026, req28796); null when no such field is shown. The stable identifier is id."
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "Retrieval instant, RFC 3339 UTC."
+          },
+          {
+            "name": "sections",
+            "type": "object[]",
+            "about": "The posting body as the page shows it: Overview, Responsibilities, Qualifications, ..."
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "source_dates",
+            "type": "object",
+            "about": "The JSON-LD dates verbatim. Some portals emit placeholders generated at request time (datePosted = now minus two years and/or validThrough = now plus one year, with a millisecond clock reading instead of a midnight-anchored instant). Each date is judged on its own against the retrieval clock (within three days of the anchor and not midnight-anchored, or the two forming the exact three-years-apart pair); placeholder is true when at least one date is such a placeholder, and only the affected normalised field(s) are null instead of a synthetic date."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "valid_through",
+            "type": "string",
+            "about": "validThrough from the JSON-LD; null when absent or when this date is a request-time placeholder (see source_dates.placeholder). A genuine validThrough is kept even when date_posted is a placeholder."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "job_id": "2207",
+          "portal": "careers-goodshepherdhospice"
+        },
+        "response": {
+          "apply_url": "https://careers-goodshepherdhospice.icims.com/jobs/2207/rn-case-manager/job?mode=apply&apply=yes&in_iframe=1&hashed=-1834351907",
+          "attributes": [
+            {
+              "label": "Location",
+              "value": "US-TX-Ft. Worth"
+            },
+            {
+              "label": "ID",
+              "value": "2026-2207"
+            },
+            {
+              "label": "Category",
+              "value": "Clinical"
+            }
+          ],
+          "attribution": "Source: icims.com career portal of the named employer",
+          "base_salary": null,
+          "date_posted": "2026-08-19T04:00:00.000Z",
+          "description_html": "<h2>Overview</h2>Good Shepherd Hospice is seeking a compassionate candidate for a&nbsp;\n<strong>Registered Nurse Case Manager </strong>serving patients and their families in\n<strong> Ft. Worth</strong> \n<strong>and surrounding communities.&nbsp;</strong>&nbsp;The RN provides nursing assessment, plan",
+          "direct_apply": true,
+          "employer": "Good Shepherd Hospice",
+          "employer_url": "https://www.goodshepherdhospice.com/",
+          "employment_type": "FULL_TIME",
+          "id": "2207",
+          "job_locations": [
+            {
+              "city": "Ft. Worth",
+              "country": "US",
+              "postal_code": "76102",
+              "region": "TX",
+              "street": "100 East 15th Street"
+            }
+          ],
+          "location": "US-TX-Ft. Worth",
+          "observed_at_ms": 1789480000000,
+          "occupational_category": "Clinical",
+          "portal": "careers-goodshepherdhospice",
+          "portal_url": "https://careers-goodshepherdhospice.icims.com/",
+          "requisition_id": "2026-2207",
+          "retrieved_at": "2026-09-15T13:46:40Z",
+          "sections": [
+            {
+              "heading": "Overview",
+              "html": "<div>Good Shepherd Hospice is seeking a compassionate candidate for a&nbsp;<strong>Registered Nurse Case Manager </strong>serving patients and their families in<strong> Ft. Worth</strong> <strong>and surrounding communities.&nbsp;</strong></div><div>&nbsp;</div><div>The RN provides nursing assessmen",
+              "text": "Good Shepherd Hospice is seeking a compassionate candidate for a Registered Nurse Case Manager serving patients and their families in Ft. Worth and surrounding communities.\nThe RN provides nursing assessment, planning and care to maximize the comfort and health of patients and families. The RN responds to all phone calls promptly and appropriately, makes patient visits as necessary and completes after hours admissions and deaths as needed.\nPrevious experience in hospice, home health, or geriatrics preferred"
+            },
+            {
+              "heading": "Responsibilities",
+              "html": "<ul><li>Receives patient assignments from the Patient Care Manager or Case Manager. Initiates communication with attending physicians, hospice staff members and other agencies as needed to coordinate optimal care and use of resources for the patient/family.</li><li>&nbsp;Cultivates communication and",
+              "text": "Receives patient assignments from the Patient Care Manager or Case Manager. Initiates communication with attending physicians, hospice staff members and other agencies as needed to coordinate optimal care and use of resources for the patient/family.\nCultivates communication and bereavement skills.\nMaintains regular communication with the attending physician concerning patient/family care.\nContacts families of new patient assignment, maintains regular communication as requested or desired by family.\nObtains data on physical, psychological, social and spiritual factors that may influence patient/family health status and incorporate that data into the Plan of Care.\nMaintains up to date patient records so that problems, plans, actions and goals are accurately and clearly stated and changes are reflected as they occur. Turn paperwork into office as required by Medicare and Good Shepherd Hospice policies and procedures.\nInstructs the patient and caregiver:\nHow to administer medication, recognizing side effects, and adverse reactions.\nHow to perform personal care and oral hygiene.\nHow to assist in lifting, moving, ambulation and exercise.\nDisaster/Safety Management.\nHow to prepare for the events preceding death.\nInforms the Patient Care Manager of unusual or potentially problematic patient/family issues.\nAttends the Hospice team meetings and other patient conferences, including care plan meetings, as deemed necessary by the Patient Care Manager.\nProvides appropriate support at time of death.\nShares in providing 24-hour, seven days a week coverage to patients and\nfamilies.\nEvaluates hospice aides every two weeks.\nEvaluate LPN at a minimum of one time per month.\nThrough individualized studies, learn and develop understanding of hospice philosophy.\nBecome proficient in pain management through individualized reading, in services or seminars.\nAll other task assigned"
+            },
+            {
+              "heading": "Qualifications",
+              "html": "<ol><li><strong>Registered Nurse currently licensed in the state in which the care is provided.&nbsp;</strong></li><li>Previous experience in hospice, home health, geriatrics or general medical/surgical nursing.&nbsp;</li><li>Demonstrated commitment to the hospice philosophy of care.</li></ol>",
+              "text": "Registered Nurse currently licensed in the state in which the care is provided.\nPrevious experience in hospice, home health, geriatrics or general medical/surgical nursing.\nDemonstrated commitment to the hospice philosophy of care."
+            }
+          ],
+          "source": "icims.com",
+          "source_dates": {
+            "date_posted": "2026-08-19T04:00:00.000Z",
+            "placeholder": false,
+            "valid_through": "2027-08-19T04:00:00.000Z"
+          },
+          "source_url": "https://careers-goodshepherdhospice.icims.com/jobs/2207/rn-case-manager/job",
+          "title": "RN Case Manager",
+          "valid_through": "2027-08-19T04:00:00.000Z"
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "icims-com",
+        "capability": "jobs/job"
+      }
+    },
+    {
+      "id": "icims-com/jobs/portal",
+      "provider": "icims-com",
+      "capability": "jobs/portal",
+      "name": "Portal",
+      "description": "To discover filter ids for search or to check that a portal exists and still serves listings on icims.com.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "portal",
+          "type": "string",
+          "in": "body",
+          "about": "Subdomain of the employer's iCIMS career site, i.e. the <portal> in https://<portal>.icims.com/jobs/search (e.g. careers-primehealthcare, careers-usu, service-princeton). Pattern: ^[a-z0-9][a-z0-9_-]{0,62}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted https://<portal>.icims.com/jobs/... URL. Exactly one of portal or url. Pattern: ^https?://[a-z0-9][a-z0-9_-]*\\.icims\\.com/jobs."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "portal",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "Describe an employer's iCIMS portal: employer name, number of pages of openings, page size, and the category, location, position-type and sort options its search form exposes.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "attribution",
+            "type": "string"
+          },
+          {
+            "name": "employer",
+            "type": "string"
+          },
+          {
+            "name": "facets",
+            "type": "object"
+          },
+          {
+            "name": "message",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number",
+            "about": "Retrieval instant, Unix ms."
+          },
+          {
+            "name": "page_size",
+            "type": "number",
+            "about": "Openings on the first page (the portal's page size when more than one page exists)."
+          },
+          {
+            "name": "portal",
+            "type": "string"
+          },
+          {
+            "name": "portal_url",
+            "type": "string"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "Retrieval instant, RFC 3339 UTC."
+          },
+          {
+            "name": "search_url",
+            "type": "string"
+          },
+          {
+            "name": "sort_options",
+            "type": "object[]"
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "total_pages",
+            "type": "number",
+            "about": "Pages of openings with no filter applied."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "portal": "careers-usu"
+        },
+        "response": {
+          "attribution": "Source: icims.com career portal of the named employer",
+          "employer": "Utah State University",
+          "facets": {
+            "categories": [
+              {
+                "id": "8713",
+                "label": "Accounting/Finance"
+              },
+              {
+                "id": "8718",
+                "label": "Administrative/Clerical"
+              },
+              {
+                "id": "17338",
+                "label": "Athletics"
+              }
+            ],
+            "locations": [
+              {
+                "id": "12781--",
+                "label": "US"
+              },
+              {
+                "id": "12781-12828-",
+                "label": "US-UT"
+              },
+              {
+                "id": "12781-12828-Blanding",
+                "label": "US-UT-Blanding"
+              }
+            ],
+            "position_types": [
+              {
+                "id": "2049",
+                "label": "Benefited Full-Time"
+              },
+              {
+                "id": "2050",
+                "label": "Benefited Part-Time"
+              },
+              {
+                "id": "2051",
+                "label": "Temporary Full-Time"
+              }
+            ]
+          },
+          "message": "Click column header to sort",
+          "observed_at_ms": 1789480000000,
+          "page_size": 20,
+          "portal": "careers-usu",
+          "portal_url": "https://careers-usu.icims.com/",
+          "retrieved_at": "2026-09-15T13:46:40Z",
+          "search_url": "https://careers-usu.icims.com/jobs/search?ss=1",
+          "sort_options": [
+            {
+              "label": "Requisition ID",
+              "schema_id": "$T{Job}.$F{ExtJobID}",
+              "sort": "id"
+            },
+            {
+              "label": "Requisition Title",
+              "schema_id": "$T{Job}.$F{JobTitle}",
+              "sort": "title"
+            },
+            {
+              "label": "Posted Date",
+              "schema_id": "$T{Job}.$T{JobPost}.$F{PostedDateTime}",
+              "sort": null
+            }
+          ],
+          "source": "icims.com",
+          "total_pages": 7
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "icims-com",
+        "capability": "jobs/portal"
+      }
+    },
+    {
+      "id": "icims-com/jobs/search",
+      "provider": "icims-com",
+      "capability": "jobs/search",
+      "name": "Search",
+      "description": "Start here with a portal subdomain (or a pasted .icims.com/jobs/search URL). Pass next_page back as page to paginate; use job for the full posting.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "category_id",
+          "type": "string",
+          "in": "body",
+          "about": "Category option id from facets.categories (searchCategory). Pattern: ^[0-9]{1,12}$."
+        },
+        {
+          "name": "keyword_relation",
+          "type": "string",
+          "in": "body",
+          "about": "Match all keywords (default) or any.",
+          "oneOf": [
+            "all",
+            "any"
+          ]
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "in": "body",
+          "about": "Location option id from facets.locations (searchLocation), e.g. -12789-Chino."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "1-based page; pass next_page back here.",
+          "default": 1,
+          "min": 1,
+          "max": 200
+        },
+        {
+          "name": "portal",
+          "type": "string",
+          "in": "body",
+          "about": "Subdomain of the employer's iCIMS career site, i.e. the <portal> in https://<portal>.icims.com/jobs/search (e.g. careers-primehealthcare, careers-usu, service-princeton). Pattern: ^[a-z0-9][a-z0-9_-]{0,62}$."
+        },
+        {
+          "name": "position_type_id",
+          "type": "string",
+          "in": "body",
+          "about": "Position type option id from facets.position_types (searchPositionType). Pattern: ^[0-9]{1,12}$."
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Keywords (searchKeyword)."
+        },
+        {
+          "name": "radius_miles",
+          "type": "number",
+          "in": "body",
+          "about": "Radius around zip in miles; needs zip.",
+          "oneOf": [
+            "5",
+            "10",
+            "15",
+            "20",
+            "25",
+            "35",
+            "50",
+            "75",
+            "100",
+            "150",
+            "200"
+          ]
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "in": "body",
+          "about": "Sort key; the portal's default order otherwise.",
+          "oneOf": [
+            "title",
+            "category",
+            "position_type",
+            "id",
+            "location"
+          ]
+        },
+        {
+          "name": "sort_order",
+          "type": "string",
+          "in": "body",
+          "about": "Needs sort.",
+          "oneOf": [
+            "asc",
+            "desc"
+          ]
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "A pasted https://<portal>.icims.com/jobs/... URL. Exactly one of portal or url. Pattern: ^https?://[a-z0-9][a-z0-9_-]*\\.icims\\.com/jobs."
+        },
+        {
+          "name": "zip",
+          "type": "string",
+          "in": "body",
+          "about": "Postal code for a radius search (searchZip). Pattern: ^[A-Za-z0-9]+$."
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "portal",
+          "url"
+        ]
+      ],
+      "response": {
+        "about": "One page of openings on an employer's iCIMS portal, filtered by keywords, category, location, position type or zip radius, sorted as requested, with the portal's facets and page count.",
+        "key": "items",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "attributes",
+            "type": "object[]"
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Stable numeric posting id from the URL path /jobs/<id>/."
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "about": "Location as the portal displays it in the header field it labels Location / Job Location / Work Location / City (e.g. US-IL-Chicago); null when no such field is shown."
+          },
+          {
+            "name": "portal",
+            "type": "string"
+          },
+          {
+            "name": "requisition_id",
+            "type": "string",
+            "about": "The portal's displayed ID, read from the header field the portal labels ID / Job ID / Requisition ID / Req # / Competition Number / System ID (e.g. 2026-280026, req28796); null when no such field is shown. The stable identifier is id."
+          },
+          {
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string",
+            "about": "Canonical posting URL on <portal>.icims.com."
+          },
+          {
+            "name": "summary",
+            "type": "string",
+            "about": "Card excerpt as shown; null when absent."
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "page": 2,
+          "portal": "careers-primehealthcare",
+          "query": "nurse"
+        },
+        "response": {
+          "attribution": "Source: icims.com career portal of the named employer",
+          "count": 50,
+          "employer": "Prime Healthcare",
+          "facets": {
+            "categories": [
+              {
+                "id": "8718",
+                "label": "Admin"
+              },
+              {
+                "id": "8725",
+                "label": "Aide"
+              },
+              {
+                "id": "8730",
+                "label": "Business Professional"
+              }
+            ],
+            "locations": [
+              {
+                "id": "-12782-Gadsden",
+                "label": "AL,Gadsden"
+              },
+              {
+                "id": "-12789-Anaheim",
+                "label": "CA,Anaheim"
+              },
+              {
+                "id": "-12789-Chino",
+                "label": "CA,Chino"
+              }
+            ],
+            "position_types": [
+              {
+                "id": "2049",
+                "label": "Full Time"
+              },
+              {
+                "id": "2050",
+                "label": "Part Time > 59"
+              },
+              {
+                "id": "32056",
+                "label": "Part Time < 60"
+              }
+            ]
+          },
+          "items": [
+            {
+              "attributes": [
+                {
+                  "label": "Facility",
+                  "value": "Monroe Hospital"
+                },
+                {
+                  "label": "Category",
+                  "value": "Admin"
+                },
+                {
+                  "label": "ID",
+                  "value": "2026-280299"
+                }
+              ],
+              "id": "280299",
+              "location": "US-IN-Bloomington",
+              "portal": "careers-primehealthcare",
+              "requisition_id": "2026-280299",
+              "source": "icims.com",
+              "source_url": "https://careers-primehealthcare.icims.com/jobs/280299/unit-secretary---emergency-services/job",
+              "summary": "The Unit Secretary is directly accountable to the Director of Emergency Room, and indirectly to the Charge Nurse, and / or House Supervisor. The Unit Secretary is an unlicensed person who performs indirect care in the department setting. Facilitates the communication needs of the department. Transcribes physician orders from records (in the absence of CPOE and EMR clinical documentation system) with notation and signature by nursing staff. Prepares and complies records on the Emergency Room. Orders supplies for the unit, prepares and completes each patients chart for necessary forms needed on a daily basis. Able to assist nursing staff for duties involving indirect patient care.",
+              "title": "Unit Secretary - Emergency Services"
+            },
+            {
+              "attributes": [
+                {
+                  "label": "Facility",
+                  "value": "Landmark Medical Center"
+                },
+                {
+                  "label": "Category",
+                  "value": "RN"
+                },
+                {
+                  "label": "ID",
+                  "value": "2026-280295"
+                }
+              ],
+              "id": "280295",
+              "location": "US-RI-Woonsocket",
+              "portal": "careers-primehealthcare",
+              "requisition_id": "2026-280295",
+              "source": "icims.com",
+              "source_url": "https://careers-primehealthcare.icims.com/jobs/280295/vascular-access-coordinator-%28rn%29/job",
+              "summary": "Utilizes the nursing process for assessment, planning, implementation, and evaluation of adults requiring vascular access device (VAD) placement. Performs VAD insertion and maintenance using ultrasound and modified Seldinger Technique (MST) for placement. Communicates with physicians, co-workers and/or nursing director, as appropriate about the patient’s clinical condition, including results of diagnostic studies and symptomatology. Collaborates with other departments to ensure efficient patient quality care is provided. Responsible for adherence to regulations, standards and hospital or unit policies and procedures. Responsible for participation in Performance Improvement activities, unit meetings and in-services. Utilizes high degree of computer skills with...",
+              "title": "Vascular Access Coordinator (RN)"
+            },
+            {
+              "attributes": [
+                {
+                  "label": "Facility",
+                  "value": "Saint Francis Hospital"
+                },
+                {
+                  "label": "Category",
+                  "value": "Admin"
+                },
+                {
+                  "label": "ID",
+                  "value": "2026-280290"
+                }
+              ],
+              "id": "280290",
+              "location": "US-IL-Evanston",
+              "portal": "careers-primehealthcare",
+              "requisition_id": "2026-280290",
+              "source": "icims.com",
+              "source_url": "https://careers-primehealthcare.icims.com/jobs/280290/unit-secretary---infusion-center/job",
+              "summary": "The Unit Secretary is directly accountable to the Director/Manager, and indirectly to the Charge Nurse, and/or House Supervisor. The Unit Secretary is an unlicensed person who performs indirect care in the department setting. Facilitates the communication needs of the department. Transcribes physician orders from records (in the absence of CPOE and EMR clinical documentation system) with notation and signature by nursing staff. Prepares and complies records patient records as appropriate for the unit. Orders supplies for the unit, prepares, and completes each patient’s chart for necessary forms needed daily. Able to assist nursing staff for duties involving indirect patient care.",
+              "title": "Unit Secretary - Infusion Center"
+            }
+          ],
+          "message": "Click column header to sort",
+          "next_page": 3,
+          "observed_at_ms": 1789480000000,
+          "page": 2,
+          "portal": "careers-primehealthcare",
+          "portal_url": "https://careers-primehealthcare.icims.com/",
+          "query": "nurse",
+          "retrieved_at": "2026-09-15T13:46:40Z",
+          "sort_options": [
+            {
+              "label": "Title",
+              "schema_id": "$T{Job}.$F{JobTitle}",
+              "sort": "title"
+            },
+            {
+              "label": "Category",
+              "schema_id": "$T{Job}.$F{Position}",
+              "sort": "category"
+            },
+            {
+              "label": "Facility",
+              "schema_id": "$T{Job}.$T{JobContent2013}.$T{JobContentCompany}.$T{ResumeContent3120}.$F{Title}",
+              "sort": null
+            }
+          ],
+          "source": "icims.com",
+          "total_pages": 29
+        },
+        "recordedAt": "2026-09-15"
+      },
+      "execute": {
+        "provider": "icims-com",
+        "capability": "jobs/search"
+      }
+    }
+  ]
+}

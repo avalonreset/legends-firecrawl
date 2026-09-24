@@ -1,0 +1,2460 @@
+{
+  "id": "census-gov",
+  "provider": "census-gov",
+  "name": "US Census Bureau",
+  "description": "Discover Census datasets, variables and geography codes, then retrieve published estimates, margins of error and counts with source annotations.",
+  "toolCount": 4,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "census-gov"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "census-gov/census/data",
+      "provider": "census-gov",
+      "capability": "census/data",
+      "name": "Data",
+      "description": "Retrieve estimates. Input: dataset path (acs/acs5, acs/acs1, acs/acs5/subject, acs/acs5/profile, dec/pl, dec/dhc, pep/population, cbp ...), vintage, 1-200 variable names or group(TABLE) tokens, and a geography as Data API for/in predicates (for: 'county:*', in: ['state:06']). Returns one row per geography with values as published, sentinels turned into null plus annotation, FIPS parts, variable metadata with units, and the equivalent api.census.gov URL. Unknown variables are rejected with invalid_input naming them.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "cursor"
+        },
+        {
+          "name": "dataset",
+          "type": "string",
+          "in": "body",
+          "about": "dataset",
+          "required": true,
+          "oneOf": [
+            "acs/acs5",
+            "acs/acs1",
+            "acs/acs5/subject",
+            "acs/acs1/subject",
+            "acs/acs5/profile",
+            "acs/acs1/profile",
+            "acs/acs5/cprofile",
+            "acs/acs1/cprofile",
+            "dec/pl",
+            "dec/dhc",
+            "dec/sf1",
+            "pep/population",
+            "cbp"
+          ]
+        },
+        {
+          "name": "geography",
+          "type": "object",
+          "in": "body",
+          "about": "geography",
+          "required": true
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 500,
+          "min": 1,
+          "max": 5000
+        },
+        {
+          "name": "predicates",
+          "type": "object",
+          "in": "body",
+          "about": "Exact-match filters on any returned column, e.g. {\"NAICS2017\": \"00\", \"EMPSZES\": \"001\"} for CBP or {\"DATE_CODE\": \"12\"} for PEP."
+        },
+        {
+          "name": "variables",
+          "type": "string[]",
+          "in": "body",
+          "about": "Variable names (B01003_001E, B19013_001M, P1_001N, ESTAB) or group(TABLE). NAME and GEO_ID may be added to any request. Variables may span up to 8 tables; more than 50 variables are split into per-table fetches and merged by GEO_ID (reported in warnings).",
+          "required": true
+        },
+        {
+          "name": "vintage",
+          "type": "number",
+          "in": "body",
+          "about": "vintage",
+          "required": true,
+          "min": 2000,
+          "max": 2035
+        }
+      ],
+      "response": {
+        "about": "Retrieve estimates. Input: dataset path (acs/acs5, acs/acs1, acs/acs5/subject, acs/acs5/profile, dec/pl, dec/dhc, pep/population, cbp ...), vintage, 1-200 variable names or group(TABLE) tokens, and a geography as Data API for/in predicates (for: 'county:*', in: ['state:06']). Returns one row per geography with values as published, sentinels turned into null plus annotation, FIPS parts, variable metadata with units, and the equivalent api.census.gov URL. Unknown variables are rejected with invalid_input naming them.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response fully satisfied the request (not whether all pages were consumed). false when a supplementary source (metadata, geography levels) failed or when results were truncated."
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "dataset",
+            "type": "string"
+          },
+          {
+            "name": "geography",
+            "type": "object"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Opaque cursor for the next page; null at the end. Offsets strictly increase, so a cursor can never loop. Maximum depth 1,000,000 records."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time of this call."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Catalog `modified` timestamp of the dataset (published without a zone, labelled Z as given); null when the source does not publish one."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "source_urls",
+            "type": "string[]",
+            "about": "Equivalent api.census.gov queries, one per table/geography fetch."
+          },
+          {
+            "name": "tables",
+            "type": "string[]"
+          },
+          {
+            "name": "total",
+            "type": "number",
+            "about": "Rows after predicates, across all pages."
+          },
+          {
+            "name": "variables",
+            "type": "object[]",
+            "about": "Metadata for every returned variable in `values` order: label, concept, predicate_type, group, unit (from label), scale (null), attributes."
+          },
+          {
+            "name": "vintage",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "dataset": "acs/acs5",
+          "geography": {
+            "for": "county:*",
+            "in": [
+              "state:06"
+            ]
+          },
+          "variables": [
+            "B01003_001E"
+          ],
+          "vintage": 2023
+        },
+        "response": {
+          "complete": true,
+          "count": 58,
+          "dataset": "acs/acs5",
+          "geography": {
+            "for": "county:*",
+            "geo_strings": [
+              "0400000US06$0500000"
+            ],
+            "in": [
+              "state:06"
+            ],
+            "level": "county"
+          },
+          "next_cursor": null,
+          "observed_at_ms": 1789084800000,
+          "records": [
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "001",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06001",
+                "level": "county",
+                "name": "Alameda County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06001:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "1651949"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "003",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06003",
+                "level": "county",
+                "name": "Alpine County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06003:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "1695"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "005",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06005",
+                "level": "county",
+                "name": "Amador County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06005:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "41029"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "007",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06007",
+                "level": "county",
+                "name": "Butte County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06007:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "209470"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "009",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06009",
+                "level": "county",
+                "name": "Calaveras County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06009:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "45995"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "011",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06011",
+                "level": "county",
+                "name": "Colusa County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06011:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "21895"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "013",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06013",
+                "level": "county",
+                "name": "Contra Costa County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06013:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "1161458"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "015",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06015",
+                "level": "county",
+                "name": "Del Norte County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06015:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "27293"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "017",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06017",
+                "level": "county",
+                "name": "El Dorado County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06017:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "192299"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "019",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06019",
+                "level": "county",
+                "name": "Fresno County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06019:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "1012152"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "021",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06021",
+                "level": "county",
+                "name": "Glenn County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06021:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "28623"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "023",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06023",
+                "level": "county",
+                "name": "Humboldt County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06023:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "135418"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "025",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06025",
+                "level": "county",
+                "name": "Imperial County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06025:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "179319"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "027",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06027",
+                "level": "county",
+                "name": "Inyo County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06027:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "18803"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "029",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06029",
+                "level": "county",
+                "name": "Kern County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06029:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "910433"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "031",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06031",
+                "level": "county",
+                "name": "Kings County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06031:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "152830"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "033",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06033",
+                "level": "county",
+                "name": "Lake County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06033:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "68139"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "035",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06035",
+                "level": "county",
+                "name": "Lassen County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06035:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "31177"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "037",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06037",
+                "level": "county",
+                "name": "Los Angeles County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06037:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "9848406"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "039",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06039",
+                "level": "county",
+                "name": "Madera County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06039:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "158790"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "041",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06041",
+                "level": "county",
+                "name": "Marin County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06041:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "258765"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "043",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06043",
+                "level": "county",
+                "name": "Mariposa County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06043:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "17060"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "045",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06045",
+                "level": "county",
+                "name": "Mendocino County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06045:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "90709"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "047",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06047",
+                "level": "county",
+                "name": "Merced County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06047:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "285597"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "049",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06049",
+                "level": "county",
+                "name": "Modoc County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06049:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "8646"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "051",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06051",
+                "level": "county",
+                "name": "Mono County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06051:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "13169"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "053",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06053",
+                "level": "county",
+                "name": "Monterey County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06053:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "435834"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "055",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06055",
+                "level": "county",
+                "name": "Napa County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06055:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "136070"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "057",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06057",
+                "level": "county",
+                "name": "Nevada County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06057:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "102452"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "059",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06059",
+                "level": "county",
+                "name": "Orange County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06059:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "3164063"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "061",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06061",
+                "level": "county",
+                "name": "Placer County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06061:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "412435"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "063",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06063",
+                "level": "county",
+                "name": "Plumas County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06063:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "19607"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "065",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06065",
+                "level": "county",
+                "name": "Riverside County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06065:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "2449909"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "067",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06067",
+                "level": "county",
+                "name": "Sacramento County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06067:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "1584047"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "069",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06069",
+                "level": "county",
+                "name": "San Benito County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06069:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "66056"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "071",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06071",
+                "level": "county",
+                "name": "San Bernardino County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06071:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "2187816"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "073",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06073",
+                "level": "county",
+                "name": "San Diego County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06073:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "3282782"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "075",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06075",
+                "level": "county",
+                "name": "San Francisco County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06075:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "836321"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "077",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06077",
+                "level": "county",
+                "name": "San Joaquin County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06077:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "787416"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "079",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06079",
+                "level": "county",
+                "name": "San Luis Obispo County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06079:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "281486"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "081",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06081",
+                "level": "county",
+                "name": "San Mateo County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06081:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "745100"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "083",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06083",
+                "level": "county",
+                "name": "Santa Barbara County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06083:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "443975"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "085",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06085",
+                "level": "county",
+                "name": "Santa Clara County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06085:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "1903297"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "087",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06087",
+                "level": "county",
+                "name": "Santa Cruz County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06087:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "266021"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "089",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06089",
+                "level": "county",
+                "name": "Shasta County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06089:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "181554"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "091",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06091",
+                "level": "county",
+                "name": "Sierra County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06091:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "2731"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "093",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06093",
+                "level": "county",
+                "name": "Siskiyou County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06093:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "43834"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "095",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06095",
+                "level": "county",
+                "name": "Solano County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06095:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "450824"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "097",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06097",
+                "level": "county",
+                "name": "Sonoma County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06097:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "485642"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "099",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06099",
+                "level": "county",
+                "name": "Stanislaus County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06099:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "552250"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "101",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06101",
+                "level": "county",
+                "name": "Sutter County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06101:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "98971"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "103",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06103",
+                "level": "county",
+                "name": "Tehama County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06103:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "65520"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "105",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06105",
+                "level": "county",
+                "name": "Trinity County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06105:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "15886"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "107",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06107",
+                "level": "county",
+                "name": "Tulare County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06107:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "475774"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "109",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06109",
+                "level": "county",
+                "name": "Tuolumne County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06109:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "54873"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "111",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06111",
+                "level": "county",
+                "name": "Ventura County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06111:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "838259"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "113",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06113",
+                "level": "county",
+                "name": "Yolo County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06113:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "217782"
+              },
+              "vintage": 2023
+            },
+            {
+              "annotations": {},
+              "dataset": "acs/acs5",
+              "geo": {
+                "fips": {
+                  "county": "115",
+                  "state": "06"
+                },
+                "geo_id": "0500000US06115",
+                "level": "county",
+                "name": "Yuba County, California",
+                "sumlevel": "050"
+              },
+              "record_id": "acs/acs5:2023:0500000US06115:1",
+              "release": {
+                "dataset": "acs/acs5",
+                "tables": [
+                  "B01003"
+                ],
+                "vintage": 2023
+              },
+              "source_flags": {},
+              "source_url": "https://api.census.gov/data/2023/acs/acs5?get=group(B01003)&ucgid=pseudo(0400000US06$0500000)",
+              "values": {
+                "B01003_001E": "83079"
+              },
+              "vintage": 2023
+            }
+          ],
+          "retrieved_at": "2026-09-11T00:00:00Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://data.census.gov/api/access/data/table?id=ACSDT5Y2023.B01003&g=0400000US06$0500000",
+          "source_urls": [
+            "https://data.census.gov/api/access/data/table?id=ACSDT5Y2023.B01003&g=0400000US06$0500000"
+          ],
+          "tables": [
+            "ACSDT5Y2023.B01003"
+          ],
+          "total": 58,
+          "variables": [
+            {
+              "attributes": [],
+              "concept": "Total Population",
+              "group": "B01003",
+              "label": "Estimate!!Total",
+              "limit": 0,
+              "name": "B01003_001E",
+              "predicate_only": true,
+              "predicate_type": "int",
+              "scale": null,
+              "source_url": "https://api.census.gov/data/2023/acs/acs5/groups/B01003.json",
+              "unit": null
+            }
+          ],
+          "vintage": 2023,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-11T00:00:00Z"
+      },
+      "execute": {
+        "provider": "census-gov",
+        "capability": "census/data"
+      }
+    },
+    {
+      "id": "census-gov/census/datasets",
+      "provider": "census-gov",
+      "capability": "census/datasets",
+      "name": "Datasets",
+      "description": "Search the Census Data API catalog. Input: free-text query over dataset path, title and description plus an optional vintage (year). Returns one record per dataset/vintage with its API endpoint, metadata links, publication date and supported geography levels.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "next_cursor from the previous page."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 20,
+          "min": 1,
+          "max": 25
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Case-insensitive tokens all of which must appear in the dataset path, title or description. Required (>= 2 characters) when vintage is null.",
+          "default": ""
+        },
+        {
+          "name": "vintage",
+          "type": "number",
+          "in": "body",
+          "about": "Restrict to one vintage year (reads api.census.gov/data/{vintage}.json, ~0.5 s). Null searches the whole catalog (~5 MB, 5-10 s).",
+          "min": 2000,
+          "max": 2035
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "vintage",
+          "query"
+        ]
+      ],
+      "response": {
+        "about": "Search the Census Data API catalog. Input: free-text query over dataset path, title and description plus an optional vintage (year). Returns one record per dataset/vintage with its API endpoint, metadata links, publication date and supported geography levels.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response fully satisfied the request (not whether all pages were consumed). false when a supplementary source (metadata, geography levels) failed or when results were truncated."
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Opaque cursor for the next page; null at the end. Offsets strictly increase, so a cursor can never loop. Maximum depth 1,000,000 records."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time of this call."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Catalog `modified` timestamp of the dataset (published without a zone, labelled Z as given); null when the source does not publish one."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "vintage",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "acs5",
+          "vintage": 2023
+        },
+        "response": {
+          "complete": true,
+          "count": 1,
+          "next_cursor": null,
+          "observed_at_ms": 1789084800000,
+          "query": "acs5",
+          "records": [
+            {
+              "dataset": "acs/acs5",
+              "description": "The American Community Survey (ACS) is an ongoing survey that provides data every year -- giving communities the current information they need to plan investments and services. The ACS covers a broad range of topics about social, economic, demographic, and housing characteristics of the U.S. population. Summary files include the following geographies: nation, all states (including DC and Puerto Rico), all metropolitan areas, all congressional districts, all counties, all places, and all tracts and block groups. Summary files contain the most detailed cross-tabulations, many of which are published down to block groups. The data are population and housing counts. There are over 64,000 variables in this dataset.",
+              "examples_url": "https://api.census.gov/data/2023/acs/acs5/examples.json",
+              "geography_levels": [
+                "us",
+                "region",
+                "division",
+                "state",
+                "county",
+                "county subdivision",
+                "subminor civil division",
+                "place/remainder (or part)",
+                "tract",
+                "block group",
+                "county (or part)",
+                "place",
+                "consolidated city",
+                "place (or part)",
+                "alaska native regional corporation",
+                "american indian area/alaska native area/hawaiian home land",
+                "tribal subdivision/remainder",
+                "american indian area/alaska native area (reservation or statistical entity only)",
+                "american indian area (off-reservation trust land only)/hawaiian home land",
+                "tribal census tract",
+                "tribal block group",
+                "state (or part)",
+                "place/remainder (or part)",
+                "county (or part)",
+                "american indian area/alaska native area/hawaiian home land (or part)",
+                "american indian area/alaska native area (reservation or statistical entity only) (or part)",
+                "american indian area (off-reservation trust land only)/hawaiian home land (or part)",
+                "state (or part)",
+                "tribal census tract (or part)",
+                "tribal census tract (or part)",
+                "tribal block group (or part)",
+                "tribal block group (or part)",
+                "metropolitan statistical area/micropolitan statistical area",
+                "state (or part)",
+                "principal city (or part)",
+                "county",
+                "metropolitan division",
+                "state (or part)",
+                "county",
+                "metropolitan statistical area/micropolitan statistical area (or part)",
+                "principal city (or part)",
+                "county",
+                "metropolitan division (or part)",
+                "county",
+                "combined statistical area",
+                "state (or part)",
+                "metropolitan statistical area/micropolitan statistical area",
+                "state (or part)",
+                "combined statistical area (or part)",
+                "metropolitan statistical area/micropolitan statistical area (or part)",
+                "urban area",
+                "state (or part)",
+                "county (or part)",
+                "congressional district",
+                "county (or part)",
+                "american indian area/alaska native area/hawaiian home land (or part)",
+                "state legislative district (upper chamber)",
+                "county (or part)",
+                "state legislative district (lower chamber)",
+                "county (or part)",
+                "public use microdata area",
+                "zip code tabulation area",
+                "school district (elementary)",
+                "school district (secondary)",
+                "school district (unified)"
+              ],
+              "geography_url": "https://api.census.gov/data/2023/acs/acs5/geography.json",
+              "groups_url": "https://api.census.gov/data/2023/acs/acs5/groups.json",
+              "identifier": "https://api.census.gov/data/id/ACSDT5Y2023",
+              "is_aggregate": true,
+              "is_available": true,
+              "is_microdata": false,
+              "is_timeseries": false,
+              "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+              "modified": "2024-09-06T17:27:47Z",
+              "source_url": "https://api.census.gov/data/2023/acs/acs5",
+              "supported_by_data": true,
+              "title": "ACS 5-Year Detailed Tables",
+              "variables_url": "https://api.census.gov/data/2023/acs/acs5/variables.json",
+              "vintage": 2023
+            }
+          ],
+          "retrieved_at": "2026-09-11T00:00:00Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://api.census.gov/data/2023.json",
+          "total": 1,
+          "vintage": 2023,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-11T00:00:00Z"
+      },
+      "execute": {
+        "provider": "census-gov",
+        "capability": "census/datasets"
+      }
+    },
+    {
+      "id": "census-gov/census/geographies",
+      "provider": "census-gov",
+      "capability": "census/geographies",
+      "name": "Geographies",
+      "description": "Geography resolver. Input: a place, county, state, tract or other geography name (e.g. 'Travis County, Texas'). Returns matching Census geographies with summary level, GEO_ID, FIPS parts and the exact `for`/`in` predicates to pass to `data`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "level",
+          "type": "string",
+          "in": "body",
+          "about": "Keep only this summary level: us, region, division, state, county, county subdivision, tract, block group, place, metropolitan statistical area/micropolitan statistical area, combined statistical area, urban area, public use microdata area, zip code tabulation area, school district (unified), american indian area/alaska native area/hawaiian home land."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "in": "body",
+          "about": "limit",
+          "default": 10,
+          "min": 1,
+          "max": 50
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "query",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Geography resolver. Input: a place, county, state, tract or other geography name (e.g. 'Travis County, Texas'). Returns matching Census geographies with summary level, GEO_ID, FIPS parts and the exact `for`/`in` predicates to pass to `data`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response fully satisfied the request (not whether all pages were consumed). false when a supplementary source (metadata, geography levels) failed or when results were truncated."
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "level",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Opaque cursor for the next page; null at the end. Offsets strictly increase, so a cursor can never loop. Maximum depth 1,000,000 records."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time of this call."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Catalog `modified` timestamp of the dataset (published without a zone, labelled Z as given); null when the source does not publish one."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "query": "San Francisco"
+        },
+        "response": {
+          "complete": false,
+          "count": 4,
+          "level": null,
+          "next_cursor": null,
+          "observed_at_ms": 1789084800000,
+          "query": "San Francisco",
+          "records": [
+            {
+              "fips": {
+                "county": "075",
+                "state": "06"
+              },
+              "for": "county:075",
+              "geo_id": "0500000US06075",
+              "in": [
+                "state:06"
+              ],
+              "level": "county",
+              "record_id": "0500000US06075",
+              "selected": true,
+              "source_url": "https://data.census.gov/api/search?q=San%20Francisco&services=geos&size=10",
+              "sumlevel": "050",
+              "title": "San Francisco County, California",
+              "ucgid": "050XX00US06075"
+            },
+            {
+              "fips": {
+                "county": "075",
+                "county_subdivision": "92790",
+                "state": "06"
+              },
+              "for": "county subdivision:92790",
+              "geo_id": "0600000US0607592790",
+              "in": [
+                "state:06",
+                "county:075"
+              ],
+              "level": "county subdivision",
+              "record_id": "0600000US0607592790",
+              "selected": false,
+              "source_url": "https://data.census.gov/api/search?q=San%20Francisco&services=geos&size=10",
+              "sumlevel": "060",
+              "title": "San Francisco CCD, San Francisco County, California",
+              "ucgid": "060XX00US0607592790"
+            },
+            {
+              "fips": {
+                "county": "019",
+                "county_subdivision": "58486",
+                "state": "27"
+              },
+              "for": "county subdivision:58486",
+              "geo_id": "0600000US2701958486",
+              "in": [
+                "state:27",
+                "county:019"
+              ],
+              "level": "county subdivision",
+              "record_id": "0600000US2701958486",
+              "selected": false,
+              "source_url": "https://data.census.gov/api/search?q=San%20Francisco&services=geos&size=10",
+              "sumlevel": "060",
+              "title": "San Francisco township, Carver County, Minnesota",
+              "ucgid": "060XX00US2701958486"
+            },
+            {
+              "fips": {
+                "place": "67000",
+                "state": "06"
+              },
+              "for": "place:67000",
+              "geo_id": "1600000US0667000",
+              "in": [
+                "state:06"
+              ],
+              "level": "place",
+              "record_id": "1600000US0667000",
+              "selected": false,
+              "source_url": "https://data.census.gov/api/search?q=San%20Francisco&services=geos&size=10",
+              "sumlevel": "160",
+              "title": "San Francisco city, California",
+              "ucgid": "160XX00US0667000"
+            }
+          ],
+          "retrieved_at": "2026-09-11T00:00:00Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://data.census.gov/api/search?q=San%20Francisco&services=geos&size=10",
+          "warnings": [
+            "skipped `San Francisco city, California` (E600000US0607567000): summary level not supported by `data`"
+          ]
+        },
+        "recordedAt": "2026-09-11T00:00:00Z"
+      },
+      "execute": {
+        "provider": "census-gov",
+        "capability": "census/geographies"
+      }
+    },
+    {
+      "id": "census-gov/census/variables",
+      "provider": "census-gov",
+      "capability": "census/variables",
+      "name": "Variables",
+      "description": "List variables of one dataset vintage. Input: dataset path and vintage, plus a group (table id such as B01003 or DP05) and/or a free-text query matched against group descriptions and variable labels. Returns variable name, verbatim label, concept, predicate type, group and the unit phrase the label carries.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "cursor",
+          "type": "string",
+          "in": "body",
+          "about": "cursor"
+        },
+        {
+          "name": "dataset",
+          "type": "string",
+          "in": "body",
+          "about": "Data API dataset path, e.g. acs/acs5, acs/acs5/profile, dec/pl, cbp. Pattern: ^[A-Za-z0-9_/]+$.",
+          "required": true
+        },
+        {
+          "name": "group",
+          "type": "string",
+          "in": "body",
+          "about": "Table id, e.g. B01003, S0101, DP05, P1. Pattern: ^[A-Za-z0-9_]{1,40}$."
+        },
+        {
+          "name": "page_size",
+          "type": "number",
+          "in": "body",
+          "about": "page_size",
+          "default": 20,
+          "min": 1,
+          "max": 500
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Tokens matched against group name/description (when no group is given; the first 5 matching groups are listed) or variable name/label/concept (within a group). Datasets with at most 5 tables (cbp, pep/population) whose descriptions do not match are searched by variable label instead."
+        },
+        {
+          "name": "vintage",
+          "type": "number",
+          "in": "body",
+          "about": "vintage",
+          "required": true,
+          "min": 2000,
+          "max": 2035
+        }
+      ],
+      "requiresOneOf": [
+        [
+          "query",
+          "group"
+        ]
+      ],
+      "response": {
+        "about": "List variables of one dataset vintage. Input: dataset path and vintage, plus a group (table id such as B01003 or DP05) and/or a free-text query matched against group descriptions and variable labels. Returns variable name, verbatim label, concept, predicate type, group and the unit phrase the label carries.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "complete",
+            "type": "boolean",
+            "about": "Whether this response fully satisfied the request (not whether all pages were consumed). false when a supplementary source (metadata, geography levels) failed or when results were truncated."
+          },
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "dataset",
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "type": "string"
+          },
+          {
+            "name": "next_cursor",
+            "type": "string",
+            "about": "Opaque cursor for the next page; null at the end. Offsets strictly increase, so a cursor can never loop. Maximum depth 1,000,000 records."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "records",
+            "type": "object[]"
+          },
+          {
+            "name": "retrieved_at",
+            "type": "string",
+            "about": "RFC 3339 UTC time of this call."
+          },
+          {
+            "name": "schema_version",
+            "type": "string"
+          },
+          {
+            "name": "source_updated_at",
+            "type": "string",
+            "about": "Catalog `modified` timestamp of the dataset (published without a zone, labelled Z as given); null when the source does not publish one."
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "total",
+            "type": "number"
+          },
+          {
+            "name": "vintage",
+            "type": "number"
+          },
+          {
+            "name": "warnings",
+            "type": "string[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "dataset": "acs/acs5",
+          "group": "B01003",
+          "vintage": 2023
+        },
+        "response": {
+          "complete": true,
+          "count": 1,
+          "dataset": "acs/acs5",
+          "group": "B01003",
+          "next_cursor": null,
+          "observed_at_ms": 1789084800000,
+          "records": [
+            {
+              "attributes": [],
+              "concept": "Total Population",
+              "dataset": "acs/acs5",
+              "group": "B01003",
+              "label": "Estimate!!Total",
+              "limit": 0,
+              "name": "B01003_001E",
+              "predicate_only": true,
+              "predicate_type": "int",
+              "scale": null,
+              "source_url": "https://api.census.gov/data/2023/acs/acs5/groups/B01003.json",
+              "unit": null,
+              "vintage": 2023
+            }
+          ],
+          "retrieved_at": "2026-09-11T00:00:00Z",
+          "schema_version": "1.0.0",
+          "source_updated_at": null,
+          "source_url": "https://api.census.gov/data/2023/acs/acs5/groups/B01003.json",
+          "total": 6,
+          "vintage": 2023,
+          "warnings": []
+        },
+        "recordedAt": "2026-09-11T00:00:00Z"
+      },
+      "execute": {
+        "provider": "census-gov",
+        "capability": "census/variables"
+      }
+    }
+  ]
+}

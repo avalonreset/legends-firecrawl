@@ -1,0 +1,2643 @@
+{
+  "id": "rover-com",
+  "provider": "rover-com",
+  "name": "Rover",
+  "description": "Rover public pet-care discovery without an account: search sitters by service (boarding, house sitting, drop-in visits, dog walking, doggy day care), location, dates, dog size and price; read a sitter's public profile with every listed rate (sitter rate and the full price including Rover's owner-side service fee), acceptance rules and cancellation policy; read the sitter's public availability calendar for a date window; list the sitter's reviews; and resolve free-text places to the location strings the search accepts. Source: the www.rover.com /api/v7/ JSON API the website calls anonymously. US market from a US ISP exit (country and currency follow the request IP); prices are sitter-listed advertised rates in USD, not quotes; availability is what the sitter listed, not a booking guarantee.",
+  "toolCount": 5,
+  "next": {
+    "provider": "firecrawl",
+    "capability": "find-tools",
+    "options": {
+      "level": "tools",
+      "limit": 100,
+      "offset": 0,
+      "providers": [
+        "rover-com"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "rover-com/pet-care-services/get_sitter",
+      "provider": "rover-com",
+      "capability": "pet-care-services/get_sitter",
+      "name": "Get sitter",
+      "description": "After `search_sitters`, to read a sitter's full profile and every listed rate.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "slug",
+          "type": "string",
+          "in": "body",
+          "about": "Profile slug from a search result or a profile URL https://www.rover.com/members/{slug}/. Give slug or url, not both. Pattern: ^[a-z0-9][a-z0-9-]{1,150}$."
+        },
+        {
+          "name": "url",
+          "type": "string",
+          "in": "body",
+          "about": "Profile page URL, https://www.rover.com/members/{slug}/."
+        }
+      ],
+      "response": {
+        "about": "Read one sitter's public profile by profile `slug` or profile `url` (`GET /api/v7/people/full-sitter-profile/?slug=`, endpoint ep-full-profile). Returns identity (opk, slug, short name), profile texts, ratings and review counts, responsiveness, member-since date, badges, home attributes, and every active service with its listed rates: for each add-on rate (standard, holiday, additional dog, puppy, cat care, ...) both `price` (the sitter's listed rate) and `full_price` (that rate plus Rover's owner-side service fee as Rover displays it), the unit (night, visit, walk, day), which dog sizes and cats the service accepts, spaces, whether new customers are accepted, and the cancellation policy. Rates are advertised prices, not quotes: holiday adjustments and taxes are not included. Unknown slug is `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "api_url",
+            "type": "string"
+          },
+          {
+            "name": "attributes",
+            "type": "object[]",
+            "about": "Skills and experience attributes (years of experience, medication, first aid, ...)."
+          },
+          {
+            "name": "availability_text",
+            "type": "string",
+            "about": "Sitter's free-text availability statement."
+          },
+          {
+            "name": "badges",
+            "type": "object[]"
+          },
+          {
+            "name": "capacity",
+            "type": "object[]"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "dog_size_buckets",
+            "type": "object[]"
+          },
+          {
+            "name": "environment",
+            "type": "string"
+          },
+          {
+            "name": "experience",
+            "type": "string"
+          },
+          {
+            "name": "first_name",
+            "type": "string"
+          },
+          {
+            "name": "headline",
+            "type": "string",
+            "about": "Title of the first listed service (the profile headline)."
+          },
+          {
+            "name": "highlights",
+            "type": "object[]"
+          },
+          {
+            "name": "images_count",
+            "type": "number"
+          },
+          {
+            "name": "is_new_sitter",
+            "type": "boolean"
+          },
+          {
+            "name": "is_profile_approved",
+            "type": "boolean"
+          },
+          {
+            "name": "is_star_sitter",
+            "type": "boolean"
+          },
+          {
+            "name": "location",
+            "type": "object",
+            "about": "Approximate service location from the first listed service; null when the sitter lists no service."
+          },
+          {
+            "name": "member_since",
+            "type": "string",
+            "about": "ISO 8601 UTC timestamp."
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "opk",
+            "type": "string"
+          },
+          {
+            "name": "pricing_note",
+            "type": "string"
+          },
+          {
+            "name": "profile_url",
+            "type": "string"
+          },
+          {
+            "name": "ratings_average",
+            "type": "number"
+          },
+          {
+            "name": "ratings_count",
+            "type": "number"
+          },
+          {
+            "name": "repeat_client_count",
+            "type": "number"
+          },
+          {
+            "name": "responsiveness",
+            "type": "object"
+          },
+          {
+            "name": "reviews_count",
+            "type": "number"
+          },
+          {
+            "name": "services",
+            "type": "object[]"
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string"
+          },
+          {
+            "name": "weight_unit",
+            "type": "string"
+          },
+          {
+            "name": "years_of_experience",
+            "type": "number"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "slug": "tianci-d-staycation-for-your-dog"
+        },
+        "response": {
+          "api_url": "https://www.rover.com/api/v7/people/AP1xVWYN/",
+          "attributes": [
+            {
+              "key": "daily-exercise",
+              "text": "Can provide daily exercise"
+            },
+            {
+              "key": "first-aid",
+              "text": "First aid/CPR"
+            },
+            {
+              "key": "injected-medication",
+              "text": "Injected medication administration"
+            },
+            {
+              "key": "oral-medication",
+              "text": "Oral medication administration"
+            },
+            {
+              "key": "senior-dog-care",
+              "text": "Senior dog experience"
+            },
+            {
+              "key": "years-of-experience",
+              "text": "20 years of experience"
+            }
+          ],
+          "availability_text": "I work from home with a very flexible schedule, no work at Friday so I have plenty of time to give your dog attentive, loving care they deserve",
+          "badges": [
+            {
+              "description": "This sitter has successfully passed an enhanced <a href=\"/background-checks/\">background check</a> by a third party provider.",
+              "title": "Verified Enhanced Background Check"
+            }
+          ],
+          "capacity": [
+            {
+              "accepts_more_than_one_client": false,
+              "calendar_id": 1,
+              "is_away": false,
+              "maximum_spaces_available": 30,
+              "name": "Boarding",
+              "spaces_available": 1
+            }
+          ],
+          "description": "I’ve cared for four dogs who all enjoyed long, happy lives past 17, and I’d love to give your pup the same gentle, loving attention on every walk.\n\nI work from home with a very flexible schedule, no work at Friday so I have plenty of time to give your dog attentive, loving care they deserve\n\nI live in a luxury high-rise in downtown Seattle with bright floor-to-ceiling windows and a beautiful dog sky-park on the 40th floor, complete with a pet wash room, fresh towels, and dryers. Your pup can enjoy stunning city views, safe bathroom breaks, and plenty of nearby parks, including a cute treat shop right across the street.",
+          "dog_size_buckets": [
+            {
+              "key": "small",
+              "range": "0-15"
+            },
+            {
+              "key": "medium",
+              "range": "16-40"
+            },
+            {
+              "key": "large",
+              "range": "41-100"
+            },
+            {
+              "key": "giant",
+              "range": "101+"
+            }
+          ],
+          "environment": "I live in a luxury high-rise in downtown Seattle with bright floor-to-ceiling windows and a beautiful dog sky-park on the 40th floor, complete with a pet wash room, fresh towels, and dryers. Your pup can enjoy stunning city views, safe bathroom breaks, and plenty of nearby parks, including a cute treat shop right across the street.",
+          "experience": "I’ve cared for four dogs who all enjoyed long, happy lives past 17, and I’d love to give your pup the same gentle, loving attention on every walk.",
+          "first_name": "Tianci",
+          "headline": "Staycation for Your Dog",
+          "highlights": [
+            {
+              "id": "is_active_star_sitter",
+              "title": "Tianci has Star Sitter status!"
+            },
+            {
+              "id": "enhanced_background_check",
+              "title": "Enhanced background check"
+            },
+            {
+              "id": "years_of_experience",
+              "title": "20 years of experience"
+            },
+            {
+              "id": "senior_dog_care_experience",
+              "title": "Senior dog experience"
+            },
+            {
+              "id": "can_provide_daily_exercise",
+              "title": "Can provide daily exercise"
+            },
+            {
+              "id": "can_administer_medication",
+              "title": "Can administer medication"
+            }
+          ],
+          "images_count": 10,
+          "is_new_sitter": false,
+          "is_profile_approved": true,
+          "is_star_sitter": true,
+          "location": {
+            "city": "Seattle",
+            "country_code": "US",
+            "display": "Seattle, WA",
+            "latitude": 47.615,
+            "longitude": -122.338,
+            "neighborhood": "Downtown",
+            "state": "WA",
+            "zip": "98121"
+          },
+          "member_since": "2025-11-29T22:41:17Z",
+          "observed_at_ms": 1790020555469,
+          "opk": "AP1xVWYN",
+          "pricing_note": "Sitter-listed advertised rates as Rover displays them, not quotes. full_price includes Rover's owner-side service fee; holiday adjustments and taxes are not included.",
+          "profile_url": "https://www.rover.com/members/tianci-d-staycation-for-your-dog/",
+          "ratings_average": 5,
+          "ratings_count": 18,
+          "repeat_client_count": 3,
+          "responsiveness": {
+            "photo_rate_percent": 70,
+            "response_percent": 100,
+            "response_time_minutes": 540,
+            "response_time_text": "Usually responds in a few minutes"
+          },
+          "reviews_count": 21,
+          "services": [
+            {
+              "accepts_cats": false,
+              "accepts_dogs": {
+                "giant": false,
+                "large": false,
+                "medium": true,
+                "puppies": true,
+                "small": true
+              },
+              "active": true,
+              "api_url": "https://www.rover.com/api/v7/people/AP1xVWYN/services/overnight-boarding/",
+              "attributes": [
+                {
+                  "key": "accepts-only-one-client",
+                  "text": "Takes only 1 client at a time"
+                },
+                {
+                  "key": "building-type",
+                  "text": "Apartment"
+                },
+                {
+                  "key": "dogs-allowed-on-bed",
+                  "text": "Dogs allowed on bed"
+                },
+                {
+                  "key": "dogs-allowed-on-furniture",
+                  "text": "Dogs allowed on furniture"
+                },
+                {
+                  "key": "no-children",
+                  "text": "No children present"
+                },
+                {
+                  "key": "no-dogs",
+                  "text": "Has no dogs"
+                },
+                {
+                  "key": "non-smoking",
+                  "text": "Non-smoking household"
+                },
+                {
+                  "key": "time-alone",
+                  "text": "Potty breaks every 0-2 Hours"
+                }
+              ],
+              "cancellation_policy": {
+                "code": "0day",
+                "label": "Same Day"
+              },
+              "description": "in the sitter's home",
+              "is_accepting_new_customers": true,
+              "is_repeat_customers_only": false,
+              "long_stays": true,
+              "name": "Boarding",
+              "rates": [
+                {
+                  "active": true,
+                  "currency": "USD",
+                  "full_price": 77,
+                  "is_additional_rate": false,
+                  "name": "Standard Rate",
+                  "price": 69,
+                  "slug": "standard-rate",
+                  "unit": "night",
+                  "unit_sentence": "per night"
+                },
+                {
+                  "active": true,
+                  "currency": "USD",
+                  "full_price": 93,
+                  "is_additional_rate": false,
+                  "name": "Holiday Rate",
+                  "price": 83,
+                  "slug": "holiday-rate",
+                  "unit": "night",
+                  "unit_sentence": "per night"
+                },
+                {
+                  "active": true,
+                  "currency": "USD",
+                  "full_price": 63,
+                  "is_additional_rate": true,
+                  "name": "Additional Dog Rate",
+                  "price": 56,
+                  "slug": "additional-dog",
+                  "unit": "night",
+                  "unit_sentence": "per dog per night"
+                },
+                {
+                  "active": true,
+                  "currency": "USD",
+                  "full_price": 85,
+                  "is_additional_rate": false,
+                  "name": "Puppy Rate",
+                  "price": 76,
+                  "slug": "puppy",
+                  "unit": "night",
+                  "unit_sentence": "per night"
+                },
+                {
+                  "active": true,
+                  "currency": "USD",
+                  "full_price": 55,
+                  "is_additional_rate": false,
+                  "name": "Cat Care",
+                  "price": 49,
+                  "slug": "cat-care",
+                  "unit": "night",
+                  "unit_sentence": "per night"
+                },
+                {
+                  "active": true,
+                  "currency": "USD",
+                  "full_price": 36,
+                  "is_additional_rate": true,
+                  "name": "Additional Cat",
+                  "price": 32,
+                  "slug": "additional-cat",
+                  "unit": "night",
+                  "unit_sentence": "per cat per night"
+                },
+                {
+                  "active": true,
+                  "currency": "USD",
+                  "full_price": 56,
+                  "is_additional_rate": true,
+                  "name": "Bathing / Grooming",
+                  "price": 50,
+                  "slug": "bathing-grooming",
+                  "unit": "bath",
+                  "unit_sentence": "each"
+                }
+              ],
+              "slug": "overnight-boarding",
+              "spaces_available": 1,
+              "title": "Staycation for Your Dog"
+            }
+          ],
+          "short_name": "Tianci D.",
+          "slug": "tianci-d-staycation-for-your-dog",
+          "weight_unit": "lbs",
+          "years_of_experience": 20
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "rover-com",
+        "capability": "pet-care-services/get_sitter"
+      }
+    },
+    {
+      "id": "rover-com/pet-care-services/get_sitter_availability",
+      "provider": "rover-com",
+      "capability": "pet-care-services/get_sitter_availability",
+      "name": "Get sitter availability",
+      "description": "Check which days a specific sitter lists as open for a service before contacting them on Rover.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "end_date",
+          "type": "string",
+          "in": "body",
+          "about": "Last day, YYYY-MM-DD; defaults to start_date + 42 days; at most 120 days after start_date. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "opk",
+          "type": "string",
+          "in": "body",
+          "about": "Sitter id (personOpk), e.g. AP1xVWYN. Pattern: ^[A-Za-z0-9_-]{6,16}$.",
+          "required": true
+        },
+        {
+          "name": "service_type",
+          "type": "string",
+          "in": "body",
+          "about": "service_type",
+          "default": "overnight-boarding",
+          "oneOf": [
+            "overnight-boarding",
+            "overnight-traveling",
+            "drop-in",
+            "dog-walking",
+            "doggy-day-care"
+          ]
+        },
+        {
+          "name": "start_date",
+          "type": "string",
+          "in": "body",
+          "about": "First day, YYYY-MM-DD; defaults to today (UTC). Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "Read a sitter's public availability calendar for one service over a date window (`GET /api/v7/people/{opk}/public-calendar/`, endpoint ep-calendar). Input `opk` from a search result or `get_sitter`, the service slug, and `start_date`/`end_date` (default: today through six weeks ahead, at most 120 days). Returns the sitter's calendar preferences (spaces, days of week, away flag) and one entry per day with `spaces_available`/`spaces_occupied` per calendar, plus `updated_at` (when the sitter last updated the calendar) and a count of days with at least one space. This is sitter-listed availability, not a booking guarantee. Unknown opk is `not_found`.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "availability_note",
+            "type": "string"
+          },
+          {
+            "name": "days",
+            "type": "object[]"
+          },
+          {
+            "name": "days_count",
+            "type": "number"
+          },
+          {
+            "name": "days_with_space",
+            "type": "number",
+            "about": "Days where at least one calendar lists a space available."
+          },
+          {
+            "name": "end_date",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "opk",
+            "type": "string"
+          },
+          {
+            "name": "preferences",
+            "type": "object[]"
+          },
+          {
+            "name": "service_type",
+            "type": "string"
+          },
+          {
+            "name": "source_url",
+            "type": "string"
+          },
+          {
+            "name": "start_date",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "string",
+            "about": "When the sitter last updated this calendar (ISO 8601 UTC)."
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "opk": "AP1xVWYN",
+          "service_type": "overnight-boarding"
+        },
+        "response": {
+          "availability_note": "Sitter-listed availability from the public calendar; spaces_available > 0 is not a booking guarantee.",
+          "days": [
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-09-21"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 1,
+                  "spaces_occupied": 0
+                }
+              ],
+              "date": "2026-09-22"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 1,
+                  "spaces_occupied": 0
+                }
+              ],
+              "date": "2026-09-23"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 1,
+                  "spaces_occupied": 0
+                }
+              ],
+              "date": "2026-09-24"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 1,
+                  "spaces_occupied": 0
+                }
+              ],
+              "date": "2026-09-25"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-09-26"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-09-27"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-09-28"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-09-29"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-09-30"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-01"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-02"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-03"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-04"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-05"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-06"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-07"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-08"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-09"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-10"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 1,
+                  "spaces_occupied": 0
+                }
+              ],
+              "date": "2026-10-11"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 1,
+                  "spaces_occupied": 0
+                }
+              ],
+              "date": "2026-10-12"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 1,
+                  "spaces_occupied": 0
+                }
+              ],
+              "date": "2026-10-13"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 1,
+                  "spaces_occupied": 0
+                }
+              ],
+              "date": "2026-10-14"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-15"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-16"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-17"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-18"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 1,
+                  "spaces_occupied": 0
+                }
+              ],
+              "date": "2026-10-19"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 1,
+                  "spaces_occupied": 0
+                }
+              ],
+              "date": "2026-10-20"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 1,
+                  "spaces_occupied": 0
+                }
+              ],
+              "date": "2026-10-21"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-22"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-23"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-24"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-25"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-26"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-27"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-28"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-29"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-30"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-10-31"
+            },
+            {
+              "calendars": [
+                {
+                  "calendar_id": 1,
+                  "manual_availability": false,
+                  "spaces_available": 0,
+                  "spaces_occupied": 1
+                }
+              ],
+              "date": "2026-11-01"
+            }
+          ],
+          "days_count": 42,
+          "days_with_space": 11,
+          "end_date": "2026-11-02",
+          "observed_at_ms": 1790020563590,
+          "opk": "AP1xVWYN",
+          "preferences": [
+            {
+              "accepts_more_than_one_client": false,
+              "calendar_id": 1,
+              "days_of_week": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday"
+              ],
+              "is_away": false,
+              "maximum_spaces_available": 30,
+              "name": "Boarding",
+              "spaces_available": 1,
+              "spaces_label": "Pet per night"
+            }
+          ],
+          "service_type": "overnight-boarding",
+          "source_url": "https://www.rover.com/api/v7/people/AP1xVWYN/public-calendar/?startDate=2026-09-21&endDate=2026-11-02&serviceType=overnight-boarding",
+          "start_date": "2026-09-21",
+          "updated_at": "2026-09-21T19:00:25Z"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "rover-com",
+        "capability": "pet-care-services/get_sitter_availability"
+      }
+    },
+    {
+      "id": "rover-com/pet-care-services/list_sitter_reviews",
+      "provider": "rover-com",
+      "capability": "pet-care-services/list_sitter_reviews",
+      "name": "List sitter reviews",
+      "description": "Read what pet owners wrote about a specific sitter.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "opk",
+          "type": "string",
+          "in": "body",
+          "about": "Sitter id (personOpk), e.g. AP1xVWYN. Pattern: ^[A-Za-z0-9_-]{6,16}$.",
+          "required": true
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "page",
+          "default": 1,
+          "min": 1,
+          "max": 10000
+        }
+      ],
+      "response": {
+        "about": "List one sitter's public reviews, newest first, one page at a time (`GET /api/v7/people/{opk}/reviews/?page=`, endpoint ep-reviews). Returns the rating distribution and totals (ratings vs. text reviews), and per review: id, timestamp with offset as Rover stores it, star rating, text, reviewer short name, the service reviewed, the pets, and the sitter's response when any. `next_page` (and the continuation) is null when exhausted. Unknown opk is `not_found`.",
+        "key": "reviews",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "added",
+            "type": "string",
+            "about": "ISO 8601 with offset as Rover reports it."
+          },
+          {
+            "name": "id",
+            "type": "string",
+            "about": "Review opk from its API URL."
+          },
+          {
+            "name": "pets",
+            "type": "object[]"
+          },
+          {
+            "name": "rating",
+            "type": "number"
+          },
+          {
+            "name": "response",
+            "type": "string",
+            "about": "Sitter's public response text, when any."
+          },
+          {
+            "name": "reviewer_short_name",
+            "type": "string"
+          },
+          {
+            "name": "service",
+            "type": "object"
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "opk": "AP1xVWYN",
+          "page": 1
+        },
+        "response": {
+          "count": 19,
+          "distribution": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 18
+          },
+          "next_page": 2,
+          "observed_at_ms": 1790020573680,
+          "opk": "AP1xVWYN",
+          "page": 1,
+          "reviews": [
+            {
+              "added": "2026-09-11T18:10:28-07:00",
+              "id": "AMaVZxmA",
+              "pets": [
+                {
+                  "name": "Demi",
+                  "pet_type": "dog"
+                }
+              ],
+              "rating": 5,
+              "response": null,
+              "reviewer_short_name": "Donny B.",
+              "service": {
+                "name": "Boarding",
+                "slug": "overnight-boarding"
+              },
+              "text": "I wish I could give 1000+ stars. Tianci is a super star sitter, my dog had a vacation of her own while under her care, from the dog park, to hikes, lake days and restful nights at home, my dog had quite the stay! Her communication was amazing. Highly recommend.",
+              "type": "rating"
+            },
+            {
+              "added": "2026-08-28T09:28:31-07:00",
+              "id": "NJ2kRjdN",
+              "pets": [
+                {
+                  "name": "Zoey",
+                  "pet_type": "dog"
+                }
+              ],
+              "rating": 5,
+              "response": null,
+              "reviewer_short_name": "Dustin Z.",
+              "service": {
+                "name": "Doggy Day Care",
+                "slug": "doggy-day-care"
+              },
+              "text": "Tianci and Ran are incredible! We are devastated they no longer do doggy daycare but we would 100% recommend them for boarding. They took such good care of our little girl and it is unlikely you will ever get such amazing picture updates from anyone else.",
+              "type": "rating"
+            },
+            {
+              "added": "2026-08-12T14:26:20-07:00",
+              "id": "gaD85bON",
+              "pets": [
+                {
+                  "name": "Theo",
+                  "pet_type": "dog"
+                }
+              ],
+              "rating": 5,
+              "response": null,
+              "reviewer_short_name": "Mia H.",
+              "service": {
+                "name": "Boarding",
+                "slug": "overnight-boarding"
+              },
+              "text": "Tianci and Ran were the best sitters for our Theo while we were on vacation for the week! They updated their Google Photos shared album with us daily which we absolutely loved. We could tell Theo was being very well taken care of and they took him on so many adventures which was fun to see too! Will definitely book them again for the next time we’re out of town!",
+              "type": "rating"
+            },
+            {
+              "added": "2026-07-30T16:55:35-07:00",
+              "id": "AMax044A",
+              "pets": [
+                {
+                  "name": "Haru (하루)",
+                  "pet_type": "dog"
+                }
+              ],
+              "rating": 5,
+              "response": null,
+              "reviewer_short_name": "David C.",
+              "service": {
+                "name": "Boarding",
+                "slug": "overnight-boarding"
+              },
+              "text": "Tianci took great care of our dog while we were out of town. We felt comfortable the entire time, and we could tell that he was enjoying himself. We appreciated all the photo updates.",
+              "type": "rating"
+            },
+            {
+              "added": "2026-07-16T18:19:37-07:00",
+              "id": "QjwXlnyA",
+              "pets": [
+                {
+                  "name": "Baloo",
+                  "pet_type": "dog"
+                }
+              ],
+              "rating": 5,
+              "response": null,
+              "reviewer_short_name": "Jesse C.",
+              "service": {
+                "name": "Boarding",
+                "slug": "overnight-boarding"
+              },
+              "text": "Tianci was wonderful! I was immediately at ease during our meet and greet as she showed us the building and explained her routine with the dogs under her care. During Baloo's 4 day stay we got so many wonderful pictures uploaded to an album. Baloo seemed very well cared for and doted on the entire time. Drop-off and pick up was a breeze, as was communication. If you're looking for a warm, reliable sitter, Tianci is her!",
+              "type": "rating"
+            },
+            {
+              "added": "2026-07-09T22:00:49-07:00",
+              "id": "N8lL0beN",
+              "pets": [
+                {
+                  "name": "Winston",
+                  "pet_type": "dog"
+                }
+              ],
+              "rating": 5,
+              "response": null,
+              "reviewer_short_name": "Michelle F.",
+              "service": {
+                "name": "Boarding",
+                "slug": "overnight-boarding"
+              },
+              "text": "Our malty-poo, Winston had such a great time with Tianci and Ran. They were so loving to him and took him on many walking adventures around the city. We also loved all the photo updates while we were traveling.",
+              "type": "rating"
+            },
+            {
+              "added": "2026-06-26T10:22:19-07:00",
+              "id": "Ao2eGjeQ",
+              "pets": [
+                {
+                  "name": "Zoey",
+                  "pet_type": "dog"
+                }
+              ],
+              "rating": 5,
+              "response": null,
+              "reviewer_short_name": "Dustin Z.",
+              "service": {
+                "name": "Doggy Day Care",
+                "slug": "doggy-day-care"
+              },
+              "text": "Tianci and her husband Ran were great with Zoey! Zoey got so much love and attention from them on her days she spent at their place. She was a very spoiled pup frequently getting new treats and toys to play with. I also love how the way they do the photo updates with Google! Very bummed they are no longer able to do doggy day care but we plan to use them for boarding in the future.",
+              "type": "rating"
+            },
+            {
+              "added": "2026-06-04T12:10:22-07:00",
+              "id": "gD4PO0Kg",
+              "pets": [
+                {
+                  "name": "Sophie",
+                  "pet_type": "dog"
+                }
+              ],
+              "rating": 5,
+              "response": null,
+              "reviewer_short_name": "Desiree R.",
+              "service": {
+                "name": "Boarding",
+                "slug": "overnight-boarding"
+              },
+              "text": "Excellent!!!! This was my first time with Tianci and her husband. They did such an incredible job taking care of my 12 year old dog.  Just truly kind and enthusiastic people. Tons of pictures, I can tell my dog had a great time with them and they with her as well. She was using a cone after a minor procedure and did a great job with after care etc. Very flexible and accommodating as well when my flight was delayed. I would definitely recommend them and most definitely use their services again.",
+              "type": "rating"
+            },
+            {
+              "added": "2026-05-29T09:19:26-07:00",
+              "id": "NJ2XO6VN",
+              "pets": [
+                {
+                  "name": "Harold",
+                  "pet_type": "dog"
+                }
+              ],
+              "rating": 5,
+              "response": null,
+              "reviewer_short_name": "Sydney B.",
+              "service": {
+                "name": "Boarding",
+                "slug": "overnight-boarding"
+              },
+              "text": "Tianci was the most amazing sitter for my dog Harold! She was so communicative and I could tell she loves dogs and making sure they’re well taken care of. Harold had the best time staying with her and didn’t want to leave! Tianci shared photo updates and messages throughout Harold’s stay and I loved seeing how happy he was in the pictures! I will surely be booking Tianci again in the future, and I highly recommend her for anyone wanting to make sure their dog is well-loved while they’re away!",
+              "type": "rating"
+            },
+            {
+              "added": "2026-05-18T15:23:17-07:00",
+              "id": "Q1zKw6mA",
+              "pets": [
+                {
+                  "name": "Suga",
+                  "pet_type": "dog"
+                }
+              ],
+              "rating": 5,
+              "response": null,
+              "reviewer_short_name": "Kosei T.",
+              "service": {
+                "name": "Boarding",
+                "slug": "overnight-boarding"
+              },
+              "text": "Tianci and ran took such amazing care of Suga and kept us updated with thoughtful messages and photos, which gave us so much peace of mind. Suga looked so happy and comfortable the entire stay. We could really tell how much care and attention they gave him. We’re so grateful and would absolutely book with her again. Highly recommend!",
+              "type": "rating"
+            }
+          ],
+          "source_url": "https://www.rover.com/api/v7/people/AP1xVWYN/reviews/?page=1",
+          "total_ratings": 21,
+          "total_text_reviews": 19
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "rover-com",
+        "capability": "pet-care-services/list_sitter_reviews"
+      }
+    },
+    {
+      "id": "rover-com/pet-care-services/search_sitters",
+      "provider": "rover-com",
+      "capability": "pet-care-services/search_sitters",
+      "name": "Search sitters",
+      "description": "Find sitters for a service near a place, optionally for dates, dog size and budget; then chain `slug`/`opk` into the detail functions.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "end_date",
+          "type": "string",
+          "in": "body",
+          "about": "Service end (pick-up) date, YYYY-MM-DD, on or after start_date. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        },
+        {
+          "name": "giant_dogs",
+          "type": "boolean",
+          "in": "body",
+          "about": "Only sitters accepting giant dogs (101+ lbs)."
+        },
+        {
+          "name": "large_dogs",
+          "type": "boolean",
+          "in": "body",
+          "about": "Only sitters accepting large dogs (41-100 lbs)."
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "in": "body",
+          "about": "Free-text place as Rover's location box accepts it, e.g. `Seattle, WA, USA` or `Chicago, IL` or a US ZIP code. Prefer a `description` from `suggest_locations`.",
+          "required": true
+        },
+        {
+          "name": "max_price",
+          "type": "number",
+          "in": "body",
+          "about": "Maximum listed price per unit, whole units of the market currency.",
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "medium_dogs",
+          "type": "boolean",
+          "in": "body",
+          "about": "Only sitters accepting medium dogs (16-40 lbs)."
+        },
+        {
+          "name": "min_price",
+          "type": "number",
+          "in": "body",
+          "about": "Minimum listed price per unit, whole units of the market currency.",
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "in": "body",
+          "about": "Result page (20 sitters per page); pass the previous response's `next_page`.",
+          "default": 1,
+          "min": 1,
+          "max": 500
+        },
+        {
+          "name": "pet_type",
+          "type": "string",
+          "in": "body",
+          "about": "Pet to search care for; defaults to dog.",
+          "default": "dog",
+          "oneOf": [
+            "dog",
+            "cat"
+          ]
+        },
+        {
+          "name": "service_type",
+          "type": "string",
+          "in": "body",
+          "about": "Rover service slug: overnight-boarding (boarding at the sitter's), overnight-traveling (house sitting at the owner's), drop-in (drop-in visits), dog-walking, doggy-day-care.",
+          "required": true,
+          "oneOf": [
+            "overnight-boarding",
+            "overnight-traveling",
+            "drop-in",
+            "dog-walking",
+            "doggy-day-care"
+          ]
+        },
+        {
+          "name": "small_dogs",
+          "type": "boolean",
+          "in": "body",
+          "about": "Only sitters accepting small dogs (Rover US bucket 0-15 lbs)."
+        },
+        {
+          "name": "start_date",
+          "type": "string",
+          "in": "body",
+          "about": "Service start (drop-off) date, YYYY-MM-DD. Give both dates or neither. Pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$."
+        }
+      ],
+      "response": {
+        "about": "Search Rover sitters for one service around a location (`GET /api/v7/search-optimized/`, endpoint ep-search-api). Filters: `service_type` (overnight-boarding = boarding in the sitter's home, overnight-traveling = house sitting in the owner's home, drop-in = drop-in visits, dog-walking, doggy-day-care), `location` as a free-text place (use the exact `description` from `suggest_locations`, e.g. `Seattle, WA, USA`), `pet_type` dog or cat, optional `start_date`/`end_date`, dog-size flags, `min_price`/`max_price` and `page` (20 results per page; `next_page` and the continuation give the next one). Each result is a sitter card: opk and slug (the identifiers `get_sitter`, `get_sitter_availability` and `list_sitter_reviews` take), name, headline, listed price per unit in the market currency, rating and review counts, neighbourhood and distance from the search centre, badges, and `available_for_selected_dates` exactly as Rover reports it (`unknown` is a real value: search results never confirm availability; use `get_sitter_availability`). The response `location` block says what Rover geocoded the input to. A location Rover cannot geocode makes it fall back to the request IP's area; this program refuses that with `invalid_input` instead of returning unrelated sitters. Market follows the proxy exit (US, USD); a non-US location therefore also fails as not resolvable.",
+        "key": "results",
+        "paginated": true,
+        "fields": [
+          {
+            "name": "api_url",
+            "type": "string"
+          },
+          {
+            "name": "available_for_selected_dates",
+            "type": "string",
+            "about": "Rover's own value (`unknown`, `available`, ...); never a confirmation."
+          },
+          {
+            "name": "badges",
+            "type": "object[]"
+          },
+          {
+            "name": "browsable_services",
+            "type": "string[]"
+          },
+          {
+            "name": "calendar_updated_days_ago",
+            "type": "number"
+          },
+          {
+            "name": "cancellation_policy",
+            "type": "string"
+          },
+          {
+            "name": "image_url",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "object"
+          },
+          {
+            "name": "opk",
+            "type": "string",
+            "about": "Sitter id (personOpk) for `get_sitter_availability` and `list_sitter_reviews`."
+          },
+          {
+            "name": "price",
+            "type": "object"
+          },
+          {
+            "name": "profile_status",
+            "type": "string",
+            "about": "Profile status badge slug such as star-sitter, when Rover shows one."
+          },
+          {
+            "name": "profile_url",
+            "type": "string"
+          },
+          {
+            "name": "rank",
+            "type": "number"
+          },
+          {
+            "name": "rating_average",
+            "type": "number"
+          },
+          {
+            "name": "repeat_client_count",
+            "type": "number"
+          },
+          {
+            "name": "reviews_count",
+            "type": "number"
+          },
+          {
+            "name": "service_type",
+            "type": "string"
+          },
+          {
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "type": "string",
+            "about": "Profile slug (from the profile URL) for `get_sitter`."
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "about": "Sitter's profile headline."
+          },
+          {
+            "name": "years_of_experience",
+            "type": "string"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "location": "Seattle, WA, USA",
+          "pet_type": "dog",
+          "service_type": "overnight-boarding"
+        },
+        "response": {
+          "currency": "USD",
+          "dog_size_buckets": {
+            "giant": "101+",
+            "large": "41-100",
+            "medium": "16-40",
+            "small": "0-15"
+          },
+          "filters": {
+            "dog_sizes": [],
+            "end_date": null,
+            "max_price": null,
+            "min_price": null,
+            "start_date": null
+          },
+          "location": {
+            "country_code": "US",
+            "latitude": 47.60621,
+            "longitude": -122.33207,
+            "query": "Seattle, WA, USA",
+            "resolved": "Seattle, WA",
+            "type": "city",
+            "zip": "98164"
+          },
+          "next_page": 2,
+          "observed_at_ms": 1790020546506,
+          "page": 1,
+          "page_count": 125,
+          "per_page": 20,
+          "pet_type": "dog",
+          "pricing_note": "Sitter-listed advertised rates as Rover displays them, not quotes. full_price includes Rover's owner-side service fee; holiday adjustments and taxes are not included.",
+          "results": [
+            {
+              "api_url": "https://www.rover.com/api/v7/people/AP1xVWYN/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                },
+                {
+                  "slug": "first-aid-cpr",
+                  "title": "First Aid & CPR"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding"
+              ],
+              "calendar_updated_days_ago": 0,
+              "cancellation_policy": "Cancel before the booking begins.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/AP1xVWYN/hndsxqidyh/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 0.67,
+                "distance_unit": "mi",
+                "latitude": 47.614978,
+                "longitude": -122.338258,
+                "neighborhood": "Downtown",
+                "state": "WA",
+                "zip": "98121"
+              },
+              "opk": "AP1xVWYN",
+              "price": {
+                "amount": 69,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/tianci-d-staycation-for-your-dog/",
+              "rank": 1,
+              "rating_average": 5,
+              "repeat_client_count": 3,
+              "reviews_count": 21,
+              "service_type": "overnight-boarding",
+              "short_name": "Tianci D.",
+              "slug": "tianci-d-staycation-for-your-dog",
+              "title": "Staycation for Your Dog",
+              "years_of_experience": "20 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/N8EGLaEg/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                },
+                {
+                  "slug": "first-aid-cpr",
+                  "title": "First Aid & CPR"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding"
+              ],
+              "calendar_updated_days_ago": 6,
+              "cancellation_policy": "Cancel up to 7 days before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/N8EGLaEg/zpuitfbtkk/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 3.51,
+                "distance_unit": "mi",
+                "latitude": 47.560121,
+                "longitude": -122.363898,
+                "neighborhood": "North Delridge",
+                "state": "WA",
+                "zip": "98106"
+              },
+              "opk": "N8EGLaEg",
+              "price": {
+                "amount": 50,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/carl-o-your-dogs-next-favorite-toy/",
+              "rank": 2,
+              "rating_average": 5,
+              "repeat_client_count": 6,
+              "reviews_count": 21,
+              "service_type": "overnight-boarding",
+              "short_name": "Carl O.",
+              "slug": "carl-o-your-dogs-next-favorite-toy",
+              "title": "Your dog's next favorite toy!",
+              "years_of_experience": "4 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/AM1q07lA/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                },
+                {
+                  "slug": "rover-101",
+                  "title": "Rover 101"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "drop-in",
+                "doggy-day-care",
+                "dog-walking"
+              ],
+              "calendar_updated_days_ago": 0,
+              "cancellation_policy": "Cancel up to 1 day before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/AM1q07lA/kzhwvmgrxx/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 1.97,
+                "distance_unit": "mi",
+                "latitude": 47.630106,
+                "longitude": -122.355175,
+                "neighborhood": "Lower Queen Anne",
+                "state": "WA",
+                "zip": "98119"
+              },
+              "opk": "AM1q07lA",
+              "price": {
+                "amount": 65,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/devan-h-senior-small-and-doodle-dude/",
+              "rank": 3,
+              "rating_average": 5,
+              "repeat_client_count": 6,
+              "reviews_count": 17,
+              "service_type": "overnight-boarding",
+              "short_name": "Devan H.",
+              "slug": "devan-h-senior-small-and-doodle-dude",
+              "title": "Senior, Small, and Doodle Dude 🐶🐾",
+              "years_of_experience": "5 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/Q3Y5JDGN/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "drop-in",
+                "doggy-day-care",
+                "dog-walking"
+              ],
+              "calendar_updated_days_ago": 0,
+              "cancellation_policy": "Cancel before the booking begins.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/Q3Y5JDGN/derkiumuyk/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 0.61,
+                "distance_unit": "mi",
+                "latitude": 47.613006,
+                "longitude": -122.323631,
+                "neighborhood": "First Hill",
+                "state": "WA",
+                "zip": "98101"
+              },
+              "opk": "Q3Y5JDGN",
+              "price": {
+                "amount": 60,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/randsell-v-lowkey-here-to-impress-your-pet/",
+              "rank": 4,
+              "rating_average": 5,
+              "repeat_client_count": 4,
+              "reviews_count": 16,
+              "service_type": "overnight-boarding",
+              "short_name": "Randsell V.",
+              "slug": "randsell-v-lowkey-here-to-impress-your-pet",
+              "title": "Lowkey here to impress your pet",
+              "years_of_experience": "6 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/NpaZ6M1g/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "drop-in",
+                "doggy-day-care",
+                "dog-walking"
+              ],
+              "calendar_updated_days_ago": 5,
+              "cancellation_policy": "Cancel up to 3 days before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/NpaZ6M1g/lugqchzjdf/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 1.3,
+                "distance_unit": "mi",
+                "latitude": 47.619269,
+                "longitude": -122.352023,
+                "neighborhood": "Belltown",
+                "state": "WA",
+                "zip": "98121"
+              },
+              "opk": "NpaZ6M1g",
+              "price": {
+                "amount": 65,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/danielle-joy-m-dani-joy-we-love-dogs/",
+              "rank": 5,
+              "rating_average": 5,
+              "repeat_client_count": 31,
+              "reviews_count": 113,
+              "service_type": "overnight-boarding",
+              "short_name": "Danielle & Joy M.",
+              "slug": "danielle-joy-m-dani-joy-we-love-dogs",
+              "title": "Dani & Joy - We love dogs",
+              "years_of_experience": "1 year of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/AyjVP1qN/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "drop-in",
+                "doggy-day-care",
+                "dog-walking"
+              ],
+              "calendar_updated_days_ago": 0,
+              "cancellation_policy": "Cancel before the booking begins.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/AyjVP1qN/yllmxpsafu/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 2.92,
+                "distance_unit": "mi",
+                "latitude": 47.571287,
+                "longitude": -122.36744,
+                "neighborhood": "North Delridge",
+                "state": "WA",
+                "zip": "98126"
+              },
+              "opk": "AyjVP1qN",
+              "price": {
+                "amount": 59,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": null,
+              "profile_url": "https://www.rover.com/members/rachael-d-i-specialize-in-last-minute-needs/",
+              "rank": 6,
+              "rating_average": 5,
+              "repeat_client_count": 34,
+              "reviews_count": 145,
+              "service_type": "overnight-boarding",
+              "short_name": "Rachael D.",
+              "slug": "rachael-d-i-specialize-in-last-minute-needs",
+              "title": "I specialize in last minute needs!",
+              "years_of_experience": "20 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/yglGrrqN/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding"
+              ],
+              "calendar_updated_days_ago": 6,
+              "cancellation_policy": "Cancel up to 1 day before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/yglGrrqN/gcrwqfrskh/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 0.93,
+                "distance_unit": "mi",
+                "latitude": 47.616708,
+                "longitude": -122.344557,
+                "neighborhood": "Belltown",
+                "state": "WA",
+                "zip": "98121"
+              },
+              "opk": "yglGrrqN",
+              "price": {
+                "amount": 75,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": null,
+              "profile_url": "https://www.rover.com/members/janet-s-your-dedicated-play-pal/",
+              "rank": 7,
+              "rating_average": 5,
+              "repeat_client_count": 9,
+              "reviews_count": 31,
+              "service_type": "overnight-boarding",
+              "short_name": "Janet S.",
+              "slug": "janet-s-your-dedicated-play-pal",
+              "title": "Your dedicated play pal!",
+              "years_of_experience": "17 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/NKGXwlMN/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "doggy-day-care"
+              ],
+              "calendar_updated_days_ago": 36,
+              "cancellation_policy": "Cancel up to 1 day before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/NKGXwlMN/lxrpuvazeo/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 1.95,
+                "distance_unit": "mi",
+                "latitude": 47.630208,
+                "longitude": -122.354123,
+                "neighborhood": "Lower Queen Anne",
+                "state": "WA",
+                "zip": "98119"
+              },
+              "opk": "NKGXwlMN",
+              "price": {
+                "amount": 40,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/debra-t-your-pet-will-feel-loved/",
+              "rank": 8,
+              "rating_average": 5,
+              "repeat_client_count": 16,
+              "reviews_count": 51,
+              "service_type": "overnight-boarding",
+              "short_name": "Debra T.",
+              "slug": "debra-t-your-pet-will-feel-loved",
+              "title": "Your pet will feel loved!",
+              "years_of_experience": "37 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/N6VBLomN/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding"
+              ],
+              "calendar_updated_days_ago": 2,
+              "cancellation_policy": "Cancel up to 7 days before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/N6VBLomN/gruangiwnd/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 3.87,
+                "distance_unit": "mi",
+                "latitude": 47.559628,
+                "longitude": -122.285928,
+                "neighborhood": "Columbia City",
+                "state": "WA",
+                "zip": "98118"
+              },
+              "opk": "N6VBLomN",
+              "price": {
+                "amount": 75,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/laila-r-little-furry-friends-welcome/",
+              "rank": 9,
+              "rating_average": 5,
+              "repeat_client_count": 15,
+              "reviews_count": 51,
+              "service_type": "overnight-boarding",
+              "short_name": "Laila R.",
+              "slug": "laila-r-little-furry-friends-welcome",
+              "title": "Little Furry Friends Welcome",
+              "years_of_experience": "40 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/gVDWB05A/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "drop-in",
+                "doggy-day-care",
+                "dog-walking"
+              ],
+              "calendar_updated_days_ago": 20,
+              "cancellation_policy": "Cancel up to 3 days before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/gVDWB05A/dwfltqkobx/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 0.66,
+                "distance_unit": "mi",
+                "latitude": 47.615782,
+                "longitude": -122.332199,
+                "neighborhood": "Downtown",
+                "state": "WA",
+                "zip": "98121"
+              },
+              "opk": "gVDWB05A",
+              "price": {
+                "amount": 72,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/pramukh-g-safe-comfy-and-easy-city-dog-care/",
+              "rank": 10,
+              "rating_average": 5,
+              "repeat_client_count": 3,
+              "reviews_count": 8,
+              "service_type": "overnight-boarding",
+              "short_name": "Pramukh G.",
+              "slug": "pramukh-g-safe-comfy-and-easy-city-dog-care",
+              "title": "Safe Comfy and Easy City Dog Care!",
+              "years_of_experience": "5 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/N8avKJmg/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "dog-walking"
+              ],
+              "calendar_updated_days_ago": 0,
+              "cancellation_policy": "Cancel up to 3 days before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/N8avKJmg/nygbjsuscf/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 1.11,
+                "distance_unit": "mi",
+                "latitude": 47.621798,
+                "longitude": -122.326423,
+                "neighborhood": "Capitol Hill",
+                "state": "WA",
+                "zip": "98102"
+              },
+              "opk": "N8avKJmg",
+              "price": {
+                "amount": 41,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": null,
+              "profile_url": "https://www.rover.com/members/jude-n-your-dogs-home-away-from-home/",
+              "rank": 11,
+              "rating_average": 5,
+              "repeat_client_count": 1,
+              "reviews_count": 5,
+              "service_type": "overnight-boarding",
+              "short_name": "Jude N.",
+              "slug": "jude-n-your-dogs-home-away-from-home",
+              "title": "Your Dog’s Home Away From Home 🐾",
+              "years_of_experience": "6 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/N8r4078Q/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "doggy-day-care"
+              ],
+              "calendar_updated_days_ago": 0,
+              "cancellation_policy": "Cancel up to 7 days before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/N8r4078Q/kfkcywanoz/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 1.51,
+                "distance_unit": "mi",
+                "latitude": 47.622141,
+                "longitude": -122.354264,
+                "neighborhood": "Lower Queen Anne",
+                "state": "WA",
+                "zip": "98109"
+              },
+              "opk": "N8r4078Q",
+              "price": {
+                "amount": 80,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/catherine-k-canine-companion-extraordinaire/",
+              "rank": 12,
+              "rating_average": 5,
+              "repeat_client_count": 14,
+              "reviews_count": 58,
+              "service_type": "overnight-boarding",
+              "short_name": "Catherine K.",
+              "slug": "catherine-k-canine-companion-extraordinaire",
+              "title": "Canine Companion Extraordinaire 🐾",
+              "years_of_experience": "16 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/AexZl38Q/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "overnight-traveling",
+                "drop-in",
+                "doggy-day-care",
+                "dog-walking"
+              ],
+              "calendar_updated_days_ago": 4,
+              "cancellation_policy": "Cancel up to 3 days before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/AexZl38Q/jpkuyafski/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 0.86,
+                "distance_unit": "mi",
+                "latitude": 47.616275,
+                "longitude": -122.34279,
+                "neighborhood": "Belltown",
+                "state": "WA",
+                "zip": "98121"
+              },
+              "opk": "AexZl38Q",
+              "price": {
+                "amount": 65,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/allison-f-you-dogs-new-bff-in-belltown/",
+              "rank": 13,
+              "rating_average": 5,
+              "repeat_client_count": 2,
+              "reviews_count": 11,
+              "service_type": "overnight-boarding",
+              "short_name": "Allison F.",
+              "slug": "allison-f-you-dogs-new-bff-in-belltown",
+              "title": "You Dog's New BFF in Belltown!",
+              "years_of_experience": "12 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/QnWqXPpA/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "overnight-traveling",
+                "drop-in",
+                "dog-walking"
+              ],
+              "calendar_updated_days_ago": 6,
+              "cancellation_policy": "Cancel up to 1 day before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/QnWqXPpA/ptvtpylfop/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 1.65,
+                "distance_unit": "mi",
+                "latitude": 47.623043,
+                "longitude": -122.357219,
+                "neighborhood": "Lower Queen Anne",
+                "state": "WA",
+                "zip": "98119"
+              },
+              "opk": "QnWqXPpA",
+              "price": {
+                "amount": 55,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/ruslana-s-loving-and-caring-pet-sitter/",
+              "rank": 14,
+              "rating_average": 5,
+              "repeat_client_count": 16,
+              "reviews_count": 53,
+              "service_type": "overnight-boarding",
+              "short_name": "Ruslana S.",
+              "slug": "ruslana-s-loving-and-caring-pet-sitter",
+              "title": "Loving and caring pet sitter",
+              "years_of_experience": "4 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/NqGYdvXQ/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "overnight-traveling"
+              ],
+              "calendar_updated_days_ago": 7,
+              "cancellation_policy": "Cancel up to 1 day before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/NqGYdvXQ/unoyfyonph/original.jpeg?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 1.85,
+                "distance_unit": "mi",
+                "latitude": 47.583312,
+                "longitude": -122.311463,
+                "neighborhood": "Beacon Hill",
+                "state": "WA",
+                "zip": "98144"
+              },
+              "opk": "NqGYdvXQ",
+              "price": {
+                "amount": 45,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": null,
+              "profile_url": "https://www.rover.com/members/emely-g-passionate-advocate-for-animals/",
+              "rank": 15,
+              "rating_average": 5,
+              "repeat_client_count": 1,
+              "reviews_count": 9,
+              "service_type": "overnight-boarding",
+              "short_name": "Emely G.",
+              "slug": "emely-g-passionate-advocate-for-animals",
+              "title": "Passionate advocate for animals",
+              "years_of_experience": "15 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/eAGb6w9Q/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-background-check",
+                  "title": "Verified Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding"
+              ],
+              "calendar_updated_days_ago": 8,
+              "cancellation_policy": "Cancel before the booking begins.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/eAGb6w9Q/efybwjwcgs/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 1.05,
+                "distance_unit": "mi",
+                "latitude": 47.619838,
+                "longitude": -122.341976,
+                "neighborhood": "South Lake Union",
+                "state": "WA",
+                "zip": "98109"
+              },
+              "opk": "eAGb6w9Q",
+              "price": {
+                "amount": 85,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/jennifer-ken-m-kamp-kennifer-new-fur-rends/",
+              "rank": 16,
+              "rating_average": 5,
+              "repeat_client_count": 60,
+              "reviews_count": 202,
+              "service_type": "overnight-boarding",
+              "short_name": "Jennifer & Ken M.",
+              "slug": "jennifer-ken-m-kamp-kennifer-new-fur-rends",
+              "title": "Kamp Kennifer 🐾 new fur-rends",
+              "years_of_experience": "15 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/N08O99LN/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "doggy-day-care",
+                "dog-walking"
+              ],
+              "calendar_updated_days_ago": 3,
+              "cancellation_policy": "Cancel up to 7 days before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/N08O99LN/cxhinyljiz/original.jpg?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 0.57,
+                "distance_unit": "mi",
+                "latitude": 47.614173,
+                "longitude": -122.328866,
+                "neighborhood": "Downtown",
+                "state": "WA",
+                "zip": "98101"
+              },
+              "opk": "N08O99LN",
+              "price": {
+                "amount": 58,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/zhongni-l-multi-breed-pro-poodle-mom/",
+              "rank": 17,
+              "rating_average": 5,
+              "repeat_client_count": 11,
+              "reviews_count": 33,
+              "service_type": "overnight-boarding",
+              "short_name": "Zhongni L.",
+              "slug": "zhongni-l-multi-breed-pro-poodle-mom",
+              "title": "Multi-Breed Pro ⭐️ Poodle Mom!",
+              "years_of_experience": "3 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/AM1Ee41A/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "overnight-traveling",
+                "drop-in",
+                "doggy-day-care",
+                "dog-walking"
+              ],
+              "calendar_updated_days_ago": 0,
+              "cancellation_policy": "Cancel up to 7 days before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/AM1Ee41A/arpnwcvxnv/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 0.78,
+                "distance_unit": "mi",
+                "latitude": 47.61727,
+                "longitude": -122.329148,
+                "neighborhood": "Capitol Hill",
+                "state": "WA",
+                "zip": "98122"
+              },
+              "opk": "AM1Ee41A",
+              "price": {
+                "amount": 55,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/mengyuan-l-gives-a-good-scratch/",
+              "rank": 18,
+              "rating_average": 4.9,
+              "repeat_client_count": 34,
+              "reviews_count": 84,
+              "service_type": "overnight-boarding",
+              "short_name": "Mengyuan L.",
+              "slug": "mengyuan-l-gives-a-good-scratch",
+              "title": "gives a good scratch",
+              "years_of_experience": "8 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/aNEZqBog/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-background-check",
+                  "title": "Verified Background Check"
+                },
+                {
+                  "slug": "rover-101",
+                  "title": "Rover 101"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding"
+              ],
+              "calendar_updated_days_ago": 37,
+              "cancellation_policy": "Cancel before the booking begins.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/aNEZqBog/1162137d51/original.jpg?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 0.4,
+                "distance_unit": "mi",
+                "latitude": 47.600877,
+                "longitude": -122.335636,
+                "neighborhood": "Downtown",
+                "state": "WA",
+                "zip": "98104"
+              },
+              "opk": "aNEZqBog",
+              "price": {
+                "amount": 65,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/saba-w-a-happy-home-for-your-pet/",
+              "rank": 19,
+              "rating_average": 5,
+              "repeat_client_count": 101,
+              "reviews_count": 220,
+              "service_type": "overnight-boarding",
+              "short_name": "Saba W.",
+              "slug": "saba-w-a-happy-home-for-your-pet",
+              "title": "A happy home for your pet.",
+              "years_of_experience": "7 years of experience"
+            },
+            {
+              "api_url": "https://www.rover.com/api/v7/people/EgYy3MgD/",
+              "available_for_selected_dates": "unknown",
+              "badges": [
+                {
+                  "slug": "verified-enhanced-background-check",
+                  "title": "Verified Enhanced Background Check"
+                },
+                {
+                  "slug": "rover-101",
+                  "title": "Rover 101"
+                }
+              ],
+              "browsable_services": [
+                "overnight-boarding",
+                "drop-in"
+              ],
+              "calendar_updated_days_ago": 0,
+              "cancellation_policy": "Cancel up to 1 day before.",
+              "image_url": "https://www.rover.com/cf-image-cdn/remote/images/people/EgYy3MgD/hiyemlrkoq/original?width=450&height=450&quality=70&fit=cover",
+              "location": {
+                "city": "Seattle",
+                "distance": 3,
+                "distance_unit": "mi",
+                "latitude": 47.581893,
+                "longitude": -122.385291,
+                "neighborhood": "Admiral",
+                "state": "WA",
+                "zip": "98116"
+              },
+              "opk": "EgYy3MgD",
+              "price": {
+                "amount": 55,
+                "currency": "USD",
+                "unit": "night",
+                "unit_sentence": "per night"
+              },
+              "profile_status": "star-sitter",
+              "profile_url": "https://www.rover.com/members/kevin-t-reliable-dog-and-cat-care/",
+              "rank": 20,
+              "rating_average": 5,
+              "repeat_client_count": 25,
+              "reviews_count": 77,
+              "service_type": "overnight-boarding",
+              "short_name": "Kevin T.",
+              "slug": "kevin-t-reliable-dog-and-cat-care",
+              "title": "Reliable Dog and Cat Care",
+              "years_of_experience": "30 years of experience"
+            }
+          ],
+          "search_uuid": "e78a43f4-fc2e-4955-8923-49582a4a447d",
+          "service_type": "overnight-boarding",
+          "total_count": 2489,
+          "weight_unit": "lbs"
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "rover-com",
+        "capability": "pet-care-services/search_sitters"
+      }
+    },
+    {
+      "id": "rover-com/pet-care-services/suggest_locations",
+      "provider": "rover-com",
+      "capability": "pet-care-services/suggest_locations",
+      "name": "Suggest locations",
+      "description": "Turn a partial or ambiguous place name into a location string before `search_sitters`.",
+      "creditsCost": 5,
+      "perRecord": false,
+      "options": [
+        {
+          "name": "country_code",
+          "type": "string",
+          "in": "body",
+          "about": "ISO 3166-1 alpha-2 country to bias predictions; US is the market this program serves. Pattern: ^[A-Za-z]{2}$.",
+          "default": "US"
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "in": "body",
+          "about": "Partial place text, e.g. `Seatt` or `Brooklyn`.",
+          "required": true
+        }
+      ],
+      "response": {
+        "about": "Resolve free text to the place strings Rover's search accepts (`GET /api/v7/utilities/location-autocomplete/`, endpoint ep-autocomplete). Returns Rover's place predictions (Google Places-backed): `description` is the exact `location` value to pass to `search_sitters`, with main/secondary text, place id and place types. An empty list with status ZERO_RESULTS is a legitimate no-match.",
+        "key": "",
+        "paginated": false,
+        "fields": [
+          {
+            "name": "count",
+            "type": "number"
+          },
+          {
+            "name": "country_code",
+            "type": "string"
+          },
+          {
+            "name": "observed_at_ms",
+            "type": "number"
+          },
+          {
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "about": "OK or ZERO_RESULTS."
+          },
+          {
+            "name": "suggestions",
+            "type": "object[]"
+          }
+        ]
+      },
+      "example": {
+        "request": {
+          "country_code": "US",
+          "query": "Seatt"
+        },
+        "response": {
+          "count": 2,
+          "country_code": "US",
+          "observed_at_ms": 1790020581621,
+          "query": "Seatt",
+          "status": "OK",
+          "suggestions": [
+            {
+              "description": "Seattle, WA, USA",
+              "main_text": "Seattle",
+              "place_id": "ChIJVTPokywQkFQRmtVEaUZlJRA",
+              "secondary_text": "WA, USA",
+              "types": [
+                "geocode",
+                "locality",
+                "political"
+              ]
+            },
+            {
+              "description": "Seattle Ferry Terminal, Seattle, WA, USA",
+              "main_text": "Seattle Ferry Terminal",
+              "place_id": "EihTZWF0dGxlIEZlcnJ5IFRlcm1pbmFsLCBTZWF0dGxlLCBXQSwgVVNBIi4qLAoUChIJXyEA669qkFQRTtt_lvPpXqYSFAoSCVUz6JMsEJBUEZrVRGlGZSUQ",
+              "secondary_text": "Seattle, WA, USA",
+              "types": [
+                "geocode",
+                "route"
+              ]
+            }
+          ]
+        },
+        "recordedAt": "2026-09-21"
+      },
+      "execute": {
+        "provider": "rover-com",
+        "capability": "pet-care-services/suggest_locations"
+      }
+    }
+  ]
+}
