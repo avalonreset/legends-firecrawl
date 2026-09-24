@@ -4,7 +4,7 @@ Live web search, page scraping, URL discovery, bounded crawling, data cataloging
 
 Legends Firecrawl is the unified super-module combining official Firecrawl web capabilities with **Legends Alexandria**, the offline data intelligence and credit circumvention engine.
 
-Part of the [CTO Legends](https://github.com/avalonreset/cto-legends) ecosystem. Install it with `cto-legends install legends-firecrawl`, or use this repo standalone: `skills/legends-firecrawl/SKILL.md` is the agent entry point.
+Part of the [CTO Legends](https://github.com/avalonreset/cto-legends) ecosystem. Ecosystem install is in progress; until it ships, use this repo standalone: `skills/legends-firecrawl/SKILL.md` is the agent entry point.
 
 ---
 
