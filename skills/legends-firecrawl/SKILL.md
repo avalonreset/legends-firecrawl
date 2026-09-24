@@ -1,7 +1,7 @@
 ---
 name: legends-firecrawl
 description: >
-  Legends Firecrawl is the unified ultimate super-module for live web search, page scraping, URL discovery, bounded crawling, data cataloging, credit circumvention, and IP safety routing. It combines all core Firecrawl operations with Legends Alexandria, the internal intelligence engine. Use when the user wants to search the web, scrape, map, crawl, or run Alexandria commands. Run doctor first.
+  Legends Firecrawl is the unified ultimate super-module for live web search, page scraping, URL discovery, bounded crawling, data cataloging, credit efficiency, and IP safety routing. It combines all core Firecrawl operations with Legends Alexandria, the internal intelligence engine. Use when the user wants to search the web, scrape, map, crawl, or run Alexandria commands. Run doctor first.
 ---
 
 # Legends Firecrawl
