@@ -1,9 +1,9 @@
 ---
-name: legends-firecrawl
+name: legends-alexandria
 description: |
-  Strategic data catalog, zero-credit circumvention engine, automated IP safety router,
+  Strategic data catalog, zero-credit open-data engine, automated IP safety router,
   and vault encapsulation system for Firecrawl Alexandria. Provides instant offline discovery
-  across 114 providers and 797 capabilities, with direct native bypass routes for 63.2%
+  across 114 providers and 797 capabilities, with direct native routes for 63.2%
   of catalog endpoints that are taxpayer-funded government APIs or open databases.
 ---
 
@@ -33,76 +33,76 @@ Firecrawl's MCP server (`https://mcp.firecrawl.dev/v2/mcp`) exposes only 3 gener
 3. Call `firecrawl_scrape` with the full JSON payload.
 
 With `legends-firecrawl`, an agent:
-- Reads the markdown card for the target category or provider in `references/`.
+- Reads the markdown card for the target category or provider in this skill folder.
 - Immediately obtains the endpoint URL, query parameters, and cURL / PowerShell command.
 - Queries the public endpoint directly for **$0.00 / 0 credits**, with **zero extra LLM hops**.
 
 For the complete technical breakdown, see:
-- [MCP Dissection and Architectural Analysis](references/mcp-dissection.md)
-- [Providers Directory (All 114 Providers)](references/providers-index.md)
+- [MCP Dissection and Architectural Analysis](mcp-dissection.md)
+- [Providers Directory (All 114 Providers)](providers-index.md)
 
 ---
 
 ## The 21 Alexandria Categories
 
-Every provider in Alexandria belongs to one of 21 verified categories. Each category has its own reference card in `references/categories/`:
+Every provider in Alexandria belongs to one of 21 verified categories. Each category has its own reference card in `categories/`:
 
 | Category | Providers | Reference Card |
 |---|---|---|
-| **ai-models** | 2 | [ai-models.md](references/categories/ai-models.md) |
-| **apps** | 3 | [apps.md](references/categories/apps.md) |
-| **companies** | 25 | [companies.md](references/categories/companies.md) |
-| **developer** | 1 | [developer.md](references/categories/developer.md) |
-| **finance** | 17 | [finance.md](references/categories/finance.md) |
-| **government** | 32 | [government.md](references/categories/government.md) |
-| **health** | 1 | [health.md](references/categories/health.md) |
-| **jobs** | 7 | [jobs.md](references/categories/jobs.md) |
-| **news** | 4 | [news.md](references/categories/news.md) |
-| **people** | 4 | [people.md](references/categories/people.md) |
-| **places** | 18 | [places.md](references/categories/places.md) |
-| **podcasts** | 1 | [podcasts.md](references/categories/podcasts.md) |
-| **real-estate** | 3 | [real-estate.md](references/categories/real-estate.md) |
-| **research** | 1 | [research.md](references/categories/research.md) |
-| **restaurants** | 6 | [restaurants.md](references/categories/restaurants.md) |
-| **shopping** | 20 | [shopping.md](references/categories/shopping.md) |
-| **skills** | 1 | [skills.md](references/categories/skills.md) |
-| **social** | 2 | [social.md](references/categories/social.md) |
-| **software** | 1 | [software.md](references/categories/software.md) |
-| **sports** | 3 | [sports.md](references/categories/sports.md) |
-| **travel** | 15 | [travel.md](references/categories/travel.md) |
+| **ai-models** | 2 | [ai-models.md](categories/ai-models.md) |
+| **apps** | 3 | [apps.md](categories/apps.md) |
+| **companies** | 25 | [companies.md](categories/companies.md) |
+| **developer** | 1 | [developer.md](categories/developer.md) |
+| **finance** | 17 | [finance.md](categories/finance.md) |
+| **government** | 32 | [government.md](categories/government.md) |
+| **health** | 1 | [health.md](categories/health.md) |
+| **jobs** | 7 | [jobs.md](categories/jobs.md) |
+| **news** | 4 | [news.md](categories/news.md) |
+| **people** | 4 | [people.md](categories/people.md) |
+| **places** | 18 | [places.md](categories/places.md) |
+| **podcasts** | 1 | [podcasts.md](categories/podcasts.md) |
+| **real-estate** | 3 | [real-estate.md](categories/real-estate.md) |
+| **research** | 1 | [research.md](categories/research.md) |
+| **restaurants** | 6 | [restaurants.md](categories/restaurants.md) |
+| **shopping** | 20 | [shopping.md](categories/shopping.md) |
+| **skills** | 1 | [skills.md](categories/skills.md) |
+| **social** | 2 | [social.md](categories/social.md) |
+| **software** | 1 | [software.md](categories/software.md) |
+| **sports** | 3 | [sports.md](categories/sports.md) |
+| **travel** | 15 | [travel.md](categories/travel.md) |
 
 ---
 
 ## Direct Public API Roster (Top 8 Zero-Credit Targets)
 
-Detailed reference cards for the top circumvention targets are located in `references/bypasses/`:
+Detailed reference cards for the top direct-route targets are located in `vault/bypasses/`:
 
 1. **US Treasury Fiscal Data (`treasury-fiscal-data` - 12 tools)**
-   - [US Treasury Bypass Guide](references/bypasses/us-treasury.md)
+   - [US Treasury Direct Route Guide](../../vault/bypasses/US-Treasury-Fiscal-Data-Bypass.md)
    - Official API: `https://api.fiscaldata.treasury.gov/services/api/fiscal_service/`
    - Cost: $0.00 / 0 credits.
 2. **SEC EDGAR Corporate Filings (`sec-gov` - 7 tools)**
-   - [SEC EDGAR Bypass Guide](references/bypasses/sec-edgar.md)
+   - [SEC EDGAR Direct Route Guide](../../vault/bypasses/SEC-EDGAR-Corporate-Filings-Bypass.md)
    - Official API: `https://data.sec.gov/`
    - Cost: $0.00 / 0 credits.
 3. **USAspending Federal Procurement (`usaspending-gov` - 7 tools)**
-   - [USAspending Bypass Guide](references/bypasses/usaspending.md)
+   - [USAspending Direct Route Guide](../../vault/bypasses/USAspending-Federal-Procurement-Bypass.md)
    - Official API: `https://api.usaspending.gov/api/v2/`
    - Cost: $0.00 / 0 credits.
 4. **CourtListener Case Law & Dockets (`courtlistener-com` - 4 tools)**
-   - [CourtListener Bypass Guide](references/bypasses/courtlistener.md)
+   - [CourtListener Direct Route Guide](../../vault/bypasses/CourtListener-Legal-Records-Bypass.md)
    - Official API: `https://www.courtlistener.com/api/rest/v4/`
    - Cost: $0.00 / 0 credits.
 5. **ESPN Sports Scores & Rosters (`espn-com` - 10 tools)**
-   - [ESPN Sports Bypass Guide](references/bypasses/espn.md)
+   - [ESPN Sports Direct Route Guide](../../vault/bypasses/ESPN-Sports-Data-Bypass.md)
    - Official API: `https://site.api.espn.com/apis/site/v2/sports/`
    - Cost: $0.00 / 0 credits.
 6. **Yahoo Finance Market Rates (`finance-yahoo-com` - 4 tools)**
-   - [Yahoo Finance Bypass Guide](references/bypasses/yahoo-finance.md)
+   - [Yahoo Finance Direct Route Guide](../../vault/bypasses/Yahoo-Finance-Market-Data-Bypass.md)
    - Official API: `https://query1.finance.yahoo.com/v8/finance/chart/`
    - Cost: $0.00 / 0 credits.
 7. **Wayback Machine Historical Captures (`web-archive-org` - 3 tools)**
-   - [Wayback Machine Bypass Guide](references/bypasses/wayback-machine.md)
+   - [Wayback Machine Direct Route Guide](../../vault/bypasses/Internet-Archive-Wayback-Machine-Bypass.md)
    - Official API: `https://archive.org/wayback/available`
    - Cost: $0.00 / 0 credits.
 8. **Y Combinator & Hacker News Ecosystem (`ycombinator-com` - 4 tools)**
@@ -163,5 +163,5 @@ The knowledge base in `E:\legends-firecrawl\vault\` adheres to the Legends Obsid
 - `vault/manifesto/IP-Risk-And-Proxy-Shielding.md`: Proxy defense doctrine.
 - `vault/tiers/`: Tiers 1 through 4 architectural notes.
 - `vault/categories/`: 21 Obsidian-linked category files.
-- `vault/bypasses/`: Production circumvention guides for the top public APIs.
+- `vault/bypasses/`: Production direct-route guides for the top public APIs.
 
