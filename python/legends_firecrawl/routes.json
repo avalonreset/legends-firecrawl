@@ -1,11 +1,14 @@
 {
   "schema": "legends-firecrawl-routes/v1",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "vendor_cli": "firecrawl-cli@1.23.3",
   "routes": [
     {
       "name": "credits",
-      "aliases": ["credit-usage", "whoami"],
+      "aliases": [
+        "credit-usage",
+        "whoami"
+      ],
       "method": "GET",
       "path": "/v2/team/credit-usage",
       "charged": false,
@@ -13,43 +16,68 @@
     },
     {
       "name": "scrape",
-      "aliases": ["page"],
+      "aliases": [
+        "page"
+      ],
       "method": "POST",
       "path": "/v2/scrape",
       "charged": true,
       "risk": "bounded-single-page",
-      "default_scope": {"pages": 1, "formats": ["markdown"]}
+      "default_scope": {
+        "pages": 1,
+        "formats": [
+          "markdown"
+        ]
+      }
     },
     {
       "name": "map",
-      "aliases": ["site-map", "discover"],
+      "aliases": [
+        "site-map",
+        "discover"
+      ],
       "method": "POST",
       "path": "/v2/map",
       "charged": true,
       "risk": "bounded-discovery",
-      "default_scope": {"limit": 100, "include_subdomains": false}
+      "default_scope": {
+        "limit": 100,
+        "include_subdomains": false
+      }
     },
     {
       "name": "search",
-      "aliases": ["web-search"],
+      "aliases": [
+        "web-search"
+      ],
       "method": "POST",
       "path": "/v2/search",
       "charged": true,
       "risk": "bounded-search",
-      "default_scope": {"limit": 5, "scrape_results": false}
+      "default_scope": {
+        "limit": 5,
+        "scrape_results": false
+      }
     },
     {
       "name": "crawl",
-      "aliases": ["site-crawl"],
+      "aliases": [
+        "site-crawl"
+      ],
       "method": "POST",
       "path": "/v2/crawl",
       "charged": true,
       "risk": "multi-page-confirm-required",
-      "default_scope": {"limit": 25, "max_depth": 2}
+      "default_scope": {
+        "limit": 25,
+        "max_depth": 2
+      }
     },
     {
       "name": "crawl-status",
-      "aliases": ["crawl-get"],
+      "aliases": [
+        "crawl-get"
+      ],
       "method": "GET",
       "path": "/v2/crawl/{id}",
       "charged": false,
