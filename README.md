@@ -1,8 +1,8 @@
 # legends-firecrawl
 
-Live web search, page scraping, URL discovery, bounded crawling, data cataloging, credit circumvention, and automated IP safety routing.
+Live web search, page scraping, URL discovery, bounded crawling, data cataloging, credit efficiency, and automated IP safety routing.
 
-Legends Firecrawl is the unified super-module combining official Firecrawl web capabilities with **Legends Alexandria**, the offline data intelligence and credit circumvention engine.
+Legends Firecrawl is the unified super-module combining official Firecrawl web capabilities with **Legends Alexandria**, the offline data intelligence and credit efficiency engine.
 
 Part of the [CTO Legends](https://github.com/avalonreset/cto-legends) ecosystem. Ecosystem install is in progress; until it ships, use this repo standalone: `skills/legends-firecrawl/SKILL.md` is the agent entry point.
 
@@ -10,7 +10,7 @@ Part of the [CTO Legends](https://github.com/avalonreset/cto-legends) ecosystem.
 
 ## Why Legends Firecrawl
 
-1. **Credit Protection & Circumvention**: Firecrawl markets Alexandria as a paid knowledge library for AI agents. Our forensic audit proved that **63.2% of the catalog (72 out of 114 providers) consists of completely free public data**. Legends Firecrawl auto-routes sanctioned government and open endpoints to direct native REST adapters, burning zero credits.
+1. **Credit Protection & Efficiency**: Firecrawl markets Alexandria as a paid knowledge library for AI agents. Our forensic audit proved that **63.2% of the catalog (72 out of 114 providers) consists of completely free public data**. Legends Firecrawl auto-routes sanctioned government and open endpoints to direct native REST adapters, burning zero credits.
 2. **Automated IP Safety Routing**: Protects residential and office IPs from bot bans. Sanctioned open APIs connect directly; commercial frontends with aggressive bot defenses (Zillow, Target, Skyscanner) automatically route through Firecrawl residential proxies.
 3. **Bounded & Budget Safe**: Prevents unbounded token and credit exhaustion. Crawls require explicit preview confirmation; page limits and search caps are enforced before HTTP execution.
 4. **Vault Encapsulation**: Captures raw API payloads locally and generates structured Obsidian research notes with citations.
