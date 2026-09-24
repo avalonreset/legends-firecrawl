@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+
+- Unique skill id for Legends Alexandria (was colliding with legends-firecrawl).
+- Alexandria skill links repaired to live category, provider, and vault targets.
+- Direct-routing language across skill, README, and hot cache; anti-abuse rules unchanged.
+- Public version and MIT license metadata aligned; local paths and telemetry scrubbed.
+
 ## 0.2.0
 
 - Deprecated the '-kit' moniker across module names.
