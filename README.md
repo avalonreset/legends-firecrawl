@@ -4,7 +4,11 @@ Live web search, page scraping, URL discovery, bounded crawling, data cataloging
 
 Legends Firecrawl is the unified super-module combining official Firecrawl web capabilities with **Legends Alexandria**, the offline data intelligence and credit efficiency engine.
 
-Part of the [CTO Legends](https://github.com/avalonreset/cto-legends) ecosystem. Ecosystem install is in progress; until it ships, use this repo standalone: `skills/legends-firecrawl/SKILL.md` is the agent entry point.
+## Agent setup (via `cto-legends`)
+
+Part of the [CTO Legends](https://github.com/avalonreset/cto-legends) ecosystem. `cto-legends` is the only registered skill; this repo vendors a pinned copy at `skills/cto-legends/SKILL.md`.
+
+Install with `cto-legends install legends-firecrawl`, then follow the module recipe the router loads. Do not register this module as its own skill.
 
 ---
 
@@ -76,15 +80,12 @@ lax captures
 
 ```powershell
 # 1. Install vendor CLI spine
-pwsh -File bin/install-spine.ps1
+npm install -g firecrawl-cli@1.23.3
 
 # 2. Configure API key
 pwsh -File bin/setup-auth.ps1
 
-# 3. Provision agent skills (Grok, Codex, Claude, Gemini, Antigravity)
-pwsh -File bin/setup-multi-agent.ps1
-
-# 4. Verify system health
+# 3. Verify system health
 pwsh -File bin/doctor.ps1
 ```
 
@@ -92,12 +93,7 @@ pwsh -File bin/doctor.ps1
 
 ## Multi-Agent Compatibility
 
-Legends Firecrawl provides native Markdown skills without requiring an ambient MCP daemon:
-- **Claude Code**: `~/.claude/skills/legends-firecrawl`
-- **Codex CLI**: `~/.codex/skills/legends-firecrawl`
-- **Grok**: `~/.grok/skills/legends-firecrawl`
-- **Gemini CLI**: `~/.gemini/skills/legends-firecrawl`
-- **Antigravity**: `.gemini/antigravity/skills/legends-firecrawl`
+Legends Firecrawl ships no per-module skill and requires no ambient MCP daemon. Agents discover and run it through the one registered `cto-legends` router skill (vendored at `skills/cto-legends/SKILL.md`): `cto-legends install legends-firecrawl` previews the install, then the `lfc` / `lax` launchers run intent-level jobs with JSON output.
 
 ---
 

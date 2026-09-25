@@ -13,13 +13,11 @@ ROOT = Path(__file__).resolve().parents[1]
 RELEASE = ROOT / "release"
 ALLOW_FILES = {
     ".gitignore",
+    ".legends-module",
+    ".legends-router-pin",
     "AGENTS.md",
     "CHANGELOG.md",
-    "CLAUDE.md",
-    "GEMINI.md",
-    "LEGENDS.md",
     "LICENSE",
-    "NEXT.md",
     "README.md",
     "VERSION",
     "pyproject.toml",

@@ -1,6 +1,6 @@
 # Legends Firecrawl agent rules
 
-1. Read LEGENDS.md and skills/legends-firecrawl/SKILL.md.
+1. Read README.md and skills/cto-legends/SKILL.md.
 2. Run pwsh -File bin/doctor.ps1; doctor BAD stops live work.
 3. Use bin/lfc.ps1 for intent-level jobs, routing, and JSON output.
 4. Never install, configure, recommend, or fall back to Firecrawl MCP.

@@ -16,7 +16,7 @@ products a predictable Firecrawl capability without an ambient MCP server.
 1. Official `firecrawl` CLI is the vendor spine and stays pinned.
 2. `bin/lfc.ps1` is the house launcher with stable JSON and policy gates.
 3. `python/legends_firecrawl` is a small direct-API compatibility layer.
-4. `skills/legends-firecrawl` is the multi-agent discovery surface.
+4. `skills/cto-legends` (pinned router copy) is the multi-agent discovery surface.
 5. `var/usage-ledger.jsonl` is local runtime evidence, never a secret store.
 
 ## Initial first-class jobs

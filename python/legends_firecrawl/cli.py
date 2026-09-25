@@ -82,7 +82,7 @@ def doctor(*, offline: bool = False) -> tuple[dict[str, Any], int]:
             []
             if not failed
             else [
-                "Install the pinned official spine with bin/install-spine.ps1 if its check failed.",
+                "Install the pinned official spine (firecrawl-cli@1.23.3) via npm if its check failed.",
                 "Set FIRECRAWL_API_KEY with bin/setup-auth.ps1 if auth failed.",
                 "Re-run doctor. Do not install or fall back to Firecrawl MCP.",
             ]
@@ -179,7 +179,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "vendor":
             executable, _ = _vendor_cli_version()
             if not executable:
-                raise SafetyError("official firecrawl CLI is missing; run bin/install-spine.ps1")
+                raise SafetyError("official firecrawl CLI is missing; install firecrawl-cli@1.23.3 via npm")
             if any(value in {"init", "setup", "launch", "launcher"} for value in args.args):
                 raise SafetyError("vendor integration installers are blocked; use the house setup scripts")
             return subprocess.call([executable, *args.args])
