@@ -9,19 +9,21 @@ providers_count: 7
 
 > Job postings: who is hiring for which roles, where, and since when.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (7)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `builtin-com` (**Built In**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `greenhouse-io` (**Greenhouse job boards**) | 6 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `icims-com` (**iCIMS**) | 3 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `indeed-com` (**Indeed US**) | 3 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `join-com` (**JOIN job ads**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `ycombinator-com` (**Y Combinator**) | 4 | Open Non-Profit, Legal & Community Ecosystems | Yes (Direct community/non-profit REST API) |
-| `ziprecruiter-com` (**ZipRecruiter US**) | 6 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
+| `builtin-com` (**Built In**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `greenhouse-io` (**Greenhouse job boards**) | 6 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `icims-com` (**iCIMS**) | 3 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `indeed-com` (**Indeed US**) | 3 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `join-com` (**JOIN job ads**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `ycombinator-com` (**Y Combinator**) | 4 | Open Non-Profit, Legal & Community Ecosystems | Official Firecrawl; preview required |
+| `ziprecruiter-com` (**ZipRecruiter US**) | 6 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

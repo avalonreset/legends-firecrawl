@@ -9,13 +9,15 @@ providers_count: 1
 
 > Open-source packages: registry metadata, versions, licences, download counts and dependents on npm, PyPI, crates.io and Maven Central.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (1)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `package-registry-metadata-download-stats` (**Package registries**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
+| `package-registry-metadata-download-stats` (**Package registries**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

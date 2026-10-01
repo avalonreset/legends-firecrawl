@@ -74,3 +74,22 @@ def test_router_native_contract_shape():
     assert (ROOT / ".legends-module").read_text(encoding="utf-8").strip() == "legends-firecrawl"
     assert "Agent setup (via `cto-legends`)" in (ROOT / "README.md").read_text(encoding="utf-8")
 
+
+def test_doctor_accepts_router_native_checkout(monkeypatch):
+    from legends_firecrawl import cli
+    monkeypatch.setattr(cli, "_vendor_cli_version", lambda: ("firecrawl", cli.EXPECTED_VENDOR_CLI))
+    monkeypatch.setattr(cli, "credential_status", lambda: {"present": True})
+    report, code = cli.doctor(offline=True)
+    assert code == 0
+    assert next(x for x in report["checks"] if x["name"] == "kit-root")["status"] == "pass"
+
+
+def test_doctor_rejects_wrong_module_marker(monkeypatch, tmp_path):
+    from legends_firecrawl import cli
+    (tmp_path / ".legends-module").write_text("unrelated-module", encoding="utf-8")
+    monkeypatch.setattr(cli, "KIT_ROOT", tmp_path)
+    monkeypatch.setattr(cli, "_vendor_cli_version", lambda: ("firecrawl", cli.EXPECTED_VENDOR_CLI))
+    monkeypatch.setattr(cli, "credential_status", lambda: {"present": True})
+    report, code = cli.doctor(offline=True)
+    assert code == 1
+    assert next(x for x in report["checks"] if x["name"] == "kit-root")["status"] == "fail"

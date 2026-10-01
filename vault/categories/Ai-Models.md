@@ -9,14 +9,16 @@ providers_count: 2
 
 > Machine-learning models and datasets: cards, licenses, downloads, tasks, tags and files.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (2)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `huggingface-co` (**Hugging Face**) | 5 | Open Non-Profit, Legal & Community Ecosystems | Yes (Direct community/non-profit REST API) |
-| `openrouter-ai` (**OpenRouter**) | 8 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
+| `huggingface-co` (**Hugging Face**) | 5 | Open Non-Profit, Legal & Community Ecosystems | Official Firecrawl; preview required |
+| `openrouter-ai` (**OpenRouter**) | 8 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

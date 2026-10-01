@@ -6,6 +6,6 @@
 4. Never install, configure, recommend, or fall back to Firecrawl MCP.
 5. Never run vendor firecrawl init, setup, launch, or launcher.
 6. Preview crawl scope, then require explicit confirmation for the live crawl.
-7. Always check if Legends Alexandria can bypass credits using its catalog before falling back to Firecrawl.
+7. Use official Firecrawl only. No direct-source bypass or substitutes. Alexandria queries require explicit --confirm; preview first. Never silently retry a possibly billed submission.
 8. Keep keys out of chat, files, logs, receipts, and shell history.
 9. Record durable product status in Empire; runtime evidence stays under var/.

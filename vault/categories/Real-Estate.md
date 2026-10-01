@@ -9,15 +9,17 @@ providers_count: 3
 
 > Property records and home valuation comparables.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (3)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `craigslist-org` (**Craigslist**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `redfin-com` (**Redfin**) | 6 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `zillow-com` (**Zillow**) | 15 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
+| `craigslist-org` (**Craigslist**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `redfin-com` (**Redfin**) | 6 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `zillow-com` (**Zillow**) | 15 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

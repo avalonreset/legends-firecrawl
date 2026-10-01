@@ -1,39 +1,11 @@
----
-type: bypass-guide
-title: "SEC EDGAR Corporate Filings Direct Bypass"
-provider: "sec-gov"
-tier: "Tier 1: Public Government Data"
-cost: "0 Credits ($0.00)"
----
+# Retired research: SEC company evidence
 
-# SEC EDGAR Corporate Filings Direct Bypass
+> Retired. Version 0.2.0 supports official Firecrawl execution only. No direct operation, including Treasury, is available as a supported substitution. Findings below describe the abandoned experiment.
 
-- **Provider ID:** `sec-gov`
-- **Data Tier:** Tier 1: Public Government Data
-- **Official Base URL:** `https://data.sec.gov/`
-- **Alexandria Cost:** 1 to 5 Credits | **Native Bypass Cost:** **0 Credits ($0.00)**
+Provider: `sec-gov`. Historical experiment: 0.2.0rc1, superseded by official-only 0.2.0.
 
-## Rationale & Arbitrage Proof
+Company lookup by explicit CIK matched 11 of 12 mapped fields; the remaining website value differed as empty string versus null. This is useful source evidence, not full API parity or a default native route.
 
-The US Securities and Exchange Commission (SEC) provides a free public JSON API for all public corporate submissions, XBRL company facts, and financial disclosures. Only a standard User-Agent header is required.
+SEC concept data returned in an unpaired test. No general company-name resolution, filings coverage or scaled reliability is established. Use the paid preview for normal routing. Source identification and fair-access requirements still apply.
 
-## Supported Endpoints & Capabilities
-
-| Capability | Official Endpoint | Parameters | Description |
-|---|---|---|---|
-| **Company Submissions** | `submissions/CIK{10-digit-cik}.json` | `None (direct CIK path)` | Complete filing history, insider transactions, addresses, SIC codes, and recent 10-K/10-Q/8-K document links. |
-| **Company Facts (XBRL)** | `api/xbrl/companyfacts/CIK{10-digit-cik}.json` | `None (direct CIK path)` | Normalized historical balance sheet, income statement, and cash flow line items across all past filings. |
-| **Company Concept** | `api/xbrl/companyconcept/CIK{10-digit-cik}/us-gaap/{concept}.json` | `None` | Single concept series (e.g. Revenues, Assets, NetIncomeLoss) over time. |
-
-## Direct cURL Execution (0 Credits)
-
-```bash
-curl -s -H "User-Agent: SampleApp admin@sampleapp.com" "https://data.sec.gov/submissions/CIK0000320193.json" | jq .filings.recent
-```
-
-## CLI Execution via `legends-firecrawl`
-
-```powershell
-pwsh -File E:\legends-firecrawl\bin\lax.ps1 query sec-gov filings/company
-```
-
+This historical note preserves the earlier research path for existing links; it is not an execution guide. Read [release scope](../../docs/RELEASE-SCOPE.md) and [live audit](../../docs/NATIVE-LIVE-AUDIT-20261001.md). Historical captures are retained unchanged; their old safety labels are not current guarantees.

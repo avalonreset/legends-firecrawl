@@ -9,15 +9,17 @@ providers_count: 3
 
 > Sports federations and circuits: tournament calendars, match results and player rankings.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (3)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `espn-com` (**ESPN**) | 10 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `tickpick-com` (**TickPick**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `worldtabletennis-com` (**World Table Tennis**) | 5 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
+| `espn-com` (**ESPN**) | 10 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `tickpick-com` (**TickPick**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `worldtabletennis-com` (**World Table Tennis**) | 5 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

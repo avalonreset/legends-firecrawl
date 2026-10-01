@@ -11,8 +11,10 @@ tags:
 # Tier 3: Public Commercial Web / Frontend JSON Endpoints
 
 - **Provider Count:** 32
-- **Overview:** Commercial web platforms whose internal read-only JSON endpoints are accessed without credentials.
-- **Kit Strategy:** Direct HTTP requests or lightweight house scrapers bypassing credit metering.
+- **Overview:** Historical catalog grouping; source access, credentials and limits require capability-specific verification.
+- **Current routing:** Official Firecrawl only. This historical taxonomy does not select a direct route.
+
+> Research inventory only. This taxonomy does not prove direct availability, licensing, safety or savings. See [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Providers in this Tier
 

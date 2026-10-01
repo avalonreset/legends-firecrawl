@@ -4,7 +4,7 @@ if ($args.Count -gt 0 -and $args[0] -eq 'alexandria') {
     $kitRoot = Split-Path $PSScriptRoot -Parent
     $scriptPath = Join-Path $kitRoot "alexandria-src\cli.js"
     $laxArgs = if ($args.Count -gt 1) { $args[1..($args.Count - 1)] } else { @() }
-    & node $scriptPath $laxArgs
+    & (Join-Path $PSScriptRoot 'lax.ps1') @laxArgs
     exit $LASTEXITCODE
 }
 

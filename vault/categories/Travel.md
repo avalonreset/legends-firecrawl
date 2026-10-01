@@ -9,27 +9,29 @@ providers_count: 15
 
 > Travel: hotels, their guest ratings, rankings in a destination and public reviews.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (15)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `amtrak-com` (**Amtrak**) | 7 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `flights-google-com` (**Google Flights**) | 2 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `golfnow-com` (**GolfNow US**) | 8 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `hipcamp-com` (**Hipcamp**) | 7 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `ra-co` (**Resident Advisor**) | 6 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `recreation-gov` (**Recreation.gov**) | 8 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `seatgeek-com` (**SeatGeek**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `skyscanner-net` (**Skyscanner**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `spothero-com` (**SpotHero parking**) | 10 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `stubhub-com` (**StubHub**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `tickpick-com` (**TickPick**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `todaytix-com` (**TodayTix**) | 5 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `trip-com` (**Trip.com**) | 6 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `turo-com` (**Turo**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `untourism-int` (**UN Tourism**) | 3 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
+| `amtrak-com` (**Amtrak**) | 7 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `flights-google-com` (**Google Flights**) | 2 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `golfnow-com` (**GolfNow US**) | 8 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `hipcamp-com` (**Hipcamp**) | 7 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `ra-co` (**Resident Advisor**) | 6 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `recreation-gov` (**Recreation.gov**) | 8 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `seatgeek-com` (**SeatGeek**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `skyscanner-net` (**Skyscanner**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `spothero-com` (**SpotHero parking**) | 10 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `stubhub-com` (**StubHub**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `tickpick-com` (**TickPick**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `todaytix-com` (**TodayTix**) | 5 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `trip-com` (**Trip.com**) | 6 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `turo-com` (**Turo**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `untourism-int` (**UN Tourism**) | 3 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

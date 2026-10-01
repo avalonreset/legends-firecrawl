@@ -9,37 +9,39 @@ providers_count: 25
 
 > Company records, filings, funding and firmographics.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (25)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `apollo` (**Apollo**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `b3-com-br` (**B3 listed companies and indices**) | 9 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `bbb-business-profiles-ratings-complaint` (**BBB business profiles**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `bbb-org` (**Better Business Bureau**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `benzinga` (**Benzinga**) | 11 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `bing-com` (**Bing Maps**) | 2 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `builtin-com` (**Built In**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `finance-yahoo-com` (**Yahoo Finance**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `find-and-update-company-information-service-gov-uk` (**Companies House**) | 15 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `fiscal-ai` (**Fiscal.ai**) | 34 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `fullenrich` (**FullEnrich**) | 10 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `gartner-com` (**Gartner**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `gleif-org` (**GLEIF**) | 6 | Open Non-Profit, Legal & Community Ecosystems | Yes (Direct community/non-profit REST API) |
-| `houzz-com` (**Houzz**) | 3 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `indeed-com` (**Indeed US**) | 3 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `maps-google-com` (**Google Maps**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `particle` (**Particle**) | 105 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `peerspot-com` (**PeerSpot**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `reclameaqui-com-br` (**Reclame Aqui**) | 7 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `search-sunbiz-org` (**Florida Sunbiz**) | 2 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `sos-state-co-us` (**Colorado Secretary of State business database**) | 3 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `trademarks-ipo-gov-uk` (**UK IPO trade mark register**) | 4 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `usaspending-gov` (**USAspending**) | 7 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `uspto-gov` (**USPTO patents, trademarks and assignments**) | 5 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `ycombinator-com` (**Y Combinator**) | 4 | Open Non-Profit, Legal & Community Ecosystems | Yes (Direct community/non-profit REST API) |
+| `apollo` (**Apollo**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `b3-com-br` (**B3 listed companies and indices**) | 9 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `bbb-business-profiles-ratings-complaint` (**BBB business profiles**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `bbb-org` (**Better Business Bureau**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `benzinga` (**Benzinga**) | 11 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `bing-com` (**Bing Maps**) | 2 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `builtin-com` (**Built In**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `finance-yahoo-com` (**Yahoo Finance**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `find-and-update-company-information-service-gov-uk` (**Companies House**) | 15 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `fiscal-ai` (**Fiscal.ai**) | 34 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `fullenrich` (**FullEnrich**) | 10 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `gartner-com` (**Gartner**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `gleif-org` (**GLEIF**) | 6 | Open Non-Profit, Legal & Community Ecosystems | Official Firecrawl; preview required |
+| `houzz-com` (**Houzz**) | 3 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `indeed-com` (**Indeed US**) | 3 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `maps-google-com` (**Google Maps**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `particle` (**Particle**) | 105 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `peerspot-com` (**PeerSpot**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `reclameaqui-com-br` (**Reclame Aqui**) | 7 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `search-sunbiz-org` (**Florida Sunbiz**) | 2 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `sos-state-co-us` (**Colorado Secretary of State business database**) | 3 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `trademarks-ipo-gov-uk` (**UK IPO trade mark register**) | 4 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `usaspending-gov` (**USAspending**) | 7 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `uspto-gov` (**USPTO patents, trademarks and assignments**) | 5 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `ycombinator-com` (**Y Combinator**) | 4 | Open Non-Profit, Legal & Community Ecosystems | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

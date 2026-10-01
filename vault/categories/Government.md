@@ -9,44 +9,46 @@ providers_count: 32
 
 > Government programs and records: federal funding and procurement opportunities, eligibility, who is buying what and when responses are due.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (32)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `bcb-gov-br` (**Banco Central do Brasil open data**) | 10 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `census-gov` (**US Census Bureau**) | 4 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `cftc` (**CFTC**) | 7 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `cftc-gov` (**CFTC Commitments of Traders**) | 8 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `courtlistener-com` (**CourtListener**) | 4 | Open Non-Profit, Legal & Community Ecosystems | Yes (Direct community/non-profit REST API) |
-| `data-sf-gov` (**DataSF open data portal**) | 5 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `data-worldbank-org` (**World Bank Data**) | 11 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `databrowser-uis-unesco-org` (**UNESCO UIS**) | 5 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `eia-gov` (**US Energy Information Administration**) | 3 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `fda-gov` (**FDA**) | 6 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `find-and-update-company-information-service-gov-uk` (**Companies House**) | 15 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `firecrawl-gov-index` (**Government Index**) | 1 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `fiscaldata-treasury-gov` (**US Treasury Fiscal Data**) | 5 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `fred` (**FRED**) | 31 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `fred-stlouisfed-org` (**FRED (Federal Reserve Economic Data)**) | 10 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `gleif-org` (**GLEIF**) | 6 | Open Non-Profit, Legal & Community Ecosystems | Yes (Direct community/non-profit REST API) |
-| `grants-gov` (**Grants.gov**) | 3 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `iea-org` (**IEA**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `npiregistry-cms-hhs-gov` (**NPI Registry**) | 3 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `recreation-gov` (**Recreation.gov**) | 8 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `sam-gov` (**SAM.gov**) | 2 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `search-sunbiz-org` (**Florida Sunbiz**) | 2 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `sec-gov` (**SEC EDGAR**) | 7 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `servicodados-ibge-gov-br` (**IBGE service data API**) | 12 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `sos-state-co-us` (**Colorado Secretary of State business database**) | 3 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `trademarks-ipo-gov-uk` (**UK IPO trade mark register**) | 4 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `treasury-fiscal-data` (**Treasury Fiscal Data**) | 12 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `usaspending-gov` (**USAspending**) | 7 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `uspto-gov` (**USPTO patents, trademarks and assignments**) | 5 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `v-dem-net` (**V-Dem**) | 6 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `who-int` (**WHO Global Health Observatory**) | 3 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `worldhappiness-report` (**World Happiness Report**) | 4 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
+| `bcb-gov-br` (**Banco Central do Brasil open data**) | 10 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `census-gov` (**US Census Bureau**) | 4 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `cftc` (**CFTC**) | 7 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `cftc-gov` (**CFTC Commitments of Traders**) | 8 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `courtlistener-com` (**CourtListener**) | 4 | Open Non-Profit, Legal & Community Ecosystems | Official Firecrawl; preview required |
+| `data-sf-gov` (**DataSF open data portal**) | 5 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `data-worldbank-org` (**World Bank Data**) | 11 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `databrowser-uis-unesco-org` (**UNESCO UIS**) | 5 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `eia-gov` (**US Energy Information Administration**) | 3 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `fda-gov` (**FDA**) | 6 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `find-and-update-company-information-service-gov-uk` (**Companies House**) | 15 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `firecrawl-gov-index` (**Government Index**) | 1 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `fiscaldata-treasury-gov` (**US Treasury Fiscal Data**) | 5 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `fred` (**FRED**) | 31 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `fred-stlouisfed-org` (**FRED (Federal Reserve Economic Data)**) | 10 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `gleif-org` (**GLEIF**) | 6 | Open Non-Profit, Legal & Community Ecosystems | Official Firecrawl; preview required |
+| `grants-gov` (**Grants.gov**) | 3 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `iea-org` (**IEA**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `npiregistry-cms-hhs-gov` (**NPI Registry**) | 3 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `recreation-gov` (**Recreation.gov**) | 8 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `sam-gov` (**SAM.gov**) | 2 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `search-sunbiz-org` (**Florida Sunbiz**) | 2 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `sec-gov` (**SEC EDGAR**) | 7 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `servicodados-ibge-gov-br` (**IBGE service data API**) | 12 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `sos-state-co-us` (**Colorado Secretary of State business database**) | 3 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `trademarks-ipo-gov-uk` (**UK IPO trade mark register**) | 4 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `treasury-fiscal-data` (**Treasury Fiscal Data**) | 12 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `usaspending-gov` (**USAspending**) | 7 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `uspto-gov` (**USPTO patents, trademarks and assignments**) | 5 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `v-dem-net` (**V-Dem**) | 6 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `who-int` (**WHO Global Health Observatory**) | 3 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `worldhappiness-report` (**World Happiness Report**) | 4 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

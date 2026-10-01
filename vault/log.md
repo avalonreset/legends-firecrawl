@@ -11,6 +11,18 @@ tags: [log, changelog, alexandria]
 
 Chronological record of structural updates, catalog extractions, and architectural decisions.
 
+## 2026-10-01 official-only decision
+
+Version 0.2.0 retires every native/direct bypass, including the tentative two-operation Treasury allowlist. The supported product is a wrapper for official Firecrawl with offline catalog convenience, bounded jobs, explicit Alexandria confirmation and saved response provenance. No savings or data-superiority claim remains. See [release scope](../docs/RELEASE-SCOPE.md).
+
+## Superseded candidate decision
+
+## 2026-10-01 correction
+
+Candidate 0.2.0rc1 narrows native support to two exact Treasury operations. Earlier automatic safety, proxy shielding and broad native coverage claims below are historical assertions, now superseded, not current guarantees. The catalog counts describe inventory only. See [release scope](../docs/RELEASE-SCOPE.md).
+
+## Historical record: unsupported safety assertions retained for provenance
+
 ## 2026-09-24
 
 - **Automated IP Safety Routing Engine Activated:**

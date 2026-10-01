@@ -11,8 +11,10 @@ tags:
 # Tier 2: Open Non-Profit, Legal & Community Ecosystems
 
 - **Provider Count:** 9
-- **Overview:** Non-profit, academic, and open-source foundations maintaining free public databases for the world.
-- **Kit Strategy:** Direct community API integration. Free law, free software, and free historical archives.
+- **Overview:** Historical catalog grouping; source access, credentials and limits require capability-specific verification.
+- **Current routing:** Official Firecrawl only. This historical taxonomy does not select a direct route.
+
+> Research inventory only. This taxonomy does not prove direct availability, licensing, safety or savings. See [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Providers in this Tier
 

@@ -1,3 +1,18 @@
+# 0.2.0
+
+- Retire all direct-source substitution, including Treasury; every Alexandria query uses official Firecrawl.
+- Keep offline discovery, explicit paid confirmation, bounded crawl and source-labelled response captures.
+- Remove savings, proxy shielding and superior-intelligence claims. No MCP runtime required.
+- Preserve raw error responses, zero versus unknown costs and unique capture filenames.
+
+# 0.2.0rc1
+
+- Restrict default direct execution to two verified Treasury operations.
+- Remove provider-level savings and scale guarantees; preserve paid envelopes and unknown costs.
+- Require explicit paid confirmation; no automatic paid fallback.
+- Validate pagination and fields; bound response size, timeout and process-local pacing.
+- Exclude local captures and unvalidated adapters from release archives.
+
 # Changelog
 
 ## 0.1.0 - 2026-09-25

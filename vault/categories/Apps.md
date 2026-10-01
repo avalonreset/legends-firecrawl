@@ -9,15 +9,17 @@ providers_count: 3
 
 > Mobile apps on the Apple App Store and Google Play: listings, ratings, review counts, charts, reviews and version history.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (3)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `aptoide-com` (**Aptoide**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `github-com` (**GitHub**) | 8 | Open Non-Profit, Legal & Community Ecosystems | Yes (Direct community/non-profit REST API) |
-| `pypi-org` (**PyPI**) | 8 | Open Non-Profit, Legal & Community Ecosystems | Yes (Direct community/non-profit REST API) |
+| `aptoide-com` (**Aptoide**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `github-com` (**GitHub**) | 8 | Open Non-Profit, Legal & Community Ecosystems | Official Firecrawl; preview required |
+| `pypi-org` (**PyPI**) | 8 | Open Non-Profit, Legal & Community Ecosystems | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

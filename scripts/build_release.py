@@ -29,7 +29,18 @@ def included_files() -> list[Path]:
     files = [ROOT / name for name in sorted(ALLOW_FILES)]
     for directory in sorted(ALLOW_DIRS):
         files.extend(path for path in sorted((ROOT / directory).rglob("*")) if path.is_file() and "__pycache__" not in path.parts)
-    return files
+    def eligible(path: Path) -> bool:
+        rel = path.relative_to(ROOT).as_posix()
+        if rel.startswith('vault/captures/'):
+            return False
+        if rel.startswith('alexandria-src/native_adapters/'):
+            return False
+        if rel in {'data/safety_audit.json', 'data/refined_audit.json'}:
+            return False
+        if rel.startswith('scripts/audit_') or path.name == 'compare_native_audit.py':
+            return False
+        return True
+    return [path for path in files if eligible(path)]
 
 
 def sha256(path: Path) -> str:
@@ -66,4 +77,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -51,6 +51,7 @@ def main() -> int:
             run([sys.executable, "-m", "legends_firecrawl.cli", "crawl-preview", "https://example.com"], candidate, env),
             run(["node", str(candidate / "alexandria-src" / "cli.js"), "audit"], candidate, env),
             run([sys.executable, "-m", "pytest", "-q"], candidate, env),
+            run(["node", "--test", "tests/test_native_router.js"], candidate, env),
         ]
         ok = measured == package["sha256"] and all(item["exit_code"] == 0 for item in checks)
         receipt = {
@@ -72,4 +73,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -1,38 +1,11 @@
----
-type: bypass-guide
-title: "Internet Archive Wayback Machine Direct Bypass"
-provider: "web-archive-org"
-tier: "Tier 2: Open Non-Profit & Academic"
-cost: "0 Credits ($0.00)"
----
+# Retired research: Wayback history substitution unverified
 
-# Internet Archive Wayback Machine Direct Bypass
+> Retired. Version 0.2.0 supports official Firecrawl execution only. No direct operation, including Treasury, is available as a supported substitution. Findings below describe the abandoned experiment.
 
-- **Provider ID:** `web-archive-org`
-- **Data Tier:** Tier 2: Open Non-Profit & Academic
-- **Official Base URL:** `https://archive.org/wayback/available`
-- **Alexandria Cost:** 1 to 5 Credits | **Native Bypass Cost:** **0 Credits ($0.00)**
+Provider: `web-archive-org`. Historical experiment: 0.2.0rc1, superseded by official-only 0.2.0.
 
-## Rationale & Arbitrage Proof
+The first live direct attempt returned HTTP 429. The historical adapter used closest-snapshot availability for a history request, which does not establish complete-history semantics.
 
-The Internet Archive Wayback Machine offers open availability and capture APIs to look up historical snapshots of any public web page without authentication or credits.
+This route is retired along with all direct-source substitutions. Use a paid preview when the managed contract meets the task. No availability, full-history or scaling claim is accepted.
 
-## Supported Endpoints & Capabilities
-
-| Capability | Official Endpoint | Parameters | Description |
-|---|---|---|---|
-| **Available Snapshot Check** | `wayback/available` | `url={target_url}&timestamp={optional_date}` | Find the closest snapshot timestamp and permanent playback URL for any target website. |
-| **Raw Capture Content** | `https://web.archive.org/web/{timestamp}id_/{url}` | `timestamp, url` | Retrieve the unmodified raw HTML capture without Wayback toolbar injection. |
-
-## Direct cURL Execution (0 Credits)
-
-```bash
-curl -s "https://archive.org/wayback/available?url=google.com" | jq .archived_snapshots.closest
-```
-
-## CLI Execution via `legends-firecrawl`
-
-```powershell
-pwsh -File E:\legends-firecrawl\bin\lax.ps1 query web-archive-org oldest
-```
-
+This historical note preserves the earlier research path for existing links; it is not an execution guide. Read [release scope](../../docs/RELEASE-SCOPE.md) and [live audit](../../docs/NATIVE-LIVE-AUDIT-20261001.md). Historical captures are retained unchanged; their old safety labels are not current guarantees.

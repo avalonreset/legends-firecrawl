@@ -9,29 +9,31 @@ providers_count: 17
 
 > Market prices, financial statements, ownership and macro rates.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (17)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `b3-com-br` (**B3 listed companies and indices**) | 9 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `bcb-gov-br` (**Banco Central do Brasil open data**) | 10 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `benzinga` (**Benzinga**) | 11 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `cftc` (**CFTC**) | 7 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `cftc-gov` (**CFTC Commitments of Traders**) | 8 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `data-imf-org` (**IMF Data**) | 4 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `data-worldbank-org` (**World Bank Data**) | 11 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `eia-gov` (**US Energy Information Administration**) | 3 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `finance-yahoo-com` (**Yahoo Finance**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `fiscal-ai` (**Fiscal.ai**) | 34 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `fiscaldata-treasury-gov` (**US Treasury Fiscal Data**) | 5 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `fred` (**FRED**) | 31 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `fred-stlouisfed-org` (**FRED (Federal Reserve Economic Data)**) | 10 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `nasdaq-com` (**Nasdaq.com news feeds and articles**) | 6 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `sec-gov` (**SEC EDGAR**) | 7 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `servicodados-ibge-gov-br` (**IBGE service data API**) | 12 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `treasury-fiscal-data` (**Treasury Fiscal Data**) | 12 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
+| `b3-com-br` (**B3 listed companies and indices**) | 9 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `bcb-gov-br` (**Banco Central do Brasil open data**) | 10 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `benzinga` (**Benzinga**) | 11 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `cftc` (**CFTC**) | 7 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `cftc-gov` (**CFTC Commitments of Traders**) | 8 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `data-imf-org` (**IMF Data**) | 4 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `data-worldbank-org` (**World Bank Data**) | 11 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `eia-gov` (**US Energy Information Administration**) | 3 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `finance-yahoo-com` (**Yahoo Finance**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `fiscal-ai` (**Fiscal.ai**) | 34 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `fiscaldata-treasury-gov` (**US Treasury Fiscal Data**) | 5 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `fred` (**FRED**) | 31 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `fred-stlouisfed-org` (**FRED (Federal Reserve Economic Data)**) | 10 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `nasdaq-com` (**Nasdaq.com news feeds and articles**) | 6 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `sec-gov` (**SEC EDGAR**) | 7 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `servicodados-ibge-gov-br` (**IBGE service data API**) | 12 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `treasury-fiscal-data` (**Treasury Fiscal Data**) | 12 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

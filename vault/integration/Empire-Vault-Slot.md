@@ -27,7 +27,7 @@ Every Legends Kit follows the strict two-home separation of concerns:
 
 | Layer | Canonical Location | Description |
 |---|---|---|
-| **Product Workbench & Runtime** | `E:\legends-firecrawl` | Code, native adapters, CLI (`lax`), tests, local offline catalog cache (`data/`), and kit-internal vault. |
+| **Product Workbench & Runtime** | `E:\legends-firecrawl` | Official Firecrawl wrappers, CLI (`lax`), tests, offline catalog cache (`data/`), and research vault. |
 | **Knowledge Source of Truth (SoT)** | `E:\empire\wiki\library\legends-firecrawl\` | The durable shelf where agents and Obsidian read domain knowledge on the monobrain. |
 
 ## Province Routing & Integration Touchpoints
@@ -37,9 +37,9 @@ Every Legends Kit follows the strict two-home separation of concerns:
    - Cataloged in `E:\empire\wiki\library\_Index.md` (Product and Domain Library).
 2. **Work Province (`[[wiki/work/Work|Work]]`):**
    - Registered under The Map as an active data acquisition and intelligence capability.
-   - Powers agent data pipelines, research, and competitive intelligence with zero credit waste on open public endpoints.
+   - Powers agent data pipelines, research, and competitive intelligence with reviewed official Firecrawl execution and saved provenance.
 3. **Money Province (`[[wiki/money/Money|Money]]`):**
-   - Powers macroeconomic, market intelligence, and fiscal monitoring via US Treasury Fiscal Data, SEC EDGAR corporate filings, FRED economic data, and IMF/World Bank indicators.
+   - Catalogs macroeconomic and fiscal sources. Catalog presence does not imply a direct integration; all supported data execution uses official Firecrawl.
 4. **Digital Territory Registry (`[[wiki/meta/Territories|Territories]]`):**
    - Registered under the root digital territory map at `E:\legends-firecrawl`.
 5. **Project Card:**

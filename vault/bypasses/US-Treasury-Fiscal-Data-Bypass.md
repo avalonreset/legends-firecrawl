@@ -1,42 +1,11 @@
----
-type: bypass-guide
-title: "US Treasury Fiscal Data Direct Bypass"
-provider: "treasury-fiscal-data"
-tier: "Tier 1: Public Government Data"
-cost: "0 Credits ($0.00)"
----
+# Retired research: Treasury direct operations
 
-# US Treasury Fiscal Data Direct Bypass
+> Retired. Version 0.2.0 supports official Firecrawl execution only. No direct operation, including Treasury, is available as a supported substitution. Findings below describe the abandoned experiment.
 
-- **Provider ID:** `treasury-fiscal-data`
-- **Data Tier:** Tier 1: Public Government Data
-- **Official Base URL:** `https://api.fiscaldata.treasury.gov/services/api/fiscal_service/`
-- **Alexandria Cost:** 1 to 5 Credits | **Native Bypass Cost:** **0 Credits ($0.00)**
+Provider: `treasury-fiscal-data`. Historical experiment: 0.2.0rc1, superseded by official-only 0.2.0.
 
-## Rationale & Arbitrage Proof
+The retired candidate allowlist contained exactly `debt/to-the-penny` and `debt/average-interest-rates`. Each tested query returned three rows whose 33 field values matched the paid response. Each paid comparison cost one Firecrawl credit. Direct execution avoids that Firecrawl charge; it is not zero operating cost.
 
-The US Department of the Treasury Bureau of the Fiscal Service operates a completely public, taxpayer-funded REST API. Firecrawl charges 1 credit per query while passing through identical query parameters.
+Official endpoints: `https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny` and `https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/avg_interest_rates`. Other Treasury operations are not promoted by these tests. Pagination and requested fields must be honored, not silently discarded.
 
-## Supported Endpoints & Capabilities
-
-| Capability | Official Endpoint | Parameters | Description |
-|---|---|---|---|
-| **Debt to the Penny** | `v2/accounting/od/debt_to_penny` | `sort=-record_date&page[size]=5` | Daily total public debt outstanding, debt held by public, intragovernmental holdings. |
-| **Operating Cash Balance** | `v1/accounting/dts/operating_cash_balance` | `sort=-record_date&page[size]=5` | Daily Treasury General Account (TGA) cash balance. |
-| **Average Interest Rates** | `v2/accounting/od/avg_interest_rates` | `sort=-record_date&page[size]=5` | Average interest rates on marketable and non-marketable Treasury securities. |
-| **Interest Expense** | `v2/accounting/od/interest_expense` | `sort=-record_date&page[size]=5` | Monthly interest expense on the public debt. |
-| **Historical Debt Outstanding** | `v2/accounting/od/historical_debt` | `sort=-record_date&page[size]=5` | Historical annual national debt dating back to 1790. |
-| **Gold Reserve** | `v2/accounting/od/gold_reserve` | `sort=-record_date&page[size]=5` | Official US government book-value gold reserve holdings. |
-
-## Direct cURL Execution (0 Credits)
-
-```bash
-curl -s "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny?sort=-record_date&page\[size\]=1" | jq .
-```
-
-## CLI Execution via `legends-firecrawl`
-
-```powershell
-pwsh -File E:\legends-firecrawl\bin\lax.ps1 query treasury-fiscal-data debt/to-the-penny
-```
-
+This historical note preserves the earlier research path for existing links; it is not an execution guide. Read [release scope](../../docs/RELEASE-SCOPE.md) and [live audit](../../docs/NATIVE-LIVE-AUDIT-20261001.md). Historical captures are retained unchanged; their old safety labels are not current guarantees.

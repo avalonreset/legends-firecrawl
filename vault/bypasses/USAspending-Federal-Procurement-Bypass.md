@@ -1,39 +1,11 @@
----
-type: bypass-guide
-title: "USAspending Federal Procurement Direct Bypass"
-provider: "usaspending-gov"
-tier: "Tier 1: Public Government Data"
-cost: "0 Credits ($0.00)"
----
+# Retired research: USAspending partial evidence
 
-# USAspending Federal Procurement Direct Bypass
+> Retired. Version 0.2.0 supports official Firecrawl execution only. No direct operation, including Treasury, is available as a supported substitution. Findings below describe the abandoned experiment.
 
-- **Provider ID:** `usaspending-gov`
-- **Data Tier:** Tier 1: Public Government Data
-- **Official Base URL:** `https://api.usaspending.gov/api/v2/`
-- **Alexandria Cost:** 1 to 5 Credits | **Native Bypass Cost:** **0 Credits ($0.00)**
+Provider: `usaspending-gov`. Historical experiment: 0.2.0rc1, superseded by official-only 0.2.0.
 
-## Rationale & Arbitrage Proof
+Agency lookup matched 10 of 11 shared fields. Nested disaster-code structures differed, and the paid route included an awards summary and reported three upstream requests. Direct output is not a substitute for the enriched contract.
 
-USAspending.gov is the official open data source for federal spending information mandated by the DATA Act. It offers a completely open REST API covering prime contract awards, subawards, agency outlays, and recipient tracking.
+Award search returned data without a paid pair. Current routing uses official Firecrawl with a preview. Repeated modest queries do not establish complete pagination or sustained capacity.
 
-## Supported Endpoints & Capabilities
-
-| Capability | Official Endpoint | Parameters | Description |
-|---|---|---|---|
-| **Agency Outlays & Profile** | `agency/{toptier_code}/` | `e.g. 012 for USDA, 097 for DoD` | Agency budget authority, gross outlays, obligations, and subtier agency counts. |
-| **Top-tier Agencies Reference** | `references/toptier_agencies/` | `None` | Directory of all 111 federal executive and independent agencies. |
-| **Spending by Award Search** | `search/spending_by_award/` | `POST JSON with award filters` | Search prime awards by keyword, NAICS code, PSC code, date range, or recipient. |
-
-## Direct cURL Execution (0 Credits)
-
-```bash
-curl -s "https://api.usaspending.gov/api/v2/agency/012/" | jq .
-```
-
-## CLI Execution via `legends-firecrawl`
-
-```powershell
-pwsh -File E:\legends-firecrawl\bin\lax.ps1 query usaspending-gov agency
-```
-
+This historical note preserves the earlier research path for existing links; it is not an execution guide. Read [release scope](../../docs/RELEASE-SCOPE.md) and [live audit](../../docs/NATIVE-LIVE-AUDIT-20261001.md). Historical captures are retained unchanged; their old safety labels are not current guarantees.

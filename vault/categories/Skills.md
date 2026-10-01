@@ -9,13 +9,15 @@ providers_count: 1
 
 > Website instructions and source files for agents and browser interactions.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (1)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `web-archive-org` (**Wayback Machine**) | 3 | Open Non-Profit, Legal & Community Ecosystems | Yes (Direct community/non-profit REST API) |
+| `web-archive-org` (**Wayback Machine**) | 3 | Open Non-Profit, Legal & Community Ecosystems | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

@@ -51,7 +51,7 @@ def doctor(*, offline: bool = False) -> tuple[dict[str, Any], int]:
     executable, vendor_version = _vendor_cli_version()
     auth = credential_status()
     checks = [
-        {"name": "kit-root", "status": "pass" if (KIT_ROOT / "LEGENDS.md").is_file() else "fail", "detail": str(KIT_ROOT)},
+        {"name": "kit-root", "status": "pass" if (KIT_ROOT / ".legends-module").is_file() and (KIT_ROOT / ".legends-module").read_text(encoding="utf-8").strip() == "legends-firecrawl" and (KIT_ROOT / "skills" / "cto-legends" / "SKILL.md").is_file() else "fail", "detail": str(KIT_ROOT)},
         {"name": "python", "status": "pass", "detail": sys.version.split()[0]},
         {
             "name": "official-firecrawl-cli",
@@ -252,4 +252,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

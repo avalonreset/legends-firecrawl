@@ -9,30 +9,32 @@ providers_count: 18
 
 > Local businesses and places: what is near an address, with hours, phone, address, website, rating and review count.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (18)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `bbb-business-profiles-ratings-complaint` (**BBB business profiles**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `bbb-org` (**Better Business Bureau**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `bing-com` (**Bing Maps**) | 2 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `classpass-com` (**ClassPass**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `fresha-com` (**Fresha**) | 5 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `gartner-com` (**Gartner**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `hipcamp-com` (**Hipcamp**) | 7 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `houzz-com` (**Houzz**) | 3 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `maps-google-com` (**Google Maps**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `ra-co` (**Resident Advisor**) | 6 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `resy-com` (**Resy**) | 6 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `rover-com` (**Rover**) | 5 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `seatgeek-com` (**SeatGeek**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `spothero-com` (**SpotHero parking**) | 10 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `stubhub-com` (**StubHub**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `tickpick-com` (**TickPick**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `todaytix-com` (**TodayTix**) | 5 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `uhaul-com` (**U-Haul**) | 5 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
+| `bbb-business-profiles-ratings-complaint` (**BBB business profiles**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `bbb-org` (**Better Business Bureau**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `bing-com` (**Bing Maps**) | 2 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `classpass-com` (**ClassPass**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `fresha-com` (**Fresha**) | 5 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `gartner-com` (**Gartner**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `hipcamp-com` (**Hipcamp**) | 7 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `houzz-com` (**Houzz**) | 3 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `maps-google-com` (**Google Maps**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `ra-co` (**Resident Advisor**) | 6 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `resy-com` (**Resy**) | 6 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `rover-com` (**Rover**) | 5 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `seatgeek-com` (**SeatGeek**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `spothero-com` (**SpotHero parking**) | 10 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `stubhub-com` (**StubHub**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `tickpick-com` (**TickPick**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `todaytix-com` (**TodayTix**) | 5 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `uhaul-com` (**U-Haul**) | 5 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

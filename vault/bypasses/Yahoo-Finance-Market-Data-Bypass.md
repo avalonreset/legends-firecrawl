@@ -1,39 +1,11 @@
----
-type: bypass-guide
-title: "Yahoo Finance Market Data Direct Bypass"
-provider: "finance-yahoo-com"
-tier: "Tier 3: Public Commercial Web / Frontend JSON"
-cost: "0 Credits ($0.00)"
----
+# Retired research: Yahoo unpaired evidence
 
-# Yahoo Finance Market Data Direct Bypass
+> Retired. Version 0.2.0 supports official Firecrawl execution only. No direct operation, including Treasury, is available as a supported substitution. Findings below describe the abandoned experiment.
 
-- **Provider ID:** `finance-yahoo-com`
-- **Data Tier:** Tier 3: Public Commercial Web / Frontend JSON
-- **Official Base URL:** `https://query1.finance.yahoo.com/`
-- **Alexandria Cost:** 1 to 5 Credits | **Native Bypass Cost:** **0 Credits ($0.00)**
+Provider: `finance-yahoo-com`. Historical experiment: 0.2.0rc1, superseded by official-only 0.2.0.
 
-## Rationale & Arbitrage Proof
+The search test returned data, but no paid comparison was performed. That establishes reachability only, not equivalent data or sustained reliability.
 
-Yahoo Finance provides high-speed, unauthenticated JSON chart and quote endpoints used by quantitative developers worldwide. Firecrawl Alexandria charges 5 credits per quote query.
+Current routing uses official Firecrawl with a preview. No accepted direct credit-saving claim follows from this test.
 
-## Supported Endpoints & Capabilities
-
-| Capability | Official Endpoint | Parameters | Description |
-|---|---|---|---|
-| **Quote & Chart Series** | `v8/finance/chart/{symbol}` | `range=1d&interval=1d&indicators=quote` | Real-time prices, 52-week ranges, market cap, previous close, volume, and trading periods. |
-| **Ticker & Equity Search** | `v1/finance/search` | `q={query}&quotesCount=5` | Fuzzy search ticker symbols, company names, ETFs, and indices. |
-| **Historical Dividends & Splits** | `v8/finance/chart/{symbol}` | `events=div%7Csplit&range=5y` | Historical dividend payouts and stock split dates/ratios. |
-
-## Direct cURL Execution (0 Credits)
-
-```bash
-curl -s -H "User-Agent: Mozilla/5.0" "https://query1.finance.yahoo.com/v8/finance/chart/AAPL?range=1d" | jq .chart.result[0].meta
-```
-
-## CLI Execution via `legends-firecrawl`
-
-```powershell
-pwsh -File E:\legends-firecrawl\bin\lax.ps1 query finance-yahoo-com quote
-```
-
+This historical note preserves the earlier research path for existing links; it is not an execution guide. Read [release scope](../../docs/RELEASE-SCOPE.md) and [live audit](../../docs/NATIVE-LIVE-AUDIT-20261001.md). Historical captures are retained unchanged; their old safety labels are not current guarantees.

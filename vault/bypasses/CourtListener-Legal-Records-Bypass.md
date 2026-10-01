@@ -1,39 +1,11 @@
----
-type: bypass-guide
-title: "CourtListener Legal Decisions & Dockets Direct Bypass"
-provider: "courtlistener-com"
-tier: "Tier 2: Open Non-Profit & Academic"
-cost: "0 Credits ($0.00)"
----
+# Retired research: CourtListener partial evidence
 
-# CourtListener Legal Decisions & Dockets Direct Bypass
+> Retired. Version 0.2.0 supports official Firecrawl execution only. No direct operation, including Treasury, is available as a supported substitution. Findings below describe the abandoned experiment.
 
-- **Provider ID:** `courtlistener-com`
-- **Data Tier:** Tier 2: Open Non-Profit & Academic
-- **Official Base URL:** `https://www.courtlistener.com/api/rest/v4/`
-- **Alexandria Cost:** 1 to 5 Credits | **Native Bypass Cost:** **0 Credits ($0.00)**
+Provider: `courtlistener-com`. Historical experiment: 0.2.0rc1, superseded by official-only 0.2.0.
 
-## Rationale & Arbitrage Proof
+Copyright search returned the same 20 cluster IDs through both routes. Field equivalence, pagination and access entitlement were not established.
 
-CourtListener is maintained by the non-profit Free Law Project, providing millions of legal opinions, federal court dockets, oral arguments, and judicial profiles via an open REST API.
+Current routing uses official Firecrawl with a preview. A working unauthenticated request is not proof of unlimited public API access. Consult the source membership and commercial API requirements before adding an integration.
 
-## Supported Endpoints & Capabilities
-
-| Capability | Official Endpoint | Parameters | Description |
-|---|---|---|---|
-| **Opinion Search** | `search/?q={query}&type=o` | `q=keyword, order_by=score desc` | Search federal and state legal opinions with full text, citations, and download links. |
-| **Docket Search** | `dockets/` | `court=dcd, docket_number=...` | Search federal district, appellate, and bankruptcy court dockets. |
-| **Courts Directory** | `courts/` | `None` | Directory of all federal and state court jurisdictions and metadata. |
-
-## Direct cURL Execution (0 Credits)
-
-```bash
-curl -s "https://www.courtlistener.com/api/rest/v4/search/?q=artificial+intelligence&type=o" | jq .results[0]
-```
-
-## CLI Execution via `legends-firecrawl`
-
-```powershell
-pwsh -File E:\legends-firecrawl\bin\lax.ps1 query courtlistener-com opinions
-```
-
+This historical note preserves the earlier research path for existing links; it is not an execution guide. Read [release scope](../../docs/RELEASE-SCOPE.md) and [live audit](../../docs/NATIVE-LIVE-AUDIT-20261001.md). Historical captures are retained unchanged; their old safety labels are not current guarantees.

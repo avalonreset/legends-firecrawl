@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const {randomUUID}=require('crypto');
 
 /**
  * Legends Alexandria: Data Encapsulation Engine
@@ -84,7 +85,7 @@ function encapsulate(queryResult, customBaseDir = null) {
   const baseDir = customBaseDir || path.resolve(__dirname, '..');
   const now = new Date();
   const dateStr = now.toISOString().slice(0, 10);
-  const timeStr = now.toISOString().replace(/[:.]/g, '-');
+  const timeStr = now.toISOString().replace(/[:.]/g, '-') + '_' + randomUUID();
 
   const providerSlug = sanitizeSlug(queryResult.provider);
   const capSlug = sanitizeSlug(queryResult.capability);
@@ -107,13 +108,13 @@ function encapsulate(queryResult, customBaseDir = null) {
       source: queryResult.source,
       routeDecision: queryResult.routeDecision || 'UNKNOWN',
       safetyTier: queryResult.safetyTier || 'UNKNOWN',
-      creditsBurned: queryResult.creditsUsed || 0,
+      creditsBurned: queryResult.creditsUsed ?? null,
       decisionReason: queryResult.decisionReason || ''
     },
-    data: queryResult.data
+    response: queryResult, data: queryResult.data
   };
 
-  fs.writeFileSync(rawFilePath, JSON.stringify(rawPayload, null, 2), 'utf-8');
+  fs.writeFileSync(rawFilePath, JSON.stringify(rawPayload, null, 2), {encoding:'utf-8',flag:'wx'});
 
   // 2. Synthesized Knowledge Card: vault/captures/<provider>/
   const vaultCardDir = path.join(baseDir, 'vault', 'captures', providerSlug);
@@ -121,7 +122,7 @@ function encapsulate(queryResult, customBaseDir = null) {
     fs.mkdirSync(vaultCardDir, { recursive: true });
   }
 
-  const cardFileName = `${dateStr}_${capSlug}.md`;
+  const cardFileName = `${timeStr}_${capSlug}.md`;
   const cardFilePath = path.join(vaultCardDir, cardFileName);
 
   const recordCount = Array.isArray(queryResult.data) 
@@ -139,7 +140,7 @@ provider: "${queryResult.provider}"
 capability: "${queryResult.capability}"
 safety_tier: "${queryResult.safetyTier || 'UNKNOWN'}"
 route_decision: "${queryResult.routeDecision || 'UNKNOWN'}"
-credits_burned: ${queryResult.creditsUsed || 0}
+credits_burned: ${queryResult.creditsUsed ?? null}
 record_count: ${recordCount}
 province: "${province}"
 tags:
@@ -164,7 +165,7 @@ Captured on **${now.toISOString()}** via **${queryResult.source}**.
 | **Capability** | \`${queryResult.capability}\` |
 | **Safety Tier** | **${queryResult.safetyTier || 'UNKNOWN'}** |
 | **Route Decision** | **${queryResult.routeDecision || 'UNKNOWN'}** |
-| **Credits Burned** | **${queryResult.creditsUsed || 0}** |
+| **Credits Burned** | **${queryResult.creditsUsed ?? null}** |
 | **Records** | ${recordCount} |
 | **Primary Province** | [[wiki/${province.toLowerCase()}/${province}|${province}]] |
 | **Immutable Raw** | \`${rawFilePath}\` |
@@ -177,11 +178,11 @@ Captured on **${now.toISOString()}** via **${queryResult.source}**.
 ${previewTable}
 
 ## Integration & Use
-- Re-querying this capability with identical parameters is unnecessary; data is preserved locally.
+- This is a dated snapshot; re-query when freshness is required.
 - Link to this card from research notes, client reports, or portfolio ledgers.
 `;
 
-  fs.writeFileSync(cardFilePath, mdContent, 'utf-8');
+  fs.writeFileSync(cardFilePath, mdContent, {encoding:'utf-8',flag:'wx'});
 
   return {
     rawFilePath,

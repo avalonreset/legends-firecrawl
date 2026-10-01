@@ -9,16 +9,18 @@ providers_count: 4
 
 > The people at companies: who they are, what they do, and how to reach them.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (4)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `apollo` (**Apollo**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `fullenrich` (**FullEnrich**) | 10 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `npiregistry-cms-hhs-gov` (**NPI Registry**) | 3 | Public Government & Intergovernmental Data | Yes (Direct official REST API) |
-| `particle` (**Particle**) | 105 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
+| `apollo` (**Apollo**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `fullenrich` (**FullEnrich**) | 10 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `npiregistry-cms-hhs-gov` (**NPI Registry**) | 3 | Public Government & Intergovernmental Data | Official Firecrawl; preview required |
+| `particle` (**Particle**) | 105 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

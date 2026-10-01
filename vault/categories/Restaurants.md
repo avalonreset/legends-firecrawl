@@ -9,18 +9,20 @@ providers_count: 6
 
 > Restaurant locations, opening hours, menus, prices and product options.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (6)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `dominos-ca` (**Domino's Canada**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `dominos-com` (**Domino's US**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `doordash-com` (**DoorDash US**) | 8 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `pizzahut-ca` (**Pizza Hut Canada**) | 9 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `pizzahut-com` (**Pizza Hut US**) | 7 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `resy-com` (**Resy**) | 6 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
+| `dominos-ca` (**Domino's Canada**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `dominos-com` (**Domino's US**) | 7 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `doordash-com` (**DoorDash US**) | 8 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `pizzahut-ca` (**Pizza Hut Canada**) | 9 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `pizzahut-com` (**Pizza Hut US**) | 7 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `resy-com` (**Resy**) | 6 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

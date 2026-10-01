@@ -1,116 +1,67 @@
 # legends-firecrawl
 
-Live web search, page scraping, URL discovery, bounded crawling, data cataloging, credit efficiency, and automated IP safety routing.
+An agent-oriented CLI wrapper for official Firecrawl web operations and Alexandria queries, with a local catalog and saved response evidence.
 
-Legends Firecrawl is the unified super-module combining official Firecrawl web capabilities with **Legends Alexandria**, the offline data intelligence and credit efficiency engine.
+**Version 0.2.0 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read [release scope](docs/RELEASE-SCOPE.md). Publication status must be verified separately.
 
-## Agent setup (via `cto-legends`)
+## What it adds
 
-Part of the [CTO Legends](https://github.com/avalonreset/cto-legends) ecosystem. `cto-legends` is the only registered skill; this repo vendors a pinned copy at `skills/cto-legends/SKILL.md`.
+- Intent-level commands for official scrape, map, search and bounded crawl jobs.
+- Offline catalog search and provider inspection. The saved snapshot contains 114 provider labels and 797 capabilities; these are discovery records, not independently tested integrations.
+- Explicit confirmation before Alexandria execution and crawl submission.
+- Local captures with response provenance for research and review.
+- Integration with the existing `cto-legends` agent workflow.
 
-Install with `cto-legends install legends-firecrawl`, then follow the module recipe the router loads. Do not register this module as its own skill.
+The value is workflow convenience and reviewable execution. This project does not claim cheaper equivalent data, unique intelligence, superior source coverage, or a measured savings percentage. Firecrawl's own API and CLI also work without MCP, and its discovery is free.
 
----
-
-## Why Legends Firecrawl
-
-1. **Credit Protection & Efficiency**: Firecrawl markets Alexandria as a paid knowledge library for AI agents. Our forensic audit proved that **63.2% of the catalog (72 out of 114 providers) consists of completely free public data**. Legends Firecrawl auto-routes sanctioned government and open endpoints to direct native REST adapters, burning zero credits.
-2. **Automated IP Safety Routing**: Protects residential and office IPs from bot bans. Sanctioned open APIs connect directly; commercial frontends with aggressive bot defenses (Zillow, Target, Skyscanner) automatically route through Firecrawl residential proxies.
-3. **Bounded & Budget Safe**: Prevents unbounded token and credit exhaustion. Crawls require explicit preview confirmation; page limits and search caps are enforced before HTTP execution.
-4. **Vault Encapsulation**: Captures raw API payloads locally and generates structured Obsidian research notes with citations.
-
----
-
-## 3-Tier IP Safety & Routing Architecture
-
-| Safety Tier | Providers | Characteristics | Router Action |
-|---|---|---|---|
-| **GREEN_SAFE** | 26 | Official government and international open APIs (US Treasury, SEC EDGAR, USAspending, FRED, CourtListener, World Bank). Legal open access mandate, zero bot defense. | **Auto-routes to Native Direct REST (0 Credits burned)** |
-| **YELLOW_SHIELDED** | 32 | Commercial consumer frontends (Zillow, Skyscanner, Target, Amazon, SpotHero). Protected by Cloudflare, DataDome, Akamai. High ban risk on residential IPs. | **Auto-routes via Firecrawl Gateway (Residential proxies shield IP)** |
-| **BLUE_LICENSED** | 56 | Proprietary commercial B2B data brokers (Apollo, Benzinga, Fiscal.ai, FullEnrich). Licensed commercial data. | **Auto-routes via Firecrawl Gateway (Paid credits or enterprise key)** |
-
----
-
-## Quick Reference
-
-### Core Web Operations
+## Commands
 
 ```powershell
-# Account and credit balance
+# Offline catalog discovery; cached descriptions and prices may be stale
+lax search "treasury"
+lax inspect treasury-fiscal-data
+lax audit
+
+# Preview an official Alexandria query; no native route is selected
+lax query treasury-fiscal-data debt/to-the-penny
+
+# Submit the reviewed request through Firecrawl; may consume credits
+lax query treasury-fiscal-data debt/to-the-penny --confirm
+
+# Captured evidence
+lax captures
+
+# Official Firecrawl web operations may consume credits
 lfc credits
-
-# Single clean page extraction (ad-blocked markdown)
 lfc scrape https://example.com
-
-# Site URL discovery
 lfc map https://example.com --limit 100
-
-# Web search without scraping results
-lfc search "machine learning benchmarks 2026" --limit 5
-
-# Preview a bounded crawl before spending credits
+lfc search "machine learning benchmarks" --limit 5
 lfc crawl-preview https://example.com --limit 25 --max-depth 2
-
-# Start reviewed crawl
 lfc crawl https://example.com --limit 25 --max-depth 2 --confirm
 ```
 
-### Alexandria Intelligence Engine
+Alexandria queries default to preview. `--preview` requests that explicitly; `--confirm` authorizes submission; `--no-save` skips local capture. The confirmation rule does not mean every existing `lfc` operation is a no-charge preview. Provider contracts and prices govern live requests.
+
+## Agent setup (via `cto-legends`)
+
+Part of [cto-legends](https://github.com/avalonreset/cto-legends). The one registered router skill is vendored at `skills/cto-legends/SKILL.md`; this module is not a separate registered skill and does not require an ambient MCP daemon.
+
+Run `cto-legends handoff legends-firecrawl` and read the returned installed recipe and task-readiness checks. If the module is missing, preview setup with `cto-legends install legends-firecrawl`, perform the authorized setup, then repeat the handoff. A catalog installation does not establish that version 0.2.0 has been published.
 
 ```powershell
-# Catalog audit, breakdown, and bypass percentage
-lax audit
-
-# Instant offline tool search across all 797 capabilities (0 credits)
-lax search "treasury"
-
-# Inspect provider contracts and direct routing details
-lax inspect treasury-fiscal-data
-
-# Execute query with automated IP safety routing & vault encapsulation
-lax query treasury-fiscal-data debt/to-the-penny
-
-# Preserved captures inventory
-lax captures
-```
-
----
-
-## Installation & Setup
-
-```powershell
-# 1. Install vendor CLI spine
 npm install -g firecrawl-cli@1.23.3
-
-# 2. Configure API key
 pwsh -File bin/setup-auth.ps1
-
-# 3. Verify system health
 pwsh -File bin/doctor.ps1
 ```
 
----
-
-## Multi-Agent Compatibility
-
-Legends Firecrawl ships no per-module skill and requires no ambient MCP daemon. Agents discover and run it through the one registered `cto-legends` router skill (vendored at `skills/cto-legends/SKILL.md`): `cto-legends install legends-firecrawl` previews the install, then the `lfc` / `lax` launchers run intent-level jobs with JSON output.
-
----
-
-## Verification & Self-Test
+## Verification and limits
 
 ```powershell
-# Run the 36-test offline contract suite
 pytest tests -v
-
-# Run the 12-scenario behavioral benchmark
 python scripts/run_behavioral_evals.py
-
-# Run the disposable live canary (costs 1 credit)
-pwsh -File bin/canary.ps1 -Confirm
 ```
 
----
+Offline tests verify command contracts, not the correctness or availability of every provider. This wrapper does not improve the underlying provider's data, replace source access limits, or guarantee proxy protection. Catalog records and prices can become stale; current provider contracts govern live execution.
 
 ## License
 

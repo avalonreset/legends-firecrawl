@@ -11,8 +11,10 @@ tags:
 # Tier 4: Proprietary Commercial B2B Data Brokers
 
 - **Provider Count:** 42
-- **Overview:** Legitimate paid B2B datasets (people search, financial news terminals, enterprise firmographics).
-- **Kit Strategy:** Route through Firecrawl Alexandria gateway using team credits, or connect direct vendor API keys.
+- **Overview:** Historical catalog grouping; source access, credentials and limits require capability-specific verification.
+- **Current routing:** Official Firecrawl only. This historical taxonomy does not select a direct route.
+
+> Research inventory only. This taxonomy does not prove direct availability, licensing, safety or savings. See [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Providers in this Tier
 

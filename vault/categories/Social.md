@@ -9,14 +9,16 @@ providers_count: 2
 
 > Public social media accounts: profiles, follower counts, posts, hashtags, boards and pins.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (2)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `stackexchange-com` (**Stack Exchange**) | 6 | Open Non-Profit, Legal & Community Ecosystems | Yes (Direct community/non-profit REST API) |
-| `us-forums-blizzard-com` (**Blizzard US Forums**) | 7 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
+| `stackexchange-com` (**Stack Exchange**) | 6 | Open Non-Profit, Legal & Community Ecosystems | Official Firecrawl; preview required |
+| `us-forums-blizzard-com` (**Blizzard US Forums**) | 7 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 

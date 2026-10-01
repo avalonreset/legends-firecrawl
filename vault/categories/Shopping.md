@@ -9,32 +9,34 @@ providers_count: 20
 
 > Products, prices, sizes, availability and customer reviews.
 
-Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Great AI Data Arbitrage]].
+Part of [[_Index|Legends Alexandria]] and the [[manifesto/The-Great-AI-Data-Arbitrage|Direct access and managed data]].
+
+> Historical catalog snapshot. Provider descriptions and prices are cached discovery data, not verified native implementations. All native substitutions are retired; see [release scope](../../docs/RELEASE-SCOPE.md).
 
 ## Cataloged Providers (20)
 
-| Provider | Capabilities | Data Tier | Direct Bypass Available? |
+| Provider | Capabilities | Data Tier | Execution route |
 |---|---|---|---|
-| `allbirds-com` (**Allbirds**) | 6 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `amazon-com` (**Amazon US**) | 10 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `autotrader-com` (**Autotrader**) | 5 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `bestbuy-com` (**Best Buy US**) | 8 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `discogs-com` (**Discogs**) | 8 | Open Non-Profit, Legal & Community Ecosystems | Yes (Direct community/non-profit REST API) |
-| `doordash-com` (**DoorDash US**) | 8 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `ebay-com` (**eBay listings**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `etsy-com` (**Etsy**) | 5 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `ikea-com` (**IKEA US**) | 6 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `kbb-com` (**Kelley Blue Book**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `newegg-com` (**Newegg US**) | 3 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `nike-com` (**Nike US**) | 6 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `peerspot-com` (**PeerSpot**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `psacard-com` (**PSA**) | 5 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `reclameaqui-com-br` (**Reclame Aqui**) | 7 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `rtings-com` (**RTINGS**) | 4 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `shopify` (**Shopify Catalog**) | 6 | Proprietary Commercial B2B Data Brokers | No (Proprietary) |
-| `target-com` (**Target**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `traderjoes-com` (**Trader Joe's**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
-| `uhaul-com` (**U-Haul**) | 5 | Public Commercial Web / Frontend JSON Endpoints | Yes (Direct unauthenticated web fetch or lightweight house scraper) |
+| `allbirds-com` (**Allbirds**) | 6 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `amazon-com` (**Amazon US**) | 10 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `autotrader-com` (**Autotrader**) | 5 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `bestbuy-com` (**Best Buy US**) | 8 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `discogs-com` (**Discogs**) | 8 | Open Non-Profit, Legal & Community Ecosystems | Official Firecrawl; preview required |
+| `doordash-com` (**DoorDash US**) | 8 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `ebay-com` (**eBay listings**) | 4 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `etsy-com` (**Etsy**) | 5 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `ikea-com` (**IKEA US**) | 6 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `kbb-com` (**Kelley Blue Book**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `newegg-com` (**Newegg US**) | 3 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `nike-com` (**Nike US**) | 6 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `peerspot-com` (**PeerSpot**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `psacard-com` (**PSA**) | 5 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `reclameaqui-com-br` (**Reclame Aqui**) | 7 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `rtings-com` (**RTINGS**) | 4 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `shopify` (**Shopify Catalog**) | 6 | Proprietary Commercial B2B Data Brokers | Official Firecrawl; preview required |
+| `target-com` (**Target**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `traderjoes-com` (**Trader Joe's**) | 3 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
+| `uhaul-com` (**U-Haul**) | 5 | Public Commercial Web / Frontend JSON Endpoints | Official Firecrawl; preview required |
 
 ## Tools & Capabilities
 
