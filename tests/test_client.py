@@ -163,3 +163,20 @@ def test_provider_http_error_preserves_raw(monkeypatch,tmp_path):
     with pytest.raises(client.ApiError) as err:instance.request('/v2/scrape')
     assert err.value.response=={'success':False,'nested':{'keep':12}}
     assert err.value.request_may_have_completed and len(calls)==1
+
+def test_installed_ledger_uses_portable_state_not_house_checkout(monkeypatch,tmp_path):
+    monkeypatch.delenv('LEGENDS_FIRECRAWL_HOME',raising=False)
+    monkeypatch.delenv('LEGENDS_FIRECRAWL_LEDGER',raising=False)
+    monkeypatch.setenv('LOCALAPPDATA',str(tmp_path/'state'))
+    monkeypatch.setattr(client,'__file__',str(tmp_path/'venv'/'Lib'/'site-packages'/'legends_firecrawl'/'client.py'))
+    assert client._kit_root() is None
+    assert client.ledger_path()==tmp_path/'state'/'Legends'/'Firecrawl'/'usage-ledger.jsonl'
+
+def test_explicit_ledger_home_and_source_marker(monkeypatch,tmp_path):
+    monkeypatch.delenv('LEGENDS_FIRECRAWL_LEDGER',raising=False)
+    monkeypatch.setenv('LEGENDS_FIRECRAWL_HOME',str(tmp_path/'chosen'))
+    assert client.ledger_path()==tmp_path/'chosen'/'var'/'usage-ledger.jsonl'
+    monkeypatch.delenv('LEGENDS_FIRECRAWL_HOME')
+    (tmp_path/'.legends-module').write_text('legends-firecrawl')
+    monkeypatch.setattr(client,'__file__',str(tmp_path/'python'/'legends_firecrawl'/'client.py'))
+    assert client._kit_root()==tmp_path

@@ -47,11 +47,26 @@ def _vendor_cli_version() -> tuple[str | None, str | None]:
     return executable, version
 
 
+def _runtime_layout_check() -> dict[str, Any]:
+    """Wheel runtime and source recipe layouts are distinct valid installations."""
+    marker = KIT_ROOT / ".legends-module"
+    source_layout = marker.exists() or (KIT_ROOT / "python" / "legends_firecrawl").is_dir()
+    if source_layout:
+        valid = marker.is_file() and marker.read_text(encoding="utf-8").strip() == "legends-firecrawl" and (KIT_ROOT / "skills" / "cto-legends" / "SKILL.md").is_file()
+        return {"name":"kit-root", "status":"pass" if valid else "fail", "detail":{"layout":"source", "path":str(KIT_ROOT), "recipes":"verified" if valid else "missing_or_invalid"}}
+    try:
+        routes = load_routes()
+        valid = routes.get("schema") == "legends-firecrawl-routes/v1" and routes.get("version") == __version__ and isinstance(routes.get("routes"), list) and bool(routes["routes"])
+    except (OSError, ValueError, AttributeError):
+        valid = False
+    return {"name":"kit-root", "status":"pass" if valid else "fail", "detail":{"layout":"installed_python", "path":str(Path(__file__).parent), "recipes":"not_bundled_in_wheel", "runtime_data":"verified" if valid else "missing_or_invalid"}}
+
+
 def doctor(*, offline: bool = False) -> tuple[dict[str, Any], int]:
     executable, vendor_version = _vendor_cli_version()
     auth = credential_status()
     checks = [
-        {"name": "kit-root", "status": "pass" if (KIT_ROOT / ".legends-module").is_file() and (KIT_ROOT / ".legends-module").read_text(encoding="utf-8").strip() == "legends-firecrawl" and (KIT_ROOT / "skills" / "cto-legends" / "SKILL.md").is_file() else "fail", "detail": str(KIT_ROOT)},
+        _runtime_layout_check(),
         {"name": "python", "status": "pass", "detail": sys.version.split()[0]},
         {
             "name": "official-firecrawl-cli",

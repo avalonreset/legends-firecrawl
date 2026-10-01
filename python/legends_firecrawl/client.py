@@ -69,8 +69,8 @@ def load_credentials() -> Credentials:
             return Credentials(value, "user-env")
     raise CredentialError(
         "FIRECRAWL_API_KEY is unavailable at process or Windows user scope. "
-        "Create a Firecrawl API key, run E:\\legends-firecrawl\\bin\\setup-auth.ps1, "
-        "then run E:\\legends-firecrawl\\bin\\doctor.ps1."
+        "Configure FIRECRAWL_API_KEY or use bin/setup-auth.ps1 from the module source, "
+        "then run python -m legends_firecrawl.cli doctor."
     )
 
 
@@ -118,10 +118,10 @@ def _kit_root() -> Path | None:
     if configured:
         return Path(configured).expanduser()
     source_root = Path(__file__).resolve().parents[2]
-    if (source_root / "LEGENDS.md").is_file():
+    marker = source_root / ".legends-module"
+    if marker.is_file() and marker.read_text(encoding="utf-8").strip() == "legends-firecrawl":
         return source_root
-    windows_house = Path(r"E:\legends-firecrawl")
-    return windows_house if windows_house.is_dir() else None
+    return None
 
 
 def ledger_path() -> Path:

@@ -93,3 +93,29 @@ def test_doctor_rejects_wrong_module_marker(monkeypatch, tmp_path):
     report, code = cli.doctor(offline=True)
     assert code == 1
     assert next(x for x in report["checks"] if x["name"] == "kit-root")["status"] == "fail"
+
+def test_doctor_accepts_installed_package_without_source_recipes(monkeypatch,tmp_path):
+    from legends_firecrawl import cli
+    monkeypatch.setattr(cli,'KIT_ROOT',tmp_path)
+    monkeypatch.setattr(cli,'_vendor_cli_version',lambda:('firecrawl',cli.EXPECTED_VENDOR_CLI))
+    monkeypatch.setattr(cli,'credential_status',lambda:{'present':True})
+    report,code=cli.doctor(offline=True)
+    assert code==0
+    layout=next(x for x in report['checks'] if x['name']=='kit-root')
+    assert layout['detail']['layout']=='installed_python'
+    assert layout['detail']['recipes']=='not_bundled_in_wheel'
+
+def test_installed_package_missing_runtime_data_rejected(monkeypatch,tmp_path):
+    from legends_firecrawl import cli
+    monkeypatch.setattr(cli,'KIT_ROOT',tmp_path)
+    monkeypatch.setattr(cli,'load_routes',lambda:{'version':'wrong'})
+    assert cli._runtime_layout_check()['status']=='fail'
+
+def test_installed_layout_does_not_hide_vendor_or_auth_failure(monkeypatch,tmp_path):
+    from legends_firecrawl import cli
+    monkeypatch.setattr(cli,'KIT_ROOT',tmp_path)
+    monkeypatch.setattr(cli,'_vendor_cli_version',lambda:(None,None))
+    monkeypatch.setattr(cli,'credential_status',lambda:{'present':False})
+    report,code=cli.doctor(offline=True)
+    assert code==1 and not report['ready']
+    assert next(x for x in report['checks'] if x['name']=='kit-root')['status']=='pass'
