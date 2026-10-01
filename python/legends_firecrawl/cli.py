@@ -148,6 +148,8 @@ def build_parser() -> argparse.ArgumentParser:
     status.add_argument("job_id")
 
     for capture_parser in (scrape, mapping, search, crawl, status):
+        capture_parser.add_argument("--receipt", action="store_true", help="Print archive receipt only; full response remains saved")
+        capture_parser.add_argument("--workspace", help="Client/project identity recorded with capture")
         capture_parser.add_argument("--no-save", action="store_true", help="Skip automatic full response archive")
 
     vendor = sub.add_parser("vendor")
@@ -156,6 +158,10 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    command_line = argv if argv is not None else sys.argv[1:]
+    if command_line and command_line[0] == 'evidence':
+        from .evidence import main as evidence_main
+        return evidence_main(command_line[1:])
     args = build_parser().parse_args(argv)
     try:
         if args.command == "version":
@@ -202,6 +208,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "crawl" and not args.confirm:
             raise SafetyError("crawl is multi-page and requires --confirm after reviewing crawl-preview")
 
+        if getattr(args, "receipt", False) and getattr(args, "no_save", False):
+            raise SafetyError("--receipt requires saving; cannot combine --no-save")
         capture_failed = False
         def emit_result(payload):
             nonlocal capture_failed
@@ -209,10 +217,10 @@ def main(argv: list[str] | None = None) -> int:
                 emit(payload)
                 return
             from .capture import archive_response
-            request = {k: v for k, v in vars(args).items() if k not in {"command", "no_save", "confirm"}}
+            request = {k: v for k, v in vars(args).items() if k not in {"command", "no_save", "confirm", "receipt", "workspace"}}
             try:
-                capture = archive_response(args.command, payload, request=request)
-                emit({**payload, "_capture": capture})
+                capture = archive_response(args.command, payload, request=request, workspace=getattr(args,"workspace",None))
+                emit({"_capture":capture,"response_omitted":True} if getattr(args,"receipt",False) else {**payload, "_capture": capture})
             except OSError as exc:
                 capture_failed = True
                 emit({"success": False, "error": "Response received but local capture failed", "capture_error": str(exc), "requestCompleted": True, "response": payload})
@@ -263,7 +271,13 @@ def main(argv: list[str] | None = None) -> int:
         else:
             raise SafetyError(f"unknown command {args.command}")
         return 2 if capture_failed else 0
-    except (CredentialError, ApiError, SafetyError) as exc:
+    except ApiError as exc:
+        failure = {"success":False,"error":str(exc),"requestMayHaveCompleted":exc.request_may_have_completed,"response":exc.response}
+        if exc.response is not None and args.command in {"scrape","map","search","crawl","crawl-status"}:
+            emit_result(failure)
+        else: emit(failure)
+        return 2
+    except (CredentialError, SafetyError) as exc:
         emit({"success": False, "error": str(exc), "command": args.command})
         return 2
 

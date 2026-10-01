@@ -31,6 +31,8 @@ def included_files() -> list[Path]:
         files.extend(path for path in sorted((ROOT / directory).rglob("*")) if path.is_file() and "__pycache__" not in path.parts)
     def eligible(path: Path) -> bool:
         rel = path.relative_to(ROOT).as_posix()
+        if any(part.endswith(".egg-info") for part in path.parts):
+            return False
         if rel.startswith('vault/captures/'):
             return False
         if rel.startswith('alexandria-src/native_adapters/'):

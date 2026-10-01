@@ -29,7 +29,11 @@ class CredentialError(RuntimeError):
 
 
 class ApiError(RuntimeError):
-    """Raised when Firecrawl rejects or cannot complete a request."""
+    """Provider failure with complete received response, when available."""
+    def __init__(self, message, *, response=None, request_may_have_completed=True):
+        super().__init__(message)
+        self.response = response
+        self.request_may_have_completed = request_may_have_completed
 
 
 class SafetyError(ValueError):
@@ -249,17 +253,21 @@ class FirecrawlClient:
         )
         try:
             with urlopen(request, timeout=self.timeout) as response:  # nosec B310 - fixed HTTPS root
-                result = json.loads(response.read().decode("utf-8"))
+                raw = response.read().decode("utf-8")
+                result = json.loads(raw)
         except HTTPError as exc:
-            raise ApiError(f"Firecrawl returned HTTP {exc.code} for {normalized}: {_error_detail(exc.read())}") from exc
+            raw = exc.read().decode("utf-8", errors="replace")
+            try: received = json.loads(raw)
+            except json.JSONDecodeError: received = {"raw_text":raw}
+            raise ApiError(f"Firecrawl returned HTTP {exc.code} for {normalized}", response=received) from exc
         except URLError as exc:
             raise ApiError(f"Could not reach Firecrawl for {normalized}: {exc.reason}") from exc
         except json.JSONDecodeError as exc:
-            raise ApiError(f"Firecrawl returned invalid JSON for {normalized}") from exc
+            raise ApiError(f"Firecrawl returned invalid JSON for {normalized}", response={"raw_text":raw}) from exc
         if not isinstance(result, dict):
-            raise ApiError(f"Firecrawl returned an unexpected response for {normalized}")
+            raise ApiError(f"Firecrawl returned an unexpected response for {normalized}", response={"provider_response":result})
         if result.get("success") is False:
-            raise ApiError(f"Firecrawl rejected {normalized}: {result.get('error') or result.get('message') or 'unknown error'}")
+            raise ApiError(f"Firecrawl rejected {normalized}", response=result)
         if log_usage:
             _append_ledger(normalized, result, consumer=self.consumer, requested_scope=requested_scope)
         return result

@@ -2,7 +2,7 @@
 
 An agent-oriented CLI wrapper for official Firecrawl web operations and Alexandria queries, with a local catalog and saved response evidence.
 
-**Version 0.2.1 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read the [release scope](docs/RELEASE-SCOPE.md) and [published 0.2.1 release](https://github.com/avalonreset/legends-firecrawl/releases/tag/v0.2.1).
+**Version 0.3.0 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read the [release scope](docs/RELEASE-SCOPE.md) and [evidence workflow](docs/RESEARCH-MEMORY.md).
 
 ## Why use it
 
@@ -13,7 +13,7 @@ Collect once, retain the complete response, then let an agent inspect the eviden
 - Intent-level commands for official scrape, map, search and bounded crawl jobs.
 - Offline catalog search and provider inspection. The saved snapshot contains 114 provider labels and 797 capabilities; these are discovery records, not independently tested integrations.
 - Explicit confirmation before Alexandria execution and crawl submission.
-- Local captures with response provenance for research and review.
+- Full captures, portable evidence export, integrity verification, offline finding/viewing and exact-scope freshness checks.
 - Integration with the existing `cto-legends` agent workflow.
 
 The value is workflow convenience and reviewable execution. This project does not claim cheaper equivalent data, unique intelligence, superior source coverage, or a measured savings percentage. Firecrawl's own API and CLI also work without MCP, and its discovery is free.
@@ -49,6 +49,10 @@ Alexandria queries default to preview. `--preview` requests that explicitly; `--
 ## Capture first, inspect afterward
 
 Scrape, map, search, crawl submission and crawl-status save the complete returned JSON to `var/captures/firecrawl/` and a Markdown reference in `vault/captures/firecrawl/`. Alexandria also preserves its full response and vault card. CLI web results retain all original fields and add `_capture` paths. `--no-save` explicitly opts out; `LEGENDS_FIRECRAWL_CAPTURE_ROOT` selects another workspace. Python client calls alone do not automatically save.
+
+Default storage is `~/.legends-firecrawl/research`, outside replaceable module installations. Existing installation-local captures are not moved automatically. Set `LEGENDS_WORKSPACE_ID` or core `--workspace` for client identity. Optional `--receipt` prints only saved paths; full output remains the default.
+
+Use `lfc evidence export-capture`, `inventory`, `find`, `verify`, `view` and `reuse` for a portable offline evidence bank. The [research-memory guide](docs/RESEARCH-MEMORY.md) explains requests, freshness, partial results and Empire handoff.
 
 The agent can read selected fields or the entire saved file without another provider call. Each capture is one response, not proof that every page or all pagination has been collected. Captures are excluded from releases.
 

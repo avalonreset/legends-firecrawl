@@ -150,3 +150,16 @@ def test_usage_ledger_does_not_store_credentials(monkeypatch: pytest.MonkeyPatch
     summary = client.usage_summary(ledger)
     assert summary["calls"] == 1
     assert summary["reported_credits"] == 1
+
+def test_provider_http_error_preserves_raw(monkeypatch,tmp_path):
+    from urllib.error import HTTPError
+    from io import BytesIO
+    instance=runtime(tmp_path,monkeypatch)
+    calls=[]
+    def failed(*args,**kwargs):
+        calls.append(1)
+        raise HTTPError('https://api.firecrawl.dev/v2/scrape',429,'busy',{},BytesIO(b'{"success":false,"nested":{"keep":12}}'))
+    monkeypatch.setattr(client,'urlopen',failed)
+    with pytest.raises(client.ApiError) as err:instance.request('/v2/scrape')
+    assert err.value.response=={'success':False,'nested':{'keep':12}}
+    assert err.value.request_may_have_completed and len(calls)==1

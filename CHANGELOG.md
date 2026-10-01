@@ -1,3 +1,11 @@
+# 0.3.0
+
+- Portable offline evidence export, verification, manifest inventory, find, bounded/full view and scoped reuse review.
+- External capture root, relative references and explicit workspace identity.
+- Optional receipt output; complete response storage remains mandatory unless explicitly skipped.
+- Provider failure envelopes retained; submitted Alexandria empty/error responses archived without retries.
+- Metadata-only capture listing with explicit legacy inspection.
+
 # 0.2.1
 
 - Fix one-word Alexandria commands through PowerShell forwarding.

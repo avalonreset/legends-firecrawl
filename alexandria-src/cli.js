@@ -19,27 +19,35 @@ async function main(){
  }
  if(command==='query'){
   if(!args[1]||!args[2])throw Error('query requires provider and capability');
-  const flags={},allowed=new Set(['--preview','--confirm','--gateway','--no-save','--json']);let options={};
+  const flags={},allowed=new Set(['--preview','--confirm','--gateway','--no-save','--json','--receipt']);let options={};
   for(let i=3;i<args.length;i++){
    if(args[i]==='--options'){if(!args[i+1])throw Error('Missing options JSON');options=JSON.parse(args[++i]);}
    else if(allowed.has(args[i]))flags[args[i].slice(2)]=true;
    else throw Error('Unknown flag: '+args[i]);
   }
+  if(flags.receipt&&flags['no-save'])throw Error('--receipt requires saving');
   const result=await query(args[1],args[2],options,flags);
-  if(result.status==='ok'&&!flags['no-save'])result.capture=require('./encapsulation').encapsulate(result);
-  console.log(JSON.stringify(result,null,2));
+  if(!['preview','confirmation_required'].includes(result.status)&&!flags['no-save']){
+   try{result.capture=require('./encapsulation').encapsulate(result);}
+   catch(error){console.log(JSON.stringify({status:'error',captureError:error.message,requestMayHaveCompleted:true,response:result},null,2));process.exitCode=2;return;}
+  }
+  console.log(JSON.stringify(flags.receipt&&result.capture?{status:result.status,capture:result.capture,response_omitted:true}:result,null,2));
   if(!['ok','preview'].includes(result.status))process.exitCode=2;
   return;
  }
  if(command==='captures'){
-  const root=path.join(process.env.LEGENDS_FIRECRAWL_CAPTURE_ROOT||path.resolve(__dirname,'..'),'var','captures');
+  const root=path.join(process.env.LEGENDS_FIRECRAWL_CAPTURE_ROOT||path.join(require('os').homedir(),'.legends-firecrawl','research'),'var','captures');
   const captures=[],errors=[];
   if(fs.existsSync(root))for(const entry of fs.readdirSync(root,{withFileTypes:true})){
    if(!entry.isDirectory())continue;
-   for(const name of fs.readdirSync(path.join(root,entry.name)).filter(n=>n.endsWith('.raw.json'))){
+   const names=fs.readdirSync(path.join(root,entry.name));
+   for(const name of names.filter(n=>n.endsWith('.raw.json'))){
     const rawFilePath=path.join(root,entry.name,name);
-    try{const raw=JSON.parse(fs.readFileSync(rawFilePath,'utf8')),m=raw.metadata||{};
-     captures.push({provider:m.provider,capability:m.capability,source:m.source,status:raw.response?.status??null,creditsUsed:m.creditsBurned??raw.response?.creditsUsed??null,timestamp:m.timestamp,rawFilePath});
+    try{const sidecar=rawFilePath.replace(/\.json$/,'.manifest.json');
+     if(!fs.existsSync(sidecar)&&!args.includes('--legacy')){captures.push({rawFilePath,metadata:'legacy_unindexed',response_integrity:'not_checked'});continue;}
+     if(fs.existsSync(sidecar)&&fs.statSync(sidecar).size>2000000)throw Error('manifest too large');
+     const raw=fs.existsSync(sidecar)?{metadata:JSON.parse(fs.readFileSync(sidecar,'utf8'))}:JSON.parse(fs.readFileSync(rawFilePath,'utf8')),m=raw.metadata||{};
+     captures.push({provider:m.provider,capability:m.capability,source:m.source,status:m.status??raw.response?.status??null,workspace:m.workspace??null,creditsUsed:m.creditsBurned??raw.response?.creditsUsed??null,timestamp:m.timestamp,rawFilePath,response_integrity:'not_checked'});
     }catch{errors.push({rawFilePath,reason:'unreadable_capture'});}
    }
   }

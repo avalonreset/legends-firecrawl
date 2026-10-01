@@ -1,6 +1,6 @@
-# Release scope: 0.2.1
+# Release scope: 0.3.0
 
-Official-only scope introduced in 0.2.0 and retained in the published 0.2.1 patch. Version 0.2.1 adds full web-response capture and fixes CLI forwarding. See [patch notes](RELEASE-0.2.1.md). An installed copy can be older; check its version separately.
+Official-only scope introduced in 0.2.0 and retained in the published 0.3.0 patch. Version 0.3.0 adds full web-response capture and fixes CLI forwarding. See [patch notes](RELEASE-0.3.0.md). An installed copy can be older; check its version separately.
 
 ## Official Firecrawl only
 

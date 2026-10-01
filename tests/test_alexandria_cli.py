@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def invoke(*args: str, root: Path = ROOT):
     env = os.environ.copy()
     env.pop('FIRECRAWL_API_KEY', None)
+    env['LEGENDS_FIRECRAWL_CAPTURE_ROOT']=str(root)
     env['FIRECRAWL_DISABLE_USER_ENV'] = '1'
     return subprocess.run(['node', str(root/'alexandria-src'/'cli.js'), *args], cwd=root, env=env, capture_output=True, text=True, timeout=15)
 
@@ -58,7 +59,7 @@ def test_capture_inventory_returns_readable_paths_and_unknown_cost(tmp_path):
     directory.mkdir(parents=True)
     raw=directory/'sample.raw.json'
     raw.write_text(json.dumps({'metadata':{'provider':'treasury-fiscal-data','capability':'debt/to-the-penny','source':'firecrawl-alexandria-gateway','creditsBurned':None},'response':{'status':'ok','creditsUsed':None},'data':{'data':[{'amount':'12'}]}}))
-    r=invoke('captures',root=tmp_path)
+    r=invoke('captures','--legacy',root=tmp_path)
     assert r.returncode == 0, r.stderr
     result=json.loads(r.stdout)
     assert result['errors'] == []
@@ -67,3 +68,25 @@ def test_capture_inventory_returns_readable_paths_and_unknown_cost(tmp_path):
     assert item['creditsUsed'] is None
     assert Path(item['rawFilePath']).resolve() == raw.resolve()
     assert json.loads(Path(item['rawFilePath']).read_text())['data']['data'][0]['amount']=='12'
+
+@pytest.mark.parametrize('state',['ok','empty','error'])
+def test_submitted_alexandria_all_states_archived(tmp_path,state):
+    env=os.environ.copy();env['FIRECRAWL_API_KEY']='offline-test';env['LEGENDS_FIRECRAWL_CAPTURE_ROOT']=str(tmp_path)
+    raw={'success':state!='error','data':{'alexandria':[{'provider':'treasury-fiscal-data','capability':'debt/to-the-penny','data':[] if state=='empty' else [{'x':1}]}]}}
+    script="global.fetch=async()=>new Response("+json.dumps(json.dumps(raw))+",{status:200});process.argv=['node','cli','query','treasury-fiscal-data','debt/to-the-penny','--confirm'];require("+json.dumps(str(ROOT/'alexandria-src'/'cli.js'))+");"
+    result=subprocess.run(['node','-e',script],env=env,capture_output=True,text=True,timeout=15)
+    report=json.loads(result.stdout)
+    assert report['status']==state
+    saved=json.loads(Path(report['capture']['rawFilePath']).read_text(encoding='utf8'))
+    assert saved['response']['response']==raw
+    assert saved['metadata']['request']['body']['alexandria']['provider']=='treasury-fiscal-data'
+
+def test_alexandria_capture_failure_retains_response(tmp_path):
+    blocked=tmp_path/'blocked';blocked.write_text('keep')
+    env=os.environ.copy();env['FIRECRAWL_API_KEY']='offline-test';env['LEGENDS_FIRECRAWL_CAPTURE_ROOT']=str(blocked)
+    script="let calls=0;global.fetch=async()=>{if(++calls>1)throw Error('repeated');return new Response(JSON.stringify({success:false,error:'retained'}),{status:500});};process.argv=['node','cli','query','treasury-fiscal-data','debt/to-the-penny','--confirm'];require("+json.dumps(str(ROOT/'alexandria-src'/'cli.js'))+");"
+    result=subprocess.run(['node','-e',script],env=env,capture_output=True,text=True,timeout=15)
+    report=json.loads(result.stdout)
+    assert result.returncode==2 and report['requestMayHaveCompleted']
+    assert report['response']['response']=={'success':False,'error':'retained'}
+    assert blocked.read_text()=='keep'

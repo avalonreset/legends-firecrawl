@@ -2,6 +2,12 @@
 
 Set `$lfc = 'E:\legends-firecrawl\bin\lfc.ps1'` in examples below.
 
+## Collect once, review offline
+
+Set `LEGENDS_FIRECRAWL_CAPTURE_ROOT` to the intended client workspace and `LEGENDS_WORKSPACE_ID` to its stable identity. Before buying fresh data, use `lfc evidence find` and `reuse` against that workspace's evidence bank. Eligibility still requires semantic review; never quietly substitute stale or partial observations.
+
+Collect the full response once. Use `--receipt` only when short chat output is helpful; it does not shorten the saved evidence. Export the capture with `lfc evidence export-capture PATH BANK --workspace CLIENT`, verify it, then use `view --select` or `view --full` to inspect relevant data without another API call. Stage reviewed evidence through Empire's existing transaction workflow. Read [research-memory](RESEARCH-MEMORY.md) for scope, freshness and incomplete-state checks.
+
 ## Prospect homepage evidence
 
 ```powershell
