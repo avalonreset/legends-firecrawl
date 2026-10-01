@@ -2,7 +2,11 @@
 
 An agent-oriented CLI wrapper for official Firecrawl web operations and Alexandria queries, with a local catalog and saved response evidence.
 
-**Version 0.2.1 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read [release scope](docs/RELEASE-SCOPE.md). Publication status must be verified separately.
+**Version 0.2.1 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read the [release scope](docs/RELEASE-SCOPE.md) and [published 0.2.1 release](https://github.com/avalonreset/legends-firecrawl/releases/tag/v0.2.1).
+
+## Why use it
+
+Collect once, retain the complete response, then let an agent inspect the evidence as needed. The wrapper supplies a repeatable collection workflow: full JSON on disk, vault references, request provenance and bounded execution. It leaves interpretation to the agent and keeps the underlying Firecrawl service visible.
 
 ## What it adds
 
@@ -54,7 +58,7 @@ Catalog search is a compact view over the complete local JSON catalog, whose pat
 
 Part of [cto-legends](https://github.com/avalonreset/cto-legends). The one registered router skill is vendored at `skills/cto-legends/SKILL.md`; this module is not a separate registered skill and does not require an ambient MCP daemon.
 
-Run `cto-legends handoff legends-firecrawl` and read the returned installed recipe and task-readiness checks. If the module is missing, preview setup with `cto-legends install legends-firecrawl`, perform the authorized setup, then repeat the handoff. A catalog installation does not establish that version 0.2.0 has been published.
+Run `cto-legends handoff legends-firecrawl` and read the returned installed recipe and task-readiness checks. If the module is missing, preview setup with `cto-legends install legends-firecrawl`, perform the authorized setup, then repeat the handoff. Use `cto-legends check-updates` to compare your installed version with the catalog and published release.
 
 ```powershell
 npm install -g firecrawl-cli@1.23.3

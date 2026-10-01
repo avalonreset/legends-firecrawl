@@ -1,6 +1,6 @@
-# Release scope: 0.2.0
+# Release scope: 0.2.1
 
-Planned stable release based on router-native 0.1.0. This document defines scope; it does not establish publication or installation status.
+Official-only scope introduced in 0.2.0 and retained in the published 0.2.1 patch. Version 0.2.1 adds full web-response capture and fixes CLI forwarding. See [patch notes](RELEASE-0.2.1.md). An installed copy can be older; check its version separately.
 
 ## Official Firecrawl only
 
