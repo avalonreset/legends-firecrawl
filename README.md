@@ -2,7 +2,7 @@
 
 An agent-oriented CLI wrapper for official Firecrawl web operations and Alexandria queries, with a local catalog and saved response evidence.
 
-**Version 0.2.0 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read [release scope](docs/RELEASE-SCOPE.md). Publication status must be verified separately.
+**Version 0.2.1 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read [release scope](docs/RELEASE-SCOPE.md). Publication status must be verified separately.
 
 ## What it adds
 
@@ -41,6 +41,14 @@ lfc crawl https://example.com --limit 25 --max-depth 2 --confirm
 ```
 
 Alexandria queries default to preview. `--preview` requests that explicitly; `--confirm` authorizes submission; `--no-save` skips local capture. The confirmation rule does not mean every existing `lfc` operation is a no-charge preview. Provider contracts and prices govern live requests.
+
+## Capture first, inspect afterward
+
+Scrape, map, search, crawl submission and crawl-status save the complete returned JSON to `var/captures/firecrawl/` and a Markdown reference in `vault/captures/firecrawl/`. Alexandria also preserves its full response and vault card. CLI web results retain all original fields and add `_capture` paths. `--no-save` explicitly opts out; `LEGENDS_FIRECRAWL_CAPTURE_ROOT` selects another workspace. Python client calls alone do not automatically save.
+
+The agent can read selected fields or the entire saved file without another provider call. Each capture is one response, not proof that every page or all pagination has been collected. Captures are excluded from releases.
+
+Catalog search is a compact view over the complete local JSON catalog, whose path is included in each result. Use `lax inspect <provider> --full` for complete cached contracts. Compact discovery never truncates the underlying archive.
 
 ## Agent setup (via `cto-legends`)
 

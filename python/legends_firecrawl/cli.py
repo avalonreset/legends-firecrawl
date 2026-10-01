@@ -147,6 +147,9 @@ def build_parser() -> argparse.ArgumentParser:
     status = sub.add_parser("crawl-status")
     status.add_argument("job_id")
 
+    for capture_parser in (scrape, mapping, search, crawl, status):
+        capture_parser.add_argument("--no-save", action="store_true", help="Skip automatic full response archive")
+
     vendor = sub.add_parser("vendor")
     vendor.add_argument("args", nargs=argparse.REMAINDER)
     return parser
@@ -199,11 +202,26 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "crawl" and not args.confirm:
             raise SafetyError("crawl is multi-page and requires --confirm after reviewing crawl-preview")
 
+        capture_failed = False
+        def emit_result(payload):
+            nonlocal capture_failed
+            if getattr(args, "no_save", False):
+                emit(payload)
+                return
+            from .capture import archive_response
+            request = {k: v for k, v in vars(args).items() if k not in {"command", "no_save", "confirm"}}
+            try:
+                capture = archive_response(args.command, payload, request=request)
+                emit({**payload, "_capture": capture})
+            except OSError as exc:
+                capture_failed = True
+                emit({"success": False, "error": "Response received but local capture failed", "capture_error": str(exc), "requestCompleted": True, "response": payload})
+
         client = FirecrawlClient(consumer="lfc")
         if args.command == "credits":
             emit(client.credit_usage())
         elif args.command == "scrape":
-            emit(
+            emit_result(
                 client.scrape(
                     args.url,
                     formats=split_csv(args.formats),
@@ -213,7 +231,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
             )
         elif args.command == "map":
-            emit(
+            emit_result(
                 client.map_site(
                     args.url,
                     limit=args.limit,
@@ -223,7 +241,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
             )
         elif args.command == "search":
-            emit(
+            emit_result(
                 client.search(
                     args.query,
                     limit=args.limit,
@@ -239,12 +257,12 @@ def main(argv: list[str] | None = None) -> int:
                 "include_paths": split_csv(args.include_paths),
                 "exclude_paths": split_csv(args.exclude_paths),
             }
-            emit(client.crawl(args.url, confirm=args.confirm, **kwargs))
+            emit_result(client.crawl(args.url, confirm=args.confirm, **kwargs))
         elif args.command == "crawl-status":
-            emit(client.crawl_status(args.job_id))
+            emit_result(client.crawl_status(args.job_id))
         else:
             raise SafetyError(f"unknown command {args.command}")
-        return 0
+        return 2 if capture_failed else 0
     except (CredentialError, ApiError, SafetyError) as exc:
         emit({"success": False, "error": str(exc), "command": args.command})
         return 2

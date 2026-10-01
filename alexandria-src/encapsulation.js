@@ -82,7 +82,7 @@ function formatDataPreviewTable(data) {
 }
 
 function encapsulate(queryResult, customBaseDir = null) {
-  const baseDir = customBaseDir || path.resolve(__dirname, '..');
+  const baseDir = customBaseDir || process.env.LEGENDS_FIRECRAWL_CAPTURE_ROOT || path.resolve(__dirname, '..');
   const now = new Date();
   const dateStr = now.toISOString().slice(0, 10);
   const timeStr = now.toISOString().replace(/[:.]/g, '-') + '_' + randomUUID();
@@ -125,9 +125,8 @@ function encapsulate(queryResult, customBaseDir = null) {
   const cardFileName = `${timeStr}_${capSlug}.md`;
   const cardFilePath = path.join(vaultCardDir, cardFileName);
 
-  const recordCount = Array.isArray(queryResult.data) 
-    ? queryResult.data.length 
-    : (queryResult.data && typeof queryResult.data === 'object' ? Object.keys(queryResult.data).length : 1);
+  const recordCount = Array.isArray(queryResult.data) ? queryResult.data.length
+    : Array.isArray(queryResult.data?.data) ? queryResult.data.data.length : null;
 
   const previewTable = formatDataPreviewTable(queryResult.data);
 

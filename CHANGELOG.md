@@ -1,3 +1,10 @@
+# 0.2.1
+
+- Fix one-word Alexandria commands through PowerShell forwarding.
+- Automatically save complete web-operation JSON and a vault reference; preserve full CLI response with capture paths. --no-save opts out.
+- Catalog search returns compact discovery with the full catalog path; --full exposes full contracts.
+- Capture listing returns timestamped JSON entries and raw paths; nested provider rows counted correctly.
+
 # 0.2.0
 
 - Retire all direct-source substitution, including Treasury; every Alexandria query uses official Firecrawl.
