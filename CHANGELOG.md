@@ -1,3 +1,8 @@
+# 0.3.1
+
+- Reject prohibited vendor integration commands before probing vendor availability, including on clean hosts.
+- Supersedes the unpromoted 0.3.0 tag; its tag remains immutable.
+
 # 0.3.0
 
 - Portable offline evidence export, verification, manifest inventory, find, bounded/full view and scoped reuse review.

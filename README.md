@@ -2,7 +2,7 @@
 
 An agent-oriented CLI wrapper for official Firecrawl web operations and Alexandria queries, with a local catalog and saved response evidence.
 
-**Version 0.3.0 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read the [release scope](docs/RELEASE-SCOPE.md) and [evidence workflow](docs/RESEARCH-MEMORY.md).
+**Version 0.3.1 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read the [release scope](docs/RELEASE-SCOPE.md) and [evidence workflow](docs/RESEARCH-MEMORY.md).
 
 ## Why use it
 

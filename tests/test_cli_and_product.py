@@ -119,3 +119,11 @@ def test_installed_layout_does_not_hide_vendor_or_auth_failure(monkeypatch,tmp_p
     report,code=cli.doctor(offline=True)
     assert code==1 and not report['ready']
     assert next(x for x in report['checks'] if x['name']=='kit-root')['status']=='pass'
+
+def test_blocked_vendor_command_never_probes_vendor(monkeypatch,capsys):
+    from legends_firecrawl import cli
+    def forbidden_probe():
+        raise AssertionError('must reject before vendor probe')
+    monkeypatch.setattr(cli,'_vendor_cli_version',forbidden_probe)
+    assert cli.main(['vendor','setup','mcp'])==2
+    assert 'blocked' in json.loads(capsys.readouterr().out)['error']

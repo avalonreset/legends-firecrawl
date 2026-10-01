@@ -1,6 +1,6 @@
-# Release scope: 0.3.0
+# Release scope: 0.3.1
 
-Official-only scope introduced in 0.2.0 and retained in the published 0.3.0 patch. Version 0.3.0 adds full web-response capture and fixes CLI forwarding. See [patch notes](RELEASE-0.3.0.md). An installed copy can be older; check its version separately.
+Official-only scope introduced in 0.2.0 continues in 0.3.1. The evidence-bank release adds portable export, integrity checks, offline views and scoped reuse review. Version 0.3.1 also makes blocked vendor commands deterministic on clean installations. The unpromoted 0.3.0 tag is superseded without being moved. See [release notes](RELEASE-0.3.1.md). An installed copy can be older; check its version separately.
 
 ## Official Firecrawl only
 

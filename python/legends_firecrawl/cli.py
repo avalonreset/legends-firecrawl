@@ -201,11 +201,11 @@ def main(argv: list[str] | None = None) -> int:
             emit(usage_summary())
             return 0
         if args.command == "vendor":
+            if any(value in {"init", "setup", "launch", "launcher"} for value in args.args):
+                raise SafetyError("vendor integration installers are blocked; use the house setup scripts")
             executable, _ = _vendor_cli_version()
             if not executable:
                 raise SafetyError("official firecrawl CLI is missing; install firecrawl-cli@1.23.3 via npm")
-            if any(value in {"init", "setup", "launch", "launcher"} for value in args.args):
-                raise SafetyError("vendor integration installers are blocked; use the house setup scripts")
             return subprocess.call([executable, *args.args])
 
         if args.command == "crawl-preview":

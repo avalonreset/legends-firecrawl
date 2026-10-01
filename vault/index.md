@@ -1,6 +1,6 @@
 # legends-firecrawl research catalog
 
-Version 0.3.0 scope: an official Firecrawl-only workflow wrapper. All direct bypass substitutions are retired. This vault contains a saved provider catalog and historical research; it does not provide independent data or credit savings.
+Version 0.3.1 scope: an official Firecrawl-only workflow wrapper. All direct bypass substitutions are retired. This vault contains a saved provider catalog and historical research; it does not provide independent data or credit savings.
 
 The catalog records 114 providers and 797 capabilities. Counts do not prove live availability or complete validation. Every supported query executes through official Firecrawl after the applicable preview and confirmation. Read [release scope](../docs/RELEASE-SCOPE.md).
 
