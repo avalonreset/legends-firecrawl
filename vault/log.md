@@ -35,10 +35,10 @@ Candidate 0.2.0rc1 narrows native support to two exact Treasury operations. Earl
   - Discovered and retrieved the final 5 capabilities of `particle` on page 2.
   - Verified catalog totals: exactly 114 providers and 797 capabilities with zero schema gaps.
 - **Empire Vault Integration:**
-  - Established canonical shelf `E:\empire\wiki\library\legends-firecrawl\_Index.md`.
-  - Linked shelf into `E:\empire\wiki\library\_Index.md` under Product and Domain Library.
-  - Registered digital territory in `E:\empire\wiki\meta\Territories.md`.
-  - Linked active capability into `E:\empire\wiki\work\Work.md`.
+  - Established canonical shelf `<empire-vault>\wiki\library\legends-firecrawl\_Index.md`.
+  - Linked shelf into `<empire-vault>\wiki\library\_Index.md` under Product and Domain Library.
+  - Registered digital territory in `<empire-vault>\wiki\meta\Territories.md`.
+  - Linked active capability into `<empire-vault>\wiki\work\Work.md`.
 - **Knowledge Vault Construction:**
   - Initialized modular Obsidian vault adhering to Legends Obsidian Wiki standard.
   - Created `_Index.md`, `hot.md`, `log.md`, 4 tier notes, 21 category files, and 7 direct bypass runbooks.
