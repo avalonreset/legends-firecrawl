@@ -1,6 +1,10 @@
-# legends-firecrawl
+# ![legends-firecrawl](assets/banner.webp)
 
-An agent-oriented CLI wrapper for official Firecrawl web operations and Alexandria queries, with a local catalog and saved response evidence.
+[![release](https://img.shields.io/github/v/release/avalonreset/legends-firecrawl?label=release&sort=date&style=flat-square&labelColor=000000&color=ff0000)](https://github.com/avalonreset/legends-firecrawl/releases/latest)
+[![checks](https://img.shields.io/github/actions/workflow/status/avalonreset/legends-firecrawl/contract.yml?branch=main&label=checks&style=flat-square&labelColor=000000)](https://github.com/avalonreset/legends-firecrawl/actions/workflows/contract.yml)
+[![license](https://img.shields.io/github/license/avalonreset/legends-firecrawl?label=license&style=flat-square&labelColor=000000&color=666666)](LICENSE)
+
+**Firecrawl CLI wrapper (`lfc` and `lax`) for AI agents: run official Firecrawl scrape, map, search, bounded crawl, and Alexandria queries with full local JSON evidence capture and offline reuse.**
 
 **Version 0.3.1 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read the [release scope](docs/RELEASE-SCOPE.md) and [evidence workflow](docs/RESEARCH-MEMORY.md).
 
@@ -18,7 +22,7 @@ Collect once, retain the complete response, then let an agent inspect the eviden
 
 The value is workflow convenience and reviewable execution. This project does not claim cheaper equivalent data, unique intelligence, superior source coverage, or a measured savings percentage. Firecrawl's own API and CLI also work without MCP, and its discovery is free.
 
-## Commands
+## Quick start and commands
 
 ```powershell
 # Offline catalog discovery; cached descriptions and prices may be stale
@@ -70,6 +74,28 @@ pwsh -File bin/setup-auth.ps1
 pwsh -File bin/doctor.ps1
 ```
 
+## Architecture and how it works
+
+```text
+Agent / CLI (`lfc` or `lax`)
+  -> Offline catalog & preview gate (`--preview` default on Alexandria)
+  -> Official Firecrawl API / CLI execution
+  -> Full JSON capture (`var/captures/firecrawl/`) + Markdown vault card
+  -> Portable evidence export, verification, and [`legends-empire`](https://github.com/avalonreset/legends-empire) handoff
+```
+
+- `legends_firecrawl/`: CLI entry points (`lfc`, `lax`), capture store, and evidence verification tools.
+- `docs/`: [Release scope](docs/RELEASE-SCOPE.md), [research-memory workflow](docs/RESEARCH-MEMORY.md), and [search strategy](docs/SEARCH-STRATEGY.md).
+- `skills/cto-legends/SKILL.md`: Pinned copy of the central [`cto-legends`](https://github.com/avalonreset/cto-legends) router skill.
+
+## FAQ
+
+**Does `legends-firecrawl` require an MCP server?**
+No. Both `lfc` and `lax` are direct CLI commands that save full JSON responses locally so your agent can inspect specific fields offline without re-querying the provider.
+
+**Where are captured responses stored?**
+By default, captures are saved outside the module checkout under `~/.legends-firecrawl/research` (or the workspace selected by `LEGENDS_FIRECRAWL_CAPTURE_ROOT`) so module upgrades never overwrite your research evidence.
+
 ## Verification and limits
 
 ```powershell
@@ -79,6 +105,10 @@ python scripts/run_behavioral_evals.py
 
 Offline tests verify command contracts, not the correctness or availability of every provider. This wrapper does not improve the underlying provider's data, replace source access limits, or guarantee proxy protection. Catalog records and prices can become stale; current provider contracts govern live execution.
 
+## Contributing and support
+
+See [CONTRIBUTING.md](CONTRIBUTING.md), [SUPPORT.md](SUPPORT.md), and [SECURITY.md](SECURITY.md).
+
 ## License
 
-MIT License. Copyright (c) 2026 Avalon Reset.
+MIT License. See [LICENSE](LICENSE). Copyright (c) 2026 Avalon Reset.
