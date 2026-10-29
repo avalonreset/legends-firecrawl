@@ -6,7 +6,7 @@
 
 **Firecrawl CLI wrapper (`lfc` and `lax`) for AI agents: run official Firecrawl scrape, map, search, bounded crawl, and Alexandria queries with full local JSON evidence capture and offline reuse.**
 
-**Version 0.3.1 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read the [release scope](docs/RELEASE-SCOPE.md) and [evidence workflow](docs/RESEARCH-MEMORY.md).
+**Version 0.3.2 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read the [release scope](docs/RELEASE-SCOPE.md) and [evidence workflow](docs/RESEARCH-MEMORY.md).
 
 ## Why use it
 

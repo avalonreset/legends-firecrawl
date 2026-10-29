@@ -1,3 +1,8 @@
+# 0.3.2
+
+- Raise minimum supported Python runtime to Python 3.11 (`requires-python = ">=3.11"`) across package metadata and multi-OS CI.
+- Upgrade Node CI runtime from EOL Node 20 to Node 22 LTS, pin GitHub Actions to 40-character commit SHAs with explicit `contents: read` permissions, and upgrade `pip>=26.2.2` before package installation.
+
 # 0.3.1
 
 - Reject prohibited vendor integration commands before probing vendor availability, including on clean hosts.
