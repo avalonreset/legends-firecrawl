@@ -1,3 +1,10 @@
+# 0.3.3
+
+- Add Python `[project.scripts]` entrypoints (`lfc`, `lax`, `legends-firecrawl`) and native `lfc alexandria` / `lax_main` routing in `python/legends_firecrawl/cli.py`.
+- Replace `powershell -ExecutionPolicy Bypass` in `bin/lfc.cmd` with direct `python -m legends_firecrawl.cli` invocation.
+- Replace `.NET` `Marshal.SecureStringToBSTR` / `PtrToStringBSTR` memory marshaling in `bin/setup-auth.ps1` with Python standard library `getpass.getpass()`.
+- Remove third-party `%APPDATA%\firecrawl-cli\credentials.json` reading from `alexandria-src/router.js` so `getCredentials()` relies exclusively on `FIRECRAWL_API_KEY`.
+
 # 0.3.2
 
 - Raise minimum supported Python runtime to Python 3.11 (`requires-python = ">=3.11"`) across package metadata and multi-OS CI.

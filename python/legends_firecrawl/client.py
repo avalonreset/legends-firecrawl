@@ -248,7 +248,7 @@ class FirecrawlClient:
             headers={
                 "Authorization": f"Bearer {self.credentials.api_key}",
                 "Content-Type": "application/json",
-                "User-Agent": "legends-firecrawl/0.1.0",
+                "User-Agent": "legends-firecrawl/0.3.3",
             },
         )
         try:

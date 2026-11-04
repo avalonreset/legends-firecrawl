@@ -127,3 +127,11 @@ def test_blocked_vendor_command_never_probes_vendor(monkeypatch,capsys):
     monkeypatch.setattr(cli,'_vendor_cli_version',forbidden_probe)
     assert cli.main(['vendor','setup','mcp'])==2
     assert 'blocked' in json.loads(capsys.readouterr().out)['error']
+
+
+def test_python_cli_routes_alexandria_subcommand_directly():
+    result = run_cli("alexandria", "audit")
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["catalogCapabilities"] == 797
+

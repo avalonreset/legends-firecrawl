@@ -1,13 +1,17 @@
 #Requires -Version 5.1
-param()
+param(
+  [string]$ApiKey
+)
 
 $ErrorActionPreference = 'Stop'
 Write-Host 'Legends Firecrawl auth setup' -ForegroundColor Cyan
 Write-Host 'Paste a Firecrawl API key. It will be stored at Windows user-environment scope and will not be printed.'
-$secure = Read-Host 'FIRECRAWL_API_KEY' -AsSecureString
-$pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
+$plain = if ($ApiKey) {
+  $ApiKey.Trim()
+} else {
+  (& python -c "import getpass; print(getpass.getpass('FIRECRAWL_API_KEY: '), end='')").Trim()
+}
 try {
-  $plain = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer)
   if ([string]::IsNullOrWhiteSpace($plain) -or -not $plain.StartsWith('fc-')) {
     throw 'The value did not look like a Firecrawl API key. Nothing was stored.'
   }
@@ -15,7 +19,6 @@ try {
   $env:FIRECRAWL_API_KEY = $plain
 }
 finally {
-  if ($pointer -ne [IntPtr]::Zero) { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer) }
   $plain = $null
 }
 Write-Host 'Stored FIRECRAWL_API_KEY at Windows user scope. Running doctor.' -ForegroundColor Green

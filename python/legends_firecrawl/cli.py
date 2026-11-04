@@ -17,6 +17,7 @@ from .client import (
     CredentialError,
     FirecrawlClient,
     SafetyError,
+    _windows_user_environment,
     credential_status,
     estimate,
     load_routes,
@@ -172,11 +173,33 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def lax_main(argv: list[str] | None = None) -> int:
+    command_line = list(argv) if argv is not None else sys.argv[1:]
+    root = Path(os.environ["LEGENDS_FIRECRAWL_HOME"]).expanduser() if os.environ.get("LEGENDS_FIRECRAWL_HOME") else KIT_ROOT
+    script_path = root / "alexandria-src" / "cli.js"
+    if not script_path.is_file():
+        emit({"status": "error", "message": f"Alexandria CLI not found at {script_path}. Run from a legends-firecrawl source checkout or set LEGENDS_FIRECRAWL_HOME."})
+        return 2
+    node_exe = shutil.which("node")
+    if not node_exe:
+        emit({"status": "error", "message": "Node.js executable ('node') not found on PATH."})
+        return 2
+    env = os.environ.copy()
+    if not env.get("FIRECRAWL_API_KEY") and env.get("FIRECRAWL_DISABLE_USER_ENV") != "1":
+        user_key = _windows_user_environment("FIRECRAWL_API_KEY")
+        if user_key:
+            env["FIRECRAWL_API_KEY"] = user_key
+    completed = subprocess.run([node_exe, str(script_path), *command_line], env=env, check=False)
+    return completed.returncode
+
+
 def main(argv: list[str] | None = None) -> int:
     command_line = argv if argv is not None else sys.argv[1:]
     if command_line and command_line[0] == 'evidence':
         from .evidence import main as evidence_main
         return evidence_main(command_line[1:])
+    if command_line and command_line[0] == 'alexandria':
+        return lax_main(command_line[1:])
     args = build_parser().parse_args(argv)
     try:
         if args.command == "version":

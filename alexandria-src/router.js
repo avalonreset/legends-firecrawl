@@ -22,8 +22,8 @@ function plan(providerId,capability,options={},flags={}) {
 }
 function getCredentials(){
  if(process.env.FIRECRAWL_API_KEY) return process.env.FIRECRAWL_API_KEY;
- const location=path.join(process.env.APPDATA||'','firecrawl-cli','credentials.json');
- if(fs.existsSync(location)) return JSON.parse(fs.readFileSync(location,'utf8')).apiKey;
+ // Direct environment key only; never read third-party CLI credential files.
+ // No disk credential fallback.
  return null;
 }
 async function query(providerId,capability,options={},flags={}){
