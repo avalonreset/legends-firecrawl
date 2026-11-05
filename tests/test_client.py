@@ -29,11 +29,30 @@ def test_windows_user_environment_credentials(monkeypatch: pytest.MonkeyPatch):
 
 def test_missing_credentials_names_house_setup(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.delenv("FIRECRAWL_API_KEY", raising=False)
+    monkeypatch.delenv("FIRECRAWL_API_KEY_FILE", raising=False)
     monkeypatch.setattr(client, "_windows_user_environment", lambda _name: None)
     with pytest.raises(client.CredentialError) as error:
         client.load_credentials()
-    assert "setup-auth.ps1" in str(error.value)
+    assert "FIRECRAWL_API_KEY" in str(error.value)
     assert "MCP" not in str(error.value)
+
+
+def test_api_key_file_and_symlink_refusal(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    monkeypatch.delenv("FIRECRAWL_API_KEY", raising=False)
+    key_file = tmp_path / "firecrawl.key"
+    key_file.write_text("  fc-file-secret-123  \n", encoding="utf-8")
+    monkeypatch.setenv("FIRECRAWL_API_KEY_FILE", str(key_file))
+    creds = client.load_credentials()
+    assert creds.api_key == "fc-file-secret-123"
+    assert creds.source == "key-file"
+    link_path = tmp_path / "symlink.key"
+    try:
+        link_path.symlink_to(key_file)
+    except OSError:
+        return
+    monkeypatch.setenv("FIRECRAWL_API_KEY_FILE", str(link_path))
+    with pytest.raises(client.SafetyError, match="symlink"):
+        client.load_credentials()
 
 
 @pytest.mark.parametrize(

@@ -22,7 +22,7 @@ ALLOW_FILES = {
     "VERSION",
     "pyproject.toml",
 }
-ALLOW_DIRS = {"alexandria-src", "bin", "data", "docs", "evals", "python", "scripts", "skills", "tests", "vault"}
+ALLOW_DIRS = {"alexandria-src", "assets", "data", "docs", "evals", "python", "scripts", "skills", "tests", "vault"}
 
 
 def included_files() -> list[Path]:

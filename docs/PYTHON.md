@@ -1,7 +1,6 @@
 # Python consumer surface
 
-Add `E:\legends-firecrawl\python` to `PYTHONPATH` or install the local
-package in the consumer's environment.
+Install the package in the consumer's environment (`python -m pip install -e .`).
 
 ```python
 from legends_firecrawl import FirecrawlClient
@@ -17,7 +16,6 @@ Legends Packet can use:
 from legends_firecrawl.packet_compat import discover_site_pages, scrape_page
 ```
 
-The compatibility module reuses the Kit's credential lookup, URL safety,
+The compatibility module reuses the module's credential lookup, URL safety,
 defaults, and ledger. Consumers should not create their own Firecrawl credential
 file or require a vendor SDK/MCP server.
-

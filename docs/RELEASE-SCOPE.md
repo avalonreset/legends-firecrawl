@@ -1,6 +1,6 @@
-# Release scope: 0.3.2
+# Release scope: 0.3.4
 
-Official-only scope introduced in 0.2.0 continues in 0.3.2. The evidence-bank release adds portable export, integrity checks, offline views and scoped reuse review. Version 0.3.2 also makes blocked vendor commands deterministic on clean installations. The unpromoted 0.3.0 tag is superseded without being moved. See [release notes](RELEASE-0.3.2.md). An installed copy can be older; check its version separately.
+Official-only scope introduced in 0.2.0 continues in 0.3.4. The evidence-bank release adds portable export, integrity checks, offline views and scoped reuse review. Version 0.3.4 also ships native Python CLI entrypoints (`lfc`, `lax`, `legends-firecrawl`, `python -m legends_firecrawl`), removes legacy `.ps1`/`.cmd` shell wrappers, and adds the Gold Standard release check gate. See [changelog](../CHANGELOG.md). An installed copy can be older; check its version separately.
 
 ## Official Firecrawl only
 

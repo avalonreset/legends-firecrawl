@@ -6,7 +6,7 @@
 
 **Firecrawl CLI wrapper (`lfc` and `lax`) for AI agents: run official Firecrawl scrape, map, search, bounded crawl, and Alexandria queries with full local JSON evidence capture and offline reuse.**
 
-**Version 0.3.2 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read the [release scope](docs/RELEASE-SCOPE.md) and [evidence workflow](docs/RESEARCH-MEMORY.md).
+**Version 0.3.4 scope:** official Firecrawl execution only. All native bypass and direct-source substitutions are retired, including the experimental Treasury routes. Read the [release scope](docs/RELEASE-SCOPE.md), [agent recipe](docs/AGENT-RECIPE.md), and [evidence workflow](docs/RESEARCH-MEMORY.md).
 
 ## Why use it
 
@@ -24,7 +24,7 @@ The value is workflow convenience and reviewable execution. This project does no
 
 ## Quick start and commands
 
-```powershell
+```sh
 # Offline catalog discovery; cached descriptions and prices may be stale
 lax search "treasury"
 lax inspect treasury-fiscal-data
@@ -68,10 +68,10 @@ Part of [cto-legends](https://github.com/avalonreset/cto-legends). The one regis
 
 Run `cto-legends handoff legends-firecrawl` and read the returned installed recipe and task-readiness checks. If the module is missing, preview setup with `cto-legends install legends-firecrawl`, perform the authorized setup, then repeat the handoff. Use `cto-legends check-updates` to compare your installed version with the catalog and published release.
 
-```powershell
+```sh
 npm install -g firecrawl-cli@1.23.3
-pwsh -File bin/setup-auth.ps1
-pwsh -File bin/doctor.ps1
+python -m pip install -e .
+lfc doctor --offline
 ```
 
 ## Architecture and how it works
@@ -84,8 +84,8 @@ Agent / CLI (`lfc` or `lax`)
   -> Portable evidence export, verification, and [`legends-empire`](https://github.com/avalonreset/legends-empire) handoff
 ```
 
-- `legends_firecrawl/`: CLI entry points (`lfc`, `lax`), capture store, and evidence verification tools.
-- `docs/`: [Release scope](docs/RELEASE-SCOPE.md), [research-memory workflow](docs/RESEARCH-MEMORY.md), and [search strategy](docs/SEARCH-STRATEGY.md).
+- `python/legends_firecrawl/`: CLI entry points (`lfc`, `lax`, `legends-firecrawl`, `python -m legends_firecrawl`), capture store, and evidence verification tools.
+- `docs/`: [Agent recipe](docs/AGENT-RECIPE.md), [Release scope](docs/RELEASE-SCOPE.md), [research-memory workflow](docs/RESEARCH-MEMORY.md), and [search strategy](docs/SEARCH-STRATEGY.md).
 - `skills/cto-legends/SKILL.md`: Pinned copy of the central [`cto-legends`](https://github.com/avalonreset/cto-legends) router skill.
 
 ## FAQ
@@ -98,9 +98,10 @@ By default, captures are saved outside the module checkout under `~/.legends-fir
 
 ## Verification and limits
 
-```powershell
-pytest tests -v
+```sh
+python -m pytest tests -v
 python scripts/run_behavioral_evals.py
+python scripts/check_release.py
 ```
 
 Offline tests verify command contracts, not the correctness or availability of every provider. This wrapper does not improve the underlying provider's data, replace source access limits, or guarantee proxy protection. Catalog records and prices can become stale; current provider contracts govern live execution.
@@ -111,7 +112,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md), [SUPPORT.md](SUPPORT.md), and [SECURITY.
 
 ## License
 
-MIT License. See [LICENSE](LICENSE). Copyright (c) 2026 Avalon Reset.
+MIT License. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Copyright (c) 2026 Avalon Reset.
 
 ---
 

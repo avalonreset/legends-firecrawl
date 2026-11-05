@@ -99,7 +99,7 @@ def doctor(*, offline: bool = False) -> tuple[dict[str, Any], int]:
             if not failed
             else [
                 "Install the pinned official spine (firecrawl-cli@1.23.3) via npm if its check failed.",
-                "Set FIRECRAWL_API_KEY with bin/setup-auth.ps1 if auth failed.",
+                "Set FIRECRAWL_API_KEY in your environment if auth failed.",
                 "Re-run doctor. Do not install or fall back to Firecrawl MCP.",
             ]
         ),

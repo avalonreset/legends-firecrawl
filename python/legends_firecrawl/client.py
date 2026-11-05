@@ -59,18 +59,33 @@ def _windows_user_environment(name: str) -> str | None:
     return value if isinstance(value, str) and value else None
 
 
+def read_api_key_file(path: str | Path) -> str:
+    p = Path(path)
+    if p.is_symlink():
+        raise SafetyError("Refusing to read symlink API key file.")
+    if not p.exists() or not p.is_file():
+        raise CredentialError("FIRECRAWL_API_KEY_FILE does not exist or is not a regular file.")
+    secret = p.read_text(encoding="utf-8").strip()
+    if not secret:
+        raise CredentialError("FIRECRAWL_API_KEY_FILE is empty.")
+    return secret
+
+
 def load_credentials() -> Credentials:
     value = os.environ.get("FIRECRAWL_API_KEY")
     if value:
         return Credentials(value, "process-env")
+    key_file = os.environ.get("FIRECRAWL_API_KEY_FILE")
+    if key_file:
+        return Credentials(read_api_key_file(key_file), "key-file")
     if not os.environ.get("FIRECRAWL_DISABLE_USER_ENV"):
         value = _windows_user_environment("FIRECRAWL_API_KEY")
         if value:
             return Credentials(value, "user-env")
     raise CredentialError(
         "FIRECRAWL_API_KEY is unavailable at process or Windows user scope. "
-        "Configure FIRECRAWL_API_KEY or use bin/setup-auth.ps1 from the module source, "
-        "then run python -m legends_firecrawl.cli doctor."
+        "Configure FIRECRAWL_API_KEY in your environment, "
+        "then run python -m legends_firecrawl doctor."
     )
 
 
@@ -179,7 +194,7 @@ def route_for(operation: str) -> dict[str, Any]:
     for route in load_routes()["routes"]:
         if route["name"] == needle or needle in route.get("aliases", []):
             return route
-    raise SafetyError(f"Unknown first-class operation '{operation}'. Run 'lfc.ps1 routes'.")
+    raise SafetyError(f"Unknown first-class operation '{operation}'. Run 'lfc routes'.")
 
 
 def estimate(operation: str, *, limit: int | None = None, formats: list[str] | None = None) -> dict[str, Any]:

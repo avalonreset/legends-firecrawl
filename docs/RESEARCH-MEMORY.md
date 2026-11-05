@@ -4,7 +4,7 @@ Collect once, preserve the complete response, and inspect it offline. Provider d
 
 ## Storage and scope
 
-Core web commands and submitted Alexandria queries save full responses, including returned empty/error/pending states. The default root is `~/.legends-firecrawl/research` on every platform (`C:\Users\<user>\.legends-firecrawl\research` on Windows). Set `LEGENDS_FIRECRAWL_CAPTURE_ROOT` to the intended client workspace before collecting. Existing captures under an old installation remain there; upgrades do not silently move them. Set `LEGENDS_WORKSPACE_ID` or core `--workspace` to record the client identity. These are labels, not access controls.
+Core web commands and submitted Alexandria queries save full responses, including returned empty/error/pending states. The default root is `~/.legends-firecrawl/research` on every platform (`%USERPROFILE%\.legends-firecrawl\research` on Windows). Set `LEGENDS_FIRECRAWL_CAPTURE_ROOT` to the intended client workspace before collecting. Existing captures under an old installation remain there; upgrades do not silently move them. Set `LEGENDS_WORKSPACE_ID` or core `--workspace` to record the client identity. These are labels, not access controls.
 
 Raw captures live under `var/captures/`; Markdown references under `vault/captures/`. Links are relative. Sidecar manifests permit metadata-only `lax captures` listing. Legacy captures are listed as unindexed; `lax captures --legacy` explicitly reads those older raw files. Sidecar listings do not verify response hashes. `--no-save` retains full stdout without files. Optional `--receipt` prints only saved paths while preserving full files. These flags cannot be combined.
 
@@ -12,7 +12,7 @@ Raw captures live under `var/captures/`; Markdown references under `vault/captur
 
 All commands below are offline and require no API credentials:
 
-```powershell
+```sh
 lfc evidence export response.json evidence --workspace client-a --endpoint scrape --request-file request.json --observed-at 2026-10-01T12:00:00Z
 lfc evidence export-capture capture.raw.json evidence --workspace client-a
 lfc evidence inventory evidence --workspace client-a --limit 50

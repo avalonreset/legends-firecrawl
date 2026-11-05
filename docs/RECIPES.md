@@ -1,6 +1,6 @@
 # Intent-first recipes
 
-Set `$lfc = 'E:\legends-firecrawl\bin\lfc.ps1'` in examples below.
+Use the installed `lfc` console entrypoint (or `python -m legends_firecrawl`) in the examples below.
 
 ## Collect once, review offline
 
@@ -10,8 +10,8 @@ Collect the full response once. Use `--receipt` only when short chat output is h
 
 ## Prospect homepage evidence
 
-```powershell
-pwsh -File $lfc scrape https://example.com --formats markdown,links
+```sh
+lfc scrape https://example.com --formats markdown,links
 ```
 
 Use when a normal HTTP fetch cannot reliably render the public page or when
@@ -19,8 +19,8 @@ clean Markdown provides better evidence. Preserve the source URL and metadata.
 
 ## Find the pages that matter before scraping
 
-```powershell
-pwsh -File $lfc map https://example.com --limit 100 --search 'services pricing about contact'
+```sh
+lfc map https://example.com --limit 100 --search 'services pricing about contact'
 ```
 
 Map first, then choose a small set of pages. Do not crawl the full site merely
@@ -28,8 +28,8 @@ because a map exists.
 
 ## Search for corroborating public evidence
 
-```powershell
-pwsh -File $lfc search 'Example Company reviews complaints' --limit 5
+```sh
+lfc search 'Example Company reviews complaints' --limit 5
 ```
 
 Search returns links/snippets by default. Add `--scrape-results` only when the
@@ -37,9 +37,9 @@ job truly needs full contents from every result.
 
 ## Bounded multi-page site collection
 
-```powershell
-pwsh -File $lfc crawl-preview https://example.com --limit 25 --max-depth 2 --include-paths /services,/about
-pwsh -File $lfc crawl https://example.com --limit 25 --max-depth 2 --include-paths /services,/about --confirm
+```sh
+lfc crawl-preview https://example.com --limit 25 --max-depth 2 --include-paths /services,/about
+lfc crawl https://example.com --limit 25 --max-depth 2 --include-paths /services,/about --confirm
 ```
 
 The first command makes no HTTP request. Review domain, limits, depth, and path
@@ -58,3 +58,10 @@ Firecrawl complements DataForSEO. DataForSEO supplies SERP/keyword/local-search
 measurements; Firecrawl supplies retrievable public-web content. Neither should
 be used as a pretend source for the other's evidence.
 
+## EDR and Security Guardrails
+
+- **No hidden consoles or execution-policy bypass wrappers**: invoke `lfc`, `lax`, `legends-firecrawl`, or `python -m legends_firecrawl` directly through standard process execution without hidden console flags or shell execution-policy bypass wrappers.
+- **No parent-process tree walking**: never enumerate parent processes or inspect system process trees.
+- **No browser profile or OS credential harvesting**: read credentials strictly from `FIRECRAWL_API_KEY` or an explicit `FIRECRAWL_API_KEY_FILE` path, never from local browser profile databases or OS DPAPI stores.
+- **Symlink refusal**: refuse symlink paths (`Path.is_symlink()`) on file inputs, key files, and evidence packages.
+- **Network allowlist**: outbound HTTPS requests are restricted to `https://api.firecrawl.dev` (or explicit HTTPS `FIRECRAWL_API_URL`) and target public HTTP(S) URLs.

@@ -15,15 +15,14 @@ def invoke(*args: str, root: Path = ROOT):
     env['FIRECRAWL_DISABLE_USER_ENV'] = '1'
     return subprocess.run(['node', str(root/'alexandria-src'/'cli.js'), *args], cwd=root, env=env, capture_output=True, text=True, timeout=15)
 
-@pytest.mark.skipif(os.name != 'nt', reason='Windows PowerShell wrapper regression')
 @pytest.mark.parametrize('command', ['audit','captures','help'])
-def test_single_word_alexandria_command_through_powershell(command):
-    shell = shutil.which('pwsh') or shutil.which('powershell')
-    if not shell: pytest.skip('PowerShell unavailable')
+def test_single_word_alexandria_command_through_python_cli(command):
+    import sys
     env = os.environ.copy()
+    env['PYTHONPATH'] = str(ROOT / 'python')
     env['FIRECRAWL_DISABLE_USER_ENV'] = '1'
     env.pop('FIRECRAWL_API_KEY',None)
-    r = subprocess.run([shell,'-NoProfile','-File',str(ROOT/'bin'/'lfc.ps1'),'alexandria',command],cwd=ROOT,env=env,capture_output=True,text=True,timeout=20)
+    r = subprocess.run([sys.executable,'-m','legends_firecrawl','alexandria',command],cwd=ROOT,env=env,capture_output=True,text=True,timeout=20)
     assert r.returncode == 0, r.stderr
     assert 'Unknown command' not in r.stderr
     if command == 'audit': assert json.loads(r.stdout)['catalogCapabilities'] == 797
