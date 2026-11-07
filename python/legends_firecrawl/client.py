@@ -119,6 +119,11 @@ def validate_public_url(value: str) -> str:
     host = parsed.hostname.lower().rstrip(".")
     if host in {"localhost", "localhost.localdomain"} or host.endswith(".local"):
         raise SafetyError("Local hosts are outside the Kit's public-web boundary.")
+    if host in {"google.com", "www.google.com"} and parsed.path.lower() in {"/goto", "/url"}:
+        raise SafetyError(
+            "Opaque Google redirect wrapper URLs (/goto or /url) cannot be scraped directly. "
+            "Pass the resolved target domain or use 'lfc resolve <domain> --path-hint ...' first."
+        )
     try:
         address = ipaddress.ip_address(host)
     except ValueError:
@@ -209,7 +214,7 @@ def estimate(operation: str, *, limit: int | None = None, formats: list[str] | N
     page_ceiling = 0
     if route["name"] == "scrape":
         page_ceiling = 1
-    elif route["name"] in {"map", "search", "crawl"}:
+    elif route["name"] in {"map", "search", "resolve", "crawl"}:
         page_ceiling = int(default_scope.get("limit") or 0)
     return {
         "operation": route["name"],
@@ -254,6 +259,7 @@ class FirecrawlClient:
         log_usage: bool = False,
         requested_scope: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
+        from . import __version__
         normalized = "/" + path.strip().lstrip("/")
         body = None if payload is None else json.dumps(payload, separators=(",", ":")).encode("utf-8")
         request = Request(
@@ -263,7 +269,7 @@ class FirecrawlClient:
             headers={
                 "Authorization": f"Bearer {self.credentials.api_key}",
                 "Content-Type": "application/json",
-                "User-Agent": "legends-firecrawl/0.3.3",
+                "User-Agent": f"legends-firecrawl/{__version__}",
             },
         )
         try:
@@ -388,6 +394,147 @@ class FirecrawlClient:
             log_usage=True,
             requested_scope={"limit": limit, "scrape_results": scrape_results},
         )
+
+    @staticmethod
+    def _parse_domain_or_breadcrumb(raw_target: str, path_hint: str | None = None) -> tuple[str, str, str | None]:
+        cleaned = (raw_target or "").strip()
+        if not cleaned:
+            raise SafetyError("Target domain or URL is required.")
+        split_parts = [seg.strip() for seg in re.split(r"\s*(?:\u203a|\u00bb|\ufffd|>)\s*", cleaned) if seg.strip()]
+        first = split_parts[0] if split_parts else cleaned
+        extracted_hint = path_hint.strip().rstrip(".\u2026").strip() if isinstance(path_hint, str) and path_hint.strip() else None
+        if not extracted_hint and len(split_parts) > 1:
+            for seg in reversed(split_parts[1:]):
+                cand = seg.strip().rstrip(".\u2026").strip()
+                if cand and cand not in {"...", "\u2026"}:
+                    extracted_hint = cand
+                    break
+        if "://" not in first:
+            first = "https://" + first.lstrip("/")
+        validated = validate_public_url(first)
+        parsed = urlparse(validated)
+        host = (parsed.hostname or "").lower().rstrip(".")
+        base_url = f"{parsed.scheme}://{host}"
+        if not extracted_hint and parsed.path and parsed.path not in {"", "/"}:
+            segs = [s.strip().rstrip(".\u2026") for s in parsed.path.split("/") if s.strip()]
+            if segs:
+                extracted_hint = segs[-1]
+        return base_url, host.removeprefix("www."), extracted_hint
+
+    @staticmethod
+    def _extract_candidate_urls(payload: dict[str, Any], expected_domain: str) -> list[str]:
+        urls: list[str] = []
+        sources = []
+        for key in ("links", "data", "results"):
+            val = payload.get(key)
+            if isinstance(val, list):
+                sources.extend(val)
+            elif isinstance(val, dict):
+                for subkey in ("web", "links", "results"):
+                    if isinstance(val.get(subkey), list):
+                        sources.extend(val[subkey])
+        for entry in sources:
+            u = entry if isinstance(entry, str) else (entry.get("url") if isinstance(entry, dict) else None)
+            if not isinstance(u, str) or not u.startswith(("http://", "https://")):
+                continue
+            host = (urlparse(u).hostname or "").lower().rstrip(".").removeprefix("www.")
+            if host == expected_domain or host.endswith("." + expected_domain):
+                if u not in urls:
+                    urls.append(u)
+        return urls
+
+    @staticmethod
+    def _score_candidate_url(url: str, *, path_hint: str | None, title: str | None, keyword: str | None) -> int:
+        parsed = urlparse(url)
+        path_lower = (parsed.path or "/").lower()
+        score = 0
+        if path_lower not in {"", "/"}:
+            score += 5
+        if path_hint:
+            hint_clean = path_hint.lower().strip().rstrip(".\u2026")
+            hint_slug = re.sub(r"[^a-z0-9]+", "-", hint_clean).strip("-")
+            if hint_clean and hint_clean in path_lower:
+                score += 100
+            elif hint_slug and hint_slug in path_lower:
+                score += 90
+            else:
+                for tok in re.findall(r"[a-z0-9]{3,}", hint_clean):
+                    if tok in path_lower:
+                        score += 15
+        for text in (title, keyword):
+            if text:
+                for tok in re.findall(r"[a-z0-9]{3,}", text.lower()):
+                    if tok in path_lower:
+                        score += 8
+        return score
+
+    def resolve_url(
+        self,
+        domain_or_url: str,
+        *,
+        path_hint: str | None = None,
+        title: str | None = None,
+        keyword: str | None = None,
+        limit: int = 25,
+        scrape: bool = False,
+        formats: list[str] | None = None,
+        country: str = "US",
+    ) -> dict[str, Any]:
+        """Resolve an exact inner URL from a domain + breadcrumb slug/title hint and optionally scrape it."""
+        if not 1 <= limit <= 200:
+            raise SafetyError("resolve limit must be between 1 and 200")
+        base_url, root_domain, effective_hint = self._parse_domain_or_breadcrumb(domain_or_url, path_hint)
+        search_term = effective_hint or title or keyword
+        map_resp = self.map_site(base_url, limit=limit, search=search_term)
+        candidates = self._extract_candidate_urls(map_resp, root_domain)
+        method_used = "map"
+
+        scored = sorted(
+            candidates,
+            key=lambda u: self._score_candidate_url(u, path_hint=effective_hint, title=title, keyword=keyword),
+            reverse=True,
+        )
+        best_score = (
+            self._score_candidate_url(scored[0], path_hint=effective_hint, title=title, keyword=keyword)
+            if scored
+            else 0
+        )
+
+        if (not scored or (search_term and best_score < 15)) and (title or effective_hint or keyword):
+            query_parts = [f"site:{root_domain}"]
+            if title:
+                query_parts.append(title)
+            elif effective_hint:
+                query_parts.append(effective_hint.replace("-", " "))
+            elif keyword:
+                query_parts.append(keyword)
+            search_resp = self.search(" ".join(query_parts), limit=min(5, limit), country=country, scrape_results=False)
+            search_candidates = self._extract_candidate_urls(search_resp, root_domain)
+            for sc in search_candidates:
+                if sc not in candidates:
+                    candidates.append(sc)
+            if search_candidates:
+                scored = sorted(
+                    candidates,
+                    key=lambda u: self._score_candidate_url(u, path_hint=effective_hint, title=title, keyword=keyword),
+                    reverse=True,
+                )
+                method_used = "map+search" if map_resp else "search"
+
+        resolved_url = scored[0] if scored else base_url
+        result: dict[str, Any] = {
+            "success": True,
+            "domain": root_domain,
+            "base_url": base_url,
+            "resolved_url": resolved_url,
+            "resolution_method": method_used,
+            "path_hint": effective_hint,
+            "title": title,
+            "candidates": scored[:10],
+        }
+        if scrape:
+            result["scraped"] = self.scrape(resolved_url, formats=formats or ["markdown"], country=country)
+        return result
 
     @staticmethod
     def crawl_preview(

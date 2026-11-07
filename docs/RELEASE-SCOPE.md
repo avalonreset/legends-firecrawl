@@ -1,6 +1,6 @@
-# Release scope: 0.3.4
+# Release scope: 0.3.5
 
-Official-only scope introduced in 0.2.0 continues in 0.3.4. The evidence-bank release adds portable export, integrity checks, offline views and scoped reuse review. Version 0.3.4 also ships native Python CLI entrypoints (`lfc`, `lax`, `legends-firecrawl`, `python -m legends_firecrawl`), removes legacy `.ps1`/`.cmd` shell wrappers, and adds the Gold Standard release check gate. See [changelog](../CHANGELOG.md). An installed copy can be older; check its version separately.
+Official-only scope introduced in 0.2.0 continues in 0.3.5. The evidence-bank release adds portable export, integrity checks, offline views and scoped reuse review. Version 0.3.5 also ships `lfc resolve` (`FirecrawlClient.resolve_url`) for inner-URL discovery and scraping from domain/breadcrumb hints, blocks opaque `/goto` redirect wrappers in `validate_public_url()`, and maintains native Python CLI entrypoints (`lfc`, `lax`, `legends-firecrawl`, `python -m legends_firecrawl`). See [changelog](../CHANGELOG.md). An installed copy can be older; check its version separately.
 
 ## Official Firecrawl only
 

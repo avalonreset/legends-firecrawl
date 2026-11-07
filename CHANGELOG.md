@@ -1,3 +1,9 @@
+# 0.3.5
+
+- **Inner-URL Resolution & Scrape (`lfc resolve` / `FirecrawlClient.resolve_url`)**: Added first-class `resolve` route and CLI subcommand to resolve concrete inner URLs from a target domain, SERP breadcrumb string (`https://domain.com › slug-hint...`), `--path-hint`, `--title`, or `--keyword` via `/v2/map` and `/v2/search` (`site:<domain>`), with optional `--scrape` to extract clean Markdown in one operation.
+- **Redirect Wrapper Safety Gate**: Updated `validate_public_url()` to block opaque Google redirect wrapper URLs (`google.com/goto` and `google.com/url`) before HTTP so scrapes never hit interstitial redirect pages.
+- **Windows UTF-8 Console & Dynamic User-Agent Hygiene**: Reconfigured CLI `stdout`/`stderr` streams to UTF-8 on Windows consoles and bound `FirecrawlClient` `User-Agent` header dynamically to `__version__`.
+
 # 0.3.4
 
 - **Ecosystem Gold Standard & Release Gate**: Added `docs/AGENT-RECIPE.md`, `scripts/check_release.py`, `THIRD_PARTY_NOTICES.md`, `MANIFEST.in`, `assets/manifest.json`, and `python/legends_firecrawl/__main__.py` (`python -m legends_firecrawl`) aligned with the CTO Legends public release standard.

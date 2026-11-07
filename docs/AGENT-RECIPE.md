@@ -29,6 +29,7 @@ lfc doctor
 | `lfc scrape <url> [--formats markdown,links] [--receipt] [--no-save]` | Bounded single-page scrape with automatic local JSON capture |
 | `lfc map <url> [--limit 100] [--search <terms>]` | Discover URLs on a target domain |
 | `lfc search "<query>" [--limit 5] [--scrape-results]` | Bounded web search via official Firecrawl API |
+| `lfc resolve <domain_or_breadcrumb> [--path-hint <slug>] [--title "<title>"] [--scrape]` | Resolve an exact inner URL on a domain from a SERP breadcrumb or slug/title hint and optionally scrape it |
 | `lfc crawl-preview <url> [--limit 25] [--max-depth 2]` | Offline preview of crawl scope and bounds |
 | `lfc crawl <url> [--limit 25] [--max-depth 2] --confirm` | Execute a bounded multi-page crawl after preview confirmation |
 | `lfc crawl-status <job_id>` | Check asynchronous crawl status and archive returned results |

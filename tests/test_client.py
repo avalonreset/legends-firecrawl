@@ -66,6 +66,8 @@ def test_api_key_file_and_symlink_refusal(monkeypatch: pytest.MonkeyPatch, tmp_p
         "http://10.0.0.2/a",
         "http://169.254.1.1/a",
         "https://user:pass@example.com/a",
+        "https://google.com/goto?url=CAES1gExyz",
+        "https://www.google.com/url?q=https://example.com",
     ],
 )
 def test_private_or_credentialed_targets_fail_before_http(url: str):
@@ -85,10 +87,41 @@ def test_non_https_api_root_is_rejected(monkeypatch: pytest.MonkeyPatch):
 
 def test_routes_and_estimates_are_intent_first():
     routes = client.load_routes()["routes"]
-    assert {item["name"] for item in routes} == {"credits", "scrape", "map", "search", "crawl", "crawl-status"}
+    assert {item["name"] for item in routes} == {"credits", "scrape", "map", "search", "resolve", "crawl", "crawl-status"}
     estimate = client.estimate("crawl", limit=40)
     assert estimate["page_or_result_ceiling"] == 40
     assert estimate["estimated_credits"] is None
+    res_est = client.estimate("resolve", limit=30)
+    assert res_est["page_or_result_ceiling"] == 30
+
+
+def test_resolve_url_parses_breadcrumb_and_scores_candidates(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    instance = runtime(tmp_path, monkeypatch)
+
+    def fake_request(path, **kwargs):
+        if path == "/v2/map":
+            return {
+                "success": True,
+                "links": [
+                    "https://warrenallen.com/",
+                    "https://warrenallen.com/about/",
+                    "https://warrenallen.com/choosing-personal-injury-attorney/",
+                ],
+            }
+        if path == "/v2/scrape":
+            return {"success": True, "data": {"markdown": "# Choosing an Attorney"}}
+        raise AssertionError(f"Unexpected path {path}")
+
+    monkeypatch.setattr(instance, "request", fake_request)
+    out = instance.resolve_url(
+        "https://warrenallen.com \u203a choosing-personal-injury-atto...",
+        title="Tips for Choosing a Personal Injury Attorney",
+        scrape=True,
+    )
+    assert out["domain"] == "warrenallen.com"
+    assert out["path_hint"] == "choosing-personal-injury-atto"
+    assert out["resolved_url"] == "https://warrenallen.com/choosing-personal-injury-attorney/"
+    assert out["scraped"]["data"]["markdown"] == "# Choosing an Attorney"
 
 
 def test_scrape_builds_house_defaults(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):

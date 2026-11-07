@@ -29,7 +29,20 @@ KIT_ROOT = Path(__file__).resolve().parents[2]
 EXPECTED_VENDOR_CLI = "1.23.3"
 
 
+def _ensure_utf8_stdio() -> None:
+    for stream in (sys.stdout, sys.stderr):
+        encoding = getattr(stream, "encoding", None)
+        if isinstance(encoding, str) and encoding.lower().replace("-", "") != "utf8":
+            reconfigure = getattr(stream, "reconfigure", None)
+            if callable(reconfigure):
+                try:
+                    reconfigure(encoding="utf-8", errors="replace")
+                except (OSError, ValueError, AttributeError):
+                    pass
+
+
 def emit(payload: Any) -> None:
+    _ensure_utf8_stdio()
     print(json.dumps(payload, indent=2, ensure_ascii=False))
 
 
@@ -150,6 +163,16 @@ def build_parser() -> argparse.ArgumentParser:
     search.add_argument("--location")
     search.add_argument("--scrape-results", action="store_true")
 
+    resolve = sub.add_parser("resolve")
+    resolve.add_argument("target", help="Target domain, URL, or SERP breadcrumb string")
+    resolve.add_argument("--path-hint", help="Breadcrumb slug or URL path hint to match")
+    resolve.add_argument("--title", help="Page title to match on the domain")
+    resolve.add_argument("--keyword", help="Search keyword context")
+    resolve.add_argument("--limit", type=int, default=25)
+    resolve.add_argument("--scrape", action="store_true", help="Also scrape the resolved inner URL")
+    resolve.add_argument("--formats", default="markdown")
+    resolve.add_argument("--country", default="US")
+
     for name in ("crawl-preview", "crawl"):
         crawl = sub.add_parser(name)
         crawl.add_argument("url")
@@ -163,7 +186,7 @@ def build_parser() -> argparse.ArgumentParser:
     status = sub.add_parser("crawl-status")
     status.add_argument("job_id")
 
-    for capture_parser in (scrape, mapping, search, crawl, status):
+    for capture_parser in (scrape, mapping, search, resolve, crawl, status):
         capture_parser.add_argument("--receipt", action="store_true", help="Print archive receipt only; full response remains saved")
         capture_parser.add_argument("--workspace", help="Client/project identity recorded with capture")
         capture_parser.add_argument("--no-save", action="store_true", help="Skip automatic full response archive")
@@ -296,6 +319,19 @@ def main(argv: list[str] | None = None) -> int:
                     scrape_results=args.scrape_results,
                 )
             )
+        elif args.command == "resolve":
+            emit_result(
+                client.resolve_url(
+                    args.target,
+                    path_hint=args.path_hint,
+                    title=args.title,
+                    keyword=args.keyword,
+                    limit=args.limit,
+                    scrape=args.scrape,
+                    formats=split_csv(args.formats),
+                    country=args.country,
+                )
+            )
         elif args.command == "crawl":
             kwargs = {
                 "limit": args.limit,
@@ -311,7 +347,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2 if capture_failed else 0
     except ApiError as exc:
         failure = {"success":False,"error":str(exc),"requestMayHaveCompleted":exc.request_may_have_completed,"response":exc.response}
-        if exc.response is not None and args.command in {"scrape","map","search","crawl","crawl-status"}:
+        if exc.response is not None and args.command in {"scrape","map","search","resolve","crawl","crawl-status"}:
             emit_result(failure)
         else: emit(failure)
         return 2
