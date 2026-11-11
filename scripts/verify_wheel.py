@@ -21,6 +21,7 @@ cli.credential_status=lambda: {'present':True}
 assert cli.doctor(offline=True)[1]==0
 cli.credential_status=lambda: {'present':False}
 assert cli.doctor(offline=True)[1]==1
+assert cli.lax_main(['audit'])==0
 with tempfile.TemporaryDirectory() as directory:
     root=Path(directory).resolve()
     package=evidence.export_bytes(json.dumps({'success':True,'data':[1]}).encode(),root,workspace='wheel',endpoint='scrape',request={'url':'https://example.com'},observed_at='2026-10-01T12:00:00Z')

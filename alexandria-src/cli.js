@@ -38,14 +38,18 @@ async function main(){
  if(command==='captures'){
   const root=path.join(process.env.LEGENDS_FIRECRAWL_CAPTURE_ROOT||path.join(require('os').homedir(),'.legends-firecrawl','research'),'var','captures');
   const captures=[],errors=[];
-  if(fs.existsSync(root))for(const entry of fs.readdirSync(root,{withFileTypes:true})){
-   if(!entry.isDirectory())continue;
+  if(fs.existsSync(root)&&!fs.lstatSync(root).isSymbolicLink())for(const entry of fs.readdirSync(root,{withFileTypes:true})){
+   if(!entry.isDirectory()||entry.isSymbolicLink())continue;
    const names=fs.readdirSync(path.join(root,entry.name));
    for(const name of names.filter(n=>n.endsWith('.raw.json'))){
     const rawFilePath=path.join(root,entry.name,name);
-    try{const sidecar=rawFilePath.replace(/\.json$/,'.manifest.json');
+    try{
+     if(fs.lstatSync(rawFilePath).isSymbolicLink())throw Error('symlink capture refused');
+     const sidecar=rawFilePath.replace(/\.json$/,'.manifest.json');
+     if(fs.existsSync(sidecar)&&fs.lstatSync(sidecar).isSymbolicLink())throw Error('symlink sidecar refused');
      if(!fs.existsSync(sidecar)&&!args.includes('--legacy')){captures.push({rawFilePath,metadata:'legacy_unindexed',response_integrity:'not_checked'});continue;}
      if(fs.existsSync(sidecar)&&fs.statSync(sidecar).size>2000000)throw Error('manifest too large');
+     if(!fs.existsSync(sidecar)&&fs.statSync(rawFilePath).size>2000000)throw Error('capture too large');
      const raw=fs.existsSync(sidecar)?{metadata:JSON.parse(fs.readFileSync(sidecar,'utf8'))}:JSON.parse(fs.readFileSync(rawFilePath,'utf8')),m=raw.metadata||{};
      captures.push({provider:m.provider,capability:m.capability,source:m.source,status:m.status??raw.response?.status??null,workspace:m.workspace??null,creditsUsed:m.creditsBurned??raw.response?.creditsUsed??null,timestamp:m.timestamp,rawFilePath,response_integrity:'not_checked'});
     }catch{errors.push({rawFilePath,reason:'unreadable_capture'});}

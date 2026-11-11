@@ -65,6 +65,8 @@ def test_api_key_file_and_symlink_refusal(monkeypatch: pytest.MonkeyPatch, tmp_p
         "http://127.0.0.1/a",
         "http://10.0.0.2/a",
         "http://169.254.1.1/a",
+        "http://[2002:7f00:1::]/a",
+        "http://[2002:a9fe:a9fe::]/a",
         "https://user:pass@example.com/a",
         "https://google.com/goto?url=CAES1gExyz",
         "https://www.google.com/url?q=https://example.com",
@@ -83,6 +85,76 @@ def test_non_https_api_root_is_rejected(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("FIRECRAWL_API_URL", "http://localhost:3002")
     with pytest.raises(client.SafetyError, match="HTTPS"):
         client.api_root()
+
+
+def test_custom_api_root_requires_explicit_allow_flag(monkeypatch: pytest.MonkeyPatch):
+    import socket as _sock
+
+    monkeypatch.setenv("FIRECRAWL_API_URL", "https://custom-proxy.example.com")
+    monkeypatch.delenv("FIRECRAWL_ALLOW_CUSTOM_API_URL", raising=False)
+    with pytest.raises(client.SafetyError, match="FIRECRAWL_ALLOW_CUSTOM_API_URL"):
+        client.api_root()
+    monkeypatch.setenv("FIRECRAWL_ALLOW_CUSTOM_API_URL", "1")
+    monkeypatch.setattr(
+        client.socket,
+        "getaddrinfo",
+        lambda *_a, **_k: [(_sock.AF_INET, _sock.SOCK_STREAM, 6, "", ("93.184.216.34", 443))],
+    )
+    assert client.api_root() == "https://custom-proxy.example.com"
+
+
+def test_validate_public_url_rejects_dns_private_ip_and_numeric_host(monkeypatch: pytest.MonkeyPatch):
+    import socket as _sock
+
+    with pytest.raises(client.SafetyError, match="Numeric"):
+        client.validate_public_url("https://2130706433/secret")
+
+    monkeypatch.setattr(
+        client.socket,
+        "getaddrinfo",
+        lambda *_a, **_k: [(_sock.AF_INET, _sock.SOCK_STREAM, 6, "", ("127.0.0.1", 443))],
+    )
+    with pytest.raises(client.SafetyError, match="non-public"):
+        client.validate_public_url("https://rebind.example.com/path", resolve_dns=True)
+
+
+def test_extract_candidate_urls_respects_include_subdomains():
+    response = {
+        "links": [
+            "https://example.com/about",
+            "https://sub.example.com/internal",
+            "https://evil-example.com/phish",
+        ]
+    }
+    strict = client.FirecrawlClient._extract_candidate_urls(response, "example.com", include_subdomains=False)
+    assert strict == ["https://example.com/about"]
+    with_subs = client.FirecrawlClient._extract_candidate_urls(response, "example.com", include_subdomains=True)
+    assert with_subs == [
+        "https://example.com/about",
+        "https://sub.example.com/internal",
+    ]
+
+
+def test_request_rejects_invalid_utf8_and_oversized_body(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    instance = runtime(tmp_path, monkeypatch)
+
+    class FakeResp:
+        def __init__(self, data: bytes):
+            self._data = data
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self, _n: int = -1) -> bytes:
+            return self._data
+
+    monkeypatch.setattr(client, "urlopen", lambda *_a, **_k: FakeResp(b"\xff\xfeinvalid"))
+    with pytest.raises(client.ApiError, match="non-UTF-8"):
+        instance.request("/v2/scrape")
+
 
 
 def test_routes_and_estimates_are_intent_first():

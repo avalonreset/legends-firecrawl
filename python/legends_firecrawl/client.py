@@ -11,17 +11,33 @@ import ipaddress
 import json
 import os
 import re
+import socket
+import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
 
 
 DEFAULT_API_ROOT = "https://api.firecrawl.dev"
+ALLOWED_API_HOSTS = frozenset({"api.firecrawl.dev"})
+MAX_RESPONSE_BYTES = 50 * 1024 * 1024
+MAX_ERROR_BYTES = 4 * 1024 * 1024
 JOB_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{12,128}$")
+_MACOS_SYSTEM_SYMLINKS = {Path("/var"), Path("/tmp"), Path("/etc")}
+
+
+class _NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def urlopen(request: Request, timeout: float = 90):
+    """Open request with redirects and ambient proxy overrides disabled."""
+    return build_opener(ProxyHandler({}), _NoRedirect()).open(request, timeout=timeout)
 
 
 class CredentialError(RuntimeError):
@@ -59,12 +75,31 @@ def _windows_user_environment(name: str) -> str | None:
     return value if isinstance(value, str) and value else None
 
 
+def _safe_local_path(value: str | Path) -> Path:
+    """Refuse symlinks and Windows reparse points across leaf and non-system parents."""
+    p = Path(value).expanduser().absolute()
+    for idx, part in enumerate((p, *p.parents)):
+        if idx > 0 and sys.platform == "darwin" and part in _MACOS_SYSTEM_SYMLINKS:
+            continue
+        if part.is_symlink() or getattr(part, "is_junction", lambda: False)():
+            raise SafetyError("Refusing to access symlink or junction path.")
+        try:
+            st = part.lstat()
+            if getattr(st, "st_reparse_tag", 0) == 0xA0000003 or (
+                getattr(st, "st_file_attributes", 0) & 0x400
+            ):
+                raise SafetyError("Refusing to access reparse-point path.")
+        except FileNotFoundError:
+            pass
+    return p
+
+
 def read_api_key_file(path: str | Path) -> str:
-    p = Path(path)
-    if p.is_symlink():
-        raise SafetyError("Refusing to read symlink API key file.")
+    p = _safe_local_path(path)
     if not p.exists() or not p.is_file():
         raise CredentialError("FIRECRAWL_API_KEY_FILE does not exist or is not a regular file.")
+    if p.stat().st_size > 65536:
+        raise SafetyError("FIRECRAWL_API_KEY_FILE exceeds maximum size limit.")
     secret = p.read_text(encoding="utf-8").strip()
     if not secret:
         raise CredentialError("FIRECRAWL_API_KEY_FILE is empty.")
@@ -97,15 +132,46 @@ def credential_status() -> dict[str, Any]:
     return {"present": True, "source": credentials.source, "length": len(credentials.api_key)}
 
 
-def api_root() -> str:
+def _is_public_ip(address: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
+    if not (
+        address.is_global
+        and not address.is_loopback
+        and not address.is_private
+        and not address.is_link_local
+        and not address.is_reserved
+        and not address.is_multicast
+        and not address.is_unspecified
+    ):
+        return False
+    for attr in ("ipv4_mapped", "sixtofour"):
+        inner = getattr(address, attr, None)
+        if inner is not None and not _is_public_ip(inner):
+            return False
+    teredo = getattr(address, "teredo", None)
+    if teredo is not None:
+        if any(not _is_public_ip(ep) for ep in teredo if ep is not None):
+            return False
+    return True
+
+
+def api_root(*, allow_custom: bool = False) -> str:
     root = os.environ.get("FIRECRAWL_API_URL", DEFAULT_API_ROOT).strip().rstrip("/")
     parsed = urlparse(root)
-    if parsed.scheme != "https" or not parsed.hostname:
-        raise SafetyError("FIRECRAWL_API_URL must be an HTTPS API root.")
+    if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+        raise SafetyError("FIRECRAWL_API_URL must be an HTTPS API root without embedded credentials.")
+    host = parsed.hostname.lower().rstrip(".")
+    custom_allowed = allow_custom or os.environ.get("FIRECRAWL_ALLOW_CUSTOM_API_URL") == "1"
+    if host not in ALLOWED_API_HOSTS:
+        if not custom_allowed:
+            raise SafetyError(
+                "FIRECRAWL_API_URL host is not in the default allowlist (api.firecrawl.dev). "
+                "Pass --allow-custom-api-url or set FIRECRAWL_ALLOW_CUSTOM_API_URL=1 for a verified self-hosted HTTPS endpoint."
+            )
+        validate_public_url(root)
     return root
 
 
-def validate_public_url(value: str) -> str:
+def validate_public_url(value: str, *, resolve_dns: bool = True) -> str:
     raw = value.strip()
     if not raw:
         raise SafetyError("URL is required.")
@@ -117,7 +183,10 @@ def validate_public_url(value: str) -> str:
     if parsed.username or parsed.password:
         raise SafetyError("Credentials embedded in URLs are forbidden.")
     host = parsed.hostname.lower().rstrip(".")
-    if host in {"localhost", "localhost.localdomain"} or host.endswith(".local"):
+    if (
+        host in {"localhost", "localhost.localdomain"}
+        or host.endswith((".local", ".localhost", ".internal"))
+    ):
         raise SafetyError("Local hosts are outside the Kit's public-web boundary.")
     if host in {"google.com", "www.google.com"} and parsed.path.lower() in {"/goto", "/url"}:
         raise SafetyError(
@@ -128,8 +197,31 @@ def validate_public_url(value: str) -> str:
         address = ipaddress.ip_address(host)
     except ValueError:
         address = None
-    if address is not None and not address.is_global:
-        raise SafetyError("Private, loopback, reserved, and link-local IP targets are forbidden.")
+    if address is not None:
+        if not _is_public_ip(address):
+            raise SafetyError("Private, loopback, reserved, and link-local IP targets are forbidden.")
+        return raw
+    labels = host.split(".")
+    if len(labels) < 2 or any(
+        not lbl or lbl.isdigit() or re.fullmatch(r"0x[0-9a-f]+", lbl) for lbl in labels
+    ):
+        raise SafetyError("Numeric or single-label hostnames are forbidden.")
+    if resolve_dns:
+        try:
+            infos = socket.getaddrinfo(host, None)
+        except OSError:
+            infos = []
+        for info in infos:
+            sockaddr = info[4]
+            if not sockaddr:
+                continue
+            ip_text = str(sockaddr[0]).split("%", 1)[0]
+            try:
+                resolved_ip = ipaddress.ip_address(ip_text)
+            except ValueError:
+                continue
+            if not _is_public_ip(resolved_ip):
+                raise SafetyError("Hostname resolves to a non-public IP address.")
     return raw
 
 
@@ -176,7 +268,7 @@ def _append_ledger(
     consumer: str,
     requested_scope: dict[str, Any] | None = None,
 ) -> None:
-    target = ledger_path()
+    target = _safe_local_path(ledger_path())
     target.parent.mkdir(parents=True, exist_ok=True)
     row = {
         "ts": datetime.now(timezone.utc).isoformat(),
@@ -222,6 +314,7 @@ def estimate(operation: str, *, limit: int | None = None, formats: list[str] | N
         "estimate_only": True,
         "requested_scope": default_scope,
         "page_or_result_ceiling": page_ceiling,
+        "max_api_requests": (3 if default_scope.get("scrape") else 2) if route["name"] == "resolve" else 1,
         "estimated_credits": None if route["charged"] else 0,
         "note": (
             "Firecrawl billing varies by endpoint, formats, proxy, parsing, and current plan. "
@@ -274,15 +367,23 @@ class FirecrawlClient:
         )
         try:
             with urlopen(request, timeout=self.timeout) as response:  # nosec B310 - fixed HTTPS root
-                raw = response.read().decode("utf-8")
-                result = json.loads(raw)
+                raw_bytes = response.read(MAX_RESPONSE_BYTES + 1)
+            if len(raw_bytes) > MAX_RESPONSE_BYTES:
+                raise ApiError(f"Firecrawl response exceeds maximum size limit for {normalized}")
+            raw = raw_bytes.decode("utf-8")
+            result = json.loads(raw)
         except HTTPError as exc:
-            raw = exc.read().decode("utf-8", errors="replace")
+            raw = exc.read(MAX_ERROR_BYTES + 1)[:MAX_ERROR_BYTES].decode("utf-8", errors="replace")
             try: received = json.loads(raw)
             except json.JSONDecodeError: received = {"raw_text":raw}
             raise ApiError(f"Firecrawl returned HTTP {exc.code} for {normalized}", response=received) from exc
         except URLError as exc:
             raise ApiError(f"Could not reach Firecrawl for {normalized}: {exc.reason}") from exc
+        except UnicodeDecodeError as exc:
+            raise ApiError(
+                f"Firecrawl returned non-UTF-8 response for {normalized}",
+                response={"raw_text": raw_bytes[:1000].decode("utf-8", errors="replace")},
+            ) from exc
         except json.JSONDecodeError as exc:
             raise ApiError(f"Firecrawl returned invalid JSON for {normalized}", response={"raw_text":raw}) from exc
         if not isinstance(result, dict):
@@ -422,7 +523,12 @@ class FirecrawlClient:
         return base_url, host.removeprefix("www."), extracted_hint
 
     @staticmethod
-    def _extract_candidate_urls(payload: dict[str, Any], expected_domain: str) -> list[str]:
+    def _extract_candidate_urls(
+        payload: dict[str, Any],
+        expected_domain: str,
+        *,
+        include_subdomains: bool = False,
+    ) -> list[str]:
         urls: list[str] = []
         sources = []
         for key in ("links", "data", "results"):
@@ -438,7 +544,7 @@ class FirecrawlClient:
             if not isinstance(u, str) or not u.startswith(("http://", "https://")):
                 continue
             host = (urlparse(u).hostname or "").lower().rstrip(".").removeprefix("www.")
-            if host == expected_domain or host.endswith("." + expected_domain):
+            if host == expected_domain or (include_subdomains and host.endswith("." + expected_domain)):
                 if u not in urls:
                     urls.append(u)
         return urls
@@ -617,7 +723,7 @@ class FirecrawlClient:
 
 
 def usage_summary(path: Path | None = None) -> dict[str, Any]:
-    target = path or ledger_path()
+    target = _safe_local_path(path or ledger_path())
     if not target.is_file():
         return {"ledger": str(target), "calls": 0, "reported_credits": 0, "unreported_calls": 0, "routes": {}}
     calls = 0

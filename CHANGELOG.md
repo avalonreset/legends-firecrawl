@@ -1,3 +1,9 @@
+# 0.3.6
+
+- **HTTP Redirect, Proxy, API-Host & DNS SSRF Hardening**: Disabled HTTP redirect following (`_NoRedirect`) and ambient proxy overrides (`ProxyHandler({})`) in `FirecrawlClient`, added `redirect: 'error'` in `alexandria-src/router.js`, restricted `FIRECRAWL_API_URL` to `https://api.firecrawl.dev` unless `--allow-custom-api-url` (`FIRECRAWL_ALLOW_CUSTOM_API_URL=1`) is explicitly set with public-host verification, and enforced numeric-label rejection plus DNS IP resolution checks in `validate_public_url()` alongside bounded response reads and `UnicodeDecodeError` handling.
+- **Windows Vendor Shim & Blocklist Hardening**: Resolved `firecrawl-cli` Node entrypoints directly on Windows without `cmd.exe` `.cmd` shell expansion and expanded the case-insensitive `lfc vendor` blocklist to refuse `login`, `logout`, `auth`, `config`, and `mcp` alongside `init`, `setup`, `launch`, and `launcher`.
+- **Wheel Packaging for `lax` / `lfc alexandria` & Symlink Refusal**: Bundled `alexandria-src/*.js` and `data/alexandria_catalog.json` inside `legends_firecrawl` package data so `lax` and `lfc alexandria` work in isolated wheel installs, added `FIRECRAWL_API_KEY_FILE` support to `lax`, enforced ancestor-chain symlink/reparse refusal across Python and Node capture/evidence paths, registered `evidence` and `alexandria` in `lfc --help`, and upgraded `scripts/check_release.py` to Gold Standard parity.
+
 # 0.3.5
 
 - **Inner-URL Resolution & Scrape (`lfc resolve` / `FirecrawlClient.resolve_url`)**: Added first-class `resolve` route and CLI subcommand to resolve concrete inner URLs from a target domain, SERP breadcrumb string (`https://domain.com › slug-hint...`), `--path-hint`, `--title`, or `--keyword` via `/v2/map` and `/v2/search` (`site:<domain>`), with optional `--scrape` to extract clean Markdown in one operation.

@@ -7,13 +7,19 @@ from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
 
+from .client import _safe_local_path
+
 def archive_response(operation: str, response: dict, *, root: Path | None = None, request: dict | None = None, workspace: str | None = None) -> dict:
-    base = Path(root or os.environ.get('LEGENDS_FIRECRAWL_CAPTURE_ROOT') or Path.home() / '.legends-firecrawl' / 'research').expanduser().resolve()
+    raw_base = Path(root or os.environ.get('LEGENDS_FIRECRAWL_CAPTURE_ROOT') or Path.home() / '.legends-firecrawl' / 'research').expanduser()
+    try:
+        base = _safe_local_path(raw_base).resolve()
+        raw_dir = _safe_local_path(base / 'var/captures/firecrawl')
+        card_dir = _safe_local_path(base / 'vault/captures/firecrawl')
+    except ValueError as exc:
+        raise OSError(str(exc)) from exc
     stamp = datetime.now(timezone.utc).isoformat()
     slug = ''.join(c if c.isalnum() or c == '-' else '-' for c in operation)
     name = stamp.replace(':', '-').replace('.', '-') + '_' + str(uuid4()) + '_' + slug
-    raw_dir = base / 'var/captures/firecrawl'
-    card_dir = base / 'vault/captures/firecrawl'
     raw_dir.mkdir(parents=True, exist_ok=True)
     card_dir.mkdir(parents=True, exist_ok=True)
     raw = raw_dir / (name + '.raw.json')

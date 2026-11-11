@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -21,12 +22,42 @@ from .client import (
     credential_status,
     estimate,
     load_routes,
+    read_api_key_file,
     usage_summary,
 )
 
 
 KIT_ROOT = Path(__file__).resolve().parents[2]
 EXPECTED_VENDOR_CLI = "1.23.3"
+BLOCKED_VENDOR_COMMANDS = frozenset({
+    "init", "setup", "launch", "launcher", "login", "logout", "auth", "config", "mcp",
+})
+_CMD_META_RE = re.compile(r'[&|<>^()%!"\r\n\x00]')
+
+
+def _resolve_vendor_argv(executable: str, vendor_args: list[str]) -> list[str]:
+    """Resolve vendor CLI execution safely without Windows cmd.exe batch injection."""
+    for arg in vendor_args:
+        if any(ch in arg for ch in ("\r", "\n", "\x00")):
+            raise SafetyError("Control characters are forbidden in vendor arguments.")
+    exe_path = Path(executable)
+    if os.name == "nt" and exe_path.suffix.lower() in {".cmd", ".bat"}:
+        node_exe = shutil.which("node")
+        if node_exe and exe_path.is_file() and not exe_path.is_symlink():
+            try:
+                shim_text = exe_path.read_text(encoding="utf-8", errors="ignore")
+                m = re.search(r'"%~dp0\\([^"]*node_modules[\\/][^"]+\.c?m?js)"', shim_text, re.I)
+                if m:
+                    candidate = (exe_path.parent / m.group(1).replace("\\", "/")).resolve()
+                    if candidate.is_file() and not candidate.is_symlink():
+                        return [node_exe, str(candidate), *vendor_args]
+            except OSError:
+                pass
+        if any(_CMD_META_RE.search(arg) for arg in vendor_args):
+            raise SafetyError(
+                "Refusing to pass shell metacharacters to a Windows .cmd/.bat shim."
+            )
+    return [executable, *vendor_args]
 
 
 def _ensure_utf8_stdio() -> None:
@@ -51,7 +82,7 @@ def _vendor_cli_version() -> tuple[str | None, str | None]:
     if not executable:
         return None, None
     completed = subprocess.run(
-        [executable, "--version"],
+        _resolve_vendor_argv(executable, ["--version"]),
         text=True,
         capture_output=True,
         check=False,
@@ -128,6 +159,11 @@ def split_csv(value: str | None) -> list[str]:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="lfc", description="Legends Firecrawl house spine")
+    parser.add_argument(
+        "--allow-custom-api-url",
+        action="store_true",
+        help="Allow a custom HTTPS FIRECRAWL_API_URL outside api.firecrawl.dev",
+    )
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("version")
     doctor_parser = sub.add_parser("doctor")
@@ -141,6 +177,10 @@ def build_parser() -> argparse.ArgumentParser:
     estimate_parser.add_argument("--formats")
     sub.add_parser("cost")
     sub.add_parser("credits")
+    evidence_parser = sub.add_parser("evidence", add_help=False, help="Portable offline evidence bank operations")
+    evidence_parser.add_argument("args", nargs=argparse.REMAINDER)
+    alexandria_parser = sub.add_parser("alexandria", add_help=False, help="Offline Alexandria catalog and bounded query routing")
+    alexandria_parser.add_argument("args", nargs=argparse.REMAINDER)
 
     scrape = sub.add_parser("scrape")
     scrape.add_argument("url")
@@ -198,16 +238,28 @@ def build_parser() -> argparse.ArgumentParser:
 
 def lax_main(argv: list[str] | None = None) -> int:
     command_line = list(argv) if argv is not None else sys.argv[1:]
-    root = Path(os.environ["LEGENDS_FIRECRAWL_HOME"]).expanduser() if os.environ.get("LEGENDS_FIRECRAWL_HOME") else KIT_ROOT
-    script_path = root / "alexandria-src" / "cli.js"
+    pkg_dir = Path(__file__).resolve().parent
+    if os.environ.get("LEGENDS_FIRECRAWL_HOME"):
+        root = Path(os.environ["LEGENDS_FIRECRAWL_HOME"]).expanduser()
+        script_path = root / "alexandria-src" / "cli.js"
+    elif (KIT_ROOT / "alexandria-src" / "cli.js").is_file():
+        script_path = KIT_ROOT / "alexandria-src" / "cli.js"
+    else:
+        script_path = pkg_dir / "alexandria-src" / "cli.js"
     if not script_path.is_file():
-        emit({"status": "error", "message": f"Alexandria CLI not found at {script_path}. Run from a legends-firecrawl source checkout or set LEGENDS_FIRECRAWL_HOME."})
+        emit({"status": "error", "message": f"Alexandria CLI not found at {script_path}. Run from a legends-firecrawl checkout or installed package."})
         return 2
     node_exe = shutil.which("node")
     if not node_exe:
         emit({"status": "error", "message": "Node.js executable ('node') not found on PATH."})
         return 2
     env = os.environ.copy()
+    if not env.get("FIRECRAWL_API_KEY") and env.get("FIRECRAWL_API_KEY_FILE"):
+        try:
+            env["FIRECRAWL_API_KEY"] = read_api_key_file(env["FIRECRAWL_API_KEY_FILE"])
+        except (CredentialError, SafetyError) as exc:
+            emit({"status": "error", "message": str(exc)})
+            return 2
     if not env.get("FIRECRAWL_API_KEY") and env.get("FIRECRAWL_DISABLE_USER_ENV") != "1":
         user_key = _windows_user_environment("FIRECRAWL_API_KEY")
         if user_key:
@@ -224,7 +276,14 @@ def main(argv: list[str] | None = None) -> int:
     if command_line and command_line[0] == 'alexandria':
         return lax_main(command_line[1:])
     args = build_parser().parse_args(argv)
+    if getattr(args, "allow_custom_api_url", False):
+        os.environ["FIRECRAWL_ALLOW_CUSTOM_API_URL"] = "1"
     try:
+        if args.command == "evidence":
+            from .evidence import main as evidence_main
+            return evidence_main(args.args)
+        if args.command == "alexandria":
+            return lax_main(args.args)
         if args.command == "version":
             emit({"kit_version": __version__, "vendor_cli_expected": EXPECTED_VENDOR_CLI})
             return 0
@@ -247,12 +306,20 @@ def main(argv: list[str] | None = None) -> int:
             emit(usage_summary())
             return 0
         if args.command == "vendor":
-            if any(value in {"init", "setup", "launch", "launcher"} for value in args.args):
-                raise SafetyError("vendor integration installers are blocked; use the house setup scripts")
+            lowered = {
+                str(value).strip().lower().lstrip("-")
+                for value in args.args
+                if str(value).strip()
+            }
+            if lowered & BLOCKED_VENDOR_COMMANDS:
+                raise SafetyError("vendor integration installers and credential/config mutators are blocked; use the house setup scripts")
+            for raw_arg in args.args:
+                if any(ch in str(raw_arg) for ch in ("\r", "\n", "\x00")):
+                    raise SafetyError("Control characters are forbidden in vendor arguments.")
             executable, _ = _vendor_cli_version()
             if not executable:
                 raise SafetyError("official firecrawl CLI is missing; install firecrawl-cli@1.23.3 via npm")
-            return subprocess.call([executable, *args.args])
+            return subprocess.call(_resolve_vendor_argv(executable, list(args.args)))
 
         if args.command == "crawl-preview":
             emit(

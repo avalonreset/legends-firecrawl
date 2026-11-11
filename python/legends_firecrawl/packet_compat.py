@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from .client import FirecrawlClient
+from .client import FirecrawlClient, _safe_local_path
 
 
 def scrape_page(
@@ -34,5 +34,6 @@ def discover_site_pages(
 
 
 def write_text_evidence(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8")
+    target = _safe_local_path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(text, encoding="utf-8")

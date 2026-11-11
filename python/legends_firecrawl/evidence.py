@@ -6,8 +6,10 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import sys
 
 SCHEMA = 'legends-firecrawl-evidence/v1'
+_MACOS_SYSTEM_SYMLINKS = {Path('/var'), Path('/tmp'), Path('/etc')}
 def _json(value):
     return json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2, allow_nan=False)
 def _decode(raw):
@@ -31,10 +33,20 @@ def _date(value):
     if date.tzinfo is None: raise ValueError('timestamp requires timezone')
     return date
 def _safe(path):
-    path = Path(path)
-    for item in (path, *path.parents):
+    path = Path(path).expanduser().absolute()
+    for idx, item in enumerate((path, *path.parents)):
+        if idx > 0 and sys.platform == 'darwin' and item in _MACOS_SYSTEM_SYMLINKS:
+            continue
         if item.is_symlink() or getattr(item, 'is_junction', lambda: False)():
             raise ValueError('linked evidence path refused')
+        try:
+            st = item.lstat()
+            if getattr(st, 'st_reparse_tag', 0) == 0xA0000003 or (
+                getattr(st, 'st_file_attributes', 0) & 0x400
+            ):
+                raise ValueError('junction evidence path refused')
+        except FileNotFoundError:
+            pass
     return path
 def _state(data, endpoint):
     if not isinstance(data, dict): return 'unknown'
@@ -58,7 +70,10 @@ def _note(observed_at):
             'Keep private client evidence outside module installations and public repositories.\n')
 def export(response, destination, *, workspace, endpoint, request, observed_at, producer='legends-firecrawl'):
     """Preserve original file bytes; supplied collection time must be actual, not export time."""
-    return export_bytes(Path(response).read_bytes(), destination, workspace=workspace, endpoint=endpoint,
+    src = _safe(response)
+    if src.stat().st_size > 50 * 1024 * 1024:
+        raise ValueError('response file exceeds 50 MB limit')
+    return export_bytes(src.read_bytes(), destination, workspace=workspace, endpoint=endpoint,
                         request=request, observed_at=observed_at, producer=producer)
 def export_bytes(raw, destination, *, workspace, endpoint, request, observed_at, producer='legends-firecrawl'):
     if not isinstance(workspace,str) or not workspace.strip(): raise ValueError('explicit workspace required')
@@ -149,7 +164,8 @@ def view(package, *, select=None, limit=20, full=False, max_chars=16000):
     if not isinstance(limit,int) or limit<1 or limit>1000: raise ValueError('limit must be 1..1000')
     if not isinstance(max_chars,int) or max_chars<100 or max_chars>1000000: raise ValueError('max_chars must be 100..1000000')
     m=verify(package)
-    value=_decode((Path(package)/'response.json').read_bytes())
+    safe_pkg=_safe(package)
+    value=_decode((safe_pkg/'response.json').read_bytes())
     if select:
         for key in select.split('.'):
             try: value=value[int(key)] if isinstance(value,list) else value[key]
@@ -168,7 +184,10 @@ def view(package, *, select=None, limit=20, full=False, max_chars=16000):
     return dict(evidence_id=m['evidence_id'],selection=select,full=full,value=projected,provider_calls=0)
 
 def export_capture(capture,destination,*,workspace,request=None,endpoint=None,observed_at=None):
-    saved=_decode(Path(capture).read_bytes())
+    cap_path=_safe(capture)
+    if cap_path.stat().st_size > 50 * 1024 * 1024:
+        raise ValueError('capture file exceeds 50 MB limit')
+    saved=_decode(cap_path.read_bytes())
     m=saved.get('metadata',{})
     raw=saved.get('response')
     if not isinstance(raw,dict): raise ValueError('capture has no full response')
@@ -192,7 +211,14 @@ def main(argv=None):
     args=vars(parser.parse_args(argv));command=args.pop('command')
     try:
         if 'request_file' in args:
-            file=args.pop('request_file');args['request']=_decode(Path(file).read_text(encoding='utf-8-sig')) if file else None
+            file=args.pop('request_file')
+            if file:
+                req_path=_safe(file)
+                if req_path.stat().st_size > 10 * 1024 * 1024:
+                    raise ValueError('request file exceeds 10 MB limit')
+                args['request']=_decode(req_path.read_text(encoding='utf-8-sig'))
+            else:
+                args['request']=None
         if command.startswith('export'):
             function=export if command=='export' else export_capture
             response=args.pop('response');destination=args.pop('destination')

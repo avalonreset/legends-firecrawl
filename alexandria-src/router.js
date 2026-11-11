@@ -20,8 +20,34 @@ function plan(providerId,capability,options={},flags={}) {
   decisionReason:'Official Firecrawl execution; direct-source substitution is retired.',
   request:{path:'/v2/scrape',body:{alexandria:{provider:providerId,capability,options}}}};
 }
+const MACOS_SYS_LINKS = new Set(['/var', '/tmp', '/etc']);
+function assertSafeKeyFile(targetPath) {
+ let cur = path.resolve(targetPath), leaf = true;
+ while (true) {
+  if (!leaf && process.platform === 'darwin' && MACOS_SYS_LINKS.has(cur)) {
+   const parent = path.dirname(cur); if (parent === cur) break; cur = parent; continue;
+  }
+  let lst;
+  try { lst = fs.lstatSync(cur); } catch (err) {
+   if (err.code === 'ENOENT') {
+    if (leaf) throw new Error('FIRECRAWL_API_KEY_FILE does not exist');
+    const parent = path.dirname(cur); if (parent === cur) break; cur = parent; leaf = false; continue;
+   }
+   throw err;
+  }
+  if (lst.isSymbolicLink()) throw new Error('Refusing symlink FIRECRAWL_API_KEY_FILE');
+  if (leaf && (!lst.isFile() || lst.size > 65536)) throw new Error('Invalid FIRECRAWL_API_KEY_FILE');
+  const parent = path.dirname(cur); if (parent === cur) break; cur = parent; leaf = false;
+ }
+}
 function getCredentials(){
  if(process.env.FIRECRAWL_API_KEY) return process.env.FIRECRAWL_API_KEY;
+ if(process.env.FIRECRAWL_API_KEY_FILE){
+  const keyFile=path.resolve(process.env.FIRECRAWL_API_KEY_FILE);
+  assertSafeKeyFile(keyFile);
+  const val=fs.readFileSync(keyFile,'utf8').trim();
+  if(val) return val;
+ }
  // Direct environment key only; never read third-party CLI credential files.
  // No disk credential fallback.
  return null;
@@ -30,12 +56,14 @@ async function query(providerId,capability,options={},flags={}){
  const proposal=plan(providerId,capability,options,flags);
  if(flags.preview) return {...proposal,status:'preview',creditsUsed:null};
  if(flags.confirm!==true) return {...proposal,status:'confirmation_required',creditsUsed:null};
- const key=getCredentials();if(!key) throw new Error('FIRECRAWL_API_KEY or official CLI credentials required');
+ const key=getCredentials();if(!key) throw new Error('FIRECRAWL_API_KEY or FIRECRAWL_API_KEY_FILE required');
  try{
-  const res=await fetch('https://api.firecrawl.dev/v2/scrape',{method:'POST',
+  const res=await fetch('https://api.firecrawl.dev/v2/scrape',{method:'POST',redirect:'error',
    headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},
    body:JSON.stringify(proposal.request.body),signal:AbortSignal.timeout(60000)});
-  const raw=await res.text();let response;
+  const raw=await res.text();
+  if(Buffer.byteLength(raw,'utf8')>50*1024*1024) throw new Error('Response exceeds maximum size limit');
+  let response;
   try{response=JSON.parse(raw);}catch{return {...proposal,status:'error',creditsUsed:null,httpStatus:res.status,response:raw,requestMayHaveCompleted:true};}
   const items=response?.data?.alexandria,tool=Array.isArray(items)&&items.length===1?items[0]:null;
   const valid=res.ok&&response?.success===true&&tool&&!tool.error&&tool.success!==false&&tool.provider===providerId&&tool.capability===capability&&Object.hasOwn(tool,'data');

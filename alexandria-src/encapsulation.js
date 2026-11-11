@@ -1,10 +1,24 @@
 const fs=require('fs'),path=require('path'),os=require('os');
 const {randomUUID,createHash}=require('crypto');
+const MACOS_SYS_LINKS=new Set(['/var','/tmp','/etc']);
+function assertNotSymlink(targetPath){
+ let cur=path.resolve(targetPath),leaf=true;
+ while(true){
+  if(!leaf&&process.platform==='darwin'&&MACOS_SYS_LINKS.has(cur)){
+   const parent=path.dirname(cur);if(parent===cur)break;cur=parent;continue;
+  }
+  try{if(fs.lstatSync(cur).isSymbolicLink())throw new Error('Refusing symlink capture path');}
+  catch(err){if(err.code!=='ENOENT')throw err;}
+  const parent=path.dirname(cur);if(parent===cur)break;cur=parent;leaf=false;
+ }
+}
 function encapsulate(result,root=null){
  const base=path.resolve(root||process.env.LEGENDS_FIRECRAWL_CAPTURE_ROOT||path.join(os.homedir(),'.legends-firecrawl','research'));
+ assertNotSymlink(base);
  const stamp=new Date().toISOString(),slug=String(result.provider||'firecrawl').replace(/[^a-zA-Z0-9-]/g,'-');
  const name=stamp.replace(/[:.]/g,'-')+'_'+randomUUID();
  const rawDir=path.join(base,'var','captures',slug),cardDir=path.join(base,'vault','captures',slug);
+ assertNotSymlink(rawDir);assertNotSymlink(cardDir);
  fs.mkdirSync(rawDir,{recursive:true});fs.mkdirSync(cardDir,{recursive:true});
  const rawFilePath=path.join(rawDir,name+'.raw.json'),cardFilePath=path.join(cardDir,name+'.md');
  const metadata={timestamp:stamp,provider:result.provider,capability:result.capability,source:result.source,

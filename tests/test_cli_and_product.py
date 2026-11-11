@@ -135,3 +135,24 @@ def test_python_cli_routes_alexandria_subcommand_directly():
     payload = json.loads(result.stdout)
     assert payload["catalogCapabilities"] == 797
 
+
+def test_vendor_blocks_case_insensitive_and_auth_commands(monkeypatch, capsys):
+    from legends_firecrawl import cli
+
+    monkeypatch.setattr(
+        cli,
+        "_vendor_cli_version",
+        lambda: (_ for _ in ()).throw(AssertionError("must reject before vendor probe")),
+    )
+    for blocked in (["vendor", "SETUP", "mcp"], ["vendor", "Login"], ["vendor", "config"]):
+        assert cli.main(blocked) == 2
+        assert "blocked" in json.loads(capsys.readouterr().out)["error"]
+
+
+def test_help_lists_evidence_and_alexandria():
+    result = run_cli("--help")
+    assert result.returncode == 0
+    assert "evidence" in result.stdout
+    assert "alexandria" in result.stdout
+
+
