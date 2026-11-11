@@ -45,7 +45,7 @@ def _safe(path):
                 getattr(st, 'st_file_attributes', 0) & 0x400
             ):
                 raise ValueError('junction evidence path refused')
-        except FileNotFoundError:
+        except OSError:
             pass
     return path
 def _state(data, endpoint):
