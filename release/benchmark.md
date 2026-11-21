@@ -3,8 +3,8 @@
 - Evals: 12
 - Trials: 36
 - Pass rate: 100%
-- Behavioral mean: 168.516 ms
-- Behavioral standard deviation: 17.21 ms
+- Behavioral mean: 127.852 ms
+- Behavioral standard deviation: 12.329 ms
 - Baseline: not run; deterministic contract evaluation only
 
 ## Thresholds
