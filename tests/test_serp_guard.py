@@ -237,3 +237,207 @@ def test_resolve_url_website_name_item_search_fallback_and_no_homepage_substitut
         c.resolve_url("reddit.com", path_hint="r/Phoenixville", title="x", require_candidate=True)
     # Standalone `lfc resolve` behavior unchanged when the flag is off:
     assert c.resolve_url("reddit.com", path_hint="r/Phoenixville", title="x")["resolved_url"] == "https://reddit.com"
+
+
+def test_resolve_url_homepage_shortcircuit_and_scoring_without_path_hint(monkeypatch):
+    from legends_firecrawl import client as client_mod
+    from legends_firecrawl.client import FirecrawlClient
+
+    monkeypatch.setattr(client_mod, "validate_public_url", lambda v, **kw: v)
+    c = FirecrawlClient.__new__(FirecrawlClient)
+    calls = []
+    c.map_site = lambda *a, **kw: (calls.append("map") or {"links": []})
+    c.search = lambda *a, **kw: (calls.append("search") or {"data": {"web": []}})
+    scraped_args = {}
+
+    def fake_scrape(url, **kw):
+        calls.append("scrape")
+        scraped_args["url"] = url
+        scraped_args.update(kw)
+        return {"success": True, "data": {"markdown": "# Home"}}
+
+    c.scrape = fake_scrape
+
+    # Bare homepage breadcrumb shortcircuits directly without spending map/search credits.
+    out = c.resolve_url(
+        "https://davidkanaskiesautorepair.com",
+        path_hint=None,
+        title="David Kanaskie's Auto Repair | Phoenixville PA",
+        scrape=True,
+        only_main_content=False,
+        max_age_ms=0,
+        require_candidate=True,
+        allow_homepage_shortcircuit=True,
+    )
+    assert out["resolved_url"] == "https://davidkanaskiesautorepair.com"
+    assert out["resolution_method"] == "breadcrumb_root"
+    assert calls == ["scrape"]
+    assert scraped_args["only_main_content"] is False
+    assert scraped_args["max_age_ms"] == 0
+
+    # Breadcrumb with an inner segment must NOT shortcircuit even when allow_homepage_shortcircuit=True.
+    calls.clear()
+    c.map_site = lambda *a, **kw: (
+        calls.append("map")
+        or {"links": ["https://www.rotorooter.com/", "https://www.rotorooter.com/philadelphia/"]}
+    )
+    inner = c.resolve_url(
+        "https://www.rotorooter.com › philadelphia",
+        path_hint=None,
+        title="Philadelphia Plumber",
+        require_candidate=True,
+        allow_homepage_shortcircuit=True,
+    )
+    assert calls == ["map"]
+    assert inner["resolved_url"] == "https://www.rotorooter.com/philadelphia/"
+
+    # _score_candidate_url must not award the +5 inner-page bonus when path_hint is empty/None.
+    root_score = FirecrawlClient._score_candidate_url(
+        "https://example.com/", path_hint=None, title=None, keyword=None
+    )
+    inner_score = FirecrawlClient._score_candidate_url(
+        "https://example.com/blog/unrelated", path_hint=None, title=None, keyword=None
+    )
+    assert root_score == 0 and inner_score == 0
+    inner_with_hint = FirecrawlClient._score_candidate_url(
+        "https://example.com/blog/unrelated", path_hint="services", title=None, keyword=None
+    )
+    assert inner_with_hint == 5
+
+
+def test_serp_targets_preserves_rank_and_mixed_order():
+    from legends_firecrawl.serp_guard import serp_targets
+
+    env = envelope("clean", urls=[])
+    env["tasks"][0]["result"][0]["items"] = [
+        {"type": "organic", "rank_group": 3, "url": "https://c.example.com/page", "domain": "c.example.com", "title": "Three"},
+        {"type": "organic", "rank_group": 1, "url": "https://a.example.com/", "domain": "a.example.com", "title": "One"},
+        {
+            "type": "organic",
+            "rank_group": 2,
+            "url": "https://google.com/goto?url=CAES2",
+            "domain": "google.com",
+            "breadcrumb": "https://b.example.com",
+            "resolved_domain": "b.example.com",
+            "breadcrumb_path_hint": None,
+            "title": "Two",
+        },
+    ]
+    split = serp_targets(env, limit=10)
+    assert split["urls"] == ["https://a.example.com/", "https://c.example.com/page"]
+    assert [d["rank"] for d in split["direct_items"]] == [1, 3]
+    assert split["direct_items"][0]["domain"] == "a.example.com"
+    assert [(t["kind"], t["rank"]) for t in split["ordered_targets"]] == [
+        ("direct", 1),
+        ("goto", 2),
+        ("direct", 3),
+    ]
+
+
+def test_cli_scrape_serp_mixed_order_shortcircuit_options_and_provider_error(monkeypatch, tmp_path, capsys):
+    from legends_firecrawl import cli
+    from legends_firecrawl.client import ApiError
+
+    env = envelope("clean", urls=[])
+    env["tasks"][0]["result"][0]["items"] = [
+        {
+            "type": "organic",
+            "rank_group": 1,
+            "url": "https://google.com/goto?url=CAES1",
+            "domain": "google.com",
+            "breadcrumb": "https://davidkanaskiesautorepair.com",
+            "resolved_domain": "davidkanaskiesautorepair.com",
+            "breadcrumb_path_hint": None,
+            "title": "David Kanaskie Auto Repair",
+        },
+        {
+            "type": "organic",
+            "rank_group": 2,
+            "url": "https://direct.example.com/shop",
+            "domain": "direct.example.com",
+            "title": "Direct Shop",
+        },
+        {
+            "type": "organic",
+            "rank_group": 3,
+            "url": "https://google.com/goto?url=CAES3",
+            "domain": "google.com",
+            "breadcrumb": "30+ comments · 2 years ago",
+            "breadcrumb_path_hint": None,
+            "website_name": "Reddit\xa0·\xa0r/Phoenixville",
+            "title": "Mechanic Recommendations?",
+        },
+        {
+            "type": "organic",
+            "rank_group": 4,
+            "url": "https://blocked.example.com/page",
+            "domain": "blocked.example.com",
+            "title": "Blocked Direct",
+        },
+    ]
+    serp_path = tmp_path / "mixed.json"
+    serp_path.write_text(json.dumps(env), encoding="utf-8")
+
+    resolve_calls = []
+    scrape_calls = []
+
+    class FakeClient:
+        def __init__(self, **kwargs):
+            pass
+
+        def resolve_url(self, target, **kwargs):
+            resolve_calls.append((target, kwargs))
+            if target == "reddit.com":
+                raise ApiError(
+                    "Firecrawl returned HTTP 403 for /v2/scrape",
+                    response={"success": False, "error": "Website Not Supported"},
+                )
+            return {
+                "success": True,
+                "resolved_url": target,
+                "resolution_method": "breadcrumb_root",
+                "base_url": target,
+                "path_hint": None,
+                "scraped": {"success": True, "data": {"markdown": "# Home"}},
+            }
+
+        def scrape(self, url, **kwargs):
+            scrape_calls.append((url, kwargs))
+            if "blocked.example.com" in url:
+                raise ApiError(
+                    "Firecrawl returned HTTP 403 for /v2/scrape",
+                    response={"success": False, "error": "Blocked by policy"},
+                )
+            return {"success": True, "data": {"markdown": f"# {url}"}}
+
+    monkeypatch.setattr(cli, "FirecrawlClient", FakeClient)
+    code = cli.main([
+        "scrape-serp",
+        str(serp_path),
+        "--resolve-goto",
+        "--full-page",
+        "--max-age-ms",
+        "1234",
+        "--confirm",
+        "--no-save",
+    ])
+    assert code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["success"] is True
+    assert [p["rank"] for p in payload["pages"]] == [1, 2, 4]
+    assert payload["pages"][0]["url"] == "https://davidkanaskiesautorepair.com"
+    assert payload["pages"][1]["url"] == "https://direct.example.com/shop"
+    assert payload["pages"][2]["provider_error"] == {"success": False, "error": "Blocked by policy"}
+
+    # Bare breadcrumb root got allow_homepage_shortcircuit=True; website_name got False.
+    assert resolve_calls[0][1]["allow_homepage_shortcircuit"] is True
+    assert resolve_calls[0][1]["only_main_content"] is False
+    assert resolve_calls[0][1]["max_age_ms"] == 1234
+    assert resolve_calls[1][0] == "reddit.com"
+    assert resolve_calls[1][1]["allow_homepage_shortcircuit"] is False
+    assert scrape_calls[0][1]["only_main_content"] is False
+    assert scrape_calls[0][1]["max_age_ms"] == 1234
+
+    assert len(payload["needs_resolve"]) == 1
+    assert payload["needs_resolve"][0]["rank"] == 3
+    assert payload["needs_resolve"][0]["provider_error"] == {"success": False, "error": "Website Not Supported"}

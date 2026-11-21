@@ -496,3 +496,49 @@ def test_cli_mocked_dispatch_and_capture_archival(monkeypatch: pytest.MonkeyPatc
         assert Path(out["_capture"]["rawFilePath"]).is_file()
 
     assert called == ["developer", "research", "parse", "agent", "agent-status", "monitor:list", "search-feedback"]
+
+
+def test_research_scrape_derives_canonical_urls_from_primary_id_and_ids(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+):
+    instance = runtime(tmp_path, monkeypatch)
+    monkeypatch.setattr(client, "validate_public_url", lambda v, **kw: v)
+    scraped_urls: list[str] = []
+
+    def fake_request(path: str, **kwargs):
+        if path.startswith("/v2/search/research/papers"):
+            return {
+                "success": True,
+                "results": [
+                    {"paperId": "p1", "primaryId": "arxiv:2505.12065", "ids": {"arxiv": ["2505.12065"]}},
+                    {"paperId": "p2", "primaryId": "pubmed:40953549"},
+                    {"paperId": "p3", "ids": {"pmid": "12345678"}},
+                    {"paperId": "p4", "primaryId": "biorxiv:10.1101/2024.01.01.573829v1"},
+                    {"paperId": "p5", "primaryId": "medrxiv:10.1101/2024.02.02.24302100v1"},
+                    {"paperId": "p6", "ids": {"doi": ["10.1038/s41586-021-03819-2"]}},
+                    {"paperId": "p7", "primaryId": "arxiv:../../etc/passwd"},
+                ],
+            }
+        if path == "/v2/scrape":
+            scraped_urls.append(kwargs["payload"]["url"])
+            return {"success": True, "data": {"markdown": "# Paper"}}
+        raise AssertionError(path)
+
+    monkeypatch.setattr(instance, "request", fake_request)
+    out = instance.research_search("retrieval", limit=10, scrape=True, confirm=True)
+    expected = [
+        "https://arxiv.org/abs/2505.12065",
+        "https://pubmed.ncbi.nlm.nih.gov/40953549/",
+        "https://pubmed.ncbi.nlm.nih.gov/12345678/",
+        "https://www.biorxiv.org/content/10.1101/2024.01.01.573829v1",
+        "https://www.medrxiv.org/content/10.1101/2024.02.02.24302100v1",
+        "https://doi.org/10.1038/s41586-021-03819-2",
+    ]
+    assert scraped_urls == expected
+    assert [row["url"] for row in out["scraped_results"]] == expected
+
+
+def test_search_feedback_does_not_register_dead_confirm_flag():
+    res = run_cli("search-feedback", "srch_123456", "--rating", "good", "--confirm")
+    assert res.returncode == 2
+    assert "unrecognized arguments: --confirm" in res.stderr

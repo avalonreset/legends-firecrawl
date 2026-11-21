@@ -487,7 +487,6 @@ def build_parser() -> argparse.ArgumentParser:
     sf_cmd.add_argument("--valuable-sources", help="Comma-separated URLs or JSON array of {url, reason}")
     sf_cmd.add_argument("--missing-content", action="append", help="Missing topic(s) or JSON array of {topic, description}")
     sf_cmd.add_argument("--query-suggestions")
-    sf_cmd.add_argument("--confirm", action="store_true")
     sf_cmd.add_argument("--dry-run", action="store_true")
 
     for guarded in (scrape, resolve, scrape_serp):
@@ -817,42 +816,92 @@ def main(argv: list[str] | None = None) -> int:
                 )
             )
         elif args.command == "scrape-serp":
+            from .serp_guard import WEBSITE_NAME_PLATFORMS
+
+            platform_domains = frozenset(WEBSITE_NAME_PLATFORMS.values())
             pages = []
             unresolved_goto = []
-            if args.resolve_goto:
-                for wrapped in serp_wrapped:
-                    if not wrapped.get("target"):
-                        unresolved_goto.append({**wrapped, "error": "no breadcrumb host, domain, or "
-                                                "allowlisted website_name to resolve"})
+            ordered = split.get("ordered_targets") or (
+                [{"kind": "goto", **w} for w in serp_wrapped]
+                + [{"kind": "direct", "rank": None, "url": u} for u in serp_direct]
+            )
+            for target_item in ordered:
+                if target_item.get("kind") == "goto":
+                    wrapped = {k: v for k, v in target_item.items() if k != "kind"}
+                    if not args.resolve_goto:
+                        unresolved_goto.append(wrapped)
                         continue
+                    if not wrapped.get("target"):
+                        unresolved_goto.append({
+                            **wrapped,
+                            "error": "no breadcrumb host, domain, or allowlisted website_name to resolve",
+                        })
+                        continue
+                    wrapped_domain = (wrapped.get("domain") or "").lower().removeprefix("www.")
+                    allow_root = (
+                        wrapped.get("resolution_basis") == "breadcrumb"
+                        and not wrapped.get("path_hint")
+                        and wrapped_domain not in platform_domains
+                    )
                     try:
                         resolved = client.resolve_url(
-                            wrapped["target"], path_hint=wrapped.get("path_hint"), title=wrapped.get("title"),
-                            scrape=True, formats=split_csv(args.formats), country=args.country,
+                            wrapped["target"],
+                            path_hint=wrapped.get("path_hint"),
+                            title=wrapped.get("title"),
+                            scrape=True,
+                            formats=split_csv(args.formats),
+                            only_main_content=not args.full_page,
+                            max_age_ms=args.max_age_ms,
+                            country=args.country,
                             require_candidate=True,
+                            allow_homepage_shortcircuit=allow_root,
                         )
-                        pages.append({"rank": wrapped.get("rank"), "url": resolved.get("resolved_url"),
-                                      "goto_resolved": True, "resolution": {k: resolved.get(k) for k in
-                                      ("resolution_method", "base_url", "path_hint")},
-                                      "resolution_basis": wrapped.get("resolution_basis"),
-                                      "response": resolved.get("scraped") or resolved})
+                        res_meta = {
+                            k: resolved.get(k)
+                            for k in ("resolution_method", "base_url", "path_hint")
+                        }
+                        if resolved.get("map_error"):
+                            res_meta["map_error"] = resolved["map_error"]
+                        pages.append({
+                            "rank": wrapped.get("rank"),
+                            "url": resolved.get("resolved_url"),
+                            "goto_resolved": True,
+                            "resolution": res_meta,
+                            "resolution_basis": wrapped.get("resolution_basis"),
+                            "response": resolved.get("scraped") or resolved,
+                        })
                     except (ApiError, SafetyError) as exc:
-                        unresolved_goto.append({**wrapped, "error": str(exc)})
-            else:
-                unresolved_goto = list(serp_wrapped)
-            for target in serp_direct:
-                try:
-                    pages.append({"url": target, "response": client.scrape(
-                        target,
-                        formats=split_csv(args.formats),
-                        only_main_content=not args.full_page,
-                        max_age_ms=args.max_age_ms,
-                        country=args.country,
-                    )})
-                except (ApiError, SafetyError) as exc:
-                    pages.append({"url": target, "error": str(exc)})
-            emit_result({"success": any("response" in page for page in pages), "pages": pages,
-                         "needs_resolve": unresolved_goto})
+                        err_entry: dict[str, Any] = {**wrapped, "error": str(exc)}
+                        provider_err = getattr(exc, "response", None)
+                        if provider_err:
+                            err_entry["provider_error"] = provider_err
+                        unresolved_goto.append(err_entry)
+                else:
+                    target = target_item["url"]
+                    item_rank = target_item.get("rank")
+                    try:
+                        pages.append({
+                            "rank": item_rank,
+                            "url": target,
+                            "response": client.scrape(
+                                target,
+                                formats=split_csv(args.formats),
+                                only_main_content=not args.full_page,
+                                max_age_ms=args.max_age_ms,
+                                country=args.country,
+                            ),
+                        })
+                    except (ApiError, SafetyError) as exc:
+                        err_page: dict[str, Any] = {"rank": item_rank, "url": target, "error": str(exc)}
+                        provider_err = getattr(exc, "response", None)
+                        if provider_err:
+                            err_page["provider_error"] = provider_err
+                        pages.append(err_page)
+            emit_result({
+                "success": any("response" in page for page in pages),
+                "pages": pages,
+                "needs_resolve": unresolved_goto,
+            })
         elif args.command == "map":
             emit_result(
                 client.map_site(

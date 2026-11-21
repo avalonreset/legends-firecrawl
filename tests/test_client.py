@@ -323,3 +323,144 @@ def test_explicit_ledger_home_and_source_marker(monkeypatch,tmp_path):
     (tmp_path/'.legends-module').write_text('legends-firecrawl')
     monkeypatch.setattr(client,'__file__',str(tmp_path/'python'/'legends_firecrawl'/'client.py'))
     assert client._kit_root()==tmp_path
+
+
+def test_resolve_url_falls_back_to_search_on_map_api_error(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    instance = runtime(tmp_path, monkeypatch)
+    monkeypatch.setattr(client, "validate_public_url", lambda v, **kw: v)
+
+    def fake_map(*_a, **_kw):
+        raise client.ApiError("Firecrawl returned HTTP 403 for /v2/map", response={"error": "Site blocked"})
+
+    def fake_search(query, **_kw):
+        assert "site:reddit.com" in query
+        return {
+            "success": True,
+            "data": {
+                "web": [
+                    {"url": "https://www.reddit.com/r/Phoenixville/comments/xyz/mechanic_recs/"},
+                ]
+            },
+        }
+
+    monkeypatch.setattr(instance, "map_site", fake_map)
+    monkeypatch.setattr(instance, "search", fake_search)
+    monkeypatch.setattr(instance, "scrape", lambda url, **_kw: {"success": True, "url": url})
+
+    out = instance.resolve_url(
+        "reddit.com",
+        path_hint="r/Phoenixville",
+        title="Mechanic Recommendations?",
+        scrape=True,
+        require_candidate=True,
+    )
+    assert out["resolution_method"] == "search"
+    assert out["map_error"] == "Firecrawl returned HTTP 403 for /v2/map"
+    assert out["resolved_url"] == "https://www.reddit.com/r/Phoenixville/comments/xyz/mechanic_recs/"
+    assert out["scraped"]["url"] == out["resolved_url"]
+
+    # When map raises ApiError and search yields no candidates with require_candidate=True, include both contexts.
+    monkeypatch.setattr(instance, "search", lambda *_a, **_kw: {"success": True, "data": {"web": []}})
+    with pytest.raises(client.SafetyError) as exc_empty:
+        instance.resolve_url("reddit.com", path_hint="r/Phoenixville", title="Mechanic", require_candidate=True)
+    assert "HTTP 403" in str(exc_empty.value)
+    assert "search returned no matching candidates" in str(exc_empty.value)
+
+    # When both map and search raise ApiError, raise ApiError with both contexts and provider payloads.
+    def fake_search_err(*_a, **_kw):
+        raise client.ApiError("Firecrawl returned HTTP 500 for /v2/search", response={"error": "Upstream error"})
+
+    monkeypatch.setattr(instance, "search", fake_search_err)
+    with pytest.raises(client.ApiError) as exc_both:
+        instance.resolve_url("reddit.com", path_hint="r/Phoenixville", title="Mechanic", require_candidate=True)
+    assert "HTTP 403" in str(exc_both.value)
+    assert "HTTP 500" in str(exc_both.value)
+    assert exc_both.value.response == {"map": {"error": "Site blocked"}, "search": {"error": "Upstream error"}}
+
+
+def test_extract_credit_signal_reads_nested_data_metadata(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    ledger = tmp_path / "ledger.jsonl"
+    monkeypatch.setenv("LEGENDS_FIRECRAWL_LEDGER", str(ledger))
+    scrape_resp = {"success": True, "data": {"markdown": "# Hi", "metadata": {"creditsUsed": 1}}}
+    parse_resp = {"success": True, "data": {"markdown": "# Doc", "metadata": {"credits_used": 2}}}
+    assert client._extract_credit_signal(scrape_resp) == 1
+    assert client._extract_credit_signal(parse_resp) == 2
+    assert client._extract_credit_signal({"creditsUsed": True}) is None
+
+    client._append_ledger("/v2/scrape", scrape_resp, consumer="lfc", requested_scope={"pages": 1})
+    client._append_ledger("/v2/parse", parse_resp, consumer="lfc", requested_scope={"pages": 1})
+    summary = client.usage_summary(ledger)
+    assert summary["calls"] == 2
+    assert summary["reported_credits"] == 3.0
+    assert summary["unreported_calls"] == 0
+
+
+def test_usage_ledger_strips_query_strings_and_normalizes_dynamic_ids(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+):
+    ledger = tmp_path / "ledger.jsonl"
+    instance = runtime(tmp_path, monkeypatch)
+
+    class FakeResp:
+        def __init__(self, payload: dict):
+            self._data = json.dumps(payload).encode("utf-8")
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self, _n: int = -1) -> bytes:
+            return self._data
+
+    monkeypatch.setattr(
+        client,
+        "urlopen",
+        lambda *_a, **_k: FakeResp({"success": True, "data": {"metadata": {"creditsUsed": 1}}}),
+    )
+    instance.request("/v2/search/developer?query=secret+client+term&k=3&integration=cli", log_usage=True)
+    instance.request("/v2/search/research/papers?query=private+query&k=5&integration=cli", log_usage=True)
+    instance.request("/v2/scrape/scrape_abc123/interact", method="POST", payload={}, log_usage=True)
+    instance.request("/v2/monitor/mon_xyz789/run", method="POST", log_usage=True)
+
+    raw_text = ledger.read_text(encoding="utf-8")
+    assert "secret" not in raw_text
+    assert "private" not in raw_text
+    assert "?" not in raw_text
+    summary = client.usage_summary(ledger)
+    assert summary["routes"] == {
+        "/v2/search/developer": 1,
+        "/v2/search/research/papers": 1,
+        "/v2/scrape/{id}/interact": 1,
+        "/v2/monitor/{id}/run": 1,
+    }
+
+
+def test_urlopen_uses_certifi_ssl_context_and_falls_back(monkeypatch: pytest.MonkeyPatch):
+    import ssl
+    import sys
+    from urllib.request import HTTPSHandler, Request
+
+    seen_handlers = []
+
+    class FakeOpener:
+        def open(self, req, timeout=90):
+            return (req, timeout)
+
+    def fake_build_opener(*handlers):
+        seen_handlers.append(handlers)
+        return FakeOpener()
+
+    monkeypatch.setattr(client, "build_opener", fake_build_opener)
+
+    ctx = client._ssl_context()
+    if "certifi" in sys.modules or ctx is not None:
+        assert isinstance(ctx, ssl.SSLContext)
+        client.urlopen(Request("https://api.firecrawl.dev/v2/team/credit-usage"), timeout=10)
+        assert any(isinstance(h, HTTPSHandler) for h in seen_handlers[-1])
+
+    # Fallback when _ssl_context returns None (e.g. certifi unavailable).
+    monkeypatch.setattr(client, "_ssl_context", lambda: None)
+    client.urlopen(Request("https://api.firecrawl.dev/v2/team/credit-usage"), timeout=10)
+    assert not any(isinstance(h, HTTPSHandler) for h in seen_handlers[-1])

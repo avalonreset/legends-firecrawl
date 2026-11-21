@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlencode, urlparse
-from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
+from urllib.request import HTTPRedirectHandler, HTTPSHandler, ProxyHandler, Request, build_opener
 from uuid import uuid4
 
 
@@ -63,9 +63,24 @@ class _NoRedirect(HTTPRedirectHandler):
         return None
 
 
+def _ssl_context():
+    """Return a certifi-backed SSL context when certifi is importable."""
+    try:
+        import certifi
+        import ssl
+
+        return ssl.create_default_context(cafile=certifi.where())
+    except Exception:
+        return None
+
+
 def urlopen(request: Request, timeout: float = 90):
     """Open request with redirects and ambient proxy overrides disabled."""
-    return build_opener(ProxyHandler({}), _NoRedirect()).open(request, timeout=timeout)
+    handlers: list[Any] = [ProxyHandler({}), _NoRedirect()]
+    ctx = _ssl_context()
+    if ctx is not None:
+        handlers.insert(1, HTTPSHandler(context=ctx))
+    return build_opener(*handlers).open(request, timeout=timeout)
 
 
 class CredentialError(RuntimeError):
@@ -276,17 +291,32 @@ def ledger_path() -> Path:
 
 
 def _extract_credit_signal(response: dict[str, Any]) -> float | int | None:
-    for key in ("creditsUsed", "credits_used", "costCredits", "cost_credits"):
-        value = response.get(key)
-        if isinstance(value, (int, float)):
-            return value
-    metadata = response.get("metadata")
-    if isinstance(metadata, dict):
-        for key in ("creditsUsed", "credits_used"):
-            value = metadata.get(key)
-            if isinstance(value, (int, float)):
+    credit_keys = ("creditsUsed", "credits_used", "costCredits", "cost_credits")
+    containers: list[Any] = [response, response.get("metadata")]
+    data = response.get("data")
+    if isinstance(data, dict):
+        containers.append(data)
+        containers.append(data.get("metadata"))
+    for container in containers:
+        if not isinstance(container, dict):
+            continue
+        for key in credit_keys:
+            value = container.get(key)
+            if isinstance(value, (int, float)) and not isinstance(value, bool):
                 return value
     return None
+
+
+def _normalize_ledger_route(route: str) -> str:
+    route_clean = route.split("?", 1)[0]
+    route_clean = re.sub(r"^/v2/scrape/[^/]+/interact$", "/v2/scrape/{id}/interact", route_clean)
+    route_clean = re.sub(r"^/v2/monitor/[^/]+/run$", "/v2/monitor/{id}/run", route_clean)
+    route_clean = re.sub(
+        r"^/v2/search/research/papers/[^/]+(/similar)?$",
+        r"/v2/search/research/papers/{id}\1",
+        route_clean,
+    )
+    return route_clean
 
 
 def _append_ledger(
@@ -300,7 +330,7 @@ def _append_ledger(
     target.parent.mkdir(parents=True, exist_ok=True)
     row = {
         "ts": datetime.now(timezone.utc).isoformat(),
-        "route": route,
+        "route": _normalize_ledger_route(route),
         "consumer": consumer,
         "success": bool(response.get("success", True)),
         "credits_reported": _extract_credit_signal(response),
@@ -489,7 +519,12 @@ class FirecrawlClient:
         if result.get("success") is False:
             raise ApiError(f"Firecrawl rejected {normalized}", response=result)
         if log_usage:
-            _append_ledger(normalized, result, consumer=self.consumer, requested_scope=requested_scope)
+            _append_ledger(
+                _normalize_ledger_route(normalized),
+                result,
+                consumer=self.consumer,
+                requested_scope=requested_scope,
+            )
         return result
 
     def credit_usage(self) -> dict[str, Any]:
@@ -652,9 +687,10 @@ class FirecrawlClient:
         parsed = urlparse(url)
         path_lower = (parsed.path or "/").lower()
         score = 0
-        if path_lower not in {"", "/"}:
+        has_hint = bool(path_hint and path_hint.strip())
+        if has_hint and path_lower not in {"", "/"}:
             score += 5
-        if path_hint:
+        if has_hint and path_hint is not None:
             hint_clean = path_hint.lower().strip().rstrip(".\u2026")
             hint_slug = re.sub(r"[^a-z0-9]+", "-", hint_clean).strip("-")
             if hint_clean and hint_clean in path_lower:
@@ -682,16 +718,49 @@ class FirecrawlClient:
         limit: int = 25,
         scrape: bool = False,
         formats: list[str] | None = None,
+        only_main_content: bool = True,
+        max_age_ms: int = 86_400_000,
         country: str = "US",
         require_candidate: bool = False,
+        allow_homepage_shortcircuit: bool = False,
     ) -> dict[str, Any]:
         """Resolve an exact inner URL from a domain + breadcrumb slug/title hint and optionally scrape it."""
         if not 1 <= limit <= 200:
             raise SafetyError("resolve limit must be between 1 and 200")
         base_url, root_domain, effective_hint = self._parse_domain_or_breadcrumb(domain_or_url, path_hint)
+        if allow_homepage_shortcircuit and effective_hint is None:
+            result: dict[str, Any] = {
+                "success": True,
+                "domain": root_domain,
+                "base_url": base_url,
+                "resolved_url": base_url,
+                "resolution_method": "breadcrumb_root",
+                "path_hint": None,
+                "title": title,
+                "candidates": [base_url],
+            }
+            if scrape:
+                result["scraped"] = self.scrape(
+                    base_url,
+                    formats=formats or ["markdown"],
+                    only_main_content=only_main_content,
+                    max_age_ms=max_age_ms,
+                    country=country,
+                )
+            return result
+
         search_term = effective_hint or title or keyword
-        map_resp = self.map_site(base_url, limit=limit, search=search_term)
-        candidates = self._extract_candidate_urls(map_resp, root_domain)
+        map_resp: dict[str, Any] | None = None
+        map_error: str | None = None
+        map_error_response: Any = None
+        try:
+            map_resp = self.map_site(base_url, limit=limit, search=search_term)
+            candidates = self._extract_candidate_urls(map_resp, root_domain)
+        except ApiError as exc:
+            map_resp = None
+            map_error = str(exc)
+            map_error_response = exc.response
+            candidates = []
         method_used = "map"
 
         scored = sorted(
@@ -705,6 +774,8 @@ class FirecrawlClient:
             else 0
         )
 
+        search_error: str | None = None
+        search_error_response: Any = None
         if (not scored or (search_term and best_score < 15)) and (title or effective_hint or keyword):
             query_parts = [f"site:{root_domain}"]
             if title:
@@ -713,8 +784,18 @@ class FirecrawlClient:
                 query_parts.append(effective_hint.replace("-", " "))
             elif keyword:
                 query_parts.append(keyword)
-            search_resp = self.search(" ".join(query_parts), limit=min(5, limit), country=country, scrape_results=False)
-            search_candidates = self._extract_candidate_urls(search_resp, root_domain)
+            try:
+                search_resp = self.search(
+                    " ".join(query_parts),
+                    limit=min(5, limit),
+                    country=country,
+                    scrape_results=False,
+                )
+                search_candidates = self._extract_candidate_urls(search_resp, root_domain)
+            except ApiError as exc:
+                search_candidates = []
+                search_error = str(exc)
+                search_error_response = exc.response
             for sc in search_candidates:
                 if sc not in candidates:
                     candidates.append(sc)
@@ -726,13 +807,31 @@ class FirecrawlClient:
                 )
                 method_used = "map+search" if map_resp else "search"
 
+        if not scored and map_error and search_error:
+            raise ApiError(
+                f"Both /v2/map and /v2/search failed for {root_domain}: "
+                f"map=({map_error}); search=({search_error})",
+                response={"map": map_error_response, "search": search_error_response},
+            )
         if require_candidate and not scored:
+            detail_parts: list[str] = []
+            if map_error:
+                detail_parts.append(f"map failed: {map_error}")
+            if search_error:
+                detail_parts.append(f"search failed: {search_error}")
+            elif title or effective_hint or keyword:
+                detail_parts.append("search returned no matching candidates")
+            detail = f" ({'; '.join(detail_parts)})" if detail_parts else ""
             raise SafetyError(
                 f"Could not resolve an inner URL on {root_domain}"
-                f"{f' for hint {effective_hint!r}' if effective_hint else ''}; "
-                "refusing to substitute the site homepage.")
+                f"{f' for hint {effective_hint!r}' if effective_hint else ''}{detail}; "
+                "refusing to substitute the site homepage."
+            )
+        if not scored and map_error and not (title or effective_hint or keyword):
+            raise ApiError(map_error, response=map_error_response)
+
         resolved_url = scored[0] if scored else base_url
-        result: dict[str, Any] = {
+        result = {
             "success": True,
             "domain": root_domain,
             "base_url": base_url,
@@ -742,8 +841,18 @@ class FirecrawlClient:
             "title": title,
             "candidates": scored[:10],
         }
+        if map_error:
+            result["map_error"] = map_error
+        if search_error:
+            result["search_error"] = search_error
         if scrape:
-            result["scraped"] = self.scrape(resolved_url, formats=formats or ["markdown"], country=country)
+            result["scraped"] = self.scrape(
+                resolved_url,
+                formats=formats or ["markdown"],
+                only_main_content=only_main_content,
+                max_age_ms=max_age_ms,
+                country=country,
+            )
         return result
 
     @staticmethod
@@ -825,6 +934,62 @@ class FirecrawlClient:
             raise SafetyError("crawl job id format is invalid")
         return self.request(f"/v2/crawl/{value}")
 
+    @staticmethod
+    def _canonical_url_from_paper_id(prefix: str, raw_id: str) -> str | None:
+        scheme = (prefix or "").strip().lower()
+        clean_id = (raw_id or "").strip()
+        if clean_id.lower().startswith(f"{scheme}:"):
+            clean_id = clean_id.split(":", 1)[1].strip()
+        if (
+            not clean_id
+            or ".." in clean_id
+            or "@" in clean_id
+            or "://" in clean_id
+            or any(ch.isspace() or ord(ch) < 32 for ch in clean_id)
+        ):
+            return None
+        if scheme == "arxiv":
+            return f"https://arxiv.org/abs/{clean_id}"
+        if scheme in {"pubmed", "pmid"}:
+            return f"https://pubmed.ncbi.nlm.nih.gov/{clean_id}/"
+        if scheme == "biorxiv":
+            return f"https://www.biorxiv.org/content/{clean_id}"
+        if scheme == "medrxiv":
+            return f"https://www.medrxiv.org/content/{clean_id}"
+        if scheme == "doi":
+            return f"https://doi.org/{clean_id}"
+        return None
+
+    @classmethod
+    def _derive_result_item_url(cls, item: dict[str, Any]) -> str | None:
+        direct = item.get("url") or item.get("readmeUrl") or item.get("pdfUrl")
+        if isinstance(direct, str) and direct.strip().startswith(("http://", "https://")):
+            return direct.strip()
+        primary_id = item.get("primaryId")
+        if isinstance(primary_id, str) and ":" in primary_id:
+            prefix, raw_id = primary_id.split(":", 1)
+            derived = cls._canonical_url_from_paper_id(prefix, raw_id)
+            if derived:
+                return derived
+        ids = item.get("ids")
+        if isinstance(ids, dict):
+            lowered_ids = {str(k).strip().lower(): v for k, v in ids.items()}
+            for key in ("arxiv", "pubmed", "pmid", "biorxiv", "medrxiv", "doi"):
+                val = lowered_ids.get(key)
+                raw_val: str | None = None
+                if isinstance(val, str) and val.strip():
+                    raw_val = val.strip()
+                elif isinstance(val, (list, tuple)):
+                    for elem in val:
+                        if isinstance(elem, str) and elem.strip():
+                            raw_val = elem.strip()
+                            break
+                if raw_val:
+                    derived = cls._canonical_url_from_paper_id(key, raw_val)
+                    if derived:
+                        return derived
+        return None
+
     def _scrape_result_urls(
         self,
         results: list[Any],
@@ -837,9 +1002,15 @@ class FirecrawlClient:
         for item in results:
             if not isinstance(item, dict):
                 continue
-            cand = item.get("url") or item.get("readmeUrl") or item.get("pdfUrl")
-            if isinstance(cand, str) and cand.startswith(("http://", "https://")) and cand not in urls:
-                urls.append(cand)
+            cand = self._derive_result_item_url(item)
+            if not cand:
+                continue
+            try:
+                validated = validate_public_url(cand, resolve_dns=False)
+            except SafetyError:
+                continue
+            if validated not in urls:
+                urls.append(validated)
             if len(urls) >= limit:
                 break
         scraped: list[dict[str, Any]] = []

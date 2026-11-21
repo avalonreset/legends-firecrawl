@@ -180,18 +180,27 @@ def serp_targets(envelope: dict[str, Any], *, limit: int = 10) -> dict[str, list
     Google now wraps most organic links in google.com/goto, which Firecrawl refuses by design.
     Wrapped items are returned under `needs_resolve` with the breadcrumb / domain / path hint /
     title that `lfc resolve` (or `scrape-serp --resolve-goto`) needs; they are never scraped as-is.
+    Also returns `direct_items` (rank/url/title/domain) and `ordered_targets` (combined in SERP order).
     """
     if type(limit) is not int or not 1 <= limit <= MAX_SERP_URLS:
         raise SafetyError(f"limit must be between 1 and {MAX_SERP_URLS}")
     urls: list[str] = []
+    direct_items: list[dict[str, Any]] = []
     needs: list[dict[str, Any]] = []
+    ordered_targets: list[dict[str, Any]] = []
+    reached_limit = False
     for task in envelope.get("tasks") or []:
+        if reached_limit:
+            break
         for res_obj in (task.get("result") or []) if isinstance(task, dict) else []:
+            if reached_limit:
+                break
             for item in (res_obj.get("items") or []) if isinstance(res_obj, dict) else []:
                 if not isinstance(item, dict) or item.get("type") != "organic":
                     continue
                 if len(urls) + len(needs) >= limit:
-                    return {"urls": urls, "needs_resolve": needs}
+                    reached_limit = True
+                    break
                 url = item.get("resolved_url") or item.get("url")
                 if _is_google_wrapper(url):
                     domain = item.get("resolved_domain") or item.get("domain")
@@ -212,9 +221,33 @@ def serp_targets(envelope: dict[str, Any], *, limit: int = 10) -> dict[str, list
                             and domain.lower().removeprefix("www.") == via_name["domain"]:
                         entry["path_hint"] = via_name["path_hint"]  # domain wins; name only enriches
                     needs.append(entry)
+                    ordered_targets.append({"kind": "goto", **entry})
                 elif isinstance(url, str) and url.startswith(("http://", "https://")) and url not in urls:
+                    direct_domain = item.get("resolved_domain") or item.get("domain")
+                    if not direct_domain or (
+                        isinstance(direct_domain, str) and direct_domain.lower().removeprefix("www.") == "google.com"
+                    ):
+                        direct_domain = (urlparse(url).hostname or "").lower().rstrip(".") or None
+                    direct_entry: dict[str, Any] = {
+                        "rank": item.get("rank_group"),
+                        "url": url,
+                        "title": item.get("title"),
+                        "domain": direct_domain,
+                    }
                     urls.append(url)
-    return {"urls": urls, "needs_resolve": needs}
+                    direct_items.append(direct_entry)
+                    ordered_targets.append({"kind": "direct", **direct_entry})
+    if ordered_targets and all(isinstance(t.get("rank"), int) for t in ordered_targets):
+        ordered_targets.sort(key=lambda t: t["rank"])
+        urls = [t["url"] for t in ordered_targets if t["kind"] == "direct"]
+        direct_items = [{k: v for k, v in t.items() if k != "kind"} for t in ordered_targets if t["kind"] == "direct"]
+        needs = [{k: v for k, v in t.items() if k != "kind"} for t in ordered_targets if t["kind"] == "goto"]
+    return {
+        "urls": urls,
+        "direct_items": direct_items,
+        "needs_resolve": needs,
+        "ordered_targets": ordered_targets,
+    }
 
 
 def serp_urls(envelope: dict[str, Any], *, limit: int = 10) -> list[str]:
