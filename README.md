@@ -62,7 +62,7 @@ Alexandria queries default to preview. `--preview` requests that explicitly; `--
 
 ## Capture first, inspect afterward
 
-Scrape, map, search, crawl submission and crawl-status save the complete returned JSON to `var/captures/firecrawl/` and a Markdown reference in `vault/captures/firecrawl/`. Alexandria also preserves its full response and vault card. CLI web results retain all original fields and add `_capture` paths. `--no-save` explicitly opts out; `LEGENDS_FIRECRAWL_CAPTURE_ROOT` selects another workspace. Python client calls alone do not automatically save.
+Live `lfc` web operations (`scrape`, `scrape-serp`, `map`, `search`, `resolve`, `developer`, `research`, `parse`, `agent`, `agent-status`, `interact`, `monitor`, `search-feedback`, `crawl`, and `crawl-status`) save the complete returned JSON to `var/captures/firecrawl/` and a Markdown reference in `vault/captures/firecrawl/`. Alexandria also preserves its full response and vault card. CLI web results retain all original fields and add `_capture` paths. `--no-save` explicitly opts out; `LEGENDS_FIRECRAWL_CAPTURE_ROOT` selects another workspace. Python client calls alone do not automatically save.
 
 Default storage is `~/.legends-firecrawl/research`, outside replaceable module installations. Existing installation-local captures are not moved automatically. Set `LEGENDS_WORKSPACE_ID` or core `--workspace` for client identity. Optional `--receipt` prints only saved paths; full output remains the default.
 

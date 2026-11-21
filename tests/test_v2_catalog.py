@@ -542,3 +542,64 @@ def test_search_feedback_does_not_register_dead_confirm_flag():
     res = run_cli("search-feedback", "srch_123456", "--rating", "good", "--confirm")
     assert res.returncode == 2
     assert "unrecognized arguments: --confirm" in res.stderr
+
+
+def test_interact_monitor_feedback_multipart_and_inspect_scrape_hardening(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+):
+    # Whitespace-only prompt/code and conflicting --stop + --prompt fail closed.
+    with pytest.raises(client.SafetyError):
+        client.FirecrawlClient.interact_preview("scrape_123456", prompt="   ")
+    with pytest.raises(client.SafetyError):
+        client.FirecrawlClient.interact_preview("scrape_123456", code="   ")
+    with pytest.raises(client.SafetyError, match="cannot be combined"):
+        client.FirecrawlClient.interact_preview("scrape_123456", prompt="click", stop=True)
+
+    # Whitespace-only monitor schedule, queries, or update fields fail closed.
+    with pytest.raises(client.SafetyError, match="--cron or --schedule"):
+        client.FirecrawlClient.monitor_preview("create", name="Watch", cron="   ", page="https://example.com")
+    with pytest.raises(client.SafetyError, match="--page"):
+        client.FirecrawlClient.monitor_preview("create", name="Watch", schedule_text="daily", queries=["   "], goal="g")
+    with pytest.raises(client.SafetyError, match="at least one field"):
+        client.FirecrawlClient.monitor_preview("update", monitor_id="mon_123", name="   ")
+
+    # Malformed JSON entries in --valuable-sources / --missing-content fail closed instead of silent drop.
+    with pytest.raises(client.SafetyError, match="--valuable-sources"):
+        cli._parse_valuable_sources('[{"wrong": 1}]')
+    with pytest.raises(client.SafetyError, match="--missing-content"):
+        cli._parse_missing_content(['[{"wrong": 1}]'])
+
+    # Multipart encoder rotates boundary if payload contains initial UUID hex.
+    seq = iter(["deadbeef" * 4, "cafebabe" * 4])
+
+    class FakeUUID:
+        def __init__(self, h: str):
+            self.hex = h
+
+    monkeypatch.setattr(client, "uuid4", lambda: FakeUUID(next(seq)))
+    body, ct = client._encode_multipart(
+        "file",
+        'tricky"name\r\n.html',
+        "text/html",
+        b"contains legendsfc" + (b"deadbeef" * 4),
+        {"options": "{}"},
+    )
+    assert "cafebabe" in ct and b"legendsfccafebabe" in body
+    assert b'filename="tricky_name.html"' in body
+
+    # research --mode inspect --scrape derives and scrapes single-paper response.
+    instance = runtime(tmp_path, monkeypatch)
+    monkeypatch.setattr(client, "validate_public_url", lambda v, **kw: v)
+    monkeypatch.setattr(
+        instance,
+        "request",
+        lambda path, **kw: (
+            {"success": True, "paperId": "p1", "primaryId": "arxiv:2505.12065"}
+            if path.startswith("/v2/search/research/papers/")
+            else {"success": True, "data": {"markdown": "# Full Paper"}}
+        ),
+    )
+    inspected = instance.research_search(
+        mode="inspect", paper_id="arxiv:2505.12065", scrape=True, confirm=True
+    )
+    assert inspected["scraped_results"][0]["url"] == "https://arxiv.org/abs/2505.12065"

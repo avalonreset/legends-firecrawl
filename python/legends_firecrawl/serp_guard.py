@@ -87,12 +87,25 @@ def _integrities(envelope: Any) -> list[dict[str, Any]]:
         return found
     if isinstance(envelope.get("status"), str) and "organic_count" in envelope:
         return [envelope]  # a bare serp_integrity block
+    raw_blocks: list[dict[str, Any] | None] = []
     for task in envelope.get("tasks") or []:
         if not isinstance(task, dict):
             continue
         for res_obj in task.get("result") or []:
-            if isinstance(res_obj, dict) and isinstance(res_obj.get("serp_integrity"), dict):
-                found.append(res_obj["serp_integrity"])
+            if not isinstance(res_obj, dict):
+                continue
+            si = res_obj.get("serp_integrity")
+            raw_blocks.append(si if isinstance(si, dict) else None)
+    if not raw_blocks or all(b is None for b in raw_blocks):
+        return []
+    for block in raw_blocks:
+        if block is None:
+            found.append({
+                "status": "unassessed",
+                "reasons": ["SERP result block is missing serp_integrity"],
+            })
+        else:
+            found.append(block)
     return found
 
 
@@ -119,8 +132,10 @@ def serp_verdict(envelope: Any) -> dict[str, Any]:
                 "warnings": ["SERP envelope has no serp_integrity block; ranking validity is unknown "
                              "(fetch it with legends-dataforseo >= 0.1.12)."]}
     statuses = [str(i.get("status") or "unassessed") for i in integrities]
-    status = next((s for s in ("unverified_decoy", "suspect_poisoned", "suspect_decoy") if s in statuses),
-                  statuses[0])
+    status = next(
+        (s for s in ("unverified_decoy", "suspect_poisoned", "suspect_decoy") if s in statuses),
+        next((s for s in statuses if s != "clean"), statuses[0]),
+    )
     unresolved = any(i.get("unresolved") is True for i in integrities)
     unprotected = any(i.get("integrity") == "unprotected" for i in integrities)
     verified = all(_block_verified(i) for i in integrities)
@@ -150,9 +165,13 @@ def serp_verdict(envelope: Any) -> dict[str, Any]:
 
 
 def load_serp_envelope(path: str | Path) -> dict[str, Any]:
-    from .client import _safe_local_path
+    from .client import MAX_RESPONSE_BYTES, _safe_local_path
 
     target = _safe_local_path(path)
+    if not target.exists() or not target.is_file():
+        raise SafetyError(f"Cannot read SERP envelope {target.name}: not a regular file")
+    if target.stat().st_size > MAX_RESPONSE_BYTES:
+        raise SafetyError(f"SERP envelope {target.name} exceeds maximum size limit")
     try:
         data = json.loads(target.read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
@@ -160,18 +179,33 @@ def load_serp_envelope(path: str | Path) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise SafetyError("SERP envelope must be a JSON object")
     # legends-dataforseo evidence exports and CLI --output files may wrap the raw envelope.
-    for key in ("response", "envelope"):
-        if isinstance(data.get(key), dict) and "tasks" in data[key]:
-            return data[key]
-    return data
+    cur = data
+    for _ in range(2):
+        unwrapped = next(
+            (
+                cur[key]
+                for key in ("response", "envelope")
+                if isinstance(cur.get(key), dict)
+                and any(k in cur[key] for k in ("tasks", "response", "envelope"))
+            ),
+            None,
+        )
+        if unwrapped is None:
+            break
+        cur = unwrapped
+    return cur
 
 
 def _is_google_wrapper(url: Any) -> bool:
     if not isinstance(url, str):
         return False
-    parsed = urlparse(url.strip())
+    try:
+        parsed = urlparse(url.strip())
+    except ValueError:
+        return False
     host = (parsed.hostname or "").lower().rstrip(".")
-    return host in {"google.com", "www.google.com"} and parsed.path.lower() in {"/goto", "/url"}
+    path = parsed.path.lower().rstrip("/")
+    return host in {"google.com", "www.google.com"} and path in {"/goto", "/url"}
 
 
 def serp_targets(envelope: dict[str, Any], *, limit: int = 10) -> dict[str, list[Any]]:
@@ -195,19 +229,32 @@ def serp_targets(envelope: dict[str, Any], *, limit: int = 10) -> dict[str, list
         for res_obj in (task.get("result") or []) if isinstance(task, dict) else []:
             if reached_limit:
                 break
-            for item in (res_obj.get("items") or []) if isinstance(res_obj, dict) else []:
-                if not isinstance(item, dict) or item.get("type") != "organic":
-                    continue
+            raw_items = (res_obj.get("items") or []) if isinstance(res_obj, dict) else []
+            organic_items = [it for it in raw_items if isinstance(it, dict) and it.get("type") == "organic"]
+            if organic_items and all(type(it.get("rank_group")) is int for it in organic_items):
+                organic_items.sort(key=lambda it: it["rank_group"])
+            for item in organic_items:
                 if len(urls) + len(needs) >= limit:
                     reached_limit = True
                     break
-                url = item.get("resolved_url") or item.get("url")
+                res_u = item.get("resolved_url")
+                raw_u = item.get("url")
+                url = raw_u if (_is_google_wrapper(res_u) and isinstance(raw_u, str) and not _is_google_wrapper(raw_u)) else (res_u or raw_u)
                 if _is_google_wrapper(url):
-                    domain = item.get("resolved_domain") or item.get("domain")
-                    if isinstance(domain, str) and domain.lower().removeprefix("www.") == "google.com":
+                    raw_dom = item.get("resolved_domain") or item.get("domain")
+                    domain = raw_dom.strip().rstrip(".") if isinstance(raw_dom, str) and raw_dom.strip() else None
+                    if domain and (domain.lower().removeprefix("www.") == "google.com" or domain.lower().endswith(".google.com")):
                         domain = None
-                    breadcrumb = item.get("breadcrumb")
-                    target = breadcrumb if isinstance(breadcrumb, str) and breadcrumb.startswith(("http://", "https://")) else domain
+                    raw_bc = item.get("breadcrumb")
+                    breadcrumb = raw_bc.strip() if isinstance(raw_bc, str) and raw_bc.strip() else None
+                    bc_is_url = False
+                    if breadcrumb and breadcrumb.startswith(("http://", "https://")):
+                        try:
+                            bc_host = (urlparse(breadcrumb).hostname or "").lower().rstrip(".")
+                        except ValueError:
+                            bc_host = ""
+                        bc_is_url = bool(bc_host) and bc_host.removeprefix("www.") != "google.com" and not bc_host.endswith(".google.com")
+                    target = breadcrumb if bc_is_url else domain
                     entry: dict[str, Any] = {"rank": item.get("rank_group"), "target": target, "domain": domain,
                                              "path_hint": _clean_path_hint(item.get("breadcrumb_path_hint")),
                                              "title": item.get("title"), "website_name": item.get("website_name"),
@@ -217,27 +264,33 @@ def serp_targets(envelope: dict[str, Any], *, limit: int = 10) -> dict[str, list
                         entry.update(target=via_name["target"], domain=via_name["domain"],
                                      path_hint=via_name["path_hint"] or entry["path_hint"],
                                      resolution_basis="website_name")
-                    elif via_name and entry["path_hint"] is None and isinstance(domain, str) \
-                            and domain.lower().removeprefix("www.") == via_name["domain"]:
-                        entry["path_hint"] = via_name["path_hint"]  # domain wins; name only enriches
+                    elif via_name and entry["path_hint"] is None and isinstance(domain, str):
+                        dom_clean = domain.lower().removeprefix("www.")
+                        if dom_clean == via_name["domain"] or dom_clean.endswith("." + via_name["domain"]):
+                            entry["path_hint"] = via_name["path_hint"]  # domain wins; name only enriches
                     needs.append(entry)
                     ordered_targets.append({"kind": "goto", **entry})
-                elif isinstance(url, str) and url.startswith(("http://", "https://")) and url not in urls:
-                    direct_domain = item.get("resolved_domain") or item.get("domain")
-                    if not direct_domain or (
-                        isinstance(direct_domain, str) and direct_domain.lower().removeprefix("www.") == "google.com"
-                    ):
-                        direct_domain = (urlparse(url).hostname or "").lower().rstrip(".") or None
+                elif isinstance(url, str) and url.strip().startswith(("http://", "https://")):
+                    clean_url = url.strip()
+                    if clean_url in urls:
+                        continue
+                    raw_direct_dom = item.get("resolved_domain") or item.get("domain")
+                    direct_domain = raw_direct_dom.strip().rstrip(".") if isinstance(raw_direct_dom, str) and raw_direct_dom.strip() else None
+                    if not direct_domain or direct_domain.lower().removeprefix("www.") == "google.com" or direct_domain.lower().endswith(".google.com"):
+                        try:
+                            direct_domain = (urlparse(clean_url).hostname or "").lower().rstrip(".") or None
+                        except ValueError:
+                            direct_domain = None
                     direct_entry: dict[str, Any] = {
                         "rank": item.get("rank_group"),
-                        "url": url,
+                        "url": clean_url,
                         "title": item.get("title"),
                         "domain": direct_domain,
                     }
-                    urls.append(url)
+                    urls.append(clean_url)
                     direct_items.append(direct_entry)
                     ordered_targets.append({"kind": "direct", **direct_entry})
-    if ordered_targets and all(isinstance(t.get("rank"), int) for t in ordered_targets):
+    if ordered_targets and all(type(t.get("rank")) is int for t in ordered_targets):
         ordered_targets.sort(key=lambda t: t["rank"])
         urls = [t["url"] for t in ordered_targets if t["kind"] == "direct"]
         direct_items = [{k: v for k, v in t.items() if k != "kind"} for t in ordered_targets if t["kind"] == "direct"]

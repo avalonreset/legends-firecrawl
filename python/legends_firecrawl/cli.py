@@ -17,7 +17,10 @@ from .client import (
     ApiError,
     CredentialError,
     FirecrawlClient,
+    SCRAPE_ALLOWED_FORMATS,
     SafetyError,
+    _clean_api_key,
+    _safe_local_path,
     _windows_user_environment,
     credential_status,
     estimate,
@@ -172,6 +175,8 @@ def _parse_valuable_sources(raw: str | None) -> list[dict[str, str]] | None:
         except json.JSONDecodeError:
             raise SafetyError("--valuable-sources must be valid JSON or a comma-separated list of URLs") from None
         entries = loaded if isinstance(loaded, list) else [loaded]
+        if not entries:
+            return None
         out: list[dict[str, str]] = []
         for entry in entries:
             if isinstance(entry, str) and entry.strip():
@@ -181,6 +186,8 @@ def _parse_valuable_sources(raw: str | None) -> list[dict[str, str]] | None:
                 if isinstance(entry.get("reason"), str) and entry["reason"].strip():
                     row["reason"] = entry["reason"].strip()
                 out.append(row)
+            else:
+                raise SafetyError("--valuable-sources JSON entries must be non-empty URL strings or {url, reason} objects")
         return out or None
     return [{"url": item} for item in split_csv(text)] or None
 
@@ -207,6 +214,8 @@ def _parse_missing_content(values: list[str] | None) -> list[dict[str, str]] | N
                     if isinstance(entry.get("description"), str) and entry["description"].strip():
                         row["description"] = entry["description"].strip()
                     out.append(row)
+                else:
+                    raise SafetyError("--missing-content JSON entries must be non-empty topic strings or {topic, description} objects")
             continue
         for part in split_csv(text):
             if ":" in part:
@@ -216,6 +225,8 @@ def _parse_missing_content(values: list[str] | None) -> list[dict[str, str]] | N
                     if desc.strip():
                         row["description"] = desc.strip()
                     out.append(row)
+                else:
+                    raise SafetyError("--missing-content entry requires a non-empty topic before ':'")
             else:
                 out.append({"topic": part})
     return out[:20] or None
@@ -302,6 +313,7 @@ def build_parser() -> argparse.ArgumentParser:
     scrape_serp.add_argument("--country", default="US")
     scrape_serp.add_argument("--full-page", action="store_true", help="include navigation and footer content")
     scrape_serp.add_argument("--confirm", action="store_true", help="required: scrapes one page per URL")
+    scrape_serp.add_argument("--dry-run", action="store_true", help="preview SERP targets and integrity verdict without HTTP calls")
     scrape_serp.add_argument("--resolve-goto", action="store_true",
                              help="resolve google.com/goto-wrapped results via map/search before scraping (extra credits)")
 
@@ -327,6 +339,9 @@ def build_parser() -> argparse.ArgumentParser:
     resolve.add_argument("--limit", type=int, default=25)
     resolve.add_argument("--scrape", action="store_true", help="Also scrape the resolved inner URL")
     resolve.add_argument("--formats", default="markdown")
+    resolve.add_argument("--max-age-ms", type=int, default=86_400_000)
+    resolve.add_argument("--full-page", action="store_true", help="include navigation and footer content")
+    resolve.add_argument("--require-candidate", action="store_true", help="refuse to substitute site homepage when no inner candidate matches")
     resolve.add_argument("--country", default="US")
 
     for name in ("crawl-preview", "crawl"):
@@ -532,6 +547,11 @@ def lax_main(argv: list[str] | None = None) -> int:
         script_path = KIT_ROOT / "alexandria-src" / "cli.js"
     else:
         script_path = pkg_dir / "alexandria-src" / "cli.js"
+    try:
+        script_path = _safe_local_path(script_path)
+    except SafetyError as exc:
+        emit({"status": "error", "message": str(exc)})
+        return 2
     if not script_path.is_file():
         emit({"status": "error", "message": f"Alexandria CLI not found at {script_path}. Run from a legends-firecrawl checkout or installed package."})
         return 2
@@ -540,30 +560,34 @@ def lax_main(argv: list[str] | None = None) -> int:
         emit({"status": "error", "message": "Node.js executable ('node') not found on PATH."})
         return 2
     env = os.environ.copy()
-    if not env.get("FIRECRAWL_API_KEY") and env.get("FIRECRAWL_API_KEY_FILE"):
-        try:
+    try:
+        if env.get("FIRECRAWL_API_KEY") and env["FIRECRAWL_API_KEY"].strip():
+            env["FIRECRAWL_API_KEY"] = _clean_api_key(env["FIRECRAWL_API_KEY"], "FIRECRAWL_API_KEY")
+        elif env.get("FIRECRAWL_API_KEY_FILE"):
             env["FIRECRAWL_API_KEY"] = read_api_key_file(env["FIRECRAWL_API_KEY_FILE"])
-        except (CredentialError, SafetyError) as exc:
-            emit({"status": "error", "message": str(exc)})
-            return 2
-    if not env.get("FIRECRAWL_API_KEY") and env.get("FIRECRAWL_DISABLE_USER_ENV") != "1":
-        user_key = _windows_user_environment("FIRECRAWL_API_KEY")
-        if user_key:
-            env["FIRECRAWL_API_KEY"] = user_key
+        elif env.get("FIRECRAWL_DISABLE_USER_ENV") != "1":
+            user_key = _windows_user_environment("FIRECRAWL_API_KEY")
+            if user_key and user_key.strip():
+                env["FIRECRAWL_API_KEY"] = _clean_api_key(user_key, "FIRECRAWL_API_KEY")
+    except (CredentialError, SafetyError) as exc:
+        emit({"status": "error", "message": str(exc)})
+        return 2
     completed = subprocess.run([node_exe, str(script_path), *command_line], env=env, check=False)
     return completed.returncode
 
 
 def main(argv: list[str] | None = None) -> int:
-    command_line = argv if argv is not None else sys.argv[1:]
+    command_line = list(argv) if argv is not None else sys.argv[1:]
     if command_line and command_line[0] == 'evidence':
         from .evidence import main as evidence_main
         return evidence_main(command_line[1:])
     if command_line and command_line[0] == 'alexandria':
         return lax_main(command_line[1:])
-    args = build_parser().parse_args(argv)
-    if getattr(args, "allow_custom_api_url", False):
-        os.environ["FIRECRAWL_ALLOW_CUSTOM_API_URL"] = "1"
+    if command_line and command_line[0] == 'vendor':
+        args = argparse.Namespace(command="vendor", args=command_line[1:], allow_custom_api_url=False)
+    else:
+        args = build_parser().parse_args(argv)
+    allow_custom_url = bool(getattr(args, "allow_custom_api_url", False))
     try:
         if args.command == "evidence":
             from .evidence import main as evidence_main
@@ -592,11 +616,12 @@ def main(argv: list[str] | None = None) -> int:
             emit(usage_summary())
             return 0
         if args.command == "vendor":
-            lowered = {
-                str(value).strip().lower().lstrip("-")
-                for value in args.args
-                if str(value).strip()
-            }
+            lowered: set[str] = set()
+            for value in args.args:
+                cleaned_val = str(value).strip().lower().lstrip("-")
+                if cleaned_val:
+                    lowered.add(cleaned_val)
+                    lowered.add(cleaned_val.split("=", 1)[0])
             if lowered & BLOCKED_VENDOR_COMMANDS:
                 raise SafetyError("vendor integration installers and credential/config mutators are blocked; use the house setup scripts")
             for raw_arg in args.args:
@@ -768,10 +793,32 @@ def main(argv: list[str] | None = None) -> int:
             for warning in serp_provenance["warnings"]:
                 print("lfc WARNING: " + warning, file=sys.stderr)
         if args.command == "scrape-serp":
+            selected_serp_formats = split_csv(args.formats) or ["markdown"]
+            unknown_serp_formats = [item for item in selected_serp_formats if item not in SCRAPE_ALLOWED_FORMATS]
+            if unknown_serp_formats:
+                raise SafetyError(f"Unsupported default-safe scrape formats: {', '.join(unknown_serp_formats)}")
+            if not 0 <= args.max_age_ms <= 604_800_000:
+                raise SafetyError("max_age_ms must be between 0 and seven days")
             split = serp_targets(serp_envelope, limit=args.limit)
             serp_direct, serp_wrapped = split["urls"], split["needs_resolve"]
             if not serp_direct and not serp_wrapped:
                 raise SafetyError("SERP envelope contains no organic URLs to scrape")
+            planned = len(serp_direct) + (len(serp_wrapped) if args.resolve_goto else 0)
+            if args.dry_run:
+                emit({
+                    "operation": "scrape-serp",
+                    "dry_run": True,
+                    "requires_confirm": True,
+                    "limit": args.limit,
+                    "resolve_goto": args.resolve_goto,
+                    "formats": selected_serp_formats,
+                    "planned_pages": planned,
+                    "direct_urls": serp_direct,
+                    "needs_resolve": serp_wrapped,
+                    "serp_provenance": serp_provenance,
+                    "note": "No HTTP request was made. Review SERP targets and re-run scrape-serp with --confirm.",
+                })
+                return 0
             if serp_wrapped and not args.resolve_goto:
                 print(f"lfc WARNING: {len(serp_wrapped)} of {len(serp_direct) + len(serp_wrapped)} organic results are "
                       "google.com/goto-wrapped and will NOT be scraped; rerun with --resolve-goto or use "
@@ -779,7 +826,6 @@ def main(argv: list[str] | None = None) -> int:
                 if not serp_direct:
                     raise SafetyError("All organic results are google.com/goto-wrapped; rerun scrape-serp with "
                                       "--resolve-goto (map/search credits per result) or use lfc resolve per item")
-            planned = len(serp_direct) + (len(serp_wrapped) if args.resolve_goto else 0)
             if not args.confirm:
                 raise SafetyError(f"scrape-serp scrapes {planned} pages and requires --confirm")
 
@@ -802,7 +848,7 @@ def main(argv: list[str] | None = None) -> int:
                 capture_failed = True
                 emit({"success": False, "error": "Response received but local capture failed", "capture_error": str(exc), "requestCompleted": True, "response": payload})
 
-        client = FirecrawlClient(consumer="lfc")
+        client = FirecrawlClient(consumer="lfc", allow_custom_api_url=allow_custom_url)
         if args.command == "credits":
             emit(client.credit_usage())
         elif args.command == "scrape":
@@ -837,11 +883,17 @@ def main(argv: list[str] | None = None) -> int:
                             "error": "no breadcrumb host, domain, or allowlisted website_name to resolve",
                         })
                         continue
-                    wrapped_domain = (wrapped.get("domain") or "").lower().removeprefix("www.")
+                    wrapped_domain = (wrapped.get("domain") or "").lower().rstrip(".").removeprefix("www.")
+                    is_platform_domain = any(
+                        wrapped_domain == pd or wrapped_domain.endswith("." + pd)
+                        for pd in platform_domains
+                    )
                     allow_root = (
                         wrapped.get("resolution_basis") == "breadcrumb"
+                        and isinstance(wrapped.get("target"), str)
+                        and wrapped["target"].startswith(("http://", "https://"))
                         and not wrapped.get("path_hint")
-                        and wrapped_domain not in platform_domains
+                        and not is_platform_domain
                     )
                     try:
                         resolved = client.resolve_url(
@@ -862,6 +914,8 @@ def main(argv: list[str] | None = None) -> int:
                         }
                         if resolved.get("map_error"):
                             res_meta["map_error"] = resolved["map_error"]
+                        if resolved.get("search_error"):
+                            res_meta["search_error"] = resolved["search_error"]
                         pages.append({
                             "rank": wrapped.get("rank"),
                             "url": resolved.get("resolved_url"),
@@ -871,11 +925,31 @@ def main(argv: list[str] | None = None) -> int:
                             "response": resolved.get("scraped") or resolved,
                         })
                     except (ApiError, SafetyError) as exc:
-                        err_entry: dict[str, Any] = {**wrapped, "error": str(exc)}
-                        provider_err = getattr(exc, "response", None)
-                        if provider_err:
-                            err_entry["provider_error"] = provider_err
-                        unresolved_goto.append(err_entry)
+                        partial = getattr(exc, "resolved_result", None)
+                        if isinstance(partial, dict) and partial.get("resolved_url"):
+                            err_res_meta = {
+                                k: partial.get(k)
+                                for k in ("resolution_method", "base_url", "path_hint", "map_error", "search_error")
+                                if partial.get(k) is not None
+                            }
+                            resolved_err_page: dict[str, Any] = {
+                                "rank": wrapped.get("rank"),
+                                "url": partial["resolved_url"],
+                                "goto_resolved": True,
+                                "resolution": err_res_meta,
+                                "resolution_basis": wrapped.get("resolution_basis"),
+                                "error": str(exc),
+                            }
+                            provider_err = getattr(exc, "response", None)
+                            if provider_err is not None:
+                                resolved_err_page["provider_error"] = provider_err
+                            pages.append(resolved_err_page)
+                        else:
+                            err_entry: dict[str, Any] = {**wrapped, "error": str(exc)}
+                            provider_err = getattr(exc, "response", None)
+                            if provider_err is not None:
+                                err_entry["provider_error"] = provider_err
+                            unresolved_goto.append(err_entry)
                 else:
                     target = target_item["url"]
                     item_rank = target_item.get("rank")
@@ -932,7 +1006,10 @@ def main(argv: list[str] | None = None) -> int:
                     limit=args.limit,
                     scrape=args.scrape,
                     formats=split_csv(args.formats),
+                    only_main_content=not args.full_page,
+                    max_age_ms=args.max_age_ms,
                     country=args.country,
+                    require_candidate=args.require_candidate,
                 )
             )
         elif args.command == "crawl":
@@ -1050,7 +1127,15 @@ def main(argv: list[str] | None = None) -> int:
             raise SafetyError(f"unknown command {args.command}")
         return 2 if capture_failed else 0
     except ApiError as exc:
-        failure = {"success":False,"error":str(exc),"requestMayHaveCompleted":exc.request_may_have_completed,"response":exc.response}
+        failure: dict[str, Any] = {
+            "success": False,
+            "error": str(exc),
+            "requestMayHaveCompleted": exc.request_may_have_completed,
+            "response": exc.response,
+        }
+        resolved_partial = getattr(exc, "resolved_result", None)
+        if isinstance(resolved_partial, dict) and resolved_partial.get("resolved_url"):
+            failure["resolved_result"] = resolved_partial
         if exc.response is not None and args.command in {
             "scrape", "scrape-serp", "map", "search", "resolve", "crawl", "crawl-status",
             "developer", "research", "parse", "agent", "agent-status", "interact", "monitor", "search-feedback",

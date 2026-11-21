@@ -144,7 +144,15 @@ def test_vendor_blocks_case_insensitive_and_auth_commands(monkeypatch, capsys):
         "_vendor_cli_version",
         lambda: (_ for _ in ()).throw(AssertionError("must reject before vendor probe")),
     )
-    for blocked in (["vendor", "SETUP", "mcp"], ["vendor", "Login"], ["vendor", "config"]):
+    for blocked in (
+        ["vendor", "SETUP", "mcp"],
+        ["vendor", "Login"],
+        ["vendor", "config"],
+        ["vendor", "--config=/tmp/x"],
+        ["vendor", "scrape", "--config=/tmp/x"],
+        ["vendor", "--auth=token"],
+        ["vendor", "--mcp=true"],
+    ):
         assert cli.main(blocked) == 2
         assert "blocked" in json.loads(capsys.readouterr().out)["error"]
 

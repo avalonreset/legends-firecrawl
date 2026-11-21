@@ -1,12 +1,12 @@
 # Release scope: 0.3.7
 
-Official-only scope introduced in 0.2.0 continues in 0.3.7. The evidence-bank release adds portable export, integrity checks, offline views and scoped reuse review. Version 0.3.7 bundles Alexandria catalog and CLI scripts inside wheel/sdist distributions so `lax` and `lfc alexandria` work in isolated wheel environments, hardens HTTP redirect/DNS/API-host validation, and maintains native Python CLI entrypoints (`lfc`, `lax`, `legends-firecrawl`, `python -m legends_firecrawl`). See [changelog](../CHANGELOG.md). An installed copy can be older; check its version separately.
+Official-only scope introduced in 0.2.0 continues in 0.3.7. The evidence-bank release adds portable export, integrity checks, offline views and scoped reuse review. Version 0.3.7 adds fail-closed SERP decoy scrape protection (`lfc scrape-serp`, `--serp-envelope`, `serp_integrity.verified: true`), closed-allowlist `website_name` target resolution (`serp_guard.website_name_target`), and first-class `firecrawl-cli@1.23.3` v2 capabilities (`developer`, `research`, `parse`, `agent`, `agent-status`, `interact`, `monitor`, `search-feedback`) alongside bundled Alexandria wheel assets, SSRF/DNS/redirect hardening, and native Python CLI entrypoints (`lfc`, `lax`, `legends-firecrawl`, `python -m legends_firecrawl`). See [changelog](../CHANGELOG.md). An installed copy can be older; check its version separately.
 
 ## Official Firecrawl only
 
 All data execution uses official Firecrawl services. All native/direct-source substitutions are retired, including the two Treasury operations briefly considered for the 0.2.0rc1 allowlist. There is no direct bypass mode or automatic native fallback in the supported product.
 
-Alexandria queries default to a request preview and require explicit `--confirm` before submission. Crawl jobs retain bounded scope and explicit confirmation. Other existing web operations may charge on execution; the Alexandria preview rule is not a blanket rule for every command.
+Alexandria queries default to a request preview and require explicit `--confirm` before submission. Multi-page crawl, SERP batch scrape (`scrape-serp`), `developer`, `research`, local file `parse`, `agent`, `interact`, and mutating `monitor` commands enforce explicit `--confirm` and `--dry-run` gates. Other existing single-call web operations (`scrape`, `map`, `search`, `resolve`) may charge on execution; the Alexandria preview rule is not a blanket rule for every command.
 
 ## Product value
 

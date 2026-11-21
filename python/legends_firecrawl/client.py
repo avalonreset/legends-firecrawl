@@ -7,8 +7,10 @@ Python API without installing a vendor SDK or an MCP server.
 
 from __future__ import annotations
 
+import http.client
 import ipaddress
 import json
+import math
 import os
 import re
 import socket
@@ -137,29 +139,35 @@ def _safe_local_path(value: str | Path) -> Path:
     return p
 
 
+def _clean_api_key(raw: str, source_label: str = "FIRECRAWL_API_KEY") -> str:
+    cleaned = raw.strip()
+    if not cleaned:
+        raise CredentialError(f"{source_label} is empty.")
+    if any(ord(ch) < 32 or ord(ch) == 127 for ch in cleaned):
+        raise CredentialError(f"{source_label} contains invalid control characters.")
+    return cleaned
+
+
 def read_api_key_file(path: str | Path) -> str:
     p = _safe_local_path(path)
     if not p.exists() or not p.is_file():
         raise CredentialError("FIRECRAWL_API_KEY_FILE does not exist or is not a regular file.")
     if p.stat().st_size > 65536:
         raise SafetyError("FIRECRAWL_API_KEY_FILE exceeds maximum size limit.")
-    secret = p.read_text(encoding="utf-8").strip()
-    if not secret:
-        raise CredentialError("FIRECRAWL_API_KEY_FILE is empty.")
-    return secret
+    return _clean_api_key(p.read_text(encoding="utf-8"), "FIRECRAWL_API_KEY_FILE")
 
 
 def load_credentials() -> Credentials:
     value = os.environ.get("FIRECRAWL_API_KEY")
-    if value:
-        return Credentials(value, "process-env")
+    if value and value.strip():
+        return Credentials(_clean_api_key(value, "FIRECRAWL_API_KEY"), "process-env")
     key_file = os.environ.get("FIRECRAWL_API_KEY_FILE")
     if key_file:
         return Credentials(read_api_key_file(key_file), "key-file")
     if not os.environ.get("FIRECRAWL_DISABLE_USER_ENV"):
         value = _windows_user_environment("FIRECRAWL_API_KEY")
-        if value:
-            return Credentials(value, "user-env")
+        if value and value.strip():
+            return Credentials(_clean_api_key(value, "FIRECRAWL_API_KEY"), "user-env")
     raise CredentialError(
         "FIRECRAWL_API_KEY is unavailable at process or Windows user scope. "
         "Configure FIRECRAWL_API_KEY in your environment, "
@@ -197,12 +205,42 @@ def _is_public_ip(address: ipaddress.IPv4Address | ipaddress.IPv6Address) -> boo
     return True
 
 
+_UNICODE_DOTS_RE = re.compile(r"[\u3002\uff0e\uff61]")
+_DNS_LABEL_RE = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$")
+
+
+def _parse_url_strict(raw: str, *, label: str = "URL"):
+    if any(ord(ch) <= 32 or ord(ch) == 127 for ch in raw):
+        raise SafetyError(f"{label} contains whitespace or control characters.")
+    if "://" not in raw:
+        if label == "URL":
+            raise SafetyError("Only public HTTP(S) URLs are supported.")
+        raise SafetyError(f"{label} must be an HTTPS API root without embedded credentials.")
+    after_scheme = raw.split("://", 1)[1]
+    authority = re.split(r"[/?#]", after_scheme, maxsplit=1)[0]
+    if "\\" in authority:
+        raise SafetyError(f"Backslashes in {label} authority are forbidden.")
+    if "@" in authority:
+        if label == "URL":
+            raise SafetyError("Credentials embedded in URLs are forbidden.")
+        raise SafetyError(f"{label} must be an HTTPS API root without embedded credentials.")
+    try:
+        parsed = urlparse(raw)
+        _ = parsed.port
+    except ValueError:
+        raise SafetyError(f"Malformed {label}.") from None
+    return parsed
+
+
 def api_root(*, allow_custom: bool = False) -> str:
     root = os.environ.get("FIRECRAWL_API_URL", DEFAULT_API_ROOT).strip().rstrip("/")
-    parsed = urlparse(root)
-    if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+    if not root:
         raise SafetyError("FIRECRAWL_API_URL must be an HTTPS API root without embedded credentials.")
-    host = parsed.hostname.lower().rstrip(".")
+    parsed = _parse_url_strict(root, label="FIRECRAWL_API_URL")
+    if parsed.scheme != "https" or not parsed.hostname or parsed.query or parsed.fragment:
+        raise SafetyError("FIRECRAWL_API_URL must be an HTTPS API root without embedded credentials, query, or fragment.")
+    raw_host = _UNICODE_DOTS_RE.sub(".", parsed.hostname)
+    host = raw_host.lower().rstrip(".")
     custom_allowed = allow_custom or os.environ.get("FIRECRAWL_ALLOW_CUSTOM_API_URL") == "1"
     if host not in ALLOWED_API_HOSTS:
         if not custom_allowed:
@@ -218,20 +256,24 @@ def validate_public_url(value: str, *, resolve_dns: bool = True) -> str:
     raw = value.strip()
     if not raw:
         raise SafetyError("URL is required.")
-    parsed = urlparse(raw)
+    parsed = _parse_url_strict(raw, label="URL")
     if parsed.scheme not in {"http", "https"}:
         raise SafetyError("Only public HTTP(S) URLs are supported.")
     if not parsed.hostname:
         raise SafetyError("URL must include a hostname.")
-    if parsed.username or parsed.password:
-        raise SafetyError("Credentials embedded in URLs are forbidden.")
-    host = parsed.hostname.lower().rstrip(".")
+    raw_host = _UNICODE_DOTS_RE.sub(".", parsed.hostname)
+    host = raw_host.lower().rstrip(".")
+    if any(ord(ch) > 127 for ch in host):
+        try:
+            host = ".".join(lbl.encode("idna").decode("ascii") for lbl in host.split(".") if lbl)
+        except UnicodeError:
+            raise SafetyError("URL hostname contains invalid internationalized domain characters.") from None
     if (
         host in {"localhost", "localhost.localdomain"}
-        or host.endswith((".local", ".localhost", ".internal"))
+        or host.endswith((".local", ".localhost", ".internal", ".home.arpa"))
     ):
         raise SafetyError("Local hosts are outside the Kit's public-web boundary.")
-    if host in {"google.com", "www.google.com"} and parsed.path.lower() in {"/goto", "/url"}:
+    if host in {"google.com", "www.google.com"} and parsed.path.lower().rstrip("/") in {"/goto", "/url"}:
         raise SafetyError(
             "Opaque Google redirect wrapper URLs (/goto or /url) cannot be scraped directly. "
             "Pass the resolved target domain or use 'lfc resolve <domain> --path-hint ...' first."
@@ -249,6 +291,8 @@ def validate_public_url(value: str, *, resolve_dns: bool = True) -> str:
         not lbl or lbl.isdigit() or re.fullmatch(r"0x[0-9a-f]+", lbl) for lbl in labels
     ):
         raise SafetyError("Numeric or single-label hostnames are forbidden.")
+    if any(not _DNS_LABEL_RE.fullmatch(lbl) for lbl in labels):
+        raise SafetyError("URL hostname contains invalid DNS label characters.")
     if resolve_dns:
         try:
             infos = socket.getaddrinfo(host, None)
@@ -291,7 +335,7 @@ def ledger_path() -> Path:
 
 
 def _extract_credit_signal(response: dict[str, Any]) -> float | int | None:
-    credit_keys = ("creditsUsed", "credits_used", "costCredits", "cost_credits")
+    credit_keys = ("creditsUsed", "credits_used", "costCredits", "cost_credits", "creditsCost", "credits_cost")
     containers: list[Any] = [response, response.get("metadata")]
     data = response.get("data")
     if isinstance(data, dict):
@@ -302,7 +346,7 @@ def _extract_credit_signal(response: dict[str, Any]) -> float | int | None:
             continue
         for key in credit_keys:
             value = container.get(key)
-            if isinstance(value, (int, float)) and not isinstance(value, bool):
+            if isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value >= 0:
                 return value
     return None
 
@@ -310,7 +354,13 @@ def _extract_credit_signal(response: dict[str, Any]) -> float | int | None:
 def _normalize_ledger_route(route: str) -> str:
     route_clean = route.split("?", 1)[0]
     route_clean = re.sub(r"^/v2/scrape/[^/]+/interact$", "/v2/scrape/{id}/interact", route_clean)
+    route_clean = re.sub(r"^/v2/monitor/[^/]+/checks/[^/]+$", "/v2/monitor/{id}/checks/{checkId}", route_clean)
+    route_clean = re.sub(r"^/v2/monitor/[^/]+/checks$", "/v2/monitor/{id}/checks", route_clean)
     route_clean = re.sub(r"^/v2/monitor/[^/]+/run$", "/v2/monitor/{id}/run", route_clean)
+    route_clean = re.sub(r"^/v2/monitor/[^/]+$", "/v2/monitor/{id}", route_clean)
+    route_clean = re.sub(r"^/v2/crawl/[^/]+$", "/v2/crawl/{id}", route_clean)
+    route_clean = re.sub(r"^/v2/agent/[^/]+$", "/v2/agent/{id}", route_clean)
+    route_clean = re.sub(r"^/v2/search/[^/]+/feedback$", "/v2/search/{id}/feedback", route_clean)
     route_clean = re.sub(
         r"^/v2/search/research/papers/[^/]+(/similar)?$",
         r"/v2/search/research/papers/{id}\1",
@@ -356,7 +406,7 @@ def estimate(operation: str, *, limit: int | None = None, formats: list[str] | N
     route = route_for(operation)
     default_scope = dict(route.get("default_scope") or {})
     if limit is not None:
-        if limit < 1:
+        if type(limit) is not int or limit < 1:
             raise SafetyError("limit must be positive")
         default_scope["limit"] = limit
     if formats:
@@ -411,22 +461,34 @@ def _encode_multipart(
     fields: dict[str, str],
 ) -> tuple[bytes, str]:
     boundary = f"legendsfc{uuid4().hex}"
-    safe_name = filename.replace("\\", "_").replace("/", "_").replace('"', "_").replace("\r", "").replace("\n", "")
+    while (
+        boundary.encode("ascii") in file_bytes
+        or any(boundary in str(k) or boundary in str(v) for k, v in fields.items())
+    ):
+        boundary = f"legendsfc{uuid4().hex}"
+    safe_field = "".join(ch for ch in file_field if ord(ch) >= 32 and ch not in {'"', "\\"})
+    safe_ct = "".join(ch for ch in content_type if ord(ch) >= 32 and ch not in {"\r", "\n"})
+    safe_name = "".join(
+        "_" if ch in {"\\", "/", '"'} else ch
+        for ch in filename
+        if ord(ch) >= 32 and ord(ch) != 127
+    )
     chunks: list[bytes] = []
     chunks.append(
         (
             f"--{boundary}\r\n"
-            f'Content-Disposition: form-data; name="{file_field}"; filename="{safe_name}"\r\n'
-            f"Content-Type: {content_type}\r\n\r\n"
+            f'Content-Disposition: form-data; name="{safe_field}"; filename="{safe_name}"\r\n'
+            f"Content-Type: {safe_ct}\r\n\r\n"
         ).encode("utf-8")
     )
     chunks.append(file_bytes)
     chunks.append(b"\r\n")
     for key, val in fields.items():
+        safe_key = "".join(ch for ch in key if ord(ch) >= 32 and ch not in {'"', "\\"})
         chunks.append(
             (
                 f"--{boundary}\r\n"
-                f'Content-Disposition: form-data; name="{key}"\r\n\r\n'
+                f'Content-Disposition: form-data; name="{safe_key}"\r\n\r\n'
                 f"{val}\r\n"
             ).encode("utf-8")
         )
@@ -453,10 +515,18 @@ def _error_detail(raw: bytes) -> str:
 class FirecrawlClient:
     """Bounded Firecrawl v2 API client."""
 
-    def __init__(self, credentials: Credentials | None = None, *, timeout: int = 90, consumer: str = "python"):
+    def __init__(
+        self,
+        credentials: Credentials | None = None,
+        *,
+        timeout: int = 90,
+        consumer: str = "python",
+        allow_custom_api_url: bool = False,
+    ):
         self.credentials = credentials or load_credentials()
         self.timeout = timeout
         self.consumer = consumer
+        self.allow_custom_api_url = allow_custom_api_url
 
     def request(
         self,
@@ -472,6 +542,9 @@ class FirecrawlClient:
     ) -> dict[str, Any]:
         from . import __version__
         normalized = "/" + path.strip().lstrip("/")
+        if any(ord(ch) <= 32 or ord(ch) == 127 for ch in normalized):
+            raise SafetyError("API path contains whitespace or control characters.")
+        api_key = _clean_api_key(self.credentials.api_key, "FIRECRAWL_API_KEY")
         if raw_body is not None:
             body = raw_body
             resolved_ct = content_type or "application/octet-stream"
@@ -479,16 +552,18 @@ class FirecrawlClient:
             body = None if payload is None else json.dumps(payload, separators=(",", ":")).encode("utf-8")
             resolved_ct = content_type or "application/json"
         headers = {
-            "Authorization": f"Bearer {self.credentials.api_key}",
+            "Authorization": f"Bearer {api_key}",
             "Content-Type": resolved_ct,
             "User-Agent": f"legends-firecrawl/{__version__}",
         }
         if extra_headers:
             for k, v in extra_headers.items():
                 if k.lower() not in {"authorization", "user-agent"}:
+                    if any(ord(ch) < 32 or ord(ch) == 127 for ch in str(k) + str(v)):
+                        raise SafetyError("HTTP header contains invalid control characters.")
                     headers[k] = v
         request = Request(
-            api_root() + normalized,
+            api_root(allow_custom=self.allow_custom_api_url) + normalized,
             data=body,
             method=method.upper(),
             headers=headers,
@@ -507,6 +582,11 @@ class FirecrawlClient:
             raise ApiError(f"Firecrawl returned HTTP {exc.code} for {normalized}", response=received) from exc
         except URLError as exc:
             raise ApiError(f"Could not reach Firecrawl for {normalized}: {exc.reason}") from exc
+        except (TimeoutError, http.client.HTTPException, OSError) as exc:
+            raise ApiError(
+                f"Transport failure while reading Firecrawl response for {normalized}: {exc}",
+                request_may_have_completed=True,
+            ) from exc
         except UnicodeDecodeError as exc:
             raise ApiError(
                 f"Firecrawl returned non-UTF-8 response for {normalized}",
@@ -545,7 +625,7 @@ class FirecrawlClient:
         unknown = [item for item in selected if item not in allowed]
         if unknown:
             raise SafetyError(f"Unsupported default-safe scrape formats: {', '.join(unknown)}")
-        if not 0 <= max_age_ms <= 604_800_000:
+        if type(max_age_ms) is not int or not 0 <= max_age_ms <= 604_800_000:
             raise SafetyError("max_age_ms must be between 0 and seven days")
         payload = {
             "url": target,
@@ -576,7 +656,7 @@ class FirecrawlClient:
         include_subdomains: bool = False,
     ) -> dict[str, Any]:
         target = validate_public_url(url)
-        if not 1 <= limit <= 1000:
+        if type(limit) is not int or not 1 <= limit <= 1000:
             raise SafetyError("map limit must be between 1 and 1000")
         if sitemap not in {"only", "include", "skip"}:
             raise SafetyError("sitemap must be only, include, or skip")
@@ -609,7 +689,7 @@ class FirecrawlClient:
         needle = query.strip()
         if not needle:
             raise SafetyError("search query is required")
-        if not 1 <= limit <= 20:
+        if type(limit) is not int or not 1 <= limit <= 20:
             raise SafetyError("house search limit must be between 1 and 20")
         payload: dict[str, Any] = {
             "query": needle,
@@ -636,7 +716,11 @@ class FirecrawlClient:
             raise SafetyError("Target domain or URL is required.")
         split_parts = [seg.strip() for seg in re.split(r"\s*(?:\u203a|\u00bb|\ufffd|>)\s*", cleaned) if seg.strip()]
         first = split_parts[0] if split_parts else cleaned
-        extracted_hint = path_hint.strip().rstrip(".\u2026").strip() if isinstance(path_hint, str) and path_hint.strip() else None
+        extracted_hint = (
+            (path_hint.strip().rstrip(".\u2026").strip() or None)
+            if isinstance(path_hint, str) and path_hint.strip()
+            else None
+        )
         if not extracted_hint and len(split_parts) > 1:
             for seg in reversed(split_parts[1:]):
                 cand = seg.strip().rstrip(".\u2026").strip()
@@ -650,7 +734,7 @@ class FirecrawlClient:
         host = (parsed.hostname or "").lower().rstrip(".")
         base_url = f"{parsed.scheme}://{host}"
         if not extracted_hint and parsed.path and parsed.path not in {"", "/"}:
-            segs = [s.strip().rstrip(".\u2026") for s in parsed.path.split("/") if s.strip()]
+            segs = [s.strip().rstrip(".\u2026").strip() for s in parsed.path.split("/") if s.strip().rstrip(".\u2026").strip()]
             if segs:
                 extracted_hint = segs[-1]
         return base_url, host.removeprefix("www."), extracted_hint
@@ -676,10 +760,14 @@ class FirecrawlClient:
             u = entry if isinstance(entry, str) else (entry.get("url") if isinstance(entry, dict) else None)
             if not isinstance(u, str) or not u.startswith(("http://", "https://")):
                 continue
-            host = (urlparse(u).hostname or "").lower().rstrip(".").removeprefix("www.")
+            try:
+                u_clean = validate_public_url(u, resolve_dns=False)
+                host = (urlparse(u_clean).hostname or "").lower().rstrip(".").removeprefix("www.")
+            except (SafetyError, ValueError):
+                continue
             if host == expected_domain or (include_subdomains and host.endswith("." + expected_domain)):
-                if u not in urls:
-                    urls.append(u)
+                if u_clean not in urls:
+                    urls.append(u_clean)
         return urls
 
     @staticmethod
@@ -693,8 +781,12 @@ class FirecrawlClient:
         if has_hint and path_hint is not None:
             hint_clean = path_hint.lower().strip().rstrip(".\u2026")
             hint_slug = re.sub(r"[^a-z0-9]+", "-", hint_clean).strip("-")
+            hint_trimmed = hint_clean.strip("/")
+            path_trimmed = path_lower.strip("/")
             if hint_clean and hint_clean in path_lower:
                 score += 100
+                if title and hint_trimmed and path_trimmed.startswith(hint_trimmed + "/"):
+                    score += 20
             elif hint_slug and hint_slug in path_lower:
                 score += 90
             else:
@@ -707,6 +799,11 @@ class FirecrawlClient:
                     if tok in path_lower:
                         score += 8
         return score
+
+    @staticmethod
+    def _is_root_homepage_url(url: str) -> bool:
+        parsed = urlparse(url)
+        return (parsed.path or "/").strip("/") == "" and not parsed.query
 
     def resolve_url(
         self,
@@ -725,8 +822,15 @@ class FirecrawlClient:
         allow_homepage_shortcircuit: bool = False,
     ) -> dict[str, Any]:
         """Resolve an exact inner URL from a domain + breadcrumb slug/title hint and optionally scrape it."""
-        if not 1 <= limit <= 200:
+        if type(limit) is not int or not 1 <= limit <= 200:
             raise SafetyError("resolve limit must be between 1 and 200")
+        selected_formats = formats or ["markdown"]
+        if scrape:
+            unknown = [item for item in selected_formats if item not in SCRAPE_ALLOWED_FORMATS]
+            if unknown:
+                raise SafetyError(f"Unsupported default-safe scrape formats: {', '.join(unknown)}")
+            if type(max_age_ms) is not int or not 0 <= max_age_ms <= 604_800_000:
+                raise SafetyError("max_age_ms must be between 0 and seven days")
         base_url, root_domain, effective_hint = self._parse_domain_or_breadcrumb(domain_or_url, path_hint)
         if allow_homepage_shortcircuit and effective_hint is None:
             result: dict[str, Any] = {
@@ -740,13 +844,17 @@ class FirecrawlClient:
                 "candidates": [base_url],
             }
             if scrape:
-                result["scraped"] = self.scrape(
-                    base_url,
-                    formats=formats or ["markdown"],
-                    only_main_content=only_main_content,
-                    max_age_ms=max_age_ms,
-                    country=country,
-                )
+                try:
+                    result["scraped"] = self.scrape(
+                        base_url,
+                        formats=selected_formats,
+                        only_main_content=only_main_content,
+                        max_age_ms=max_age_ms,
+                        country=country,
+                    )
+                except (ApiError, SafetyError) as exc:
+                    exc.resolved_result = dict(result)
+                    raise
             return result
 
         search_term = effective_hint or title or keyword
@@ -774,9 +882,26 @@ class FirecrawlClient:
             else 0
         )
 
+        is_reddit_sub_hint = bool(
+            root_domain == "reddit.com"
+            and effective_hint
+            and re.fullmatch(r"r/[a-z0-9_]+", effective_hint.strip(), re.I)
+            and title
+        )
+        subreddit_container_only = bool(
+            is_reddit_sub_hint
+            and scored
+            and not any(
+                (urlparse(u).path or "").lower().strip("/").startswith(effective_hint.lower().strip("/") + "/")
+                for u in scored
+            )
+        )
+
         search_error: str | None = None
         search_error_response: Any = None
-        if (not scored or (search_term and best_score < 15)) and (title or effective_hint or keyword):
+        if (not scored or (search_term and best_score < 15) or subreddit_container_only) and (
+            title or effective_hint or keyword
+        ):
             query_parts = [f"site:{root_domain}"]
             if title:
                 query_parts.append(title)
@@ -807,13 +932,22 @@ class FirecrawlClient:
                 )
                 method_used = "map+search" if map_resp else "search"
 
-        if not scored and map_error and search_error:
+        effective_scored = scored
+        if require_candidate:
+            effective_scored = [u for u in scored if not self._is_root_homepage_url(u)]
+            if is_reddit_sub_hint and effective_hint:
+                sub_prefix = effective_hint.lower().strip("/") + "/"
+                effective_scored = [
+                    u for u in effective_scored if (urlparse(u).path or "").lower().strip("/").startswith(sub_prefix)
+                ]
+
+        if not effective_scored and map_error and search_error:
             raise ApiError(
                 f"Both /v2/map and /v2/search failed for {root_domain}: "
                 f"map=({map_error}); search=({search_error})",
                 response={"map": map_error_response, "search": search_error_response},
             )
-        if require_candidate and not scored:
+        if require_candidate and not effective_scored:
             detail_parts: list[str] = []
             if map_error:
                 detail_parts.append(f"map failed: {map_error}")
@@ -827,10 +961,10 @@ class FirecrawlClient:
                 f"{f' for hint {effective_hint!r}' if effective_hint else ''}{detail}; "
                 "refusing to substitute the site homepage."
             )
-        if not scored and map_error and not (title or effective_hint or keyword):
+        if not effective_scored and map_error and not (title or effective_hint or keyword):
             raise ApiError(map_error, response=map_error_response)
 
-        resolved_url = scored[0] if scored else base_url
+        resolved_url = effective_scored[0] if effective_scored else base_url
         result = {
             "success": True,
             "domain": root_domain,
@@ -839,20 +973,24 @@ class FirecrawlClient:
             "resolution_method": method_used,
             "path_hint": effective_hint,
             "title": title,
-            "candidates": scored[:10],
+            "candidates": effective_scored[:10],
         }
         if map_error:
             result["map_error"] = map_error
         if search_error:
             result["search_error"] = search_error
         if scrape:
-            result["scraped"] = self.scrape(
-                resolved_url,
-                formats=formats or ["markdown"],
-                only_main_content=only_main_content,
-                max_age_ms=max_age_ms,
-                country=country,
-            )
+            try:
+                result["scraped"] = self.scrape(
+                    resolved_url,
+                    formats=selected_formats,
+                    only_main_content=only_main_content,
+                    max_age_ms=max_age_ms,
+                    country=country,
+                )
+            except (ApiError, SafetyError) as exc:
+                exc.resolved_result = dict(result)
+                raise
         return result
 
     @staticmethod
@@ -865,9 +1003,9 @@ class FirecrawlClient:
         exclude_paths: list[str] | None = None,
     ) -> dict[str, Any]:
         target = validate_public_url(url)
-        if not 1 <= limit <= 100:
+        if type(limit) is not int or not 1 <= limit <= 100:
             raise SafetyError("house crawl limit must be between 1 and 100")
-        if not 0 <= max_depth <= 5:
+        if type(max_depth) is not int or not 0 <= max_depth <= 5:
             raise SafetyError("house crawl depth must be between 0 and 5")
         return {
             "operation": "crawl",
@@ -1036,7 +1174,7 @@ class FirecrawlClient:
         if not needle:
             raise SafetyError("developer search query is required")
         max_limit = 20 if scrape else 100
-        if not 1 <= limit <= max_limit:
+        if type(limit) is not int or not 1 <= limit <= max_limit:
             raise SafetyError(f"developer search limit must be between 1 and {max_limit}")
         selected = formats or ["markdown"]
         if scrape:
@@ -1080,13 +1218,23 @@ class FirecrawlClient:
             log_usage=True,
             requested_scope={"limit": limit, "scrape": scrape},
         )
-        if scrape and isinstance(response.get("results"), list):
-            response = {
-                **response,
-                "scraped_results": self._scrape_result_urls(
-                    response["results"], limit=limit, formats=formats, country=country
-                ),
-            }
+        if scrape:
+            items_for_scrape: list[Any] | None = None
+            if isinstance(response.get("results"), list):
+                items_for_scrape = response["results"]
+            elif isinstance(response.get("data"), dict) and isinstance(response["data"].get("results"), list):
+                items_for_scrape = response["data"]["results"]
+            elif isinstance(response.get("paper"), dict):
+                items_for_scrape = [response["paper"]]
+            elif any(k in response for k in ("primaryId", "ids", "url", "pdfUrl", "readmeUrl")):
+                items_for_scrape = [response]
+            if items_for_scrape is not None:
+                response = {
+                    **response,
+                    "scraped_results": self._scrape_result_urls(
+                        items_for_scrape, limit=limit, formats=formats, country=country
+                    ),
+                }
         return response
 
     @staticmethod
@@ -1112,7 +1260,7 @@ class FirecrawlClient:
         if norm_mode not in RESEARCH_MODES:
             raise SafetyError(f"research mode must be one of: {', '.join(sorted(RESEARCH_MODES))}")
         max_limit = 20 if scrape else 100
-        if not 1 <= limit <= max_limit:
+        if type(limit) is not int or not 1 <= limit <= max_limit:
             raise SafetyError(f"research limit must be between 1 and {max_limit}")
         selected = formats or ["markdown"]
         if scrape:
@@ -1241,13 +1389,23 @@ class FirecrawlClient:
             log_usage=True,
             requested_scope={"mode": plan["mode"], "limit": limit, "scrape": scrape},
         )
-        if scrape and isinstance(response.get("results"), list):
-            response = {
-                **response,
-                "scraped_results": self._scrape_result_urls(
-                    response["results"], limit=limit, formats=formats, country=country
-                ),
-            }
+        if scrape:
+            items_for_scrape: list[Any] | None = None
+            if isinstance(response.get("results"), list):
+                items_for_scrape = response["results"]
+            elif isinstance(response.get("data"), dict) and isinstance(response["data"].get("results"), list):
+                items_for_scrape = response["data"]["results"]
+            elif isinstance(response.get("paper"), dict):
+                items_for_scrape = [response["paper"]]
+            elif any(k in response for k in ("primaryId", "ids", "url", "pdfUrl", "readmeUrl")):
+                items_for_scrape = [response]
+            if items_for_scrape is not None:
+                response = {
+                    **response,
+                    "scraped_results": self._scrape_result_urls(
+                        items_for_scrape, limit=limit, formats=formats, country=country
+                    ),
+                }
         return response
 
     @staticmethod
@@ -1276,7 +1434,7 @@ class FirecrawlClient:
         unknown = [item for item in selected if item not in PARSE_ALLOWED_FORMATS]
         if unknown:
             raise SafetyError(f"Unsupported parse formats: {', '.join(unknown)}")
-        if timeout_ms is not None and not 1000 <= timeout_ms <= 300_000:
+        if timeout_ms is not None and (type(timeout_ms) is not int or not 1000 <= timeout_ms <= 300_000):
             raise SafetyError("parse timeout_ms must be between 1000 and 300000")
         api_formats: list[Any] = list(selected)
         if query and query.strip():
@@ -1333,8 +1491,12 @@ class FirecrawlClient:
             return plan
         if not confirm:
             raise SafetyError("parse uploads a local file and requires --confirm (or pass --dry-run to preview)")
-        target = Path(plan["file"])
+        target = _safe_local_path(plan["file"])
+        if not target.exists() or not target.is_file():
+            raise SafetyError(f"Parse target does not exist or is not a regular file: {target.name}")
         file_bytes = target.read_bytes()
+        if len(file_bytes) > MAX_PARSE_BYTES:
+            raise SafetyError(f"File exceeds maximum /v2/parse upload size ({MAX_PARSE_BYTES} bytes)")
         body, content_type = _encode_multipart(
             "file",
             plan["filename"],
@@ -1377,6 +1539,8 @@ class FirecrawlClient:
             sp = _safe_local_path(schema_file)
             if not sp.is_file():
                 raise SafetyError(f"Schema file not found: {sp.name}")
+            if sp.stat().st_size > 2 * 1024 * 1024:
+                raise SafetyError("Schema file exceeds maximum size limit (2 MB)")
             try:
                 loaded = json.loads(sp.read_text(encoding="utf-8"))
             except (OSError, ValueError) as exc:
@@ -1480,7 +1644,11 @@ class FirecrawlClient:
     ) -> dict[str, Any]:
         sid = _validate_resource_id(scrape_id, "scrape id")
         path = f"/v2/scrape/{sid}/interact"
+        prompt_clean = (prompt or "").strip() if isinstance(prompt, str) else ""
+        code_clean = (code or "").strip() if isinstance(code, str) else ""
         if stop:
+            if prompt_clean or code_clean or prompt or code:
+                raise SafetyError("interact --stop cannot be combined with --prompt or --code")
             return {
                 "operation": "interact",
                 "action": "stop",
@@ -1492,19 +1660,19 @@ class FirecrawlClient:
                 "estimated_credits": 0,
                 "note": "No HTTP request was made. Re-run interact --stop with --confirm to terminate the session.",
             }
-        if bool(prompt) == bool(code):
+        if bool(prompt_clean) == bool(code_clean):
             raise SafetyError("interact requires exactly one of --prompt or --code (or --stop)")
         payload: dict[str, Any] = {"origin": "cli", "integration": "cli"}
-        if code:
+        if code_clean:
             lang = (language or "node").strip().lower()
             if lang not in INTERACT_LANGUAGES:
                 raise SafetyError(f"interact language must be one of: {', '.join(sorted(INTERACT_LANGUAGES))}")
             payload["code"] = code
             payload["language"] = lang
         else:
-            payload["prompt"] = (prompt or "").strip()
+            payload["prompt"] = prompt_clean
         if timeout is not None:
-            if not 1 <= timeout <= 300:
+            if type(timeout) is not int or not 1 <= timeout <= 300:
                 raise SafetyError("interact timeout must be between 1 and 300 seconds")
             payload["timeout"] = timeout
         return {
@@ -1587,53 +1755,63 @@ class FirecrawlClient:
         if act == "create":
             if not (name and name.strip()):
                 raise SafetyError("monitor create requires --name")
-            if not (cron or schedule_text):
+            cron_clean = cron.strip() if isinstance(cron, str) and cron.strip() else None
+            sched_clean = schedule_text.strip() if isinstance(schedule_text, str) and schedule_text.strip() else None
+            tz_clean = timezone_name.strip() if isinstance(timezone_name, str) and timezone_name.strip() else None
+            if not (cron_clean or sched_clean):
                 raise SafetyError("monitor create requires --cron or --schedule")
-            urls = list(scrape_urls or ([page] if page else []))
+            urls = [u.strip() for u in (scrape_urls or ([page] if page else [])) if isinstance(u, str) and u.strip()]
+            crawl_clean = crawl_url.strip() if isinstance(crawl_url, str) and crawl_url.strip() else None
+            cleaned_queries = [q.strip() for q in (queries or []) if isinstance(q, str) and q.strip()]
             has_scrape = bool(urls)
-            has_crawl = bool(crawl_url)
-            has_search = bool(queries)
+            has_crawl = bool(crawl_clean)
+            has_search = bool(cleaned_queries)
             if not (has_scrape or has_crawl or has_search):
                 raise SafetyError("monitor create requires --page, --scrape-urls, --crawl-url, or --queries")
             if has_search and not (goal and goal.strip()):
                 raise SafetyError("monitor create with --queries requires --goal")
             schedule: dict[str, Any] = {}
-            if cron:
-                schedule["cron"] = cron.strip()
-            if schedule_text:
-                schedule["text"] = schedule_text.strip()
-            if timezone_name:
-                schedule["timezone"] = timezone_name.strip()
+            if cron_clean:
+                schedule["cron"] = cron_clean
+            if sched_clean:
+                schedule["text"] = sched_clean
+            if tz_clean:
+                schedule["timezone"] = tz_clean
             targets: list[dict[str, Any]] = []
             if has_scrape:
                 targets.append({"type": "scrape", "urls": [validate_public_url(u) for u in urls]})
             if has_crawl:
-                targets.append({"type": "crawl", "url": validate_public_url(crawl_url or "")})
+                targets.append({"type": "crawl", "url": validate_public_url(crawl_clean or "")})
             if has_search:
-                st: dict[str, Any] = {"type": "search", "queries": [q.strip() for q in (queries or []) if q.strip()]}
+                st: dict[str, Any] = {"type": "search", "queries": cleaned_queries}
                 if search_window:
                     if search_window not in MONITOR_SEARCH_WINDOWS:
                         raise SafetyError(f"search_window must be one of: {', '.join(sorted(MONITOR_SEARCH_WINDOWS))}")
                     st["searchWindow"] = search_window
                 if max_results is not None:
-                    if not 1 <= max_results <= 50:
+                    if type(max_results) is not int or not 1 <= max_results <= 50:
                         raise SafetyError("monitor max_results must be between 1 and 50")
                     st["maxResults"] = max_results
                 if include_domains:
-                    st["includeDomains"] = include_domains
+                    st["includeDomains"] = [d.strip() for d in include_domains if isinstance(d, str) and d.strip()]
                 if exclude_domains:
-                    st["excludeDomains"] = exclude_domains
+                    st["excludeDomains"] = [d.strip() for d in exclude_domains if isinstance(d, str) and d.strip()]
                 targets.append(st)
             body: dict[str, Any] = {"name": name.strip(), "schedule": schedule, "targets": targets}
             if webhook_url:
                 wh: dict[str, Any] = {"url": validate_public_url(webhook_url)}
                 if webhook_events:
-                    wh["events"] = webhook_events
+                    wh["events"] = [ev.strip() for ev in webhook_events if isinstance(ev, str) and ev.strip()]
                 body["webhook"] = wh
             if email_recipients:
-                body["notification"] = {"email": {"enabled": True, "recipients": email_recipients}}
+                cleaned_emails = [em.strip() for em in email_recipients if isinstance(em, str) and em.strip()]
+                for em in cleaned_emails:
+                    if "@" not in em or any(ch.isspace() or ord(ch) < 32 for ch in em):
+                        raise SafetyError(f"invalid monitor email recipient: {em}")
+                if cleaned_emails:
+                    body["notification"] = {"email": {"enabled": True, "recipients": cleaned_emails}}
             if retention_days is not None:
-                if not 1 <= retention_days <= 365:
+                if type(retention_days) is not int or not 1 <= retention_days <= 365:
                     raise SafetyError("retention_days must be between 1 and 365")
                 body["retentionDays"] = retention_days
             if goal is not None and goal.strip():
@@ -1643,11 +1821,11 @@ class FirecrawlClient:
         elif act == "list":
             qs: list[tuple[str, str]] = []
             if limit is not None:
-                if not 1 <= limit <= 100:
+                if type(limit) is not int or not 1 <= limit <= 100:
                     raise SafetyError("monitor list limit must be between 1 and 100")
                 qs.append(("limit", str(limit)))
             if offset is not None:
-                if offset < 0:
+                if type(offset) is not int or offset < 0:
                     raise SafetyError("monitor offset must be non-negative")
                 qs.append(("offset", str(offset)))
             path = f"/v2/monitor?{urlencode(qs)}" if qs else "/v2/monitor"
@@ -1657,26 +1835,29 @@ class FirecrawlClient:
         elif act == "update":
             mid = _validate_resource_id(monitor_id or "", "monitor id")
             body = {}
-            if name:
+            if name and name.strip():
                 body["name"] = name.strip()
-            if goal:
+            if goal and goal.strip():
                 body["goal"] = goal.strip()
             if state:
                 if state not in {"active", "paused"}:
                     raise SafetyError("monitor state must be active or paused")
                 body["status"] = state
             if retention_days is not None:
-                if not 1 <= retention_days <= 365:
+                if type(retention_days) is not int or not 1 <= retention_days <= 365:
                     raise SafetyError("retention_days must be between 1 and 365")
                 body["retentionDays"] = retention_days
-            if cron or schedule_text or timezone_name:
+            cron_upd = cron.strip() if isinstance(cron, str) and cron.strip() else None
+            sched_upd = schedule_text.strip() if isinstance(schedule_text, str) and schedule_text.strip() else None
+            tz_upd = timezone_name.strip() if isinstance(timezone_name, str) and timezone_name.strip() else None
+            if cron_upd or sched_upd or tz_upd:
                 sched: dict[str, Any] = {}
-                if cron:
-                    sched["cron"] = cron.strip()
-                if schedule_text:
-                    sched["text"] = schedule_text.strip()
-                if timezone_name:
-                    sched["timezone"] = timezone_name.strip()
+                if cron_upd:
+                    sched["cron"] = cron_upd
+                if sched_upd:
+                    sched["text"] = sched_upd
+                if tz_upd:
+                    sched["timezone"] = tz_upd
                 body["schedule"] = sched
             if not body:
                 raise SafetyError("monitor update requires at least one field to update")
@@ -1695,11 +1876,11 @@ class FirecrawlClient:
             mid = _validate_resource_id(monitor_id or "", "monitor id")
             qs = []
             if limit is not None:
-                if not 1 <= limit <= 100:
+                if type(limit) is not int or not 1 <= limit <= 100:
                     raise SafetyError("monitor checks limit must be between 1 and 100")
                 qs.append(("limit", str(limit)))
             if offset is not None:
-                if offset < 0:
+                if type(offset) is not int or offset < 0:
                     raise SafetyError("monitor offset must be non-negative")
                 qs.append(("offset", str(offset)))
             path = f"/v2/monitor/{mid}/checks" + (f"?{urlencode(qs)}" if qs else "")
@@ -1708,11 +1889,11 @@ class FirecrawlClient:
             cid = _validate_resource_id(check_id or "", "check id")
             qs = []
             if limit is not None:
-                if not 1 <= limit <= 100:
+                if type(limit) is not int or not 1 <= limit <= 100:
                     raise SafetyError("monitor check limit must be between 1 and 100")
                 qs.append(("limit", str(limit)))
             if skip is not None:
-                if skip < 0:
+                if type(skip) is not int or skip < 0:
                     raise SafetyError("monitor skip must be non-negative")
                 qs.append(("skip", str(skip)))
             if page_status:
@@ -1865,7 +2046,7 @@ def usage_summary(path: Path | None = None) -> dict[str, Any]:
         calls += 1
         routes[row["route"]] = routes.get(row["route"], 0) + 1
         credits = row.get("credits_reported")
-        if isinstance(credits, (int, float)):
+        if isinstance(credits, (int, float)) and not isinstance(credits, bool) and math.isfinite(credits):
             reported += float(credits)
         else:
             unreported += 1

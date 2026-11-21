@@ -441,3 +441,224 @@ def test_cli_scrape_serp_mixed_order_shortcircuit_options_and_provider_error(mon
     assert len(payload["needs_resolve"]) == 1
     assert payload["needs_resolve"][0]["rank"] == 3
     assert payload["needs_resolve"][0]["provider_error"] == {"success": False, "error": "Website Not Supported"}
+
+
+def test_post_resolution_scrape_error_preserves_resolved_url_in_pages_and_standalone_resolve(
+    monkeypatch, tmp_path, capsys
+):
+    from legends_firecrawl import cli, client as client_mod
+    from legends_firecrawl.client import ApiError, Credentials, FirecrawlClient
+
+    monkeypatch.setattr(client_mod, "validate_public_url", lambda v, **kw: v)
+    env = envelope("clean", urls=[])
+    env["tasks"][0]["result"][0]["items"] = [
+        {
+            "type": "organic",
+            "rank_group": 1,
+            "url": "https://google.com/goto?url=CAES1",
+            "domain": "google.com",
+            "breadcrumb": "https://blocked-root.example.com",
+            "resolved_domain": "blocked-root.example.com",
+            "breadcrumb_path_hint": None,
+            "title": "Blocked Root Shop",
+        },
+        {
+            "type": "organic",
+            "rank_group": 3,
+            "url": "https://google.com/goto?url=CAES3",
+            "domain": "google.com",
+            "resolved_domain": None,
+            "breadcrumb": "30+ comments  ·  2 years ago",
+            "breadcrumb_path_hint": None,
+            "website_name": "Reddit\xa0·\xa0r/Phoenixville",
+            "title": "Mechanic Recommendations? : r/Phoenixville",
+        },
+    ]
+    serp_path = tmp_path / "l08_rank3.json"
+    serp_path.write_text(json.dumps(env), encoding="utf-8")
+
+    reddit_thread = "https://www.reddit.com/r/Phoenixville/comments/1bqm14z/mechanic_recommendations/"
+
+    def fake_map(self, base_url, **kw):
+        raise ApiError("Firecrawl returned HTTP 403 for /v2/map", response={"error": "map unsupported"})
+
+    def fake_search(self, query, **kw):
+        return {"success": True, "data": {"web": [{"url": reddit_thread}]}}
+
+    def fake_scrape(self, url, **kw):
+        raise ApiError(
+            "Firecrawl returned HTTP 403 for /v2/scrape",
+            response={"success": False, "error": "we do not support this site"},
+        )
+
+    monkeypatch.setattr(FirecrawlClient, "map_site", fake_map)
+    monkeypatch.setattr(FirecrawlClient, "search", fake_search)
+    monkeypatch.setattr(FirecrawlClient, "scrape", fake_scrape)
+    monkeypatch.setattr(
+        cli,
+        "FirecrawlClient",
+        lambda **kw: FirecrawlClient(Credentials("fc-test-key", "test"), consumer="lfc"),
+    )
+
+    code = cli.main(["scrape-serp", str(serp_path), "--resolve-goto", "--confirm", "--no-save"])
+    assert code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["needs_resolve"] == []
+    assert len(payload["pages"]) == 2
+
+    p1, p3 = payload["pages"]
+    assert p1["rank"] == 1
+    assert p1["url"] == "https://blocked-root.example.com"
+    assert p1["goto_resolved"] is True
+    assert p1["resolution"] == {
+        "resolution_method": "breadcrumb_root",
+        "base_url": "https://blocked-root.example.com",
+    }
+    assert p1["resolution_basis"] == "breadcrumb"
+    assert p1["provider_error"] == {"success": False, "error": "we do not support this site"}
+
+    assert p3["rank"] == 3
+    assert p3["url"] == reddit_thread
+    assert p3["goto_resolved"] is True
+    assert p3["resolution"] == {
+        "resolution_method": "search",
+        "base_url": "https://reddit.com",
+        "path_hint": "r/Phoenixville",
+        "map_error": "Firecrawl returned HTTP 403 for /v2/map",
+    }
+    assert p3["resolution_basis"] == "website_name"
+    assert "HTTP 403" in p3["error"]
+    assert p3["provider_error"] == {"success": False, "error": "we do not support this site"}
+
+    # Standalone lfc resolve --scrape also retains resolved_result in the error envelope.
+    rc = cli.main([
+        "resolve",
+        "reddit.com",
+        "--path-hint",
+        "r/Phoenixville",
+        "--title",
+        "Mechanic Recommendations? : r/Phoenixville",
+        "--scrape",
+        "--no-save",
+    ])
+    assert rc == 2
+    standalone_err = json.loads(capsys.readouterr().out)
+    assert standalone_err["resolved_result"]["resolved_url"] == reddit_thread
+
+
+def test_multi_block_serp_missing_integrity_on_second_block_fails_closed():
+    valid = envelope("clean", urls=["https://safe.example.com/a"])
+    valid["tasks"][0]["result"].append({
+        "items": [{"type": "organic", "rank_group": 1, "url": "https://decoy.example.org/trap"}]
+    })
+    with pytest.raises(SuspectSerpError) as exc:
+        guard_serp(valid)
+    assert exc.value.verdict["verified"] is False
+    assert exc.value.verdict["status"] == "unassessed"
+    assert "SERP result block is missing serp_integrity" in exc.value.verdict["reasons"]
+
+
+def test_resolve_url_rejects_homepage_in_map_links_and_bare_subreddit_container(monkeypatch):
+    from legends_firecrawl import client as client_mod
+    from legends_firecrawl.client import FirecrawlClient, SafetyError
+
+    monkeypatch.setattr(client_mod, "validate_public_url", lambda v, **kw: v)
+    c = FirecrawlClient.__new__(FirecrawlClient)
+    search_calls = []
+
+    # Map returns both root / and bare /r/Phoenixville/; search finds the actual thread.
+    c.map_site = lambda base_url, **kw: {
+        "links": ["https://www.reddit.com/", "https://www.reddit.com/r/Phoenixville/"]
+    }
+    c.search = lambda q, **kw: (
+        search_calls.append(q)
+        or {"data": {"web": ["https://www.reddit.com/r/Phoenixville/comments/9xyz/best_shop/"]}}
+    )
+    resolved = c.resolve_url(
+        "reddit.com",
+        path_hint="r/Phoenixville",
+        title="Mechanic Recommendations? : r/Phoenixville",
+        require_candidate=True,
+    )
+    assert len(search_calls) == 1
+    assert resolved["resolved_url"] == "https://www.reddit.com/r/Phoenixville/comments/9xyz/best_shop/"
+
+    # When search returns empty, bare /r/Phoenixville/ and / must NOT satisfy require_candidate=True.
+    c.search = lambda q, **kw: {"data": {"web": []}}
+    with pytest.raises(SafetyError, match="refusing to substitute"):
+        c.resolve_url(
+            "reddit.com",
+            path_hint="r/Phoenixville",
+            title="Mechanic Recommendations?",
+            require_candidate=True,
+        )
+
+    # Invalid scrape format fails before spending map_site credits.
+    map_invoked = []
+    c.map_site = lambda *a, **kw: (map_invoked.append(1) or {"links": []})
+    with pytest.raises(SafetyError, match="formats"):
+        c.resolve_url("example.com", path_hint="pricing", scrape=True, formats=["screenshot"])
+    assert map_invoked == []
+
+
+def test_scrape_serp_dry_run_engagement_breadcrumb_and_unordered_limit(monkeypatch, tmp_path):
+    from legends_firecrawl import cli
+    from legends_firecrawl.serp_guard import serp_targets
+
+    env = envelope("clean", urls=[])
+    env["tasks"][0]["result"][0]["items"] = [
+        {"type": "organic", "rank_group": 3, "url": "https://three.example.com/", "domain": "three.example.com"},
+        {"type": "organic", "rank_group": 1, "url": "https://one.example.com/", "domain": "one.example.com"},
+        {"type": "organic", "rank_group": 2, "url": "https://two.example.com/", "domain": "two.example.com"},
+    ]
+    assert serp_targets(env, limit=2)["urls"] == ["https://one.example.com/", "https://two.example.com/"]
+
+    serp_path = tmp_path / "dry.json"
+    serp_path.write_text(json.dumps(env), encoding="utf-8")
+    res = run_cli("scrape-serp", str(serp_path), "--limit", "2", "--dry-run")
+    assert res.returncode == 0
+    dry = json.loads(res.stdout)
+    assert dry["dry_run"] is True and dry["planned_pages"] == 2
+
+    # Engagement breadcrumb on non-allowlist forum and platform subdomain must NOT short-circuit to homepage.
+    forum_env = envelope("clean", urls=[])
+    forum_env["tasks"][0]["result"][0]["items"] = [
+        {
+            "type": "organic",
+            "rank_group": 1,
+            "url": "https://google.com/goto?url=CAES1",
+            "domain": "stackoverflow.com",
+            "breadcrumb": "12 answers · 3 years ago",
+            "title": "How to cancel tokio task",
+        },
+        {
+            "type": "organic",
+            "rank_group": 2,
+            "url": "https://google.com/goto?url=CAES2",
+            "domain": "old.reddit.com",
+            "breadcrumb": "https://old.reddit.com",
+            "title": "Thread title",
+        },
+    ]
+    forum_path = tmp_path / "forum.json"
+    forum_path.write_text(json.dumps(forum_env), encoding="utf-8")
+    seen_shortcircuit = []
+
+    class StubClient:
+        def __init__(self, **kw):
+            pass
+
+        def resolve_url(self, target, **kw):
+            seen_shortcircuit.append((target, kw.get("allow_homepage_shortcircuit")))
+            return {
+                "success": True,
+                "resolved_url": f"https://{target.removeprefix('https://')}/t/1",
+                "resolution_method": "search",
+                "base_url": f"https://{target.removeprefix('https://')}",
+                "path_hint": None,
+                "scraped": {"success": True, "data": {"markdown": "ok"}},
+            }
+
+    monkeypatch.setattr(cli, "FirecrawlClient", StubClient)
+    assert cli.main(["scrape-serp", str(forum_path), "--resolve-goto", "--confirm", "--no-save"]) == 0
+    assert seen_shortcircuit == [("stackoverflow.com", False), ("https://old.reddit.com", False)]

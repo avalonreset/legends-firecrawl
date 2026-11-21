@@ -16,10 +16,20 @@ def test_version_consistency():
 
 
 def test_release_builder_is_allowlisted():
+    import importlib.util
+
     text = (ROOT / "scripts" / "build_release.py").read_text(encoding="utf-8")
     assert "ALLOW_FILES" in text and "ALLOW_DIRS" in text
     for excluded in ("var", ".git", "dist"):
         assert f'"{excluded}"' not in text.split("ALLOW_DIRS", 1)[1].split("}", 1)[0]
+
+    spec = importlib.util.spec_from_file_location("build_release", ROOT / "scripts" / "build_release.py")
+    assert spec and spec.loader
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    included = {p.relative_to(ROOT).as_posix() for p in mod.included_files()}
+    for required in ("LICENSE", "NOTICE", "THIRD_PARTY_NOTICES.md", "MANIFEST.in", "SECURITY.md", "CONTRIBUTING.md", "CITATION.cff"):
+        assert required in included
 
 
 def test_secret_files_are_not_in_source_package():

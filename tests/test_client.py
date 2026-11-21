@@ -464,3 +464,105 @@ def test_urlopen_uses_certifi_ssl_context_and_falls_back(monkeypatch: pytest.Mon
     monkeypatch.setattr(client, "_ssl_context", lambda: None)
     client.urlopen(Request("https://api.firecrawl.dev/v2/team/credit-usage"), timeout=10)
     assert not any(isinstance(h, HTTPSHandler) for h in seen_handlers[-1])
+
+
+@pytest.mark.parametrize(
+    "bad_url",
+    [
+        "https://localhost\\.example.com",
+        "https://metadata.google.internal\\.example.com",
+        "http://127.0\u30020\u30021/secret",
+        "https://@example.com/a",
+        "https://:@example.com/a",
+        "http://[::1",
+        "https://example.com:99999/a",
+        "https://example.com/path with spaces",
+        "https://google.com/goto/?url=abc",
+    ],
+)
+def test_url_parser_differentials_and_malformed_urls_rejected(bad_url: str):
+    with pytest.raises(client.SafetyError):
+        client.validate_public_url(bad_url, resolve_dns=False)
+
+
+@pytest.mark.parametrize(
+    "bad_root",
+    [
+        "https://api.firecrawl.dev?leak=1",
+        "https://api.firecrawl.dev#frag",
+        "https://@api.firecrawl.dev",
+        "https://api.firecrawl.dev\\.evil.com",
+    ],
+)
+def test_api_root_rejects_query_fragment_userinfo_and_backslash(monkeypatch: pytest.MonkeyPatch, bad_root: str):
+    monkeypatch.setenv("FIRECRAWL_API_URL", bad_root)
+    with pytest.raises(client.SafetyError):
+        client.api_root()
+
+
+def test_api_key_control_chars_never_leak_secret_and_read_timeouts_wrap_in_api_error(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+):
+    import http.client
+
+    secret = "fc-super-secret-canary-999"
+    monkeypatch.setattr(client, "urlopen", lambda *_a, **_k: pytest.fail("urlopen must not be called"))
+    monkeypatch.setenv("FIRECRAWL_API_KEY", f"{secret}\r\nX-Injected: 1")
+    with pytest.raises(client.CredentialError) as cred_exc:
+        client.load_credentials()
+    assert secret not in str(cred_exc.value)
+
+    bad_instance = client.FirecrawlClient(client.Credentials(f"{secret}\nX-Evil: 1", "test"), consumer="test")
+    with pytest.raises(client.CredentialError) as req_exc:
+        bad_instance.request("/v2/team/credit-usage")
+    assert secret not in str(req_exc.value)
+
+    monkeypatch.setenv("FIRECRAWL_API_KEY", "fc-valid-test-key")
+    instance = runtime(tmp_path, monkeypatch)
+    monkeypatch.setenv("FIRECRAWL_API_URL", client.DEFAULT_API_ROOT)
+
+    class TimeoutStream:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self, _n: int = -1) -> bytes:
+            raise TimeoutError("read timed out mid-stream")
+
+    monkeypatch.setattr(client, "urlopen", lambda *_a, **_k: TimeoutStream())
+    with pytest.raises(client.ApiError) as t_exc:
+        instance.request("/v2/scrape", method="POST", payload={"url": "https://example.com"})
+    assert t_exc.value.request_may_have_completed is True
+
+    class IncompleteStream(TimeoutStream):
+        def read(self, _n: int = -1) -> bytes:
+            raise http.client.IncompleteRead(b"{", 100)
+
+    monkeypatch.setattr(client, "urlopen", lambda *_a, **_k: IncompleteStream())
+    with pytest.raises(client.ApiError) as inc_exc:
+        instance.request("/v2/scrape", method="POST", payload={"url": "https://example.com"})
+    assert inc_exc.value.request_may_have_completed is True
+
+
+def test_ledger_normalizes_all_v2_dynamic_routes_and_ignores_bool_credits(tmp_path: Path):
+    assert client._normalize_ledger_route("/v2/monitor/mon_123") == "/v2/monitor/{id}"
+    assert client._normalize_ledger_route("/v2/monitor/mon_123/checks?limit=5") == "/v2/monitor/{id}/checks"
+    assert client._normalize_ledger_route("/v2/monitor/mon_123/checks/chk_9") == "/v2/monitor/{id}/checks/{checkId}"
+    assert client._normalize_ledger_route("/v2/crawl/job_1234567890ab") == "/v2/crawl/{id}"
+    assert client._normalize_ledger_route("/v2/agent/ag_1234567890ab") == "/v2/agent/{id}"
+    assert client._normalize_ledger_route("/v2/search/srch_123/feedback") == "/v2/search/{id}/feedback"
+    assert client._normalize_ledger_route("/v2/search/developer?query=abc") == "/v2/search/developer"
+    assert client._extract_credit_signal({"data": {"creditsCost": 3}}) == 3
+
+    ledger = tmp_path / "ledger.jsonl"
+    ledger.write_text(
+        '{"route":"/v2/scrape","credits_reported":true}\n'
+        '{"route":"/v2/scrape","credits_reported":2}\n',
+        encoding="utf-8",
+    )
+    summary = client.usage_summary(ledger)
+    assert summary["calls"] == 2
+    assert summary["reported_credits"] == 2.0
+    assert summary["unreported_calls"] == 1
