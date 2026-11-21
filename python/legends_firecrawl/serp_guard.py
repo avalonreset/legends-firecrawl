@@ -1,4 +1,4 @@
-"""Refuse to scrape URL sets derived from a SERP that legends-dataforseo marked as decoy or poisoned."""
+"""Fail closed: scrape SERP-derived URL sets only when legends-dataforseo marked the SERP verified."""
 
 from __future__ import annotations
 
@@ -10,17 +10,21 @@ from urllib.parse import urlparse
 
 from .client import SafetyError
 
-SUSPECT_STATUSES = frozenset({"suspect_decoy", "suspect_poisoned"})
+SUSPECT_STATUSES = frozenset({"suspect_decoy", "suspect_poisoned", "unverified_decoy"})
 OVERRIDE_ENV = "LEGENDS_FIRECRAWL_ALLOW_SUSPECT_SERP"
+OVERRIDE_ENV_ALIAS = "LEGENDS_FIRECRAWL_ALLOW_UNVERIFIED_SERP"
 MAX_SERP_URLS = 20
 
 
 class SuspectSerpError(SafetyError):
-    """A SERP-derived URL set is marked suspect; scraping it would faithfully copy a decoy."""
+    """A SERP-derived URL set is not verified clean; scraping it could faithfully copy a decoy."""
 
     def __init__(self, message: str, *, verdict: dict[str, Any]):
         super().__init__(message)
         self.verdict = verdict
+
+
+UnverifiedSerpError = SuspectSerpError
 
 
 def _integrities(envelope: Any) -> list[dict[str, Any]]:
@@ -38,37 +42,56 @@ def _integrities(envelope: Any) -> list[dict[str, Any]]:
     return found
 
 
+def _block_verified(integrity: dict[str, Any]) -> bool:
+    return (integrity.get("verified") is True
+            and integrity.get("integrity") != "unprotected"
+            and integrity.get("status") == "clean"
+            and integrity.get("unresolved") is not True)
+
+
 def serp_verdict(envelope: Any) -> dict[str, Any]:
-    """Summarize SERP provenance: status, reasons and warnings (never raises)."""
+    """Summarize SERP provenance (never raises). `verified` is the fail-closed gate.
+
+    verified is True only when every organic block carries legends-dataforseo >= 0.1.12
+    `serp_integrity.verified: true`, is protected (resolve sent), clean and not unresolved.
+    Missing, false, unprotected, suspect or unverified_decoy all mean verified False.
+    """
     integrities = _integrities(envelope)
     warnings: list[str] = []
     reasons: list[str] = []
     if not integrities:
-        return {"status": "unassessed", "suspect": False, "unresolved": False, "unverified": True, "reasons": [],
+        return {"status": "unassessed", "verified": False, "suspect": False, "unresolved": False,
+                "unverified": True, "unprotected": False, "reasons": ["SERP envelope has no serp_integrity block"],
                 "warnings": ["SERP envelope has no serp_integrity block; ranking validity is unknown "
                              "(fetch it with legends-dataforseo >= 0.1.12)."]}
     statuses = [str(i.get("status") or "unassessed") for i in integrities]
-    status = next((s for s in ("suspect_poisoned", "suspect_decoy") if s in statuses), statuses[0])
+    status = next((s for s in ("unverified_decoy", "suspect_poisoned", "suspect_decoy") if s in statuses),
+                  statuses[0])
     unresolved = any(i.get("unresolved") is True for i in integrities)
-    unverified = any(i.get("unverified") is True for i in integrities)
+    unprotected = any(i.get("integrity") == "unprotected" for i in integrities)
+    verified = all(_block_verified(i) for i in integrities)
     for integrity in integrities:
-        reasons.extend(r for r in integrity.get("reasons") or [] if isinstance(r, str) and r not in reasons)
+        for r in list(integrity.get("reasons") or []) + list(integrity.get("unverified_reasons") or []):
+            if isinstance(r, str) and r not in reasons:
+                reasons.append(r)
         decoy = integrity.get("decoy")
         verification = integrity.get("verification") if isinstance(integrity.get("verification"), dict) else {}
+        if "verified" not in integrity:
+            warnings.append("serp_integrity has no verified field (pre-0.1.12 envelope); decoy SERPs are not ruled out.")
         if not isinstance(decoy, dict):
             warnings.append("serp_integrity has no decoy assessment (pre-0.1.12 envelope); decoy SERPs are not ruled out.")
         elif decoy.get("provider_resolve") == "not_requested":
             warnings.append("resolve_poisoned_results was not requested for this SERP; provider decoy repair was off.")
-        elif decoy.get("provider_resolve") == "requested_no_swap" and verification.get("status") == "stable":
-            pass  # second resolve pull agreed with the first: verified by legends-dataforseo
-        elif decoy.get("provider_resolve") == "requested_no_swap" and not decoy.get("signals_evaluated"):
-            warnings.append("Provider resolve swapped nothing and no decoy signal could be evaluated; "
-                            "the provider check is fail-open, so treat this SERP as unverified.")
-        if integrity.get("unverified") is True:
+        if integrity.get("integrity") == "unprotected":
+            warnings.append("SERP was pulled UNPROTECTED (LEGENDS_DFS_ALLOW_POISONED=1); decoy rankings are likely.")
+        if integrity.get("verified") is not True and "verified" in integrity:
             warnings.append("legends-dataforseo marked this SERP unverified (verification: "
                             f"{verification.get('status') or 'unknown'}); decoy rankings are not ruled out.")
     suspect = status in SUSPECT_STATUSES or unresolved
-    return {"status": status, "suspect": suspect, "unresolved": unresolved, "unverified": unverified,
+    if not verified and not reasons:
+        reasons.append("serp_integrity.verified is not true")
+    return {"status": status, "verified": verified, "suspect": suspect, "unresolved": unresolved,
+            "unverified": not verified, "unprotected": unprotected,
             "reasons": reasons, "warnings": list(dict.fromkeys(warnings))}
 
 
@@ -136,22 +159,28 @@ def serp_urls(envelope: dict[str, Any], *, limit: int = 10) -> list[str]:
 
 
 def override_enabled(flag: bool = False) -> bool:
-    return bool(flag) or os.environ.get(OVERRIDE_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
+    truthy = {"1", "true", "yes", "on"}
+    return bool(flag) or any(os.environ.get(name, "").strip().lower() in truthy
+                             for name in (OVERRIDE_ENV, OVERRIDE_ENV_ALIAS))
 
 
 def guard_serp(envelope: Any, *, allow_suspect: bool = False) -> dict[str, Any]:
-    """Raise SuspectSerpError for a suspect SERP unless overridden; return the verdict otherwise."""
+    """Fail closed: raise SuspectSerpError unless the SERP is verified, or the operator overrides."""
     verdict = serp_verdict(envelope)
-    if verdict["suspect"]:
+    if not verdict["verified"]:
+        label = verdict["status"] if verdict["suspect"] else f"{verdict['status']} but unverified"
+        if verdict["unprotected"]:
+            label += ", unprotected"
         if not override_enabled(allow_suspect):
             detail = "; ".join(verdict["reasons"][:3]) or "no reason recorded"
             raise SuspectSerpError(
-                f"Refusing to scrape URLs from a SERP marked {verdict['status']}"
+                f"Refusing to scrape URLs from a SERP marked {label}"
                 f"{' (unresolved after re-pull)' if verdict['unresolved'] else ''}: {detail}. "
-                "Re-pull the SERP with legends-dataforseo (resolve_poisoned_results on) or pass "
-                f"--allow-suspect-serp / {OVERRIDE_ENV}=1 to scrape it anyway.",
+                "Only SERPs with serp_integrity.verified=true (legends-dataforseo >= 0.1.12) are scraped. "
+                "Re-pull it with legends-dataforseo or pass --allow-unverified-serp (alias "
+                f"--allow-suspect-serp) / {OVERRIDE_ENV}=1 to scrape it anyway.",
                 verdict=verdict,
             )
-        verdict["warnings"].append(f"OVERRIDE: scraping a SERP marked {verdict['status']}; results may be decoy pages.")
+        verdict["warnings"].append(f"OVERRIDE: scraping a SERP marked {label}; results may be decoy pages.")
         verdict["overridden"] = True
     return verdict

@@ -239,9 +239,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     for guarded in (scrape, resolve, scrape_serp):
         if guarded is not scrape_serp:
-            guarded.add_argument("--serp-envelope", help="SERP envelope the target came from; refused when suspect")
-        guarded.add_argument("--allow-suspect-serp", action="store_true",
-                             help="Override the suspect_decoy/suspect_poisoned SERP refusal (loud warning)")
+            guarded.add_argument("--serp-envelope", help="SERP envelope the target came from; refused unless verified")
+        guarded.add_argument("--allow-unverified-serp", "--allow-suspect-serp", dest="allow_suspect_serp",
+                             action="store_true",
+                             help="Override the fail-closed refusal of a SERP whose serp_integrity.verified is not true "
+                                  "(unverified, unprotected, suspect or unverified_decoy; loud warning)")
 
     for capture_parser in (scrape, scrape_serp, mapping, search, resolve, crawl, status):
         capture_parser.add_argument("--receipt", action="store_true", help="Print archive receipt only; full response remains saved")

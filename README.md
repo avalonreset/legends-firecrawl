@@ -45,7 +45,7 @@ lfc scrape https://example.com
 lfc map https://example.com --limit 100
 lfc search "machine learning benchmarks" --limit 5
 lfc resolve "https://example.com" --path-hint "pricing" --scrape
-# Scrape page 1 of a saved legends-dataforseo SERP; refused when it is marked suspect_decoy/suspect_poisoned
+# Scrape page 1 of a saved legends-dataforseo SERP; refused unless serp_integrity.verified is true
 lfc scrape-serp serp.json --limit 10 --resolve-goto --confirm
 lfc crawl-preview https://example.com --limit 25 --max-depth 2
 lfc crawl https://example.com --limit 25 --max-depth 2 --confirm
