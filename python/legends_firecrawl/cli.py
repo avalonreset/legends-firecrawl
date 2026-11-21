@@ -189,6 +189,17 @@ def build_parser() -> argparse.ArgumentParser:
     scrape.add_argument("--country", default="US")
     scrape.add_argument("--full-page", action="store_true", help="include navigation and footer content")
 
+    scrape_serp = sub.add_parser("scrape-serp", help="Scrape organic URLs from a saved legends-dataforseo SERP envelope")
+    scrape_serp.add_argument("envelope", help="Saved legends-dataforseo SERP JSON (serp --output file)")
+    scrape_serp.add_argument("--limit", type=int, default=10)
+    scrape_serp.add_argument("--formats", default="markdown")
+    scrape_serp.add_argument("--max-age-ms", type=int, default=86_400_000)
+    scrape_serp.add_argument("--country", default="US")
+    scrape_serp.add_argument("--full-page", action="store_true", help="include navigation and footer content")
+    scrape_serp.add_argument("--confirm", action="store_true", help="required: scrapes one page per URL")
+    scrape_serp.add_argument("--resolve-goto", action="store_true",
+                             help="resolve google.com/goto-wrapped results via map/search before scraping (extra credits)")
+
     mapping = sub.add_parser("map")
     mapping.add_argument("url")
     mapping.add_argument("--limit", type=int, default=100)
@@ -226,7 +237,13 @@ def build_parser() -> argparse.ArgumentParser:
     status = sub.add_parser("crawl-status")
     status.add_argument("job_id")
 
-    for capture_parser in (scrape, mapping, search, resolve, crawl, status):
+    for guarded in (scrape, resolve, scrape_serp):
+        if guarded is not scrape_serp:
+            guarded.add_argument("--serp-envelope", help="SERP envelope the target came from; refused when suspect")
+        guarded.add_argument("--allow-suspect-serp", action="store_true",
+                             help="Override the suspect_decoy/suspect_poisoned SERP refusal (loud warning)")
+
+    for capture_parser in (scrape, scrape_serp, mapping, search, resolve, crawl, status):
         capture_parser.add_argument("--receipt", action="store_true", help="Print archive receipt only; full response remains saved")
         capture_parser.add_argument("--workspace", help="Client/project identity recorded with capture")
         capture_parser.add_argument("--no-save", action="store_true", help="Skip automatic full response archive")
@@ -336,16 +353,43 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "crawl" and not args.confirm:
             raise SafetyError("crawl is multi-page and requires --confirm after reviewing crawl-preview")
 
+        serp_provenance = None
+        serp_envelope = None
+        if args.command == "scrape-serp" or getattr(args, "serp_envelope", None):
+            from .serp_guard import guard_serp, load_serp_envelope, serp_targets
+
+            serp_envelope = load_serp_envelope(args.envelope if args.command == "scrape-serp" else args.serp_envelope)
+            serp_provenance = guard_serp(serp_envelope, allow_suspect=getattr(args, "allow_suspect_serp", False))
+            for warning in serp_provenance["warnings"]:
+                print("lfc WARNING: " + warning, file=sys.stderr)
+        if args.command == "scrape-serp":
+            split = serp_targets(serp_envelope, limit=args.limit)
+            serp_direct, serp_wrapped = split["urls"], split["needs_resolve"]
+            if not serp_direct and not serp_wrapped:
+                raise SafetyError("SERP envelope contains no organic URLs to scrape")
+            if serp_wrapped and not args.resolve_goto:
+                print(f"lfc WARNING: {len(serp_wrapped)} of {len(serp_direct) + len(serp_wrapped)} organic results are "
+                      "google.com/goto-wrapped and will NOT be scraped; rerun with --resolve-goto or use "
+                      "'lfc resolve <target> --path-hint ... --scrape' (listed under needs_resolve).", file=sys.stderr)
+                if not serp_direct:
+                    raise SafetyError("All organic results are google.com/goto-wrapped; rerun scrape-serp with "
+                                      "--resolve-goto (map/search credits per result) or use lfc resolve per item")
+            planned = len(serp_direct) + (len(serp_wrapped) if args.resolve_goto else 0)
+            if not args.confirm:
+                raise SafetyError(f"scrape-serp scrapes {planned} pages and requires --confirm")
+
         if getattr(args, "receipt", False) and getattr(args, "no_save", False):
             raise SafetyError("--receipt requires saving; cannot combine --no-save")
         capture_failed = False
         def emit_result(payload):
             nonlocal capture_failed
+            if serp_provenance is not None and isinstance(payload, dict):
+                payload = {**payload, "serp_provenance": serp_provenance}
             if getattr(args, "no_save", False):
                 emit(payload)
                 return
             from .capture import archive_response
-            request = {k: v for k, v in vars(args).items() if k not in {"command", "no_save", "confirm", "receipt", "workspace"}}
+            request = {k: v for k, v in vars(args).items() if k not in {"command", "no_save", "confirm", "receipt", "workspace", "allow_suspect_serp"}}
             try:
                 capture = archive_response(args.command, payload, request=request, workspace=getattr(args,"workspace",None))
                 emit({"_capture":capture,"response_omitted":True} if getattr(args,"receipt",False) else {**payload, "_capture": capture})
@@ -366,6 +410,40 @@ def main(argv: list[str] | None = None) -> int:
                     country=args.country,
                 )
             )
+        elif args.command == "scrape-serp":
+            pages = []
+            unresolved_goto = []
+            if args.resolve_goto:
+                for wrapped in serp_wrapped:
+                    if not wrapped.get("target"):
+                        unresolved_goto.append({**wrapped, "error": "no breadcrumb host or domain to resolve"})
+                        continue
+                    try:
+                        resolved = client.resolve_url(
+                            wrapped["target"], path_hint=wrapped.get("path_hint"), title=wrapped.get("title"),
+                            scrape=True, formats=split_csv(args.formats), country=args.country,
+                        )
+                        pages.append({"rank": wrapped.get("rank"), "url": resolved.get("resolved_url"),
+                                      "goto_resolved": True, "resolution": {k: resolved.get(k) for k in
+                                      ("resolution_method", "base_url", "path_hint")},
+                                      "response": resolved.get("scraped") or resolved})
+                    except (ApiError, SafetyError) as exc:
+                        unresolved_goto.append({**wrapped, "error": str(exc)})
+            else:
+                unresolved_goto = list(serp_wrapped)
+            for target in serp_direct:
+                try:
+                    pages.append({"url": target, "response": client.scrape(
+                        target,
+                        formats=split_csv(args.formats),
+                        only_main_content=not args.full_page,
+                        max_age_ms=args.max_age_ms,
+                        country=args.country,
+                    )})
+                except (ApiError, SafetyError) as exc:
+                    pages.append({"url": target, "error": str(exc)})
+            emit_result({"success": any("response" in page for page in pages), "pages": pages,
+                         "needs_resolve": unresolved_goto})
         elif args.command == "map":
             emit_result(
                 client.map_site(
@@ -414,12 +492,16 @@ def main(argv: list[str] | None = None) -> int:
         return 2 if capture_failed else 0
     except ApiError as exc:
         failure = {"success":False,"error":str(exc),"requestMayHaveCompleted":exc.request_may_have_completed,"response":exc.response}
-        if exc.response is not None and args.command in {"scrape","map","search","resolve","crawl","crawl-status"}:
+        if exc.response is not None and args.command in {"scrape","scrape-serp","map","search","resolve","crawl","crawl-status"}:
             emit_result(failure)
         else: emit(failure)
         return 2
     except (CredentialError, SafetyError) as exc:
-        emit({"success": False, "error": str(exc), "command": args.command})
+        failure = {"success": False, "error": str(exc), "command": args.command}
+        verdict = getattr(exc, "verdict", None)
+        if isinstance(verdict, dict):
+            failure["serp_provenance"] = verdict
+        emit(failure)
         return 2
 
 

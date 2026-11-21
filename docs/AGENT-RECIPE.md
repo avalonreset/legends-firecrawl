@@ -30,6 +30,7 @@ lfc doctor
 | `lfc map <url> [--limit 100] [--search <terms>]` | Discover URLs on a target domain |
 | `lfc search "<query>" [--limit 5] [--scrape-results]` | Bounded web search via official Firecrawl API |
 | `lfc resolve <domain_or_breadcrumb> [--path-hint <slug>] [--title "<title>"] [--scrape]` | Resolve an exact inner URL on a domain from a SERP breadcrumb or slug/title hint and optionally scrape it |
+| `lfc scrape-serp <serp.json> [--limit N] [--resolve-goto] --confirm [--allow-suspect-serp]` | Scrape the organic URLs of a saved legends-dataforseo SERP envelope. Google now wraps organic links as `google.com/goto?url=...` (no real URL in the item); those are listed under `needs_resolve` and never scraped raw. `--resolve-goto` resolves each through `resolve_url` (breadcrumb host + path hint + title via map/search, about 2-3 extra credits per item) and scrapes the inner page; items with only a `website_name` (for example `Reddit · r/<sub>`) stay in `needs_resolve`. Envelopes marked `unverified` scrape with a warning. Refused before HTTP when `serp_integrity` is `suspect_decoy`, `suspect_poisoned` or `unresolved`; `--serp-envelope` adds the same gate to `scrape` / `resolve`. Override only with `--allow-suspect-serp` (loud warning). |
 | `lfc crawl-preview <url> [--limit 25] [--max-depth 2]` | Offline preview of crawl scope and bounds |
 | `lfc crawl <url> [--limit 25] [--max-depth 2] --confirm` | Execute a bounded multi-page crawl after preview confirmation |
 | `lfc crawl-status <job_id>` | Check asynchronous crawl status and archive returned results |
