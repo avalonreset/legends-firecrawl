@@ -53,12 +53,14 @@ def website_name_target(website_name: Any) -> dict[str, Any] | None:
     parts = [p.strip() for p in _WEBSITE_NAME_SPLIT_RE.split(flat) if p.strip()]
     if not parts:
         return None
-    platform, qualifier = parts[0], (" · ".join(parts[1:]) or None)
+    platform = parts[0]
+    non_engagement = [p for p in parts[1:] if not _ENGAGEMENT_HINT_RE.search(p)]
+    qualifier = " · ".join(non_engagement) or None
     domain = WEBSITE_NAME_PLATFORMS.get(platform.casefold())
     if domain is None:
         return None
     path_hint = None
-    if qualifier and not _ENGAGEMENT_HINT_RE.search(qualifier):
+    if qualifier:
         subreddit = _SUBREDDIT_RE.match(qualifier)
         if domain == "reddit.com" and subreddit:
             path_hint = f"r/{subreddit.group(1)}"
@@ -249,8 +251,9 @@ def serp_targets(envelope: dict[str, Any], *, limit: int = 10) -> dict[str, list
                     breadcrumb = raw_bc.strip() if isinstance(raw_bc, str) and raw_bc.strip() else None
                     bc_is_url = False
                     if breadcrumb and breadcrumb.startswith(("http://", "https://")):
+                        bc_first = re.split(r"\s*(?:\u203a|\u00bb|\ufffd|>)\s*", breadcrumb, maxsplit=1)[0].strip()
                         try:
-                            bc_host = (urlparse(breadcrumb).hostname or "").lower().rstrip(".")
+                            bc_host = (urlparse(bc_first).hostname or "").lower().rstrip(".")
                         except ValueError:
                             bc_host = ""
                         bc_is_url = bool(bc_host) and bc_host.removeprefix("www.") != "google.com" and not bc_host.endswith(".google.com")

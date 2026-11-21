@@ -152,9 +152,33 @@ def test_vendor_blocks_case_insensitive_and_auth_commands(monkeypatch, capsys):
         ["vendor", "scrape", "--config=/tmp/x"],
         ["vendor", "--auth=token"],
         ["vendor", "--mcp=true"],
+        ["--allow-custom-api-url", "vendor", "--config=/tmp/x"],
     ):
         assert cli.main(blocked) == 2
         assert "blocked" in json.loads(capsys.readouterr().out)["error"]
+
+
+def test_doctor_forwards_allow_custom_api_url_without_polluting_environ(monkeypatch, capsys):
+    from legends_firecrawl import cli
+
+    seen = {}
+
+    class StubDoctorClient:
+        def __init__(self, **kw):
+            seen.update(kw)
+
+        def credit_usage(self):
+            return {"success": True, "data": {"remainingCredits": 100}}
+
+    monkeypatch.delenv("FIRECRAWL_ALLOW_CUSTOM_API_URL", raising=False)
+    monkeypatch.setattr(cli, "_vendor_cli_version", lambda: ("firecrawl", cli.EXPECTED_VENDOR_CLI))
+    monkeypatch.setattr(cli, "credential_status", lambda: {"present": True, "source": "test", "length": 10})
+    monkeypatch.setattr(cli, "FirecrawlClient", StubDoctorClient)
+    assert cli.main(["--allow-custom-api-url", "doctor"]) == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["ready"] is True
+    assert seen["allow_custom_api_url"] is True
+    assert "FIRECRAWL_ALLOW_CUSTOM_API_URL" not in os.environ
 
 
 def test_help_lists_evidence_and_alexandria():

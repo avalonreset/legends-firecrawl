@@ -237,12 +237,11 @@ def api_root(*, allow_custom: bool = False) -> str:
     if not root:
         raise SafetyError("FIRECRAWL_API_URL must be an HTTPS API root without embedded credentials.")
     parsed = _parse_url_strict(root, label="FIRECRAWL_API_URL")
-    if parsed.scheme != "https" or not parsed.hostname or parsed.query or parsed.fragment:
-        raise SafetyError("FIRECRAWL_API_URL must be an HTTPS API root without embedded credentials, query, or fragment.")
-    raw_host = _UNICODE_DOTS_RE.sub(".", parsed.hostname)
-    host = raw_host.lower().rstrip(".")
+    if parsed.scheme != "https" or not parsed.hostname or parsed.params or parsed.query or parsed.fragment:
+        raise SafetyError("FIRECRAWL_API_URL must be an HTTPS API root without embedded credentials, params, query, or fragment.")
+    ascii_host = parsed.hostname.lower().rstrip(".")
     custom_allowed = allow_custom or os.environ.get("FIRECRAWL_ALLOW_CUSTOM_API_URL") == "1"
-    if host not in ALLOWED_API_HOSTS:
+    if ascii_host not in ALLOWED_API_HOSTS:
         if not custom_allowed:
             raise SafetyError(
                 "FIRECRAWL_API_URL host is not in the default allowlist (api.firecrawl.dev). "
@@ -264,8 +263,11 @@ def validate_public_url(value: str, *, resolve_dns: bool = True) -> str:
     raw_host = _UNICODE_DOTS_RE.sub(".", parsed.hostname)
     host = raw_host.lower().rstrip(".")
     if any(ord(ch) > 127 for ch in host):
+        raw_labels = host.split(".")
+        if any(not lbl for lbl in raw_labels):
+            raise SafetyError("Numeric or single-label hostnames are forbidden.")
         try:
-            host = ".".join(lbl.encode("idna").decode("ascii") for lbl in host.split(".") if lbl)
+            host = ".".join(lbl.encode("idna").decode("ascii") for lbl in raw_labels)
         except UnicodeError:
             raise SafetyError("URL hostname contains invalid internationalized domain characters.") from None
     if (

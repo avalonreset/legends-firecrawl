@@ -478,6 +478,7 @@ def test_urlopen_uses_certifi_ssl_context_and_falls_back(monkeypatch: pytest.Mon
         "https://example.com:99999/a",
         "https://example.com/path with spaces",
         "https://google.com/goto/?url=abc",
+        "https://m\u00fcnchen..de/a",
     ],
 )
 def test_url_parser_differentials_and_malformed_urls_rejected(bad_url: str):
@@ -490,6 +491,8 @@ def test_url_parser_differentials_and_malformed_urls_rejected(bad_url: str):
     [
         "https://api.firecrawl.dev?leak=1",
         "https://api.firecrawl.dev#frag",
+        "https://api.firecrawl.dev;param",
+        "https://api\u3002firecrawl\u3002dev",
         "https://@api.firecrawl.dev",
         "https://api.firecrawl.dev\\.evil.com",
     ],

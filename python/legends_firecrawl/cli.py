@@ -115,7 +115,7 @@ def _runtime_layout_check() -> dict[str, Any]:
     return {"name":"kit-root", "status":"pass" if valid else "fail", "detail":{"layout":"installed_python", "path":str(Path(__file__).parent), "recipes":"not_bundled_in_wheel", "runtime_data":"verified" if valid else "missing_or_invalid"}}
 
 
-def doctor(*, offline: bool = False) -> tuple[dict[str, Any], int]:
+def doctor(*, offline: bool = False, allow_custom_api_url: bool = False) -> tuple[dict[str, Any], int]:
     executable, vendor_version = _vendor_cli_version()
     auth = credential_status()
     checks = [
@@ -132,7 +132,7 @@ def doctor(*, offline: bool = False) -> tuple[dict[str, Any], int]:
     live: dict[str, Any] = {"status": "skipped", "reason": "offline requested" if offline else "auth unavailable"}
     if not offline and auth["present"]:
         try:
-            usage = FirecrawlClient(consumer="doctor").credit_usage()
+            usage = FirecrawlClient(consumer="doctor", allow_custom_api_url=allow_custom_api_url).credit_usage()
             live = {"status": "pass", "credit_usage": usage}
         except (CredentialError, ApiError, SafetyError) as exc:
             live = {"status": "fail", "error": str(exc)}
@@ -585,6 +585,8 @@ def main(argv: list[str] | None = None) -> int:
         return lax_main(command_line[1:])
     if command_line and command_line[0] == 'vendor':
         args = argparse.Namespace(command="vendor", args=command_line[1:], allow_custom_api_url=False)
+    elif len(command_line) >= 2 and command_line[0] == '--allow-custom-api-url' and command_line[1] == 'vendor':
+        args = argparse.Namespace(command="vendor", args=command_line[2:], allow_custom_api_url=True)
     else:
         args = build_parser().parse_args(argv)
     allow_custom_url = bool(getattr(args, "allow_custom_api_url", False))
@@ -598,7 +600,7 @@ def main(argv: list[str] | None = None) -> int:
             emit({"kit_version": __version__, "vendor_cli_expected": EXPECTED_VENDOR_CLI})
             return 0
         if args.command == "doctor":
-            result, code = doctor(offline=args.offline)
+            result, code = doctor(offline=args.offline, allow_custom_api_url=allow_custom_url)
             emit(result)
             return code
         if args.command == "routes":
@@ -968,7 +970,7 @@ def main(argv: list[str] | None = None) -> int:
                     except (ApiError, SafetyError) as exc:
                         err_page: dict[str, Any] = {"rank": item_rank, "url": target, "error": str(exc)}
                         provider_err = getattr(exc, "response", None)
-                        if provider_err:
+                        if provider_err is not None:
                             err_page["provider_error"] = provider_err
                         pages.append(err_page)
             emit_result({

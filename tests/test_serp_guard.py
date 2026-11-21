@@ -662,3 +662,29 @@ def test_scrape_serp_dry_run_engagement_breadcrumb_and_unordered_limit(monkeypat
     monkeypatch.setattr(cli, "FirecrawlClient", StubClient)
     assert cli.main(["scrape-serp", str(forum_path), "--resolve-goto", "--confirm", "--no-save"]) == 0
     assert seen_shortcircuit == [("stackoverflow.com", False), ("https://old.reddit.com", False)]
+
+    # Google breadcrumb with chevron separator must never be accepted as a target URL,
+    # and multi-part website_name keeps non-engagement segments.
+    from legends_firecrawl.serp_guard import website_name_target
+
+    assert website_name_target("Reddit · r/Phoenixville · 30+ comments") == {
+        "target": "reddit.com",
+        "domain": "reddit.com",
+        "path_hint": "r/Phoenixville",
+        "resolution_basis": "website_name",
+    }
+    google_bc_env = envelope("clean", urls=[])
+    google_bc_env["tasks"][0]["result"][0]["items"] = [
+        {
+            "type": "organic",
+            "rank_group": 1,
+            "url": "https://google.com/goto?url=CAES9",
+            "domain": "google.com",
+            "breadcrumb": "https://www.google.com › url",
+            "website_name": "Reddit · r/Phoenixville · 30+ comments",
+            "title": "Mechanic Recommendations?",
+        }
+    ]
+    split_gbc = serp_targets(google_bc_env, limit=5)
+    assert split_gbc["needs_resolve"][0]["target"] == "reddit.com"
+    assert split_gbc["needs_resolve"][0]["path_hint"] == "r/Phoenixville"
