@@ -14,9 +14,9 @@ Collect once, retain the complete response, then let an agent inspect the eviden
 
 ## What it adds
 
-- Intent-level commands for official scrape, map, search and bounded crawl jobs.
+- Intent-level commands for official scrape, map, search, developer index search, research paper index search, local document parsing (`/v2/parse`), AI extraction agent (`/v2/agent`), interactive scrape sessions, change monitors (`/v2/monitor`), search feedback, and bounded crawl jobs.
 - Offline catalog search and provider inspection. The saved snapshot contains 114 provider labels and 797 capabilities; these are discovery records, not independently tested integrations.
-- Explicit confirmation before Alexandria execution and crawl submission.
+- Explicit `--confirm` and `--dry-run` gates before billable crawl, agent, developer, research, parse, interact, monitor, and Alexandria submissions, plus fail-closed SERP decoy protection with allowlisted `website_name` target resolution.
 - Full captures, portable evidence export, integrity verification, offline finding/viewing and exact-scope freshness checks.
 - Integration with the existing `cto-legends` agent workflow.
 
@@ -47,6 +47,13 @@ lfc search "machine learning benchmarks" --limit 5
 lfc resolve "https://example.com" --path-hint "pricing" --scrape
 # Scrape page 1 of a saved legends-dataforseo SERP; refused unless serp_integrity.verified is true
 lfc scrape-serp serp.json --limit 10 --resolve-goto --confirm
+lfc developer "axum middleware ordering" --limit 10 --dry-run
+lfc research "CRISPR base editing off-target effects" --limit 10 --dry-run
+lfc parse ./report.pdf --formats markdown,links --dry-run
+lfc agent "Extract pricing tiers" --urls https://example.com/pricing --max-credits 25 --dry-run
+lfc agent-status <job_id>
+lfc monitor list --limit 20
+lfc search-feedback <search_id> --rating good --dry-run
 lfc crawl-preview https://example.com --limit 25 --max-depth 2
 lfc crawl https://example.com --limit 25 --max-depth 2 --confirm
 ```

@@ -60,6 +60,61 @@
       }
     },
     {
+      "name": "developer",
+      "aliases": [
+        "dev-search",
+        "developer-search"
+      ],
+      "method": "GET",
+      "path": "/v2/search/developer",
+      "charged": true,
+      "risk": "bounded-search-confirm-required",
+      "default_scope": {
+        "limit": 10,
+        "scrape": false
+      }
+    },
+    {
+      "name": "research",
+      "aliases": [
+        "papers",
+        "research-papers",
+        "search-papers"
+      ],
+      "method": "GET",
+      "path": "/v2/search/research/papers",
+      "charged": true,
+      "risk": "bounded-search-confirm-required",
+      "default_scope": {
+        "limit": 10,
+        "scrape": false,
+        "endpoints": [
+          "/v2/search/research/papers",
+          "/v2/search/research/papers/{id}",
+          "/v2/search/research/papers/{id}/similar",
+          "/v2/search/research/github"
+        ]
+      }
+    },
+    {
+      "name": "parse",
+      "aliases": [
+        "parse-file",
+        "document-parse"
+      ],
+      "method": "POST",
+      "path": "/v2/parse",
+      "charged": true,
+      "risk": "bounded-file-upload-confirm-required",
+      "default_scope": {
+        "pages": 1,
+        "formats": [
+          "markdown"
+        ],
+        "estimated_credits": 1
+      }
+    },
+    {
       "name": "resolve",
       "aliases": [
         "resolve-url",
@@ -103,6 +158,90 @@
       "path": "/v2/crawl/{id}",
       "charged": false,
       "risk": "read-only"
+    },
+    {
+      "name": "agent",
+      "aliases": [
+        "web-agent",
+        "extract-agent"
+      ],
+      "method": "POST",
+      "path": "/v2/agent",
+      "charged": true,
+      "risk": "agent-confirm-required",
+      "default_scope": {
+        "max_credits": 25,
+        "model": "spark-1-mini"
+      }
+    },
+    {
+      "name": "agent-status",
+      "aliases": [
+        "agent-get"
+      ],
+      "method": "GET",
+      "path": "/v2/agent/{id}",
+      "charged": false,
+      "risk": "read-only"
+    },
+    {
+      "name": "interact",
+      "aliases": [
+        "scrape-interact"
+      ],
+      "method": "POST",
+      "path": "/v2/scrape/{id}/interact",
+      "charged": true,
+      "risk": "browser-interact-confirm-required",
+      "default_scope": {
+        "language": "node",
+        "endpoints": [
+          "POST /v2/scrape/{id}/interact",
+          "DELETE /v2/scrape/{id}/interact"
+        ]
+      }
+    },
+    {
+      "name": "monitor",
+      "aliases": [
+        "monitors",
+        "change-monitor"
+      ],
+      "method": "POST",
+      "path": "/v2/monitor",
+      "charged": true,
+      "risk": "recurring-monitor-confirm-required",
+      "default_scope": {
+        "actions": [
+          "create",
+          "list",
+          "get",
+          "update",
+          "delete",
+          "run",
+          "checks",
+          "check"
+        ]
+      }
+    },
+    {
+      "name": "search-feedback",
+      "aliases": [
+        "feedback-search"
+      ],
+      "method": "POST",
+      "path": "/v2/search/{searchId}/feedback",
+      "charged": false,
+      "risk": "feedback-refund",
+      "default_scope": {
+        "ratings": [
+          "good",
+          "bad",
+          "partial"
+        ],
+        "estimated_credits": 0,
+        "refund_credits": 1
+      }
     }
   ]
 }

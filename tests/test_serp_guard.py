@@ -153,7 +153,7 @@ def test_goto_wrapped_results_are_split_out_and_never_scraped_raw(tmp_path):
                   "website_name": "Reddit", "title": "Reputable Plumber"})
     split = serp_targets(env, limit=10)
     assert split["urls"] == ["https://a.example.com/1"]
-    assert [w["target"] for w in split["needs_resolve"]] == ["https://www.rotorooter.com › philadelphia", None]
+    assert [w["target"] for w in split["needs_resolve"]] == ["https://www.rotorooter.com › philadelphia", "reddit.com"]
     assert serp_urls(env, limit=10) == ["https://a.example.com/1"]
 
     only_goto = envelope("clean", urls=["https://google.com/goto?url=CAES9"])
@@ -162,3 +162,78 @@ def test_goto_wrapped_results_are_split_out_and_never_scraped_raw(tmp_path):
     result = run_cli("scrape-serp", str(path), "--confirm", "--no-save")
     assert result.returncode != 0
     assert "--resolve-goto" in (result.stdout + result.stderr)
+
+
+@pytest.mark.parametrize("name,domain,hint", [
+    ("Reddit\xa0·\xa0r/Phoenixville", "reddit.com", "r/Phoenixville"),  # L08 rank 3 verbatim
+    ("Reddit · r/philadelphia", "reddit.com", "r/philadelphia"),
+    ("Reddit", "reddit.com", None),
+    ("Reddit · 30+ comments", "reddit.com", None),              # engagement qualifier dropped
+    ("Facebook\xa0·\xa0Roxborough Rants & Raves", "facebook.com", "Roxborough Rants & Raves"),
+    ("Instagram\xa0·\xa0scott_plumbing", "instagram.com", "scott_plumbing"),
+    ("YouTube\xa0·\xa0Plumbing Pals", "youtube.com", "Plumbing Pals"),
+    ("TikTok · @phillyplumber", "tiktok.com", "phillyplumber"),
+    ("Yelp", "yelp.com", None),
+])
+def test_website_name_target_allowlist(name, domain, hint):
+    from legends_firecrawl.serp_guard import website_name_target
+    got = website_name_target(name)
+    assert got == {"target": domain, "domain": domain, "path_hint": hint,
+                   "resolution_basis": "website_name"}
+
+
+@pytest.mark.parametrize("name", ["David Kanaskie's Auto Repair", "Saunders Auto Center",
+                                  "Some Local Blog", "", "   ", None, 123])
+def test_website_name_target_never_guesses_a_business_domain(name):
+    from legends_firecrawl.serp_guard import website_name_target
+    assert website_name_target(name) is None
+
+
+def test_serp_targets_website_name_only_rank3_l08_shape():
+    from legends_firecrawl.serp_guard import serp_targets
+    env = envelope("clean", urls=["https://a.example.com/1"])
+    items = env["tasks"][0]["result"][0]["items"]
+    items.append({"type": "organic", "rank_group": 3, "url": "https://google.com/goto?url=CAES3",
+                  "domain": "google.com", "resolved_domain": None,
+                  "breadcrumb": "30+ comments  ·  2 years ago", "breadcrumb_path_hint": None,
+                  "website_name": "Reddit\xa0·\xa0r/Phoenixville",
+                  "title": "Mechanic Recommendations? : r/Phoenixville"})
+    items.append({"type": "organic", "rank_group": 4, "url": "https://google.com/goto?url=CAES4",
+                  "domain": "reddit.com", "breadcrumb": "50+ comments  ·  9 months ago",
+                  "breadcrumb_path_hint": "2 years ago",   # poisoned hint must be dropped
+                  "website_name": "Reddit · r/philadelphia", "title": "Reputable Plumber : r/philadelphia"})
+    split = serp_targets(env, limit=10)
+    r3, r4 = split["needs_resolve"]
+    assert (r3["target"], r3["domain"], r3["path_hint"], r3["resolution_basis"]) == \
+        ("reddit.com", "reddit.com", "r/Phoenixville", "website_name")
+    assert (r4["target"], r4["path_hint"], r4["resolution_basis"]) == \
+        ("reddit.com", "r/philadelphia", "breadcrumb")  # domain wins, name enriches
+
+
+def test_resolve_url_website_name_item_search_fallback_and_no_homepage_substitute(monkeypatch):
+    from legends_firecrawl import client as client_mod
+    from legends_firecrawl.client import FirecrawlClient, SafetyError
+
+    monkeypatch.setattr(client_mod, "validate_public_url", lambda v, **kw: v)  # no DNS
+    c = FirecrawlClient.__new__(FirecrawlClient)
+    seen = {}
+    c.map_site = lambda base_url, **kw: {"links": ["https://www.reddit.com/"]}
+    def fake_search(query, **kw):
+        seen["query"] = query
+        return {"data": {"web": [{"url": "https://www.reddit.com/r/Phoenixville/comments/abc/mechanic_recommendations/"}]}}
+    c.search = fake_search
+    c.scrape = lambda url, **kw: {"markdown": "thread body", "url": url}
+
+    out = c.resolve_url("reddit.com", path_hint="r/Phoenixville",
+                        title="Mechanic Recommendations? : r/Phoenixville",
+                        scrape=True, require_candidate=True)
+    assert out["resolved_url"].endswith("/r/Phoenixville/comments/abc/mechanic_recommendations/")
+    assert "site:reddit.com" in seen["query"]
+    assert out["scraped"]["markdown"] == "thread body"
+
+    c.map_site = lambda base_url, **kw: {"links": []}
+    c.search = lambda query, **kw: {"data": {"web": []}}
+    with pytest.raises(SafetyError, match="refusing to substitute"):
+        c.resolve_url("reddit.com", path_hint="r/Phoenixville", title="x", require_candidate=True)
+    # Standalone `lfc resolve` behavior unchanged when the flag is off:
+    assert c.resolve_url("reddit.com", path_hint="r/Phoenixville", title="x")["resolved_url"] == "https://reddit.com"

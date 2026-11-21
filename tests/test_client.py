@@ -159,12 +159,31 @@ def test_request_rejects_invalid_utf8_and_oversized_body(monkeypatch: pytest.Mon
 
 def test_routes_and_estimates_are_intent_first():
     routes = client.load_routes()["routes"]
-    assert {item["name"] for item in routes} == {"credits", "scrape", "map", "search", "resolve", "crawl", "crawl-status"}
+    assert {item["name"] for item in routes} == {
+        "credits",
+        "scrape",
+        "map",
+        "search",
+        "developer",
+        "research",
+        "parse",
+        "resolve",
+        "crawl",
+        "crawl-status",
+        "agent",
+        "agent-status",
+        "interact",
+        "monitor",
+        "search-feedback",
+    }
     estimate = client.estimate("crawl", limit=40)
     assert estimate["page_or_result_ceiling"] == 40
     assert estimate["estimated_credits"] is None
     res_est = client.estimate("resolve", limit=30)
     assert res_est["page_or_result_ceiling"] == 30
+    parse_est = client.estimate("parse")
+    assert parse_est["page_or_result_ceiling"] == 1
+    assert parse_est["estimated_credits"] == 1
 
 
 def test_resolve_url_parses_breadcrumb_and_scores_candidates(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):

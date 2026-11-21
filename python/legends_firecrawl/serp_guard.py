@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -14,6 +15,59 @@ SUSPECT_STATUSES = frozenset({"suspect_decoy", "suspect_poisoned", "unverified_d
 OVERRIDE_ENV = "LEGENDS_FIRECRAWL_ALLOW_SUSPECT_SERP"
 OVERRIDE_ENV_ALIAS = "LEGENDS_FIRECRAWL_ALLOW_UNVERIFIED_SERP"
 MAX_SERP_URLS = 20
+
+# Closed allowlist: SERP `website_name` first segment -> registrable domain.
+# Only platforms whose display name maps to exactly one domain belong here.
+# Anything else (a business name) stays unresolved; never slug-guess a domain.
+WEBSITE_NAME_PLATFORMS = {
+    "reddit": "reddit.com", "youtube": "youtube.com", "facebook": "facebook.com",
+    "instagram": "instagram.com", "x": "x.com", "twitter": "x.com",
+    "linkedin": "linkedin.com", "tiktok": "tiktok.com", "yelp": "yelp.com",
+    "nextdoor": "nextdoor.com", "quora": "quora.com", "pinterest": "pinterest.com",
+    "tripadvisor": "tripadvisor.com", "medium": "medium.com",
+}
+_WEBSITE_NAME_SPLIT_RE = re.compile(r"\s*[·•|]\s*")
+_ENGAGEMENT_HINT_RE = re.compile(r"\b(comments?|likes?|views?|followers?|reactions?|ago|subscribers?)\b", re.I)
+_HANDLE_RE = re.compile(r"^@?[A-Za-z0-9._-]{2,40}$")
+_SUBREDDIT_RE = re.compile(r"^r/([A-Za-z0-9_]{2,25})$")
+_HANDLE_PLATFORMS = frozenset({"instagram.com", "tiktok.com", "x.com", "medium.com"})
+
+
+def _clean_path_hint(hint: Any) -> str | None:
+    """Drop empty hints and engagement breadcrumb text ('30+ comments', '2 years ago')."""
+    if not isinstance(hint, str) or not hint.strip() or _ENGAGEMENT_HINT_RE.search(hint):
+        return None
+    return hint.strip()
+
+
+def website_name_target(website_name: Any) -> dict[str, Any] | None:
+    """Resolve a website_name-only SERP item ('Reddit · r/Phoenixville') to a domain + hint.
+
+    Returns None unless the leading segment is an allowlisted platform. The qualifier
+    after the middot becomes a path hint for resolve_url search/scoring; it is never
+    used to construct a final URL (the ranked thread is not the subreddit front page).
+    """
+    if not isinstance(website_name, str) or not website_name.strip():
+        return None
+    flat = website_name.replace("\xa0", " ").strip()
+    parts = [p.strip() for p in _WEBSITE_NAME_SPLIT_RE.split(flat) if p.strip()]
+    if not parts:
+        return None
+    platform, qualifier = parts[0], (" · ".join(parts[1:]) or None)
+    domain = WEBSITE_NAME_PLATFORMS.get(platform.casefold())
+    if domain is None:
+        return None
+    path_hint = None
+    if qualifier and not _ENGAGEMENT_HINT_RE.search(qualifier):
+        subreddit = _SUBREDDIT_RE.match(qualifier)
+        if domain == "reddit.com" and subreddit:
+            path_hint = f"r/{subreddit.group(1)}"
+        elif domain in _HANDLE_PLATFORMS and _HANDLE_RE.match(qualifier):
+            path_hint = qualifier.lstrip("@")
+        else:
+            path_hint = qualifier  # page / channel / company name: search term only
+    return {"target": domain, "domain": domain, "path_hint": path_hint,
+            "resolution_basis": "website_name"}
 
 
 class SuspectSerpError(SafetyError):
@@ -145,9 +199,19 @@ def serp_targets(envelope: dict[str, Any], *, limit: int = 10) -> dict[str, list
                         domain = None
                     breadcrumb = item.get("breadcrumb")
                     target = breadcrumb if isinstance(breadcrumb, str) and breadcrumb.startswith(("http://", "https://")) else domain
-                    needs.append({"rank": item.get("rank_group"), "target": target, "domain": domain,
-                                  "path_hint": item.get("breadcrumb_path_hint"), "title": item.get("title"),
-                                  "website_name": item.get("website_name")})
+                    entry: dict[str, Any] = {"rank": item.get("rank_group"), "target": target, "domain": domain,
+                                             "path_hint": _clean_path_hint(item.get("breadcrumb_path_hint")),
+                                             "title": item.get("title"), "website_name": item.get("website_name"),
+                                             "resolution_basis": "breadcrumb" if target else "none"}
+                    via_name = website_name_target(item.get("website_name"))
+                    if via_name and target is None:
+                        entry.update(target=via_name["target"], domain=via_name["domain"],
+                                     path_hint=via_name["path_hint"] or entry["path_hint"],
+                                     resolution_basis="website_name")
+                    elif via_name and entry["path_hint"] is None and isinstance(domain, str) \
+                            and domain.lower().removeprefix("www.") == via_name["domain"]:
+                        entry["path_hint"] = via_name["path_hint"]  # domain wins; name only enriches
+                    needs.append(entry)
                 elif isinstance(url, str) and url.startswith(("http://", "https://")) and url not in urls:
                     urls.append(url)
     return {"urls": urls, "needs_resolve": needs}

@@ -18,16 +18,44 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlparse
+from urllib.parse import quote, urlencode, urlparse
 from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
+from uuid import uuid4
 
 
 DEFAULT_API_ROOT = "https://api.firecrawl.dev"
 ALLOWED_API_HOSTS = frozenset({"api.firecrawl.dev"})
 MAX_RESPONSE_BYTES = 50 * 1024 * 1024
 MAX_ERROR_BYTES = 4 * 1024 * 1024
+MAX_PARSE_BYTES = 50 * 1024 * 1024
 JOB_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{12,128}$")
+RESOURCE_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{3,128}$")
 _MACOS_SYSTEM_SYMLINKS = {Path("/var"), Path("/tmp"), Path("/etc")}
+SCRAPE_ALLOWED_FORMATS = frozenset({"markdown", "html", "rawHtml", "links", "images", "summary", "branding"})
+PARSE_ALLOWED_FORMATS = frozenset({"markdown", "html", "rawHtml", "links", "images", "summary", "json", "attributes"})
+PARSE_CONTENT_TYPES = {
+    ".html": "text/html",
+    ".htm": "text/html",
+    ".pdf": "application/pdf",
+    ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ".doc": "application/msword",
+    ".odt": "application/vnd.oasis.opendocument.text",
+    ".rtf": "application/rtf",
+    ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ".xls": "application/vnd.ms-excel",
+}
+PARSE_SUPPORTED_EXTENSIONS = frozenset(PARSE_CONTENT_TYPES)
+AGENT_MODELS = frozenset({"spark-1-mini", "spark-1-pro"})
+MAX_AGENT_CREDITS = 500
+INTERACT_LANGUAGES = frozenset({"node", "python", "bash"})
+MONITOR_ACTIONS = frozenset({"create", "list", "get", "update", "delete", "run", "checks", "check"})
+MONITOR_MUTATING_ACTIONS = frozenset({"create", "update", "delete", "run"})
+MONITOR_SEARCH_WINDOWS = frozenset({"5m", "15m", "1h", "6h", "24h", "7d"})
+MONITOR_PAGE_STATUSES = frozenset({"same", "new", "changed", "removed", "error"})
+SEARCH_FEEDBACK_RATINGS = frozenset({"good", "bad", "partial"})
+SEARCH_FEEDBACK_OPT_OUT_ENVS = ("FIRECRAWL_NO_SEARCH_FEEDBACK", "FIRECRAWL_DISABLE_SEARCH_FEEDBACK")
+RESEARCH_MODES = frozenset({"papers", "inspect", "related", "read", "github"})
+RESEARCH_RELATION_MODES = frozenset({"similar", "citers", "references"})
 
 
 class _NoRedirect(HTTPRedirectHandler):
@@ -304,10 +332,17 @@ def estimate(operation: str, *, limit: int | None = None, formats: list[str] | N
     if formats:
         default_scope["formats"] = formats
     page_ceiling = 0
-    if route["name"] == "scrape":
+    if route["name"] in {"scrape", "parse"}:
         page_ceiling = 1
-    elif route["name"] in {"map", "search", "resolve", "crawl"}:
+    elif route["name"] in {"map", "search", "developer", "research", "resolve", "crawl"}:
         page_ceiling = int(default_scope.get("limit") or 0)
+    estimated_credits: int | None
+    if not route["charged"]:
+        estimated_credits = 0
+    elif isinstance(default_scope.get("estimated_credits"), int):
+        estimated_credits = int(default_scope["estimated_credits"])
+    else:
+        estimated_credits = None
     return {
         "operation": route["name"],
         "charged": route["charged"],
@@ -315,13 +350,63 @@ def estimate(operation: str, *, limit: int | None = None, formats: list[str] | N
         "requested_scope": default_scope,
         "page_or_result_ceiling": page_ceiling,
         "max_api_requests": (3 if default_scope.get("scrape") else 2) if route["name"] == "resolve" else 1,
-        "estimated_credits": None if route["charged"] else 0,
+        "estimated_credits": estimated_credits,
         "note": (
             "Firecrawl billing varies by endpoint, formats, proxy, parsing, and current plan. "
             "The Kit reports bounded scope and actual provider-reported credits when returned; "
             "it does not invent a dollar estimate."
         ),
     }
+
+
+def _validate_resource_id(value: str, label: str) -> str:
+    cleaned = (value or "").strip()
+    if not RESOURCE_ID_PATTERN.fullmatch(cleaned):
+        raise SafetyError(f"{label} format is invalid")
+    return cleaned
+
+
+def _validate_paper_id(value: str) -> str:
+    cleaned = (value or "").strip()
+    if not cleaned or len(cleaned) > 200 or ".." in cleaned or any(ord(ch) < 32 or ch.isspace() for ch in cleaned):
+        raise SafetyError("paper id format is invalid")
+    return cleaned
+
+
+def _encode_multipart(
+    file_field: str,
+    filename: str,
+    content_type: str,
+    file_bytes: bytes,
+    fields: dict[str, str],
+) -> tuple[bytes, str]:
+    boundary = f"legendsfc{uuid4().hex}"
+    safe_name = filename.replace("\\", "_").replace("/", "_").replace('"', "_").replace("\r", "").replace("\n", "")
+    chunks: list[bytes] = []
+    chunks.append(
+        (
+            f"--{boundary}\r\n"
+            f'Content-Disposition: form-data; name="{file_field}"; filename="{safe_name}"\r\n'
+            f"Content-Type: {content_type}\r\n\r\n"
+        ).encode("utf-8")
+    )
+    chunks.append(file_bytes)
+    chunks.append(b"\r\n")
+    for key, val in fields.items():
+        chunks.append(
+            (
+                f"--{boundary}\r\n"
+                f'Content-Disposition: form-data; name="{key}"\r\n\r\n'
+                f"{val}\r\n"
+            ).encode("utf-8")
+        )
+    chunks.append(f"--{boundary}--\r\n".encode("utf-8"))
+    return b"".join(chunks), f"multipart/form-data; boundary={boundary}"
+
+
+def is_search_feedback_disabled_locally() -> bool:
+    truthy = {"1", "true", "yes", "on"}
+    return any(os.environ.get(name, "").strip().lower() in truthy for name in SEARCH_FEEDBACK_OPT_OUT_ENVS)
 
 
 def _error_detail(raw: bytes) -> str:
@@ -349,21 +434,34 @@ class FirecrawlClient:
         *,
         method: str = "GET",
         payload: dict[str, Any] | None = None,
+        raw_body: bytes | None = None,
+        content_type: str | None = None,
+        extra_headers: dict[str, str] | None = None,
         log_usage: bool = False,
         requested_scope: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         from . import __version__
         normalized = "/" + path.strip().lstrip("/")
-        body = None if payload is None else json.dumps(payload, separators=(",", ":")).encode("utf-8")
+        if raw_body is not None:
+            body = raw_body
+            resolved_ct = content_type or "application/octet-stream"
+        else:
+            body = None if payload is None else json.dumps(payload, separators=(",", ":")).encode("utf-8")
+            resolved_ct = content_type or "application/json"
+        headers = {
+            "Authorization": f"Bearer {self.credentials.api_key}",
+            "Content-Type": resolved_ct,
+            "User-Agent": f"legends-firecrawl/{__version__}",
+        }
+        if extra_headers:
+            for k, v in extra_headers.items():
+                if k.lower() not in {"authorization", "user-agent"}:
+                    headers[k] = v
         request = Request(
             api_root() + normalized,
             data=body,
             method=method.upper(),
-            headers={
-                "Authorization": f"Bearer {self.credentials.api_key}",
-                "Content-Type": "application/json",
-                "User-Agent": f"legends-firecrawl/{__version__}",
-            },
+            headers=headers,
         )
         try:
             with urlopen(request, timeout=self.timeout) as response:  # nosec B310 - fixed HTTPS root
@@ -585,6 +683,7 @@ class FirecrawlClient:
         scrape: bool = False,
         formats: list[str] | None = None,
         country: str = "US",
+        require_candidate: bool = False,
     ) -> dict[str, Any]:
         """Resolve an exact inner URL from a domain + breadcrumb slug/title hint and optionally scrape it."""
         if not 1 <= limit <= 200:
@@ -627,6 +726,11 @@ class FirecrawlClient:
                 )
                 method_used = "map+search" if map_resp else "search"
 
+        if require_candidate and not scored:
+            raise SafetyError(
+                f"Could not resolve an inner URL on {root_domain}"
+                f"{f' for hint {effective_hint!r}' if effective_hint else ''}; "
+                "refusing to substitute the site homepage.")
         resolved_url = scored[0] if scored else base_url
         result: dict[str, Any] = {
             "success": True,
@@ -720,6 +824,859 @@ class FirecrawlClient:
         if not JOB_ID_PATTERN.fullmatch(value):
             raise SafetyError("crawl job id format is invalid")
         return self.request(f"/v2/crawl/{value}")
+
+    def _scrape_result_urls(
+        self,
+        results: list[Any],
+        *,
+        limit: int,
+        formats: list[str] | None,
+        country: str,
+    ) -> list[dict[str, Any]]:
+        urls: list[str] = []
+        for item in results:
+            if not isinstance(item, dict):
+                continue
+            cand = item.get("url") or item.get("readmeUrl") or item.get("pdfUrl")
+            if isinstance(cand, str) and cand.startswith(("http://", "https://")) and cand not in urls:
+                urls.append(cand)
+            if len(urls) >= limit:
+                break
+        scraped: list[dict[str, Any]] = []
+        for target in urls:
+            try:
+                scraped.append({
+                    "url": target,
+                    "response": self.scrape(target, formats=formats or ["markdown"], country=country),
+                })
+            except (ApiError, SafetyError) as exc:
+                scraped.append({"url": target, "error": str(exc)})
+        return scraped
+
+    @staticmethod
+    def developer_preview(
+        query: str,
+        *,
+        limit: int = 10,
+        scrape: bool = False,
+        formats: list[str] | None = None,
+    ) -> dict[str, Any]:
+        needle = (query or "").strip()
+        if not needle:
+            raise SafetyError("developer search query is required")
+        max_limit = 20 if scrape else 100
+        if not 1 <= limit <= max_limit:
+            raise SafetyError(f"developer search limit must be between 1 and {max_limit}")
+        selected = formats or ["markdown"]
+        if scrape:
+            unknown = [item for item in selected if item not in SCRAPE_ALLOWED_FORMATS]
+            if unknown:
+                raise SafetyError(f"Unsupported default-safe scrape formats: {', '.join(unknown)}")
+        params = urlencode([("query", needle), ("k", str(limit)), ("integration", "cli")])
+        return {
+            "operation": "developer",
+            "dry_run": True,
+            "requires_confirm": True,
+            "method": "GET",
+            "path": f"/v2/search/developer?{params}",
+            "query": needle,
+            "limit": limit,
+            "scrape": scrape,
+            "formats": selected if scrape else [],
+            "estimated_credits": None,
+            "note": "No HTTP request was made. Review scope and re-run developer with --confirm.",
+        }
+
+    def developer_search(
+        self,
+        query: str,
+        *,
+        limit: int = 10,
+        scrape: bool = False,
+        formats: list[str] | None = None,
+        country: str = "US",
+        confirm: bool = False,
+        dry_run: bool = False,
+    ) -> dict[str, Any]:
+        plan = self.developer_preview(query, limit=limit, scrape=scrape, formats=formats)
+        if dry_run:
+            return plan
+        if not confirm:
+            raise SafetyError("developer search requires --confirm (or pass --dry-run to preview)")
+        response = self.request(
+            plan["path"],
+            method="GET",
+            log_usage=True,
+            requested_scope={"limit": limit, "scrape": scrape},
+        )
+        if scrape and isinstance(response.get("results"), list):
+            response = {
+                **response,
+                "scraped_results": self._scrape_result_urls(
+                    response["results"], limit=limit, formats=formats, country=country
+                ),
+            }
+        return response
+
+    @staticmethod
+    def research_preview(
+        query: str = "",
+        *,
+        limit: int = 10,
+        scrape: bool = False,
+        formats: list[str] | None = None,
+        mode: str = "papers",
+        authors: list[str] | None = None,
+        categories: list[str] | None = None,
+        date_from: str | None = None,
+        date_to: str | None = None,
+        paper_id: str | None = None,
+        seed_ids: list[str] | None = None,
+        intent: str | None = None,
+        relation_mode: str | None = None,
+        question: str | None = None,
+        rerank: bool = False,
+    ) -> dict[str, Any]:
+        norm_mode = (mode or "papers").strip().lower()
+        if norm_mode not in RESEARCH_MODES:
+            raise SafetyError(f"research mode must be one of: {', '.join(sorted(RESEARCH_MODES))}")
+        max_limit = 20 if scrape else 100
+        if not 1 <= limit <= max_limit:
+            raise SafetyError(f"research limit must be between 1 and {max_limit}")
+        selected = formats or ["markdown"]
+        if scrape:
+            unknown = [item for item in selected if item not in SCRAPE_ALLOWED_FORMATS]
+            if unknown:
+                raise SafetyError(f"Unsupported default-safe scrape formats: {', '.join(unknown)}")
+        pairs: list[tuple[str, str]] = []
+        base = "/v2/search/research"
+        if norm_mode == "papers":
+            needle = (query or "").strip()
+            if not needle:
+                raise SafetyError("research query is required")
+            pairs.append(("query", needle))
+            pairs.append(("k", str(limit)))
+            for author in authors or []:
+                if author.strip():
+                    pairs.append(("authors", author.strip()))
+            for cat in categories or []:
+                if cat.strip():
+                    pairs.append(("categories", cat.strip()))
+            if date_from:
+                pairs.append(("from", date_from.strip()))
+            if date_to:
+                pairs.append(("to", date_to.strip()))
+            endpoint = f"{base}/papers"
+        elif norm_mode == "inspect":
+            pid = _validate_paper_id(paper_id or query)
+            endpoint = f"{base}/papers/{quote(pid, safe='')}"
+        elif norm_mode == "read":
+            pid = _validate_paper_id(paper_id or query)
+            q = (question or "").strip()
+            if not q:
+                raise SafetyError("research read mode requires --question")
+            pairs.append(("query", q))
+            pairs.append(("k", str(limit)))
+            endpoint = f"{base}/papers/{quote(pid, safe='')}"
+        elif norm_mode == "related":
+            seeds = [_validate_paper_id(s) for s in (seed_ids or ([paper_id] if paper_id else ([query] if query else [])))]
+            if not seeds:
+                raise SafetyError("research related mode requires at least one seed paper id")
+            intent_clean = (intent or "").strip()
+            if not intent_clean:
+                raise SafetyError("research related mode requires --intent")
+            pairs.append(("intent", intent_clean))
+            if relation_mode:
+                rm = relation_mode.strip().lower()
+                if rm not in RESEARCH_RELATION_MODES:
+                    raise SafetyError("relation mode must be similar, citers, or references")
+                pairs.append(("mode", rm))
+            pairs.append(("k", str(limit)))
+            if rerank:
+                pairs.append(("rerank", "true"))
+            for anchor in seeds[1:]:
+                pairs.append(("anchor", anchor))
+            endpoint = f"{base}/papers/{quote(seeds[0], safe='')}/similar"
+        else:  # github
+            needle = (query or "").strip()
+            if not needle:
+                raise SafetyError("research github query is required")
+            pairs.append(("query", needle))
+            pairs.append(("k", str(limit)))
+            endpoint = f"{base}/github"
+        pairs.append(("integration", "cli"))
+        full_path = f"{endpoint}?{urlencode(pairs)}"
+        return {
+            "operation": "research",
+            "mode": norm_mode,
+            "dry_run": True,
+            "requires_confirm": True,
+            "method": "GET",
+            "path": full_path,
+            "query": (query or "").strip(),
+            "limit": limit,
+            "scrape": scrape,
+            "formats": selected if scrape else [],
+            "estimated_credits": None,
+            "note": "No HTTP request was made. Review scope and re-run research with --confirm.",
+        }
+
+    def research_search(
+        self,
+        query: str = "",
+        *,
+        limit: int = 10,
+        scrape: bool = False,
+        formats: list[str] | None = None,
+        country: str = "US",
+        mode: str = "papers",
+        authors: list[str] | None = None,
+        categories: list[str] | None = None,
+        date_from: str | None = None,
+        date_to: str | None = None,
+        paper_id: str | None = None,
+        seed_ids: list[str] | None = None,
+        intent: str | None = None,
+        relation_mode: str | None = None,
+        question: str | None = None,
+        rerank: bool = False,
+        confirm: bool = False,
+        dry_run: bool = False,
+    ) -> dict[str, Any]:
+        plan = self.research_preview(
+            query,
+            limit=limit,
+            scrape=scrape,
+            formats=formats,
+            mode=mode,
+            authors=authors,
+            categories=categories,
+            date_from=date_from,
+            date_to=date_to,
+            paper_id=paper_id,
+            seed_ids=seed_ids,
+            intent=intent,
+            relation_mode=relation_mode,
+            question=question,
+            rerank=rerank,
+        )
+        if dry_run:
+            return plan
+        if not confirm:
+            raise SafetyError("research search requires --confirm (or pass --dry-run to preview)")
+        response = self.request(
+            plan["path"],
+            method="GET",
+            log_usage=True,
+            requested_scope={"mode": plan["mode"], "limit": limit, "scrape": scrape},
+        )
+        if scrape and isinstance(response.get("results"), list):
+            response = {
+                **response,
+                "scraped_results": self._scrape_result_urls(
+                    response["results"], limit=limit, formats=formats, country=country
+                ),
+            }
+        return response
+
+    @staticmethod
+    def parse_preview(
+        file_path: str | Path,
+        *,
+        formats: list[str] | None = None,
+        only_main_content: bool = True,
+        query: str | None = None,
+        include_tags: list[str] | None = None,
+        exclude_tags: list[str] | None = None,
+        timeout_ms: int | None = None,
+    ) -> dict[str, Any]:
+        target = _safe_local_path(file_path)
+        if not target.exists() or not target.is_file():
+            raise SafetyError(f"Parse target does not exist or is not a regular file: {target.name}")
+        ext = target.suffix.lower()
+        if ext not in PARSE_SUPPORTED_EXTENSIONS:
+            raise SafetyError(
+                f"Unsupported file type '{ext or '(none)'}'. Supported: {', '.join(sorted(PARSE_SUPPORTED_EXTENSIONS))}"
+            )
+        size = target.stat().st_size
+        if size > MAX_PARSE_BYTES:
+            raise SafetyError(f"File exceeds maximum /v2/parse upload size ({MAX_PARSE_BYTES} bytes)")
+        selected = list(formats) if formats else ["markdown"]
+        unknown = [item for item in selected if item not in PARSE_ALLOWED_FORMATS]
+        if unknown:
+            raise SafetyError(f"Unsupported parse formats: {', '.join(unknown)}")
+        if timeout_ms is not None and not 1000 <= timeout_ms <= 300_000:
+            raise SafetyError("parse timeout_ms must be between 1000 and 300000")
+        api_formats: list[Any] = list(selected)
+        if query and query.strip():
+            api_formats.append({"type": "query", "prompt": query.strip()})
+        options_payload: dict[str, Any] = {
+            "formats": api_formats,
+            "integration": "cli",
+            "onlyMainContent": only_main_content,
+        }
+        if include_tags:
+            options_payload["includeTags"] = include_tags
+        if exclude_tags:
+            options_payload["excludeTags"] = exclude_tags
+        if timeout_ms is not None:
+            options_payload["timeout"] = timeout_ms
+        return {
+            "operation": "parse",
+            "dry_run": True,
+            "requires_confirm": True,
+            "method": "POST",
+            "path": "/v2/parse",
+            "file": str(target),
+            "filename": target.name,
+            "content_type": PARSE_CONTENT_TYPES[ext],
+            "bytes": size,
+            "options": options_payload,
+            "estimated_credits": 1,
+            "note": "No HTTP request was made. Review file scope and re-run parse with --confirm.",
+        }
+
+    def parse_file(
+        self,
+        file_path: str | Path,
+        *,
+        formats: list[str] | None = None,
+        only_main_content: bool = True,
+        query: str | None = None,
+        include_tags: list[str] | None = None,
+        exclude_tags: list[str] | None = None,
+        timeout_ms: int | None = None,
+        confirm: bool = False,
+        dry_run: bool = False,
+    ) -> dict[str, Any]:
+        plan = self.parse_preview(
+            file_path,
+            formats=formats,
+            only_main_content=only_main_content,
+            query=query,
+            include_tags=include_tags,
+            exclude_tags=exclude_tags,
+            timeout_ms=timeout_ms,
+        )
+        if dry_run:
+            return plan
+        if not confirm:
+            raise SafetyError("parse uploads a local file and requires --confirm (or pass --dry-run to preview)")
+        target = Path(plan["file"])
+        file_bytes = target.read_bytes()
+        body, content_type = _encode_multipart(
+            "file",
+            plan["filename"],
+            plan["content_type"],
+            file_bytes,
+            {"options": json.dumps(plan["options"], separators=(",", ":"))},
+        )
+        return self.request(
+            "/v2/parse",
+            method="POST",
+            raw_body=body,
+            content_type=content_type,
+            log_usage=True,
+            requested_scope={"pages": 1, "bytes": plan["bytes"], "formats": plan["options"]["formats"]},
+        )
+
+    @staticmethod
+    def agent_preview(
+        prompt: str,
+        *,
+        urls: list[str] | None = None,
+        model: str = "spark-1-mini",
+        max_credits: int = 25,
+        schema: dict[str, Any] | None = None,
+        schema_file: str | Path | None = None,
+        strict_constrain_to_urls: bool = False,
+    ) -> dict[str, Any]:
+        needle = (prompt or "").strip()
+        if not needle:
+            raise SafetyError("agent prompt is required")
+        if model not in AGENT_MODELS:
+            raise SafetyError(f"agent model must be one of: {', '.join(sorted(AGENT_MODELS))}")
+        if type(max_credits) is not int or not 1 <= max_credits <= MAX_AGENT_CREDITS:
+            raise SafetyError(f"agent max_credits must be an integer between 1 and {MAX_AGENT_CREDITS}")
+        validated_urls: list[str] = []
+        for u in urls or []:
+            validated_urls.append(validate_public_url(u))
+        resolved_schema = schema
+        if schema_file is not None:
+            sp = _safe_local_path(schema_file)
+            if not sp.is_file():
+                raise SafetyError(f"Schema file not found: {sp.name}")
+            try:
+                loaded = json.loads(sp.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as exc:
+                raise SafetyError(f"Invalid JSON in schema file: {exc}") from None
+            if not isinstance(loaded, dict):
+                raise SafetyError("Agent schema must be a JSON object")
+            resolved_schema = loaded
+        elif resolved_schema is not None and not isinstance(resolved_schema, dict):
+            raise SafetyError("Agent schema must be a JSON object")
+        payload: dict[str, Any] = {
+            "prompt": needle,
+            "integration": "cli",
+            "model": model,
+            "maxCredits": max_credits,
+        }
+        if validated_urls:
+            payload["urls"] = validated_urls
+        if resolved_schema is not None:
+            payload["schema"] = resolved_schema
+        if strict_constrain_to_urls:
+            payload["strictConstrainToURLs"] = True
+        return {
+            "operation": "agent",
+            "dry_run": True,
+            "requires_confirm": True,
+            "method": "POST",
+            "path": "/v2/agent",
+            "payload": payload,
+            "max_credits_cap": max_credits,
+            "estimated_credits": None,
+            "note": "No HTTP request was made. Review maxCredits cap and re-run agent with --confirm.",
+        }
+
+    def agent_start(
+        self,
+        prompt: str,
+        *,
+        urls: list[str] | None = None,
+        model: str = "spark-1-mini",
+        max_credits: int = 25,
+        schema: dict[str, Any] | None = None,
+        schema_file: str | Path | None = None,
+        strict_constrain_to_urls: bool = False,
+        confirm: bool = False,
+        dry_run: bool = False,
+    ) -> dict[str, Any]:
+        plan = self.agent_preview(
+            prompt,
+            urls=urls,
+            model=model,
+            max_credits=max_credits,
+            schema=schema,
+            schema_file=schema_file,
+            strict_constrain_to_urls=strict_constrain_to_urls,
+        )
+        if dry_run:
+            return plan
+        if not confirm:
+            raise SafetyError("agent runs autonomous multi-page extraction and requires --confirm (or --dry-run)")
+        return self.request(
+            "/v2/agent",
+            method="POST",
+            payload=plan["payload"],
+            log_usage=True,
+            requested_scope={"max_credits": max_credits, "model": model, "url_count": len(urls or [])},
+        )
+
+    def agent_status(self, job_id: str) -> dict[str, Any]:
+        value = job_id.strip()
+        if not JOB_ID_PATTERN.fullmatch(value):
+            raise SafetyError("agent job id format is invalid")
+        return self.request(f"/v2/agent/{value}")
+
+    def agent_cancel(self, job_id: str, *, confirm: bool = False, dry_run: bool = False) -> dict[str, Any]:
+        value = job_id.strip()
+        if not JOB_ID_PATTERN.fullmatch(value):
+            raise SafetyError("agent job id format is invalid")
+        if dry_run:
+            return {
+                "operation": "agent-cancel",
+                "dry_run": True,
+                "requires_confirm": True,
+                "method": "DELETE",
+                "path": f"/v2/agent/{value}",
+                "job_id": value,
+                "estimated_credits": 0,
+            }
+        if not confirm:
+            raise SafetyError("cancelling an agent job requires --confirm (or pass --dry-run to preview)")
+        return self.request(f"/v2/agent/{value}", method="DELETE")
+
+    @staticmethod
+    def interact_preview(
+        scrape_id: str,
+        *,
+        prompt: str | None = None,
+        code: str | None = None,
+        language: str = "node",
+        timeout: int | None = None,
+        stop: bool = False,
+    ) -> dict[str, Any]:
+        sid = _validate_resource_id(scrape_id, "scrape id")
+        path = f"/v2/scrape/{sid}/interact"
+        if stop:
+            return {
+                "operation": "interact",
+                "action": "stop",
+                "dry_run": True,
+                "requires_confirm": True,
+                "method": "DELETE",
+                "path": path,
+                "scrape_id": sid,
+                "estimated_credits": 0,
+                "note": "No HTTP request was made. Re-run interact --stop with --confirm to terminate the session.",
+            }
+        if bool(prompt) == bool(code):
+            raise SafetyError("interact requires exactly one of --prompt or --code (or --stop)")
+        payload: dict[str, Any] = {"origin": "cli", "integration": "cli"}
+        if code:
+            lang = (language or "node").strip().lower()
+            if lang not in INTERACT_LANGUAGES:
+                raise SafetyError(f"interact language must be one of: {', '.join(sorted(INTERACT_LANGUAGES))}")
+            payload["code"] = code
+            payload["language"] = lang
+        else:
+            payload["prompt"] = (prompt or "").strip()
+        if timeout is not None:
+            if not 1 <= timeout <= 300:
+                raise SafetyError("interact timeout must be between 1 and 300 seconds")
+            payload["timeout"] = timeout
+        return {
+            "operation": "interact",
+            "action": "execute",
+            "dry_run": True,
+            "requires_confirm": True,
+            "method": "POST",
+            "path": path,
+            "scrape_id": sid,
+            "payload": payload,
+            "estimated_credits": None,
+            "note": "No HTTP request was made. Re-run interact with --confirm to execute in the browser session.",
+        }
+
+    def interact(
+        self,
+        scrape_id: str,
+        *,
+        prompt: str | None = None,
+        code: str | None = None,
+        language: str = "node",
+        timeout: int | None = None,
+        stop: bool = False,
+        confirm: bool = False,
+        dry_run: bool = False,
+    ) -> dict[str, Any]:
+        plan = self.interact_preview(
+            scrape_id, prompt=prompt, code=code, language=language, timeout=timeout, stop=stop
+        )
+        if dry_run:
+            return plan
+        if not confirm:
+            raise SafetyError("interact operates a live cloud browser session and requires --confirm (or --dry-run)")
+        if stop:
+            return self.request(plan["path"], method="DELETE", log_usage=True, requested_scope={"action": "stop"})
+        return self.request(
+            plan["path"],
+            method="POST",
+            payload=plan["payload"],
+            log_usage=True,
+            requested_scope={"action": "execute", "mode": "code" if code else "prompt"},
+        )
+
+    @staticmethod
+    def monitor_preview(
+        action: str,
+        *,
+        monitor_id: str | None = None,
+        check_id: str | None = None,
+        name: str | None = None,
+        cron: str | None = None,
+        schedule_text: str | None = None,
+        timezone_name: str | None = None,
+        page: str | None = None,
+        scrape_urls: list[str] | None = None,
+        crawl_url: str | None = None,
+        queries: list[str] | None = None,
+        search_window: str | None = None,
+        max_results: int | None = None,
+        include_domains: list[str] | None = None,
+        exclude_domains: list[str] | None = None,
+        webhook_url: str | None = None,
+        webhook_events: list[str] | None = None,
+        email_recipients: list[str] | None = None,
+        retention_days: int | None = None,
+        goal: str | None = None,
+        state: str | None = None,
+        limit: int | None = None,
+        offset: int | None = None,
+        skip: int | None = None,
+        page_status: str | None = None,
+    ) -> dict[str, Any]:
+        act = (action or "").strip().lower()
+        if act not in MONITOR_ACTIONS:
+            raise SafetyError(f"monitor action must be one of: {', '.join(sorted(MONITOR_ACTIONS))}")
+        method = "GET"
+        path = "/v2/monitor"
+        payload: dict[str, Any] | None = None
+        if act == "create":
+            if not (name and name.strip()):
+                raise SafetyError("monitor create requires --name")
+            if not (cron or schedule_text):
+                raise SafetyError("monitor create requires --cron or --schedule")
+            urls = list(scrape_urls or ([page] if page else []))
+            has_scrape = bool(urls)
+            has_crawl = bool(crawl_url)
+            has_search = bool(queries)
+            if not (has_scrape or has_crawl or has_search):
+                raise SafetyError("monitor create requires --page, --scrape-urls, --crawl-url, or --queries")
+            if has_search and not (goal and goal.strip()):
+                raise SafetyError("monitor create with --queries requires --goal")
+            schedule: dict[str, Any] = {}
+            if cron:
+                schedule["cron"] = cron.strip()
+            if schedule_text:
+                schedule["text"] = schedule_text.strip()
+            if timezone_name:
+                schedule["timezone"] = timezone_name.strip()
+            targets: list[dict[str, Any]] = []
+            if has_scrape:
+                targets.append({"type": "scrape", "urls": [validate_public_url(u) for u in urls]})
+            if has_crawl:
+                targets.append({"type": "crawl", "url": validate_public_url(crawl_url or "")})
+            if has_search:
+                st: dict[str, Any] = {"type": "search", "queries": [q.strip() for q in (queries or []) if q.strip()]}
+                if search_window:
+                    if search_window not in MONITOR_SEARCH_WINDOWS:
+                        raise SafetyError(f"search_window must be one of: {', '.join(sorted(MONITOR_SEARCH_WINDOWS))}")
+                    st["searchWindow"] = search_window
+                if max_results is not None:
+                    if not 1 <= max_results <= 50:
+                        raise SafetyError("monitor max_results must be between 1 and 50")
+                    st["maxResults"] = max_results
+                if include_domains:
+                    st["includeDomains"] = include_domains
+                if exclude_domains:
+                    st["excludeDomains"] = exclude_domains
+                targets.append(st)
+            body: dict[str, Any] = {"name": name.strip(), "schedule": schedule, "targets": targets}
+            if webhook_url:
+                wh: dict[str, Any] = {"url": validate_public_url(webhook_url)}
+                if webhook_events:
+                    wh["events"] = webhook_events
+                body["webhook"] = wh
+            if email_recipients:
+                body["notification"] = {"email": {"enabled": True, "recipients": email_recipients}}
+            if retention_days is not None:
+                if not 1 <= retention_days <= 365:
+                    raise SafetyError("retention_days must be between 1 and 365")
+                body["retentionDays"] = retention_days
+            if goal is not None and goal.strip():
+                body["goal"] = goal.strip()
+            method = "POST"
+            payload = body
+        elif act == "list":
+            qs: list[tuple[str, str]] = []
+            if limit is not None:
+                if not 1 <= limit <= 100:
+                    raise SafetyError("monitor list limit must be between 1 and 100")
+                qs.append(("limit", str(limit)))
+            if offset is not None:
+                if offset < 0:
+                    raise SafetyError("monitor offset must be non-negative")
+                qs.append(("offset", str(offset)))
+            path = f"/v2/monitor?{urlencode(qs)}" if qs else "/v2/monitor"
+        elif act == "get":
+            mid = _validate_resource_id(monitor_id or "", "monitor id")
+            path = f"/v2/monitor/{mid}"
+        elif act == "update":
+            mid = _validate_resource_id(monitor_id or "", "monitor id")
+            body = {}
+            if name:
+                body["name"] = name.strip()
+            if goal:
+                body["goal"] = goal.strip()
+            if state:
+                if state not in {"active", "paused"}:
+                    raise SafetyError("monitor state must be active or paused")
+                body["status"] = state
+            if retention_days is not None:
+                if not 1 <= retention_days <= 365:
+                    raise SafetyError("retention_days must be between 1 and 365")
+                body["retentionDays"] = retention_days
+            if cron or schedule_text or timezone_name:
+                sched: dict[str, Any] = {}
+                if cron:
+                    sched["cron"] = cron.strip()
+                if schedule_text:
+                    sched["text"] = schedule_text.strip()
+                if timezone_name:
+                    sched["timezone"] = timezone_name.strip()
+                body["schedule"] = sched
+            if not body:
+                raise SafetyError("monitor update requires at least one field to update")
+            method = "PATCH"
+            path = f"/v2/monitor/{mid}"
+            payload = body
+        elif act == "delete":
+            mid = _validate_resource_id(monitor_id or "", "monitor id")
+            method = "DELETE"
+            path = f"/v2/monitor/{mid}"
+        elif act == "run":
+            mid = _validate_resource_id(monitor_id or "", "monitor id")
+            method = "POST"
+            path = f"/v2/monitor/{mid}/run"
+        elif act == "checks":
+            mid = _validate_resource_id(monitor_id or "", "monitor id")
+            qs = []
+            if limit is not None:
+                if not 1 <= limit <= 100:
+                    raise SafetyError("monitor checks limit must be between 1 and 100")
+                qs.append(("limit", str(limit)))
+            if offset is not None:
+                if offset < 0:
+                    raise SafetyError("monitor offset must be non-negative")
+                qs.append(("offset", str(offset)))
+            path = f"/v2/monitor/{mid}/checks" + (f"?{urlencode(qs)}" if qs else "")
+        elif act == "check":
+            mid = _validate_resource_id(monitor_id or "", "monitor id")
+            cid = _validate_resource_id(check_id or "", "check id")
+            qs = []
+            if limit is not None:
+                if not 1 <= limit <= 100:
+                    raise SafetyError("monitor check limit must be between 1 and 100")
+                qs.append(("limit", str(limit)))
+            if skip is not None:
+                if skip < 0:
+                    raise SafetyError("monitor skip must be non-negative")
+                qs.append(("skip", str(skip)))
+            if page_status:
+                if page_status not in MONITOR_PAGE_STATUSES:
+                    raise SafetyError(f"page_status must be one of: {', '.join(sorted(MONITOR_PAGE_STATUSES))}")
+                qs.append(("status", page_status))
+            path = f"/v2/monitor/{mid}/checks/{cid}" + (f"?{urlencode(qs)}" if qs else "")
+        requires_confirm = act in MONITOR_MUTATING_ACTIONS
+        return {
+            "operation": "monitor",
+            "action": act,
+            "dry_run": True,
+            "requires_confirm": requires_confirm,
+            "method": method,
+            "path": path,
+            "payload": payload,
+            "estimated_credits": None if act in {"create", "run"} else 0,
+            "note": (
+                "No HTTP request was made. Review monitor scope and re-run with --confirm."
+                if requires_confirm
+                else "No HTTP request was made. This monitor action is read-only."
+            ),
+        }
+
+    def monitor(
+        self,
+        action: str,
+        *,
+        confirm: bool = False,
+        dry_run: bool = False,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        plan = self.monitor_preview(action, **kwargs)
+        if dry_run:
+            return plan
+        if plan["requires_confirm"] and not confirm:
+            raise SafetyError(f"monitor {plan['action']} is mutating/recurring and requires --confirm (or --dry-run)")
+        return self.request(
+            plan["path"],
+            method=plan["method"],
+            payload=plan["payload"],
+            extra_headers={"X-Origin": "cli"},
+            log_usage=plan["action"] in {"create", "run"},
+            requested_scope={"action": plan["action"]},
+        )
+
+    @staticmethod
+    def search_feedback_preview(
+        search_id: str,
+        *,
+        rating: str,
+        valuable_sources: list[dict[str, str]] | None = None,
+        missing_content: list[dict[str, str]] | None = None,
+        query_suggestions: str | None = None,
+    ) -> dict[str, Any]:
+        sid = _validate_resource_id(search_id, "search id")
+        norm_rating = (rating or "").strip().lower()
+        if norm_rating not in SEARCH_FEEDBACK_RATINGS:
+            raise SafetyError("rating must be one of: good, bad, partial")
+        body: dict[str, Any] = {
+            "rating": norm_rating,
+            "origin": "cli",
+            "integration": "cli",
+        }
+        if valuable_sources:
+            cleaned_sources: list[dict[str, str]] = []
+            for entry in valuable_sources:
+                url = validate_public_url(str(entry.get("url", "")), resolve_dns=False)
+                item: dict[str, str] = {"url": url}
+                if entry.get("reason"):
+                    item["reason"] = str(entry["reason"]).strip()
+                cleaned_sources.append(item)
+            if cleaned_sources:
+                body["valuableSources"] = cleaned_sources
+        if missing_content:
+            cleaned_missing: list[dict[str, str]] = []
+            for entry in missing_content[:20]:
+                topic = str(entry.get("topic", "")).strip()
+                if not topic:
+                    continue
+                item = {"topic": topic}
+                if entry.get("description"):
+                    item["description"] = str(entry["description"]).strip()
+                cleaned_missing.append(item)
+            if cleaned_missing:
+                body["missingContent"] = cleaned_missing
+        if query_suggestions and query_suggestions.strip():
+            body["querySuggestions"] = query_suggestions.strip()
+        return {
+            "operation": "search-feedback",
+            "dry_run": True,
+            "requires_confirm": False,
+            "method": "POST",
+            "path": f"/v2/search/{sid}/feedback",
+            "search_id": sid,
+            "payload": body,
+            "estimated_credits": 0,
+            "refund_credits_on_first_submit": 1,
+            "note": "No HTTP request was made. Search feedback is free and refunds 1 credit on first submission.",
+        }
+
+    def search_feedback(
+        self,
+        search_id: str,
+        *,
+        rating: str,
+        valuable_sources: list[dict[str, str]] | None = None,
+        missing_content: list[dict[str, str]] | None = None,
+        query_suggestions: str | None = None,
+        dry_run: bool = False,
+    ) -> dict[str, Any]:
+        plan = self.search_feedback_preview(
+            search_id,
+            rating=rating,
+            valuable_sources=valuable_sources,
+            missing_content=missing_content,
+            query_suggestions=query_suggestions,
+        )
+        if dry_run:
+            return plan
+        if is_search_feedback_disabled_locally():
+            return {
+                "success": True,
+                "disabled": True,
+                "disabledSource": "env",
+                "creditsRefunded": 0,
+                "warning": "Search feedback disabled by FIRECRAWL_NO_SEARCH_FEEDBACK; no data was sent.",
+            }
+        return self.request(
+            plan["path"],
+            method="POST",
+            payload=plan["payload"],
+            log_usage=False,
+            requested_scope={"search_id": plan["search_id"], "rating": plan["payload"]["rating"]},
+        )
 
 
 def usage_summary(path: Path | None = None) -> dict[str, Any]:
