@@ -1,3 +1,7 @@
+# 0.3.9 - 2026-11-22
+
+- Sync vendored `cto-legends` router skill pin (`69ddc4f68faa`), enforce LF line endings via `.gitattributes`, and standardize release artifact checksums.
+
 # 0.3.8
 
 - **Architecture & Visual Reference Cards (`assets/cards/r1/`, `scripts/render_cards.py`, `README.md`)**: Added vector-outlined SVG architecture and workflow cards (`slot-1-agent-handoff.svg`, `slot-2-three-pillars.svg`, `slot-3-plain-english-chains.svg`, `slot-4-serp-to-markdown.svg`, `slot-5-disposable-vs-firecrawl.svg`, `slot-7-message-avalon-reset.svg`, `slot-collection-star-shrine.svg`) and expanded `README.md` documentation covering the 15-route Firecrawl v2 CLI (`lfc`), fail-closed SERP integrity verification and `/goto` target resolution (`lfc scrape-serp --resolve-goto`), the 114-provider / 797-capability Alexandria data catalog (`lax`), local document parsing (`/v2/parse`), 43M research paper discovery (`/v2/search/research/papers`), and the SHA-256 local evidence bank (`~/.legends-firecrawl/research`).
