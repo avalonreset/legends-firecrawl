@@ -1,3 +1,7 @@
+# Unreleased
+
+- **SERP Truth Gate Guard Hardening (`python/legends_firecrawl/serp_guard.py`)**: `guard_serp()` and `serp_verdict()` now reject legacy provider-only `verified_basis` values (`provider_from_web`, `double_pull_stable`, `provider_clean_no_decoy_signals`) and require independent consensus (`independent_consensus` or `independent_consensus_repaired`) unless `--allow-unverified-serp` / `LEGENDS_FIRECRAWL_ALLOW_UNVERIFIED_SERP=1` is explicitly supplied.
+
 # 0.3.9 - 2026-11-22
 
 - Sync vendored `cto-legends` router skill pin (`69ddc4f68faa`), enforce LF line endings via `.gitattributes`, and standardize release artifact checksums.

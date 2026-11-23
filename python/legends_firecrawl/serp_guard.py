@@ -12,6 +12,12 @@ from urllib.parse import urlparse
 from .client import SafetyError
 
 SUSPECT_STATUSES = frozenset({"suspect_decoy", "suspect_poisoned", "unverified_decoy"})
+LEGACY_PROVIDER_ONLY_BASES = frozenset({
+    "provider_from_web",
+    "double_pull_stable",
+    "provider_clean_no_decoy_signals",
+})
+TRUSTED_VERIFIED_BASES = frozenset({"independent_consensus", "independent_consensus_repaired"})
 OVERRIDE_ENV = "LEGENDS_FIRECRAWL_ALLOW_SUSPECT_SERP"
 OVERRIDE_ENV_ALIAS = "LEGENDS_FIRECRAWL_ALLOW_UNVERIFIED_SERP"
 MAX_SERP_URLS = 20
@@ -112,6 +118,11 @@ def _integrities(envelope: Any) -> list[dict[str, Any]]:
 
 
 def _block_verified(integrity: dict[str, Any]) -> bool:
+    basis = integrity.get("verified_basis")
+    if basis in LEGACY_PROVIDER_ONLY_BASES:
+        return False
+    if basis is not None and basis not in TRUSTED_VERIFIED_BASES:
+        return False
     return (integrity.get("verified") is True
             and integrity.get("integrity") != "unprotected"
             and integrity.get("status") == "clean"
@@ -121,9 +132,9 @@ def _block_verified(integrity: dict[str, Any]) -> bool:
 def serp_verdict(envelope: Any) -> dict[str, Any]:
     """Summarize SERP provenance (never raises). `verified` is the fail-closed gate.
 
-    verified is True only when every organic block carries legends-dataforseo >= 0.1.12
-    `serp_integrity.verified: true`, is protected (resolve sent), clean and not unresolved.
-    Missing, false, unprotected, suspect or unverified_decoy all mean verified False.
+    verified is True only when every organic block carries `serp_integrity.verified: true`,
+    is protected (resolve sent), clean, not unresolved, and not stamped with a legacy
+    provider-only basis (`provider_from_web`, `double_pull_stable`, `provider_clean_no_decoy_signals`).
     """
     integrities = _integrities(envelope)
     warnings: list[str] = []
@@ -132,7 +143,7 @@ def serp_verdict(envelope: Any) -> dict[str, Any]:
         return {"status": "unassessed", "verified": False, "suspect": False, "unresolved": False,
                 "unverified": True, "unprotected": False, "reasons": ["SERP envelope has no serp_integrity block"],
                 "warnings": ["SERP envelope has no serp_integrity block; ranking validity is unknown "
-                             "(fetch it with legends-dataforseo >= 0.1.12)."]}
+                             "(fetch it with legends-dataforseo)."]}
     statuses = [str(i.get("status") or "unassessed") for i in integrities]
     status = next(
         (s for s in ("unverified_decoy", "suspect_poisoned", "suspect_decoy") if s in statuses),
@@ -145,6 +156,12 @@ def serp_verdict(envelope: Any) -> dict[str, Any]:
         for r in list(integrity.get("reasons") or []) + list(integrity.get("unverified_reasons") or []):
             if isinstance(r, str) and r not in reasons:
                 reasons.append(r)
+        basis = integrity.get("verified_basis")
+        if basis in LEGACY_PROVIDER_ONLY_BASES:
+            msg = f"SERP used legacy provider-only verification basis ({basis}) without independent consensus"
+            if msg not in reasons:
+                reasons.append(msg)
+            warnings.append(msg + "; re-pull through the SERP Truth Gate.")
         decoy = integrity.get("decoy")
         verification = integrity.get("verification") if isinstance(integrity.get("verification"), dict) else {}
         if "verified" not in integrity:

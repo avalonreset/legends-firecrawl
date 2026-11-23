@@ -23,7 +23,7 @@ _ABSENT = object()
 
 
 def envelope(status, *, decoy=True, unresolved=False, provider="resolved", urls=None, verified=None,
-             integrity_label="protected"):
+             integrity_label="protected", verified_basis="independent_consensus"):
     integrity = {"status": status, "organic_count": 3,
                  "reasons": [] if status == "clean" else ["AI Overview cites 5 sites; 0.00 overlap with organic top 20"]}
     if decoy:
@@ -35,6 +35,8 @@ def envelope(status, *, decoy=True, unresolved=False, provider="resolved", urls=
     if verified is not _ABSENT:
         integrity["verified"] = verified
         integrity["integrity"] = integrity_label
+        if verified and verified_basis is not _ABSENT:
+            integrity["verified_basis"] = verified_basis
         if not verified:
             integrity["unverified"] = True
             integrity["unverified_reasons"] = [f"serp_integrity.status is {status}"]
@@ -75,6 +77,9 @@ def test_verified_clean_serp_passes_without_warnings():
     envelope("clean", verified=_ABSENT),
     envelope("clean", decoy=False, verified=_ABSENT),
     envelope("clean", verified=True, integrity_label="unprotected"),
+    envelope("clean", verified=True, verified_basis="provider_from_web"),
+    envelope("clean", verified=True, verified_basis="double_pull_stable"),
+    envelope("clean", verified=True, verified_basis="provider_clean_no_decoy_signals"),
     {"tasks": []},
 ])
 def test_anything_not_verified_is_refused(env):
@@ -82,6 +87,11 @@ def test_anything_not_verified_is_refused(env):
         guard_serp(env)
     assert exc.value.verdict["verified"] is False
     assert "--allow-unverified-serp" in str(exc.value) and "--allow-suspect-serp" in str(exc.value)
+
+
+def test_truth_gate_repaired_basis_passes_without_warnings():
+    verdict = guard_serp(envelope("clean", verified_basis="independent_consensus_repaired"))
+    assert verdict["verified"] is True and verdict["warnings"] == []
 
 
 def test_overrides_flag_env_and_alias_env(monkeypatch):
