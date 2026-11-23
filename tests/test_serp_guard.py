@@ -11,6 +11,8 @@ import pytest
 from legends_firecrawl.serp_guard import (
     OVERRIDE_ENV,
     OVERRIDE_ENV_ALIAS,
+    TRUSTED_VERIFIED_BASES,
+    VERIFIED_BASES,
     SuspectSerpError,
     guard_serp,
     load_serp_envelope,
@@ -92,6 +94,48 @@ def test_anything_not_verified_is_refused(env):
 def test_truth_gate_repaired_basis_passes_without_warnings():
     verdict = guard_serp(envelope("clean", verified_basis="independent_consensus_repaired"))
     assert verdict["verified"] is True and verdict["warnings"] == []
+
+
+def test_verified_bases_alias_matches_trusted_bases():
+    assert VERIFIED_BASES is TRUSTED_VERIFIED_BASES
+    assert VERIFIED_BASES == frozenset({"independent_consensus", "independent_consensus_repaired"})
+
+
+@pytest.mark.parametrize("basis", [_ABSENT, None, "custom_fake"])
+def test_verified_true_with_untrusted_basis_fails_closed_with_reason(basis):
+    env = envelope("clean", verified=True, verified_basis=basis)
+    if basis is _ABSENT:
+        assert "verified_basis" not in env["tasks"][0]["result"][0]["serp_integrity"]
+    verdict = serp_verdict(env)
+    assert verdict["verified"] is False
+    assert any("verified_basis" in r and "independent_consensus" in r for r in verdict["reasons"])
+    assert any("verified_basis" in w for w in verdict["warnings"])
+    with pytest.raises(SuspectSerpError) as exc:
+        guard_serp(env)
+    assert exc.value.verdict["verified"] is False
+    assert "legends-dataforseo >= 0.1.12" not in str(exc.value)
+    assert "verified_basis" in str(exc.value) and "independent_consensus" in str(exc.value)
+
+
+def test_verified_true_with_integrity_field_omitted_fails_closed_with_reason():
+    env = envelope("clean", verified=True)
+    del env["tasks"][0]["result"][0]["serp_integrity"]["integrity"]
+    verdict = serp_verdict(env)
+    assert verdict["verified"] is False
+    assert any("not protected" in r for r in verdict["reasons"])
+    with pytest.raises(SuspectSerpError):
+        guard_serp(env)
+
+
+@pytest.mark.parametrize("organic_count", [0, False, None])
+def test_verified_true_with_bad_organic_count_fails_closed_with_reason(organic_count):
+    env = envelope("clean", verified=True)
+    env["tasks"][0]["result"][0]["serp_integrity"]["organic_count"] = organic_count
+    verdict = serp_verdict(env)
+    assert verdict["verified"] is False
+    assert any("organic_count" in r for r in verdict["reasons"])
+    with pytest.raises(SuspectSerpError):
+        guard_serp(env)
 
 
 def test_overrides_flag_env_and_alias_env(monkeypatch):

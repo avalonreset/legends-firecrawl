@@ -1,6 +1,6 @@
 # Unreleased
 
-- **SERP Truth Gate Guard Hardening (`python/legends_firecrawl/serp_guard.py`)**: `guard_serp()` and `serp_verdict()` now reject legacy provider-only `verified_basis` values (`provider_from_web`, `double_pull_stable`, `provider_clean_no_decoy_signals`) and require independent consensus (`independent_consensus` or `independent_consensus_repaired`) unless `--allow-unverified-serp` / `LEGENDS_FIRECRAWL_ALLOW_UNVERIFIED_SERP=1` is explicitly supplied.
+- **SERP Truth Gate Guard Hardening (`python/legends_firecrawl/serp_guard.py`)**: `guard_serp()` and `serp_verdict()` now fail closed unless `serp_integrity.verified=true` with `verified_basis` in {'independent_consensus', 'independent_consensus_repaired'} (`VERIFIED_BASES`), `integrity='protected'`, and a positive integer `organic_count`; missing, `None`, legacy provider-only (`provider_from_web`, `double_pull_stable`, `provider_clean_no_decoy_signals`), or otherwise untrusted bases are rejected with explicit reasons unless `--allow-unverified-serp` / `LEGENDS_FIRECRAWL_ALLOW_UNVERIFIED_SERP=1` is explicitly supplied.
 
 # 0.3.9 - 2026-11-22
 

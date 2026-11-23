@@ -18,6 +18,7 @@ LEGACY_PROVIDER_ONLY_BASES = frozenset({
     "provider_clean_no_decoy_signals",
 })
 TRUSTED_VERIFIED_BASES = frozenset({"independent_consensus", "independent_consensus_repaired"})
+VERIFIED_BASES = TRUSTED_VERIFIED_BASES
 OVERRIDE_ENV = "LEGENDS_FIRECRAWL_ALLOW_SUSPECT_SERP"
 OVERRIDE_ENV_ALIAS = "LEGENDS_FIRECRAWL_ALLOW_UNVERIFIED_SERP"
 MAX_SERP_URLS = 20
@@ -119,12 +120,12 @@ def _integrities(envelope: Any) -> list[dict[str, Any]]:
 
 def _block_verified(integrity: dict[str, Any]) -> bool:
     basis = integrity.get("verified_basis")
-    if basis in LEGACY_PROVIDER_ONLY_BASES:
+    if basis not in TRUSTED_VERIFIED_BASES:
         return False
-    if basis is not None and basis not in TRUSTED_VERIFIED_BASES:
-        return False
+    organic_count = integrity.get("organic_count")
     return (integrity.get("verified") is True
-            and integrity.get("integrity") != "unprotected"
+            and integrity.get("integrity") == "protected"
+            and type(organic_count) is int and organic_count > 0
             and integrity.get("status") == "clean"
             and integrity.get("unresolved") is not True)
 
@@ -132,9 +133,10 @@ def _block_verified(integrity: dict[str, Any]) -> bool:
 def serp_verdict(envelope: Any) -> dict[str, Any]:
     """Summarize SERP provenance (never raises). `verified` is the fail-closed gate.
 
-    verified is True only when every organic block carries `serp_integrity.verified: true`,
-    is protected (resolve sent), clean, not unresolved, and not stamped with a legacy
-    provider-only basis (`provider_from_web`, `double_pull_stable`, `provider_clean_no_decoy_signals`).
+    verified is True only when every organic block carries `serp_integrity.verified: true`
+    with `verified_basis` in {'independent_consensus', 'independent_consensus_repaired'},
+    `integrity` == 'protected', a positive integer `organic_count`, clean, and not unresolved.
+    A missing, None, legacy provider-only, or otherwise untrusted `verified_basis` fails closed.
     """
     integrities = _integrities(envelope)
     warnings: list[str] = []
@@ -162,6 +164,25 @@ def serp_verdict(envelope: Any) -> dict[str, Any]:
             if msg not in reasons:
                 reasons.append(msg)
             warnings.append(msg + "; re-pull through the SERP Truth Gate.")
+        elif integrity.get("verified") is True and basis not in TRUSTED_VERIFIED_BASES:
+            msg = (f"SERP verified_basis is not trusted independent consensus ({basis!r}); "
+                   "serp_integrity.verified=true with verified_basis in "
+                   "{'independent_consensus', 'independent_consensus_repaired'} is required")
+            if msg not in reasons:
+                reasons.append(msg)
+            warnings.append(msg + "; re-pull through the SERP Truth Gate.")
+        if integrity.get("verified") is True and integrity.get("integrity") != "protected":
+            msg = (f"SERP integrity is not protected ({integrity.get('integrity')!r}); "
+                   "serp_integrity.verified=true with integrity='protected' is required")
+            if msg not in reasons:
+                reasons.append(msg)
+        if integrity.get("verified") is True:
+            organic_count = integrity.get("organic_count")
+            if type(organic_count) is not int or organic_count <= 0:
+                msg = (f"SERP organic_count is not a positive integer ({organic_count!r}); "
+                       "serp_integrity.verified=true with organic_count > 0 is required")
+                if msg not in reasons:
+                    reasons.append(msg)
         decoy = integrity.get("decoy")
         verification = integrity.get("verification") if isinstance(integrity.get("verification"), dict) else {}
         if "verified" not in integrity:
@@ -346,7 +367,8 @@ def guard_serp(envelope: Any, *, allow_suspect: bool = False) -> dict[str, Any]:
             raise SuspectSerpError(
                 f"Refusing to scrape URLs from a SERP marked {label}"
                 f"{' (unresolved after re-pull)' if verdict['unresolved'] else ''}: {detail}. "
-                "Only SERPs with serp_integrity.verified=true (legends-dataforseo >= 0.1.12) are scraped. "
+                "Only SERPs with serp_integrity.verified=true with verified_basis in "
+                "{'independent_consensus', 'independent_consensus_repaired'} are scraped. "
                 "Re-pull it with legends-dataforseo or pass --allow-unverified-serp (alias "
                 f"--allow-suspect-serp) / {OVERRIDE_ENV}=1 to scrape it anyway.",
                 verdict=verdict,
