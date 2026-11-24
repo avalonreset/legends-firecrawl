@@ -97,6 +97,25 @@ lax query treasury-fiscal-data debt/to-the-penny
 lax query treasury-fiscal-data debt/to-the-penny --confirm
 ```
 
+## Zero-Keys Hosted Option ($10 PAYG)
+
+Want competitor page teardowns without running your own crawling setup?
+
+This module is free, MIT licensed, and runs on your own accounts. That does not change.
+
+If you would rather not manage provider accounts or API keys at all, [CTO Legends Recon](https://cto-legends.com/recon) is a separate hosted MCP server that answers the same kind of questions from one endpoint:
+
+- One URL and one API key. Works in Claude Code, Cursor, Antigravity, Claude Desktop, and OpenCode
+- Pay as you go from a $10 prepaid wallet. No subscription
+- From $0.05 a run. Anything above your limit is quoted first
+- Failed runs and 24-hour repeats cost $0.00
+
+```bash
+claude mcp add --transport http recon-concierge https://recon.cto-legends.com/mcp --header "Authorization: Bearer YOUR_API_KEY"
+```
+
+Create a key at [recon.cto-legends.com](https://recon.cto-legends.com/login). Prefer to self-host? Keep reading. Everything below needs nothing from us.
+
 ## Reference
 
 <details>
